@@ -16,18 +16,32 @@ type dancer = {
    position: { x: number | null; y: number | null };
 };
 
-export const Grid: React.FC<{ children: React.ReactNode; setDancers: Function }> = ({ children, setDancers }) => {
-   let [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
+export const Grid: React.FC<{ children: React.ReactNode; setDancers: Function; dancers: dancer[] }> = ({ children, setDancers, dancers }) => {
    const [{ isOver }, drop] = useDrop(() => ({
-      accept: "dancerAlias",
+      accept: ["dancerAlias", "dancer"],
       drop: (item: DragItem, monitor) => {
          const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
          const left = Math.round(item.left + delta.x);
          const top = Math.round(item.top + delta.y);
+
+         console.log(dancers);
+         //  console.log(
+         //     dancers.find((dancer) => {
+         //        console.log(dancer.position.x, dancer.position.y);
+         //        return dancer.position.x === positionToCoords(left, top).x && positionToCoords(left, top).y === dancer.position.y;
+         //     })
+         //  );
+         if (
+            dancers.find((dancer) => {
+               return dancer.position.x === positionToCoords(left, top).x && positionToCoords(left, top).y === dancer.position.y;
+            })
+         ) {
+            return;
+         }
+
          setDancers((dancers: dancer[]) => {
             return dancers.map((dancer) => {
-               if (dancer.id === item.id) {
+               if (dancer.id === parseInt(item.id)) {
                   return { ...dancer, position: { x: positionToCoords(left, top).x, y: positionToCoords(left, top).y } };
                }
                return dancer;
@@ -46,7 +60,7 @@ export const Grid: React.FC<{ children: React.ReactNode; setDancers: Function }>
       //      event.preventDefault();
       //      setZoom((zoom) => Math.max(Math.min(zoom - event.deltaY / 800, 3), 1));
       //   };
-      //   const element = drop.current;
+      //   const element = ref.current;
       //   element.addEventListener("wheel", handleWheel);
       //   return () => {
       //      element.removeEventListener("wheel", handleWheel);

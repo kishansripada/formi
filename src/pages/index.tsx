@@ -8,6 +8,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { DancerAlias } from "../components/DancerAlias";
 import { Dancer } from "../components/Dancer";
 import { Grid } from "../components/Grid";
+import { SidebarDrop } from "../components/SidebarDrop";
 
 type dancer = {
    name: string;
@@ -19,7 +20,7 @@ type dancer = {
 const Home: NextPage = () => {
    const [dancers, setDancers] = useState([
       { name: "Kishan Sripada", id: 222, isOnStage: true, position: { x: -1, y: 8 } },
-      { name: "Mira Sripada", id: 203, isOnStage: false, position: { x: null, y: null } },
+      { name: "Mira Sripada", id: 203, isOnStage: true, position: { x: 6, y: 6 } },
       { name: "Test", id: 555, isOnStage: true, position: { x: -8, y: 8 } },
    ]);
 
@@ -31,9 +32,10 @@ const Home: NextPage = () => {
                   {dancers.map((dancer, index) => (
                      <Dancer setDancers={setDancers} {...dancer} key={index} dancers={dancers} />
                   ))}
+                  <SidebarDrop setDancers={setDancers} />
                </div>
 
-               <Grid setDancers={setDancers}>
+               <Grid setDancers={setDancers} dancers={dancers}>
                   {dancers
                      .filter((dancer) => dancer.isOnStage)
                      .map((dancer, index) => (
@@ -55,9 +57,5 @@ const Home: NextPage = () => {
 const coordsToPosition = (x: number, y: number) => {
    return { left: 400 + 40 * x, top: 400 + 40 * -y };
 };
-
-// console.log(coordsToPosition(1, 1));
-
-// console.log(positionToCoords(440, 421));
 
 export default Home;
