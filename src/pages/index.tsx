@@ -8,6 +8,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { DancerAlias } from "../components/DancerAlias";
 import { Dancer } from "../components/Dancer";
 import { Grid } from "../components/Grid";
+
 type dancer = {
    name: string;
    id: number;
@@ -17,8 +18,9 @@ type dancer = {
 
 const Home: NextPage = () => {
    const [dancers, setDancers] = useState([
-      { name: "Kishan Sripada", id: 222, isOnStage: true, position: { x: 1, y: 8 } },
+      { name: "Kishan Sripada", id: 222, isOnStage: true, position: { x: -1, y: 8 } },
       { name: "Mira Sripada", id: 203, isOnStage: false, position: { x: null, y: null } },
+      { name: "Test", id: 555, isOnStage: true, position: { x: -8, y: 8 } },
    ]);
 
    return (
@@ -27,7 +29,7 @@ const Home: NextPage = () => {
             <div className="flex flex-row ">
                <div className="flex flex-col w-1/4">
                   {dancers.map((dancer, index) => (
-                     <Dancer setDancers={setDancers} {...dancer} id={index} key={index} dancers={dancers} />
+                     <Dancer setDancers={setDancers} {...dancer} key={index} dancers={dancers} />
                   ))}
                </div>
 
@@ -35,7 +37,13 @@ const Home: NextPage = () => {
                   {dancers
                      .filter((dancer) => dancer.isOnStage)
                      .map((dancer, index) => (
-                        <DancerAlias key={index} name={dancer.name} position={dancer.position} />
+                        <DancerAlias
+                           setDancers={setDancers}
+                           key={index}
+                           name={dancer.name}
+                           id={dancer.id}
+                           {...coordsToPosition(dancer.position.x, dancer.position.y)}
+                        />
                      ))}
                </Grid>
             </div>
@@ -43,5 +51,13 @@ const Home: NextPage = () => {
       </>
    );
 };
+
+const coordsToPosition = (x: number, y: number) => {
+   return { left: 400 + 40 * x, top: 400 + 40 * -y };
+};
+
+// console.log(coordsToPosition(1, 1));
+
+// console.log(positionToCoords(440, 421));
 
 export default Home;

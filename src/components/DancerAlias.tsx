@@ -1,11 +1,24 @@
 import { useDrag } from "react-dnd";
-export const DancerAlias = ({ name, position }: { name: string; position: { x: number | null; y: number | null } }) => {
-   const [{ isDragging }, drag] = useDrag(() => ({
-      type: "dancerAlias",
-      collect: (monitor) => ({
-         isDragging: !!monitor.isDragging(),
+
+export interface DancerAliasProps {
+   name: string;
+   id: number;
+   left: number;
+   top: number;
+   setDancers: Function;
+}
+
+export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, left, top, setDancers }) => {
+   const [{ isDragging }, drag] = useDrag(
+      () => ({
+         type: "dancerAlias",
+         item: { id, left, top },
+         collect: (monitor) => ({
+            isDragging: !!monitor.isDragging(),
+         }),
       }),
-   }));
+      [id, left, top]
+   );
 
    let initials = name
       .split(" ")
@@ -18,9 +31,9 @@ export const DancerAlias = ({ name, position }: { name: string; position: { x: n
             ref={drag}
             className="w-8 h-8 bg-red-500 rounded-full flex flex-row justify-center items-center absolute z-10 mr-auto ml-auto"
             style={{
-               left: 400 - 16 + (800 / 20) * position.x,
-               top: 400 - 16 - (800 / 20) * position.y,
-
+               transform: "translate(-50%, -50%)",
+               left: left,
+               top: top,
                opacity: isDragging ? 0 : 1,
             }}
          >

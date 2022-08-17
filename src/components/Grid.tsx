@@ -1,22 +1,43 @@
 import { useState, useEffect, useRef } from "react";
 import { useDrop } from "react-dnd";
+import type { XYCoord } from "react-dnd";
+
+export interface DragItem {
+   type: string;
+   id: string;
+   top: number;
+   left: number;
+}
+
+type dancer = {
+   name: string;
+   id: number;
+   isOnStage: boolean;
+   position: { x: number | null; y: number | null };
+};
 
 export const Grid: React.FC<{ children: React.ReactNode; setDancers: Function }> = ({ children, setDancers }) => {
    let [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
    const [{ isOver }, drop] = useDrop(() => ({
       accept: "dancerAlias",
-      drop: () => console.log("drop"),
+      drop: (item: DragItem, monitor) => {
+         const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
+         const left = Math.round(item.left + delta.x);
+         const top = Math.round(item.top + delta.y);
+         setDancers((dancers: dancer[]) => {
+            return dancers.map((dancer) => {
+               if (dancer.id === item.id) {
+                  return { ...dancer, position: { x: positionToCoords(left, top).x, y: positionToCoords(left, top).y } };
+               }
+               return dancer;
+            });
+         });
+      },
       collect: (monitor) => ({
          isOver: !!monitor.isOver(),
       }),
    }));
-
-   const mouseMove = (e: React.MouseEvent) => {
-      var rect = document.getElementById("grid").getBoundingClientRect();
-      var x = e.clientX - rect.left;
-      var y = e.clientY - rect.top;
-      setMousePosition({ x, y });
-   };
 
    const ref = useRef(null);
    const [zoom, setZoom] = useState(1);
@@ -34,40 +55,7 @@ export const Grid: React.FC<{ children: React.ReactNode; setDancers: Function }>
 
    return (
       <>
-         <div
-            className="min-w-[850px] h-[800px] grid gap-0 place-items-center relative"
-            style={{
-               gridTemplateColumns: "repeat(18, minmax(0, 1fr))",
-            }}
-            ref={drop}
-         >
-            {children}
-            {new Array(306).fill(0).map((_, i) => (
-               <div className="w-12 h-12 relative">
-                  <div
-                     className="w-full h-[1px] bg-gray-300 absolute"
-                     style={{
-                        top: "50%",
-                        transform: "translate(0, -50%)",
-                     }}
-                  ></div>
-                  <div
-                     className="w-[1px] h-full bg-gray-300 absolute "
-                     style={{
-                        left: "50%",
-                        transform: "translate(-50%, 0)",
-                     }}
-                  ></div>
-               </div>
-            ))}
-         </div>
-
-         {/* <div
-            className="flex flex-row justify-center relative w-[800px] h-[800px]  overflow-hidden border-2 border-black"
-            id="grid"
-            ref={drop}
-            onMouseMove={mouseMove}
-         >
+         <div className="flex flex-row justify-center relative w-[800px] h-[800px] overflow-hidden border-2 border-black" id="grid" ref={drop}>
             <div
                className="h-[800px] w-[800px] absolute"
                style={{
@@ -105,7 +93,11 @@ export const Grid: React.FC<{ children: React.ReactNode; setDancers: Function }>
                   ))}
                </div>
             </div>
-         </div> */}
+         </div>
       </>
    );
+};
+
+const positionToCoords = (left: number, top: number) => {
+   return { x: Math.round((left - 400) / 40), y: Math.round((-1 * (top - 400)) / 40) + 0 };
 };
