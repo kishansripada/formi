@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useDrop } from "react-dnd";
 import type { XYCoord } from "react-dnd";
+import { GridLines } from "../components/GridLines";
 
 export interface DragItem {
    type: string;
@@ -16,7 +17,7 @@ type dancer = {
    position: { x: number | null; y: number | null };
 };
 
-export const Grid: React.FC<{ children: React.ReactNode; setDancers: Function; dancers: dancer[] }> = ({ children, setDancers, dancers }) => {
+export const Canvas: React.FC<{ children: React.ReactNode; setDancers: Function; dancers: dancer[] }> = ({ children, setDancers, dancers }) => {
    const [{ isOver, canDrop }, drop] = useDrop(() => ({
       accept: ["dancerAlias", "dancer"],
       drop: (item: DragItem, monitor) => {
@@ -82,44 +83,15 @@ export const Grid: React.FC<{ children: React.ReactNode; setDancers: Function; d
 
    return (
       <>
-         <div className="flex flex-row justify-center relative w-[800px] h-[800px] overflow-hidden border-2 border-black" id="grid" ref={drop}>
-            <div
-               className="h-[800px] w-[800px] absolute"
-               style={{
-                  transform: `scale(${zoom})`,
-                  left: 0,
-                  backgroundColor: canDrop ? "red" : "transparent",
-               }}
-            >
+         <div
+            className="flex flex-row justify-center items-center relative w-[800px] h-[400px] overflow-hidden  border-2 border-black"
+            id="grid"
+            ref={drop}
+         >
+            <div className="h-[800px] w-[800px] absolute">
+               <GridOverlay />
                {children}
-
-               <div className="flex flex-row h-full justify-between">
-                  {new Array(21).fill(0).map((_, i) => (
-                     <div
-                        key={i}
-                        className="h-full bg-gray-300"
-                        style={{
-                           width: i % 5 == 0 ? (1 / zoom) * 2.5 : 1 / zoom,
-                           backgroundColor: i === 10 ? "black" : "",
-                           zIndex: i === 10 ? 1 : 0,
-                        }}
-                     ></div>
-                  ))}
-               </div>
-
-               <div className="flex flex-col h-[800px] justify-between relative top-[-800px]">
-                  {new Array(21).fill(0).map((_, i) => (
-                     <div
-                        key={i}
-                        className=" w-full bg-gray-300"
-                        style={{
-                           height: i % 5 === 0 ? (1 / zoom) * 2.5 : 1 / zoom,
-                           backgroundColor: i === 10 ? "black" : "rgb(209 213 219)",
-                           zIndex: i === 10 ? 1 : 0,
-                        }}
-                     ></div>
-                  ))}
-               </div>
+               <GridLines />
             </div>
          </div>
       </>
@@ -128,4 +100,23 @@ export const Grid: React.FC<{ children: React.ReactNode; setDancers: Function; d
 
 const positionToCoords = (left: number, top: number) => {
    return { x: Math.round((left - 400) / 40), y: Math.round((-1 * (top - 400)) / 40) + 0 };
+};
+
+// overlay when moving a dancer on the stage for the first time
+export const GridOverlay: React.FC<{}> = ({}) => {
+   const [{ isOver, canDrop }, drop] = useDrop(() => ({
+      accept: ["dancer"],
+      collect: (monitor) => ({
+         isOver: !!monitor.isOver(),
+         canDrop: monitor.canDrop(),
+      }),
+   }));
+
+   return canDrop ? (
+      <div className=" w-[800px] h-[800px] bg-red-200 opacity-30 flex flex-row justify-center items-center absolute z-20" ref={drop}>
+         add to scene
+      </div>
+   ) : (
+      <div></div>
+   );
 };

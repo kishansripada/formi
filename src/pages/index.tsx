@@ -7,7 +7,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DancerAlias } from "../components/DancerAlias";
 import { Dancer } from "../components/Dancer";
-import { Grid } from "../components/Grid";
+import { Canvas } from "../components/Canvas";
 import { SidebarDrop } from "../components/SidebarDrop";
 
 type dancer = {
@@ -35,7 +35,7 @@ const Home: NextPage = () => {
                   <SidebarDrop setDancers={setDancers} />
                </div>
 
-               <Grid setDancers={setDancers} dancers={dancers}>
+               <Canvas setDancers={setDancers} dancers={dancers}>
                   {dancers
                      .filter((dancer) => dancer.isOnStage)
                      .map((dancer, index) => (
@@ -47,7 +47,7 @@ const Home: NextPage = () => {
                            {...coordsToPosition(dancer.position.x, dancer.position.y)}
                         />
                      ))}
-               </Grid>
+               </Canvas>
             </div>
          </DndProvider>
       </>

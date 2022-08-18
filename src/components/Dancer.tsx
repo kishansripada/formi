@@ -49,7 +49,7 @@ export const Dancer = ({
             ref={drag}
             className="flex flex-row items-center bg-slate-300 border-black border-2"
             style={{
-               opacity: isOnStage ? 1 : 0.7,
+               opacity: !isOnStage ? 1 : 0.7,
             }}
          >
             {id}
