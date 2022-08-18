@@ -23,8 +23,9 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, left, top, s
    let initials = name
       .split(" ")
       .map((word) => word[0])
-      .join("");
-
+      .slice(0, 3)
+      .join("")
+      .toUpperCase();
    return (
       <>
          <div

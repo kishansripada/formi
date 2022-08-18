@@ -1,4 +1,4 @@
-import { useDrag, DragPreviewImage } from "react-dnd";
+import { useDrag } from "react-dnd";
 
 type dancer = {
    name: string;
@@ -43,7 +43,10 @@ export const Dancer = ({
    let initials = name
       .split(" ")
       .map((word) => word[0])
-      .join("");
+      .slice(0, 3)
+      .join("")
+      .toUpperCase();
+
    return (
       <>
          <div

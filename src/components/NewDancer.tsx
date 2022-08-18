@@ -22,7 +22,7 @@ export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
          <div
             className="flex flex-row items-center bg-slate-300 border-black border-2"
             style={{
-               opacity: 0.7,
+               opacity: 1,
             }}
          >
             new

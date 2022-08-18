@@ -83,11 +83,7 @@ export const Canvas: React.FC<{ children: React.ReactNode; setDancers: Function;
 
    return (
       <>
-         <div
-            className="flex flex-row justify-center items-center relative w-[800px] h-[400px] overflow-hidden  border-2 border-black"
-            id="grid"
-            ref={drop}
-         >
+         <div className="flex flex-row justify-center items-center relative w-[800px]   overflow-hidden  border-2 border-black" id="grid" ref={drop}>
             <div className="h-[800px] w-[800px] absolute">
                <GridOverlay />
                {children}

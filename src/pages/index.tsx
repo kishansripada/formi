@@ -10,6 +10,7 @@ import { Dancer } from "../components/Dancer";
 import { Canvas } from "../components/Canvas";
 import { SidebarDrop } from "../components/SidebarDrop";
 import { NewDancer } from "../components/NewDancer";
+import { Header } from "../components/Header";
 
 type dancer = {
    name: string;
@@ -28,16 +29,17 @@ const Home: NextPage = () => {
    return (
       <>
          <DndProvider backend={HTML5Backend}>
-            <div className="flex flex-row ">
-               <div className="flex flex-col w-1/4 relative">
-                  {dancers.map((dancer, index) => (
-                     <Dancer setDancers={setDancers} {...dancer} key={index} dancers={dancers} />
-                  ))}
-                  <NewDancer setDancers={setDancers} />
-                  <SidebarDrop setDancers={setDancers} />
-               </div>
+            <div className="flex flex-col h-[100vh]">
+               <Header />
+               <div className="flex flex-row grow">
+                  <div className="flex flex-col w-1/4 relative">
+                     {dancers.map((dancer, index) => (
+                        <Dancer setDancers={setDancers} {...dancer} key={index} dancers={dancers} />
+                     ))}
+                     <NewDancer setDancers={setDancers} />
+                     <SidebarDrop setDancers={setDancers} />
+                  </div>
 
-               <div className="flex flex-col justify-center h-screen">
                   <Canvas setDancers={setDancers} dancers={dancers}>
                      {dancers
                         .filter((dancer) => dancer.isOnStage)
@@ -52,6 +54,7 @@ const Home: NextPage = () => {
                         ))}
                   </Canvas>
                </div>
+               <div className="bg-red-200 w-full h-[200px]">d</div>
             </div>
          </DndProvider>
       </>
