@@ -20,9 +20,9 @@ type dancer = {
 
 const Home: NextPage = () => {
    const [dancers, setDancers] = useState([
-      { name: "Kishan Sripada", id: 222, isOnStage: true, position: { x: 1, y: 1 } },
-      { name: "Mira Sripada", id: 203, isOnStage: true, position: { x: 1, y: 2 } },
-      { name: "Test", id: 555, isOnStage: true, position: { x: -2, y: 3 } },
+      { name: "Dancer 1", id: 222, isOnStage: true, position: { x: 1, y: 1 } },
+      { name: "Dancer 2", id: 203, isOnStage: true, position: { x: 1, y: 2 } },
+      { name: "Dancer 3", id: 555, isOnStage: true, position: { x: -2, y: 3 } },
    ]);
 
    return (

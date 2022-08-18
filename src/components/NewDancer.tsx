@@ -11,6 +11,7 @@ export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
    const [newName, setNewName] = useState("");
 
    const createNewDancer = () => {
+      if (newName === "") return;
       setDancers((dancers: dancer[]) => {
          return [...dancers, { name: newName, id: Math.round(Math.random() * 1000), isOnStage: false, position: { x: null, y: null } }];
       });
@@ -29,7 +30,7 @@ export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
                <p className="pointer-events-none select-none">New</p>
             </div>
             <input
-               onKeyDown={(event) => (event.key === "Enter" && newName != "" ? createNewDancer() : null)}
+               onKeyDown={(event) => (event.key === "Enter" ? createNewDancer() : null)}
                placeholder="New dancer"
                value={newName}
                onChange={(e) => setNewName(e.target.value)}
