@@ -1,3 +1,5 @@
+import { useDrag, DragPreviewImage } from "react-dnd";
+
 type dancer = {
    name: string;
    id: number;
@@ -18,13 +20,33 @@ export const Dancer = ({
    dancers: dancer[];
    isOnStage: boolean;
 }) => {
+   const [{ isDragging }, drag] = useDrag(
+      () => ({
+         type: "dancer",
+         canDrag: (monitor) => {
+            return !isOnStage;
+         },
+         item: { id },
+         collect: (monitor) => ({
+            isDragging: !!monitor.isDragging(),
+         }),
+      }),
+      [id, isOnStage]
+   );
+
    let initials = name
       .split(" ")
       .map((word) => word[0])
       .join("");
    return (
       <>
+         {/* <DragPreviewImage
+            src="https://media-cldnry.s-nbcnews.com/image/upload/newscms/2016_14/1038581/red-dot-puzzle-before-today-160406.jpg"
+            connect={preview}
+         /> */}
+
          <div
+            ref={drag}
             className="flex flex-row items-center bg-slate-300 border-black border-2"
             style={{
                opacity: isOnStage ? 1 : 0.7,

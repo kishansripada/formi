@@ -17,39 +17,52 @@ type dancer = {
 };
 
 export const Grid: React.FC<{ children: React.ReactNode; setDancers: Function; dancers: dancer[] }> = ({ children, setDancers, dancers }) => {
-   const [{ isOver }, drop] = useDrop(() => ({
+   const [{ isOver, canDrop }, drop] = useDrop(() => ({
       accept: ["dancerAlias", "dancer"],
       drop: (item: DragItem, monitor) => {
-         const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
-         const left = Math.round(item.left + delta.x);
-         const top = Math.round(item.top + delta.y);
+         if (item.left && item.top) {
+            const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
+            const left = Math.round(item.left + delta.x);
+            const top = Math.round(item.top + delta.y);
 
-         console.log(dancers);
-         //  console.log(
-         //     dancers.find((dancer) => {
-         //        console.log(dancer.position.x, dancer.position.y);
-         //        return dancer.position.x === positionToCoords(left, top).x && positionToCoords(left, top).y === dancer.position.y;
-         //     })
-         //  );
-         if (
-            dancers.find((dancer) => {
-               return dancer.position.x === positionToCoords(left, top).x && positionToCoords(left, top).y === dancer.position.y;
-            })
-         ) {
-            return;
-         }
+            console.log(dancers);
+            //  console.log(
+            //     dancers.find((dancer) => {
+            //        console.log(dancer.position.x, dancer.position.y);
+            //        return dancer.position.x === positionToCoords(left, top).x && positionToCoords(left, top).y === dancer.position.y;
+            //     })
+            //  );
+            //  if (
+            //     dancers.find((dancer) => {
+            //        return dancer.position.x === positionToCoords(left, top).x && positionToCoords(left, top).y === dancer.position.y;
+            //     })
+            //  ) {
+            //     return;
+            //  }
 
-         setDancers((dancers: dancer[]) => {
-            return dancers.map((dancer) => {
-               if (dancer.id === parseInt(item.id)) {
-                  return { ...dancer, position: { x: positionToCoords(left, top).x, y: positionToCoords(left, top).y } };
-               }
-               return dancer;
+            setDancers((dancers: dancer[]) => {
+               return dancers.map((dancer) => {
+                  if (dancer.id === parseInt(item.id)) {
+                     return { ...dancer, position: { x: positionToCoords(left, top).x, y: positionToCoords(left, top).y } };
+                  }
+                  return dancer;
+               });
             });
-         });
+         } else {
+            console.log("new dancer");
+            setDancers((dancers: dancer[]) => {
+               return dancers.map((dancer) => {
+                  if (dancer.id === parseInt(item.id)) {
+                     return { ...dancer, position: { x: 0, y: 0 }, isOnStage: true };
+                  }
+                  return dancer;
+               });
+            });
+         }
       },
       collect: (monitor) => ({
          isOver: !!monitor.isOver(),
+         canDrop: monitor.canDrop(),
       }),
    }));
 
@@ -75,6 +88,7 @@ export const Grid: React.FC<{ children: React.ReactNode; setDancers: Function; d
                style={{
                   transform: `scale(${zoom})`,
                   left: 0,
+                  backgroundColor: canDrop ? "red" : "transparent",
                }}
             >
                {children}
