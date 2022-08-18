@@ -9,6 +9,7 @@ import { DancerAlias } from "../components/DancerAlias";
 import { Dancer } from "../components/Dancer";
 import { Canvas } from "../components/Canvas";
 import { SidebarDrop } from "../components/SidebarDrop";
+import { NewDancer } from "../components/NewDancer";
 
 type dancer = {
    name: string;
@@ -19,35 +20,38 @@ type dancer = {
 
 const Home: NextPage = () => {
    const [dancers, setDancers] = useState([
-      { name: "Kishan Sripada", id: 222, isOnStage: true, position: { x: -1, y: 8 } },
-      { name: "Mira Sripada", id: 203, isOnStage: true, position: { x: 6, y: 6 } },
-      { name: "Test", id: 555, isOnStage: true, position: { x: -8, y: 8 } },
+      { name: "Kishan Sripada", id: 222, isOnStage: true, position: { x: 1, y: 1 } },
+      { name: "Mira Sripada", id: 203, isOnStage: true, position: { x: 1, y: 2 } },
+      { name: "Test", id: 555, isOnStage: true, position: { x: -2, y: 3 } },
    ]);
 
    return (
       <>
          <DndProvider backend={HTML5Backend}>
             <div className="flex flex-row ">
-               <div className="flex flex-col w-1/4">
+               <div className="flex flex-col w-1/4 relative">
                   {dancers.map((dancer, index) => (
                      <Dancer setDancers={setDancers} {...dancer} key={index} dancers={dancers} />
                   ))}
+                  <NewDancer setDancers={setDancers} />
                   <SidebarDrop setDancers={setDancers} />
                </div>
 
-               <Canvas setDancers={setDancers} dancers={dancers}>
-                  {dancers
-                     .filter((dancer) => dancer.isOnStage)
-                     .map((dancer, index) => (
-                        <DancerAlias
-                           setDancers={setDancers}
-                           key={index}
-                           name={dancer.name}
-                           id={dancer.id}
-                           {...coordsToPosition(dancer.position.x, dancer.position.y)}
-                        />
-                     ))}
-               </Canvas>
+               <div className="flex flex-col justify-center h-screen">
+                  <Canvas setDancers={setDancers} dancers={dancers}>
+                     {dancers
+                        .filter((dancer) => dancer.isOnStage)
+                        .map((dancer, index) => (
+                           <DancerAlias
+                              setDancers={setDancers}
+                              key={index}
+                              name={dancer.name}
+                              id={dancer.id}
+                              {...coordsToPosition(dancer.position.x, dancer.position.y)}
+                           />
+                        ))}
+                  </Canvas>
+               </div>
             </div>
          </DndProvider>
       </>

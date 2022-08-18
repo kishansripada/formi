@@ -58,7 +58,7 @@ export const Dancer = ({
             </div>
             <input
                defaultValue={name}
-               onChange={(e) => setDancers(dancers.map((dancer, index) => (index === id ? { ...dancer, name: e.target.value } : dancer)))}
+               onChange={(e) => setDancers(dancers.map((dancer, index) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)))}
             />
          </div>
       </>
