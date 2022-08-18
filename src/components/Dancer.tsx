@@ -64,7 +64,7 @@ export const Dancer = ({
                defaultValue={name}
                onChange={(e) => setDancers(dancers.map((dancer, index) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)))}
             />
-            <button className="ml-auto" onClick={removeDancer}>
+            <button className="ml-auto mr-4" onClick={removeDancer}>
                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path
                      fillRule="evenodd"

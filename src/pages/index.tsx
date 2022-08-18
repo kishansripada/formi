@@ -11,6 +11,7 @@ import { Canvas } from "../components/Canvas";
 import { SidebarDrop } from "../components/SidebarDrop";
 import { NewDancer } from "../components/NewDancer";
 import { Header } from "../components/Header";
+import { Formations } from "../components/Formations";
 
 type dancer = {
    name: string;
@@ -24,15 +25,27 @@ const Home: NextPage = () => {
       { name: "Dancer 1", id: 222, isOnStage: true, position: { x: 1, y: 1 } },
       { name: "Dancer 2", id: 203, isOnStage: true, position: { x: 1, y: 2 } },
       { name: "Dancer 3", id: 555, isOnStage: true, position: { x: -2, y: 3 } },
+      { name: "Dancer 1", id: 222, isOnStage: true, position: { x: 1, y: 1 } },
+      { name: "Dancer 2", id: 203, isOnStage: true, position: { x: 1, y: 2 } },
+      { name: "Dancer 3", id: 555, isOnStage: true, position: { x: -2, y: 3 } },
+      { name: "Dancer 1", id: 222, isOnStage: true, position: { x: 1, y: 1 } },
+      { name: "Dancer 2", id: 203, isOnStage: true, position: { x: 1, y: 2 } },
+      { name: "Dancer 3", id: 555, isOnStage: true, position: { x: -2, y: 3 } },
+      { name: "Dancer 1", id: 222, isOnStage: true, position: { x: 1, y: 1 } },
+      { name: "Dancer 2", id: 203, isOnStage: true, position: { x: 1, y: 2 } },
+      { name: "Dancer 3", id: 555, isOnStage: true, position: { x: -2, y: 3 } },
+      { name: "Dancer 1", id: 222, isOnStage: true, position: { x: 1, y: 1 } },
+      { name: "Dancer 2", id: 203, isOnStage: true, position: { x: 1, y: 2 } },
+      { name: "Dancer 3", id: 555, isOnStage: true, position: { x: -2, y: 3 } },
    ]);
 
    return (
       <>
          <DndProvider backend={HTML5Backend}>
-            <div className="flex flex-col h-[100vh]">
+            <div className="flex flex-col h-screen overflow-hidden">
                <Header />
-               <div className="flex flex-row grow">
-                  <div className="flex flex-col w-1/4 relative">
+               <div className="flex flex-row grow overflow-hidden">
+                  <div className="flex flex-col w-1/4 relative overflow-y-scroll min-w-[300px]">
                      {dancers.map((dancer, index) => (
                         <Dancer setDancers={setDancers} {...dancer} key={index} dancers={dancers} />
                      ))}
@@ -54,7 +67,7 @@ const Home: NextPage = () => {
                         ))}
                   </Canvas>
                </div>
-               <div className="bg-red-200 w-full h-[200px]">d</div>
+               <Formations />
             </div>
          </DndProvider>
       </>
