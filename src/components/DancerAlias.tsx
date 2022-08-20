@@ -2,13 +2,14 @@ import { useDrag } from "react-dnd";
 
 export interface DancerAliasProps {
    name: string;
-   id: number;
+   id: string;
    left: number;
    top: number;
    setDancers: Function;
+   selectedFormation: number | null;
 }
 
-export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, left, top, setDancers }) => {
+export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, left, top, setDancers, selectedFormation }) => {
    const [{ isDragging }, drag] = useDrag(
       () => ({
          type: "dancerAlias",
@@ -30,7 +31,9 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, left, top, s
       <>
          <div
             ref={drag}
-            className="w-8 h-8 bg-red-500 rounded-full flex flex-row justify-center items-center absolute z-10 mr-auto ml-auto"
+            className={`w-8 h-8 bg-red-500 rounded-full flex flex-row justify-center items-center absolute z-[9999] mr-auto ml-auto ${
+               selectedFormation === null ? "pointer-events-none" : ""
+            }`}
             style={{
                transform: "translate(-50%, -50%)",
                left: left,
@@ -38,7 +41,7 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, left, top, s
                opacity: isDragging ? 0 : 1,
             }}
          >
-            <p className="pointer-events-none select-none">{initials}</p>
+            <p className="">{initials}</p>
          </div>
       </>
    );

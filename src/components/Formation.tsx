@@ -3,35 +3,38 @@ import { useEffect } from "react";
 import { ResizableBox } from "react-resizable";
 type dancer = {
    name?: string;
-   id: number;
+   id: string;
    isOnStage?: boolean;
    position: { x: number | null; y: number | null };
 };
+type formation = {
+   durationSeconds: number;
+   positions: dancer[];
+};
 
-export const Formation: React.FC<{ formation: dancer[]; amSelected: boolean; setSelectedFormation: Function; index: number }> = ({
-   formation,
-   amSelected,
-   setSelectedFormation,
-   index,
-}) => {
+export const Formation: React.FC<{ formation: formation; amSelected: boolean; index: number }> = ({ formation, amSelected, index }) => {
    return (
       <>
-         {/* <Resizable
-            className="bg-gray-200 mr-2 rounded-xl ring-2 ring-black  flex flex-row items-center py-3"
-            enable={{ top: false, right: true, bottom: false, left: false, topRight: false, bottomRight: false, bottomLeft: false, topLeft: false }}
-            defaultSize={{
-               width: 200,
-               height: "100%",
+         <div
+            className={` bg-gray-200 ring-black ring-2 h-full flex flex-row rounded-xl group ${amSelected ? "bg-gray-400" : ""}`}
+            style={{
+               width: formation.durationSeconds * 100,
             }}
          >
-            <div className="h-full w-1 bg-gray-600 ml-auto rounded-full"></div>
-         </Resizable> */}
-         <div className={`rounded bg-gray-200 mr-3 h-full w-[200px] ${amSelected ? "ring-2 ring-black" : ""}`}>
-            <p className="">{index}</p>
+            <p className="">index: {index}</p>
+            <p className="">duration: {formation.durationSeconds}s</p>
+
+            <svg
+               xmlns="http://www.w3.org/2000/svg"
+               className="h-6 w-6 ml-auto mr-1 mt-1 fill-gray-300 cursor-pointer invisible group-hover:visible"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke="currentColor"
+               strokeWidth={2}
+            >
+               <path strokeLinecap="round" strokeLinejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
          </div>
-         {/* <ResizableBox width={200} height={100} className="rounded bg-gray-200 mr-3">
-            <span className="text-xs">{JSON.stringify(formation)}</span>
-         </ResizableBox> */}
       </>
    );
 };

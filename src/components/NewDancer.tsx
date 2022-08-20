@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 type dancer = {
-   name: string;
-   id: number;
-   isOnStage: boolean;
+   name?: string;
+   id: string;
+   isOnStage?: boolean;
    position: { x: number | null; y: number | null };
 };
 
@@ -13,7 +13,7 @@ export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
    const createNewDancer = () => {
       if (newName === "") return;
       setDancers((dancers: dancer[]) => {
-         return [...dancers, { name: newName, id: Math.round(Math.random() * 1000), isOnStage: false, position: { x: null, y: null } }];
+         return [...dancers, { name: newName, id: "string", isOnStage: false, position: { x: null, y: null } }];
       });
       setNewName("");
    };

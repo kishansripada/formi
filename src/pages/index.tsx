@@ -12,53 +12,53 @@ import { SidebarDrop } from "../components/SidebarDrop";
 import { NewDancer } from "../components/NewDancer";
 import { Header } from "../components/Header";
 import { Formations } from "../components/Formations";
+import { SoundCloud } from "../components/SoundCloud";
 
 type dancer = {
    name?: string;
-   id: number;
+   id: string;
    isOnStage?: boolean;
    position: { x: number | null; y: number | null };
 };
 
+type formation = {
+   durationSeconds: number;
+   positions: dancer[];
+};
+
 const Home: NextPage = () => {
    const [dancers, setDancers] = useState([
-      { name: "Dancer 1", id: 222, isOnStage: true, position: { x: 1, y: 1 } },
-      { name: "Dancer 2", id: 203, isOnStage: true, position: { x: 1, y: 2 } },
-      { name: "Dancer 3", id: 555, isOnStage: true, position: { x: -2, y: 3 } },
+      { name: "Dancer 1", id: "anotherid", isOnStage: true, position: { x: 1, y: 1 } },
+      { name: "Dancer 2", id: "id", isOnStage: true, position: { x: 1, y: 2 } },
+      { name: "Dancer 3", id: "test", isOnStage: true, position: { x: -2, y: 3 } },
    ]);
+
+   const [positionSeconds, setPositionSeconds] = useState<number | null>(null);
+
+   const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
 
    const [formations, setFormations] = useState([
-      [
-         {
-            id: 222,
-            position: { x: 1, y: 1 },
+      {
+         durationSeconds: 2,
+         positions: [
+            {
+               id: "anotherid",
+               position: { x: 1, y: 1 },
+            },
+            {
+               id: "id",
+               position: { x: 1, y: 2 },
+            },
+            {
+               id: "test",
+               position: { x: -2, y: 3 },
+            },
+         ],
+         transition: {
+            durationSeconds: 1,
          },
-         {
-            id: 203,
-            position: { x: 1, y: 2 },
-         },
-         {
-            id: 555,
-            position: { x: -2, y: 3 },
-         },
-      ],
-      [
-         {
-            id: 222,
-            position: { x: 2, y: 2 },
-         },
-         {
-            id: 203,
-            position: { x: 2, y: 3 },
-         },
-         {
-            id: 555,
-            position: { x: -2, y: 3 },
-         },
-      ],
+      },
    ]);
-
-   const [selectedFormation, setSelectedFormation] = useState(0);
 
    return (
       <>
@@ -68,7 +68,7 @@ const Home: NextPage = () => {
                <div className="flex flex-row grow overflow-hidden">
                   <div className="flex flex-col w-1/4 relative overflow-y-scroll min-w-[300px]">
                      {dancers.map((dancer, index) => (
-                        <Dancer setDancers={setDancers} {...dancer} key={index} dancers={dancers} />
+                        <Dancer selectedFormation={selectedFormation} setDancers={setDancers} {...dancer} key={index} dancers={dancers} />
                      ))}
                      <NewDancer setDancers={setDancers} />
                      <SidebarDrop setDancers={setDancers} />
@@ -81,6 +81,7 @@ const Home: NextPage = () => {
                            .filter((dancer) => dancer.isOnStage)
                            .map((dancer, index) => (
                               <DancerAlias
+                                 selectedFormation={selectedFormation}
                                  setDancers={setDancers}
                                  key={index}
                                  name={dancer.name}
@@ -91,8 +92,19 @@ const Home: NextPage = () => {
                      </Canvas>
                      <p>audience</p>
                   </div>
+                  {/* STATS */}
+                  <div className="text-xl">
+                     <p>selected formation: {JSON.stringify(selectedFormation)}</p>
+                     <p>positionSeconds: {JSON.stringify(positionSeconds)}</p>
+                  </div>
                </div>
-               <Formations formations={formations} selectedFormation={selectedFormation} setSelectedFormation={setSelectedFormation} />
+               <SoundCloud trackUrl="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1310078686" />
+               <Formations
+                  setFormations={setFormations}
+                  formations={formations}
+                  selectedFormation={selectedFormation}
+                  setSelectedFormation={setSelectedFormation}
+               />
             </div>
          </DndProvider>
       </>

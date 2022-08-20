@@ -1,9 +1,9 @@
 import { useDrag } from "react-dnd";
 
 type dancer = {
-   name: string;
-   id: number;
-   isOnStage: boolean;
+   name?: string;
+   id: string;
+   isOnStage?: boolean;
    position: { x: number | null; y: number | null };
 };
 
@@ -13,19 +13,21 @@ export const Dancer = ({
    setDancers,
    dancers,
    isOnStage,
+   selectedFormation,
 }: {
    name: string;
-   id: number;
+   id: string;
    setDancers: Function;
    dancers: dancer[];
    isOnStage: boolean;
+   selectedFormation: number | null;
 }) => {
    const [{ isDragging }, drag] = useDrag(
       () => ({
          type: "dancer",
-         canDrag: (monitor) => {
-            return !isOnStage;
-         },
+         // canDrag: (monitor) => {
+         //    return !isOnStage && selectedFormation !== null;
+         // },
          item: { id },
          collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
@@ -51,9 +53,11 @@ export const Dancer = ({
       <>
          <div
             ref={drag}
-            className="flex flex-row items-center bg-slate-300 border-black border-2"
+            className={`flex flex-row items-center bg-slate-300 border-black border-2`}
+            // cannot add to stage if they arleady are on stage or if no formation is selected
+            draggable={!isOnStage && selectedFormation !== null}
             style={{
-               opacity: !isOnStage ? 1 : 0.7,
+               opacity: !isOnStage && selectedFormation !== null ? 1 : 0.7,
             }}
          >
             {id}

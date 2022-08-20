@@ -8,9 +8,9 @@ export interface DragItem {
 }
 
 type dancer = {
-   name: string;
-   id: number;
-   isOnStage: boolean;
+   name?: string;
+   id: string;
+   isOnStage?: boolean;
    position: { x: number | null; y: number | null };
 };
 
@@ -20,7 +20,7 @@ export const SidebarDrop: React.FC<{ setDancers: Function }> = ({ setDancers }) 
       drop: (item: DragItem, monitor) => {
          setDancers((dancers: dancer[]) => {
             return dancers.map((dancer) => {
-               if (dancer.id == parseInt(item.id)) {
+               if (dancer.id === item.id) {
                   return { ...dancer, isOnStage: false };
                }
                return dancer;

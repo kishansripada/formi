@@ -11,12 +11,11 @@ export interface DragItem {
 }
 
 type dancer = {
-   name: string;
-   id: number;
-   isOnStage: boolean;
+   name?: string;
+   id: string;
+   isOnStage?: boolean;
    position: { x: number | null; y: number | null };
 };
-
 export const Canvas: React.FC<{ children: React.ReactNode; setDancers: Function; dancers: dancer[] }> = ({ children, setDancers, dancers }) => {
    const [{ isOver, canDrop }, drop] = useDrop(() => ({
       accept: ["dancerAlias", "dancer"],
@@ -43,7 +42,7 @@ export const Canvas: React.FC<{ children: React.ReactNode; setDancers: Function;
 
             setDancers((dancers: dancer[]) => {
                return dancers.map((dancer) => {
-                  if (dancer.id === parseInt(item.id)) {
+                  if (dancer.id === item.id) {
                      return { ...dancer, position: { x: positionToCoords(left, top).x, y: positionToCoords(left, top).y } };
                   }
                   return dancer;
@@ -53,7 +52,7 @@ export const Canvas: React.FC<{ children: React.ReactNode; setDancers: Function;
             console.log("new dancer");
             setDancers((dancers: dancer[]) => {
                return dancers.map((dancer) => {
-                  if (dancer.id === parseInt(item.id)) {
+                  if (dancer.id === item.id) {
                      return { ...dancer, position: { x: 0, y: 0 }, isOnStage: true };
                   }
                   return dancer;
