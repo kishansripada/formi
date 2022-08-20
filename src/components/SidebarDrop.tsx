@@ -36,10 +36,7 @@ export const SidebarDrop: React.FC<{ setDancers: Function }> = ({ setDancers }) 
    return canDrop ? (
       <>
          <div
-            className="h-full opacity-30 absolute z-10 w-full  flex flex-row justify-center items-center"
-            style={{
-               background: "rgba(255, 0, 0, 0.5)",
-            }}
+            className="h-full opacity-70 absolute z-10 w-full  flex flex-row justify-center items-center bg-red-500/40  ring-black rounded ring-2"
             ref={drop}
          >
             <p>{isOver ? "remove from scene" : ""}</p>

@@ -2,6 +2,13 @@
 module.exports = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    // colors: {
+    //   "soundcloud-bg-color": "#f5f5f5"
+    // },
+    // colors: {
+    //   "michiganblue": "#00274c",
+    //   'maize': '#ffcb05',
+    // },
     extend: {},
   },
   plugins: [

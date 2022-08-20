@@ -13,7 +13,13 @@ import { NewDancer } from "../components/NewDancer";
 import { Header } from "../components/Header";
 import { Formations } from "../components/Formations";
 import { SoundCloud } from "../components/SoundCloud";
+import dynamic from "next/dynamic";
 
+// const SoundCloud = dynamic(() => import("../components/SoundCloud").then((mod) => mod.SoundCloud), {
+//    ssr: false,
+// });
+
+// const DynamicComponent = dynamic(() => import("../components/SoundCloud").then((mod) => mod.SoundCloud), { ssr: false });
 type dancer = {
    name?: string;
    id: string;
@@ -28,11 +34,10 @@ type formation = {
 
 const Home: NextPage = () => {
    const [dancers, setDancers] = useState([
-      { name: "Dancer 1", id: "anotherid", isOnStage: true, position: { x: 1, y: 1 } },
-      { name: "Dancer 2", id: "id", isOnStage: true, position: { x: 1, y: 2 } },
-      { name: "Dancer 3", id: "test", isOnStage: true, position: { x: -2, y: 3 } },
+      { name: "Dancer 1", id: "anotoher 1", isOnStage: true, position: { x: 1, y: 1 } },
+      { name: "Dancer 2", id: "test", isOnStage: true, position: { x: 1, y: 2 } },
+      { name: "Dancer 3", id: "test1", isOnStage: true, position: { x: -2, y: 3 } },
    ]);
-
    const [positionSeconds, setPositionSeconds] = useState<number | null>(null);
 
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
@@ -98,13 +103,15 @@ const Home: NextPage = () => {
                      <p>positionSeconds: {JSON.stringify(positionSeconds)}</p>
                   </div>
                </div>
-               <SoundCloud trackUrl="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1310078686" />
-               <Formations
-                  setFormations={setFormations}
-                  formations={formations}
-                  selectedFormation={selectedFormation}
-                  setSelectedFormation={setSelectedFormation}
-               />
+               <div className="overflow-x-scroll">
+                  <SoundCloud />
+                  <Formations
+                     setFormations={setFormations}
+                     formations={formations}
+                     selectedFormation={selectedFormation}
+                     setSelectedFormation={setSelectedFormation}
+                  />
+               </div>
             </div>
          </DndProvider>
       </>

@@ -23,19 +23,24 @@ export const Formations: React.FC<{
       setSelectedFormation(null);
    };
 
+   const deleteFormation = (index: number) => {
+      //  if the user deletes the selected formation, unselect it and select the one before it
+      if (selectedFormation === index) {
+         setSelectedFormation(index - 1);
+      }
+      setFormations((formations: formation[]) => {
+         return formations.filter((_, i) => i !== index);
+      });
+   };
    return (
       <>
-         <div
-            className="bg-red-200 w-full min-h-[100px] flex flex-row pt-3 pb-6 px-6 overflow-x-scroll "
-            id="outside"
-            onClick={clickOutsideFormations}
-         >
+         <div className=" bg-red-200 min-h-[100px] flex flex-row pt-3 pb-6 px-6 w-[3000px]" id="outside" onClick={clickOutsideFormations}>
             <svg
                onClick={() => {
-                  setFormations((formations) => [
+                  setFormations((formations: formation[]) => [
                      ...formations,
                      {
-                        durationSeconds: 2,
+                        durationSeconds: Math.random() + 0.3,
                         positions: [],
                         transition: {
                            durationSeconds: 1,
@@ -43,7 +48,7 @@ export const Formations: React.FC<{
                      },
                   ]);
                }}
-               className="h-16 w-16 hover:fill-slate-100 mr-10 ml-4 cursor-pointer"
+               className="h-16 w-16 hover:fill-slate-100 mr-10 ml-4 cursor-pointer shrink-0"
                fill="none"
                viewBox="0 0 24 24"
                stroke="currentColor"
@@ -53,8 +58,22 @@ export const Formations: React.FC<{
             </svg>
 
             {formations.map((formation, index) => (
-               <div key={index} onClick={() => setSelectedFormation(index)}>
-                  <Formation formation={formation} index={index} amSelected={index === selectedFormation} />
+               <div
+                  key={index}
+                  id="formation"
+                  onClick={(e) => {
+                     if (e.target?.id === "delete") return;
+                     setSelectedFormation(index);
+                  }}
+               >
+                  <Formation
+                     deleteFormation={deleteFormation}
+                     setSelectedFormation={setSelectedFormation}
+                     setFormations={setFormations}
+                     formation={formation}
+                     index={index}
+                     amSelected={index === selectedFormation}
+                  />
                </div>
             ))}
          </div>
