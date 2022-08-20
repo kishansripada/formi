@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 type dancer = {
    name?: string;
@@ -13,7 +14,7 @@ export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
    const createNewDancer = () => {
       if (newName === "") return;
       setDancers((dancers: dancer[]) => {
-         return [...dancers, { name: newName, id: "string", isOnStage: false, position: { x: null, y: null } }];
+         return [...dancers, { name: newName, id: uuidv4(), isOnStage: false, position: { x: null, y: null } }];
       });
       setNewName("");
    };

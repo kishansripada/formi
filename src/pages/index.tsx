@@ -12,12 +12,15 @@ import { SidebarDrop } from "../components/SidebarDrop";
 import { NewDancer } from "../components/NewDancer";
 import { Header } from "../components/Header";
 import { Formations } from "../components/Formations";
-import { SoundCloud } from "../components/SoundCloud";
+// import { SoundCloudComponent } from "../components/SoundCloudComponent";
 import dynamic from "next/dynamic";
 
-// const SoundCloud = dynamic(() => import("../components/SoundCloud").then((mod) => mod.SoundCloud), {
-//    ssr: false,
-// });
+const SoundCloudComponent = dynamic<{ setPositionSeconds: Function; setIsPlaying: Function }>(
+   () => import("../components/SoundCloudComponent").then((mod) => mod.SoundCloudComponent),
+   {
+      ssr: false,
+   }
+);
 
 // const DynamicComponent = dynamic(() => import("../components/SoundCloud").then((mod) => mod.SoundCloud), { ssr: false });
 type dancer = {
@@ -33,12 +36,11 @@ type formation = {
 };
 
 const Home: NextPage = () => {
-   const [dancers, setDancers] = useState([
-      { name: "Dancer 1", id: "anotoher 1", isOnStage: true, position: { x: 1, y: 1 } },
-      { name: "Dancer 2", id: "test", isOnStage: true, position: { x: 1, y: 2 } },
-      { name: "Dancer 3", id: "test1", isOnStage: true, position: { x: -2, y: 3 } },
-   ]);
+   const [dancers, setDancers] = useState([]);
+
    const [positionSeconds, setPositionSeconds] = useState<number | null>(null);
+
+   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
 
@@ -100,11 +102,12 @@ const Home: NextPage = () => {
                   {/* STATS */}
                   <div className="text-xl">
                      <p>selected formation: {JSON.stringify(selectedFormation)}</p>
-                     <p>positionSeconds: {JSON.stringify(positionSeconds)}</p>
+                     <p>positionSeconds: {JSON.stringify(Math.round(positionSeconds))}</p>
+                     <p>{isPlaying ? "Playing " : "paused"}</p>
                   </div>
                </div>
                <div className="overflow-x-scroll">
-                  <SoundCloud />
+                  <SoundCloudComponent setIsPlaying={setIsPlaying} setPositionSeconds={setPositionSeconds} />
                   <Formations
                      setFormations={setFormations}
                      formations={formations}
