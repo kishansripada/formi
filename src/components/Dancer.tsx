@@ -9,7 +9,9 @@ type dancer = {
 type formation = {
    durationSeconds: number;
    positions: dancer[];
-   transitionDuration: number;
+   transition: {
+      durationSeconds: number;
+   };
 };
 
 export const Dancer = ({
@@ -61,6 +63,7 @@ export const Dancer = ({
       // and the dancer is not already on the stage
       !formations[selectedFormation]?.positions.find((dancer) => dancer.id === id);
 
+   console.log(canBeAddedToStage);
    return (
       <>
          <div

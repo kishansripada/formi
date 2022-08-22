@@ -8,7 +8,9 @@ type dancer = {
 type formation = {
    durationSeconds: number;
    positions: dancer[];
-   transitionDuration: number;
+   transition: {
+      durationSeconds: number;
+   };
 };
 
 export interface DancerAliasProps {

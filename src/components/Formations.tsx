@@ -9,14 +9,18 @@ type dancer = {
 type formation = {
    durationSeconds: number;
    positions: dancer[];
-   transitionDuration: number;
+   transition: {
+      durationSeconds: number;
+   };
 };
+
 export const Formations: React.FC<{
    formations: formation[];
    selectedFormation: number | null;
    setSelectedFormation: Function;
    setFormations: Function;
-}> = ({ formations, selectedFormation, setSelectedFormation, setFormations }) => {
+   songDuration: number | null;
+}> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration }) => {
    const clickOutsideFormations = (e) => {
       if (e.target.id !== "outside") return;
       e.stopPropagation();
@@ -34,21 +38,28 @@ export const Formations: React.FC<{
    };
    return (
       <>
-         <div className=" bg-red-200 min-h-[100px] flex flex-row pt-3 pb-6 px-6 w-[3000px]" id="outside" onClick={clickOutsideFormations}>
+         <div
+            className=" bg-red-200 min-h-[100px] flex flex-row pt-3 pb-6 px-6"
+            style={{
+               width: songDuration ? songDuration / 100 + 123 : "100%",
+            }}
+            id="outside"
+            onClick={clickOutsideFormations}
+         >
             <svg
                onClick={() => {
                   setFormations((formations: formation[]) => [
                      ...formations,
                      {
-                        durationSeconds: Math.random() + 0.3,
+                        durationSeconds: Math.random() * 10 + 2,
                         positions: [],
                         transition: {
-                           durationSeconds: 1,
+                           durationSeconds: 5,
                         },
                      },
                   ]);
                }}
-               className="h-16 w-16 hover:fill-slate-100 mr-10 ml-4 cursor-pointer shrink-0"
+               className="h-16 w-16 hover:fill-slate-100 mr-5 ml-4 cursor-pointer shrink-0"
                fill="none"
                viewBox="0 0 24 24"
                stroke="currentColor"

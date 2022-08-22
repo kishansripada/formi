@@ -19,8 +19,11 @@ type dancer = {
 type formation = {
    durationSeconds: number;
    positions: dancer[];
-   transitionDuration: number;
+   transition: {
+      durationSeconds: number;
+   };
 };
+
 export const Canvas: React.FC<{
    children: React.ReactNode;
    setDancers: Function;
@@ -40,7 +43,7 @@ export const Canvas: React.FC<{
             const left = Math.round(item.left + delta.x);
             const top = Math.round(item.top + delta.y);
 
-            if (selectedFormation !== null) {
+            if (item.selectedFormation !== null) {
                setFormations((formations: formation[], index: number) => {
                   return formations.map((formation, i) => {
                      if (i === item.selectedFormation) {

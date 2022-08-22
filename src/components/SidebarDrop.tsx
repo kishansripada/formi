@@ -16,21 +16,28 @@ type dancer = {
 type formation = {
    durationSeconds: number;
    positions: dancer[];
-   transitionDuration: number;
+   transition: {
+      durationSeconds: number;
+   };
 };
-export const SidebarDrop: React.FC<{ setDancers: Function }> = ({ setDancers }) => {
+
+export const SidebarDrop: React.FC<{ setFormations: Function }> = ({ setFormations }) => {
    const [{ isOver, canDrop }, drop] = useDrop(() => ({
       accept: "dancerAlias",
       drop: (item: DragItem, monitor) => {
          console.log("dropped on sidebar");
-         // setDancers((dancers: dancer[]) => {
-         //    return dancers.map((dancer) => {
-         //       if (dancer.id === item.id) {
-         //          return { ...dancer, isOnStage: false };
-         //       }
-         //       return dancer;
-         //    });
-         // });
+         console.log(setFormations);
+         setFormations((formations: formation[]) => {
+            return formations.map((formation: formation, index: number) => {
+               if (index === item.selectedFormation) {
+                  return {
+                     ...formations,
+                     positions: formation.positions.filter((dancer) => dancer.id !== item.id),
+                  };
+               }
+               return formation;
+            });
+         });
       },
       collect: (monitor) => ({
          isOver: !!monitor.isOver(),

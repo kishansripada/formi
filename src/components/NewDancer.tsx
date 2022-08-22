@@ -10,7 +10,9 @@ type dancer = {
 type formation = {
    durationSeconds: number;
    positions: dancer[];
-   transitionDuration: number;
+   transition: {
+      durationSeconds: number;
+   };
 };
 
 export const NewDancer = ({ setDancers }: { setDancers: Function }) => {

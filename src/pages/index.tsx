@@ -15,7 +15,7 @@ import { Formations } from "../components/Formations";
 // import { SoundCloudComponent } from "../components/SoundCloudComponent";
 import dynamic from "next/dynamic";
 
-const SoundCloudComponent = dynamic<{ setPositionSeconds: Function; setIsPlaying: Function }>(
+const SoundCloudComponent = dynamic<{ setPosition: Function; setIsPlaying: Function; setSongDuration: Function; songDuration: number | null }>(
    () => import("../components/SoundCloudComponent").then((mod) => mod.SoundCloudComponent),
    {
       ssr: false,
@@ -31,12 +31,15 @@ type dancer = {
 type formation = {
    durationSeconds: number;
    positions: dancer[];
-   transitionDuration: number;
+   transition: {
+      durationSeconds: number;
+   };
 };
 
 const Home: NextPage = () => {
+   const [songDuration, setSongDuration] = useState<number | null>(null);
    const [dancers, setDancers] = useState<dancer[]>([]);
-   const [positionSeconds, setPositionSeconds] = useState<number | null>(null);
+   const [position, setPosition] = useState<number | null>(null);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [selectedFormation, setSelectedFormation] = useState<number | null>(null);
    const [formations, setFormations] = useState<formation[]>([]);
@@ -59,7 +62,7 @@ const Home: NextPage = () => {
                         />
                      ))}
                      <NewDancer setDancers={setDancers} />
-                     <SidebarDrop setDancers={setDancers} />
+                     <SidebarDrop setFormations={setFormations} />
                   </div>
 
                   <div className="flex flex-col h-full items-center">
@@ -87,13 +90,36 @@ const Home: NextPage = () => {
                   {/* STATS */}
                   <div className="text-xl">
                      <p>selected formation: {JSON.stringify(selectedFormation)}</p>
-                     <p>positionSeconds: {JSON.stringify(Math.round(positionSeconds))}</p>
+                     <p>positoin: {JSON.stringify(Math.round(position))}</p>
                      <p>{isPlaying ? "Playing " : "paused"}</p>
+                     <hr />
+                     <p>Current Formation:</p>
+                     <p>Duration: {selectedFormation !== null ? formations[selectedFormation]?.durationSeconds : ""}</p>
+                     <p>Transition Duration: {selectedFormation !== null ? formations[selectedFormation]?.transition.durationSeconds : ""}</p>
+                     <p>
+                        total Duration:{" "}
+                        {selectedFormation !== null
+                           ? formations[selectedFormation]?.transition.durationSeconds + formations[selectedFormation]?.durationSeconds
+                           : ""}
+                     </p>
+                     <hr />
+                     <p>
+                        total all formations :{" "}
+                        {formations
+                           .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
+                           .reduce((partialSum, a) => partialSum + a, 0)}
+                     </p>
                   </div>
                </div>
                <div className="overflow-x-scroll">
-                  <SoundCloudComponent setIsPlaying={setIsPlaying} setPositionSeconds={setPositionSeconds} />
+                  <SoundCloudComponent
+                     setSongDuration={setSongDuration}
+                     songDuration={songDuration}
+                     setIsPlaying={setIsPlaying}
+                     setPosition={setPosition}
+                  />
                   <Formations
+                     songDuration={songDuration}
                      setFormations={setFormations}
                      formations={formations}
                      selectedFormation={selectedFormation}

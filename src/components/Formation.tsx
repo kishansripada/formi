@@ -10,7 +10,9 @@ type dancer = {
 type formation = {
    durationSeconds: number;
    positions: dancer[];
-   transitionDuration: number;
+   transition: {
+      durationSeconds: number;
+   };
 };
 
 export const Formation: React.FC<{
@@ -24,14 +26,16 @@ export const Formation: React.FC<{
    return (
       <>
          <div
-            className={` bg-gray-200 ring-black ring-2 h-full flex flex-row rounded-xl group mr-1 ${amSelected ? "bg-gray-400" : ""}`}
+            className={` bg-gray-200  h-full flex flex-row  rounded-xl group box-border  border-black ${
+               amSelected ? "border-[3px]" : "border-[1px]"
+            }`}
             style={{
-               width: formation.durationSeconds * 100 + 0.3,
+               width: (formation.transition.durationSeconds + formation.durationSeconds) * 10,
             }}
          >
             {/* <p className="">index: {index}</p>
             <p className="">duration: {formation.durationSeconds}s</p> */}
-
+            {/* 
             <svg
                xmlns="http://www.w3.org/2000/svg"
                className="h-6 w-6 ml-auto mr-1 mt-1 fill-gray-300 cursor-pointer invisible group-hover:visible"
@@ -47,7 +51,20 @@ export const Formation: React.FC<{
                   strokeLinejoin="round"
                   d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
                />
-            </svg>
+            </svg> */}
+
+            <div
+               className="bg-red-200 rounded-l-xl"
+               style={{
+                  width: formation.durationSeconds * 10,
+               }}
+            ></div>
+            <div
+               className="bg-blue-200 rounded-r-xl"
+               style={{
+                  width: formation.transition.durationSeconds * 10,
+               }}
+            ></div>
          </div>
       </>
    );
