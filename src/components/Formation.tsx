@@ -4,12 +4,13 @@ import { ResizableBox } from "react-resizable";
 type dancer = {
    name?: string;
    id: string;
-   isOnStage?: boolean;
    position: { x: number | null; y: number | null };
 };
+
 type formation = {
    durationSeconds: number;
    positions: dancer[];
+   transitionDuration: number;
 };
 
 export const Formation: React.FC<{

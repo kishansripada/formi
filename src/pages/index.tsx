@@ -22,50 +22,24 @@ const SoundCloudComponent = dynamic<{ setPositionSeconds: Function; setIsPlaying
    }
 );
 
-// const DynamicComponent = dynamic(() => import("../components/SoundCloud").then((mod) => mod.SoundCloud), { ssr: false });
 type dancer = {
-   name?: string;
+   name: string;
    id: string;
-   isOnStage?: boolean;
    position: { x: number | null; y: number | null };
 };
 
 type formation = {
    durationSeconds: number;
    positions: dancer[];
+   transitionDuration: number;
 };
 
 const Home: NextPage = () => {
-   const [dancers, setDancers] = useState([]);
-
+   const [dancers, setDancers] = useState<dancer[]>([]);
    const [positionSeconds, setPositionSeconds] = useState<number | null>(null);
-
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
-
-   const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
-
-   const [formations, setFormations] = useState([
-      {
-         durationSeconds: 2,
-         positions: [
-            {
-               id: "anotherid",
-               position: { x: 1, y: 1 },
-            },
-            {
-               id: "id",
-               position: { x: 1, y: 2 },
-            },
-            {
-               id: "test",
-               position: { x: -2, y: 3 },
-            },
-         ],
-         transition: {
-            durationSeconds: 1,
-         },
-      },
-   ]);
+   const [selectedFormation, setSelectedFormation] = useState<number | null>(null);
+   const [formations, setFormations] = useState<formation[]>([]);
 
    return (
       <>
@@ -75,7 +49,14 @@ const Home: NextPage = () => {
                <div className="flex flex-row grow overflow-hidden">
                   <div className="flex flex-col w-1/4 relative overflow-y-scroll min-w-[300px]">
                      {dancers.map((dancer, index) => (
-                        <Dancer selectedFormation={selectedFormation} setDancers={setDancers} {...dancer} key={index} dancers={dancers} />
+                        <Dancer
+                           formations={formations}
+                           selectedFormation={selectedFormation}
+                           setDancers={setDancers}
+                           {...dancer}
+                           key={index}
+                           dancers={dancers}
+                        />
                      ))}
                      <NewDancer setDancers={setDancers} />
                      <SidebarDrop setDancers={setDancers} />
@@ -83,19 +64,23 @@ const Home: NextPage = () => {
 
                   <div className="flex flex-col h-full items-center">
                      <p>backstage</p>
-                     <Canvas setDancers={setDancers} dancers={dancers}>
-                        {dancers
-                           .filter((dancer) => dancer.isOnStage)
-                           .map((dancer, index) => (
-                              <DancerAlias
-                                 selectedFormation={selectedFormation}
-                                 setDancers={setDancers}
-                                 key={index}
-                                 name={dancer.name}
-                                 id={dancer.id}
-                                 {...coordsToPosition(dancer.position.x, dancer.position.y)}
-                              />
-                           ))}
+                     <Canvas
+                        formations={formations}
+                        selectedFormation={selectedFormation}
+                        setDancers={setDancers}
+                        dancers={dancers}
+                        setFormations={setFormations}
+                     >
+                        {dancers.map((dancer, index) => (
+                           <DancerAlias
+                              selectedFormation={selectedFormation}
+                              setDancers={setDancers}
+                              key={index}
+                              name={dancer.name}
+                              id={dancer.id}
+                              formations={formations}
+                           />
+                        ))}
                      </Canvas>
                      <p>audience</p>
                   </div>

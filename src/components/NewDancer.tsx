@@ -4,8 +4,13 @@ import { v4 as uuidv4 } from "uuid";
 type dancer = {
    name?: string;
    id: string;
-   isOnStage?: boolean;
    position: { x: number | null; y: number | null };
+};
+
+type formation = {
+   durationSeconds: number;
+   positions: dancer[];
+   transitionDuration: number;
 };
 
 export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
@@ -14,7 +19,7 @@ export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
    const createNewDancer = () => {
       if (newName === "") return;
       setDancers((dancers: dancer[]) => {
-         return [...dancers, { name: newName, id: uuidv4(), isOnStage: false, position: { x: null, y: null } }];
+         return [...dancers, { name: newName, id: uuidv4() }];
       });
       setNewName("");
    };

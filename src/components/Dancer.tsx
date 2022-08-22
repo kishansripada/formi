@@ -3,8 +3,13 @@ import { useDrag } from "react-dnd";
 type dancer = {
    name?: string;
    id: string;
-   isOnStage?: boolean;
    position: { x: number | null; y: number | null };
+};
+
+type formation = {
+   durationSeconds: number;
+   positions: dancer[];
+   transitionDuration: number;
 };
 
 export const Dancer = ({
@@ -12,15 +17,16 @@ export const Dancer = ({
    id,
    setDancers,
    dancers,
-   isOnStage,
    selectedFormation,
+   formations,
 }: {
    name: string;
    id: string;
+   position: { x: number | null; y: number | null };
    setDancers: Function;
    dancers: dancer[];
-   isOnStage: boolean;
    selectedFormation: number | null;
+   formations: formation[];
 }) => {
    const [{ isDragging }, drag] = useDrag(
       () => ({
@@ -28,12 +34,12 @@ export const Dancer = ({
          // canDrag: (monitor) => {
          //    return !isOnStage && selectedFormation !== null;
          // },
-         item: { id },
+         item: { id, formations, selectedFormation },
          collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
          }),
       }),
-      [id, isOnStage]
+      [id, formations, selectedFormation]
    );
 
    const removeDancer = () => {
@@ -49,15 +55,20 @@ export const Dancer = ({
       .join("")
       .toUpperCase();
 
+   let canBeAddedToStage =
+      // there is a formation select
+      selectedFormation !== null &&
+      // and the dancer is not already on the stage
+      !formations[selectedFormation]?.positions.find((dancer) => dancer.id === id);
+
    return (
       <>
          <div
             ref={drag}
             className={`flex flex-row items-center bg-slate-300 border-black border-2`}
-            // cannot add to stage if they arleady are on stage or if no formation is selected
-            draggable={!isOnStage && selectedFormation !== null}
+            draggable={canBeAddedToStage}
             style={{
-               opacity: !isOnStage && selectedFormation !== null ? 1 : 0.7,
+               opacity: canBeAddedToStage ? 1 : 0.7,
             }}
          >
             {id}

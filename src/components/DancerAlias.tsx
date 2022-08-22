@@ -1,24 +1,38 @@
 import { useDrag } from "react-dnd";
+type dancer = {
+   name?: string;
+   id: string;
+   position: { x: number | null; y: number | null };
+};
+
+type formation = {
+   durationSeconds: number;
+   positions: dancer[];
+   transitionDuration: number;
+};
 
 export interface DancerAliasProps {
    name: string;
    id: string;
-   left: number;
-   top: number;
    setDancers: Function;
    selectedFormation: number | null;
+   formations: formation[];
 }
 
-export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, left, top, setDancers, selectedFormation }) => {
+export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, formations, setDancers, selectedFormation }) => {
+   let currentCoords = formations[selectedFormation]?.positions.find((dancer: dancer) => dancer.id === id)?.position;
+
+   let { left, top } = selectedFormation !== null && currentCoords ? coordsToPosition(currentCoords.x, currentCoords.y) : { left: 800, top: 400 };
+
    const [{ isDragging }, drag] = useDrag(
       () => ({
          type: "dancerAlias",
-         item: { id, left, top },
+         item: { id, left, top, formations, selectedFormation },
          collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
          }),
       }),
-      [id, left, top]
+      [id, left, top, formations, selectedFormation]
    );
 
    let initials = name
@@ -45,4 +59,8 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, left, top, s
          </div>
       </>
    );
+};
+
+const coordsToPosition = (x: number, y: number) => {
+   return { left: 400 + 40 * x, top: 400 + 40 * -y };
 };

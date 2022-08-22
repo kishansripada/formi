@@ -13,51 +13,71 @@ export interface DragItem {
 type dancer = {
    name?: string;
    id: string;
-   isOnStage?: boolean;
    position: { x: number | null; y: number | null };
 };
-export const Canvas: React.FC<{ children: React.ReactNode; setDancers: Function; dancers: dancer[] }> = ({ children, setDancers, dancers }) => {
+
+type formation = {
+   durationSeconds: number;
+   positions: dancer[];
+   transitionDuration: number;
+};
+export const Canvas: React.FC<{
+   children: React.ReactNode;
+   setDancers: Function;
+   dancers: dancer[];
+   setFormations: Function;
+   selectedFormation: number | null;
+   formations: formation[];
+}> = ({ children, setDancers, dancers, setFormations, selectedFormation, formations }) => {
+   console.log(formations);
    const [{ isOver, canDrop }, drop] = useDrop(() => ({
       accept: ["dancerAlias", "dancer"],
       drop: (item: DragItem, monitor) => {
-         if (item.left && item.top) {
+         console.log(item);
+         if (item.formations[item.selectedFormation].positions.find((dancer: dancer) => dancer.id === item.id)) {
+            console.log("dancer already on stage");
             const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
             const left = Math.round(item.left + delta.x);
             const top = Math.round(item.top + delta.y);
 
-            console.log(dancers);
-            //  console.log(
-            //     dancers.find((dancer) => {
-            //        console.log(dancer.position.x, dancer.position.y);
-            //        return dancer.position.x === positionToCoords(left, top).x && positionToCoords(left, top).y === dancer.position.y;
-            //     })
-            //  );
-            //  if (
-            //     dancers.find((dancer) => {
-            //        return dancer.position.x === positionToCoords(left, top).x && positionToCoords(left, top).y === dancer.position.y;
-            //     })
-            //  ) {
-            //     return;
-            //  }
+            if (selectedFormation !== null) {
+               setFormations((formations: formation[], index: number) => {
+                  return formations.map((formation, i) => {
+                     if (i === item.selectedFormation) {
+                        return {
+                           ...formation,
+                           positions: formation.positions.map((dancer) => {
+                              if (dancer.id === item.id) {
+                                 return { ...dancer, position: { x: positionToCoords(left, top).x, y: positionToCoords(left, top).y } };
+                              }
+                              return dancer;
+                           }),
+                        };
+                     }
 
-            setDancers((dancers: dancer[]) => {
-               return dancers.map((dancer) => {
-                  if (dancer.id === item.id) {
-                     return { ...dancer, position: { x: positionToCoords(left, top).x, y: positionToCoords(left, top).y } };
-                  }
-                  return dancer;
+                     return formation;
+                  });
                });
-            });
+            }
          } else {
+            //  new dancer
             console.log("new dancer");
-            setDancers((dancers: dancer[]) => {
-               return dancers.map((dancer) => {
-                  if (dancer.id === item.id) {
-                     return { ...dancer, position: { x: 0, y: 0 }, isOnStage: true };
-                  }
-                  return dancer;
+
+            if (item.selectedFormation !== null) {
+               console.log("selected formation is not null and new dancer");
+               setFormations((formations: formation[], index: number) => {
+                  return formations.map((formation, i) => {
+                     if (i === item.selectedFormation) {
+                        return {
+                           ...formation,
+                           positions: [...formation.positions, { id: item.id, position: { x: 0, y: 0 } }],
+                        };
+                     }
+
+                     return formation;
+                  });
                });
-            });
+            }
          }
       },
       collect: (monitor) => ({
@@ -65,20 +85,6 @@ export const Canvas: React.FC<{ children: React.ReactNode; setDancers: Function;
          canDrop: monitor.canDrop(),
       }),
    }));
-
-   const ref = useRef(null);
-   const [zoom, setZoom] = useState(1);
-   useEffect(() => {
-      //   const handleWheel = (event) => {
-      //      event.preventDefault();
-      //      setZoom((zoom) => Math.max(Math.min(zoom - event.deltaY / 800, 3), 1));
-      //   };
-      //   const element = ref.current;
-      //   element.addEventListener("wheel", handleWheel);
-      //   return () => {
-      //      element.removeEventListener("wheel", handleWheel);
-      //   };
-   }, []);
 
    return (
       <>
