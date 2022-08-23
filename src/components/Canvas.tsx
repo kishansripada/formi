@@ -75,7 +75,10 @@ export const Canvas: React.FC<{
                      if (i === item.selectedFormation) {
                         return {
                            ...formation,
-                           positions: [...formation.positions, { id: item.id, position: { x: 0, y: 0 } }],
+                           positions: [
+                              ...formation.positions,
+                              { id: item.id, position: { x: 0, y: 0 }, exitStrategy: undefined, enterStrategy: undefined },
+                           ],
                         };
                      }
 

@@ -8,7 +8,7 @@ export interface DancerAliasProps {
    selectedFormation: number | null;
    formations: formation[];
    isPlaying: boolean;
-   position: number;
+   position: number | null;
 }
 
 export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, formations, setDancers, selectedFormation, isPlaying, position }) => {

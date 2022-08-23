@@ -7,8 +7,8 @@ export type dancer = {
  export type dancerPosition = {
     id: string;
     position: { x: number ; y: number  };
-    exitStrategy?: "left" | "right" | null
-    enterStrategy?: "left" | "right" | null
+    exitStrategy: "left" | "right" | undefined
+    enterStrategy: "left" | "right" | undefined
  };
  
  

@@ -12,6 +12,7 @@ import { SidebarDrop } from "../components/SidebarDrop";
 import { NewDancer } from "../components/NewDancer";
 import { Header } from "../components/Header";
 import { Formations } from "../components/Formations";
+import { CurrentFormation } from "../components/CurrentFormation";
 // import { SoundCloudComponent } from "../components/SoundCloudComponent";
 import dynamic from "next/dynamic";
 
@@ -21,20 +22,7 @@ const SoundCloudComponent = dynamic<{ setPosition: Function; setIsPlaying: Funct
       ssr: false,
    }
 );
-
-type dancer = {
-   name: string;
-   id: string;
-   position: { x: number | null; y: number | null };
-};
-
-type formation = {
-   durationSeconds: number;
-   positions: dancer[];
-   transition: {
-      durationSeconds: number;
-   };
-};
+import { dancer, dancerPosition, formation } from "../types/types";
 
 const Home: NextPage = () => {
    const [songDuration, setSongDuration] = useState<number | null>(null);
@@ -90,14 +78,14 @@ const Home: NextPage = () => {
                      <p>audience</p>
                   </div>
                   {/* STATS */}
-                  <div className="text-xl">
+                  <div className="text-xl bg-green-200 w-full">
                      <p>selected formation: {JSON.stringify(selectedFormation)}</p>
                      <p>positoin: {JSON.stringify(position)}</p>
                      <p>{isPlaying ? "Playing " : "paused"}</p>
                      <hr />
                      <p>Current Formation:</p>
-                     <p>Duration: {selectedFormation !== null ? formations[selectedFormation]?.durationSeconds : ""}</p>
-                     <p>Transition Duration: {selectedFormation !== null ? formations[selectedFormation]?.transition.durationSeconds : ""}</p>
+                     <p>Duration: {selectedFormation !== null ? formations?.[selectedFormation]?.durationSeconds : ""}</p>
+                     <p>Transition Duration: {selectedFormation !== null ? formations?.[selectedFormation]?.transition.durationSeconds : ""}</p>
                      <p>
                         total Duration:{" "}
                         {selectedFormation !== null
@@ -111,6 +99,7 @@ const Home: NextPage = () => {
                            .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
                            .reduce((partialSum, a) => partialSum + a, 0)}
                      </p>
+                     <CurrentFormation setFormations={setFormations} formations={formations} selectedFormation={selectedFormation} />
                   </div>
                </div>
                <div className="overflow-x-scroll">
