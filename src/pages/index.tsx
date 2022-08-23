@@ -76,6 +76,8 @@ const Home: NextPage = () => {
                      >
                         {dancers.map((dancer, index) => (
                            <DancerAlias
+                              isPlaying={isPlaying}
+                              position={position}
                               selectedFormation={selectedFormation}
                               setDancers={setDancers}
                               key={index}
@@ -90,7 +92,7 @@ const Home: NextPage = () => {
                   {/* STATS */}
                   <div className="text-xl">
                      <p>selected formation: {JSON.stringify(selectedFormation)}</p>
-                     <p>positoin: {JSON.stringify(Math.round(position))}</p>
+                     <p>positoin: {JSON.stringify(position)}</p>
                      <p>{isPlaying ? "Playing " : "paused"}</p>
                      <hr />
                      <p>Current Formation:</p>

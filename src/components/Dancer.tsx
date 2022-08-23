@@ -1,18 +1,5 @@
 import { useDrag } from "react-dnd";
-
-type dancer = {
-   name?: string;
-   id: string;
-   position: { x: number | null; y: number | null };
-};
-
-type formation = {
-   durationSeconds: number;
-   positions: dancer[];
-   transition: {
-      durationSeconds: number;
-   };
-};
+import { dancer, dancerPosition, formation } from "../types/types";
 
 export const Dancer = ({
    name,
@@ -80,7 +67,7 @@ export const Dancer = ({
             </div>
             <input
                defaultValue={name}
-               onChange={(e) => setDancers(dancers.map((dancer, index) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)))}
+               onChange={(e) => setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)))}
             />
             <button className="ml-auto mr-4" onClick={removeDancer}>
                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

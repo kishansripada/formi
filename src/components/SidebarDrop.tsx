@@ -5,21 +5,10 @@ export interface DragItem {
    id: string;
    top: number;
    left: number;
+   formations: formation[];
+   selectedFormation: number;
 }
-
-type dancer = {
-   name?: string;
-   id: string;
-   position: { x: number | null; y: number | null };
-};
-
-type formation = {
-   durationSeconds: number;
-   positions: dancer[];
-   transition: {
-      durationSeconds: number;
-   };
-};
+import { dancer, dancerPosition, formation } from "../types/types";
 
 export const SidebarDrop: React.FC<{ setFormations: Function }> = ({ setFormations }) => {
    const [{ isOver, canDrop }, drop] = useDrop(() => ({

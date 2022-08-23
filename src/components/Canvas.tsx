@@ -2,27 +2,30 @@ import { useState, useEffect, useRef } from "react";
 import { useDrop } from "react-dnd";
 import type { XYCoord } from "react-dnd";
 import { GridLines } from "../components/GridLines";
+import { dancer, dancerPosition, formation } from "../types/types";
 
 export interface DragItem {
    type: string;
    id: string;
    top: number;
    left: number;
+   formations: formation[];
+   selectedFormation: number;
 }
 
-type dancer = {
-   name?: string;
-   id: string;
-   position: { x: number | null; y: number | null };
-};
+// type dancer = {
+//    name?: string;
+//    id: string;
+//    position: { x: number | null; y: number | null };
+// };
 
-type formation = {
-   durationSeconds: number;
-   positions: dancer[];
-   transition: {
-      durationSeconds: number;
-   };
-};
+// type formation = {
+//    durationSeconds: number;
+//    positions: dancer[];
+//    transition: {
+//       durationSeconds: number;
+//    };
+// };
 
 export const Canvas: React.FC<{
    children: React.ReactNode;
@@ -36,8 +39,7 @@ export const Canvas: React.FC<{
    const [{ isOver, canDrop }, drop] = useDrop(() => ({
       accept: ["dancerAlias", "dancer"],
       drop: (item: DragItem, monitor) => {
-         console.log(item);
-         if (item.formations[item.selectedFormation].positions.find((dancer: dancer) => dancer.id === item.id)) {
+         if (item.formations[item.selectedFormation].positions.find((dancer: dancerPosition) => dancer.id === item.id)) {
             console.log("dancer already on stage");
             const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
             const left = Math.round(item.left + delta.x);

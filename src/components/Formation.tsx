@@ -1,19 +1,7 @@
 import { useEffect } from "react";
 // import { Resizable } from "re-resizable";
 import { ResizableBox } from "react-resizable";
-type dancer = {
-   name?: string;
-   id: string;
-   position: { x: number | null; y: number | null };
-};
-
-type formation = {
-   durationSeconds: number;
-   positions: dancer[];
-   transition: {
-      durationSeconds: number;
-   };
-};
+import { dancer, dancerPosition, formation } from "../types/types";
 
 export const Formation: React.FC<{
    formation: formation;

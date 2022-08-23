@@ -1,18 +1,6 @@
 import { ReactEventHandler } from "react";
 import { Formation } from "./Formation";
-type dancer = {
-   name?: string;
-   id: string;
-   position: { x: number | null; y: number | null };
-};
-
-type formation = {
-   durationSeconds: number;
-   positions: dancer[];
-   transition: {
-      durationSeconds: number;
-   };
-};
+import { dancer, dancerPosition, formation } from "../types/types";
 
 export const Formations: React.FC<{
    formations: formation[];
@@ -56,6 +44,7 @@ export const Formations: React.FC<{
                         transition: {
                            durationSeconds: 5,
                         },
+                        name: null,
                      },
                   ]);
                }}
