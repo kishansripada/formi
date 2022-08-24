@@ -89,7 +89,7 @@ const Home: NextPage = () => {
                      <p>
                         total Duration:{" "}
                         {selectedFormation !== null
-                           ? formations[selectedFormation]?.transition.durationSeconds + formations[selectedFormation]?.durationSeconds
+                           ? formations?.[selectedFormation]?.transition?.durationSeconds + formations?.[selectedFormation]?.durationSeconds
                            : ""}
                      </p>
                      <hr />
