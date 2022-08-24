@@ -18,4 +18,17 @@ export const exampleRouter = createRouter()
     async resolve({ ctx }) {
       return await ctx.prisma.example.findMany();
     },
-  });
+  }).query("getSoundCloudTrackId", {
+    input: z
+      .object({
+        url: z.string(),
+      }),
+    resolve({ input }) {
+      let data = fetch(input.url).then(r => r.text()).then(html => {
+        return {
+          greeting: `${html.match(/(?<=api.soundcloud.com%2Ftracks%2F).*?(?=&)/)}`,
+        };
+      })
+      return data
+    },
+  })

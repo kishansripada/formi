@@ -27,7 +27,7 @@ export const Formations: React.FC<{
    return (
       <>
          <div
-            className="  min-h-[100px] flex flex-row pt-3 pb-6 px-6"
+            className=" h-[100px] flex flex-row pt-3 pb-6 px-6"
             style={{
                width: songDuration ? songDuration / 100 + 123 : "100%",
             }}
@@ -39,7 +39,7 @@ export const Formations: React.FC<{
                   setFormations((formations: formation[]) => [
                      ...formations,
                      {
-                        durationSeconds: Math.random() * 10 + 2,
+                        durationSeconds: 10,
                         positions: [],
                         transition: {
                            durationSeconds: 5,

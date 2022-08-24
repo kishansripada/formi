@@ -31,6 +31,7 @@ const Home: NextPage = () => {
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [selectedFormation, setSelectedFormation] = useState<number | null>(null);
    const [formations, setFormations] = useState<formation[]>([]);
+   const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(null);
 
    return (
       <>
@@ -38,7 +39,7 @@ const Home: NextPage = () => {
             <div className="flex flex-col h-screen overflow-hidden">
                <Header />
                <div className="flex flex-row grow overflow-hidden">
-                  <div className="flex flex-col w-1/4 relative overflow-y-scroll min-w-[300px] ml-3">
+                  <div className="flex flex-col w-1/4 relative overflow-y-scroll min-w-[300px] ml-3 overflow-hidden">
                      {dancers.map((dancer, index) => (
                         <Dancer
                            formations={formations}
@@ -79,8 +80,10 @@ const Home: NextPage = () => {
 
                   <CurrentFormation dancers={dancers} setFormations={setFormations} formations={formations} selectedFormation={selectedFormation} />
                </div>
-               <div className="overflow-x-scroll">
+               <div className="overflow-x-scroll min-h-[195px]">
                   <SoundCloudComponent
+                     soundCloudTrackId={soundCloudTrackId}
+                     setSoundCloudTrackId={setSoundCloudTrackId}
                      setSongDuration={setSongDuration}
                      songDuration={songDuration}
                      setIsPlaying={setIsPlaying}

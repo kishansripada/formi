@@ -16,7 +16,7 @@ export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
    return (
       <>
          <div
-            className="flex flex-row items-center h-16 rounded-xl border-black border-2"
+            className="flex flex-row items-center h-16 rounded-xl border-black border-2 shrink-0"
             style={{
                opacity: 1,
             }}
