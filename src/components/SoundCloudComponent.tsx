@@ -1,6 +1,4 @@
 import Script from "next/script";
-import { useRef, useState } from "react";
-import { useEffect } from "react";
 
 export const SoundCloudComponent: React.FC<{
    setPosition: Function;
@@ -9,25 +7,24 @@ export const SoundCloudComponent: React.FC<{
    songDuration: number | null;
 }> = ({ setPosition, setIsPlaying, setSongDuration, songDuration }) => {
    function handleLoad() {
-      var widgetIframe = document.getElementById("iframe"),
-         player = SC.Widget(widgetIframe);
+      let SC = (window as any).SC;
+      var widgetIframe = document.getElementById("iframe");
+      let player = SC.Widget(widgetIframe);
 
-      player.bind(window.SC.Widget.Events.READY, () => {
-         console.log("READY");
-         player.getDuration((e) => {
-            console.log(e);
+      player.bind(SC.Widget.Events.READY, () => {
+         player.getDuration((e: any) => {
             setSongDuration(e);
          });
-         player.bind(SC.Widget.Events.PLAY_PROGRESS, (e) => {
+         player.bind(SC.Widget.Events.PLAY_PROGRESS, (e: any) => {
             setPosition(e.currentPosition / 1000);
          });
-         player.bind(SC.Widget.Events.PLAY, (e) => {
+         player.bind(SC.Widget.Events.PLAY, (e: any) => {
             setIsPlaying(true);
          });
-         player.bind(SC.Widget.Events.PAUSE, (e) => {
+         player.bind(SC.Widget.Events.PAUSE, (e: any) => {
             setIsPlaying(false);
          });
-         player.bind(SC.Widget.Events.FINISH, (e) => {
+         player.bind(SC.Widget.Events.FINISH, (e: any) => {
             setIsPlaying(false);
          });
       });
@@ -48,7 +45,6 @@ export const SoundCloudComponent: React.FC<{
                src={`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1310078686`}
             ></iframe>
          </div>
-         {/* <button onClick={() => widget.getPosition((position: number) => console.log(position / 1000))}>PLAY</button> */}
       </>
    );
 };

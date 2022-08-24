@@ -20,7 +20,7 @@ export const SidebarDrop: React.FC<{ setFormations: Function }> = ({ setFormatio
             return formations.map((formation: formation, index: number) => {
                if (index === item.selectedFormation) {
                   return {
-                     ...formations,
+                     ...formation,
                      positions: formation.positions.filter((dancer) => dancer.id !== item.id),
                   };
                }

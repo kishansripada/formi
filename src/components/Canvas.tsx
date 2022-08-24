@@ -13,20 +13,6 @@ export interface DragItem {
    selectedFormation: number;
 }
 
-// type dancer = {
-//    name?: string;
-//    id: string;
-//    position: { x: number | null; y: number | null };
-// };
-
-// type formation = {
-//    durationSeconds: number;
-//    positions: dancer[];
-//    transition: {
-//       durationSeconds: number;
-//    };
-// };
-
 export const Canvas: React.FC<{
    children: React.ReactNode;
    setDancers: Function;
@@ -39,7 +25,7 @@ export const Canvas: React.FC<{
    const [{ isOver, canDrop }, drop] = useDrop(() => ({
       accept: ["dancerAlias", "dancer"],
       drop: (item: DragItem, monitor) => {
-         if (item.formations[item.selectedFormation].positions.find((dancer: dancerPosition) => dancer.id === item.id)) {
+         if (item?.formations?.[item.selectedFormation]?.positions.find((dancer: dancerPosition) => dancer.id === item.id)) {
             console.log("dancer already on stage");
             const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
             const left = Math.round(item.left + delta.x);

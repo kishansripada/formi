@@ -65,7 +65,7 @@ const Home: NextPage = () => {
                         {dancers.map((dancer, index) => (
                            <DancerAlias
                               isPlaying={isPlaying}
-                              position={position}
+                              position={position ? parseFloat(position.toFixed(2)) : null}
                               selectedFormation={selectedFormation}
                               setDancers={setDancers}
                               key={index}
@@ -86,12 +86,7 @@ const Home: NextPage = () => {
                      <p>Current Formation:</p>
                      <p>Duration: {selectedFormation !== null ? formations?.[selectedFormation]?.durationSeconds : ""}</p>
                      <p>Transition Duration: {selectedFormation !== null ? formations?.[selectedFormation]?.transition.durationSeconds : ""}</p>
-                     <p>
-                        total Duration:{" "}
-                        {selectedFormation !== null
-                           ? formations?.[selectedFormation]?.transition?.durationSeconds + formations?.[selectedFormation]?.durationSeconds
-                           : ""}
-                     </p>
+
                      <hr />
                      <p>
                         total all formations :{" "}

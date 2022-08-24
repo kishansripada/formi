@@ -20,7 +20,7 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, formations, 
       .toUpperCase();
 
    // if the track is playing then early return with the animation function
-   if (isPlaying) {
+   if (isPlaying && position !== null) {
       let myPosition = animate(formations, position, id);
       console.log(myPosition);
       return (
@@ -85,7 +85,7 @@ const coordsToPosition = (x: number, y: number) => {
 
 const animate = (formations: formation[], position: number, id: string): { left: number; top: number } => {
    // get a list of the times that each formation ends
-   let endTimes = formations.map((_, index) =>
+   const endTimes = formations.map((_, index) =>
       formations
          .slice(0, index + 1)
          .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
@@ -93,16 +93,16 @@ const animate = (formations: formation[], position: number, id: string): { left:
    );
 
    // find the current formation that the times suggest
-   let currentFormationIndex = formations.findIndex((_, index) => position < endTimes[index]);
+   const currentFormationIndex = formations.findIndex((_, index) => position < endTimes[index]);
 
    // if the position is beyond all the formation, return off stage
    if (!formations[currentFormationIndex]) {
       return coordsToPosition(10, 10);
    }
 
-   let inThisFormation = formations[currentFormationIndex].positions.find((dancer) => dancer.id === id);
+   const inThisFormation = formations[currentFormationIndex].positions.find((dancer) => dancer.id === id);
 
-   let isInNextFormation = formations[currentFormationIndex + 1]
+   let inNextFormation = formations[currentFormationIndex + 1]
       ? formations[currentFormationIndex + 1].positions.find((dancerPosition) => dancerPosition.id === id)
       : false;
 
@@ -113,11 +113,11 @@ const animate = (formations: formation[], position: number, id: string): { left:
 
    if (isInTransition) {
       if (inThisFormation) {
-         if (isInNextFormation) {
+         if (inNextFormation) {
             // transition between current and next
             // requires animation don't return yet
             from = inThisFormation.position;
-            to = isInNextFormation.position;
+            to = inNextFormation.position;
          } else {
             // transition between current and exit strategy specified in current
             // requires animation don't return yet
@@ -136,20 +136,20 @@ const animate = (formations: formation[], position: number, id: string): { left:
             })();
          }
       } else {
-         if (isInNextFormation) {
+         if (inNextFormation) {
             // transition between enter strategy specified in next and position in next
             // requires animation don't return yet
-            to = isInNextFormation.position;
+            to = inNextFormation.position;
 
             from = (() => {
-               if (isInNextFormation.enterStrategy === "closest") {
+               if (inNextFormation.enterStrategy === "closest") {
                   if (to.x >= 0) return { x: 11, y: to.y };
                   if (to.x < 0) return { x: -11, y: to.y };
                }
-               if (isInNextFormation.enterStrategy === "right") {
+               if (inNextFormation.enterStrategy === "right") {
                   return { x: 11, y: to.y };
                }
-               if (isInNextFormation.enterStrategy === "left") {
+               if (inNextFormation.enterStrategy === "left") {
                   return { x: -11, y: to.y };
                }
             })();

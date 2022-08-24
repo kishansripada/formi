@@ -9,7 +9,7 @@ export const Formations: React.FC<{
    setFormations: Function;
    songDuration: number | null;
 }> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration }) => {
-   const clickOutsideFormations = (e) => {
+   const clickOutsideFormations = (e: any) => {
       if (e.target.id !== "outside") return;
       e.stopPropagation();
       setSelectedFormation(null);
@@ -61,8 +61,8 @@ export const Formations: React.FC<{
                <div
                   key={index}
                   id="formation"
-                  onClick={(e) => {
-                     if (e.target?.id === "delete") return;
+                  onClick={(e: any) => {
+                     if (e.target.id === "delete") return;
                      setSelectedFormation(index);
                   }}
                >
