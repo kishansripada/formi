@@ -11,7 +11,6 @@ export const Dancer = ({
 }: {
    name: string;
    id: string;
-   position: { x: number | null; y: number | null };
    setDancers: Function;
    dancers: dancer[];
    selectedFormation: number | null;

@@ -92,30 +92,85 @@ const animate = (formations: formation[], position: number, id: string): { left:
          .reduce((partialSum, a) => partialSum + a, 0)
    );
 
-   // find the current formation that the times suggests
+   // find the current formation that the times suggest
    let currentFormationIndex = formations.findIndex((_, index) => position < endTimes[index]);
+
+   // if the position is beyond all the formation, return off stage
+   if (!formations[currentFormationIndex]) {
+      return coordsToPosition(10, 10);
+   }
+
+   let inThisFormation = formations[currentFormationIndex].positions.find((dancer) => dancer.id === id);
+
+   let isInNextFormation = formations[currentFormationIndex + 1]
+      ? formations[currentFormationIndex + 1].positions.find((dancerPosition) => dancerPosition.id === id)
+      : false;
 
    let isInTransition = position > endTimes[currentFormationIndex] - formations[currentFormationIndex].transition.durationSeconds;
 
-   // if the dancer is not transitioning, just return the position of the formation its in
-   if (!isInTransition) {
-      let dancerPosition = formations[currentFormationIndex].positions.find((dancerPosition) => dancerPosition.id === id);
+   let from;
+   let to;
 
-      return coordsToPosition(dancerPosition.position.x, dancerPosition.position.y);
+   if (isInTransition) {
+      if (inThisFormation) {
+         if (isInNextFormation) {
+            // transition between current and next
+            // requires animation don't return yet
+            from = inThisFormation.position;
+            to = isInNextFormation.position;
+         } else {
+            // transition between current and exit strategy specified in current
+            // requires animation don't return yet
+            from = inThisFormation.position;
+            to = (() => {
+               if (inThisFormation.exitStrategy === "closest") {
+                  if (from.x >= 0) return { x: 11, y: from.y };
+                  if (from.x < 0) return { x: -11, y: from.y };
+               }
+               if (inThisFormation.exitStrategy === "right") {
+                  return { x: 11, y: from.y };
+               }
+               if (inThisFormation.exitStrategy === "left") {
+                  return { x: -11, y: from.y };
+               }
+            })();
+         }
+      } else {
+         if (isInNextFormation) {
+            // transition between enter strategy specified in next and position in next
+            // requires animation don't return yet
+            to = isInNextFormation.position;
+
+            from = (() => {
+               if (isInNextFormation.enterStrategy === "closest") {
+                  if (to.x >= 0) return { x: 11, y: to.y };
+                  if (to.x < 0) return { x: -11, y: to.y };
+               }
+               if (isInNextFormation.enterStrategy === "right") {
+                  return { x: 11, y: to.y };
+               }
+               if (isInNextFormation.enterStrategy === "left") {
+                  return { x: -11, y: to.y };
+               }
+            })();
+         } else {
+            // return off stage
+            return coordsToPosition(10, 10);
+         }
+      }
+   } else {
+      if (inThisFormation) {
+         // return position from this formation
+         return coordsToPosition(inThisFormation.position.x, inThisFormation.position.y);
+      } else {
+         // return off stage
+         return coordsToPosition(10, 10);
+      }
    }
 
    let percentThroughTransition =
       (position - (endTimes[currentFormationIndex] - formations[currentFormationIndex].transition.durationSeconds)) /
       formations[currentFormationIndex].transition.durationSeconds;
 
-   // if they are transitioning then run the animation
-   let from = formations[currentFormationIndex].positions.find((dancerPosition) => dancerPosition.id === id).position;
-
-   let isInNextFormation = formations[currentFormationIndex + 1].positions.find((dancerPosition) => dancerPosition.id === id);
-
-   let to = isInNextFormation ? isInNextFormation.position : { x: 8, y: 0 };
-
    return coordsToPosition(from.x + (to.x - from.x) * percentThroughTransition, from.y + (to.y - from.y) * percentThroughTransition);
-
-   //   return timeUpUntilEndOfCurrentFormation
 };

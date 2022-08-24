@@ -77,7 +77,7 @@ export const Canvas: React.FC<{
                            ...formation,
                            positions: [
                               ...formation.positions,
-                              { id: item.id, position: { x: 0, y: 0 }, exitStrategy: undefined, enterStrategy: undefined },
+                              { id: item.id, position: { x: 0, y: 0 }, exitStrategy: "closest", enterStrategy: "closest" },
                            ],
                         };
                      }

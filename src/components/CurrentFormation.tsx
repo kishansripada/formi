@@ -28,8 +28,28 @@ export const CurrentFormation: React.FC<{
             {dancersWhoAreNotInNextFormation?.map((dancer) => (
                <div className="flex flex-row">
                   <p>{dancer.id}</p>
-                  <select>
-                     <option value={undefined}> </option>
+                  <select
+                     defaultValue={formations[selectedFormation]?.positions.find((dancerPosition) => dancerPosition.id === dancer.id)?.exitStrategy}
+                     onChange={(e) =>
+                        setFormations((formations: formation[]) => {
+                           return formations.map((formation, index: number) => {
+                              if (index === selectedFormation) {
+                                 return {
+                                    ...formation,
+                                    positions: formation.positions.map((dancerPosition) => {
+                                       if (dancerPosition.id === dancer.id) {
+                                          return { ...dancerPosition, exitStrategy: e.target.value };
+                                       }
+                                       return dancerPosition;
+                                    }),
+                                 };
+                              }
+                              return formation;
+                           });
+                        })
+                     }
+                  >
+                     <option value="closest">closest</option>
                      <option value="left"> left</option>
                      <option value="right"> right</option>
                   </select>
@@ -60,7 +80,7 @@ export const CurrentFormation: React.FC<{
                         })
                      }
                   >
-                     <option value={undefined}> </option>
+                     <option value="closest">closest</option>
                      <option value="left"> left</option>
                      <option value="right"> right</option>
                   </select>
