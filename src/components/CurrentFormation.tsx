@@ -23,9 +23,9 @@ export const CurrentFormation: React.FC<{
 
    return (
       <>
-         <div className="bg-purple-200 flex flex-col items-center">
+         <div className=" flex flex-col items-center w-1/5 mr-3 border-black rounded-xl border-2 mb-2 px-10">
             <input type="text" defaultValue={formations[selectedFormation]?.name || `Formation ${selectedFormation}`} />
-            {dancersWhoAreNotInNextFormation?.length ? <p>Enter Strategy</p> : <></>}
+            {dancersWhoAreNotInPreviousFormation?.length ? <p>Enter Strategy</p> : <></>}
             {dancersWhoAreNotInPreviousFormation?.map((dancer, i) => (
                <div className="flex flex-row justify-between w-full" key={i}>
                   {dancers.find((dancerx) => dancerx.id === dancer.id)?.name}

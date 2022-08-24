@@ -76,30 +76,8 @@ const Home: NextPage = () => {
                      </Canvas>
                      <p>audience</p>
                   </div>
-                  {/* STATS */}
-                  <div className="text-xl bg-green-200 w-1/4">
-                     <p>selected formation: {JSON.stringify(selectedFormation)}</p>
-                     <p>positoin: {JSON.stringify(position)}</p>
-                     <p>{isPlaying ? "Playing " : "paused"}</p>
-                     <hr />
-                     <p>Current Formation:</p>
-                     <p>Duration: {selectedFormation !== null ? formations?.[selectedFormation]?.durationSeconds : ""}</p>
-                     <p>Transition Duration: {selectedFormation !== null ? formations?.[selectedFormation]?.transition.durationSeconds : ""}</p>
 
-                     <hr />
-                     <p>
-                        total all formations :{" "}
-                        {formations
-                           .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
-                           .reduce((partialSum, a) => partialSum + a, 0)}
-                     </p>
-                     <CurrentFormation
-                        dancers={dancers}
-                        setFormations={setFormations}
-                        formations={formations}
-                        selectedFormation={selectedFormation}
-                     />
-                  </div>
+                  <CurrentFormation dancers={dancers} setFormations={setFormations} formations={formations} selectedFormation={selectedFormation} />
                </div>
                <div className="overflow-x-scroll">
                   <SoundCloudComponent

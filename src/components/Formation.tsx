@@ -24,7 +24,7 @@ export const Formation: React.FC<{
          });
       });
    };
-   const onResizeTransition = (event, { element, size, handle }) => {
+   const onResizeTransition = (event: any, { size }: { size: any }) => {
       // this.setState({width: size.width, height: size.height});
       setFormations((formations: formation[]) => {
          return formations.map((formation, i) => {
@@ -37,20 +37,18 @@ export const Formation: React.FC<{
    };
    return (
       <>
-         <div
-            className={`  h-full flex flex-row  rounded-xl  box-border  border-black ${amSelected ? "border-[3px]" : "border-[1px]"} overflow-hidden`}
-         >
+         <div className={`  h-full flex flex-row  rounded-xl  border-black ${amSelected ? "border-[3px]" : "border-[1px]"} overflow-hidden`}>
             <div
                style={{
                   width: formation.durationSeconds * 10,
                }}
+               className="relative"
             >
                <Resizable
-                  className="flex flex-row justify-between w-full items-center"
                   width={formation.durationSeconds * 10}
                   onResize={onResizeFormation}
                   resizeHandles={["e"]}
-                  handle={<div className="bg-gray-500 ml-auto h-16 w-1 cursor-e-resize"></div>}
+                  handle={<div className="bg-gray-500  h-16 w-1 cursor-e-resize absolute right-0"></div>}
                >
                   <span></span>
                </Resizable>
@@ -60,13 +58,13 @@ export const Formation: React.FC<{
                style={{
                   width: formation.transition.durationSeconds * 10,
                }}
+               className="bg-blue-200 relative"
             >
                <Resizable
-                  className="flex flex-row justify-between w-full items-center"
                   width={formation.transition.durationSeconds * 10}
                   onResize={onResizeTransition}
                   resizeHandles={["e"]}
-                  handle={<div className="bg-gray-500 ml-auto h-16 w-1 cursor-e-resize"></div>}
+                  handle={<div className="bg-gray-500 absolute right-0 h-16 w-1 cursor-e-resize"></div>}
                >
                   <span></span>
                </Resizable>

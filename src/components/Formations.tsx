@@ -27,7 +27,7 @@ export const Formations: React.FC<{
    return (
       <>
          <div
-            className=" bg-red-200 min-h-[100px] flex flex-row pt-3 pb-6 px-6"
+            className="  min-h-[100px] flex flex-row pt-3 pb-6 px-6"
             style={{
                width: songDuration ? songDuration / 100 + 123 : "100%",
             }}
