@@ -21,12 +21,11 @@ export const Canvas: React.FC<{
    selectedFormation: number | null;
    formations: formation[];
 }> = ({ children, setDancers, dancers, setFormations, selectedFormation, formations }) => {
-   console.log(formations);
    const [{ isOver, canDrop }, drop] = useDrop(() => ({
       accept: ["dancerAlias", "dancer"],
       drop: (item: DragItem, monitor) => {
          if (item?.formations?.[item.selectedFormation]?.positions.find((dancer: dancerPosition) => dancer.id === item.id)) {
-            console.log("dancer already on stage");
+            // console.log("dancer already on stage");
             const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
             const left = Math.round(item.left + delta.x);
             const top = Math.round(item.top + delta.y);
@@ -52,10 +51,10 @@ export const Canvas: React.FC<{
             }
          } else {
             //  new dancer
-            console.log("new dancer");
+            // console.log("new dancer");
 
             if (item.selectedFormation !== null) {
-               console.log("selected formation is not null and new dancer");
+               // console.log("selected formation is not null and new dancer");
                setFormations((formations: formation[], index: number) => {
                   return formations.map((formation, i) => {
                      if (i === item.selectedFormation) {
@@ -83,7 +82,7 @@ export const Canvas: React.FC<{
    return (
       <>
          <div
-            className="flex flex-row justify-center items-center relative w-[800px] grow  overflow-hidden  border-2 border-black"
+            className="flex flex-row justify-center items-center relative w-[800px] grow  overflow-hidden  border-2 border-black rounded-xl mx-3"
             id="grid"
             ref={drop}
          >

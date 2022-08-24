@@ -8,6 +8,7 @@ export const Dancer = ({
    dancers,
    selectedFormation,
    formations,
+   instagramUsername,
 }: {
    name: string;
    id: string;
@@ -15,6 +16,7 @@ export const Dancer = ({
    dancers: dancer[];
    selectedFormation: number | null;
    formations: formation[];
+   instagramUsername: string | null;
 }) => {
    const [{ isDragging }, drag] = useDrag(
       () => ({
@@ -49,22 +51,23 @@ export const Dancer = ({
       // and the dancer is not already on the stage
       !formations[selectedFormation]?.positions.find((dancer) => dancer.id === id);
 
-   console.log(canBeAddedToStage);
+   // console.log(canBeAddedToStage);
    return (
       <>
          <div
             ref={drag}
-            className={`flex flex-row items-center bg-slate-300 border-black border-2`}
+            className={`flex flex-row items-center  border-black border-2 rounded-xl mb-1 h-16`}
             draggable={canBeAddedToStage}
             style={{
                opacity: canBeAddedToStage ? 1 : 0.7,
             }}
          >
-            {id}
-            <div className="w-12 h-12 bg-red-500 rounded-full flex flex-row justify-center items-center">
+            {/* <div className="w-12 h-12 bg-red-500 rounded-full flex flex-row justify-center items-center">
                <p className="pointer-events-none select-none">{initials}</p>
-            </div>
+            </div> */}
+            <img className="w-14 h-14 rounded-full ml-2" src="https://i.imgur.com/NRXbswe.jpg" alt="" />
             <input
+               className="ml-2"
                defaultValue={name}
                onChange={(e) => setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)))}
             />

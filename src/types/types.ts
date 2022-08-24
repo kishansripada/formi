@@ -1,6 +1,7 @@
 export type dancer = {
     name: string;
     id: string;
+    instagramUsername: string | null
  };
 
 

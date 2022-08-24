@@ -4,7 +4,8 @@ export const CurrentFormation: React.FC<{
    selectedFormation: number | null;
    formations: formation[];
    setFormations: Function;
-}> = ({ formations, selectedFormation, setFormations }) => {
+   dancers: dancer[];
+}> = ({ formations, selectedFormation, setFormations, dancers }) => {
    if (selectedFormation === null) {
       return <div>no formation selected :(</div>;
    }
@@ -22,14 +23,14 @@ export const CurrentFormation: React.FC<{
 
    return (
       <>
-         <div className="bg-purple-200">
+         <div className="bg-purple-200 flex flex-col items-center">
             <input type="text" defaultValue={formations[selectedFormation]?.name || `Formation ${selectedFormation}`} />
-            <p>Exit Strategy</p>
-            {dancersWhoAreNotInNextFormation?.map((dancer) => (
-               <div className="flex flex-row">
-                  <p>{dancer.id}</p>
+            {dancersWhoAreNotInNextFormation?.length ? <p>Enter Strategy</p> : <></>}
+            {dancersWhoAreNotInPreviousFormation?.map((dancer, i) => (
+               <div className="flex flex-row justify-between w-full" key={i}>
+                  {dancers.find((dancerx) => dancerx.id === dancer.id)?.name}
                   <select
-                     defaultValue={formations[selectedFormation]?.positions.find((dancerPosition) => dancerPosition.id === dancer.id)?.exitStrategy}
+                     defaultValue={formations[selectedFormation]?.positions.find((dancerPosition) => dancerPosition.id === dancer.id)?.enterStrategy}
                      onChange={(e) =>
                         setFormations((formations: formation[]) => {
                            return formations.map((formation, index: number) => {
@@ -38,7 +39,7 @@ export const CurrentFormation: React.FC<{
                                     ...formation,
                                     positions: formation.positions.map((dancerPosition) => {
                                        if (dancerPosition.id === dancer.id) {
-                                          return { ...dancerPosition, exitStrategy: e.target.value };
+                                          return { ...dancerPosition, enterStrategy: e.target.value };
                                        }
                                        return dancerPosition;
                                     }),
@@ -55,12 +56,12 @@ export const CurrentFormation: React.FC<{
                   </select>
                </div>
             ))}
-            <p>Enter Strategy</p>
-            {dancersWhoAreNotInPreviousFormation?.map((dancer) => (
-               <div className="flex flex-row">
-                  <p>{dancer.id}</p>
+            {dancersWhoAreNotInNextFormation?.length ? <p>Exit Strategy</p> : <></>}
+            {dancersWhoAreNotInNextFormation?.map((dancer, i) => (
+               <div className="flex flex-row justify-between w-full" key={i}>
+                  {dancers.find((dancerx) => dancerx.id === dancer.id)?.name}
                   <select
-                     defaultValue={formations[selectedFormation]?.positions.find((dancerPosition) => dancerPosition.id === dancer.id)?.enterStrategy}
+                     defaultValue={formations[selectedFormation]?.positions.find((dancerPosition) => dancerPosition.id === dancer.id)?.exitStrategy}
                      onChange={(e) =>
                         setFormations((formations: formation[]) => {
                            return formations.map((formation, index: number) => {
@@ -69,7 +70,7 @@ export const CurrentFormation: React.FC<{
                                     ...formation,
                                     positions: formation.positions.map((dancerPosition) => {
                                        if (dancerPosition.id === dancer.id) {
-                                          return { ...dancerPosition, enterStrategy: e.target.value };
+                                          return { ...dancerPosition, exitStrategy: e.target.value };
                                        }
                                        return dancerPosition;
                                     }),

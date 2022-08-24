@@ -38,7 +38,7 @@ const Home: NextPage = () => {
             <div className="flex flex-col h-screen overflow-hidden">
                <Header />
                <div className="flex flex-row grow overflow-hidden">
-                  <div className="flex flex-col w-1/4 relative overflow-y-scroll min-w-[300px]">
+                  <div className="flex flex-col w-1/4 relative overflow-y-scroll min-w-[300px] ml-3">
                      {dancers.map((dancer, index) => (
                         <Dancer
                            formations={formations}
@@ -54,7 +54,6 @@ const Home: NextPage = () => {
                   </div>
 
                   <div className="flex flex-col h-full items-center">
-                     <p>backstage</p>
                      <Canvas
                         formations={formations}
                         selectedFormation={selectedFormation}
@@ -78,7 +77,7 @@ const Home: NextPage = () => {
                      <p>audience</p>
                   </div>
                   {/* STATS */}
-                  <div className="text-xl bg-green-200 w-full">
+                  <div className="text-xl bg-green-200 w-1/4">
                      <p>selected formation: {JSON.stringify(selectedFormation)}</p>
                      <p>positoin: {JSON.stringify(position)}</p>
                      <p>{isPlaying ? "Playing " : "paused"}</p>
@@ -94,7 +93,12 @@ const Home: NextPage = () => {
                            .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
                            .reduce((partialSum, a) => partialSum + a, 0)}
                      </p>
-                     <CurrentFormation setFormations={setFormations} formations={formations} selectedFormation={selectedFormation} />
+                     <CurrentFormation
+                        dancers={dancers}
+                        setFormations={setFormations}
+                        formations={formations}
+                        selectedFormation={selectedFormation}
+                     />
                   </div>
                </div>
                <div className="overflow-x-scroll">
@@ -116,10 +120,6 @@ const Home: NextPage = () => {
          </DndProvider>
       </>
    );
-};
-
-const coordsToPosition = (x: number, y: number) => {
-   return { left: 400 + 40 * x, top: 400 + 40 * -y };
 };
 
 export default Home;

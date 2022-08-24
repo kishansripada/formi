@@ -14,8 +14,7 @@ export const SidebarDrop: React.FC<{ setFormations: Function }> = ({ setFormatio
    const [{ isOver, canDrop }, drop] = useDrop(() => ({
       accept: "dancerAlias",
       drop: (item: DragItem, monitor) => {
-         console.log("dropped on sidebar");
-         console.log(setFormations);
+         // console.log("dropped on sidebar");
          setFormations((formations: formation[]) => {
             return formations.map((formation: formation, index: number) => {
                if (index === item.selectedFormation) {
@@ -37,10 +36,10 @@ export const SidebarDrop: React.FC<{ setFormations: Function }> = ({ setFormatio
    return canDrop ? (
       <>
          <div
-            className="h-full opacity-70 absolute z-10 w-full  flex flex-row justify-center items-center bg-red-500/40  ring-black rounded ring-2"
+            className="h-full opacity-70 absolute z-10 w-full  flex flex-row justify-center items-center bg-red-500/40 rounded-xl border-red-600 border-4"
             ref={drop}
          >
-            <p>{isOver ? "remove from scene" : ""}</p>
+            <p>{isOver ? "remove from formation" : ""}</p>
          </div>
       </>
    ) : null;

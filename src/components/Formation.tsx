@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 // import { Resizable } from "re-resizable";
-import { ResizableBox } from "react-resizable";
+// import { ResizableBox } from "react-resizable";
+import { Resizable } from "react-resizable";
+
 import { dancer, dancerPosition, formation } from "../types/types";
 
 export const Formation: React.FC<{
@@ -11,48 +13,64 @@ export const Formation: React.FC<{
    setSelectedFormation: Function;
    deleteFormation: Function;
 }> = ({ formation, amSelected, index, setFormations, setSelectedFormation, deleteFormation }) => {
+   const onResizeFormation = (event, { element, size, handle }) => {
+      // this.setState({width: size.width, height: size.height});
+      setFormations((formations: formation[]) => {
+         return formations.map((formation, i) => {
+            if (i === index) {
+               return { ...formation, durationSeconds: size.width / 10 };
+            }
+            return formation;
+         });
+      });
+   };
+   const onResizeTransition = (event, { element, size, handle }) => {
+      // this.setState({width: size.width, height: size.height});
+      setFormations((formations: formation[]) => {
+         return formations.map((formation, i) => {
+            if (i === index) {
+               return { ...formation, transition: { ...formation.transition, durationSeconds: size.width / 10 } };
+            }
+            return formation;
+         });
+      });
+   };
    return (
       <>
          <div
-            className={` bg-gray-200  h-full flex flex-row  rounded-xl group box-border  border-black ${
-               amSelected ? "border-[3px]" : "border-[1px]"
-            }`}
-            style={{
-               width: (formation.transition.durationSeconds + formation.durationSeconds) * 10,
-            }}
+            className={`  h-full flex flex-row  rounded-xl  box-border  border-black ${amSelected ? "border-[3px]" : "border-[1px]"} overflow-hidden`}
          >
-            {/* <p className="">index: {index}</p>
-            <p className="">duration: {formation.durationSeconds}s</p> */}
-            {/* 
-            <svg
-               xmlns="http://www.w3.org/2000/svg"
-               className="h-6 w-6 ml-auto mr-1 mt-1 fill-gray-300 cursor-pointer invisible group-hover:visible"
-               fill="none"
-               viewBox="0 0 24 24"
-               stroke="currentColor"
-               strokeWidth={2}
-               onClick={() => deleteFormation(index)}
-            >
-               <path
-                  id="delete"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-               />
-            </svg> */}
-
             <div
-               className="bg-red-200 rounded-l-xl"
                style={{
                   width: formation.durationSeconds * 10,
                }}
-            ></div>
+            >
+               <Resizable
+                  className="flex flex-row justify-between w-full items-center"
+                  width={formation.durationSeconds * 10}
+                  onResize={onResizeFormation}
+                  resizeHandles={["e"]}
+                  handle={<div className="bg-gray-500 ml-auto h-16 w-1 cursor-e-resize"></div>}
+               >
+                  <span></span>
+               </Resizable>
+            </div>
+
             <div
-               className="bg-blue-200 rounded-r-xl"
                style={{
                   width: formation.transition.durationSeconds * 10,
                }}
-            ></div>
+            >
+               <Resizable
+                  className="flex flex-row justify-between w-full items-center"
+                  width={formation.transition.durationSeconds * 10}
+                  onResize={onResizeTransition}
+                  resizeHandles={["e"]}
+                  handle={<div className="bg-gray-500 ml-auto h-16 w-1 cursor-e-resize"></div>}
+               >
+                  <span></span>
+               </Resizable>
+            </div>
          </div>
       </>
    );

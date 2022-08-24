@@ -22,7 +22,7 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, formations, 
    // if the track is playing then early return with the animation function
    if (isPlaying && position !== null) {
       let myPosition = animate(formations, position, id);
-      console.log(myPosition);
+      // console.log(myPosition);
       return (
          <>
             <div
