@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { trpc } from "../../utils/trpc";
 import { useState, useEffect, useRef, useCallback } from "react";
 import debounce from "lodash.debounce";
 import { supabase } from "../../utils/supabase";
@@ -94,12 +93,31 @@ const Home: NextPage = () => {
       }
    }, [formations, router.isReady]);
    //////////////////////////
+   // ///////////
+   let uploadSoundCloudId = useCallback(
+      debounce(async (soundCloudTrackId) => {
+         console.log("uploading formations");
+         const { data, error } = await supabase.from("dances").update({ soundCloudId: soundCloudTrackId }).eq("id", router.query.danceId);
+         console.log({ data });
+         console.log({ error });
+         setSaved(true);
+      }, 5000),
+      [router.query.danceId]
+   );
+
+   useEffect(() => {
+      if (router.isReady) {
+         setSaved(false);
+         uploadSoundCloudId(soundCloudTrackId);
+      }
+   }, [soundCloudTrackId, router.isReady]);
+   //////////////////////////
 
    return (
       <>
          <DndProvider backend={HTML5Backend}>
             <div className="flex flex-col h-screen overflow-hidden">
-               <Header saved={saved} />
+               <Header saved={saved} setSoundCloudTrackId={setSoundCloudTrackId} />
                <div className="flex flex-row grow overflow-hidden">
                   <div className="flex flex-col w-1/4 relative overflow-y-scroll min-w-[300px] ml-3 overflow-hidden">
                      {dancers.map((dancer, index) => (
