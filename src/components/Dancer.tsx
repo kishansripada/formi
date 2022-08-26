@@ -60,19 +60,33 @@ export const Dancer = ({
             ref={drag}
             className={`flex flex-row items-center  border-black border-2 rounded-xl mb-1 h-16`}
             draggable={canBeAddedToStage && !isPlaying}
-            style={{
-               opacity: canBeAddedToStage && !isPlaying ? 1 : 0.7,
-            }}
          >
             {/* <div className="w-12 h-12 bg-red-500 rounded-full flex flex-row justify-center items-center">
                <p className="pointer-events-none select-none">{initials}</p>
             </div> */}
-            <img className="w-14 h-14 rounded-full ml-2" src="https://i.imgur.com/NRXbswe.jpg" alt="" />
+
+            {instagramUsername ? (
+               <img className="w-14 h-14 rounded-full ml-2" src="https://i.imgur.com/NRXbswe.jpg" alt="" />
+            ) : (
+               <>
+                  <div
+                     className={`w-14 h-14 ml-2 rounded-full grid place-items-center ${
+                        canBeAddedToStage && !isPlaying ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" : "bg-black"
+                     } `}
+                  >
+                     <div className="bg-white rounded-full w-12 h-12 grid place-items-center">
+                        <p className="">{initials}</p>
+                     </div>
+                  </div>
+               </>
+            )}
+
             <input
-               className="ml-2"
+               className="ml-2 px-2 py-1 rounded-md focus:outline-gray-500"
                defaultValue={name}
                onChange={(e) => setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)))}
             />
+
             <button className="ml-auto mr-4" onClick={removeDancer}>
                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path

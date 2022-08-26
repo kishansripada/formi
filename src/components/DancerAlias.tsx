@@ -26,14 +26,16 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, formations, 
       return (
          <>
             <div
-               className={`w-8 h-8 bg-red-500 rounded-full flex flex-row justify-center items-center absolute z-[9999] mr-auto ml-auto pointer-events-none`}
+               className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[9999] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 pointer-events-none`}
                style={{
                   transform: "translate(-50%, -50%)",
                   left: myPosition.left,
                   top: myPosition.top,
                }}
             >
-               <p className="">{initials}</p>
+               <div className="bg-white rounded-full w-8 h-8 grid place-items-center">
+                  <p className="">{initials}</p>
+               </div>
             </div>
          </>
       );
@@ -63,7 +65,7 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, formations, 
       <>
          <div
             ref={drag}
-            className={`w-8 h-8 bg-red-500 rounded-full flex flex-row justify-center items-center absolute z-[9999] mr-auto ml-auto ${
+            className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[9999] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  ${
                selectedFormation === null ? "pointer-events-none" : ""
             }`}
             style={{
@@ -73,7 +75,9 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, formations, 
                opacity: isDragging ? 0 : 1,
             }}
          >
-            <p className="">{initials}</p>
+            <div className="bg-white rounded-full w-8 h-8 grid place-items-center">
+               <p className="">{initials}</p>
+            </div>
          </div>
       </>
    );

@@ -1,5 +1,6 @@
 import { ReactEventHandler } from "react";
 import { Formation } from "./Formation";
+import { useCallback, useEffect, useState } from "react";
 import { dancer, dancerPosition, formation } from "../types/types";
 
 export const Formations: React.FC<{
@@ -9,6 +10,10 @@ export const Formations: React.FC<{
    setFormations: Function;
    songDuration: number | null;
 }> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration }) => {
+   let [isCommandDown, setIsCommandDown] = useState<boolean>(false);
+
+   let [copiedFormation, setCopiedFormation] = useState<null | formation>(null);
+
    const clickOutsideFormations = (e: any) => {
       if (e.target.id !== "outside") return;
       e.stopPropagation();
@@ -24,6 +29,55 @@ export const Formations: React.FC<{
          return formations.filter((_, i) => i !== index);
       });
    };
+
+   const copy = () => {
+      if (selectedFormation === null) return;
+      setCopiedFormation(formations[selectedFormation]);
+   };
+
+   const paste = () => {
+      if (!copiedFormation || selectedFormation === null) return;
+      setFormations((formations: formation[]) => {
+         return formations.map((formation, index) => {
+            if (selectedFormation === index) {
+               return copiedFormation;
+            }
+            return formation;
+         });
+      });
+      console.log(copiedFormation);
+   };
+
+   const handleKeyDown = (event) => {
+      if (event.key === "Meta") {
+         setIsCommandDown(true);
+      }
+      if (event.key === "c" && isCommandDown) {
+         copy();
+      }
+      if (event.key === "v" && isCommandDown) {
+         paste();
+      }
+   };
+
+   const handleKeyUp = useCallback((event) => {
+      if (event.key === "Meta") {
+         setIsCommandDown(false);
+      }
+   }, []);
+
+   useEffect(() => {
+      // attach the event listener
+      document.addEventListener("keydown", handleKeyDown);
+      document.addEventListener("keyup", handleKeyUp);
+
+      // remove the event listener
+      return () => {
+         document.removeEventListener("keydown", handleKeyDown);
+         document.removeEventListener("keyup", handleKeyUp);
+      };
+   }, [handleKeyDown, handleKeyUp]);
+
    return (
       <>
          <div

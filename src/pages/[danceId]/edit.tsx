@@ -5,7 +5,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import debounce from "lodash.debounce";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
-
 import { type } from "os";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
