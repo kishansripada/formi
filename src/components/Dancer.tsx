@@ -9,6 +9,7 @@ export const Dancer = ({
    selectedFormation,
    formations,
    instagramUsername,
+   isPlaying,
 }: {
    name: string;
    id: string;
@@ -17,6 +18,7 @@ export const Dancer = ({
    selectedFormation: number | null;
    formations: formation[];
    instagramUsername: string | null;
+   isPlaying: boolean;
 }) => {
    const [{ isDragging }, drag] = useDrag(
       () => ({
@@ -57,9 +59,9 @@ export const Dancer = ({
          <div
             ref={drag}
             className={`flex flex-row items-center  border-black border-2 rounded-xl mb-1 h-16`}
-            draggable={canBeAddedToStage}
+            draggable={canBeAddedToStage && !isPlaying}
             style={{
-               opacity: canBeAddedToStage ? 1 : 0.7,
+               opacity: canBeAddedToStage && !isPlaying ? 1 : 0.7,
             }}
          >
             {/* <div className="w-12 h-12 bg-red-500 rounded-full flex flex-row justify-center items-center">
