@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation } from "../types/types";
+import { dancer, dancerPosition, formation } from "../../types/types";
 
 export const CurrentFormation: React.FC<{
    selectedFormation: number | null;

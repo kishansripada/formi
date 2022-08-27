@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useDrop } from "react-dnd";
 import type { XYCoord } from "react-dnd";
-import { GridLines } from "../components/GridLines";
-import { dancer, dancerPosition, formation } from "../types/types";
+import { GridLines } from "./GridLines";
+import { dancer, dancerPosition, formation } from "../../types/types";
 
 export interface DragItem {
    type: string;

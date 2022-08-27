@@ -1,5 +1,5 @@
 import { useDrag } from "react-dnd";
-import { dancer, dancerPosition, formation } from "../types/types";
+import { dancer, dancerPosition, formation } from "../../types/types";
 
 export const Dancer = ({
    name,

@@ -1,7 +1,7 @@
 import { ReactEventHandler } from "react";
 import { Formation } from "./Formation";
 import { useCallback, useEffect, useState } from "react";
-import { dancer, dancerPosition, formation } from "../types/types";
+import { dancer, dancerPosition, formation } from "../../types/types";
 
 export const Formations: React.FC<{
    formations: formation[];
@@ -48,7 +48,7 @@ export const Formations: React.FC<{
       console.log(copiedFormation);
    };
 
-   const handleKeyDown = (event) => {
+   const handleKeyDown = (event: any) => {
       if (event.key === "Meta") {
          setIsCommandDown(true);
       }
@@ -60,7 +60,7 @@ export const Formations: React.FC<{
       }
    };
 
-   const handleKeyUp = useCallback((event) => {
+   const handleKeyUp = useCallback((event: any) => {
       if (event.key === "Meta") {
          setIsCommandDown(false);
       }

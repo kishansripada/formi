@@ -7,14 +7,14 @@ import { useRouter } from "next/router";
 import { type } from "os";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { DancerAlias } from "../../components/DancerAlias";
-import { Dancer } from "../../components/Dancer";
-import { Canvas } from "../../components/Canvas";
-import { SidebarDrop } from "../../components/SidebarDrop";
-import { NewDancer } from "../../components/NewDancer";
-import { Header } from "../../components/Header";
-import { Formations } from "../../components/Formations";
-import { CurrentFormation } from "../../components/CurrentFormation";
+import { DancerAlias } from "../../components/AppComponents/DancerAlias";
+import { Dancer } from "../../components/AppComponents/Dancer";
+import { Canvas } from "../../components/AppComponents/Canvas";
+import { SidebarDrop } from "../../components/AppComponents/SidebarDrop";
+import { NewDancer } from "../../components/AppComponents/NewDancer";
+import { Header } from "../../components/AppComponents/Header";
+import { Formations } from "../../components/AppComponents/Formations";
+import { CurrentFormation } from "../../components/AppComponents/CurrentFormation";
 // import { SoundCloudComponent } from "../components/SoundCloudComponent";
 import dynamic from "next/dynamic";
 
@@ -25,7 +25,7 @@ const SoundCloudComponent = dynamic<{
    songDuration: number | null;
    soundCloudTrackId: string | null;
    setSoundCloudTrackId: Function;
-}>(() => import("../../components/SoundCloudComponent").then((mod) => mod.SoundCloudComponent), {
+}>(() => import("../../components/AppComponents/SoundCloudComponent").then((mod) => mod.SoundCloudComponent), {
    ssr: false,
 });
 

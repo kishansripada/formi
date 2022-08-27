@@ -8,7 +8,7 @@ export interface DragItem {
    formations: formation[];
    selectedFormation: number;
 }
-import { dancer, dancerPosition, formation } from "../types/types";
+import { dancer, dancerPosition, formation } from "../../types/types";
 
 export const SidebarDrop: React.FC<{ setFormations: Function }> = ({ setFormations }) => {
    const [{ isOver, canDrop }, drop] = useDrop(() => ({

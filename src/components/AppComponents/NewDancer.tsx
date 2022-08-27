@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { dancer, dancerPosition, formation } from "../types/types";
+import { dancer, dancerPosition, formation } from "../../types/types";
 
 export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
    const [newName, setNewName] = useState("");

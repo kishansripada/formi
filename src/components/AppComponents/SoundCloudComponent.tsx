@@ -1,6 +1,5 @@
 import Script from "next/script";
 import { useState } from "react";
-import { trpc } from "../utils/trpc";
 
 export const SoundCloudComponent: React.FC<{
    setPosition: Function;

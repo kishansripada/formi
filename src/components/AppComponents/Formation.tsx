@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Resizable } from "react-resizable";
-import { dancer, dancerPosition, formation } from "../types/types";
+import { dancer, dancerPosition, formation } from "../../types/types";
 
 export const Formation: React.FC<{
    formation: formation;
