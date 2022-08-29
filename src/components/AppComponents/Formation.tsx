@@ -55,7 +55,7 @@ export const Formation: React.FC<{
                style={{
                   width: formation.transition.durationSeconds * 10,
                }}
-               className="bg-blue-200 relative"
+               className=" relative"
             >
                <Resizable
                   width={formation.transition.durationSeconds * 10}
@@ -65,6 +65,14 @@ export const Formation: React.FC<{
                >
                   <span></span>
                </Resizable>
+               <div className="flex flex-row h-full">
+                  <svg className="w-1/2" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
+                     <polygon fill="lightgray" strokeWidth={0} points="0,0 0,20 10,10" />
+                  </svg>
+                  <svg className="w-1/2 mr-1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
+                     <polygon fill="lightgray" strokeWidth={0} points="0,10 10,0 10,20" />
+                  </svg>
+               </div>
             </div>
          </div>
       </>

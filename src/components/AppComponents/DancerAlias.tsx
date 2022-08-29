@@ -89,36 +89,27 @@ const coordsToPosition = (x: number, y: number) => {
 
 const animate = (formations: formation[], position: number, id: string): { left: number; top: number } => {
    let sum = 0;
-   let currentFormationIndex = 0;
+   let currentFormationIndex = null;
    let isInTransition;
-
+   let percentThroughTransition;
    for (let i = 0; i < formations.length; i++) {
       sum = sum + formations[i].durationSeconds + formations[i]?.transition.durationSeconds;
       if (position < sum) {
          currentFormationIndex = i;
+         let durationThroughTransition = position - (sum - formations[i]?.transition?.durationSeconds);
 
-         if (position < sum - formations[i]?.transition?.durationSeconds) {
-            isInTransition = false;
-         } else {
+         if (durationThroughTransition > 0) {
             isInTransition = true;
+            percentThroughTransition = durationThroughTransition / formations[i]?.transition?.durationSeconds;
+         } else {
+            isInTransition = false;
          }
          break;
       }
    }
 
-   // get a list of the times that each formation ends
-   // const endTimes = formations.map((_, index) =>
-   //    formations
-   //       .slice(0, index + 1)
-   //       .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
-   //       .reduce((partialSum, a) => partialSum + a, 0)
-   // );
-
-   // // find the current formation that the times suggest
-   // const currentFormationIndex = formations.findIndex((_, index) => position < endTimes[index]);
-
    // if the position is beyond all the formation, return off stage
-   if (!formations[currentFormationIndex]) {
+   if (currentFormationIndex === null) {
       return coordsToPosition(10, 10);
    }
 
@@ -127,8 +118,6 @@ const animate = (formations: formation[], position: number, id: string): { left:
    let inNextFormation = formations[currentFormationIndex + 1]
       ? formations[currentFormationIndex + 1].positions.find((dancerPosition) => dancerPosition.id === id)
       : false;
-
-   // let isInTransition = position > endTimes[currentFormationIndex] - formations[currentFormationIndex].transition.durationSeconds;
 
    let from;
    let to;
@@ -189,10 +178,6 @@ const animate = (formations: formation[], position: number, id: string): { left:
          return coordsToPosition(10, 10);
       }
    }
-
-   let percentThroughTransition =
-      (position - (sum - formations[currentFormationIndex].transition.durationSeconds)) /
-      formations[currentFormationIndex].transition.durationSeconds;
 
    return coordsToPosition(from.x + (to.x - from.x) * percentThroughTransition, from.y + (to.y - from.y) * percentThroughTransition);
 };

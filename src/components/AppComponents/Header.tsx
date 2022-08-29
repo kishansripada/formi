@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 
-export const Header = ({ saved, setSoundCloudTrackId }: { saved: boolean; setSoundCloudTrackId: Function }) => {
+export const Header = ({ saved, setSoundCloudTrackId, session }: { saved: boolean; setSoundCloudTrackId: Function; session: any }) => {
    const wrapperRef = useRef(null);
    useEffect(() => {
       function handleClickOutside(event) {
@@ -17,8 +18,11 @@ export const Header = ({ saved, setSoundCloudTrackId }: { saved: boolean; setSou
    let [newSoundCloudUrl, setNewSoundCloudUrl] = useState("");
    return (
       <div className="mb-2">
-         <div className=" h-[75px] flex flex-row items-center shrink-0">
-            <p className="text-3xl"> LOGO</p>
+         <div className=" h-[75px] flex flex-row items-center shrink-0 px-10 ">
+            <div className="flex flex-row items-end">
+               <p className="text-3xl"> nuch</p>
+               <p className="text-sm mb-1 ml-4">Welcome back, {session.user.user_metadata.full_name}</p>
+            </div>
 
             <div className="ml-auto flex">
                <div ref={wrapperRef}>
@@ -82,6 +86,9 @@ export const Header = ({ saved, setSoundCloudTrackId }: { saved: boolean; setSou
                      <p>saving...</p>
                   </div>
                )}
+               <Link href="/mydances">
+                  <a className="ml-10">My Dances</a>
+               </Link>
             </div>
          </div>
          <hr />

@@ -12,11 +12,20 @@ import { Dancer } from "../../components/AppComponents/Dancer";
 import { Canvas } from "../../components/AppComponents/Canvas";
 import { SidebarDrop } from "../../components/AppComponents/SidebarDrop";
 import { NewDancer } from "../../components/AppComponents/NewDancer";
-import { Header } from "../../components/AppComponents/Header";
 import { Formations } from "../../components/AppComponents/Formations";
 import { CurrentFormation } from "../../components/AppComponents/CurrentFormation";
 // import { SoundCloudComponent } from "../components/SoundCloudComponent";
 import dynamic from "next/dynamic";
+
+const Header = dynamic<{
+   saved: boolean;
+   setSoundCloudTrackId: Function;
+   session: any;
+}>(() => import("../../components/AppComponents/Header").then((mod) => mod.Header), {
+   ssr: false,
+});
+
+// import { Header } from "../../components/AppComponents/Header";
 
 const SoundCloudComponent = dynamic<{
    setPosition: Function;
@@ -31,7 +40,7 @@ const SoundCloudComponent = dynamic<{
 
 import { dancer, dancerPosition, formation } from "../../types/types";
 
-const Home: NextPage = () => {
+const Home = ({ session }: { session: any }) => {
    const [songDuration, setSongDuration] = useState<number | null>(null);
    const [dancers, setDancers] = useState<dancer[]>([]);
    const [position, setPosition] = useState<number | null>(null);
@@ -64,7 +73,7 @@ const Home: NextPage = () => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 5000),
+      }, 20000),
       [router.query.danceId]
    );
 
@@ -82,7 +91,7 @@ const Home: NextPage = () => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 5000),
+      }, 20000),
       [router.query.danceId]
    );
 
@@ -117,11 +126,12 @@ const Home: NextPage = () => {
       <>
          <DndProvider backend={HTML5Backend}>
             <div className="flex flex-col h-screen overflow-hidden">
-               <Header saved={saved} setSoundCloudTrackId={setSoundCloudTrackId} />
+               <Header session={session} saved={saved} setSoundCloudTrackId={setSoundCloudTrackId} />
                <div className="flex flex-row grow overflow-hidden">
                   <div className="flex flex-col w-1/4 relative overflow-y-scroll min-w-[300px] ml-3 overflow-hidden">
                      {dancers.map((dancer, index) => (
                         <Dancer
+                           setFormations={setFormations}
                            isPlaying={isPlaying}
                            formations={formations}
                            selectedFormation={selectedFormation}
@@ -159,7 +169,13 @@ const Home: NextPage = () => {
                      <p>audience</p>
                   </div>
 
-                  <CurrentFormation dancers={dancers} setFormations={setFormations} formations={formations} selectedFormation={selectedFormation} />
+                  <CurrentFormation
+                     setSelectedFormation={setSelectedFormation}
+                     dancers={dancers}
+                     setFormations={setFormations}
+                     formations={formations}
+                     selectedFormation={selectedFormation}
+                  />
                </div>
                <div className="overflow-x-scroll min-h-[195px]">
                   <SoundCloudComponent

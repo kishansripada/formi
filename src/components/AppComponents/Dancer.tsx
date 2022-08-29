@@ -8,6 +8,7 @@ export const Dancer = ({
    dancers,
    selectedFormation,
    formations,
+   setFormations,
    instagramUsername,
    isPlaying,
 }: {
@@ -17,6 +18,7 @@ export const Dancer = ({
    dancers: dancer[];
    selectedFormation: number | null;
    formations: formation[];
+   setFormations: Function;
    instagramUsername: string | null;
    isPlaying: boolean;
 }) => {
@@ -35,6 +37,12 @@ export const Dancer = ({
    );
 
    const removeDancer = () => {
+      // remove dancer and all their positions
+      setFormations((formations) => {
+         return formations.map((formation) => {
+            return { ...formation, positions: formation.positions.filter((dancerPosition) => dancerPosition.id !== id) };
+         });
+      });
       setDancers((dancers: dancer[]) => {
          return dancers.filter((dancer) => dancer.id !== id);
       });
@@ -58,7 +66,7 @@ export const Dancer = ({
       <>
          <div
             ref={drag}
-            className={`flex flex-row items-center  border-black border-2 rounded-xl mb-1 h-16`}
+            className={`flex flex-row items-center  border-black border-2 rounded-xl mb-1 min-h-[64px]`}
             draggable={canBeAddedToStage && !isPlaying}
          >
             {/* <div className="w-12 h-12 bg-red-500 rounded-full flex flex-row justify-center items-center">
@@ -82,7 +90,7 @@ export const Dancer = ({
             )}
 
             <input
-               className="ml-2 px-2 py-1 rounded-md focus:outline-gray-500"
+               className="ml-2 px-2 py-1 rounded-md focus:outline-gray-500 w-32"
                defaultValue={name}
                onChange={(e) => setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)))}
             />
