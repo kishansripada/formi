@@ -11,6 +11,7 @@ export const Dancer = ({
    setFormations,
    instagramUsername,
    isPlaying,
+   removeDancer,
 }: {
    name: string;
    id: string;
@@ -21,6 +22,7 @@ export const Dancer = ({
    setFormations: Function;
    instagramUsername: string | null;
    isPlaying: boolean;
+   removeDancer: Function;
 }) => {
    const [{ isDragging }, drag] = useDrag(
       () => ({
@@ -35,18 +37,6 @@ export const Dancer = ({
       }),
       [id, formations, selectedFormation]
    );
-
-   const removeDancer = () => {
-      // remove dancer and all their positions
-      setFormations((formations) => {
-         return formations.map((formation) => {
-            return { ...formation, positions: formation.positions.filter((dancerPosition) => dancerPosition.id !== id) };
-         });
-      });
-      setDancers((dancers: dancer[]) => {
-         return dancers.filter((dancer) => dancer.id !== id);
-      });
-   };
 
    let initials = name
       .split(" ")
@@ -66,7 +56,7 @@ export const Dancer = ({
       <>
          <div
             ref={drag}
-            className={`flex flex-row items-center  border-black border-2 rounded-xl mb-1 min-h-[64px]`}
+            className={`flex flex-row items-center  border-black  rounded-xl mb-1 min-h-[64px] bg-white`}
             draggable={canBeAddedToStage && !isPlaying}
          >
             {/* <div className="w-12 h-12 bg-red-500 rounded-full flex flex-row justify-center items-center">
@@ -78,7 +68,7 @@ export const Dancer = ({
             ) : (
                <>
                   <div
-                     className={`w-14 h-14 ml-2 rounded-full grid place-items-center ${
+                     className={`min-w-[56px] min-h-[56px] ml-2 rounded-full grid place-items-center ${
                         canBeAddedToStage && !isPlaying ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" : "bg-black"
                      } `}
                   >
@@ -90,12 +80,12 @@ export const Dancer = ({
             )}
 
             <input
-               className="ml-2 px-2 py-1 rounded-md focus:outline-gray-500 w-32"
+               className="ml-2 px-2 py-1 rounded-md focus:outline-gray-500 w-full mr-3"
                defaultValue={name}
                onChange={(e) => setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)))}
             />
 
-            <button className="ml-auto mr-4" onClick={removeDancer}>
+            <button className="ml-auto mr-4" onClick={() => removeDancer(id)}>
                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path
                      fillRule="evenodd"

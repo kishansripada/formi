@@ -20,16 +20,6 @@ export const Formations: React.FC<{
       setSelectedFormation(null);
    };
 
-   const deleteFormation = (index: number) => {
-      //  if the user deletes the selected formation, unselect it and select the one before it
-      if (selectedFormation === index) {
-         setSelectedFormation(index - 1);
-      }
-      setFormations((formations: formation[]) => {
-         return formations.filter((_, i) => i !== index);
-      });
-   };
-
    const copy = () => {
       if (selectedFormation === null) return;
       setCopiedFormation(formations[selectedFormation]);
@@ -81,7 +71,7 @@ export const Formations: React.FC<{
    return (
       <>
          <div
-            className=" h-[100px] flex flex-row pt-3 pb-6 px-6"
+            className=" h-[100px] flex flex-row pt-3 pb-6 px-6 bg-white"
             style={{
                width: songDuration ? songDuration / 100 + 123 : "100%",
             }}
@@ -121,7 +111,6 @@ export const Formations: React.FC<{
                   }}
                >
                   <Formation
-                     deleteFormation={deleteFormation}
                      setSelectedFormation={setSelectedFormation}
                      setFormations={setFormations}
                      formation={formation}

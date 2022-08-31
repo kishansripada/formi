@@ -82,7 +82,7 @@ export const Canvas: React.FC<{
    return (
       <>
          <div
-            className="flex flex-row justify-center items-center relative w-[800px] grow  overflow-hidden  border-2 border-black rounded-xl mx-3"
+            className="flex flex-row justify-center items-center relative w-[800px] grow  overflow-hidden  border-black  mx-3 bg-white"
             id="grid"
             ref={drop}
          >

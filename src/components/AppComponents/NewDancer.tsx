@@ -16,7 +16,7 @@ export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
    return (
       <>
          <div
-            className="flex flex-row items-center h-16 rounded-xl border-black border-2 shrink-0"
+            className="flex flex-row items-center h-16 rounded-xl bg-white shrink-0"
             style={{
                opacity: 1,
             }}
@@ -29,6 +29,7 @@ export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
                onChange={(e) => setNewName(e.target.value)}
                onBlur={createNewDancer}
             />
+            <p className="ml-auto text-gray-400 mr-3"> enter to create</p>
          </div>
       </>
    );

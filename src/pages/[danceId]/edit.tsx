@@ -48,8 +48,21 @@ const Home = ({ session }: { session: any }) => {
    const [selectedFormation, setSelectedFormation] = useState<number | null>(null);
    const [formations, setFormations] = useState<formation[]>([]);
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(null);
+   const [danceName, setDanceName] = useState<string>("Untitled Dance");
    const [saved, setSaved] = useState<boolean>(true);
    const router = useRouter();
+
+   const removeDancer = (id: string) => {
+      // remove dancer and all their positions
+      setFormations((formations) => {
+         return formations.map((formation) => {
+            return { ...formation, positions: formation.positions.filter((dancerPosition) => dancerPosition.id !== id) };
+         });
+      });
+      setDancers((dancers: dancer[]) => {
+         return dancers.filter((dancer) => dancer.id !== id);
+      });
+   };
 
    useEffect(() => {
       if (router.query.danceId) {
@@ -58,10 +71,11 @@ const Home = ({ session }: { session: any }) => {
             .select("*")
             .eq("id", router.query.danceId)
             .then((r) => {
-               let { soundCloudId, dancers, formations } = r.data[0];
+               let { soundCloudId, dancers, formations, name } = r.data[0];
                setSoundCloudTrackId(soundCloudId);
                setFormations(formations);
                setDancers(dancers);
+               setDanceName(name);
             });
       }
    }, [router.query.danceId]);
@@ -121,16 +135,42 @@ const Home = ({ session }: { session: any }) => {
       }
    }, [soundCloudTrackId, router.isReady]);
    //////////////////////////
+   // ///////////
+   let uploadName = useCallback(
+      debounce(async (danceName) => {
+         console.log("uploading name");
+         const { data, error } = await supabase.from("dances").update({ name: danceName }).eq("id", router.query.danceId);
+         console.log({ data });
+         console.log({ error });
+         setSaved(true);
+      }, 5000),
+      [router.query.danceId]
+   );
+
+   useEffect(() => {
+      if (router.isReady) {
+         setSaved(false);
+         uploadName(danceName);
+      }
+   }, [danceName, router.isReady]);
+   //////////////////////////
 
    return (
       <>
          <DndProvider backend={HTML5Backend}>
-            <div className="flex flex-col h-screen overflow-hidden">
-               <Header session={session} saved={saved} setSoundCloudTrackId={setSoundCloudTrackId} />
+            <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa]">
+               <Header
+                  session={session}
+                  saved={saved}
+                  setSoundCloudTrackId={setSoundCloudTrackId}
+                  danceName={danceName}
+                  setDanceName={setDanceName}
+               />
                <div className="flex flex-row grow overflow-hidden">
-                  <div className="flex flex-col w-1/4 relative overflow-y-scroll min-w-[300px] ml-3 overflow-hidden">
+                  <div className="flex flex-col w-1/6 relative overflow-y-scroll min-w-[300px] ml-3 overflow-hidden">
                      {dancers.map((dancer, index) => (
                         <Dancer
+                           removeDancer={removeDancer}
                            setFormations={setFormations}
                            isPlaying={isPlaying}
                            formations={formations}
@@ -145,7 +185,7 @@ const Home = ({ session }: { session: any }) => {
                      <SidebarDrop setFormations={setFormations} />
                   </div>
 
-                  <div className="flex flex-col h-full items-center">
+                  <div className="flex flex-col h-full items-center w-2/3">
                      <Canvas
                         formations={formations}
                         selectedFormation={selectedFormation}
@@ -155,6 +195,7 @@ const Home = ({ session }: { session: any }) => {
                      >
                         {dancers.map((dancer, index) => (
                            <DancerAlias
+                              index={index}
                               isPlaying={isPlaying}
                               position={position ? parseFloat(position.toFixed(2)) : null}
                               selectedFormation={selectedFormation}

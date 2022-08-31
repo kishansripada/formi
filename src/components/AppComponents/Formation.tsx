@@ -8,8 +8,7 @@ export const Formation: React.FC<{
    index: number;
    setFormations: Function;
    setSelectedFormation: Function;
-   deleteFormation: Function;
-}> = ({ formation, amSelected, index, setFormations, setSelectedFormation, deleteFormation }) => {
+}> = ({ formation, amSelected, index, setFormations, setSelectedFormation }) => {
    const onResizeFormation = (event, { element, size, handle }) => {
       // this.setState({width: size.width, height: size.height});
       setFormations((formations: formation[]) => {

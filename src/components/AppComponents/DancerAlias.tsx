@@ -9,9 +9,10 @@ export interface DancerAliasProps {
    formations: formation[];
    isPlaying: boolean;
    position: number | null;
+   index: number;
 }
 
-export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, formations, setDancers, selectedFormation, isPlaying, position }) => {
+export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, formations, setDancers, selectedFormation, isPlaying, position, index }) => {
    let initials = name
       .split(" ")
       .map((word) => word[0])

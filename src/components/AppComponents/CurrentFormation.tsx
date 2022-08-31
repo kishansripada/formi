@@ -20,9 +20,9 @@ export const CurrentFormation: React.FC<{
 
    return (
       <>
-         <div className=" flex flex-col  w-1/5 mr-3 border-black rounded-xl border-2 mb-6 px-3 ">
+         <div className=" flex flex-col  w-1/4 mr-3 border-black rounded-xl border-1 mb-6 px-3 bg-white">
             {selectedFormation !== null ? (
-               <div>
+               <div className="h-full">
                   <input
                      className="w-full text-center h-12 text-2xl focus:outline-none"
                      onChange={(e) => {
@@ -114,26 +114,26 @@ export const CurrentFormation: React.FC<{
                         </select>
                      </div>
                   ))}
+                  <button
+                     className="text-white bg-red-600 px-2 py-1 rounded-md mt-auto mb-2 w-full"
+                     onClick={() => {
+                        if (selectedFormation === formations.length - 1) {
+                           setSelectedFormation((selectedFormation: number) => selectedFormation - 1);
+                        }
+
+                        setFormations((formations: formation[]) => {
+                           return formations.filter((_, index) => {
+                              return index !== selectedFormation;
+                           });
+                        });
+                     }}
+                  >
+                     delete formation
+                  </button>
                </div>
             ) : (
                <></>
             )}
-            <button
-               className="text-white bg-red-600 px-2 py-1 rounded-md mt-auto mb-2"
-               onClick={() => {
-                  if (selectedFormation === formations.length - 1) {
-                     setSelectedFormation((selectedFormation: number) => selectedFormation - 1);
-                  }
-
-                  setFormations((formations: formation[]) => {
-                     return formations.filter((_, index) => {
-                        return index !== selectedFormation;
-                     });
-                  });
-               }}
-            >
-               delete formation
-            </button>
          </div>
       </>
    );

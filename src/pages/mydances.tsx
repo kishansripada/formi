@@ -27,30 +27,45 @@ const Home: NextPage = ({ session }) => {
    }
 
    return (
-      <>
-         <div className="h-20 bg-blue-200"></div>
-         <div className="flex flex-row">
-            <button className="ml-auto" onClick={createNewDance}>
-               new dance
-            </button>
+      <div className="">
+         <div className="h-20 flex flex-row items-center px-[10%]">
+            <p className="text-3xl">naach</p>
          </div>
          <hr />
-         <div className="grid grid-flow-col-dense		 gap-4 ">
-            {myDances.length ? (
-               myDances.map((dance) => {
-                  return (
-                     <Link key={dance.id} href={`/${dance.id}/edit`}>
-                        <button className="w-20 h-20 bg-gray-200">
-                           <a> {dance.id}</a>
-                        </button>
-                     </Link>
-                  );
-               })
-            ) : (
-               <p>looks like you don't have any dances</p>
-            )}
+         <div className="px-[10%]">
+            <p className="text-3xl font-semibold mb-6 mt-3">My dances</p>
+            <div className="grid grid-flow-col  gap-4 child:rounded-xl ">
+               {myDances.length ? (
+                  myDances.map((dance) => {
+                     return (
+                        <Link key={dance.id} href={`/${dance.id}/edit`}>
+                           <div className="flex flex-col items-center">
+                              <button className="w-20 h-20 bg-gray-200 hover:bg-gray-100 rounded-xl">
+                                 <a> {dance.id}</a>
+                              </button>
+                              <p className="mt-1">{dance.name}</p>
+                           </div>
+                        </Link>
+                     );
+                  })
+               ) : (
+                  <p>looks like you don't have any dances</p>
+               )}
+               <button className="w-20 h-20 bg-gray-200 grid place-items-center hover:bg-gray-100" onClick={createNewDance}>
+                  <svg
+                     xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     strokeWidth={1.5}
+                     stroke="currentColor"
+                     className="w-10 h-10"
+                  >
+                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+               </button>
+            </div>
          </div>
-      </>
+      </div>
    );
 };
 
