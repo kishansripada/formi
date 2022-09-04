@@ -24,12 +24,18 @@ export const Dancer = ({
    isPlaying: boolean;
    removeDancer: Function;
 }) => {
+   let canBeAddedToStage =
+      // there is a formation select
+      selectedFormation !== null &&
+      // and the dancer is not already on the stage
+      !formations[selectedFormation]?.positions.find((dancer) => dancer.id === id);
+
    const [{ isDragging }, drag] = useDrag(
       () => ({
          type: "dancer",
-         // canDrag: (monitor) => {
-         //    return !isOnStage && selectedFormation !== null;
-         // },
+         canDrag: (monitor) => {
+            return canBeAddedToStage && !isPlaying;
+         },
          item: { id, formations, selectedFormation },
          collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
@@ -45,24 +51,14 @@ export const Dancer = ({
       .join("")
       .toUpperCase();
 
-   let canBeAddedToStage =
-      // there is a formation select
-      selectedFormation !== null &&
-      // and the dancer is not already on the stage
-      !formations[selectedFormation]?.positions.find((dancer) => dancer.id === id);
-
    // console.log(canBeAddedToStage);
    return (
       <>
          <div
             ref={drag}
             className={`flex flex-row items-center  border-black  rounded-xl mb-1 min-h-[64px] bg-white`}
-            draggable={canBeAddedToStage && !isPlaying}
+            // draggable={canBeAddedToStage && !isPlaying}
          >
-            {/* <div className="w-12 h-12 bg-red-500 rounded-full flex flex-row justify-center items-center">
-               <p className="pointer-events-none select-none">{initials}</p>
-            </div> */}
-
             {instagramUsername ? (
                <img className="w-14 h-14 rounded-full ml-2" src="https://i.imgur.com/NRXbswe.jpg" alt="" />
             ) : (

@@ -1,19 +1,23 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-
+import { supabase } from "../../utils/supabase";
+import { useRouter } from "next/router";
 export const Header = ({
    saved,
    setSoundCloudTrackId,
    session,
    danceName,
    setDanceName,
+   setSession,
 }: {
    saved: boolean;
    setSoundCloudTrackId: Function;
    session: any;
    danceName: string;
    setDanceName: Function;
+   setSession: Function;
 }) => {
+   const router = useRouter();
    const wrapperRef = useRef(null);
    useEffect(() => {
       function handleClickOutside(event) {
@@ -32,8 +36,10 @@ export const Header = ({
       <>
          <div className=" h-[75px] flex flex-row items-center shrink-0 px-10 bg-white justify-between">
             <div className="flex flex-row items-end">
-               <p className="text-3xl"> naach</p>
-               <p className="text-sm mb-1 ml-4">Welcome back, {session.user.user_metadata.full_name}</p>
+               <p className="text-3xl">
+                  naach <span className="text-xs">early access</span>
+               </p>
+               <p className="text-sm mb-1 ml-4">Welcome back, {session?.user?.user_metadata?.full_name}</p>
             </div>
 
             <div>
@@ -107,8 +113,18 @@ export const Header = ({
                </div>
 
                <Link href="/mydances">
-                  <a className="ml-10 bg-purple-600 px-2 py-1 rounded-md text-white">my dances</a>
+                  <a className="ml-2 bg-pink-600 hover:bg-pink-700 px-2 py-1 rounded-md text-white">my dances</a>
                </Link>
+               <button
+                  className="ml-6"
+                  onClick={() => {
+                     router.push("/login");
+                     setSession(null);
+                     supabase.auth.signOut();
+                  }}
+               >
+                  sign out
+               </button>
             </div>
          </div>
          <hr className="mb-2" />

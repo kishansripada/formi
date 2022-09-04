@@ -5,8 +5,8 @@ import debounce from "lodash.debounce";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
 import { type } from "os";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+// import { DndProvider } from "react-dnd";
+// import { HTML5Backend } from "react-dnd-html5-backend";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
 import { Dancer } from "../../components/AppComponents/Dancer";
 import { Canvas } from "../../components/AppComponents/Canvas";
@@ -40,13 +40,22 @@ const SoundCloudComponent = dynamic<{
 
 import { dancer, dancerPosition, formation } from "../../types/types";
 
-const Home = ({ session }: { session: any }) => {
+const Home = ({ session, setSession }: { session: any }) => {
    const [songDuration, setSongDuration] = useState<number | null>(null);
    const [dancers, setDancers] = useState<dancer[]>([]);
    const [position, setPosition] = useState<number | null>(null);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
-   const [selectedFormation, setSelectedFormation] = useState<number | null>(null);
-   const [formations, setFormations] = useState<formation[]>([]);
+   const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
+   const [formations, setFormations] = useState<formation[]>([
+      {
+         durationSeconds: 10,
+         positions: [],
+         transition: {
+            durationSeconds: 5,
+         },
+         name: "untitled",
+      },
+   ]);
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(null);
    const [danceName, setDanceName] = useState<string>("Untitled Dance");
    const [saved, setSaved] = useState<boolean>(true);
@@ -87,7 +96,7 @@ const Home = ({ session }: { session: any }) => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 20000),
+      }, 10000),
       [router.query.danceId]
    );
 
@@ -105,7 +114,7 @@ const Home = ({ session }: { session: any }) => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 20000),
+      }, 10000),
       [router.query.danceId]
    );
 
@@ -124,7 +133,7 @@ const Home = ({ session }: { session: any }) => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 5000),
+      }, 200),
       [router.query.danceId]
    );
 
@@ -143,7 +152,7 @@ const Home = ({ session }: { session: any }) => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 5000),
+      }, 200),
       [router.query.danceId]
    );
 
@@ -157,86 +166,85 @@ const Home = ({ session }: { session: any }) => {
 
    return (
       <>
-         <DndProvider backend={HTML5Backend}>
-            <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa]">
-               <Header
-                  session={session}
-                  saved={saved}
-                  setSoundCloudTrackId={setSoundCloudTrackId}
-                  danceName={danceName}
-                  setDanceName={setDanceName}
-               />
-               <div className="flex flex-row grow overflow-hidden">
-                  <div className="flex flex-col w-1/6 relative overflow-y-scroll min-w-[300px] ml-3 overflow-hidden">
-                     {dancers.map((dancer, index) => (
-                        <Dancer
-                           removeDancer={removeDancer}
-                           setFormations={setFormations}
-                           isPlaying={isPlaying}
-                           formations={formations}
-                           selectedFormation={selectedFormation}
-                           setDancers={setDancers}
-                           {...dancer}
-                           key={index}
-                           dancers={dancers}
-                        />
-                     ))}
-                     <NewDancer setDancers={setDancers} />
-                     <SidebarDrop setFormations={setFormations} />
-                  </div>
-
-                  <div className="flex flex-col h-full items-center w-2/3">
-                     <Canvas
+         <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa]">
+            <Header
+               session={session}
+               saved={saved}
+               setSoundCloudTrackId={setSoundCloudTrackId}
+               danceName={danceName}
+               setSession={setSession}
+               setDanceName={setDanceName}
+            />
+            <div className="flex flex-row grow overflow-hidden">
+               <div className="flex flex-col w-1/6 relative overflow-y-scroll min-w-[300px] ml-3 overflow-hidden">
+                  {dancers.map((dancer, index) => (
+                     <Dancer
+                        removeDancer={removeDancer}
+                        setFormations={setFormations}
+                        isPlaying={isPlaying}
                         formations={formations}
                         selectedFormation={selectedFormation}
                         setDancers={setDancers}
+                        {...dancer}
+                        key={index}
                         dancers={dancers}
-                        setFormations={setFormations}
-                     >
-                        {dancers.map((dancer, index) => (
-                           <DancerAlias
-                              index={index}
-                              isPlaying={isPlaying}
-                              position={position ? parseFloat(position.toFixed(2)) : null}
-                              selectedFormation={selectedFormation}
-                              setDancers={setDancers}
-                              key={index}
-                              name={dancer.name}
-                              id={dancer.id}
-                              formations={formations}
-                           />
-                        ))}
-                     </Canvas>
-                     <p>audience</p>
-                  </div>
+                     />
+                  ))}
+                  <NewDancer setDancers={setDancers} />
+                  <SidebarDrop setFormations={setFormations} />
+               </div>
 
-                  <CurrentFormation
-                     setSelectedFormation={setSelectedFormation}
+               <div className="flex flex-col h-full items-center w-2/3">
+                  <Canvas
+                     formations={formations}
+                     selectedFormation={selectedFormation}
+                     setDancers={setDancers}
                      dancers={dancers}
                      setFormations={setFormations}
-                     formations={formations}
-                     selectedFormation={selectedFormation}
-                  />
+                  >
+                     {dancers.map((dancer, index) => (
+                        <DancerAlias
+                           index={index}
+                           isPlaying={isPlaying}
+                           position={position ? parseFloat(position.toFixed(2)) : null}
+                           selectedFormation={selectedFormation}
+                           setDancers={setDancers}
+                           key={index}
+                           name={dancer.name}
+                           id={dancer.id}
+                           formations={formations}
+                        />
+                     ))}
+                  </Canvas>
+                  <p>audience</p>
                </div>
-               <div className="overflow-x-scroll min-h-[195px]">
-                  <SoundCloudComponent
-                     soundCloudTrackId={soundCloudTrackId}
-                     setSoundCloudTrackId={setSoundCloudTrackId}
-                     setSongDuration={setSongDuration}
-                     songDuration={songDuration}
-                     setIsPlaying={setIsPlaying}
-                     setPosition={setPosition}
-                  />
-                  <Formations
-                     songDuration={songDuration}
-                     setFormations={setFormations}
-                     formations={formations}
-                     selectedFormation={selectedFormation}
-                     setSelectedFormation={setSelectedFormation}
-                  />
-               </div>
+
+               <CurrentFormation
+                  setSelectedFormation={setSelectedFormation}
+                  dancers={dancers}
+                  setFormations={setFormations}
+                  formations={formations}
+                  selectedFormation={selectedFormation}
+               />
             </div>
-         </DndProvider>
+            <div className="overflow-x-scroll min-h-[195px]">
+               <SoundCloudComponent
+                  soundCloudTrackId={soundCloudTrackId}
+                  setSoundCloudTrackId={setSoundCloudTrackId}
+                  setSongDuration={setSongDuration}
+                  songDuration={songDuration}
+                  setIsPlaying={setIsPlaying}
+                  setPosition={setPosition}
+               />
+               <Formations
+                  songDuration={songDuration}
+                  setFormations={setFormations}
+                  formations={formations}
+                  selectedFormation={selectedFormation}
+                  setSelectedFormation={setSelectedFormation}
+               />
+            </div>
+         </div>
       </>
    );
 };
