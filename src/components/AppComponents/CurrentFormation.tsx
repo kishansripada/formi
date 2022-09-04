@@ -22,14 +22,14 @@ export const CurrentFormation: React.FC<{
       <>
          <div className=" flex flex-col  w-1/4 mr-3 border-black rounded-xl border-1 mb-6 px-3 bg-white">
             {selectedFormation !== null ? (
-               <div className="h-full">
+               <div className="h-full  flex flex-col">
                   <input
                      className="w-full text-center h-12 text-2xl focus:outline-none"
-                     onChange={(e) => {
+                     onBlur={(e) => {
                         console.log(e.target.value);
-                        setFormations((formations: formation[], index: number) => {
+                        setFormations((formations: formation[]) => {
                            return formations.map((formation, i) => {
-                              if (index === selectedFormation) {
+                              if (i === selectedFormation) {
                                  return {
                                     ...formation,
                                     name: e.target.value,
@@ -42,9 +42,11 @@ export const CurrentFormation: React.FC<{
                         console.log(formations);
                      }}
                      type="text"
-                     defaultValue={formations[selectedFormation]?.name || `Formation ${selectedFormation}`}
+                     key={formations[selectedFormation].name}
+                     defaultValue={formations[selectedFormation].name}
                   />
-                  <hr className="mb-2" />
+                  <hr className="" />
+                  {/* <p className="text-sm text-gray-400 mb-2 ml-auto mr-auto">formation name</p> */}
                   {dancersWhoAreNotInPreviousFormation?.length ? <p className="text-xl">Enter from:</p> : <></>}
                   {dancersWhoAreNotInPreviousFormation?.map((dancer, i) => (
                      <div className="flex flex-row justify-between w-full" key={i}>

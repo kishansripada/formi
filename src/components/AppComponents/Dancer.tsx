@@ -54,11 +54,7 @@ export const Dancer = ({
    // console.log(canBeAddedToStage);
    return (
       <>
-         <div
-            ref={drag}
-            className={`flex flex-row items-center  border-black  rounded-xl mb-1 min-h-[64px] bg-white`}
-            // draggable={canBeAddedToStage && !isPlaying}
-         >
+         <div ref={drag} className={`flex flex-row items-center  border-black  rounded-xl mb-1 min-h-[64px] bg-white`} draggable={!isPlaying}>
             {instagramUsername ? (
                <img className="w-14 h-14 rounded-full ml-2" src="https://i.imgur.com/NRXbswe.jpg" alt="" />
             ) : (
