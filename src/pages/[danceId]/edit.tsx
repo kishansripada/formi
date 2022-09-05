@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState, useEffect, useRef, useCallback } from "react";
-import debounce from "lodash.debounce";
+import { debounce } from "lodash";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
 import { type } from "os";
