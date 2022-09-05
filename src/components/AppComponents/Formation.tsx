@@ -10,7 +10,6 @@ export const Formation: React.FC<{
    setSelectedFormation: Function;
 }> = ({ formation, amSelected, index, setFormations, setSelectedFormation }) => {
    const onResizeFormation = (event, { element, size, handle }) => {
-      // this.setState({width: size.width, height: size.height});
       setFormations((formations: formation[]) => {
          return formations.map((formation, i) => {
             if (i === index) {
