@@ -7,7 +7,7 @@ import { type } from "os";
 import Link from "next/link";
 import { Header } from "../components/NonAppComponents/Header";
 
-const Home: NextPage = ({ session, setSession }) => {
+const MyDances: NextPage = ({ session, setSession }) => {
    var timeSince = function (date) {
       if (typeof date !== "object") {
          date = new Date(date);
@@ -147,4 +147,4 @@ const Home: NextPage = ({ session, setSession }) => {
    );
 };
 
-export default Home;
+export default MyDances;

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 import { Header } from "../components/NonAppComponents/Header";
 
-const login = ({ session, setSession }) => {
+const Login = ({ session, setSession }) => {
    const router = useRouter();
 
    useEffect(() => {
@@ -18,7 +18,7 @@ const login = ({ session, setSession }) => {
    }, [router, session]);
 
    const handleLogin = async () => {
-      const loginData = await supabase.auth.signIn(
+      await supabase.auth.signIn(
          {
             provider: "google",
          },
@@ -78,4 +78,4 @@ const login = ({ session, setSession }) => {
       </div>
    );
 };
-export default login;
+export default Login;

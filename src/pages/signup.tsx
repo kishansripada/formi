@@ -2,7 +2,7 @@ import { useState } from "react";
 import { supabase } from "../utils/supabase";
 import type { NextPage } from "next";
 
-const signup = () => {
+const Signup = () => {
    const [loading, setLoading] = useState(false);
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
@@ -47,4 +47,4 @@ const signup = () => {
       </div>
    );
 };
-export default signup;
+export default Signup;
