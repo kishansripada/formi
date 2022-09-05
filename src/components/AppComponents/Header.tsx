@@ -82,30 +82,28 @@ export const Header = ({
                   </button>
 
                   {changeSoundCloudIsOpen ? (
-                     <div className="w-[200px] h-[100px] absolute bg-white border-2 border-black rounded-xl right-[70px] top-16 px-2 py-1">
-                        <div className="flex flex-row">
-                           <p className="text-sm ">paste in a new SoundCloud url</p>
-                           <button
-                              className="bg-blue-500 py-1 px-1"
-                              onClick={async () => {
-                                 const trackId = await fetch(`/api/getSoundCloudTrackId?url=${newSoundCloudUrl}`)
-                                    .then((r) => r.json())
-                                    .then((r) => r.trackId);
-                                 console.log(trackId);
-                                 setSoundCloudTrackId(trackId);
-                              }}
-                           >
-                              go
-                           </button>
-                        </div>
+                     <div className="w-[200px]  absolute bg-white border-2 border-black rounded-xl right-[150px] top-16 px-3 py-3 z-50">
+                        <div className="flex flex-row"></div>
                         <input
-                           placeholder="New dancer"
+                           placeholder="soundcloud URL"
                            value={newSoundCloudUrl}
                            onChange={(e) => setNewSoundCloudUrl(e.target.value)}
                            type="text"
-                           className="border-gray-500 border-2 rounded-md ml-2 px-2 w-44"
-                           // onKeyDown={(event) => (event.key === "Enter" ? createNewDancer() : null)}
+                           className="border-gray-500 border-2 rounded-md  px-2 w-full"
                         />
+                        <button
+                           className="bg-orange-600 py-1 px-1 w-full mt-2 rounded-md text-white hover:bg-orange-700"
+                           onClick={async () => {
+                              const trackId = await fetch(`/api/getSoundCloudTrackId?url=${newSoundCloudUrl}`)
+                                 .then((r) => r.json())
+                                 .then((r) => r.trackId);
+                              console.log(trackId);
+                              setSoundCloudTrackId(trackId);
+                              setChangeSoundCloudIsOpen(false);
+                           }}
+                        >
+                           go
+                        </button>
                      </div>
                   ) : (
                      <></>

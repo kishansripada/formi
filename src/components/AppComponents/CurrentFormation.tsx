@@ -7,7 +7,7 @@ export const CurrentFormation: React.FC<{
    dancers: dancer[];
    setSelectedFormation: Function;
 }> = ({ formations, selectedFormation, setFormations, dancers, setSelectedFormation }) => {
-   let dancersWhoAreNotInNextFormation = formations[selectedFormation]?.positions.filter((dancerPosition: dancerPosition) => {
+   let dancersWhoAreNotInNextFormation = formations[selectedFormation].positions.filter((dancerPosition: dancerPosition) => {
       return !formations[selectedFormation + 1]?.positions.find((dancer) => dancer.id === dancerPosition.id);
    });
 

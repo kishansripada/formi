@@ -88,7 +88,7 @@ export const Formations: React.FC<{
                         transition: {
                            durationSeconds: 5,
                         },
-                        name: "untitled",
+                        name: "Untitled",
                      },
                   ]);
                }}

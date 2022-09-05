@@ -111,8 +111,8 @@ export const GridOverlay: React.FC<{}> = ({}) => {
    }));
 
    return canDrop ? (
-      <div className=" w-[800px] h-[800px] bg-red-200 opacity-30 flex flex-row justify-center items-center absolute z-20" ref={drop}>
-         add to scene
+      <div className=" w-[800px] h-[800px] bg-red-200  bg-opacity-30 grid place-items-center absolute z-20 text-red-500" ref={drop}>
+         <p className="opacity-100 bg-red-200 px-2 py-1 rounded-md "> add to formation</p>
       </div>
    ) : (
       <div></div>

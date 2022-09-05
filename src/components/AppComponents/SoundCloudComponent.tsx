@@ -1,5 +1,5 @@
 import Script from "next/script";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import logo from "../../../public/logo.svg";
 import Image from "next/image";
 
@@ -69,6 +69,7 @@ export const SoundCloudComponent: React.FC<{
       let player = SC.Widget(widgetIframe);
 
       player.bind(SC.Widget.Events.READY, () => {
+         console.log("readt");
          player.getDuration((e: any) => {
             setSongDuration(e);
          });
@@ -89,7 +90,7 @@ export const SoundCloudComponent: React.FC<{
 
    return (
       <>
-         <Script onLoad={handleLoad} strategy="lazyOnload" src="https://w.soundcloud.com/player/api.js" />
+         <Script onReady={handleLoad} strategy="lazyOnload" src="https://w.soundcloud.com/player/api.js" />
 
          <div className="">
             <iframe

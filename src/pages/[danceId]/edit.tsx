@@ -21,6 +21,9 @@ const Header = dynamic<{
    saved: boolean;
    setSoundCloudTrackId: Function;
    session: any;
+   danceName: string;
+   setDanceName: Function;
+   setSession: Function;
 }>(() => import("../../components/AppComponents/Header").then((mod) => mod.Header), {
    ssr: false,
 });
@@ -39,6 +42,14 @@ const SoundCloudComponent = dynamic<{
 });
 
 import { dancer, dancerPosition, formation } from "../../types/types";
+const useDidMountEffect = (func, deps) => {
+   const didMount = useRef(false);
+
+   useEffect(() => {
+      if (didMount.current) func();
+      else didMount.current = true;
+   }, deps);
+};
 
 const Home = ({ session, setSession }: { session: any }) => {
    const [songDuration, setSongDuration] = useState<number | null>(null);
@@ -53,7 +64,7 @@ const Home = ({ session, setSession }: { session: any }) => {
          transition: {
             durationSeconds: 5,
          },
-         name: "untitled",
+         name: "Untitled",
       },
    ]);
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(null);
@@ -96,7 +107,7 @@ const Home = ({ session, setSession }: { session: any }) => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 10000),
+      }, 2000),
       [router.query.danceId]
    );
 
@@ -152,7 +163,7 @@ const Home = ({ session, setSession }: { session: any }) => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 200),
+      }, 1000),
       [router.query.danceId]
    );
 
