@@ -32,12 +32,12 @@ export const Formation: React.FC<{
    };
    return (
       <>
-         <div className={`${amSelected ? "border-[2px]" : "border-[1px]"} border-black   h-full flex flex-row  rounded-xl    overflow-hidden r`}>
+         <div className={`${amSelected ? "border-[2px]" : "border-[1px]"} border-black   h-full flex flex-row  rounded-xl overflow-hidden z-50 `}>
             <div
                style={{
                   width: formation.durationSeconds * 10 - (amSelected ? 4 : 2),
                }}
-               className="relative"
+               className="relative z-0"
             >
                <Resizable
                   width={formation.durationSeconds * 10}
@@ -65,7 +65,7 @@ export const Formation: React.FC<{
                >
                   <span></span>
                </Resizable>
-               <div className="flex flex-row h-full">
+               <div className="flex flex-row h-full -z-50">
                   <svg className="w-1/2" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
                      <polygon fill="lightgray" strokeWidth={0} points="0,0 0,20 10,10" />
                   </svg>

@@ -188,7 +188,7 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
                setDanceName={setDanceName}
             />
             <div className="flex flex-row grow overflow-hidden">
-               <div className="flex flex-col w-1/6 relative overflow-y-scroll min-w-[300px] ml-3 overflow-hidden">
+               <div className="flex flex-col w-1/4 relative overflow-y-scroll ml-3 overflow-hidden">
                   {dancers.map((dancer, index) => (
                      <Dancer
                         removeDancer={removeDancer}
@@ -254,6 +254,8 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
                   formations={formations}
                   selectedFormation={selectedFormation}
                   setSelectedFormation={setSelectedFormation}
+                  isPlaying={isPlaying}
+                  position={position}
                />
             </div>
          </div>

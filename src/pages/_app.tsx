@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
    });
    return (
       <DndProvider backend={HTML5Backend}>
-         <Component {...pageProps} session={session} setSession={setSession} />;
+         <Component {...pageProps} session={session} setSession={setSession} />
       </DndProvider>
    );
 }

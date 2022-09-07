@@ -29,7 +29,7 @@ export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
                onChange={(e) => setNewName(e.target.value)}
                onBlur={createNewDancer}
             />
-            <p className="ml-auto text-gray-400 mr-3"> enter to create</p>
+            <p className="ml-auto text-gray-400 mr-3"> enter</p>
          </div>
       </>
    );

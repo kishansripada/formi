@@ -9,7 +9,9 @@ export const Formations: React.FC<{
    setSelectedFormation: Function;
    setFormations: Function;
    songDuration: number | null;
-}> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration }) => {
+   position: number | null;
+   isPlaying: boolean;
+}> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration, position, isPlaying }) => {
    let [isCommandDown, setIsCommandDown] = useState<boolean>(false);
 
    let [copiedFormation, setCopiedFormation] = useState<null | formation>(null);
@@ -70,6 +72,17 @@ export const Formations: React.FC<{
 
    return (
       <>
+         {/* <div>
+            {position !== null && isPlaying ? (
+               <div
+                  className="bg-red-500 w-[5px] h-[100px] absolute z-50"
+                  style={{
+                     left: 119 + position * 10,
+                  }}
+               ></div>
+            ) : null}
+         </div> */}
+
          <div
             className=" h-[100px] flex flex-row pt-3 pb-6 px-6 bg-white"
             style={{
@@ -79,12 +92,7 @@ export const Formations: React.FC<{
             onClick={clickOutsideFormations}
          >
             {/* progress bar */}
-            {/* <div
-               className="bg-red-500 w-[2px] relative z-50"
-               style={{
-                  left: 200,
-               }}
-            ></div> */}
+
             {/* progress bar */}
 
             <svg
