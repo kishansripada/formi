@@ -9,7 +9,7 @@ export const Formation: React.FC<{
    setFormations: Function;
    setSelectedFormation: Function;
 }> = ({ formation, amSelected, index, setFormations, setSelectedFormation }) => {
-   const onResizeFormation = (event, { element, size, handle }) => {
+   const onResizeFormation = (event: any, { size }: { size: any }) => {
       setFormations((formations: formation[]) => {
          return formations.map((formation, i) => {
             if (i === index) {
@@ -32,7 +32,7 @@ export const Formation: React.FC<{
    };
    return (
       <>
-         <div className={`  h-full flex flex-row  rounded-xl  border-black ${amSelected ? "border-[3px]" : "border-[1px]"} overflow-hidden`}>
+         <div className={`${amSelected ? "bg-pink-100" : ""}  h-full flex flex-row  rounded-xl p-3px border-black   overflow-hidden r`}>
             <div
                style={{
                   width: formation.durationSeconds * 10,
@@ -41,6 +41,7 @@ export const Formation: React.FC<{
             >
                <Resizable
                   width={formation.durationSeconds * 10}
+                  height={100}
                   onResize={onResizeFormation}
                   resizeHandles={["e"]}
                   handle={<div className="bg-gray-500  h-16 w-1 cursor-e-resize absolute right-0"></div>}
@@ -59,6 +60,7 @@ export const Formation: React.FC<{
                   width={formation.transition.durationSeconds * 10}
                   onResize={onResizeTransition}
                   resizeHandles={["e"]}
+                  height={100}
                   handle={<div className="bg-gray-500 absolute right-0 h-16 w-1 cursor-e-resize"></div>}
                >
                   <span></span>

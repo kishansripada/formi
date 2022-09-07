@@ -7,12 +7,15 @@ export const CurrentFormation: React.FC<{
    dancers: dancer[];
    setSelectedFormation: Function;
 }> = ({ formations, selectedFormation, setFormations, dancers, setSelectedFormation }) => {
-   let dancersWhoAreNotInNextFormation = formations?.[selectedFormation]?.positions.filter((dancerPosition: dancerPosition) => {
-      return !formations[selectedFormation + 1]?.positions.find((dancer) => dancer.id === dancerPosition.id);
-   });
+   let dancersWhoAreNotInNextFormation =
+      selectedFormation !== null
+         ? formations?.[selectedFormation]?.positions.filter((dancerPosition: dancerPosition) => {
+              return !formations[selectedFormation + 1]?.positions.find((dancer) => dancer.id === dancerPosition.id);
+           })
+         : [];
 
    let dancersWhoAreNotInPreviousFormation =
-      selectedFormation === 0
+      selectedFormation === 0 || selectedFormation === null
          ? []
          : formations[selectedFormation]?.positions.filter((dancerPosition: dancerPosition) => {
               return !formations[selectedFormation - 1]?.positions.find((dancer) => dancer.id === dancerPosition.id);
@@ -21,12 +24,12 @@ export const CurrentFormation: React.FC<{
    return (
       <>
          <div className=" flex flex-col  w-1/4 mr-3 border-black rounded-xl border-1 mb-6 px-3 bg-white">
-            {selectedFormation !== null ? (
+            {selectedFormation !== null && formations[selectedFormation]?.name !== null ? (
                <div className="h-full  flex flex-col">
                   <input
                      className="w-full text-center h-12 text-2xl focus:outline-none"
                      onBlur={(e) => {
-                        console.log(e.target.value);
+                        // console.log(e.target.value);
                         setFormations((formations: formation[]) => {
                            return formations.map((formation, i) => {
                               if (i === selectedFormation) {
@@ -39,16 +42,16 @@ export const CurrentFormation: React.FC<{
                               return formation;
                            });
                         });
-                        console.log(formations);
+                        // console.log(formations);
                      }}
                      type="text"
-                     key={formations[selectedFormation].name}
-                     defaultValue={formations[selectedFormation].name}
+                     key={formations[selectedFormation]?.name}
+                     defaultValue={formations[selectedFormation]?.name || ""}
                   />
                   <hr className="" />
                   {/* <p className="text-sm text-gray-400 mb-2 ml-auto mr-auto">formation name</p> */}
                   {dancersWhoAreNotInPreviousFormation?.length ? <p className="text-xl">Enter from:</p> : <></>}
-                  {dancersWhoAreNotInPreviousFormation?.map((dancer, i) => (
+                  {dancersWhoAreNotInPreviousFormation?.map((dancer: dancerPosition, i: number) => (
                      <div className="flex flex-row justify-between w-full" key={i}>
                         {dancers.find((dancerx) => dancerx.id === dancer.id)?.name}
                         <select
@@ -83,7 +86,7 @@ export const CurrentFormation: React.FC<{
                   ))}
 
                   {dancersWhoAreNotInNextFormation?.length ? <p className="text-xl">Exit towards:</p> : <></>}
-                  {dancersWhoAreNotInNextFormation?.map((dancer, i) => (
+                  {dancersWhoAreNotInNextFormation?.map((dancer: dancerPosition, i) => (
                      <div className="flex flex-row justify-between w-full" key={i}>
                         {dancers.find((dancerx) => dancerx.id === dancer.id)?.name}
                         <select

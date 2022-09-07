@@ -114,7 +114,7 @@ const animate = (formations: formation[], position: number, id: string): { left:
       return coordsToPosition(10, 10);
    }
 
-   const inThisFormation = formations[currentFormationIndex].positions.find((dancer) => dancer.id === id);
+   const inThisFormation = formations?.[currentFormationIndex]?.positions.find((dancer) => dancer.id === id);
 
    let inNextFormation = formations[currentFormationIndex + 1]
       ? formations[currentFormationIndex + 1].positions.find((dancerPosition) => dancerPosition.id === id)

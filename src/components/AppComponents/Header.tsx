@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
+import logo from "../../../public/logo.svg";
+import Image from "next/image";
+
 export const Header = ({
    saved,
    setSoundCloudTrackId,
@@ -20,8 +23,8 @@ export const Header = ({
    const router = useRouter();
    const wrapperRef = useRef(null);
    useEffect(() => {
-      function handleClickOutside(event) {
-         if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      function handleClickOutside(event: MouseEvent) {
+         if (wrapperRef.current && !wrapperRef.current?.contains(event.target)) {
             setChangeSoundCloudIsOpen(false);
          }
       }
@@ -36,9 +39,14 @@ export const Header = ({
       <>
          <div className=" h-[75px] flex flex-row items-center shrink-0 px-10 bg-white justify-between">
             <div className="flex flex-row items-end">
-               <p className="text-3xl">
-                  naach <span className="text-xs">early access</span>
-               </p>
+               <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-1 py-1 grid place-items-center rounded-xl">
+                  <div className="bg-white px-2 py-1 rounded-lg grid place-items-center">
+                     <Image className="" src={logo} width={100} height={30} />
+                  </div>
+               </div>
+
+               <span className="text-xs ml-3">early access</span>
+
                <p className="text-sm mb-1 ml-4">Welcome back, {session?.user?.user_metadata?.full_name}</p>
             </div>
 

@@ -5,8 +5,9 @@ import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { Session } from "@supabase/supabase-js";
 function MyApp({ Component, pageProps }: AppProps) {
-   let [session, setSession] = useState<any>(null);
+   let [session, setSession] = useState<Session | null>(null);
    useEffect(() => {
       async function getInitialAuth() {
          let initalSession = await supabase.auth.session();

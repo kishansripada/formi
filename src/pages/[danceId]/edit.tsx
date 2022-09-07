@@ -1,12 +1,7 @@
-import type { NextPage } from "next";
-import Head from "next/head";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { debounce } from "lodash";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
-import { type } from "os";
-// import { DndProvider } from "react-dnd";
-// import { HTML5Backend } from "react-dnd-html5-backend";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
 import { Dancer } from "../../components/AppComponents/Dancer";
 import { Canvas } from "../../components/AppComponents/Canvas";
@@ -14,7 +9,6 @@ import { SidebarDrop } from "../../components/AppComponents/SidebarDrop";
 import { NewDancer } from "../../components/AppComponents/NewDancer";
 import { Formations } from "../../components/AppComponents/Formations";
 import { CurrentFormation } from "../../components/AppComponents/CurrentFormation";
-// import { SoundCloudComponent } from "../components/SoundCloudComponent";
 import dynamic from "next/dynamic";
 
 const Header = dynamic<{
@@ -42,16 +36,17 @@ const SoundCloudComponent = dynamic<{
 });
 
 import { dancer, dancerPosition, formation } from "../../types/types";
-const useDidMountEffect = (func, deps) => {
-   const didMount = useRef(false);
+import { Session } from "@supabase/supabase-js";
+// const useDidMountEffect = (func, deps) => {
+//    const didMount = useRef(false);
 
-   useEffect(() => {
-      if (didMount.current) func();
-      else didMount.current = true;
-   }, deps);
-};
+//    useEffect(() => {
+//       if (didMount.current) func();
+//       else didMount.current = true;
+//    }, deps);
+// };
 
-const Home = ({ session, setSession }: { session: any }) => {
+const Home = ({ session, setSession }: { session: Session; setSession: Function }) => {
    const [songDuration, setSongDuration] = useState<number | null>(null);
    const [dancers, setDancers] = useState<dancer[]>([]);
    const [position, setPosition] = useState<number | null>(null);
@@ -91,7 +86,10 @@ const Home = ({ session, setSession }: { session: any }) => {
             .select("*")
             .eq("id", router.query.danceId)
             .then((r) => {
-               let { soundCloudId, dancers, formations, name } = r.data[0];
+               if (!r?.data?.[0]) {
+                  // toast error
+               }
+               let { soundCloudId, dancers, formations, name } = r?.data?.[0];
                setSoundCloudTrackId(soundCloudId);
                setFormations(formations);
                setDancers(dancers);
@@ -144,7 +142,7 @@ const Home = ({ session, setSession }: { session: any }) => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 200),
+      }, 2000),
       [router.query.danceId]
    );
 
@@ -177,7 +175,7 @@ const Home = ({ session, setSession }: { session: any }) => {
 
    return (
       <>
-         <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa]">
+         <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none">
             <Header
                session={session}
                saved={saved}

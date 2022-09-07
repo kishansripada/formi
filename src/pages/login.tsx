@@ -4,8 +4,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 import { Header } from "../components/NonAppComponents/Header";
+import { Session } from "@supabase/supabase-js";
 
-const Login = ({ session, setSession }) => {
+const Login = ({ session, setSession }: { session: Session; setSession: Function }) => {
    const router = useRouter();
 
    useEffect(() => {

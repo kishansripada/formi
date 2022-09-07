@@ -6,9 +6,10 @@ import { useRouter } from "next/router";
 import { type } from "os";
 import Link from "next/link";
 import { Header } from "../components/NonAppComponents/Header";
+import { Session } from "@supabase/supabase-js";
 
-const MyDances: NextPage = ({ session, setSession }) => {
-   var timeSince = function (date) {
+const MyDances = ({ session, setSession }: { session: Session; setSession: Function }) => {
+   var timeSince = function (date: string) {
       if (typeof date !== "object") {
          date = new Date(date);
       }
@@ -50,7 +51,7 @@ const MyDances: NextPage = ({ session, setSession }) => {
 
       return interval + " " + intervalType;
    };
-   console.log(session);
+   //    console.log(session);
    const router = useRouter();
    const [myDances, setMyDances] = useState([]);
 
@@ -61,14 +62,14 @@ const MyDances: NextPage = ({ session, setSession }) => {
 
    useEffect(() => {
       if (!session) return;
-      console.log(session);
+      //   console.log(session);
 
       supabase
          .from("dances")
          .select("*")
          .eq("user", session.user.id)
          .then((r) => {
-            console.log(r);
+            // console.log(r);
             setMyDances(r.data);
          });
    }, [session]);

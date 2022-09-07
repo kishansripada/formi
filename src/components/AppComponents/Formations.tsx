@@ -22,7 +22,7 @@ export const Formations: React.FC<{
 
    const copy = () => {
       if (selectedFormation === null) return;
-      setCopiedFormation(formations[selectedFormation]);
+      setCopiedFormation(formations[selectedFormation] || null);
    };
 
    const paste = () => {
@@ -78,6 +78,15 @@ export const Formations: React.FC<{
             id="outside"
             onClick={clickOutsideFormations}
          >
+            {/* progress bar */}
+            {/* <div
+               className="bg-red-500 w-[2px] relative z-50"
+               style={{
+                  left: 200,
+               }}
+            ></div> */}
+            {/* progress bar */}
+
             <svg
                onClick={() => {
                   setFormations((formations: formation[]) => [
