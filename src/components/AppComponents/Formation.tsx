@@ -32,10 +32,10 @@ export const Formation: React.FC<{
    };
    return (
       <>
-         <div className={`${amSelected ? "bg-pink-100" : ""}  h-full flex flex-row  rounded-xl p-3px border-black   overflow-hidden r`}>
+         <div className={`${amSelected ? "border-[2px]" : "border-[1px]"} border-black   h-full flex flex-row  rounded-xl    overflow-hidden r`}>
             <div
                style={{
-                  width: formation.durationSeconds * 10,
+                  width: formation.durationSeconds * 10 - (amSelected ? 4 : 2),
                }}
                className="relative"
             >

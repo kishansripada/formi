@@ -1,4 +1,5 @@
 import { dancer, dancerPosition, formation } from "../../types/types";
+import toast, { Toaster } from "react-hot-toast";
 
 export const CurrentFormation: React.FC<{
    selectedFormation: number | null;
@@ -131,6 +132,7 @@ export const CurrentFormation: React.FC<{
                               return index !== selectedFormation;
                            });
                         });
+                        toast.success("formation deleted");
                      }}
                   >
                      delete formation
@@ -140,6 +142,7 @@ export const CurrentFormation: React.FC<{
                <></>
             )}
          </div>
+         <Toaster></Toaster>
       </>
    );
 };

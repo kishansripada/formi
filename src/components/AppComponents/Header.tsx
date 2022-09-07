@@ -47,7 +47,7 @@ export const Header = ({
                      <Image className="" src={logo} width={100} height={30} />
                   </div>
                </div>
-               <span className="text-xs ml-3">early access</span>
+               <p className="text-xs ml-3">early access</p>
                <p className="text-sm mb-1 ml-4">Welcome back, {session?.user?.user_metadata?.full_name}</p>
             </div>
 

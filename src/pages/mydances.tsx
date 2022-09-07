@@ -7,6 +7,7 @@ import { type } from "os";
 import Link from "next/link";
 import { Header } from "../components/NonAppComponents/Header";
 import { Session } from "@supabase/supabase-js";
+import toast, { Toaster } from "react-hot-toast";
 
 const MyDances = ({ session, setSession }: { session: Session; setSession: Function }) => {
    var timeSince = function (date: string) {
@@ -57,6 +58,12 @@ const MyDances = ({ session, setSession }: { session: Session; setSession: Funct
 
    const deleteDance = async (id) => {
       const { data, error } = await supabase.from("dances").delete().eq("id", id);
+      if (data) {
+         toast.success("deleted dance");
+      }
+      if (error) {
+         toast.error("there was an issue deleting your dance");
+      }
       console.log(data);
    };
 
@@ -144,6 +151,7 @@ const MyDances = ({ session, setSession }: { session: Session; setSession: Funct
                </div>
             </div>
          </div>
+         <Toaster></Toaster>
       </div>
    );
 };
