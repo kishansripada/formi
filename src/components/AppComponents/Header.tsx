@@ -4,6 +4,7 @@ import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
 import logo from "../../../public/logo.svg";
 import Image from "next/image";
+import toast, { Toaster } from "react-hot-toast";
 
 export const Header = ({
    saved,
@@ -12,6 +13,7 @@ export const Header = ({
    danceName,
    setDanceName,
    setSession,
+   soundCloudTrackId,
 }: {
    saved: boolean;
    setSoundCloudTrackId: Function;
@@ -19,6 +21,7 @@ export const Header = ({
    danceName: string;
    setDanceName: Function;
    setSession: Function;
+   soundCloudTrackId: string | null;
 }) => {
    const router = useRouter();
    const wrapperRef = useRef(null);
@@ -44,9 +47,7 @@ export const Header = ({
                      <Image className="" src={logo} width={100} height={30} />
                   </div>
                </div>
-
                <span className="text-xs ml-3">early access</span>
-
                <p className="text-sm mb-1 ml-4">Welcome back, {session?.user?.user_metadata?.full_name}</p>
             </div>
 
@@ -102,12 +103,21 @@ export const Header = ({
                         <button
                            className="bg-orange-600 py-1 px-1 w-full mt-2 rounded-md text-white hover:bg-orange-700"
                            onClick={async () => {
-                              const trackId = await fetch(`/api/getSoundCloudTrackId?url=${newSoundCloudUrl}`)
+                              fetch(`/api/getSoundCloudTrackId?url=${newSoundCloudUrl}`)
                                  .then((r) => r.json())
-                                 .then((r) => r.trackId);
-                              console.log(trackId);
-                              setSoundCloudTrackId(trackId);
-                              setChangeSoundCloudIsOpen(false);
+                                 .then((r) => {
+                                    if (r.trackId === soundCloudTrackId) {
+                                       toast("thats the same track silly");
+                                       return;
+                                    }
+                                    toast.success("track switched!");
+                                    // console.log(r.trackId);
+                                    setSoundCloudTrackId(r.trackId);
+                                    setChangeSoundCloudIsOpen(false);
+                                 })
+                                 .catch((r) => {
+                                    toast.error("invalid SoundCloud url");
+                                 });
                            }}
                         >
                            go
@@ -134,6 +144,7 @@ export const Header = ({
             </div>
          </div>
          <hr className="mb-2" />
+         <Toaster />
       </>
    );
 };

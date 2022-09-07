@@ -2,6 +2,7 @@ import Script from "next/script";
 import { useEffect, useState } from "react";
 import logo from "../../../public/logo.svg";
 import Image from "next/image";
+import toast, { Toaster } from "react-hot-toast";
 
 export const SoundCloudComponent: React.FC<{
    setPosition: Function;
@@ -44,11 +45,16 @@ export const SoundCloudComponent: React.FC<{
                            />
                            <button
                               onClick={async () => {
-                                 const trackId = await fetch(`/api/getSoundCloudTrackId?url=${newUrl}`)
+                                 await fetch(`/api/getSoundCloudTrackId?url=${newUrl}`)
                                     .then((r) => r.json())
-                                    .then((r) => r.trackId);
-                                 console.log(trackId);
-                                 setSoundCloudTrackId(trackId);
+                                    .then((r) => {
+                                       toast.success("successfully added SoundCloud track");
+                                       // console.log(r.trackId);
+                                       setSoundCloudTrackId(r.trackId);
+                                    })
+                                    .catch((r) => {
+                                       toast.error("invalid SoundCloud url");
+                                    });
                               }}
                               className="ml-auto mt-3 bg-pink-600 hover:bg-pink-700 rounded-xl text-white px-3 py-2"
                            >
@@ -59,6 +65,7 @@ export const SoundCloudComponent: React.FC<{
                   </div>
                </div>
             </div>
+            <Toaster />
          </>
       );
    }

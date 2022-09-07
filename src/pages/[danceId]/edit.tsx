@@ -18,11 +18,10 @@ const Header = dynamic<{
    danceName: string;
    setDanceName: Function;
    setSession: Function;
+   soundCloudTrackId: string | null;
 }>(() => import("../../components/AppComponents/Header").then((mod) => mod.Header), {
    ssr: false,
 });
-
-// import { Header } from "../../components/AppComponents/Header";
 
 const SoundCloudComponent = dynamic<{
    setPosition: Function;
@@ -80,6 +79,9 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
    };
 
    useEffect(() => {
+      // if (!session) {
+      //    router.push("/login");
+      // }
       if (router.query.danceId) {
          supabase
             .from("dances")
@@ -177,6 +179,7 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
       <>
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none">
             <Header
+               soundCloudTrackId={soundCloudTrackId}
                session={session}
                saved={saved}
                setSoundCloudTrackId={setSoundCloudTrackId}
