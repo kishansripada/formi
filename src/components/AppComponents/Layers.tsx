@@ -2,8 +2,9 @@ import { ReactEventHandler } from "react";
 import { Formation } from "./Formation";
 import { useCallback, useEffect, useState } from "react";
 import { dancer, dancerPosition, formation } from "../../types/types";
+import { Layer } from "./Layer";
 
-export const Formations: React.FC<{
+export const Layers: React.FC<{
    formations: formation[];
    selectedFormation: number | null;
    setSelectedFormation: Function;
@@ -71,72 +72,65 @@ export const Formations: React.FC<{
    }, [handleKeyDown, handleKeyUp]);
 
    return (
-      <>
-         {/* <div>
-            {position !== null && isPlaying ? (
-               <div
-                  className="bg-red-500 w-[5px] h-[100px] absolute z-50"
-                  style={{
-                     left: 119 + position * 10,
-                  }}
-               ></div>
-            ) : null}
-         </div> */}
-
+      <div className="flex flex-row items-center bg-[#fafafa]">
+         <svg
+            onClick={() => {
+               setFormations((formations: formation[]) => [
+                  ...formations,
+                  {
+                     durationSeconds: 10,
+                     positions: [],
+                     transition: {
+                        durationSeconds: 5,
+                     },
+                     name: "Untitled",
+                  },
+               ]);
+            }}
+            className="h-12 w-12 hover:fill-slate-100 mr-9 ml-4 cursor-pointer shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.5}
+         >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+         </svg>
          <div
-            className=" h-[100px] flex flex-row pt-3 pb-6 px-6 bg-white"
+            className="flex flex-col pt-2 pb-3 px-6  overflow-y-scroll overflow-x-clip bg-[#fafafa] justify-center"
             style={{
                width: songDuration ? songDuration / 100 + 123 : "100%",
             }}
             id="outside"
             onClick={clickOutsideFormations}
          >
-            {/* progress bar */}
-
-            {/* progress bar */}
-
-            <svg
-               onClick={() => {
-                  setFormations((formations: formation[]) => [
-                     ...formations,
-                     {
-                        durationSeconds: 10,
-                        positions: [],
-                        transition: {
-                           durationSeconds: 5,
-                        },
-                        name: "Untitled",
-                     },
-                  ]);
-               }}
-               className="h-16 w-16 hover:fill-slate-100 mr-5 ml-4 cursor-pointer shrink-0"
-               fill="none"
-               viewBox="0 0 24 24"
-               stroke="currentColor"
-               strokeWidth={1.5}
-            >
-               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-
-            {formations.map((formation, index) => (
-               <div
-                  key={index}
-                  id="formation"
-                  onClick={(e: any) => {
-                     if (e.target.id === "delete") return;
-                     setSelectedFormation(index);
-                  }}
-               >
-                  <Formation
-                     setSelectedFormation={setSelectedFormation}
-                     setFormations={setFormations}
-                     formation={formation}
-                     index={index}
-                     amSelected={index === selectedFormation}
-                  />
-               </div>
-            ))}
+            <Layer
+               songDuration={songDuration}
+               setFormations={setFormations}
+               formations={formations}
+               selectedFormation={selectedFormation}
+               setSelectedFormation={setSelectedFormation}
+               isPlaying={isPlaying}
+               position={position}
+            />
+            {/* <Layer
+               songDuration={songDuration}
+               setFormations={setFormations}
+               formations={formations}
+               selectedFormation={selectedFormation}
+               setSelectedFormation={setSelectedFormation}
+               isPlaying={isPlaying}
+               position={position}
+            />
+            <Layer
+               songDuration={songDuration}
+               setFormations={setFormations}
+               formations={formations}
+               selectedFormation={selectedFormation}
+               setSelectedFormation={setSelectedFormation}
+               isPlaying={isPlaying}
+               position={position}
+            /> */}
          </div>
-      </>
+      </div>
    );
 };

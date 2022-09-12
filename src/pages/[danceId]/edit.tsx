@@ -7,8 +7,10 @@ import { Dancer } from "../../components/AppComponents/Dancer";
 import { Canvas } from "../../components/AppComponents/Canvas";
 import { SidebarDrop } from "../../components/AppComponents/SidebarDrop";
 import { NewDancer } from "../../components/AppComponents/NewDancer";
-import { Formations } from "../../components/AppComponents/Formations";
+import { Formations } from "../../components/AppComponents/Layer";
 import { CurrentFormation } from "../../components/AppComponents/CurrentFormation";
+import { EditDancer } from "../../components/AppComponents/EditDancer";
+import { Layers } from "../../components/AppComponents/Layers";
 import dynamic from "next/dynamic";
 
 const Header = dynamic<{
@@ -64,6 +66,7 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(null);
    const [danceName, setDanceName] = useState<string>("Untitled Dance");
    const [saved, setSaved] = useState<boolean>(true);
+   const [editingDancer, setEditingDancer] = useState<string | null>(null);
    const router = useRouter();
 
    const removeDancer = (id: string) => {
@@ -177,6 +180,10 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
 
    return (
       <>
+         {editingDancer !== null ? (
+            <EditDancer setDancers={setDancers} dancers={dancers} setEditingDancer={setEditingDancer} editingDancer={editingDancer}></EditDancer>
+         ) : null}
+
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none">
             <Header
                soundCloudTrackId={soundCloudTrackId}
@@ -188,19 +195,22 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
                setDanceName={setDanceName}
             />
             <div className="flex flex-row grow overflow-hidden">
-               <div className="flex flex-col w-1/4 relative overflow-y-scroll ml-3 overflow-hidden">
+               <div className="flex flex-col w-1/4 relative overflow-y-scroll overflow-x-visible ml-3">
                   {dancers.map((dancer, index) => (
-                     <Dancer
-                        removeDancer={removeDancer}
-                        setFormations={setFormations}
-                        isPlaying={isPlaying}
-                        formations={formations}
-                        selectedFormation={selectedFormation}
-                        setDancers={setDancers}
-                        {...dancer}
-                        key={index}
-                        dancers={dancers}
-                     />
+                     <>
+                        <Dancer
+                           removeDancer={removeDancer}
+                           setFormations={setFormations}
+                           isPlaying={isPlaying}
+                           formations={formations}
+                           selectedFormation={selectedFormation}
+                           setDancers={setDancers}
+                           {...dancer}
+                           key={index}
+                           dancers={dancers}
+                           setEditingDancer={setEditingDancer}
+                        />
+                     </>
                   ))}
                   <NewDancer setDancers={setDancers} />
                   <SidebarDrop setFormations={setFormations} />
@@ -222,8 +232,7 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
                            selectedFormation={selectedFormation}
                            setDancers={setDancers}
                            key={index}
-                           name={dancer.name}
-                           id={dancer.id}
+                           dancer={dancer}
                            formations={formations}
                         />
                      ))}
@@ -248,7 +257,16 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
                   setIsPlaying={setIsPlaying}
                   setPosition={setPosition}
                />
-               <Formations
+               {/* <Formations
+                  songDuration={songDuration}
+                  setFormations={setFormations}
+                  formations={formations}
+                  selectedFormation={selectedFormation}
+                  setSelectedFormation={setSelectedFormation}
+                  isPlaying={isPlaying}
+                  position={position}
+               /> */}
+               <Layers
                   songDuration={songDuration}
                   setFormations={setFormations}
                   formations={formations}

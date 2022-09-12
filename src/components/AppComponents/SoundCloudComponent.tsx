@@ -76,7 +76,6 @@ export const SoundCloudComponent: React.FC<{
       let player = SC.Widget(widgetIframe);
 
       player.bind(SC.Widget.Events.READY, () => {
-         console.log("readt");
          player.getDuration((e: any) => {
             setSongDuration(e);
          });

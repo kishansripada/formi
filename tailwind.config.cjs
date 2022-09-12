@@ -9,7 +9,11 @@ module.exports = {
     //   "michiganblue": "#00274c",
     //   'maize': '#ffcb05',
     // },
-    extend: {},
+    extend: {
+      fontFamily: {
+        space: ["Space Grotesk", "sans-serif"],
+      },
+    },
   },
   plugins: [
     function ({ addVariant }) {

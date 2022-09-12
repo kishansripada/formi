@@ -7,7 +7,7 @@ export const GridLines: React.FC<{}> = ({}) => {
                   key={i}
                   className="h-full bg-gray-300"
                   style={{
-                     width: i === 5 || i === 15 ? (1 / 1) * 2.5 : 1 / 1,
+                     width: i === 5 || i === 15 || i === 10 ? (1 / 1) * 2.5 : 1 / 1,
                      backgroundColor: i === 10 ? "black" : "rgb(209 213 219)",
                      zIndex: i === 10 ? 1 : 0,
                   }}

@@ -9,7 +9,14 @@ export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
    const createNewDancer = () => {
       if (newName === "") return;
       setDancers((dancers: dancer[]) => {
-         return [...dancers, { name: newName, id: uuidv4(), instagramUsername: null }];
+         return [
+            ...dancers,
+            {
+               name: newName,
+               id: uuidv4(),
+               instagramUsername: null,
+            },
+         ];
       });
       setNewName("");
    };

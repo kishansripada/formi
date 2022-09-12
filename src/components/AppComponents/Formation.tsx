@@ -13,13 +13,18 @@ export const Formation: React.FC<{
       setFormations((formations: formation[]) => {
          return formations.map((formation, i) => {
             if (i === index) {
-               return { ...formation, durationSeconds: size.width / 10 };
+               return {
+                  ...formation,
+                  durationSeconds: size.width / 10,
+                  transition: { durationSeconds: formation.transition.durationSeconds + (formation.durationSeconds - size.width / 10) },
+               };
             }
             return formation;
          });
       });
    };
    const onResizeTransition = (event: any, { size }: { size: any }) => {
+      // change the width of just the formation based on the transition
       // this.setState({width: size.width, height: size.height});
       setFormations((formations: formation[]) => {
          return formations.map((formation, i) => {
@@ -30,9 +35,10 @@ export const Formation: React.FC<{
          });
       });
    };
+
    return (
       <>
-         <div className={`${amSelected ? "border-[2px]" : "border-[1px]"} border-black   h-full flex flex-row  rounded-xl overflow-hidden z-50 `}>
+         <div className={`${amSelected ? "border-[2px]" : "border-[1px]"} border-black  flex flex-row  rounded-md overflow-hidden z-50 h-[35px]`}>
             <div
                style={{
                   width: formation.durationSeconds * 10 - (amSelected ? 4 : 2),
@@ -41,7 +47,7 @@ export const Formation: React.FC<{
             >
                <Resizable
                   width={formation.durationSeconds * 10}
-                  height={100}
+                  // height={100}
                   onResize={onResizeFormation}
                   resizeHandles={["e"]}
                   handle={<div className="bg-gray-500  h-16 w-1 cursor-e-resize absolute right-0"></div>}
@@ -60,7 +66,7 @@ export const Formation: React.FC<{
                   width={formation.transition.durationSeconds * 10}
                   onResize={onResizeTransition}
                   resizeHandles={["e"]}
-                  height={100}
+                  // height={"100%"}
                   handle={<div className="bg-gray-500 absolute right-0 h-16 w-1 cursor-e-resize"></div>}
                >
                   <span></span>

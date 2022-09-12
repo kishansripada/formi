@@ -89,7 +89,7 @@ const MyDances = ({ session, setSession }: { session: Session; setSession: Funct
    }
 
    return (
-      <div className="">
+      <div className="h-screen flex flex-col">
          <Header session={session} setSession={setSession}></Header>
          <hr />
          <div className="px-[10%]">
@@ -152,6 +152,12 @@ const MyDances = ({ session, setSession }: { session: Session; setSession: Funct
             </div>
          </div>
          <Toaster></Toaster>
+         <div className="h-28 w-full bg-pink-200 mt-auto flex flex-row items-center px-[10%]">
+            have a feature request or bug to report?
+            <a className="ml-3" href="https://forms.gle/UHN2RFz94B2Y1C2M7">
+               submit it here
+            </a>
+         </div>
       </div>
    );
 };

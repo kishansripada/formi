@@ -2,8 +2,9 @@ import { useDrag } from "react-dnd";
 import { dancer, dancerPosition, formation } from "../../types/types";
 
 export interface DancerAliasProps {
-   name: string;
-   id: string;
+   // name: string;
+   // id: string;
+   dancer: dancer;
    setDancers: Function;
    selectedFormation: number | null;
    formations: formation[];
@@ -12,8 +13,8 @@ export interface DancerAliasProps {
    index: number;
 }
 
-export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, formations, setDancers, selectedFormation, isPlaying, position, index }) => {
-   let initials = name
+export const DancerAlias: React.FC<DancerAliasProps> = ({ dancer, formations, setDancers, selectedFormation, isPlaying, position, index }) => {
+   let initials = dancer.name
       .split(" ")
       .map((word) => word[0])
       .slice(0, 3)
@@ -22,21 +23,25 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, formations, 
 
    // if the track is playing then early return with the animation function
    if (isPlaying && position !== null) {
-      let myPosition = animate(formations, position, id);
+      let myPosition = animate(formations, position, dancer.id);
       // console.log(myPosition);
       return (
          <>
             <div
-               className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[9999] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 pointer-events-none`}
+               className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 pointer-events-none`}
                style={{
                   transform: "translate(-50%, -50%)",
                   left: myPosition.left,
                   top: myPosition.top,
                }}
             >
-               <div className="bg-white rounded-full w-8 h-8 grid place-items-center">
-                  <p className="">{initials}</p>
-               </div>
+               {dancer.instagramUsername ? (
+                  <img className="w-[34px] h-[34px] rounded-full" src={dancer.instagramUsername} alt="" />
+               ) : (
+                  <div className="bg-white rounded-full w-8 h-8 grid place-items-center">
+                     <p className="">{initials}</p>
+                  </div>
+               )}
             </div>
          </>
       );
@@ -44,7 +49,7 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, formations, 
    // if there is no formation selected and the track is not playing, then just return nothing
    if (selectedFormation === null) return <></>;
 
-   let currentCoords = formations[selectedFormation]?.positions.find((dancer: dancerPosition) => dancer.id === id)?.position;
+   let currentCoords = formations[selectedFormation]?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id)?.position;
 
    // if the dancer does not have any coordinates right now, return nothing since it shouln't be displayed
    if (!currentCoords) return <></>;
@@ -54,19 +59,19 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, formations, 
    const [{ isDragging }, drag] = useDrag(
       () => ({
          type: "dancerAlias",
-         item: { id, left, top, formations, selectedFormation },
+         item: { id: dancer.id, left, top, formations, selectedFormation },
          collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
          }),
       }),
-      [id, left, top, formations, selectedFormation]
+      [dancer.id, left, top, formations, selectedFormation]
    );
 
    return (
       <>
          <div
             ref={drag}
-            className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[9999] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  ${
+            className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  ${
                selectedFormation === null ? "pointer-events-none" : ""
             }`}
             style={{
@@ -76,9 +81,13 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ name, id, formations, 
                opacity: isDragging ? 0 : 1,
             }}
          >
-            <div className="bg-white rounded-full w-8 h-8 grid place-items-center">
-               <p className="">{initials}</p>
-            </div>
+            {dancer.instagramUsername ? (
+               <img className="w-[34px] h-[34px] rounded-full" src={dancer.instagramUsername} alt="" />
+            ) : (
+               <div className="bg-white rounded-full w-8 h-8 grid place-items-center">
+                  <p className="">{initials}</p>
+               </div>
+            )}
          </div>
       </>
    );
