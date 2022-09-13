@@ -38,46 +38,57 @@ export const Formation: React.FC<{
 
    return (
       <>
-         <div className={`${amSelected ? "border-[2px]" : "border-[1px]"} border-black  flex flex-row  rounded-md overflow-hidden z-50 h-[35px]`}>
-            <div
-               style={{
-                  width: formation.durationSeconds * 10 - (amSelected ? 4 : 2),
-               }}
-               className="relative z-0"
-            >
-               <Resizable
-                  width={formation.durationSeconds * 10}
-                  // height={100}
-                  onResize={onResizeFormation}
-                  resizeHandles={["e"]}
-                  handle={<div className="bg-gray-500  h-16 w-1 cursor-e-resize absolute right-0"></div>}
-               >
-                  <span></span>
-               </Resizable>
+         <div
+            className="rounded-md overflow-hidden h-[50px]  mx-[2px]  "
+            style={{
+               width: formation.transition.durationSeconds * 10 + formation.durationSeconds * 10,
+            }}
+         >
+            <div className={`${amSelected ? " bg-pink-200" : "bg-pink-600"} h-[17px]  px-2 overflow-clip`}>
+               <p className={`text-[12px] pointer-events-none select-none ${amSelected ? " text-pink-700" : "text-pink-200"}`}>{formation.name}</p>
             </div>
-
-            <div
-               style={{
-                  width: formation.transition.durationSeconds * 10,
-               }}
-               className=" relative"
-            >
-               <Resizable
-                  width={formation.transition.durationSeconds * 10}
-                  onResize={onResizeTransition}
-                  resizeHandles={["e"]}
-                  // height={"100%"}
-                  handle={<div className="bg-gray-500 absolute right-0 h-16 w-1 cursor-e-resize"></div>}
+            <div className={` flex flex-row `}>
+               <div
+                  style={{
+                     width: formation.durationSeconds * 10,
+                  }}
+                  className="relative bg-pink-600 h-[33px]"
                >
-                  <span></span>
-               </Resizable>
-               <div className="flex flex-row h-full -z-50">
-                  <svg className="w-1/2" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
-                     <polygon fill="lightgray" strokeWidth={0} points="0,0 0,20 10,10" />
-                  </svg>
-                  <svg className="w-1/2 mr-1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
-                     <polygon fill="lightgray" strokeWidth={0} points="0,10 10,0 10,20" />
-                  </svg>
+                  <Resizable
+                     width={formation.durationSeconds * 10}
+                     // height={100}
+                     onResize={onResizeFormation}
+                     resizeHandles={["e"]}
+                     handle={<div className="bg-pink-200 h-full  w-1 cursor-ew-resize absolute right-0 "></div>}
+                  >
+                     <span></span>
+                  </Resizable>
+               </div>
+
+               <div
+                  style={{
+                     width: formation.transition.durationSeconds * 10,
+                  }}
+                  className=" relative bg-pink-600 h-[33px]"
+               >
+                  <Resizable
+                     width={formation.transition.durationSeconds * 10}
+                     onResize={onResizeTransition}
+                     resizeHandles={["e"]}
+                     // height={"100%"}
+                     handle={<div className="h-full bg-pink-200  absolute right-0  w-1 cursor-ew-resize"></div>}
+                  >
+                     <span></span>
+                  </Resizable>
+
+                  <div className="flex flex-row h-full  pointer-events-none">
+                     <svg className="w-1/2" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
+                        <polygon className="fill-pink-200" strokeWidth={0} points="0,0 0,20 10,10" />
+                     </svg>
+                     <svg className="w-1/2 mr-1" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
+                        <polygon className="fill-pink-200" strokeWidth={0} points="0,10 10,0 10,20" />
+                     </svg>
+                  </div>
                </div>
             </div>
          </div>

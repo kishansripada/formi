@@ -11,11 +11,11 @@ import { homeFormation } from "../../public/formationForHome";
 import Link from "next/link";
 const home = () => {
    let router = useRouter();
-   useEffect(() => {
-      if (router.isReady) {
-         router.push("/login");
-      }
-   }, [router]);
+   //    useEffect(() => {
+   //       if (router.isReady) {
+   //          router.push("/login");
+   //       }
+   //    }, [router]);
 
    const animate = (formations: formation[], position: number, id: string): { left: number; top: number } => {
       let sum = 0;
@@ -143,8 +143,8 @@ const home = () => {
 
          <h1 className="text-5xl mt-[-6px] flex flex-row items-center ">
             <div className="h-[2px] bg-black w-[10%]"></div>
-            <div className="flex flex-row items-end mx-5  rounded-xl bg-white ">
-               <p>naach</p>
+            <div className="flex flex-row items-end mx-5  rounded-xl bg-white relative top-[-30px]">
+               <p className="">naach</p>
                <span className="text-sm ml-3"> beta</span>
             </div>
 
@@ -153,8 +153,8 @@ const home = () => {
 
          <h1 className="text-7xl font-space font-semibold text-center px-[15%]  leading-[90px] relative  mt-24 z-10">
             taking care of the
-            <span className=" -rotate-3 inline-block text-pink-600 bg-pink-200 py-1 px-3 rounded-xl">formations</span>, so you can focus on your
-            <span className=" rotate-3 inline-block text-blue-600 bg-blue-200 py-1 px-3 rounded-xl"> dancers</span>
+            <span className=" -rotate-3 inline-block text-pink-600 bg-pink-200 py-1 px-3 rounded-xl">formations,</span> so you can focus on your
+            <span className=" rotate-3 inline-block text-blue-600 bg-blue-200 py-1 px-3 rounded-xl"> dancers.</span>
          </h1>
 
          <h1
@@ -170,12 +170,13 @@ const home = () => {
          </h1>
 
          <h1
-            className="text-7xl font-space fixed text-center text-orange-600"
+            className="text-7xl font-space fixed text-center text-orange-600 ml-auto mr-auto"
             style={{
-               left: "50%",
-               transform: "translateX(-50%)",
-               top: linear(900, 1000, 0, 200, scrollY),
-               opacity: scrollY < 1700 ? linear(900, 1000, 0, 1, scrollY) : linear(1700, 2100, 1, 0, scrollY),
+               right: 0,
+               top: 200,
+               transform: "translate(-50%, -50%)",
+
+               left: linear(900, 1000, -700, 700, scrollY),
             }}
          >
             synced to SoundCloud
@@ -224,7 +225,7 @@ const home = () => {
          >
             <img
                className="w-[45px] h-[45px] rounded-full"
-               src="https://media-exp1.licdn.com/dms/image/C4D03AQFHCtAKpvhINg/profile-displayphoto-shrink_400_400/0/1645427187748?e=1668038400&v=beta&t=Pa9FKP6T3wndcrLvdi50vsOtWuvjv3hoWNhBzwajlIM"
+               src="https://media-exp1.licdn.com/dms/image/C4E03AQF5Cj8kpiygOA/profile-displayphoto-shrink_400_400/0/1615169034858?e=1668643200&v=beta&t=tnhbngy_GAgRg1JaG2i0fFZdy1TcJHJ7SbH3DPKLGF4"
                alt=""
             />
          </div>

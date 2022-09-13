@@ -72,34 +72,24 @@ export const Layers: React.FC<{
    }, [handleKeyDown, handleKeyUp]);
 
    return (
-      <div className="flex flex-row items-center bg-[#fafafa]">
-         <svg
-            onClick={() => {
-               setFormations((formations: formation[]) => [
-                  ...formations,
-                  {
-                     durationSeconds: 10,
-                     positions: [],
-                     transition: {
-                        durationSeconds: 5,
-                     },
-                     name: "Untitled",
-                  },
-               ]);
-            }}
-            className="h-12 w-12 hover:fill-slate-100 mr-9 ml-4 cursor-pointer shrink-0"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={1.5}
-         >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-         </svg>
+      <div
+         className="flex flex-row items-center bg-white w-full "
+         style={{
+            width: songDuration ? songDuration / 100 + 123 : "100%",
+         }}
+      >
+         <div>
+            <div
+               className={` w-[3px] h-[50px] relative z-50 ${position === null || !isPlaying ? "bg-white" : "bg-black"}`}
+               style={{
+                  left: 119 + (position !== null && isPlaying ? position * 10 : 0),
+               }}
+            ></div>
+         </div>
+
+         <button className="w-7 text-white ">new layer</button>
          <div
-            className="flex flex-col pt-2 pb-3 px-6  overflow-y-scroll overflow-x-clip bg-[#fafafa] justify-center"
-            style={{
-               width: songDuration ? songDuration / 100 + 123 : "100%",
-            }}
+            className="flex flex-col pt-2 pb-3 px-6  overflow-y-scroll overflow-x-clip bg-white  max-h-[100px] "
             id="outside"
             onClick={clickOutsideFormations}
          >
@@ -112,24 +102,6 @@ export const Layers: React.FC<{
                isPlaying={isPlaying}
                position={position}
             />
-            {/* <Layer
-               songDuration={songDuration}
-               setFormations={setFormations}
-               formations={formations}
-               selectedFormation={selectedFormation}
-               setSelectedFormation={setSelectedFormation}
-               isPlaying={isPlaying}
-               position={position}
-            />
-            <Layer
-               songDuration={songDuration}
-               setFormations={setFormations}
-               formations={formations}
-               selectedFormation={selectedFormation}
-               setSelectedFormation={setSelectedFormation}
-               isPlaying={isPlaying}
-               position={position}
-            /> */}
          </div>
       </div>
    );

@@ -248,7 +248,7 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
                   selectedFormation={selectedFormation}
                />
             </div>
-            <div className="overflow-x-scroll min-h-[195px]">
+            <div className="overflow-x-scroll min-h-[195px] bg-white ">
                <SoundCloudComponent
                   soundCloudTrackId={soundCloudTrackId}
                   setSoundCloudTrackId={setSoundCloudTrackId}
