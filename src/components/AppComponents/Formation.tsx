@@ -39,18 +39,19 @@ export const Formation: React.FC<{
    return (
       <>
          <div
-            className="rounded-md overflow-hidden h-[50px]  mx-[2px]  "
+            className="rounded-md overflow-hidden h-[50px]  mx-[2px] box-border "
             style={{
-               width: formation.transition.durationSeconds * 10 + formation.durationSeconds * 10,
+               width: formation.transition.durationSeconds * 10 + formation.durationSeconds * 10 - 4,
+               // subtract 4 to account for the mx-[2px]
             }}
          >
             <div className={`${amSelected ? " bg-pink-200" : "bg-pink-600"} h-[17px]  px-2 overflow-clip`}>
                <p className={`text-[12px] pointer-events-none select-none ${amSelected ? " text-pink-700" : "text-pink-200"}`}>{formation.name}</p>
             </div>
-            <div className={` flex flex-row `}>
+            <div className={` flex flex-row  box-border`}>
                <div
                   style={{
-                     width: formation.durationSeconds * 10,
+                     width: formation.durationSeconds * 10 - 2,
                   }}
                   className="relative bg-pink-600 h-[33px]"
                >
@@ -59,7 +60,7 @@ export const Formation: React.FC<{
                      // height={100}
                      onResize={onResizeFormation}
                      resizeHandles={["e"]}
-                     handle={<div className="bg-pink-200 h-full  w-1 cursor-ew-resize absolute right-0 "></div>}
+                     handle={<div className="bg-pink-600 h-full  w-1 cursor-ew-resize absolute right-0 "></div>}
                   >
                      <span></span>
                   </Resizable>
@@ -67,7 +68,7 @@ export const Formation: React.FC<{
 
                <div
                   style={{
-                     width: formation.transition.durationSeconds * 10,
+                     width: formation.transition.durationSeconds * 10 - 2,
                   }}
                   className=" relative bg-pink-600 h-[33px]"
                >

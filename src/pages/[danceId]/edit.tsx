@@ -7,7 +7,6 @@ import { Dancer } from "../../components/AppComponents/Dancer";
 import { Canvas } from "../../components/AppComponents/Canvas";
 import { SidebarDrop } from "../../components/AppComponents/SidebarDrop";
 import { NewDancer } from "../../components/AppComponents/NewDancer";
-import { Formations } from "../../components/AppComponents/Layer";
 import { CurrentFormation } from "../../components/AppComponents/CurrentFormation";
 import { EditDancer } from "../../components/AppComponents/EditDancer";
 import { Layers } from "../../components/AppComponents/Layers";
@@ -228,7 +227,7 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
                         <DancerAlias
                            index={index}
                            isPlaying={isPlaying}
-                           position={position ? parseFloat(position.toFixed(2)) : null}
+                           position={position}
                            selectedFormation={selectedFormation}
                            setDancers={setDancers}
                            key={index}
@@ -257,15 +256,7 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
                   setIsPlaying={setIsPlaying}
                   setPosition={setPosition}
                />
-               {/* <Formations
-                  songDuration={songDuration}
-                  setFormations={setFormations}
-                  formations={formations}
-                  selectedFormation={selectedFormation}
-                  setSelectedFormation={setSelectedFormation}
-                  isPlaying={isPlaying}
-                  position={position}
-               /> */}
+
                <Layers
                   songDuration={songDuration}
                   setFormations={setFormations}

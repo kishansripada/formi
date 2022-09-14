@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import logo from "../../../public/logo.svg";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
+import { memo } from "react";
 
 export const SoundCloudComponent: React.FC<{
    setPosition: Function;
@@ -11,9 +12,9 @@ export const SoundCloudComponent: React.FC<{
    songDuration: number | null;
    soundCloudTrackId: string | null;
    setSoundCloudTrackId: Function;
-}> = ({ setPosition, setIsPlaying, setSongDuration, songDuration, soundCloudTrackId, setSoundCloudTrackId }) => {
+}> = memo(({ setPosition, setIsPlaying, setSongDuration, songDuration, soundCloudTrackId, setSoundCloudTrackId }) => {
    const [newUrl, setNewUrl] = useState("");
-
+   console.log("SoundCloudComponent rerendered");
    if (!soundCloudTrackId) {
       return (
          <>
@@ -71,24 +72,30 @@ export const SoundCloudComponent: React.FC<{
    }
 
    function handleLoad() {
+      console.log("handling load");
       let SC = (window as any).SC;
       var widgetIframe = document.getElementById("iframe");
       let player = SC.Widget(widgetIframe);
 
-      player.bind(SC.Widget.Events.READY, () => {
+      player.bind(SC.Widget.Events.READY, (e: any) => {
+         console.log("ready");
          player.getDuration((e: any) => {
+            console.log("getting duration");
             setSongDuration(e);
          });
          player.bind(SC.Widget.Events.PLAY_PROGRESS, (e: any) => {
-            setPosition(parseFloat((e.currentPosition / 1000).toFixed(2)));
+            setPosition(Math.ceil(e.currentPosition / 1000 / 0.033) * 0.033);
+            // setPosition(Math.round(e.currentPosition / 10) / 100);
+            // setPosition(e.currentPosition / 1000);
          });
-         player.bind(SC.Widget.Events.PLAY, (e: any) => {
+
+         player.bind(SC.Widget.Events.PLAY, () => {
             setIsPlaying(true);
          });
-         player.bind(SC.Widget.Events.PAUSE, (e: any) => {
+         player.bind(SC.Widget.Events.PAUSE, () => {
             setIsPlaying(false);
          });
-         player.bind(SC.Widget.Events.FINISH, (e: any) => {
+         player.bind(SC.Widget.Events.FINISH, () => {
             setIsPlaying(false);
          });
       });
@@ -111,4 +118,4 @@ export const SoundCloudComponent: React.FC<{
          </div>
       </>
    );
-};
+});

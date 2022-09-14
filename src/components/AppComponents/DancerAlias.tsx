@@ -14,6 +14,7 @@ export interface DancerAliasProps {
 }
 
 export const DancerAlias: React.FC<DancerAliasProps> = ({ dancer, formations, setDancers, selectedFormation, isPlaying, position, index }) => {
+   // console.log("dancer alias created");
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])
