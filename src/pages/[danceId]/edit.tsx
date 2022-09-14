@@ -180,7 +180,13 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
    return (
       <>
          {editingDancer !== null ? (
-            <EditDancer setDancers={setDancers} dancers={dancers} setEditingDancer={setEditingDancer} editingDancer={editingDancer}></EditDancer>
+            <EditDancer
+               removeDancer={removeDancer}
+               setDancers={setDancers}
+               dancers={dancers}
+               setEditingDancer={setEditingDancer}
+               editingDancer={editingDancer}
+            ></EditDancer>
          ) : null}
 
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none">

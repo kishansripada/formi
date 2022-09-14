@@ -84,7 +84,7 @@ export const SoundCloudComponent: React.FC<{
             setSongDuration(e);
          });
          player.bind(SC.Widget.Events.PLAY_PROGRESS, (e: any) => {
-            setPosition(Math.ceil(e.currentPosition / 1000 / 0.033) * 0.033);
+            setPosition(Math.ceil(e.currentPosition / 1000 / 0.016) * 0.016);
             // setPosition(Math.round(e.currentPosition / 10) / 100);
             // setPosition(e.currentPosition / 1000);
          });

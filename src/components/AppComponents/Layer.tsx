@@ -28,7 +28,10 @@ export const Layer: React.FC<{
    };
 
    const paste = () => {
-      if (!copiedFormation || selectedFormation === null) return;
+      if (!copiedFormation) return;
+      if (selectedFormation === null) {
+         setFormations((formations: formation[]) => [...formations, copiedFormation]);
+      }
       setFormations((formations: formation[]) => {
          return formations.map((formation, index) => {
             if (selectedFormation === index) {
@@ -37,7 +40,6 @@ export const Layer: React.FC<{
             return formation;
          });
       });
-      console.log(copiedFormation);
    };
 
    const handleKeyDown = (event: any) => {
@@ -82,17 +84,26 @@ export const Layer: React.FC<{
          >
             <svg
                onClick={() => {
-                  setFormations((formations: formation[]) => [
-                     ...formations,
-                     {
-                        durationSeconds: 10,
-                        positions: [],
-                        transition: {
-                           durationSeconds: 5,
+                  if (!formations.length) {
+                     setFormations((formations: formation[]) => [
+                        ...formations,
+                        {
+                           durationSeconds: 10,
+                           positions: [],
+                           transition: {
+                              durationSeconds: 5,
+                           },
+                           name: `Untitled ${formations.length + 1}`,
                         },
-                        name: "Untitled",
-                     },
-                  ]);
+                     ]);
+                  } else {
+                     setFormations((formations: formation[]) => [
+                        ...formations,
+                        { ...formations[formations.length - 1], name: `Untitled ${formations.length + 1}` },
+                     ]);
+                  }
+
+                  setSelectedFormation(formations.length);
                }}
                xmlns="http://www.w3.org/2000/svg"
                fill="none"

@@ -78,8 +78,13 @@ export const Dancer = ({
             <input
                className="ml-2 px-2 py-1 rounded-md focus:outline-gray-500 w-full mr-3"
                defaultValue={name}
-               // key={name}
-               onChange={(e) => setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)))}
+               key={name}
+               onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                     setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)));
+                  }
+               }}
+               onBlur={(e) => setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)))}
             />
             {/* 
             <button className="ml-auto mr-4" onClick={() => removeDancer(id)}>
