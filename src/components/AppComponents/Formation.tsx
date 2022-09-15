@@ -57,10 +57,10 @@ export const Formation: React.FC<{
                >
                   <Resizable
                      width={formation.durationSeconds * 10}
-                     // height={100}
+                     height={100}
                      onResize={onResizeFormation}
                      resizeHandles={["e"]}
-                     handle={<div className="bg-pink-600 h-full  w-1 cursor-ew-resize absolute right-0 "></div>}
+                     handle={<div className="bg-pink-200 h-full  w-[6px] cursor-ew-resize absolute right-0 "></div>}
                   >
                      <span></span>
                   </Resizable>
@@ -76,13 +76,13 @@ export const Formation: React.FC<{
                      width={formation.transition.durationSeconds * 10}
                      onResize={onResizeTransition}
                      resizeHandles={["e"]}
-                     // height={"100%"}
-                     handle={<div className="h-full bg-pink-200  absolute right-0  w-1 cursor-ew-resize"></div>}
+                     height={100}
+                     handle={<div className="h-full bg-pink-200  absolute right-0  w-[6px] cursor-ew-resize"></div>}
                   >
                      <span></span>
                   </Resizable>
 
-                  <div className="flex flex-row h-full  pointer-events-none">
+                  <div className="flex flex-row h-full  pointer-events-none mr-[2px]">
                      <svg className="w-1/2" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
                         <polygon className="fill-pink-200" strokeWidth={0} points="0,0 0,20 10,10" />
                      </svg>

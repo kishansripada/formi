@@ -9,6 +9,7 @@ import { useScrollYPosition } from "react-use-scroll-position";
 import { formation } from "../types/types";
 import { homeFormation } from "../../public/formationForHome";
 import Link from "next/link";
+import Head from "next/head";
 const home = () => {
    let router = useRouter();
    //    useEffect(() => {
@@ -111,6 +112,7 @@ const home = () => {
 
       return coordsToPosition(from.x + (to.x - from.x) * percentThroughTransition, from.y + (to.y - from.y) * percentThroughTransition);
    };
+
    const coordsToPosition = (x: number, y: number) => {
       return { left: 47 + 80 * x, top: 470 + 40 * -y };
    };
@@ -130,6 +132,9 @@ const home = () => {
    return (
       <>
          <nav className="flex flex-row justify-between mt-5 text-gray-500 px-[10%]">
+            <Head>
+               <title> Naach</title>
+            </Head>
             <div></div>
             <ul className="flex flex-row child:mx-3 justify-center child:ease-in-out child:duration-300">
                <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md  ">about</button>

@@ -11,6 +11,7 @@ import { CurrentFormation } from "../../components/AppComponents/CurrentFormatio
 import { EditDancer } from "../../components/AppComponents/EditDancer";
 import { Layers } from "../../components/AppComponents/Layers";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 
 const Header = dynamic<{
    saved: boolean;
@@ -25,12 +26,15 @@ const Header = dynamic<{
 });
 
 const SoundCloudComponent = dynamic<{
+   setFormations: Function;
+   isPlaying: boolean;
    setPosition: Function;
    setIsPlaying: Function;
    setSongDuration: Function;
    songDuration: number | null;
    soundCloudTrackId: string | null;
    setSoundCloudTrackId: Function;
+   setSelectedFormation: Function;
 }>(() => import("../../components/AppComponents/SoundCloudComponent").then((mod) => mod.SoundCloudComponent), {
    ssr: false,
 });
@@ -179,6 +183,9 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
 
    return (
       <>
+         <Head>
+            <title>Edit | Naach</title>
+         </Head>
          {editingDancer !== null ? (
             <EditDancer
                removeDancer={removeDancer}
@@ -255,6 +262,9 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
             </div>
             <div className="overflow-x-scroll min-h-[195px] bg-white ">
                <SoundCloudComponent
+                  setSelectedFormation={setSelectedFormation}
+                  setFormations={setFormations}
+                  isPlaying={isPlaying}
                   soundCloudTrackId={soundCloudTrackId}
                   setSoundCloudTrackId={setSoundCloudTrackId}
                   setSongDuration={setSongDuration}

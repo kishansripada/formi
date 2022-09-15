@@ -81,7 +81,7 @@ export const Layers: React.FC<{
       >
          <svg
             style={{
-               left: 114 + (position !== null && isPlaying ? position * 10 : 0),
+               left: 114 + (position !== null ? position * 10 : 0),
             }}
             width="3730"
             height="27444"
