@@ -24,7 +24,7 @@ const Login = ({ session, setSession }: { session: Session; setSession: Function
             provider: "google",
          },
          {
-            redirectTo: "http://localhost:3000/mydances",
+            redirectTo: "https://www.naach.app/mydances",
          }
       );
    };
