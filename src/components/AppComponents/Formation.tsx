@@ -46,7 +46,7 @@ export const Formation: React.FC<{
             }}
          >
             <div className={`${amSelected ? " bg-pink-200" : "bg-pink-600"} h-[17px]  px-2 overflow-clip`}>
-               <p className={`text-[12px] pointer-events-none select-none ${amSelected ? " text-pink-700" : "text-pink-200"}`}>{formation.name}</p>
+               <p className={`text-[12px] pointer-events-none select-none ${amSelected ? " text-pink-700" : "text-pink-100"}`}>{formation.name}</p>
             </div>
             <div className={` flex flex-row  box-border`}>
                <div

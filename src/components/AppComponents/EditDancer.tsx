@@ -1,5 +1,6 @@
 import toast, { Toaster } from "react-hot-toast";
 import { dancer, dancerPosition, formation } from "../../types/types";
+import { MouseEvent } from "react";
 
 export const EditDancer: React.FC<{
    setEditingDancer: Function;
@@ -19,17 +20,12 @@ export const EditDancer: React.FC<{
          }}
       >
          <div className="flex  w-[400px] flex-col rounded-xl bg-white pt-10 pb-3 px-3">
-            {/* <input
-               className="text-3xl text-center mb-8 focus:outline-none"
-               type="text"
-               defaultValue={dancers.find((dancer) => dancer.id === editingDancer)?.name}
-            /> */}
             <p className="text-3xl text-center mb-8">{dancers.find((dancer) => dancer.id === editingDancer)?.name}</p>
 
             <div className="flex flex-col mt-auto">
                <div className="flex flex-col items-center">
                   <div className="flex flex-col items-start">
-                     <p className="text-sm">instagram username:</p>
+                     <p className="text-sm">image url:</p>
                      <input
                         defaultValue={dancers.find((dancer) => dancer.id === editingDancer)?.instagramUsername || ""}
                         onBlur={(e) => {

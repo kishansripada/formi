@@ -211,8 +211,6 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
                   {dancers.map((dancer, index) => (
                      <>
                         <Dancer
-                           removeDancer={removeDancer}
-                           setFormations={setFormations}
                            isPlaying={isPlaying}
                            formations={formations}
                            selectedFormation={selectedFormation}

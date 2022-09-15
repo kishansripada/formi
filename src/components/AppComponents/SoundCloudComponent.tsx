@@ -37,29 +37,20 @@ export const SoundCloudComponent: React.FC<{
                <div className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]">
                   <div className="flex  w-[700px] flex-col rounded-xl bg-white">
                      <div className="flex flex-col rounded-xl px-10 py-10 h-full">
-                        <div className="flex flex-row items-center mb-12">
-                           <img src="https://static.cdnlogo.com/logos/s/19/soundcloud.svg" className="w-24" alt="" />
-                           <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-6 h-6 mx-6 scale-150"
-                           >
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                           </svg>
-                           <Image src={logo} width={200} height={80} />
-                        </div>
                         <div className="flex flex-col mt-auto">
-                           <p className="text-xl">Let's add a SoundCloud track to get started!</p>
-                           <p className="">Paste a link to a public track URL below:</p>
-                           <div className="flex flex-row items-center">
-                              <input
-                                 onChange={(e) => setNewUrl(e.target.value)}
-                                 className=" border-black border-2 rounded-md focus:outline-none px-2 h-8 mt-3 grow mr-3"
-                                 type="text"
-                              />
+                           <p className="text-xl text-gray-500">Add a SoundCloud track to get started</p>
+
+                           <div className="flex flex-row items-center pt-3 ">
+                              <div className="flex flex-row items-center  w-full border-2 rounded-md border-black">
+                                 <input
+                                    onChange={(e) => setNewUrl(e.target.value)}
+                                    className="  rounded-md focus:outline-none px-2 h-8  grow mr-3"
+                                    type="text"
+                                    placeholder="SoundCloud url..."
+                                 />
+                                 <img src="https://static.cdnlogo.com/logos/s/19/soundcloud.svg" className="w-12 mr-2" alt="" />
+                              </div>
+
                               <button
                                  onClick={async () => {
                                     await fetch(`/api/getSoundCloudTrackId?url=${newUrl}`)
@@ -73,11 +64,26 @@ export const SoundCloudComponent: React.FC<{
                                           toast.error("invalid SoundCloud url");
                                        });
                                  }}
-                                 className="ml-auto mt-3 bg-pink-600 hover:bg-pink-700 rounded-xl text-white px-3 py-2"
+                                 className=" bg-pink-600 hover:bg-pink-700 rounded-md text-white px-3 py-1 ml-3 w-32"
                               >
                                  Get Started
                               </button>
                            </div>
+                        </div>
+
+                        <div className="flex flex-row justify-center mt-20">
+                           <p>
+                              or{" "}
+                              <button
+                                 onClick={() => {
+                                    setSoundCloudTrackId("257461521");
+                                    toast.success("using example track");
+                                 }}
+                                 className="text-pink-600"
+                              >
+                                 use example track
+                              </button>
+                           </p>
                         </div>
                      </div>
                   </div>
@@ -120,12 +126,45 @@ export const SoundCloudComponent: React.FC<{
       return (
          <>
             <div
-               className="fixed "
+               className="fixed flex flex-row justify-start "
                style={{
                   left: "50%",
                   transform: "translateX(-50%)",
                }}
             >
+               <button
+                  onClick={() => (player ? (player as any).toggle() : null)}
+                  className=" rounded-b-md bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 mx-1 "
+               >
+                  {isPlaying ? (
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-6 h-6 "
+                     >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9v6m-4.5 0V9M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                     </svg>
+                  ) : (
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                     >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path
+                           strokeLinecap="round"
+                           strokeLinejoin="round"
+                           d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z"
+                        />
+                     </svg>
+                  )}
+               </button>
                <button
                   onClick={() => {
                      setFormations((formations: formation[]) => {
@@ -148,15 +187,9 @@ export const SoundCloudComponent: React.FC<{
                         }
                      });
                   }}
-                  className="rou rounded-b-md bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 mx-1"
+                  className=" rounded-b-md bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 mx-1 cursor-pointer"
                >
                   + new formation
-               </button>
-               <button
-                  onClick={() => (player ? (player as any).toggle() : null)}
-                  className="rou rounded-b-md bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 mx-1"
-               >
-                  {isPlaying ? "pause" : "play"}
                </button>
             </div>
             <Script onReady={handleLoad} strategy="lazyOnload" src="https://w.soundcloud.com/player/api.js" />
