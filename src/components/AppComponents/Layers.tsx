@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { dancer, dancerPosition, formation } from "../../types/types";
 import { Layer } from "./Layer";
 import cursor from "../../../public/cursor.svg";
+import { PIXELS_PER_SECOND } from "../../types/types";
 
 export const Layers: React.FC<{
    formations: formation[];
@@ -76,19 +77,19 @@ export const Layers: React.FC<{
       <div
          className="flex flex-row items-center bg-white w-full "
          style={{
-            width: songDuration ? songDuration / 100 + 123 : "100%",
+            width: songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND + 123 : "100%",
          }}
       >
          <svg
             style={{
-               left: 114 + (position !== null ? position * 10 : 0),
+               left: 114 + (position !== null ? position * PIXELS_PER_SECOND : 0),
             }}
             width="3730"
             height="27444"
             viewBox="0 0 3730 27444"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-4 h-20 relative z-50"
+            className="w-4 h-20 relative z-50 pointer-events-none"
          >
             <path d="M1873 2248L1865.04 27443" stroke="white" strokeWidth="459" />
             <rect x="547" width="2635" height="2635" rx="400" fill="black" />

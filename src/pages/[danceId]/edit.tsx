@@ -26,8 +26,6 @@ const Header = dynamic<{
 });
 
 const SoundCloudComponent = dynamic<{
-   setFormations: Function;
-   isPlaying: boolean;
    setPosition: Function;
    setIsPlaying: Function;
    setSongDuration: Function;
@@ -35,6 +33,7 @@ const SoundCloudComponent = dynamic<{
    soundCloudTrackId: string | null;
    setSoundCloudTrackId: Function;
    setSelectedFormation: Function;
+   setFormations: Function;
 }>(() => import("../../components/AppComponents/SoundCloudComponent").then((mod) => mod.SoundCloudComponent), {
    ssr: false,
 });
@@ -262,7 +261,7 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
                <SoundCloudComponent
                   setSelectedFormation={setSelectedFormation}
                   setFormations={setFormations}
-                  isPlaying={isPlaying}
+                  // isPlaying={isPlaying}
                   soundCloudTrackId={soundCloudTrackId}
                   setSoundCloudTrackId={setSoundCloudTrackId}
                   setSongDuration={setSongDuration}

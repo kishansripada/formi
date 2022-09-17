@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Resizable } from "react-resizable";
 import { dancer, dancerPosition, formation } from "../../types/types";
+import { PIXELS_PER_SECOND } from "../../types/types";
 
 export const Formation: React.FC<{
    formation: formation;
@@ -15,8 +16,10 @@ export const Formation: React.FC<{
             if (i === index) {
                return {
                   ...formation,
-                  durationSeconds: size.width / 10,
-                  transition: { durationSeconds: formation.transition.durationSeconds + (formation.durationSeconds - size.width / 10) },
+                  durationSeconds: size.width / PIXELS_PER_SECOND,
+                  transition: {
+                     durationSeconds: formation.transition.durationSeconds + (formation.durationSeconds - size.width / PIXELS_PER_SECOND),
+                  },
                };
             }
             return formation;
@@ -29,7 +32,7 @@ export const Formation: React.FC<{
       setFormations((formations: formation[]) => {
          return formations.map((formation, i) => {
             if (i === index) {
-               return { ...formation, transition: { ...formation.transition, durationSeconds: size.width / 10 } };
+               return { ...formation, transition: { ...formation.transition, durationSeconds: size.width / PIXELS_PER_SECOND } };
             }
             return formation;
          });
@@ -41,7 +44,7 @@ export const Formation: React.FC<{
          <div
             className="rounded-md overflow-hidden h-[50px]  mx-[2px] box-border "
             style={{
-               width: formation.transition.durationSeconds * 10 + formation.durationSeconds * 10 - 4,
+               width: formation.transition.durationSeconds * PIXELS_PER_SECOND + formation.durationSeconds * PIXELS_PER_SECOND - 4,
                // subtract 4 to account for the mx-[2px]
             }}
          >
@@ -51,12 +54,12 @@ export const Formation: React.FC<{
             <div className={` flex flex-row  box-border`}>
                <div
                   style={{
-                     width: formation.durationSeconds * 10 - 2,
+                     width: formation.durationSeconds * PIXELS_PER_SECOND - 2,
                   }}
                   className="relative bg-pink-600 h-[33px]"
                >
                   <Resizable
-                     width={formation.durationSeconds * 10}
+                     width={formation.durationSeconds * PIXELS_PER_SECOND}
                      height={100}
                      onResize={onResizeFormation}
                      resizeHandles={["e"]}
@@ -68,12 +71,12 @@ export const Formation: React.FC<{
 
                <div
                   style={{
-                     width: formation.transition.durationSeconds * 10 - 2,
+                     width: formation.transition.durationSeconds * PIXELS_PER_SECOND - 2,
                   }}
                   className=" relative bg-pink-600 h-[33px]"
                >
                   <Resizable
-                     width={formation.transition.durationSeconds * 10}
+                     width={formation.transition.durationSeconds * PIXELS_PER_SECOND}
                      onResize={onResizeTransition}
                      resizeHandles={["e"]}
                      height={100}

@@ -41,7 +41,7 @@ export const Header = ({
    return (
       <>
          <div className=" h-[75px] flex flex-row items-center shrink-0 px-10 bg-white justify-between">
-            <div className="flex flex-row items-end">
+            <div className="flex flex-row items-end shrink-0">
                <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-1 py-1 grid place-items-center rounded-xl">
                   <div className="bg-white px-2 py-1 rounded-lg grid place-items-center">
                      <Image className="" src={logo} width={100} height={30} />
@@ -86,7 +86,7 @@ export const Header = ({
                )}
 
                <div ref={wrapperRef}>
-                  <button onClick={() => setChangeSoundCloudIsOpen((state) => !state)} className="bg-black text-white px-2 py-1 rounded-md ml-auto ">
+                  <button onClick={() => setChangeSoundCloudIsOpen((state) => !state)} className="bg-black text-white px-2 py-1 rounded-md ml-auto  ">
                      change track
                   </button>
 

@@ -4,11 +4,8 @@ import logo from "../../../public/logo.svg";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
-import { formation } from "../../types/types";
-
+import { PIXELS_PER_SECOND, formation } from "../../types/types";
 export const SoundCloudComponent: React.FC<{
-   setFormations: Function;
-   isPlaying: boolean;
    setPosition: Function;
    setIsPlaying: Function;
    setSongDuration: Function;
@@ -16,20 +13,12 @@ export const SoundCloudComponent: React.FC<{
    soundCloudTrackId: string | null;
    setSoundCloudTrackId: Function;
    setSelectedFormation: Function;
+   setFormations: Function;
 }> = memo(
-   ({
-      setPosition,
-      setIsPlaying,
-      setSongDuration,
-      songDuration,
-      soundCloudTrackId,
-      setSoundCloudTrackId,
-      setFormations,
-      isPlaying,
-      setSelectedFormation,
-   }) => {
+   ({ setPosition, setIsPlaying, setSongDuration, songDuration, soundCloudTrackId, setSoundCloudTrackId, setFormations, setSelectedFormation }) => {
       const [newUrl, setNewUrl] = useState("");
       const [player, setPlayer] = useState(null);
+
       console.log("SoundCloudComponent rerendered");
       if (!soundCloudTrackId) {
          return (
@@ -95,18 +84,21 @@ export const SoundCloudComponent: React.FC<{
 
       function handleLoad() {
          console.log("handling load");
+
          let SC = (window as any).SC;
          var widgetIframe = document.getElementById("iframe");
+         setPlayer(SC.Widget(widgetIframe));
          let player = SC.Widget(widgetIframe);
-         setPlayer(player);
+
          player.bind(SC.Widget.Events.READY, (e: any) => {
             console.log("ready");
             player.getDuration((e: any) => {
                console.log("getting duration");
                setSongDuration(e);
             });
+            console.log("new position bound");
             player.bind(SC.Widget.Events.PLAY_PROGRESS, (e: any) => {
-               setPosition(Math.ceil(e.currentPosition / 1000 / 0.016) * 0.016);
+               setPosition(Math.ceil(e.currentPosition / 1000 / 0.033) * 0.033);
                // setPosition(Math.round(e.currentPosition / 10) / 100);
                // setPosition(e.currentPosition / 1000);
             });
@@ -136,34 +128,13 @@ export const SoundCloudComponent: React.FC<{
                   onClick={() => (player ? (player as any).toggle() : null)}
                   className=" rounded-b-md bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 mx-1 "
                >
-                  {isPlaying ? (
-                     <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-6 h-6 "
-                     >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9v6m-4.5 0V9M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                     </svg>
-                  ) : (
-                     <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-6 h-6"
-                     >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        <path
-                           strokeLinecap="round"
-                           strokeLinejoin="round"
-                           d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z"
-                        />
-                     </svg>
-                  )}
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                     <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 7.5V18M15 7.5V18M3 16.811V8.69c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 010 1.954l-7.108 4.061A1.125 1.125 0 013 16.811z"
+                     />
+                  </svg>
                </button>
                <button
                   onClick={() => {
@@ -199,7 +170,7 @@ export const SoundCloudComponent: React.FC<{
                   scrolling="no"
                   frameBorder="no"
                   id="iframe"
-                  width={songDuration ? songDuration / 100 + 123 : "100%"}
+                  width={songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND + 123 : "100%"}
                   height="95"
                   allow="autoplay"
                   src={`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${soundCloudTrackId}&color=%23b42ae7&auto_play=false`}

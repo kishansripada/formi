@@ -1,7 +1,7 @@
 import { ReactEventHandler } from "react";
 import { Formation } from "./Formation";
 import { useCallback, useEffect, useState } from "react";
-import { dancer, dancerPosition, formation } from "../../types/types";
+import { dancer, dancerPosition, formation, PIXELS_PER_SECOND } from "../../types/types";
 
 export const Layer: React.FC<{
    formations: formation[];
@@ -77,7 +77,7 @@ export const Layer: React.FC<{
          <div
             className=" flex flex-row bg-white items-center border-y-black border-y-[1px]"
             style={{
-               width: songDuration ? songDuration / 100 + 123 : "100%",
+               width: songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND + 123 : "100%",
             }}
             id="outside"
             onClick={clickOutsideFormations}

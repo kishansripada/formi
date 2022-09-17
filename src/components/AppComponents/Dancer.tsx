@@ -72,7 +72,7 @@ export const Dancer = ({
             </>
 
             <input
-               className="ml-2 px-2 py-1 rounded-md focus:outline-gray-500 w-full mr-3"
+               className="ml-2 px-2 py-1 rounded-md focus:outline-pink-500 w-full mr-3"
                defaultValue={name}
                key={name}
                onKeyDown={(e) => {

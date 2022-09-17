@@ -19,3 +19,5 @@ export type formation = {
    };
    name: string | null;
 };
+
+export const PIXELS_PER_SECOND = 15;
