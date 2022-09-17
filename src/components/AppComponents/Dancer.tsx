@@ -80,7 +80,10 @@ export const Dancer = ({
                      setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)));
                   }
                }}
-               onBlur={(e) => setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)))}
+               onBlur={(e) => {
+                  if (e.target.value === dancers.find((dancer) => dancer.id === id)?.name) return;
+                  setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)));
+               }}
             />
 
             <button className="ml-auto mr-3" onClick={() => setEditingDancer(id)}>
