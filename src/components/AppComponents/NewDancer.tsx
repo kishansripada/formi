@@ -29,14 +29,14 @@ export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
             }}
          >
             <input
-               className="ml-3 outline-none"
+               className="ml-3 focus:outline-pink-600 rounded-md  hover:outline-gray-400 focus:outline-2  hover:outline-2 focus:outline hover:outline px-2"
                onKeyDown={(event) => (event.key === "Enter" ? createNewDancer() : null)}
                placeholder="New dancer"
                value={newName}
                onChange={(e) => setNewName(e.target.value)}
                onBlur={createNewDancer}
             />
-            <p className="ml-auto text-gray-400 mr-3"> enter</p>
+            <p className="text-gray-400 ml-auto mr-auto px-3 text-center"> enter to create</p>
          </div>
       </>
    );

@@ -83,7 +83,7 @@ const MyDances = ({ session, setSession }: { session: Session; setSession: Funct
    }, [session]);
 
    async function createNewDance() {
-      const { data, error } = await supabase.from("dances").insert([{ user: session.user.id }]);
+      const { data, error } = await supabase.from("dances").insert([{ user: session.user.id, last_edited: new Date() }]);
       console.log(data);
       router.push(`/${data[0].id}/edit`);
       console.log(error);

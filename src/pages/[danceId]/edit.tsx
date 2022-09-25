@@ -108,7 +108,8 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
    let uploadDancers = useCallback(
       debounce(async (dancers) => {
          console.log("uploading dancers");
-         const { data, error } = await supabase.from("dances").update({ dancers: dancers }).eq("id", router.query.danceId);
+         const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
+
          console.log({ data });
          console.log({ error });
          setSaved(true);
@@ -126,7 +127,10 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
    let uploadFormations = useCallback(
       debounce(async (formations) => {
          console.log("uploading formations");
-         const { data, error } = await supabase.from("dances").update({ formations: formations }).eq("id", router.query.danceId);
+         const { data, error } = await supabase
+            .from("dances")
+            .update({ formations: formations, last_edited: new Date() })
+            .eq("id", router.query.danceId);
          console.log({ data });
          console.log({ error });
          setSaved(true);
@@ -145,7 +149,10 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
    let uploadSoundCloudId = useCallback(
       debounce(async (soundCloudTrackId) => {
          console.log("uploading formations");
-         const { data, error } = await supabase.from("dances").update({ soundCloudId: soundCloudTrackId }).eq("id", router.query.danceId);
+         const { data, error } = await supabase
+            .from("dances")
+            .update({ soundCloudId: soundCloudTrackId, last_edited: new Date() })
+            .eq("id", router.query.danceId);
          console.log({ data });
          console.log({ error });
          setSaved(true);

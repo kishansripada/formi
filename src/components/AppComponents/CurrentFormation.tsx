@@ -28,7 +28,7 @@ export const CurrentFormation: React.FC<{
             {selectedFormation !== null && formations[selectedFormation]?.name !== null ? (
                <div className="h-full  flex flex-col">
                   <input
-                     className="w-full text-center h-12 text-2xl focus:outline-none"
+                     className="w-full text-center h-6 text-2xl focus:outline-pink-600 rounded-sm  hover:outline-gray-400 focus:outline-2  hover:outline-2 focus:outline hover:outline mt-4 py-4 mb-2"
                      onBlur={(e) => {
                         // console.log(e.target.value);
                         setFormations((formations: formation[]) => {
@@ -49,85 +49,146 @@ export const CurrentFormation: React.FC<{
                      key={formations[selectedFormation]?.name}
                      defaultValue={formations[selectedFormation]?.name || ""}
                   />
-                  <hr className="" />
-                  {/* <p className="text-sm text-gray-400 mb-2 ml-auto mr-auto">formation name</p> */}
-                  {dancersWhoAreNotInPreviousFormation?.length ? (
-                     <div className="border-gray-500 border-[2px]  rounded-xl px-3 py-2">
-                        <p className="text-xl">Enter from:</p>
-                        {dancersWhoAreNotInPreviousFormation?.map((dancer: dancerPosition, i: number) => (
-                           <div className="flex flex-row justify-between w-full" key={i}>
-                              {dancers.find((dancerx) => dancerx.id === dancer.id)?.name}
-                              <select
-                                 className=" focus:outline-none outline-1 outline-gray-300"
-                                 defaultValue={
-                                    formations[selectedFormation]?.positions.find((dancerPosition) => dancerPosition.id === dancer.id)?.enterStrategy
-                                 }
-                                 onChange={(e) =>
-                                    setFormations((formations: formation[]) => {
-                                       return formations.map((formation, index: number) => {
-                                          if (index === selectedFormation) {
-                                             return {
-                                                ...formation,
-                                                positions: formation.positions.map((dancerPosition) => {
-                                                   if (dancerPosition.id === dancer.id) {
-                                                      return { ...dancerPosition, enterStrategy: e.target.value };
-                                                   }
-                                                   return dancerPosition;
-                                                }),
-                                             };
-                                          }
-                                          return formation;
-                                       });
-                                    })
-                                 }
-                              >
-                                 <option value="closest"></option>
-                                 <option value="left">left</option>
-                                 <option value="right">right</option>
-                              </select>
-                           </div>
-                        ))}
-                     </div>
-                  ) : null}
 
-                  {dancersWhoAreNotInNextFormation?.length ? (
-                     <div className="border-gray-500 border-[2px] my-2 rounded-xl px-3 py-2">
-                        <p className="text-xl">Exit towards:</p>
-                        {dancersWhoAreNotInNextFormation?.map((dancer: dancerPosition, i) => (
-                           <div className="flex flex-row justify-between w-full" key={i}>
-                              {dancers.find((dancerx) => dancerx.id === dancer.id)?.name}
-                              <select
-                                 className=" focus:outline-none outline-1 outline-gray-300"
-                                 defaultValue={
-                                    formations[selectedFormation]?.positions.find((dancerPosition) => dancerPosition.id === dancer.id)?.exitStrategy
-                                 }
-                                 onChange={(e) =>
-                                    setFormations((formations: formation[]) => {
-                                       return formations.map((formation, index: number) => {
-                                          if (index === selectedFormation) {
-                                             return {
-                                                ...formation,
-                                                positions: formation.positions.map((dancerPosition) => {
-                                                   if (dancerPosition.id === dancer.id) {
-                                                      return { ...dancerPosition, exitStrategy: e.target.value };
-                                                   }
-                                                   return dancerPosition;
-                                                }),
-                                             };
-                                          }
-                                          return formation;
-                                       });
-                                    })
-                                 }
+                  <div className="h-full flex flex-col">
+                     <div className="h-1/2 flex flex-col">
+                        <div className="flex flex-row justify-between items-center">
+                           <p className="text-xl">Enter From:</p>
+                           <button className="peer">
+                              <svg
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 strokeWidth={1.5}
+                                 stroke="currentColor"
+                                 className="w-5 h-5"
                               >
-                                 <option value="closest"></option>
-                                 <option value="left">left</option>
-                                 <option value="right">right</option>
-                              </select>
+                                 <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                                 />
+                              </svg>
+                           </button>
+                           <div className="peer-hover:opacity-100 absolute right-[50px] text-wrap w-96 z-50 py-2 px-3 text-sm  text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 pointer-events-none">
+                              <p>
+                                 dancers that are not in the previous formation and must enter the stage during the previous formation's transition
+                              </p>
+
+                              <p>choose which side of the stage they enter from</p>
                            </div>
-                        ))}
+                        </div>
+
+                        <div
+                           className={`${
+                              dancersWhoAreNotInPreviousFormation?.length ? "border-pink-500" : "border-gray-500"
+                           } border-[2px] rounded-md px-3 py-2 mb-2 grow`}
+                        >
+                           {dancersWhoAreNotInPreviousFormation?.map((dancer: dancerPosition, i: number) => (
+                              <div className="flex flex-row justify-between w-full" key={i}>
+                                 {dancers.find((dancerx) => dancerx.id === dancer.id)?.name}
+                                 <select
+                                    className=" focus:outline-none outline-1 outline-gray-300"
+                                    defaultValue={
+                                       formations[selectedFormation]?.positions.find((dancerPosition) => dancerPosition.id === dancer.id)
+                                          ?.enterStrategy
+                                    }
+                                    onChange={(e) =>
+                                       setFormations((formations: formation[]) => {
+                                          return formations.map((formation, index: number) => {
+                                             if (index === selectedFormation) {
+                                                return {
+                                                   ...formation,
+                                                   positions: formation.positions.map((dancerPosition) => {
+                                                      if (dancerPosition.id === dancer.id) {
+                                                         return { ...dancerPosition, enterStrategy: e.target.value };
+                                                      }
+                                                      return dancerPosition;
+                                                   }),
+                                                };
+                                             }
+                                             return formation;
+                                          });
+                                       })
+                                    }
+                                 >
+                                    <option value="closest"></option>
+                                    <option value="left">left</option>
+                                    <option value="right">right</option>
+                                 </select>
+                              </div>
+                           ))}
+                        </div>
                      </div>
-                  ) : null}
+                     <div className="h-1/2 flex flex-col">
+                        <div className="flex flex-row justify-between items-center">
+                           <p className="text-xl">Exit Towards:</p>
+                           <button className="peer">
+                              <svg
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 strokeWidth={1.5}
+                                 stroke="currentColor"
+                                 className="w-5 h-5"
+                              >
+                                 <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                                 />
+                              </svg>
+                           </button>
+                           <div className="peer-hover:opacity-100 absolute right-[50px] text-wrap w-96 z-50 py-2 px-3 text-sm  text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 pointer-events-none">
+                              <p>dancers who are not in the next formation and must exit during this formation's transition</p>
+
+                              <p>choose which side of the stage they exit towards</p>
+                           </div>
+                        </div>
+
+                        <div
+                           className={`${
+                              dancersWhoAreNotInNextFormation?.length ? "border-pink-500" : "border-gray-500"
+                           } border-[2px] rounded-md px-3 py-2 mb-2 grow`}
+                        >
+                           {dancersWhoAreNotInNextFormation?.map((dancer: dancerPosition, i) => (
+                              <div className="flex flex-row justify-between w-full" key={i}>
+                                 {dancers.find((dancerx) => dancerx.id === dancer.id)?.name}
+                                 <select
+                                    className=" focus:outline-none outline-1 outline-gray-300"
+                                    defaultValue={
+                                       formations[selectedFormation]?.positions.find((dancerPosition) => dancerPosition.id === dancer.id)
+                                          ?.exitStrategy
+                                    }
+                                    onChange={(e) =>
+                                       setFormations((formations: formation[]) => {
+                                          return formations.map((formation, index: number) => {
+                                             if (index === selectedFormation) {
+                                                return {
+                                                   ...formation,
+                                                   positions: formation.positions.map((dancerPosition) => {
+                                                      if (dancerPosition.id === dancer.id) {
+                                                         return { ...dancerPosition, exitStrategy: e.target.value };
+                                                      }
+                                                      return dancerPosition;
+                                                   }),
+                                                };
+                                             }
+                                             return formation;
+                                          });
+                                       })
+                                    }
+                                 >
+                                    <option value="closest"></option>
+                                    <option value="left">left</option>
+                                    <option value="right">right</option>
+                                 </select>
+                              </div>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
+
                   <div className="flex flex-row  mt-auto">
                      <button
                         className="text-white bg-red-600 px-2 py-1 rounded-md mb-2  flex flex-row items-center justify-center w-1/2 mx-2"
@@ -166,12 +227,14 @@ export const CurrentFormation: React.FC<{
                            });
                         }}
                      >
-                        clear
+                        clear dancers
                      </button>
                   </div>
                </div>
             ) : (
-               <></>
+               <>
+                  <p className="text-center mt-16">no formation selected </p>
+               </>
             )}
          </div>
          <Toaster></Toaster>

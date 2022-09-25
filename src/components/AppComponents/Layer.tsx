@@ -109,7 +109,7 @@ export const Layer: React.FC<{
                fill="none"
                viewBox="0 0 24 24"
                strokeWidth="1.5"
-               stroke="black"
+               stroke="white"
                className="w-6 h-6 cursor-pointer mr-2 fill-white"
             >
                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -120,7 +120,7 @@ export const Layer: React.FC<{
                fill="none"
                viewBox="0 0 24 24"
                strokeWidth={1.5}
-               stroke="black"
+               stroke="white"
                className="w-6 h-6 cursor-pointer mr-2"
             >
                <path
