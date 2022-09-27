@@ -140,7 +140,7 @@ export const CurrentFormation: React.FC<{
                               </svg>
                            </button>
                            <div className="peer-hover:opacity-100 absolute right-[50px] text-wrap w-96 z-50 py-2 px-3 text-sm  text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 pointer-events-none">
-                              <p>dancers who are not in the next formation and must exit during this formation's transition</p>
+                              <p>dancers who are not in the next formation and must exit the stage during this formation's transition</p>
 
                               <p>choose which side of the stage they exit towards</p>
                            </div>

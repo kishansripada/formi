@@ -137,9 +137,9 @@ const home = () => {
             </Head>
             <div></div>
             <ul className="flex flex-row child:mx-3 justify-center child:ease-in-out child:duration-300">
-               <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md  ">about</button>
+               {/* <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md  ">about</button>
                <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md">try it</button>
-               <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md">pricing</button>
+               <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md">pricing</button> */}
             </ul>
             <Link href={"/login"} className="">
                <button className="bg-pink-500 hover:bg-pink-600 px-4 py-1 rounded-md text-white">login</button>
@@ -167,14 +167,14 @@ const home = () => {
             style={{
                left: "50%",
                transform: "translateX(-50%)",
-               top: linear(200, 500, 0, 200, scrollY),
-               opacity: scrollY < 900 ? linear(200, 500, 0, 1, scrollY) : linear(900, 1000, 1, 0, scrollY),
+               top: linear(200, 500, 0, 175, scrollY),
+               opacity: linear(200, 500, 0, 1, scrollY),
             }}
          >
             bring your formations to life
          </h1>
 
-         <h1
+         {/* <h1
             className="text-7xl font-space fixed text-center text-orange-600 ml-auto mr-auto"
             style={{
                right: 0,
@@ -185,7 +185,7 @@ const home = () => {
             }}
          >
             synced to SoundCloud
-         </h1>
+         </h1> */}
 
          {/* riya */}
          <div

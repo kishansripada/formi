@@ -101,14 +101,14 @@ export const Header = ({
                   </button>
 
                   {changeSoundCloudIsOpen ? (
-                     <div className="w-[200px]  absolute bg-white border-2 border-black rounded-xl right-[150px] top-16 px-3 py-3 z-50">
+                     <div className="w-[200px]  absolute bg-white border-[1px] border-gray-300 rounded-xl right-[175px] top-16 px-3 py-3 z-50">
                         <div className="flex flex-row"></div>
                         <input
                            placeholder="soundcloud URL"
                            value={newSoundCloudUrl}
                            onChange={(e) => setNewSoundCloudUrl(e.target.value)}
                            type="text"
-                           className="border-gray-500 border-2 rounded-md  px-2 w-full"
+                           className="border-gray-500 border-2 rounded-md  px-2 w-full focus:outline-pink-600"
                         />
                         <button
                            className="bg-orange-600 py-1 px-1 w-full mt-2 rounded-md text-white hover:bg-orange-700"
