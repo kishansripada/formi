@@ -141,12 +141,12 @@ const home = () => {
                <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md">try it</button>
                <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md">pricing</button> */}
             </ul>
-            <Link href={"/login"} className="">
+            <Link href={"/login"} className="z-50">
                <button className="bg-pink-500 hover:bg-pink-600 px-4 py-1 rounded-md text-white">login</button>
             </Link>
          </nav>
 
-         <h1 className="text-5xl mt-[-6px] flex flex-row items-center ">
+         <h1 className="text-5xl mt-[-6px] flex flex-row items-center pointer-events-none ">
             <div className="h-[2px] bg-black w-[10%]"></div>
             <div className="flex flex-row items-end mx-5  rounded-xl bg-white relative top-[-30px]">
                <p className="">naach</p>
@@ -156,14 +156,14 @@ const home = () => {
             <div className="h-[2px] bg-black w-full"></div>
          </h1>
 
-         <h1 className="text-7xl font-space font-semibold text-center px-[15%]  leading-[90px] relative  mt-24 z-10">
+         <h1 className="text-4xl lg:text-7xl font-space font-semibold text-center px-[15%]  lg:leading-[90px] relative  mt-24 z-10">
             taking care of the
             <span className=" -rotate-3 inline-block text-pink-600 bg-pink-200 py-1 px-3 rounded-xl">formations,</span> so you can focus on your
             <span className=" rotate-3 inline-block text-blue-600 bg-blue-200 py-1 px-3 rounded-xl"> dancers.</span>
          </h1>
 
          <h1
-            className="text-7xl font-space fixed text-center"
+            className="text-6xl lg:text-7xl font-space fixed text-center"
             style={{
                left: "50%",
                transform: "translateX(-50%)",

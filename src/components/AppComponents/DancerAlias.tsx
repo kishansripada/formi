@@ -72,7 +72,7 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ dancer, formations, se
       <>
          <div
             ref={drag}
-            className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  ${
+            className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-600  ${
                selectedFormation === null ? "pointer-events-none" : ""
             }`}
             style={{

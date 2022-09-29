@@ -12,7 +12,7 @@ import { EditDancer } from "../../components/AppComponents/EditDancer";
 import { Layers } from "../../components/AppComponents/Layers";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-
+import { isMobile } from "react-device-detect";
 const Header = dynamic<{
    saved: boolean;
    setSoundCloudTrackId: Function;
@@ -49,7 +49,7 @@ import { Session } from "@supabase/supabase-js";
 //    }, deps);
 // };
 
-const Home = ({ session, setSession }: { session: Session; setSession: Function }) => {
+const Edit = ({ session, setSession }: { session: Session; setSession: Function }) => {
    const [songDuration, setSongDuration] = useState<number | null>(null);
    const [dancers, setDancers] = useState<dancer[]>([]);
    const [position, setPosition] = useState<number | null>(null);
@@ -192,6 +192,7 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
          <Head>
             <title>Edit | Naach</title>
          </Head>
+
          {editingDancer !== null ? (
             <EditDancer
                removeDancer={removeDancer}
@@ -266,9 +267,9 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
             </div>
             <div className="overflow-x-scroll min-h-[195px] bg-white ">
                <SoundCloudComponent
+                  key={soundCloudTrackId}
                   setSelectedFormation={setSelectedFormation}
                   setFormations={setFormations}
-                  // isPlaying={isPlaying}
                   soundCloudTrackId={soundCloudTrackId}
                   setSoundCloudTrackId={setSoundCloudTrackId}
                   setSongDuration={setSongDuration}
@@ -292,4 +293,4 @@ const Home = ({ session, setSession }: { session: Session; setSession: Function 
    );
 };
 
-export default Home;
+export default Edit;
