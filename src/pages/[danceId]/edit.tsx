@@ -69,6 +69,13 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    const [danceName, setDanceName] = useState<string>("Untitled Dance");
    const [saved, setSaved] = useState<boolean>(true);
    const [editingDancer, setEditingDancer] = useState<string | null>(null);
+   const [mobile, setMobile] = useState<string | null>(null);
+
+   useEffect(() => {
+      if (isMobile) {
+         setMobile(true);
+      }
+   }, [isMobile]);
    const router = useRouter();
 
    const removeDancer = (id: string) => {
@@ -189,6 +196,20 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
 
    return (
       <>
+         {mobile ? (
+            <>
+               <div className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/95 backdrop-blur-[2px]">
+                  <div className="flex  w-[700px] flex-col rounded-xl bg-white">
+                     <div className="flex flex-col rounded-xl px-10 py-10 h-full text-center">
+                        <div className="flex flex-col mt-auto">
+                           editing dances with Naach is unfortunately not yet optimized for mobile devices, please visit naach.app on your desktop to
+                           edit your formations
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </>
+         ) : null}
          <Head>
             <title>Edit | Naach</title>
          </Head>

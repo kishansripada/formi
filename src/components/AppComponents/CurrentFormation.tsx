@@ -16,13 +16,6 @@ export const CurrentFormation: React.FC<{
            })
          : [];
 
-   // let dancersInThisFormation =
-   //    selectedFormation !== null
-   //       ? formations?.[selectedFormation]?.positions.filter((dancerPosition: dancerPosition) => {
-   //            return formations[selectedFormation]?.positions.find((dancer) => dancer.id === dancerPosition.id);
-   //         })
-   //       : [];
-
    let dancersInThisFormation =
       selectedFormation !== null
          ? dancers.filter((dancer) => {
