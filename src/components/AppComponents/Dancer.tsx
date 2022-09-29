@@ -65,7 +65,7 @@ export const Dancer = ({
                      </div>
                   ) : (
                      <div className="bg-white rounded-full w-12 h-12 grid place-items-center">
-                        <p className="">{initials}</p>
+                        <p className="font-bold">{initials}</p>
                      </div>
                   )}
                </div>
