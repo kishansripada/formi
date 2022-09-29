@@ -12,11 +12,11 @@ import Link from "next/link";
 import Head from "next/head";
 const home = () => {
    let router = useRouter();
-   //    useEffect(() => {
-   //       if (router.isReady) {
-   //          router.push("/login");
-   //       }
-   //    }, [router]);
+   useEffect(() => {
+      if (router.isReady) {
+         router.push("/login");
+      }
+   }, [router]);
 
    const animate = (formations: formation[], position: number, id: string): { left: number; top: number } => {
       let sum = 0;
@@ -116,6 +116,7 @@ const home = () => {
    const coordsToPosition = (x: number, y: number) => {
       return { left: 47 + 80 * x, top: 470 + 40 * -y };
    };
+
    const linear = (iStart: number, iEnd: number, oStart: number, oEnd: number, i: number) => {
       if (i < iStart) return oStart;
       if (i > iEnd) return oEnd;
