@@ -149,7 +149,7 @@ const home = () => {
                <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md">pricing</button> */}
             </ul>
             <Link href={"/login"} className="z-50">
-               <button className="bg-pink-500 hover:bg-pink-600 px-4 py-1 rounded-md text-white">login</button>
+               <button className="bg-pink-500 hover:bg-pink-600 px-4 py-1 rounded-md text-white">get started</button>
             </Link>
          </nav>
 
