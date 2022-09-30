@@ -10,6 +10,7 @@ import { NewDancer } from "../../components/AppComponents/NewDancer";
 import { CurrentFormation } from "../../components/AppComponents/CurrentFormation";
 import { EditDancer } from "../../components/AppComponents/EditDancer";
 import { Layers } from "../../components/AppComponents/Layers";
+import Link from "next/link";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { isMobile } from "react-device-detect";
@@ -70,6 +71,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    const [saved, setSaved] = useState<boolean>(true);
    const [editingDancer, setEditingDancer] = useState<string | null>(null);
    const [mobile, setMobile] = useState<string | null>(null);
+   const [noAccess, setNoAccess] = useState<boolean>(false);
 
    useEffect(() => {
       if (isMobile) {
@@ -94,14 +96,16 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
       // if (!session) {
       //    router.push("/login");
       // }
+
       if (router.query.danceId) {
          supabase
             .from("dances")
             .select("*")
             .eq("id", router.query.danceId)
             .then((r) => {
-               if (!r?.data?.[0]) {
-                  // toast error
+               if (!r?.data?.length) {
+                  setNoAccess(true);
+                  return;
                }
                let { soundCloudId, dancers, formations, name } = r?.data?.[0];
                setSoundCloudTrackId(soundCloudId);
@@ -209,7 +213,25 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   </div>
                </div>
             </>
-         ) : null}
+         ) : (
+            <></>
+         )}
+         {noAccess ? (
+            <>
+               <div className="fixed top-0 left-0 z-[100] flex h-screen w-screen items-center justify-center bg-black/70 backdrop-blur-[8px]">
+                  <div className="flex  w-[700px] flex-col rounded-xl bg-white">
+                     <div className="flex flex-col rounded-xl px-10 py-10 h-full text-center">
+                        <div className="flex flex-col mt-auto">you don't have access to this dance 🫢</div>
+                        <Link href="/mydances">
+                           <a className="ml-2  px-2 py-1 rounded-md text-pink-600"> back to my dances</a>
+                        </Link>
+                     </div>
+                  </div>
+               </div>
+            </>
+         ) : (
+            <></>
+         )}
          <Head>
             <title>Edit | Naach</title>
          </Head>
@@ -222,7 +244,9 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                setEditingDancer={setEditingDancer}
                editingDancer={editingDancer}
             ></EditDancer>
-         ) : null}
+         ) : (
+            <></>
+         )}
 
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none">
             <Header

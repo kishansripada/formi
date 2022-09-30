@@ -5,6 +5,8 @@ import { useEffect } from "react";
 // import { supabase } from "../utils/supabase";
 // import { Header } from "../components/NonAppComponents/Header";
 // import demo from "../../public/demo.mp4";
+import toast, { Toaster } from "react-hot-toast";
+
 import { useScrollYPosition } from "react-use-scroll-position";
 import { formation } from "../types/types";
 import { homeFormation } from "../../public/formationForHome";
@@ -12,11 +14,6 @@ import Link from "next/link";
 import Head from "next/head";
 const home = () => {
    let router = useRouter();
-   // useEffect(() => {
-   //    if (router.isReady) {
-   //       router.push("/login");
-   //    }
-   // }, [router]);
 
    const animate = (formations: formation[], position: number, id: string): { left: number; top: number } => {
       let sum = 0;
@@ -137,7 +134,16 @@ const home = () => {
                <title> Naach</title>
             </Head>
             <div></div>
-            <ul className="flex flex-row child:mx-3 justify-center child:ease-in-out child:duration-300">
+            <ul className="flex flex-col items-center child:mx-3 justify-center child:ease-in-out child:duration-300 text-sm leading-tight displ invisible lg:visible">
+               <p> hey there 👋, we just launched. keep in mind we're still in beta 🫤.</p>
+               <p>
+                  {" "}
+                  watch a{" "}
+                  <a className="text-pink-600" target="_blank" href="https://www.youtube.com/watch?v=1dj8L5tUAjU">
+                     tutorial
+                  </a>{" "}
+                  to learn more
+               </p>
                {/* <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md  ">about</button>
                <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md">try it</button>
                <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md">pricing</button> */}
