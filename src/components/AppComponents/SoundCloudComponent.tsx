@@ -154,7 +154,17 @@ export const SoundCloudComponent: React.FC<{
                            ];
                         } else {
                            setSelectedFormation(formations.length);
-                           return [...formations, { ...formations[formations.length - 1], name: `Untitled ${formations.length + 1}` }];
+                           return [
+                              ...formations,
+                              {
+                                 ...formations[formations.length - 1],
+                                 name: `Untitled ${formations.length + 1}`,
+                                 transition: {
+                                    durationSeconds: 5,
+                                 },
+                                 durationSeconds: 10,
+                              },
+                           ];
                         }
                      });
                   }}

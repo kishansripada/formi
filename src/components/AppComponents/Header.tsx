@@ -95,8 +95,9 @@ export const Header = ({
             </div>
 
             <p>
-               stuck? watch a{" "}
+               stuck? watch a
                <a className="text-pink-600" href="https://www.youtube.com/watch?v=1dj8L5tUAjU" target={"_blank"}>
+                  {" "}
                   tutorial
                </a>
             </p>

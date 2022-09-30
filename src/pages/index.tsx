@@ -12,11 +12,11 @@ import Link from "next/link";
 import Head from "next/head";
 const home = () => {
    let router = useRouter();
-   useEffect(() => {
-      if (router.isReady) {
-         router.push("/login");
-      }
-   }, [router]);
+   // useEffect(() => {
+   //    if (router.isReady) {
+   //       router.push("/login");
+   //    }
+   // }, [router]);
 
    const animate = (formations: formation[], position: number, id: string): { left: number; top: number } => {
       let sum = 0;
@@ -150,21 +150,21 @@ const home = () => {
          <h1 className="text-5xl mt-[-6px] flex flex-row items-center pointer-events-none ">
             <div className="h-[2px] bg-black w-[10%]"></div>
             <div className="flex flex-row items-end mx-5  rounded-xl bg-white relative top-[-30px]">
-               <p className="">naach</p>
+               <p className="text-[35px] lg:text-5xl">naach</p>
                <span className="text-sm ml-3"> beta</span>
             </div>
 
             <div className="h-[2px] bg-black w-full"></div>
          </h1>
 
-         <h1 className="text-4xl lg:text-7xl font-space font-semibold text-center px-[15%]  lg:leading-[90px] relative  mt-24 z-10">
+         <h1 className="text-5xl leading-[70px] lg:text-7xl font-space font-semibold text-center px-[15%]  lg:leading-[90px] relative  mt-24 z-10">
             taking care of the
             <span className=" -rotate-3 inline-block text-pink-600 bg-pink-200 py-1 px-3 rounded-xl">formations,</span> so you can focus on your
             <span className=" rotate-3 inline-block text-blue-600 bg-blue-200 py-1 px-3 rounded-xl"> dancers.</span>
          </h1>
 
          <h1
-            className="text-6xl lg:text-7xl font-space fixed text-center"
+            className="text-5xl lg:text-7xl font-space fixed text-center pointer-events-none"
             style={{
                left: "50%",
                transform: "translateX(-50%)",
@@ -284,7 +284,7 @@ const home = () => {
             />
          </div>
 
-         <div className="h-[6000px]"></div>
+         <div className="h-[3000px]"></div>
 
          <div
             className="h-screen w-[2000px] fixed top-0 left-0  pointer-events-none -z-50"
