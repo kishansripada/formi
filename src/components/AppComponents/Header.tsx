@@ -94,6 +94,13 @@ export const Header = ({
                <hr />
             </div>
 
+            <p>
+               stuck? watch a{" "}
+               <a className="text-pink-600" href="https://www.youtube.com/watch?v=1dj8L5tUAjU" target={"_blank"}>
+                  tutorial
+               </a>
+            </p>
+
             <div className=" flex flex-row items-center">
                <div ref={wrapperRef}>
                   <button onClick={() => setChangeSoundCloudIsOpen((state) => !state)} className="bg-black text-white px-2 py-1 rounded-md ml-auto  ">
