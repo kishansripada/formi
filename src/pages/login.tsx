@@ -30,7 +30,7 @@ const Login = ({ session, setSession }: { session: Session; setSession: Function
    };
 
    return (
-      <div className="flex flex-row h-screen overflow-hidden relative">
+      <div className="flex  flex-col justify-center  h-screen overflow-hidden relative">
          <div
             className="pointer-events-none absolute  h-[1000px] w-[1000px]"
             style={{
@@ -46,13 +46,23 @@ const Login = ({ session, setSession }: { session: Session; setSession: Function
             style={{
                //    backgroundImage: "-o-radial-gradient(47.64% 52.94%, 37.66% 48.2%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
                backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
-               right: -400,
+               left: -400,
                bottom: -400,
                opacity: 0.2,
             }}
          ></div>
+         <div className="flex flex-row w-full items-center ">
+            <div className="bg-black w-full h-[2px]"></div>
+            <div className="h-[2px] w-[100px]"></div>
+            <p className="text-3xl flex flex-row items-end">
+               <p>naach</p>
+               <p className="text-xs ml-3 w-[80px]">early access </p>
+            </p>
+            <div className="h-[2px] w-[100px]"></div>
+            <div className="bg-black w-full h-[2px]"></div>
+         </div>
 
-         <div className="flex flex-col items-center w-[60%] justify-center h-full">
+         <div className="flex flex-col items-center  justify-center mt-[100px] z-[100]">
             <button
                className="flex flex-row items-center text-white  px-2 py-1 rounded-md bg-pink-600 hover:bg-pink-700"
                onClick={(e) => {
@@ -64,17 +74,6 @@ const Login = ({ session, setSession }: { session: Session; setSession: Function
                </svg>
                <p className="ml-3">login with google</p>
             </button>
-         </div>
-         <div className="flex flex-row w-[40%]">
-            <div className="flex flex-col items-center h-full">
-               <div className="bg-black w-[2px] h-full"></div>
-               <div className="w-[2px] h-[100px]"></div>
-               <p className="text-3xl">
-                  naach <span className="text-xs">early access</span>
-               </p>
-               <div className="w-[2px] h-[100px]"></div>
-               <div className="bg-black w-[2px] h-full"></div>
-            </div>
          </div>
       </div>
    );
