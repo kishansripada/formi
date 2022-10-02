@@ -41,14 +41,6 @@ const SoundCloudComponent = dynamic<{
 
 import { dancer, dancerPosition, formation } from "../../types/types";
 import { Session } from "@supabase/supabase-js";
-// const useDidMountEffect = (func, deps) => {
-//    const didMount = useRef(false);
-
-//    useEffect(() => {
-//       if (didMount.current) func();
-//       else didMount.current = true;
-//    }, deps);
-// };
 
 const Edit = ({ session, setSession }: { session: Session; setSession: Function }) => {
    const [songDuration, setSongDuration] = useState<number | null>(null);
@@ -93,10 +85,6 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    };
 
    useEffect(() => {
-      // if (!session) {
-      //    router.push("/login");
-      // }
-
       if (router.query.danceId) {
          supabase
             .from("dances")
