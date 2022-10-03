@@ -3,9 +3,11 @@ import { debounce } from "lodash";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
+import { DancerAliasShadow } from "../../components/AppComponents/DancerAliasShadow";
+
 import { Dancer } from "../../components/AppComponents/Dancer";
 import { Canvas } from "../../components/AppComponents/Canvas";
-import { SidebarDrop } from "../../components/AppComponents/SidebarDrop";
+// import { SidebarDrop } from "../../components/AppComponents/SidebarDrop";
 import { NewDancer } from "../../components/AppComponents/NewDancer";
 import { CurrentFormation } from "../../components/AppComponents/CurrentFormation";
 import { EditDancer } from "../../components/AppComponents/EditDancer";
@@ -22,6 +24,8 @@ const Header = dynamic<{
    setDanceName: Function;
    setSession: Function;
    soundCloudTrackId: string | null;
+   setShowPreviousFormation: Function;
+   showPreviousFormation: boolean;
 }>(() => import("../../components/AppComponents/Header").then((mod) => mod.Header), {
    ssr: false,
 });
@@ -62,6 +66,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    const [danceName, setDanceName] = useState<string>("Untitled Dance");
    const [saved, setSaved] = useState<boolean>(true);
    const [editingDancer, setEditingDancer] = useState<string | null>(null);
+   const [showPreviousFormation, setShowPreviousFormation] = useState<boolean>(false);
    const [mobile, setMobile] = useState<string | null>(null);
    const [noAccess, setNoAccess] = useState<boolean>(false);
 
@@ -245,6 +250,8 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                danceName={danceName}
                setSession={setSession}
                setDanceName={setDanceName}
+               showPreviousFormation={showPreviousFormation}
+               setShowPreviousFormation={setShowPreviousFormation}
             />
             <div className="flex flex-row grow overflow-hidden">
                <div className="flex flex-col w-1/4 relative overflow-y-scroll overflow-x-visible ml-3">
@@ -263,7 +270,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                      </>
                   ))}
                   <NewDancer setDancers={setDancers} />
-                  <SidebarDrop setFormations={setFormations} />
+                  {/* <SidebarDrop setFormations={setFormations} /> */}
                </div>
 
                <div className="flex flex-col h-full items-center w-2/3">
@@ -276,7 +283,6 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   >
                      {dancers.map((dancer, index) => (
                         <DancerAlias
-                           index={index}
                            isPlaying={isPlaying}
                            position={position}
                            selectedFormation={selectedFormation}
@@ -284,8 +290,23 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                            key={index}
                            dancer={dancer}
                            formations={formations}
+                           setFormations={setFormations}
                         />
                      ))}
+                     {showPreviousFormation
+                        ? dancers.map((dancer, index) => (
+                             <DancerAliasShadow
+                                isPlaying={isPlaying}
+                                position={position}
+                                selectedFormation={selectedFormation}
+                                setDancers={setDancers}
+                                key={index}
+                                dancer={dancer}
+                                formations={formations}
+                                setFormations={setFormations}
+                             />
+                          ))
+                        : null}
                   </Canvas>
                   <p>audience</p>
                </div>

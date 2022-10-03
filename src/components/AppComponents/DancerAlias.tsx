@@ -1,19 +1,26 @@
-import { useDrag } from "react-dnd";
 import { dancer, dancerPosition, formation } from "../../types/types";
+import { useSpring, animated } from "@react-spring/web";
+import { useDrag } from "@use-gesture/react";
 
 export interface DancerAliasProps {
-   // name: string;
-   // id: string;
    dancer: dancer;
    setDancers: Function;
    selectedFormation: number | null;
    formations: formation[];
    isPlaying: boolean;
    position: number | null;
-   index: number;
+   setFormations: Function;
 }
 
-export const DancerAlias: React.FC<DancerAliasProps> = ({ dancer, formations, setDancers, selectedFormation, isPlaying, position, index }) => {
+export const DancerAlias: React.FC<DancerAliasProps> = ({
+   dancer,
+   formations,
+   setDancers,
+   selectedFormation,
+   isPlaying,
+   position,
+   setFormations,
+}) => {
    // console.log("dancer alias created");
    let initials = dancer.name
       .split(" ")
@@ -29,7 +36,7 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ dancer, formations, se
       return (
          <>
             <div
-               className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 pointer-events-none`}
+               className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 pointer-events-none cursor-pointer`}
                style={{
                   transform: "translate(-50%, -50%)",
                   left: myPosition.left,
@@ -37,10 +44,10 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ dancer, formations, se
                }}
             >
                {dancer.instagramUsername ? (
-                  <img className="w-[34px] h-[34px] rounded-full" src={dancer.instagramUsername} alt="" />
+                  <img className="w-[34px] h-[34px] rounded-full select-none " src={dancer.instagramUsername} alt="" />
                ) : (
-                  <div className="bg-white rounded-full w-8 h-8 grid place-items-center">
-                     <p className="">{initials}</p>
+                  <div className="bg-white rounded-full w-8 h-8 grid place-items-center cursor-pointer  ">
+                     <p className="cursor-pointer">{initials}</p>
                   </div>
                )}
             </div>
@@ -57,36 +64,26 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({ dancer, formations, se
 
    let { left, top } = coordsToPosition(currentCoords.x, currentCoords.y);
 
-   const [{ isDragging }, drag] = useDrag(
-      () => ({
-         type: "dancerAlias",
-         item: { id: dancer.id, left, top, formations, selectedFormation },
-         collect: (monitor) => ({
-            isDragging: !!monitor.isDragging(),
-         }),
-      }),
-      [dancer.id, left, top, formations, selectedFormation]
-   );
-
    return (
       <>
          <div
-            ref={drag}
-            className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-600  ${
-               selectedFormation === null ? "pointer-events-none" : ""
-            }`}
-            style={{
-               transform: "translate(-50%, -50%)",
-               left: left,
-               top: top,
-               opacity: isDragging ? 0 : 1,
-            }}
+            style={{ left, top, transform: "translate(-50%, -50%)" }}
+            id={dancer.id}
+            className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-600 `}
          >
             {dancer.instagramUsername ? (
-               <img className="w-[34px] h-[34px] rounded-full" src={dancer.instagramUsername} alt="" />
+               <img
+                  id={dancer.id}
+                  draggable={false}
+                  className="w-[34px] h-[34px] rounded-full select-none   "
+                  src={dancer.instagramUsername}
+                  alt=""
+               />
             ) : (
-               <div className="bg-white rounded-full w-8 h-8 grid place-items-center">
-                  <p className="">{initials}</p>
+               <div id={dancer.id} className="bg-white rounded-full w-8 h-8 grid place-items-center select-none">
+                  <p id={dancer.id} className="select-none ">
+                     {initials}
+                  </p>
                </div>
             )}
          </div>

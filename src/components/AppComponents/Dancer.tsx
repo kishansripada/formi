@@ -1,4 +1,3 @@
-import { useDrag } from "react-dnd";
 import { dancer, dancerPosition, formation } from "../../types/types";
 
 export const Dancer = ({
@@ -28,20 +27,6 @@ export const Dancer = ({
       // and the dancer is not already on the stage
       !formations[selectedFormation]?.positions.find((dancer) => dancer.id === id);
 
-   const [{ isDragging }, drag] = useDrag(
-      () => ({
-         type: "dancer",
-         canDrag: (monitor) => {
-            return canBeAddedToStage && !isPlaying;
-         },
-         item: { id, formations, selectedFormation },
-         collect: (monitor) => ({
-            isDragging: !!monitor.isDragging(),
-         }),
-      }),
-      [id, formations, selectedFormation]
-   );
-
    let initials = name
       .split(" ")
       .map((word) => word[0])
@@ -49,10 +34,9 @@ export const Dancer = ({
       .join("")
       .toUpperCase();
 
-   // console.log(canBeAddedToStage);
    return (
       <>
-         <div ref={drag} className={`flex flex-row items-center  border-black  rounded-xl mb-1 min-h-[64px] bg-white`} draggable={!isPlaying}>
+         <div className={`flex flex-row items-center  border-black  rounded-xl mb-1 min-h-[64px] bg-white`} draggable={!isPlaying}>
             <>
                <div
                   className={`min-w-[56px] min-h-[56px] ml-2 rounded-full grid place-items-center ${

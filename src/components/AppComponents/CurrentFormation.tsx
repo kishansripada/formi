@@ -1,6 +1,5 @@
 import { dancer, dancerPosition, formation } from "../../types/types";
 import toast, { Toaster } from "react-hot-toast";
-import { fromPairs } from "lodash";
 
 export const CurrentFormation: React.FC<{
    selectedFormation: number | null;

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useDrop } from "react-dnd";
-import type { XYCoord } from "react-dnd";
+
 import { GridLines } from "./GridLines";
 import { dancer, dancerPosition, formation } from "../../types/types";
 
@@ -21,100 +20,73 @@ export const Canvas: React.FC<{
    selectedFormation: number | null;
    formations: formation[];
 }> = ({ children, setDancers, dancers, setFormations, selectedFormation, formations }) => {
-   const [{ isOver, canDrop }, drop] = useDrop(() => ({
-      accept: ["dancerAlias", "dancer"],
-      drop: (item: DragItem, monitor) => {
-         if (item?.formations?.[item.selectedFormation]?.positions.find((dancer: dancerPosition) => dancer.id === item.id)) {
-            // console.log("dancer already on stage");
-            const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
-            const left = Math.round(item.left + delta.x);
-            const top = Math.round(item.top + delta.y);
+   let [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
 
-            if (item.selectedFormation !== null) {
-               setFormations((formations: formation[], index: number) => {
-                  return formations.map((formation, i) => {
-                     if (i === item.selectedFormation) {
+   const coordsToPosition = (x: number, y: number) => {
+      return { left: 400 + 40 * x, top: 400 + 40 * -y };
+   };
+
+   const handleDragMove = (e) => {
+      if (!draggingDancerId) return;
+      // Get the target
+      const target = e.currentTarget;
+
+      // Get the bounding rectangle of target
+      const rect = target.getBoundingClientRect();
+
+      // Mouse position
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      setFormations((formations: formation[]) => {
+         return formations.map((formation, index: number) => {
+            if (index === selectedFormation) {
+               return {
+                  ...formation,
+                  positions: formation.positions.map((dancerPosition) => {
+                     if (dancerPosition.id === draggingDancerId) {
                         return {
-                           ...formation,
-                           positions: formation.positions.map((dancer) => {
-                              if (dancer.id === item.id) {
-                                 return { ...dancer, position: { x: positionToCoords(left, top).x, y: positionToCoords(left, top).y } };
-                              }
-                              return dancer;
-                           }),
+                           ...dancerPosition,
+                           position: { ...positionToCoords(x, y + (800 - rect.height) / 2) },
                         };
                      }
-
-                     return formation;
-                  });
-               });
+                     return dancerPosition;
+                  }),
+               };
             }
-         } else {
-            //  new dancer
-            // console.log("new dancer");
+            return formation;
+         });
+      });
+   };
 
-            if (item.selectedFormation !== null) {
-               // console.log("selected formation is not null and new dancer");
-               setFormations((formations: formation[], index: number) => {
-                  return formations.map((formation, i) => {
-                     if (i === item.selectedFormation) {
-                        return {
-                           ...formation,
-                           positions: [
-                              ...formation.positions,
-                              { id: item.id, position: { x: 0, y: 0 }, exitStrategy: "closest", enterStrategy: "closest" },
-                           ],
-                        };
-                     }
+   const pointerDown = (e) => {
+      if (e.target.id) {
+         console.log(e.target.id);
+         setDraggingDancerId(e.target.id);
+      } else {
+         console.log("drag to select");
+      }
+   };
 
-                     return formation;
-                  });
-               });
-            }
-         }
-      },
-      collect: (monitor) => ({
-         isOver: !!monitor.isOver(),
-         canDrop: monitor.canDrop(),
-      }),
-   }));
+   const pointerUp = (e) => {
+      setDraggingDancerId(null);
+   };
 
    return (
-      <>
-         <div
-            className="flex flex-row justify-center items-center relative w-[800px] grow  overflow-hidden  border-black  mx-3 bg-white rounded-xl"
-            id="grid"
-            ref={drop}
-         >
-            <div className="h-[800px] w-[800px] absolute">
-               <GridOverlay />
-               {children}
-               <GridLines />
-            </div>
+      <div
+         className="flex flex-row justify-center items-center relative w-[800px] grow  overflow-hidden  border-black  mx-3 bg-white rounded-xl"
+         onPointerDown={pointerDown}
+         onPointerUp={pointerUp}
+         onPointerMove={handleDragMove}
+      >
+         <div className="h-[800px] w-[800px] absolute">
+            {children}
+            <GridLines />
          </div>
-      </>
+      </div>
    );
 };
 
 const positionToCoords = (left: number, top: number) => {
    return { x: Math.round((left - 400) / 40), y: Math.round((-1 * (top - 400)) / 40) + 0 };
-};
-
-// overlay when moving a dancer on the stage for the first time
-export const GridOverlay: React.FC<{}> = ({}) => {
-   const [{ isOver, canDrop }, drop] = useDrop(() => ({
-      accept: ["dancer"],
-      collect: (monitor) => ({
-         isOver: !!monitor.isOver(),
-         canDrop: monitor.canDrop(),
-      }),
-   }));
-
-   return canDrop ? (
-      <div className=" w-[800px] h-[800px] bg-red-200  bg-opacity-30 grid place-items-center absolute z-20 text-red-500" ref={drop}>
-         <p className="opacity-100 bg-red-200 px-2 py-1 rounded-md "> add to formation</p>
-      </div>
-   ) : (
-      <div></div>
-   );
 };
