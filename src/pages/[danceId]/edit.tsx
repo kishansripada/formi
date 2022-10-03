@@ -72,6 +72,10 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    const [noAccess, setNoAccess] = useState<boolean>(false);
 
    useEffect(() => {
+      setSelectedDancers([]);
+   }, [selectedFormation]);
+
+   useEffect(() => {
       if (isMobile) {
          setMobile(true);
       }
@@ -277,6 +281,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
 
                <div className="flex flex-col h-full items-center w-2/3">
                   <Canvas
+                     setSelectedFormation={setSelectedFormation}
                      formations={formations}
                      selectedFormation={selectedFormation}
                      setDancers={setDancers}
@@ -317,6 +322,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                </div>
 
                <CurrentFormation
+                  selectedDancers={selectedDancers}
                   setSelectedFormation={setSelectedFormation}
                   dancers={dancers}
                   setFormations={setFormations}

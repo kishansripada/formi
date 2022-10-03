@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
-import logo from "../../../public/logo.svg";
+import logo from "../../../public/logo.png";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -46,11 +46,7 @@ export const Header = ({
       <>
          <div className=" h-[75px] flex flex-row items-center shrink-0 px-10 bg-white justify-between">
             <div className="flex flex-row items-center shrink-0">
-               <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 px-1 py-1 grid place-items-center rounded-xl">
-                  <div className="bg-white px-2 py-1 rounded-lg grid place-items-center">
-                     <Image className="" src={logo} width={100} height={30} />
-                  </div>
-               </div>
+               <Image className="ml-[-30px]" src={logo} width={170} height={60} />
 
                <div className="h-full ">
                   <div className="flex flex-row justify-center items-center">
