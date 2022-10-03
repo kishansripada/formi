@@ -63,6 +63,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
       },
    ]);
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(null);
+   const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
    const [danceName, setDanceName] = useState<string>("Untitled Dance");
    const [saved, setSaved] = useState<boolean>(true);
    const [editingDancer, setEditingDancer] = useState<string | null>(null);
@@ -109,6 +110,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
       }
    }, [router.query.danceId]);
 
+   /////////////////////////////
    let uploadDancers = useCallback(
       debounce(async (dancers) => {
          console.log("uploading dancers");
@@ -280,9 +282,12 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                      setDancers={setDancers}
                      dancers={dancers}
                      setFormations={setFormations}
+                     selectedDancers={selectedDancers}
+                     setSelectedDancers={setSelectedDancers}
                   >
                      {dancers.map((dancer, index) => (
                         <DancerAlias
+                           selectedDancers={selectedDancers}
                            isPlaying={isPlaying}
                            position={position}
                            selectedFormation={selectedFormation}

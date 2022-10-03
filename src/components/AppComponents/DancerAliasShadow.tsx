@@ -56,7 +56,7 @@ export const DancerAliasShadow: React.FC<DancerAliasProps> = ({
                   alt=""
                />
             ) : (
-               <div id={dancer.id} className="bg-white rounded-full w-8 h-8 grid place-items-center select-none">
+               <div id={dancer.id} className="bg-white rounded-full  w-[34px] h-[34px] grid place-items-center select-none">
                   <p id={dancer.id} className="select-none ">
                      {initials}
                   </p>

@@ -3,15 +3,6 @@ import { useState, useEffect, useRef } from "react";
 import { GridLines } from "./GridLines";
 import { dancer, dancerPosition, formation } from "../../types/types";
 
-export interface DragItem {
-   type: string;
-   id: string;
-   top: number;
-   left: number;
-   formations: formation[];
-   selectedFormation: number;
-}
-
 export const Canvas: React.FC<{
    children: React.ReactNode;
    setDancers: Function;
@@ -19,9 +10,52 @@ export const Canvas: React.FC<{
    setFormations: Function;
    selectedFormation: number | null;
    formations: formation[];
-}> = ({ children, setDancers, dancers, setFormations, selectedFormation, formations }) => {
+   selectedDancers: string[];
+   setSelectedDancers: Function;
+}> = ({ children, setDancers, dancers, setFormations, selectedFormation, formations, selectedDancers, setSelectedDancers }) => {
    let [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
+   const [shiftHeld, setShiftHeld] = useState(false);
 
+   const downHandler = ({ key }) => {
+      console.log(selectedDancers);
+      if (key === "Backspace") {
+         setSelectedDancers((selectedDancers: string[]) => {
+            setFormations((formations: formation[]) => {
+               return formations.map((formation, i) => {
+                  if (i === selectedFormation) {
+                     return {
+                        ...formation,
+                        positions: formation.positions.filter((dancerPosition: dancerPosition) => {
+                           return !selectedDancers.find((id) => dancerPosition.id === id);
+                        }),
+                     };
+                  }
+                  return formation;
+               });
+            });
+
+            return [];
+         });
+      }
+      if (key === "Shift") {
+         setShiftHeld(true);
+      }
+   };
+
+   function upHandler({ key }) {
+      if (key === "Shift") {
+         setShiftHeld(false);
+      }
+   }
+
+   useEffect(() => {
+      window.addEventListener("keydown", downHandler);
+      window.addEventListener("keyup", upHandler);
+      return () => {
+         window.removeEventListener("keydown", downHandler);
+         window.removeEventListener("keyup", upHandler);
+      };
+   }, []);
    const coordsToPosition = (x: number, y: number) => {
       return { left: 400 + 40 * x, top: 400 + 40 * -y };
    };
@@ -63,8 +97,12 @@ export const Canvas: React.FC<{
       if (e.target.id) {
          console.log(e.target.id);
          setDraggingDancerId(e.target.id);
+         shiftHeld
+            ? setSelectedDancers((selectedDancers: string[]) => [...selectedDancers, e.target.id])
+            : setSelectedDancers((selectedDancers: string[]) => [e.target.id]);
       } else {
          console.log("drag to select");
+         setSelectedDancers([]);
       }
    };
 
