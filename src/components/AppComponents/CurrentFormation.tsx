@@ -32,7 +32,7 @@ export const CurrentFormation: React.FC<{
 
    return (
       <>
-         <div className=" flex flex-col  w-1/4 mr-3 border-black rounded-xl border-1 mb-6 px-3 bg-white">
+         <div className=" flex flex-col  w-[30%] mr-3 border-black rounded-xl border-1 mb-6 px-3 bg-white">
             {selectedFormation !== null && formations[selectedFormation]?.name !== null ? (
                <div className="h-full  flex flex-col">
                   <input
@@ -74,7 +74,7 @@ export const CurrentFormation: React.FC<{
                   <hr className="mx-[-12px]" />
                   <ul className="mt-4 flex flex-col overflow-y-scroll pr-3">
                      <li className=" mt-2 flex flex-row justify-between font-semibold">
-                        <p className="">Name</p>
+                        <p className="w-[40%]">Name</p>
                         <div className="flex flex-row items-center ">
                            Enter from:
                            <button className="peer ml-2">
@@ -138,7 +138,7 @@ export const CurrentFormation: React.FC<{
                                     selectedDancers.includes(dancer.id) ? "bg-pink-200" : ""
                                  }`}
                               >
-                                 <p className="w-1/3">{dancer.name}</p>
+                                 <p className="w-2/3">{dancer.name}</p>
 
                                  <select
                                     value={

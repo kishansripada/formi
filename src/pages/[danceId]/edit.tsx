@@ -260,7 +260,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                setShowPreviousFormation={setShowPreviousFormation}
             />
             <div className="flex flex-row grow overflow-hidden">
-               <div className="flex flex-col w-1/4 relative overflow-y-scroll overflow-x-visible ml-3">
+               <div className="flex flex-col w-[20%] relative overflow-y-scroll overflow-x-visible ml-3">
                   {dancers.map((dancer, index) => (
                      <>
                         <Dancer

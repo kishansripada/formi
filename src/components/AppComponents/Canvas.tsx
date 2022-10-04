@@ -19,10 +19,9 @@ export const Canvas: React.FC<{
    const [shiftHeld, setShiftHeld] = useState(false);
    const [commandHeld, setCommandHeld] = useState(false);
    const [isDragging, setIsDragging] = useState(false);
+   const [copiedPositions, setCopiedPositions] = useState(false);
    const [dragBoxCoords, setDragBoxCoords] = useState({ start: { x: null, y: null }, end: { x: null, y: null } });
    const downHandler = (e) => {
-      // console.log(updatedCommandHeld);
-      // console.log(e.key);
       let updatedSelectedFormation: null | number = null;
       setSelectedFormation((selectedFormation: null | number) => {
          updatedSelectedFormation = selectedFormation;
@@ -39,6 +38,10 @@ export const Canvas: React.FC<{
          console.log("command pressed");
          setCommandHeld(true);
       }
+      if (e.key === "Escape") {
+         setSelectedDancers([]);
+         setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
+      }
 
       if (e.key === "a") {
          if (updatedSelectedFormation === null) return;
@@ -48,6 +51,58 @@ export const Canvas: React.FC<{
                e.preventDefault();
                console.log(updatedSelectedFormation);
                setSelectedDancers([...updatedFormations[updatedSelectedFormation]?.positions.map((position) => position.id)]);
+            }
+            return commandHeld;
+         });
+      }
+      let updatedSelectedDancers: string[] = [];
+
+      setSelectedDancers((selectedDancers: string[]) => {
+         updatedSelectedDancers = selectedDancers;
+         return selectedDancers;
+      });
+
+      // ////////////////////////// COPY PASTE ////////////////////////// ////////////////////////
+      if (e.key === "c") {
+         if (updatedSelectedFormation === null) return;
+
+         setCommandHeld((commandHeld: boolean) => {
+            if (commandHeld && updatedSelectedDancers.length) {
+               e.preventDefault();
+               setCopiedPositions(
+                  updatedFormations[updatedSelectedFormation].positions.filter((dancerPosition) => updatedSelectedDancers.includes(dancerPosition.id))
+               );
+            }
+            return commandHeld;
+         });
+      }
+
+      // on paste, filter out all of the dancers that are being pasted before splicing them into the array of positions
+      if (e.key === "v") {
+         if (updatedSelectedFormation === null) return;
+
+         setCommandHeld((commandHeld: boolean) => {
+            if (commandHeld) {
+               e.preventDefault();
+               setCopiedPositions((copiedPositions) => {
+                  setFormations((formations) => {
+                     return formations.map((formation, i) => {
+                        if (i === updatedSelectedFormation) {
+                           return {
+                              ...formation,
+                              positions: [
+                                 ...formation.positions.filter((dancerPosition) => {
+                                    return !copiedPositions.map((dancerPositionCopy) => dancerPositionCopy.id).includes(dancerPosition.id);
+                                 }),
+                                 ...copiedPositions,
+                              ],
+                           };
+                        }
+                        return formation;
+                     });
+                  });
+                  return copiedPositions;
+               });
             }
             return commandHeld;
          });
@@ -205,13 +260,12 @@ export const Canvas: React.FC<{
 
    const pointerUp = (e) => {
       setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
-
       if (e.target.id && !shiftHeld && !isDragging) {
          setSelectedDancers([e.target.id]);
       }
-
       // if a dancer was dragged (moved), then update round the formations to the nearest whole (persists to database)
       if (isDragging) {
+         console.log("dragged then let up");
          setFormations((formations: formation[]) => {
             return formations.map((formation) => {
                return {
@@ -223,7 +277,6 @@ export const Canvas: React.FC<{
             });
          });
       }
-
       setDraggingDancerId(null);
       setIsDragging(false);
    };
