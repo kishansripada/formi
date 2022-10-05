@@ -8,7 +8,8 @@ export const CurrentFormation: React.FC<{
    dancers: dancer[];
    setSelectedFormation: Function;
    selectedDancers: string[];
-}> = ({ formations, selectedFormation, setFormations, dancers, setSelectedFormation, selectedDancers }) => {
+   setSelectedDancers: Function;
+}> = ({ formations, selectedFormation, setFormations, dancers, setSelectedFormation, selectedDancers, setSelectedDancers }) => {
    let dancersWhoAreNotInNextFormation =
       selectedFormation !== null
          ? formations?.[selectedFormation]?.positions.filter((dancerPosition: dancerPosition) => {
@@ -134,7 +135,8 @@ export const CurrentFormation: React.FC<{
                         return (
                            <>
                               <li
-                                 className={` py-2 rounded-md px-2 flex flex-row items-center my-1 ${
+                                 onClick={() => setSelectedDancers([dancer.id])}
+                                 className={` py-2 rounded-md px-2 flex flex-row items-center my-1 cursor-pointer ${
                                     selectedDancers.includes(dancer.id) ? "bg-pink-200" : ""
                                  }`}
                               >

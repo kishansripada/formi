@@ -21,9 +21,11 @@ export const DancerAliasShadow: React.FC<DancerAliasProps> = ({
    position,
    setFormations,
 }) => {
-   let currentCoords = formations[selectedFormation + 1]?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id)?.position;
+   let currentCoords = formations[selectedFormation === formations.length - 1 ? selectedFormation - 1 : selectedFormation + 1]?.positions.find(
+      (dancerx: dancerPosition) => dancerx.id === dancer.id
+   )?.position;
 
-   if (selectedFormation === null || selectedFormation === formations.length - 1 || !currentCoords || isPlaying) return <></>;
+   if (selectedFormation === null || !currentCoords || isPlaying) return <></>;
 
    // console.log("dancer alias created");
    let initials = dancer.name

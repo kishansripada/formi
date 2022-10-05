@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { Resizable } from "react-resizable";
 import { dancer, dancerPosition, formation } from "../../types/types";
 import { PIXELS_PER_SECOND } from "../../types/types";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export const Formation: React.FC<{
    formation: formation;
@@ -42,7 +44,7 @@ export const Formation: React.FC<{
    return (
       <>
          <div
-            className="rounded-md overflow-hidden h-[50px]  mx-[2px] box-border "
+            className="rounded-md overflow-hidden h-[40px]  mx-[2px] box-border "
             style={{
                width: formation.transition.durationSeconds * PIXELS_PER_SECOND + formation.durationSeconds * PIXELS_PER_SECOND - 4,
                // subtract 4 to account for the mx-[2px]
@@ -56,7 +58,7 @@ export const Formation: React.FC<{
                   style={{
                      width: formation.durationSeconds * PIXELS_PER_SECOND - 2,
                   }}
-                  className="relative bg-pink-600 h-[33px]"
+                  className="relative bg-pink-600 h-[23px]"
                >
                   <Resizable
                      width={formation.durationSeconds * PIXELS_PER_SECOND}
@@ -74,7 +76,7 @@ export const Formation: React.FC<{
                   style={{
                      width: formation.transition.durationSeconds * PIXELS_PER_SECOND - 2,
                   }}
-                  className=" relative bg-pink-600 h-[33px]"
+                  className=" relative bg-pink-600 h-[23px]"
                >
                   <Resizable
                      width={formation.transition.durationSeconds * PIXELS_PER_SECOND}

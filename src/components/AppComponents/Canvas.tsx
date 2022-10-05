@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, PointerEvent, PointerEventHandler } from "react";
 
 import { GridLines } from "./GridLines";
-import { dancer, dancerPosition, formation } from "../../types/types";
+import { dancer, dancerPosition, formation, dragBoxCoords } from "../../types/types";
 import { CurrentFormation } from "./CurrentFormation";
 
 export const Canvas: React.FC<{
@@ -20,34 +20,37 @@ export const Canvas: React.FC<{
    const [commandHeld, setCommandHeld] = useState(false);
    const [isDragging, setIsDragging] = useState(false);
    const [copiedPositions, setCopiedPositions] = useState(false);
-   const [dragBoxCoords, setDragBoxCoords] = useState({ start: { x: null, y: null }, end: { x: null, y: null } });
-   const downHandler = (e) => {
-      let updatedSelectedFormation: null | number = null;
-      setSelectedFormation((selectedFormation: null | number) => {
-         updatedSelectedFormation = selectedFormation;
-         return selectedFormation;
-      });
-
-      let updatedFormations;
-      setFormations((formations: null | number) => {
-         updatedFormations = formations;
-         return formations;
-      });
-
+   const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
+   const downHandler = (e: any) => {
       if (e.key === "Meta") {
          console.log("command pressed");
          setCommandHeld(true);
+      }
+      if (e.key === "Shift") {
+         setShiftHeld(true);
       }
       if (e.key === "Escape") {
          setSelectedDancers([]);
          setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
       }
 
+      let updatedSelectedFormation: null | number = null;
+      setSelectedFormation((selectedFormation: null | number) => {
+         updatedSelectedFormation = selectedFormation;
+         return selectedFormation;
+      });
+
+      let updatedFormations: formation[];
+      setFormations((formations: formation[]) => {
+         updatedFormations = formations;
+         return formations;
+      });
+
       if (e.key === "a") {
          if (updatedSelectedFormation === null) return;
 
          setCommandHeld((commandHeld: boolean) => {
-            if (commandHeld) {
+            if (commandHeld && updatedSelectedFormation !== null) {
                e.preventDefault();
                console.log(updatedSelectedFormation);
                setSelectedDancers([...updatedFormations[updatedSelectedFormation]?.positions.map((position) => position.id)]);
@@ -67,7 +70,7 @@ export const Canvas: React.FC<{
          if (updatedSelectedFormation === null) return;
 
          setCommandHeld((commandHeld: boolean) => {
-            if (commandHeld && updatedSelectedDancers.length) {
+            if (commandHeld && updatedSelectedDancers.length && updatedSelectedFormation !== null) {
                e.preventDefault();
                setCopiedPositions(
                   updatedFormations[updatedSelectedFormation].positions.filter((dancerPosition) => updatedSelectedDancers.includes(dancerPosition.id))
@@ -98,6 +101,7 @@ export const Canvas: React.FC<{
                               ],
                            };
                         }
+
                         return formation;
                      });
                   });
@@ -134,9 +138,6 @@ export const Canvas: React.FC<{
             return [];
          });
       }
-      if (e.key === "Shift") {
-         setShiftHeld(true);
-      }
    };
 
    function upHandler({ key }) {
@@ -160,7 +161,7 @@ export const Canvas: React.FC<{
       return { left: 400 + 40 * x, top: 400 + 40 * -y };
    };
 
-   const handleDragMove = (e) => {
+   const handleDragMove = (e: any) => {
       if (e.target.id && !dragBoxCoords.start.x) {
          setIsDragging(true);
       }
@@ -177,10 +178,16 @@ export const Canvas: React.FC<{
          setDragBoxCoords((dragBoxCoords) => {
             return { ...dragBoxCoords, end: { x: x, y: y + (800 - rect.height) / 2 } };
          });
-         if (dragBoxCoords.end.x && dragBoxCoords.end.y) {
+         if (
+            dragBoxCoords.start.x !== null &&
+            dragBoxCoords.end.y !== null &&
+            dragBoxCoords.start.y !== null &&
+            dragBoxCoords.end.y !== null &&
+            selectedFormation !== null
+         ) {
             setSelectedDancers(
                formations?.[selectedFormation]?.positions
-                  .filter((dancerPosition) => {
+                  .filter((dancerPosition: dancerPosition) => {
                      return (
                         coordsToPosition(dancerPosition.position.x, dancerPosition.position.y).left >
                            Math.min(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
@@ -192,7 +199,7 @@ export const Canvas: React.FC<{
                            Math.max(dragBoxCoords.start.y, dragBoxCoords.end.y)
                      );
                   })
-                  .map((dancerPosition) => dancerPosition.id)
+                  .map((dancerPosition: dancerPosition) => dancerPosition.id)
             );
          }
       }
@@ -220,7 +227,7 @@ export const Canvas: React.FC<{
       });
    };
 
-   const pointerDown = (e) => {
+   const pointerDown = (e: any) => {
       if (!e.target.id) {
          setSelectedDancers([]);
          // Get the target
@@ -240,6 +247,10 @@ export const Canvas: React.FC<{
       }
       if (e.target.id) {
          setDraggingDancerId(e.target.id);
+         if (!shiftHeld && !selectedDancers.includes(e.target.id)) {
+            setSelectedDancers([e.target.id]);
+         }
+
          if (shiftHeld) {
             if (!selectedDancers.includes(e.target.id)) {
                setSelectedDancers((selectedDancers: string[]) => [...selectedDancers, e.target.id]);
@@ -248,24 +259,15 @@ export const Canvas: React.FC<{
             }
          }
       }
-
-      if (selectedDancers.length > 0 && e.target.id && !shiftHeld && !selectedDancers.includes(e.target.id)) {
-         setSelectedDancers([e.target.id]);
-      }
-
-      if (!selectedDancers.length && e.target.id) {
-         setSelectedDancers([e.target.id]);
-      }
    };
 
-   const pointerUp = (e) => {
+   const pointerUp = (e: any) => {
       setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
       if (e.target.id && !shiftHeld && !isDragging) {
          setSelectedDancers([e.target.id]);
       }
       // if a dancer was dragged (moved), then update round the formations to the nearest whole (persists to database)
       if (isDragging) {
-         console.log("dragged then let up");
          setFormations((formations: formation[]) => {
             return formations.map((formation) => {
                return {
@@ -287,10 +289,11 @@ export const Canvas: React.FC<{
          onPointerDown={pointerDown}
          onPointerUp={pointerUp}
          onPointerMove={handleDragMove}
+         onKeyDown={() => console.log("test")}
       >
          <div className="h-[800px] w-[800px] absolute">
             {children}
-            {dragBoxCoords.start.x && dragBoxCoords.end.x ? (
+            {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y ? (
                <div
                   className="absolute bg-blue-200/50 z-10"
                   style={{

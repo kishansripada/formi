@@ -21,7 +21,6 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({
    setFormations,
    selectedDancers,
 }) => {
-   // console.log(selectedDancers.includes(dancer.id));
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])
@@ -32,7 +31,7 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({
    // if the track is playing then early return with the animation function
    if (isPlaying && position !== null) {
       let myPosition = animate(formations, position, dancer.id);
-      // console.log(myPosition);
+
       return (
          <>
             <div

@@ -323,6 +323,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
 
                <CurrentFormation
                   selectedDancers={selectedDancers}
+                  setSelectedDancers={setSelectedDancers}
                   setSelectedFormation={setSelectedFormation}
                   dancers={dancers}
                   setFormations={setFormations}
