@@ -19,7 +19,7 @@ export const EditDancer: React.FC<{
             }
          }}
       >
-         <div className="flex  w-[400px] flex-col rounded-xl bg-white pt-10 pb-3 px-3">
+         <div className="flex  w-[400px] flex-col rounded-xl bg-white pt-10 pb-3 px-3 hi">
             <p className="text-3xl text-center mb-8">{dancers.find((dancer) => dancer.id === editingDancer)?.name}</p>
 
             <div className="flex flex-col mt-auto">
