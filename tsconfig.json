@@ -22,6 +22,6 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.js"
-  ],
+, "src/components/AppComponents/useUndoableState.jsx"  ],
   "exclude": ["node_modules"]
 }
