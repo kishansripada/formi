@@ -131,7 +131,19 @@ const home = () => {
       <>
          <nav className="flex flex-row justify-between mt-5 text-gray-500 px-[10%]">
             <Head>
-               <title> Naach</title>
+               <title> Naach — Expression Through Movement.</title>
+
+               <meta name="description" content="automate, animate and visualize your dance formations synced to music" />
+               <meta name="keywords" content="dance, choreography, desi, formations" />
+               <meta name="twitter:card" content="summary" />
+               <meta name="twitter:title" content="Naach — Expression Through Movement." />
+               <meta name="twitter:image" content="https://i.imgur.com/pWxufBF.png" />
+               <meta property="og:type" content="song" />
+               <meta property="og:title" content="Naach — Expression Through Movement." />
+               <meta property="og:description" content="automate, animate and visualize your dance formations synced to music" />
+               <meta property="og:image" content="https://i.imgur.com/pWxufBF.png" />
+
+               <meta property="og:site_name" content="Naach — Expression Through Movement." />
             </Head>
             <div></div>
             <ul className="flex flex-col items-center child:mx-3 justify-center child:ease-in-out child:duration-300 text-sm leading-tight displ invisible lg:visible">

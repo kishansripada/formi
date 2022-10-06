@@ -1,15 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { debounce, isEqual } from "lodash";
+
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
 import { DancerAliasShadow } from "../../components/AppComponents/DancerAliasShadow";
-import useUndoableState from "../../components/AppComponents/useUndoableState";
-import { Dancer } from "../../components/AppComponents/Dancer";
+
 import { Canvas } from "../../components/AppComponents/Canvas";
-// import { SidebarDrop } from "../../components/AppComponents/SidebarDrop";
-import { NewDancer } from "../../components/AppComponents/NewDancer";
-import { CurrentFormation } from "../../components/AppComponents/CurrentFormation";
 import { EditDancer } from "../../components/AppComponents/EditDancer";
 import { Layers } from "../../components/AppComponents/Layers";
 import Link from "next/link";
@@ -46,30 +42,13 @@ const SoundCloudComponent = dynamic<{
 import { dancer, dancerPosition, formation } from "../../types/types";
 import { Session } from "@supabase/supabase-js";
 
-const Edit = ({ session, setSession }: { session: Session; setSession: Function }) => {
+const View = ({ session, setSession }: { session: Session; setSession: Function }) => {
    const [songDuration, setSongDuration] = useState<number | null>(null);
    const [dancers, setDancers] = useState<dancer[]>([]);
    const [position, setPosition] = useState<number | null>(null);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
-   // const {
-   //    state: formations,
-   //    setState: setFormations,
-   //    resetState: resetDoc,
-   //    index: docStateIndex,
-   //    lastIndex: docStateLastIndex,
-   //    goBack: undo,
-   //    goForward: red,
-   // } = useUndoableState([
-   //    {
-   //       durationSeconds: 10,
-   //       positions: [],
-   //       transition: {
-   //          durationSeconds: 5,
-   //       },
-   //       name: "Untitled",
-   //    },
-   // ]);
+
    const [formations, setFormations] = useState<formation[]>([
       {
          durationSeconds: 10,
@@ -100,18 +79,6 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    }, [isMobile]);
    const router = useRouter();
 
-   const removeDancer = (id: string) => {
-      // remove dancer and all their positions
-      setFormations((formations) => {
-         return formations.map((formation) => {
-            return { ...formation, positions: formation.positions.filter((dancerPosition) => dancerPosition.id !== id) };
-         });
-      });
-      setDancers((dancers: dancer[]) => {
-         return dancers.filter((dancer) => dancer.id !== id);
-      });
-   };
-
    useEffect(() => {
       if (router.query.danceId) {
          supabase
@@ -131,89 +98,6 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
             });
       }
    }, [router.query.danceId]);
-
-   /////////////////////////////
-   let uploadDancers = useCallback(
-      debounce(async (dancers) => {
-         console.log("uploading dancers");
-         const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
-
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 2000),
-      [router.query.danceId]
-   );
-
-   useEffect(() => {
-      if (router.isReady) {
-         setSaved(false);
-         uploadDancers(dancers);
-      }
-   }, [dancers, router.isReady]);
-   // ///////////
-   let uploadFormations = useCallback(
-      debounce(async (formations) => {
-         console.log("uploading formations");
-         const { data, error } = await supabase
-            .from("dances")
-            .update({ formations: formations, last_edited: new Date() })
-            .eq("id", router.query.danceId);
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 10000),
-      [router.query.danceId]
-   );
-
-   useEffect(() => {
-      if (router.isReady) {
-         setSaved(false);
-         uploadFormations(formations);
-      }
-   }, [formations, router.isReady]);
-   //////////////////////////
-   // ///////////
-   let uploadSoundCloudId = useCallback(
-      debounce(async (soundCloudTrackId) => {
-         console.log("uploading formations");
-         const { data, error } = await supabase
-            .from("dances")
-            .update({ soundCloudId: soundCloudTrackId, last_edited: new Date() })
-            .eq("id", router.query.danceId);
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 2000),
-      [router.query.danceId]
-   );
-
-   useEffect(() => {
-      if (router.isReady) {
-         setSaved(false);
-         uploadSoundCloudId(soundCloudTrackId);
-      }
-   }, [soundCloudTrackId, router.isReady]);
-   //////////////////////////
-   // ///////////
-   let uploadName = useCallback(
-      debounce(async (danceName) => {
-         console.log("uploading name");
-         const { data, error } = await supabase.from("dances").update({ name: danceName }).eq("id", router.query.danceId);
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 1000),
-      [router.query.danceId]
-   );
-
-   useEffect(() => {
-      if (router.isReady) {
-         setSaved(false);
-         uploadName(danceName);
-      }
-   }, [danceName, router.isReady]);
-   //////////////////////////
 
    return (
       <>
@@ -264,32 +148,16 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
             <></>
          )}
          <Head>
-            <title>Edit | Naach</title>
+            <title>View | Naach</title>
          </Head>
 
          {editingDancer !== null ? (
-            <EditDancer
-               removeDancer={removeDancer}
-               setDancers={setDancers}
-               dancers={dancers}
-               setEditingDancer={setEditingDancer}
-               editingDancer={editingDancer}
-            ></EditDancer>
+            <EditDancer setDancers={setDancers} dancers={dancers} setEditingDancer={setEditingDancer} editingDancer={editingDancer}></EditDancer>
          ) : (
             <></>
          )}
 
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none">
-            {/* <button
-               onClick={() =>
-                  setFormations((formations) => {
-                     console.log(formations);
-                     return formations;
-                  })
-               }
-            >
-               click me
-            </button> */}
             <Header
                soundCloudTrackId={soundCloudTrackId}
                session={session}
@@ -301,28 +169,18 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                showPreviousFormation={showPreviousFormation}
                setShowPreviousFormation={setShowPreviousFormation}
             />
-            <div className="flex flex-row grow overflow-hidden">
-               <div className="flex flex-col w-[20%] relative overflow-y-scroll overflow-x-visible ml-3">
-                  {dancers.map((dancer, index) => (
-                     <>
-                        <Dancer
-                           isPlaying={isPlaying}
-                           formations={formations}
-                           selectedFormation={selectedFormation}
-                           setDancers={setDancers}
-                           {...dancer}
-                           key={index}
-                           dancers={dancers}
-                           setEditingDancer={setEditingDancer}
-                           setFormations={setFormations}
-                        />
-                     </>
-                  ))}
-                  <NewDancer setDancers={setDancers} />
-                  {/* <SidebarDrop setFormations={setFormations} /> */}
+            <div className="flex flex-row grow overflow-hidden justify-between">
+               <div className="w-full mb-5 mt-1 flex flex-row items-center justify-center">
+                  <iframe
+                     className="h-full "
+                     src="https://www.youtube.com/embed/Zw6w3skoiOo"
+                     title="YouTube video player"
+                     frameborder="0"
+                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                     allowfullscreen
+                  ></iframe>
                </div>
-
-               <div className="flex flex-col h-full items-center w-2/3">
+               <div className="flex flex-col h-full items-center  pointer-events-none">
                   <Canvas
                      setSelectedFormation={setSelectedFormation}
                      formations={formations}
@@ -363,16 +221,16 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   </Canvas>
                   <p>audience</p>
                </div>
-
-               <CurrentFormation
-                  selectedDancers={selectedDancers}
-                  setSelectedDancers={setSelectedDancers}
-                  setSelectedFormation={setSelectedFormation}
-                  dancers={dancers}
-                  setFormations={setFormations}
-                  formations={formations}
-                  selectedFormation={selectedFormation}
-               />
+               <div className="w-full mb-5 mt-1 flex flex-row items-center justify-center " style={{ transform: "scale(-1, 1)" }}>
+                  <iframe
+                     className="h-full "
+                     src="https://www.youtube.com/embed/Zw6w3skoiOo"
+                     title="YouTube video player"
+                     frameborder="0"
+                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                     allowfullscreen
+                  ></iframe>
+               </div>
             </div>
             <div className="overflow-x-scroll min-h-[195px] bg-white ">
                <SoundCloudComponent
@@ -386,20 +244,21 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   setIsPlaying={setIsPlaying}
                   setPosition={setPosition}
                />
-
-               <Layers
-                  songDuration={songDuration}
-                  setFormations={setFormations}
-                  formations={formations}
-                  selectedFormation={selectedFormation}
-                  setSelectedFormation={setSelectedFormation}
-                  isPlaying={isPlaying}
-                  position={position}
-               />
+               <div className="pointer-events-none">
+                  <Layers
+                     songDuration={songDuration}
+                     setFormations={setFormations}
+                     formations={formations}
+                     selectedFormation={selectedFormation}
+                     setSelectedFormation={setSelectedFormation}
+                     isPlaying={isPlaying}
+                     position={position}
+                  />
+               </div>
             </div>
          </div>
       </>
    );
 };
 
-export default Edit;
+export default View;

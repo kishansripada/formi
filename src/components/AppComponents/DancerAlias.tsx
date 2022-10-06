@@ -45,7 +45,7 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({
                {dancer.instagramUsername ? (
                   <img className="w-[34px] h-[34px] rounded-full select-none " src={dancer.instagramUsername} alt="" />
                ) : (
-                  <div className="bg-white rounded-full w-8 h-8 grid place-items-center cursor-pointer  ">
+                  <div className="bg-white rounded-full w-8 h-8 grid place-items-center cursor-pointer font-semibold  ">
                      <p className="cursor-pointer">{initials}</p>
                   </div>
                )}
@@ -78,13 +78,13 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({
                <img
                   id={dancer.id}
                   draggable={false}
-                  className="w-[34px] h-[34px] rounded-full select-none   "
+                  className="w-[34px] h-[34px] rounded-full select-none"
                   src={dancer.instagramUsername}
-                  alt=""
+                  alt={dancer.name}
                />
             ) : (
                <div id={dancer.id} className="bg-white rounded-full w-[34px] h-[34px] grid place-items-center select-none">
-                  <p id={dancer.id} className="select-none ">
+                  <p id={dancer.id} className="select-none font-semibold ">
                      {initials}
                   </p>
                </div>

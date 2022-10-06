@@ -10,6 +10,7 @@ export const Dancer = ({
    instagramUsername,
    isPlaying,
    setEditingDancer,
+   setFormations,
 }: {
    name: string;
    id: string;
@@ -20,6 +21,7 @@ export const Dancer = ({
    instagramUsername: string | null;
    isPlaying: boolean;
    setEditingDancer: Function;
+   setFormations: Function;
 }) => {
    let canBeAddedToStage =
       // there is a formation select
@@ -69,6 +71,40 @@ export const Dancer = ({
                   setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)));
                }}
             />
+            {canBeAddedToStage ? (
+               <button
+                  onClick={() => {
+                     setFormations((formations: formation[]) => {
+                        return formations.map((formation, i) => {
+                           if (i === selectedFormation) {
+                              return {
+                                 ...formation,
+                                 positions: [
+                                    ...formation.positions,
+                                    {
+                                       id: id,
+                                       position: {
+                                          x: 0,
+                                          y: 6,
+                                       },
+                                       exitStrategy: "closest",
+                                       enterStrategy: "closest",
+                                    },
+                                 ],
+                              };
+                           }
+                           return formation;
+                        });
+                     });
+                  }}
+               >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+               </button>
+            ) : (
+               <></>
+            )}
 
             <button className="ml-auto mr-3" onClick={() => setEditingDancer(id)}>
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
