@@ -85,6 +85,7 @@ export const Canvas: React.FC<{
          if (updatedSelectedFormation === null) return;
 
          setCommandHeld((commandHeld: boolean) => {
+            if (!copiedPositions) return;
             if (commandHeld) {
                e.preventDefault();
                setCopiedPositions((copiedPositions) => {
