@@ -22,6 +22,9 @@ export const Canvas: React.FC<{
    const [copiedPositions, setCopiedPositions] = useState(false);
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
    const downHandler = (e: any) => {
+      if (e.path[0].tagName === "INPUT") {
+         return;
+      }
       if (e.key === "Meta") {
          console.log("command pressed");
          setCommandHeld(true);
@@ -48,7 +51,7 @@ export const Canvas: React.FC<{
 
       if (e.key === "a") {
          if (updatedSelectedFormation === null) return;
-
+         e.preventDefault();
          setCommandHeld((commandHeld: boolean) => {
             if (commandHeld && updatedSelectedFormation !== null) {
                e.preventDefault();
@@ -68,10 +71,9 @@ export const Canvas: React.FC<{
       // ////////////////////////// COPY PASTE ////////////////////////// ////////////////////////
       if (e.key === "c") {
          if (updatedSelectedFormation === null) return;
-
+         e.preventDefault();
          setCommandHeld((commandHeld: boolean) => {
             if (commandHeld && updatedSelectedDancers.length && updatedSelectedFormation !== null) {
-               e.preventDefault();
                setCopiedPositions(
                   updatedFormations[updatedSelectedFormation].positions.filter((dancerPosition) => updatedSelectedDancers.includes(dancerPosition.id))
                );
@@ -83,11 +85,11 @@ export const Canvas: React.FC<{
       // on paste, filter out all of the dancers that are being pasted before splicing them into the array of positions
       if (e.key === "v") {
          if (updatedSelectedFormation === null) return;
-
+         // e.preventDefault();
          setCommandHeld((commandHeld: boolean) => {
             if (!copiedPositions) return;
             if (commandHeld) {
-               e.preventDefault();
+               // e.preventDefault();
                setCopiedPositions((copiedPositions) => {
                   setFormations((formations) => {
                      return formations.map((formation, i) => {
@@ -115,6 +117,7 @@ export const Canvas: React.FC<{
 
       // console.log(selectedDancers);
       if (e.key === "Backspace") {
+         e.preventDefault();
          let updatedSelectedDancers: string[] = [];
 
          setSelectedDancers((selectedDancers: string[]) => {
