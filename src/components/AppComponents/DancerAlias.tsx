@@ -35,7 +35,7 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({
       return (
          <>
             <div
-               className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  pointer-events-none cursor-pointer`}
+               className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  pointer-events-none cursor-default `}
                style={{
                   transform: "translate(-50%, -50%)",
                   left: myPosition.left,
@@ -45,8 +45,8 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({
                {dancer.instagramUsername ? (
                   <img className="w-[34px] h-[34px] rounded-full select-none " src={dancer.instagramUsername} alt="" />
                ) : (
-                  <div className="bg-white rounded-full w-8 h-8 grid place-items-center cursor-pointer font-semibold  ">
-                     <p className="cursor-pointer">{initials}</p>
+                  <div className="bg-white rounded-full w-8 h-8 grid place-items-center cursor-default  font-semibold  ">
+                     <p className="cursor-default ">{initials}</p>
                   </div>
                )}
             </div>
@@ -72,7 +72,7 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({
                selectedDancers.includes(dancer.id)
                   ? "bg-blue-500 w-[41px] h-[41px]"
                   : "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 w-[38px] h-[38px]"
-            }  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto  `}
+            }  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
          >
             {dancer.instagramUsername ? (
                <img
@@ -83,8 +83,8 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({
                   alt={dancer.name}
                />
             ) : (
-               <div id={dancer.id} className="bg-white rounded-full w-[34px] h-[34px] grid place-items-center select-none">
-                  <p id={dancer.id} className="select-none font-semibold ">
+               <div id={dancer.id} className="bg-white rounded-full w-[34px] h-[34px] grid place-items-center select-none cursor-default ">
+                  <p id={dancer.id} className="select-none font-semibold cursor-default  ">
                      {initials}
                   </p>
                </div>

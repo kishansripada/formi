@@ -295,7 +295,7 @@ export const Canvas: React.FC<{
 
    return (
       <div
-         className="flex flex-row justify-center items-center relative w-[800px] grow  overflow-hidden  border-black  mx-3 bg-white rounded-xl"
+         className="flex flex-row justify-center items-center relative w-[800px] grow  overflow-hidden  border-black  mx-3 bg-white rounded-xl cursor-default "
          onPointerDown={pointerDown}
          onPointerUp={pointerUp}
          onPointerMove={handleDragMove}
@@ -305,7 +305,7 @@ export const Canvas: React.FC<{
             {children}
             {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y ? (
                <div
-                  className="absolute bg-blue-200/50 z-10"
+                  className="absolute bg-blue-200/50 z-10 cursor-default "
                   style={{
                      width: Math.abs(dragBoxCoords.end.x - dragBoxCoords.start.x),
                      height: Math.abs(dragBoxCoords.end.y - dragBoxCoords.start.y),
