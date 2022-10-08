@@ -47,7 +47,7 @@ export const DancerAliasShadow: React.FC<DancerAliasProps> = ({
          <div
             style={{ left, top, transform: "translate(-50%, -50%)" }}
             id={dancer.id}
-            className={`w-[38px] h-[38px] opacity-30 pointer-events-none  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-600 `}
+            className={`w-[38px] h-[38px] opacity-30 pointer-events-none  rounded-full flex flex-row justify-center items-center absolute z-[30] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-600 `}
          >
             {dancer.instagramUsername ? (
                <img

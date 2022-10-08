@@ -22,7 +22,7 @@ export const Canvas: React.FC<{
    const [copiedPositions, setCopiedPositions] = useState(false);
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
    const downHandler = (e: any) => {
-      if (e.path[0].tagName === "INPUT") {
+      if (e?.path?.[0]?.tagName === "INPUT") {
          return;
       }
       if (e.key === "Meta") {
@@ -70,6 +70,7 @@ export const Canvas: React.FC<{
 
       // ////////////////////////// COPY PASTE ////////////////////////// ////////////////////////
       if (e.key === "c") {
+         console.log("pressed c");
          if (updatedSelectedFormation === null) return;
          e.preventDefault();
          setCommandHeld((commandHeld: boolean) => {
