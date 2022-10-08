@@ -23,6 +23,7 @@ export const Canvas: React.FC<{
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
    const downHandler = (e: any) => {
       if (e?.path?.[0]?.tagName === "INPUT") {
+         console.log("in an input field");
          return;
       }
       if (e.key === "Meta") {
@@ -70,9 +71,9 @@ export const Canvas: React.FC<{
 
       // ////////////////////////// COPY PASTE ////////////////////////// ////////////////////////
       if (e.key === "c") {
-         console.log("pressed c");
          if (updatedSelectedFormation === null) return;
-         e.preventDefault();
+
+         // e.preventDefault();
          setCommandHeld((commandHeld: boolean) => {
             if (commandHeld && updatedSelectedDancers.length && updatedSelectedFormation !== null) {
                setCopiedPositions(
@@ -85,13 +86,17 @@ export const Canvas: React.FC<{
 
       // on paste, filter out all of the dancers that are being pasted before splicing them into the array of positions
       if (e.key === "v") {
+         console.log("v");
+         console.log({ copiedPositions });
          if (updatedSelectedFormation === null) return;
-         // e.preventDefault();
+
          setCommandHeld((commandHeld: boolean) => {
-            if (!copiedPositions) return;
+            // if (!copiedPositions) return;
             if (commandHeld) {
+               console.log("paste!");
                // e.preventDefault();
                setCopiedPositions((copiedPositions) => {
+                  if (!copiedPositions) return false;
                   setFormations((formations) => {
                      return formations.map((formation, i) => {
                         if (i === updatedSelectedFormation) {
