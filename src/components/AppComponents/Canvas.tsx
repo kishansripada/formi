@@ -32,14 +32,11 @@ export const Canvas: React.FC<{
          window.removeEventListener("keydown", downHandler);
          window.removeEventListener("keyup", upHandler);
       };
-   }, [selectedFormation, commandHeld]);
+   }, [selectedFormation, commandHeld, selectedDancers, formations, copiedPositions]);
 
    const downHandler = (e: any) => {
-      console.log(selectedFormation);
-      if (e?.path?.[0]?.tagName === "INPUT") {
-         console.log("in an input field");
-         return;
-      }
+      if (e?.path?.[0]?.tagName === "INPUT") return;
+
       if (e.key === "Meta") {
          setCommandHeld(true);
       }
@@ -50,122 +47,55 @@ export const Canvas: React.FC<{
          setSelectedDancers([]);
          setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
       }
+      if (selectedFormation === null) return;
 
-      let updatedSelectedFormation: null | number = null;
-      setSelectedFormation((selectedFormation: null | number) => {
-         updatedSelectedFormation = selectedFormation;
-         return selectedFormation;
-      });
-
-      let updatedFormations: formation[];
-      setFormations((formations: formation[]) => {
-         updatedFormations = formations;
-         return formations;
-      });
       if (e.key === "Backspace") {
          e.preventDefault();
-         let updatedSelectedDancers: string[] = [];
-
-         setSelectedDancers((selectedDancers: string[]) => {
-            updatedSelectedDancers = selectedDancers;
-            return selectedDancers;
-         });
-
          setFormations((formations: formation[]) => {
             return formations.map((formation, i) => {
-               if (i === updatedSelectedFormation) {
+               if (i === selectedFormation) {
                   return {
                      ...formation,
                      positions: formation.positions.filter((dancerPosition: dancerPosition) => {
-                        return !updatedSelectedDancers.find((id) => dancerPosition.id === id);
+                        return !selectedDancers.find((id) => dancerPosition.id === id);
                      }),
                   };
                }
                return formation;
             });
          });
-         setSelectedDancers((selectedDancers: string[]) => {
-            return [];
-         });
+         setSelectedDancers([]);
       }
 
       if (!commandHeld) return;
-      if (selectedFormation === null) return;
-
-      if (e.key === "a") {
-         e.preventDefault();
-         setSelectedDancers([...updatedFormations[updatedSelectedFormation]?.positions.map((position) => position.id)]);
-      }
-
-      // if (e.key === "a") {
-      //    if (updatedSelectedFormation === null) return;
-      //    e.preventDefault();
-      //    setCommandHeld((commandHeld: boolean) => {
-      //       if (commandHeld && updatedSelectedFormation !== null) {
-      //          e.preventDefault();
-      //          console.log(updatedSelectedFormation);
-      //          setSelectedDancers([...updatedFormations[updatedSelectedFormation]?.positions.map((position) => position.id)]);
-      //       }
-      //       return commandHeld;
-      //    });
-      // }
-      let updatedSelectedDancers: string[] = [];
-
-      setSelectedDancers((selectedDancers: string[]) => {
-         updatedSelectedDancers = selectedDancers;
-         return selectedDancers;
-      });
-
-      // ////////////////////////// COPY PASTE ////////////////////////// ////////////////////////
-      if (e.key === "c") {
-         if (updatedSelectedFormation === null) return;
-
-         // e.preventDefault();
-         setCommandHeld((commandHeld: boolean) => {
-            if (commandHeld && updatedSelectedDancers.length && updatedSelectedFormation !== null) {
-               setCopiedPositions(
-                  updatedFormations[updatedSelectedFormation].positions.filter((dancerPosition) => updatedSelectedDancers.includes(dancerPosition.id))
-               );
-            }
-            return commandHeld;
-         });
-      }
 
       // on paste, filter out all of the dancers that are being pasted before splicing them into the array of positions
-      if (e.key === "v") {
-         console.log("v");
-         console.log({ copiedPositions });
-         if (updatedSelectedFormation === null) return;
-
-         setCommandHeld((commandHeld: boolean) => {
-            // if (!copiedPositions) return;
-            if (commandHeld) {
-               console.log("paste!");
-               // e.preventDefault();
-               setCopiedPositions((copiedPositions) => {
-                  if (!copiedPositions) return false;
-                  setFormations((formations) => {
-                     return formations.map((formation, i) => {
-                        if (i === updatedSelectedFormation) {
-                           return {
-                              ...formation,
-                              positions: [
-                                 ...formation.positions.filter((dancerPosition) => {
-                                    return !copiedPositions.map((dancerPositionCopy) => dancerPositionCopy.id).includes(dancerPosition.id);
-                                 }),
-                                 ...copiedPositions,
-                              ],
-                           };
-                        }
-
-                        return formation;
-                     });
-                  });
-                  return copiedPositions;
-               });
-            }
-            return commandHeld;
+      if (e.key === "v" && copiedPositions.length) {
+         setFormations((formations) => {
+            return formations.map((formation, i) => {
+               if (i === selectedFormation) {
+                  return {
+                     ...formation,
+                     positions: [
+                        ...formation.positions.filter((dancerPosition) => {
+                           return !copiedPositions.map((dancerPositionCopy) => dancerPositionCopy.id).includes(dancerPosition.id);
+                        }),
+                        ...copiedPositions,
+                     ],
+                  };
+               }
+               return formation;
+            });
          });
+      }
+      if (e.key === "a") {
+         e.preventDefault();
+         setSelectedDancers([...formations[selectedFormation]?.positions.map((position) => position.id)]);
+      }
+
+      if (e.key === "c" && selectedDancers.length) {
+         e.preventDefault();
+         setCopiedPositions(formations[selectedFormation].positions.filter((dancerPosition) => selectedDancers.includes(dancerPosition.id)));
       }
    };
 
