@@ -38,7 +38,7 @@ export const Dancer = ({
 
    return (
       <>
-         <div className={`flex flex-row items-center  border-black  rounded-xl mb-1 min-h-[64px] bg-white`} draggable={!isPlaying}>
+         <div className={`flex flex-row items-center  border-black  rounded-xl mb-1 min-h-[64px] bg-white`}>
             <>
                <div
                   className={`min-w-[56px] min-h-[56px] ml-2 rounded-full grid place-items-center ${

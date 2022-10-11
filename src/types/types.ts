@@ -28,8 +28,8 @@ export type dragBoxCoords = { start: { x: number | null; y: number | null }; end
 export const PIXELS_PER_SECOND = 15;
 
 export const PIXELS_PER_SQUARE = 40;
-export const GRID_WIDTH = 50;
-export const GRID_HEIGHT = 50;
+export const GRID_WIDTH = 40;
+export const GRID_HEIGHT = 30;
 
 export const coordsToPosition = (x: number, y: number) => {
    return { left: (PIXELS_PER_SQUARE * GRID_WIDTH) / 2 + PIXELS_PER_SQUARE * x, top: (PIXELS_PER_SQUARE * GRID_HEIGHT) / 2 + PIXELS_PER_SQUARE * -y };

@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation, coordsToPosition } from "../../types/types";
+import { dancer, dancerPosition, formation, coordsToPosition, GRID_WIDTH, PIXELS_PER_SQUARE } from "../../types/types";
 
 export interface DancerAliasProps {
    dancer: dancer;
@@ -28,10 +28,34 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({
       .join("")
       .toUpperCase();
 
-   // if the track is playing then early return with the animation function
-   if (isPlaying && position !== null) {
-      let myPosition = animate(formations, position, dancer.id);
+   const whereInFormation = (formations: formation[], position: number) => {
+      let sum = 0;
+      let currentFormationIndex = null;
 
+      let percentThroughTransition;
+      for (let i = 0; i < formations.length; i++) {
+         sum = sum + formations[i].durationSeconds + formations[i]?.transition.durationSeconds;
+         if (position < sum) {
+            currentFormationIndex = i;
+            let durationThroughTransition = position - (sum - formations[i]?.transition?.durationSeconds);
+
+            if (durationThroughTransition > 0) {
+               percentThroughTransition = durationThroughTransition / formations[i]?.transition?.durationSeconds;
+            }
+            break;
+         }
+      }
+      return { currentFormationIndex, percentThroughTransition };
+   };
+
+   let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
+
+   // if the track is playing then  return with the animation function
+   if (isPlaying && position !== null) {
+      let myPosition = animate(formations, dancer.id, currentFormationIndex, percentThroughTransition);
+
+      // if the animation function returns null, the dancer is not on the stage
+      if (myPosition === null) return <></>;
       return (
          <>
             <div
@@ -100,37 +124,14 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({
    );
 };
 
-// const coordsToPosition = (x: number, y: number) => {
-//    return { left: 400 + 40 * x, top: 400 + 40 * -y };
-// };
-
-const animate = (formations: formation[], position: number, id: string): { left: number; top: number } => {
-   let sum = 0;
-   let currentFormationIndex = null;
-   let isInTransition;
-
-   // t = percent through transition
-   let t;
-   for (let i = 0; i < formations.length; i++) {
-      sum = sum + formations[i].durationSeconds + formations[i]?.transition.durationSeconds;
-      if (position < sum) {
-         currentFormationIndex = i;
-         let durationThroughTransition = position - (sum - formations[i]?.transition?.durationSeconds);
-
-         if (durationThroughTransition > 0) {
-            isInTransition = true;
-            t = durationThroughTransition / formations[i]?.transition?.durationSeconds;
-         } else {
-            isInTransition = false;
-         }
-         break;
-      }
-   }
-
+const animate = (
+   formations: formation[],
+   id: string,
+   currentFormationIndex: number | null,
+   percentThroughTransition: number | undefined
+): { left: number; top: number } | null => {
    // if the position is beyond all the formation, return off stage
-   if (currentFormationIndex === null) {
-      return coordsToPosition(10, 10);
-   }
+   if (currentFormationIndex === null) return null;
 
    const inThisFormation = formations?.[currentFormationIndex]?.positions.find((dancer) => dancer.id === id);
 
@@ -141,7 +142,7 @@ const animate = (formations: formation[], position: number, id: string): { left:
    let from;
    let to;
 
-   if (isInTransition) {
+   if (percentThroughTransition != undefined) {
       if (inThisFormation) {
          if (inNextFormation) {
             // transition between current and next
@@ -154,14 +155,14 @@ const animate = (formations: formation[], position: number, id: string): { left:
             from = inThisFormation.position;
             to = (() => {
                if (inThisFormation.exitStrategy === "closest") {
-                  if (from.x >= 0) return { x: 11, y: from.y };
-                  if (from.x < 0) return { x: -11, y: from.y };
+                  if (from.x >= 0) return { x: GRID_WIDTH / 2 + 1, y: from.y };
+                  if (from.x < 0) return { x: -(GRID_WIDTH / 2 + 1), y: from.y };
                }
                if (inThisFormation.exitStrategy === "right") {
-                  return { x: 11, y: from.y };
+                  return { x: GRID_WIDTH / 2 + 1, y: from.y };
                }
                if (inThisFormation.exitStrategy === "left") {
-                  return { x: -11, y: from.y };
+                  return { x: -(GRID_WIDTH / 2 + 1), y: from.y };
                }
             })();
          }
@@ -173,19 +174,19 @@ const animate = (formations: formation[], position: number, id: string): { left:
 
             from = (() => {
                if (inNextFormation.enterStrategy === "closest") {
-                  if (to.x >= 0) return { x: 11, y: to.y };
-                  if (to.x < 0) return { x: -11, y: to.y };
+                  if (to.x >= 0) return { x: GRID_WIDTH / 2 + 1, y: to.y };
+                  if (to.x < 0) return { x: -(GRID_WIDTH / 2 + 1), y: to.y };
                }
                if (inNextFormation.enterStrategy === "right") {
-                  return { x: 11, y: to.y };
+                  return { x: GRID_WIDTH / 2 + 1, y: to.y };
                }
                if (inNextFormation.enterStrategy === "left") {
-                  return { x: -11, y: to.y };
+                  return { x: -(GRID_WIDTH / 2 + 1), y: to.y };
                }
             })();
          } else {
             // return off stage
-            return coordsToPosition(10, 10);
+            return null;
          }
       }
    } else {
@@ -194,20 +195,20 @@ const animate = (formations: formation[], position: number, id: string): { left:
          return coordsToPosition(inThisFormation.position.x, inThisFormation.position.y);
       } else {
          // return off stage
-         return coordsToPosition(10, 10);
+         return null;
       }
    }
    if (inThisFormation?.transitionType === "cubic" && inThisFormation?.controlPointStart?.y && inThisFormation?.controlPointStart?.x) {
       return coordsToPosition(
-         (1 - t) ** 3 * from.x +
-            3 * (1 - t) ** 2 * t * inThisFormation.controlPointStart.x +
-            3 * (1 - t) * t ** 2 * inThisFormation.controlPointEnd.x +
-            t ** 3 * to.x,
-         (1 - t) ** 3 * from.y +
-            3 * (1 - t) ** 2 * t * inThisFormation.controlPointStart.y +
-            3 * (1 - t) * t ** 2 * inThisFormation.controlPointEnd.y +
-            t ** 3 * to.y
+         (1 - percentThroughTransition) ** 3 * from.x +
+            3 * (1 - percentThroughTransition) ** 2 * percentThroughTransition * inThisFormation.controlPointStart.x +
+            3 * (1 - percentThroughTransition) * percentThroughTransition ** 2 * inThisFormation.controlPointEnd.x +
+            percentThroughTransition ** 3 * to.x,
+         (1 - percentThroughTransition) ** 3 * from.y +
+            3 * (1 - percentThroughTransition) ** 2 * percentThroughTransition * inThisFormation.controlPointStart.y +
+            3 * (1 - percentThroughTransition) * percentThroughTransition ** 2 * inThisFormation.controlPointEnd.y +
+            percentThroughTransition ** 3 * to.y
       );
    }
-   return coordsToPosition(from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t);
+   return coordsToPosition(from.x + (to.x - from.x) * percentThroughTransition, from.y + (to.y - from.y) * percentThroughTransition);
 };

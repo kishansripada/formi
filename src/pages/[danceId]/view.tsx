@@ -207,6 +207,7 @@ const View = ({ session, setSession }: { session: Session; setSession: Function 
                      {showPreviousFormation
                         ? dancers.map((dancer, index) => (
                              <DancerAliasShadow
+                                viewAllPaths={viewAllPaths}
                                 isPlaying={isPlaying}
                                 position={position}
                                 selectedFormation={selectedFormation}

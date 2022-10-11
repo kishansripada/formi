@@ -311,7 +311,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   selectedDancers={selectedDancers}
                   setSelectedDancers={setSelectedDancers}
                >
-                  {selectedFormation !== null && !isPlaying ? (
+                  {selectedFormation != null ? (
                      <PathEditor
                         setSelectedFormation={setSelectedFormation}
                         formations={formations}
@@ -322,6 +322,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                         selectedDancers={selectedDancers}
                         setSelectedDancers={setSelectedDancers}
                         viewAllPaths={viewAllPaths}
+                        isPlaying={isPlaying}
                      />
                   ) : (
                      <></>

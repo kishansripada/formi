@@ -1,6 +1,4 @@
 import { dancer, dancerPosition, formation, coordsToPosition } from "../../types/types";
-import { useSpring, animated } from "@react-spring/web";
-import { useDrag } from "@use-gesture/react";
 
 export interface DancerAliasProps {
    dancer: dancer;
@@ -10,7 +8,7 @@ export interface DancerAliasProps {
    isPlaying: boolean;
    position: number | null;
    setFormations: Function;
-   viewAllPaths: boolean;
+   // viewAllPaths: boolean;
 }
 
 export const DancerAliasShadow: React.FC<DancerAliasProps> = ({
@@ -28,18 +26,12 @@ export const DancerAliasShadow: React.FC<DancerAliasProps> = ({
 
    if (selectedFormation === null || !currentCoords || isPlaying) return <></>;
 
-   // console.log("dancer alias created");
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])
       .slice(0, 3)
       .join("")
       .toUpperCase();
-
-   // if there is no formation selected and the track is not playing, then just return nothing
-
-   // if the dancer does not have any coordinates right now, return nothing since it shouln't be displayed
-   if (!currentCoords) return <></>;
 
    let { left, top } = coordsToPosition(currentCoords.x, currentCoords.y);
 

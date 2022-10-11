@@ -12,6 +12,7 @@ export const PathEditor: React.FC<{
    setSelectedDancers: Function;
    setSelectedFormation: Function;
    viewAllPaths: boolean;
+   isPlaying: boolean;
 }> = ({
    setDancers,
    dancers,
@@ -22,10 +23,8 @@ export const PathEditor: React.FC<{
    selectedDancers,
    setSelectedFormation,
    viewAllPaths,
+   isPlaying,
 }) => {
-   //    const coordsToPosition = (x: number, y: number) => {
-   //       return { left: 400 + 40 * x, top: 400 + 40 * -y };
-   //    };
    if (selectedFormation === null) return;
 
    let selectedDancerPositions = formations?.[selectedFormation]?.positions?.filter((dancerPosition) => selectedDancers.includes(dancerPosition.id));

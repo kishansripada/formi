@@ -23,7 +23,7 @@ export const Canvas: React.FC<{
    const [scrollOffset, setScrollOffset] = useState({ x: -648, y: -684 });
    const [zoom, setZoom] = useState(1);
    const [isDragging, setIsDragging] = useState(false);
-   const [copiedPositions, setCopiedPositions] = useState(false);
+   const [copiedPositions, setCopiedPositions] = useState([]);
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
    useEffect(() => {
       window.addEventListener("keydown", downHandler);
@@ -71,14 +71,14 @@ export const Canvas: React.FC<{
 
       // on paste, filter out all of the dancers that are being pasted before splicing them into the array of positions
       if (e.key === "v" && copiedPositions.length) {
-         setFormations((formations) => {
+         setFormations((formations: formation[]) => {
             return formations.map((formation, i) => {
                if (i === selectedFormation) {
                   return {
                      ...formation,
                      positions: [
                         ...formation.positions.filter((dancerPosition) => {
-                           return !copiedPositions.map((dancerPositionCopy) => dancerPositionCopy.id).includes(dancerPosition.id);
+                           return !copiedPositions.map((dancerPositionCopy: dancerPosition) => dancerPositionCopy.id).includes(dancerPosition.id);
                         }),
                         ...copiedPositions,
                      ],
@@ -109,15 +109,14 @@ export const Canvas: React.FC<{
    }
 
    const handleDragMove = (e: any) => {
-      if (changingControlId && changingControlType === "start") {
+      if (changingControlId) {
          setFormations((formations: formation[]) => {
             return formations.map((formation, index: number) => {
                if (index === selectedFormation) {
                   return {
                      ...formation,
                      positions: formation.positions.map((dancerPosition) => {
-                        // dancerPosition.id === draggingDancerId
-                        if (changingControlId === dancerPosition.id) {
+                        if (changingControlId === dancerPosition.id && changingControlType === "start") {
                            return {
                               ...dancerPosition,
                               controlPointStart: {
@@ -125,25 +124,8 @@ export const Canvas: React.FC<{
                                  y: dancerPosition.controlPointStart.y - e.movementY / PIXELS_PER_SQUARE / zoom,
                               },
                            };
-                           // ...positionToCoords(x, y + (800 - rect.height) / 2)
                         }
-                        return dancerPosition;
-                     }),
-                  };
-               }
-               return formation;
-            });
-         });
-      }
-      if (changingControlId && changingControlType === "end") {
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, index: number) => {
-               if (index === selectedFormation) {
-                  return {
-                     ...formation,
-                     positions: formation.positions.map((dancerPosition) => {
-                        // dancerPosition.id === draggingDancerId
-                        if (changingControlId === dancerPosition.id) {
+                        if (changingControlId === dancerPosition.id && changingControlType === "end") {
                            return {
                               ...dancerPosition,
                               controlPointEnd: {
@@ -160,11 +142,12 @@ export const Canvas: React.FC<{
             });
          });
       }
+
       if (e.target.dataset.type === "dancer" && !dragBoxCoords.start.x) {
          setIsDragging(true);
       }
       const target = e.currentTarget;
-      // console.log(target);
+
       // Get the bounding rectangle of target
       const rect = target.getBoundingClientRect();
 
@@ -208,7 +191,6 @@ export const Canvas: React.FC<{
                return {
                   ...formation,
                   positions: formation.positions.map((dancerPosition) => {
-                     // dancerPosition.id === draggingDancerId
                      if (selectedDancers.includes(dancerPosition.id)) {
                         return {
                            ...dancerPosition,
@@ -221,7 +203,6 @@ export const Canvas: React.FC<{
                               y: dancerPosition.controlPointStart.y - e.movementY / PIXELS_PER_SQUARE / zoom,
                            },
                         };
-                        // ...positionToCoords(x, y + (800 - rect.height) / 2)
                      }
                      return dancerPosition;
                   }),
@@ -364,7 +345,3 @@ export const Canvas: React.FC<{
       </div>
    );
 };
-
-// const positionToCoords = (left: number, top: number) => {
-//    return { x: Math.round((left - 400) / 40), y: Math.round((-1 * (top - 400)) / 40) + 0 };
-// };
