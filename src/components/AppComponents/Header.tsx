@@ -16,6 +16,8 @@ export const Header = ({
    soundCloudTrackId,
    showPreviousFormation,
    setShowPreviousFormation,
+   viewAllPaths,
+   setViewAllPaths,
 }: {
    saved: boolean;
    setSoundCloudTrackId: Function;
@@ -24,8 +26,10 @@ export const Header = ({
    setDanceName: Function;
    setSession: Function;
    soundCloudTrackId: string | null;
-   showPreviousFormation: boolean;
    setShowPreviousFormation: Function;
+   showPreviousFormation: boolean;
+   viewAllPaths: boolean;
+   setViewAllPaths: Function;
 }) => {
    const router = useRouter();
    const wrapperRef = useRef(null);
@@ -95,17 +99,34 @@ export const Header = ({
                   tutorial
                </a>
             </p>
-            <label className="inline-flex relative items-center cursor-pointer">
-               <input
-                  checked={showPreviousFormation}
-                  type="checkbox"
-                  id="checked-toggle"
-                  className="sr-only peer"
-                  onChange={() => setShowPreviousFormation((value: boolean) => !value)}
-               />
-               <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
-               <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">show next formation</span>
-            </label>
+            <div className="flex flex-col items-center justify-center">
+               <label className="inline-flex relative items-center cursor-pointer">
+                  <input
+                     checked={showPreviousFormation}
+                     type="checkbox"
+                     id="checked-toggle"
+                     className="sr-only peer"
+                     onChange={() => setShowPreviousFormation((value: boolean) => !value)}
+                  />
+                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
+               </label>
+
+               <p className="text-sm font-medium text-gray-900 dark:text-gray-300">show next formation</p>
+            </div>
+
+            <div className="flex flex-col items-center justify-center">
+               <label className="inline-flex relative items-center cursor-pointer">
+                  <input
+                     checked={viewAllPaths}
+                     type="checkbox"
+                     id="checked-toggle"
+                     className="sr-only peer"
+                     onChange={() => setViewAllPaths((value: boolean) => !value)}
+                  />
+                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
+               </label>
+               <p className="text-sm font-medium text-gray-900 dark:text-gray-300">view all paths</p>
+            </div>
 
             <div className=" flex flex-row items-center">
                <div ref={wrapperRef}>

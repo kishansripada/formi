@@ -72,13 +72,13 @@ export const CurrentFormation: React.FC<{
                      key={formations[selectedFormation]?.name}
                      defaultValue={formations[selectedFormation]?.name || ""}
                   />
-                  <hr className="mx-[-12px]" />
-                  <ul className="mt-4 flex flex-col overflow-y-scroll pr-3">
-                     <li className=" mt-2 flex flex-row justify-between font-semibold">
-                        <p className="w-[40%]">Name</p>
-                        <div className="flex flex-row items-center ">
-                           Enter from:
-                           <button className="peer ml-2">
+                  <hr className="mx-[-12px] " />
+                  <ul className="mt-4 flex flex-col overflow-y-scroll pr-3 text-sm">
+                     <li className=" mt-2 flex flex-row justify-between font-semibold ">
+                        <p className="w-[45%] ">Name</p>
+                        <p className="w-[15%] ">Path</p>
+                        <div className="flex flex-col items-center w-[15%] ">
+                           <button className="peer ml-1">
                               <svg
                                  xmlns="http://www.w3.org/2000/svg"
                                  fill="none"
@@ -94,7 +94,8 @@ export const CurrentFormation: React.FC<{
                                  />
                               </svg>
                            </button>
-                           <div className="peer-hover:opacity-100 absolute right-[160px] text-wrap w-96 z-50 py-2 px-3 text-sm  text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 pointer-events-none">
+                           <p className=""> Enter from:</p>
+                           <div className="peer-hover:opacity-100 absolute right-[160px]  text-wrap w-96 z-50 py-2 px-3 text-sm  text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 pointer-events-none">
                               <p>
                                  available to dancers who are not in the previous formation and must enter the stage during the previous formation's
                                  transition
@@ -103,9 +104,8 @@ export const CurrentFormation: React.FC<{
                               <p>choose which side of the stage they enter from</p>
                            </div>
                         </div>
-                        <div className="flex flex-row items-center">
-                           Exit to:
-                           <button className="peer ml-2">
+                        <div className="flex flex-col items-center w-[15%]">
+                           <button className="peer ml-1">
                               <svg
                                  xmlns="http://www.w3.org/2000/svg"
                                  fill="none"
@@ -121,6 +121,7 @@ export const CurrentFormation: React.FC<{
                                  />
                               </svg>
                            </button>
+                           Exit to:
                            <div className="peer-hover:opacity-100 absolute right-[50px]  w-96 z-50 py-2 px-3 text-sm  text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition duration-300 pointer-events-none">
                               <div>
                                  available to dancers who are not in the next formation and must exit the stage during this formation's transition
@@ -133,15 +134,42 @@ export const CurrentFormation: React.FC<{
                      <hr />
                      {dancersInThisFormation?.map((dancer) => {
                         return (
-                           <>
+                           <div className="">
                               <li
                                  onClick={() => setSelectedDancers([dancer.id])}
-                                 className={` py-2 rounded-md px-2 flex flex-row items-center my-1 cursor-pointer ${
+                                 className={` py-2 rounded-md px-2 flex flex-row items-center my-1 cursor-pointer  ${
                                     selectedDancers.includes(dancer.id) ? "bg-pink-200" : ""
                                  }`}
                               >
-                                 <p className="w-2/3">{dancer.name}</p>
-
+                                 <p className="w-[40%]">{dancer.name}</p>
+                                 <select
+                                    value={
+                                       formations[selectedFormation]?.positions.find((dancerPosition) => dancer.id === dancerPosition.id)
+                                          ?.transitionType
+                                    }
+                                    onChange={(e) =>
+                                       setFormations((formations: formation[]) => {
+                                          return formations.map((formation, index: number) => {
+                                             if (index === selectedFormation) {
+                                                return {
+                                                   ...formation,
+                                                   positions: formation.positions.map((dancerPosition) => {
+                                                      if (dancerPosition.id === dancer.id) {
+                                                         return { ...dancerPosition, transitionType: e.target.value };
+                                                      }
+                                                      return dancerPosition;
+                                                   }),
+                                                };
+                                             }
+                                             return formation;
+                                          });
+                                       })
+                                    }
+                                    className={`w-[20%] mx-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500   py-[5px]`}
+                                 >
+                                    <option value="linear">linear</option>
+                                    <option value="cubic">cubic</option>
+                                 </select>
                                  <select
                                     value={
                                        formations[selectedFormation]?.positions.find((dancerPosition) => dancer.id === dancerPosition.id)
@@ -165,7 +193,7 @@ export const CurrentFormation: React.FC<{
                                           });
                                        })
                                     }
-                                    className={`w-1/3 mx-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500   py-[5px] px-[5px] ${
+                                    className={`w-[20%] mx-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500   py-[5px] ${
                                        dancersWhoAreNotInPreviousFormation?.find((dancerPosition) => dancerPosition.id === dancer.id)
                                           ? ""
                                           : "opacity-30 pointer-events-none"
@@ -198,7 +226,7 @@ export const CurrentFormation: React.FC<{
                                           });
                                        })
                                     }
-                                    className={`w-1/3 mx-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500   py-[5px] px-[5px] ${
+                                    className={`w-[20%] mx-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500   py-[5px]  ${
                                        dancersWhoAreNotInNextFormation?.find((dancerPosition) => dancer.id === dancerPosition.id)
                                           ? ""
                                           : "opacity-30 pointer-events-none"
@@ -210,7 +238,7 @@ export const CurrentFormation: React.FC<{
                                  </select>
                               </li>
                               <hr />
-                           </>
+                           </div>
                         );
                      })}
                   </ul>

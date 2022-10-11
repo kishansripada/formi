@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation } from "../../types/types";
+import { dancer, dancerPosition, formation, coordsToPosition } from "../../types/types";
 
 export interface DancerAliasProps {
    dancer: dancer;
@@ -68,6 +68,7 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({
          <div
             style={{ left, top, transform: "translate(-50%, -50%)" }}
             id={dancer.id}
+            data-type={"dancer"}
             className={` ${
                selectedDancers.includes(dancer.id)
                   ? "bg-blue-500 w-[41px] h-[41px]"
@@ -77,14 +78,19 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({
             {dancer.instagramUsername ? (
                <img
                   id={dancer.id}
+                  data-type={"dancer"}
                   draggable={false}
                   className="w-[34px] h-[34px] rounded-full select-none"
                   src={dancer.instagramUsername}
                   alt={dancer.name}
                />
             ) : (
-               <div id={dancer.id} className="bg-white rounded-full w-[34px] h-[34px] grid place-items-center select-none cursor-default ">
-                  <p id={dancer.id} className="select-none font-semibold cursor-default  ">
+               <div
+                  id={dancer.id}
+                  data-type={"dancer"}
+                  className="bg-white rounded-full w-[34px] h-[34px] grid place-items-center select-none cursor-default "
+               >
+                  <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
                      {initials}
                   </p>
                </div>
@@ -94,15 +100,17 @@ export const DancerAlias: React.FC<DancerAliasProps> = ({
    );
 };
 
-const coordsToPosition = (x: number, y: number) => {
-   return { left: 400 + 40 * x, top: 400 + 40 * -y };
-};
+// const coordsToPosition = (x: number, y: number) => {
+//    return { left: 400 + 40 * x, top: 400 + 40 * -y };
+// };
 
 const animate = (formations: formation[], position: number, id: string): { left: number; top: number } => {
    let sum = 0;
    let currentFormationIndex = null;
    let isInTransition;
-   let percentThroughTransition;
+
+   // t = percent through transition
+   let t;
    for (let i = 0; i < formations.length; i++) {
       sum = sum + formations[i].durationSeconds + formations[i]?.transition.durationSeconds;
       if (position < sum) {
@@ -111,7 +119,7 @@ const animate = (formations: formation[], position: number, id: string): { left:
 
          if (durationThroughTransition > 0) {
             isInTransition = true;
-            percentThroughTransition = durationThroughTransition / formations[i]?.transition?.durationSeconds;
+            t = durationThroughTransition / formations[i]?.transition?.durationSeconds;
          } else {
             isInTransition = false;
          }
@@ -189,6 +197,17 @@ const animate = (formations: formation[], position: number, id: string): { left:
          return coordsToPosition(10, 10);
       }
    }
-
-   return coordsToPosition(from.x + (to.x - from.x) * percentThroughTransition, from.y + (to.y - from.y) * percentThroughTransition);
+   if (inThisFormation?.transitionType === "cubic" && inThisFormation?.controlPointStart?.y && inThisFormation?.controlPointStart?.x) {
+      return coordsToPosition(
+         (1 - t) ** 3 * from.x +
+            3 * (1 - t) ** 2 * t * inThisFormation.controlPointStart.x +
+            3 * (1 - t) * t ** 2 * inThisFormation.controlPointEnd.x +
+            t ** 3 * to.x,
+         (1 - t) ** 3 * from.y +
+            3 * (1 - t) ** 2 * t * inThisFormation.controlPointStart.y +
+            3 * (1 - t) * t ** 2 * inThisFormation.controlPointEnd.y +
+            t ** 3 * to.y
+      );
+   }
+   return coordsToPosition(from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t);
 };

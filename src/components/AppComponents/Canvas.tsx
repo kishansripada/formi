@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef, PointerEvent, PointerEventHandler } from "react";
+import { useState, useEffect, useRef, PointerEvent, PointerEventHandler, useMemo } from "react";
 
 import { GridLines } from "./GridLines";
-import { dancer, dancerPosition, formation, dragBoxCoords } from "../../types/types";
+import { dancer, dancerPosition, formation, dragBoxCoords, coordsToPosition, PIXELS_PER_SQUARE, GRID_HEIGHT, GRID_WIDTH } from "../../types/types";
 import { CurrentFormation } from "./CurrentFormation";
 
 export const Canvas: React.FC<{
@@ -18,16 +18,29 @@ export const Canvas: React.FC<{
    let [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
    const [shiftHeld, setShiftHeld] = useState(false);
    const [commandHeld, setCommandHeld] = useState(false);
+   const [changingControlId, setChangingControlId] = useState<null | string>(null);
+   const [changingControlType, setChangingControlType] = useState<"start" | "end" | null>(null);
+   const [scrollOffset, setScrollOffset] = useState({ x: -648, y: -684 });
+   const [zoom, setZoom] = useState(1);
    const [isDragging, setIsDragging] = useState(false);
    const [copiedPositions, setCopiedPositions] = useState(false);
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
+   useEffect(() => {
+      window.addEventListener("keydown", downHandler);
+      window.addEventListener("keyup", upHandler);
+      return () => {
+         window.removeEventListener("keydown", downHandler);
+         window.removeEventListener("keyup", upHandler);
+      };
+   }, [selectedFormation, commandHeld]);
+
    const downHandler = (e: any) => {
+      console.log(selectedFormation);
       if (e?.path?.[0]?.tagName === "INPUT") {
          console.log("in an input field");
          return;
       }
       if (e.key === "Meta") {
-         console.log("command pressed");
          setCommandHeld(true);
       }
       if (e.key === "Shift") {
@@ -49,19 +62,53 @@ export const Canvas: React.FC<{
          updatedFormations = formations;
          return formations;
       });
-
-      if (e.key === "a") {
-         if (updatedSelectedFormation === null) return;
+      if (e.key === "Backspace") {
          e.preventDefault();
-         setCommandHeld((commandHeld: boolean) => {
-            if (commandHeld && updatedSelectedFormation !== null) {
-               e.preventDefault();
-               console.log(updatedSelectedFormation);
-               setSelectedDancers([...updatedFormations[updatedSelectedFormation]?.positions.map((position) => position.id)]);
-            }
-            return commandHeld;
+         let updatedSelectedDancers: string[] = [];
+
+         setSelectedDancers((selectedDancers: string[]) => {
+            updatedSelectedDancers = selectedDancers;
+            return selectedDancers;
+         });
+
+         setFormations((formations: formation[]) => {
+            return formations.map((formation, i) => {
+               if (i === updatedSelectedFormation) {
+                  return {
+                     ...formation,
+                     positions: formation.positions.filter((dancerPosition: dancerPosition) => {
+                        return !updatedSelectedDancers.find((id) => dancerPosition.id === id);
+                     }),
+                  };
+               }
+               return formation;
+            });
+         });
+         setSelectedDancers((selectedDancers: string[]) => {
+            return [];
          });
       }
+
+      if (!commandHeld) return;
+      if (selectedFormation === null) return;
+
+      if (e.key === "a") {
+         e.preventDefault();
+         setSelectedDancers([...updatedFormations[updatedSelectedFormation]?.positions.map((position) => position.id)]);
+      }
+
+      // if (e.key === "a") {
+      //    if (updatedSelectedFormation === null) return;
+      //    e.preventDefault();
+      //    setCommandHeld((commandHeld: boolean) => {
+      //       if (commandHeld && updatedSelectedFormation !== null) {
+      //          e.preventDefault();
+      //          console.log(updatedSelectedFormation);
+      //          setSelectedDancers([...updatedFormations[updatedSelectedFormation]?.positions.map((position) => position.id)]);
+      //       }
+      //       return commandHeld;
+      //    });
+      // }
       let updatedSelectedDancers: string[] = [];
 
       setSelectedDancers((selectedDancers: string[]) => {
@@ -120,34 +167,6 @@ export const Canvas: React.FC<{
             return commandHeld;
          });
       }
-
-      // console.log(selectedDancers);
-      if (e.key === "Backspace") {
-         e.preventDefault();
-         let updatedSelectedDancers: string[] = [];
-
-         setSelectedDancers((selectedDancers: string[]) => {
-            updatedSelectedDancers = selectedDancers;
-            return selectedDancers;
-         });
-
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, i) => {
-               if (i === updatedSelectedFormation) {
-                  return {
-                     ...formation,
-                     positions: formation.positions.filter((dancerPosition: dancerPosition) => {
-                        return !updatedSelectedDancers.find((id) => dancerPosition.id === id);
-                     }),
-                  };
-               }
-               return formation;
-            });
-         });
-         setSelectedDancers((selectedDancers: string[]) => {
-            return [];
-         });
-      }
    };
 
    function upHandler({ key }) {
@@ -159,34 +178,73 @@ export const Canvas: React.FC<{
       }
    }
 
-   useEffect(() => {
-      window.addEventListener("keydown", downHandler);
-      window.addEventListener("keyup", upHandler);
-      return () => {
-         window.removeEventListener("keydown", downHandler);
-         window.removeEventListener("keyup", upHandler);
-      };
-   }, []);
-   const coordsToPosition = (x: number, y: number) => {
-      return { left: 400 + 40 * x, top: 400 + 40 * -y };
-   };
-
    const handleDragMove = (e: any) => {
-      if (e.target.id && !dragBoxCoords.start.x) {
+      if (changingControlId && changingControlType === "start") {
+         setFormations((formations: formation[]) => {
+            return formations.map((formation, index: number) => {
+               if (index === selectedFormation) {
+                  return {
+                     ...formation,
+                     positions: formation.positions.map((dancerPosition) => {
+                        // dancerPosition.id === draggingDancerId
+                        if (changingControlId === dancerPosition.id) {
+                           return {
+                              ...dancerPosition,
+                              controlPointStart: {
+                                 x: dancerPosition.controlPointStart.x + e.movementX / PIXELS_PER_SQUARE / zoom,
+                                 y: dancerPosition.controlPointStart.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                              },
+                           };
+                           // ...positionToCoords(x, y + (800 - rect.height) / 2)
+                        }
+                        return dancerPosition;
+                     }),
+                  };
+               }
+               return formation;
+            });
+         });
+      }
+      if (changingControlId && changingControlType === "end") {
+         setFormations((formations: formation[]) => {
+            return formations.map((formation, index: number) => {
+               if (index === selectedFormation) {
+                  return {
+                     ...formation,
+                     positions: formation.positions.map((dancerPosition) => {
+                        // dancerPosition.id === draggingDancerId
+                        if (changingControlId === dancerPosition.id) {
+                           return {
+                              ...dancerPosition,
+                              controlPointEnd: {
+                                 x: dancerPosition.controlPointEnd.x + e.movementX / PIXELS_PER_SQUARE / zoom,
+                                 y: dancerPosition.controlPointEnd.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                              },
+                           };
+                        }
+                        return dancerPosition;
+                     }),
+                  };
+               }
+               return formation;
+            });
+         });
+      }
+      if (e.target.dataset.type === "dancer" && !dragBoxCoords.start.x) {
          setIsDragging(true);
       }
-      // Get the target
       const target = e.currentTarget;
-
+      // console.log(target);
       // Get the bounding rectangle of target
       const rect = target.getBoundingClientRect();
 
       // Mouse position
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
+
       if (dragBoxCoords.start.x && dragBoxCoords.start.y) {
          setDragBoxCoords((dragBoxCoords) => {
-            return { ...dragBoxCoords, end: { x: x, y: y + (800 - rect.height) / 2 } };
+            return { ...dragBoxCoords, end: { x: x / zoom, y: y / zoom } };
          });
          if (
             dragBoxCoords.start.x !== null &&
@@ -224,7 +282,14 @@ export const Canvas: React.FC<{
                      if (selectedDancers.includes(dancerPosition.id)) {
                         return {
                            ...dancerPosition,
-                           position: { x: dancerPosition.position.x + e.movementX / 40, y: dancerPosition.position.y - e.movementY / 40 },
+                           position: {
+                              x: dancerPosition.position.x + e.movementX / PIXELS_PER_SQUARE / zoom,
+                              y: dancerPosition.position.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                           },
+                           controlPointStart: {
+                              x: dancerPosition.controlPointStart.x + e.movementX / PIXELS_PER_SQUARE / zoom,
+                              y: dancerPosition.controlPointStart.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                           },
                         };
                         // ...positionToCoords(x, y + (800 - rect.height) / 2)
                      }
@@ -238,24 +303,31 @@ export const Canvas: React.FC<{
    };
 
    const pointerDown = (e: any) => {
+      if (e.target.dataset.type === "controlPointStart") {
+         setChangingControlId(e.target.id);
+         setChangingControlType("start");
+      }
+      if (e.target.dataset.type === "controlPointEnd") {
+         setChangingControlId(e.target.id);
+         setChangingControlType("end");
+      }
       if (!e.target.id) {
          setSelectedDancers([]);
          // Get the target
          const target = e.currentTarget;
-
+         // console.log(target);
          // Get the bounding rectangle of target
          const rect = target.getBoundingClientRect();
 
          // Mouse position
          const x = e.clientX - rect.left;
          const y = e.clientY - rect.top;
+
          setDragBoxCoords((dragBoxCoords) => {
-            return { ...dragBoxCoords, start: { x: x, y: y + (800 - rect.height) / 2 } };
+            return { ...dragBoxCoords, start: { x: x / zoom, y: y / zoom } };
          });
-         // console.log(y + (800 - rect.height) / 2);
-         // console.log(x);
       }
-      if (e.target.id) {
+      if (e.target.dataset.type === "dancer") {
          setDraggingDancerId(e.target.id);
          if (!shiftHeld && !selectedDancers.includes(e.target.id)) {
             setSelectedDancers([e.target.id]);
@@ -272,8 +344,10 @@ export const Canvas: React.FC<{
    };
 
    const pointerUp = (e: any) => {
+      setChangingControlId(null);
+      setChangingControlType(null);
       setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
-      if (e.target.id && !shiftHeld && !isDragging) {
+      if (e.target.dataset.type === "dancer" && !shiftHeld && !isDragging) {
          setSelectedDancers([e.target.id]);
       }
       // if a dancer was dragged (moved), then update round the formations to the nearest whole (persists to database)
@@ -293,16 +367,54 @@ export const Canvas: React.FC<{
       setIsDragging(false);
    };
 
+   useEffect(() => {
+      window.addEventListener("wheel", handleScroll, { passive: false });
+
+      return () => {
+         window.removeEventListener("wheel", handleScroll);
+      };
+   }, []);
+
+   const handleScroll = (e) => {
+      if (
+         e
+            .composedPath()
+            .map((elem) => elem.id)
+            .includes("stage") &&
+         e.ctrlKey === false
+      ) {
+         e.preventDefault();
+         setScrollOffset((scrollOffset) => {
+            return { y: scrollOffset.y - e.deltaY, x: scrollOffset.x - e.deltaX };
+         });
+      }
+      if (
+         e
+            .composedPath()
+            .map((elem) => elem.id)
+            .includes("stage") &&
+         e.ctrlKey === true
+      ) {
+         e.preventDefault();
+         setZoom((zoom) => (zoom - e.deltaY / 200 > 0.2 && zoom - e.deltaY / 200 < 1.2 ? zoom - e.deltaY / 200 : zoom));
+      }
+   };
    return (
-      <div
-         className="flex flex-row justify-center items-center relative w-[800px] grow  overflow-hidden  border-black  mx-3 bg-white rounded-xl cursor-default "
-         onPointerDown={pointerDown}
-         onPointerUp={pointerUp}
-         onPointerMove={handleDragMove}
-         onKeyDown={() => console.log("test")}
-      >
-         <div className="h-[800px] w-[800px] absolute">
+      <div className="flex flex-row  h-full cursor-default w-1/2 overflow-hidden mx-4 px-3 rounded-xl  " id="stage" onPointerUp={pointerUp}>
+         <div
+            className="relative bg-white "
+            onPointerDown={pointerDown}
+            onPointerMove={handleDragMove}
+            style={{
+               top: scrollOffset.y,
+               left: scrollOffset.x,
+               transform: `scale(${zoom})`,
+               height: GRID_HEIGHT * PIXELS_PER_SQUARE,
+               width: GRID_WIDTH * PIXELS_PER_SQUARE,
+            }}
+         >
             {children}
+
             {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y ? (
                <div
                   className="absolute bg-blue-200/50 z-10 cursor-default "
@@ -323,6 +435,6 @@ export const Canvas: React.FC<{
    );
 };
 
-const positionToCoords = (left: number, top: number) => {
-   return { x: Math.round((left - 400) / 40), y: Math.round((-1 * (top - 400)) / 40) + 0 };
-};
+// const positionToCoords = (left: number, top: number) => {
+//    return { x: Math.round((left - 400) / 40), y: Math.round((-1 * (top - 400)) / 40) + 0 };
+// };

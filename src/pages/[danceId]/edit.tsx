@@ -4,10 +4,10 @@ import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
 import { DancerAliasShadow } from "../../components/AppComponents/DancerAliasShadow";
-import useUndoableState from "../../components/AppComponents/useUndoableState";
+
 import { Dancer } from "../../components/AppComponents/Dancer";
 import { Canvas } from "../../components/AppComponents/Canvas";
-// import { SidebarDrop } from "../../components/AppComponents/SidebarDrop";
+
 import { NewDancer } from "../../components/AppComponents/NewDancer";
 import { CurrentFormation } from "../../components/AppComponents/CurrentFormation";
 import { EditDancer } from "../../components/AppComponents/EditDancer";
@@ -16,6 +16,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { isMobile } from "react-device-detect";
+import { PathEditor } from "../../components/AppComponents/PathEditor";
 const Header = dynamic<{
    saved: boolean;
    setSoundCloudTrackId: Function;
@@ -26,6 +27,8 @@ const Header = dynamic<{
    soundCloudTrackId: string | null;
    setShowPreviousFormation: Function;
    showPreviousFormation: boolean;
+   viewAllPaths: boolean;
+   setViewAllPaths: Function;
 }>(() => import("../../components/AppComponents/Header").then((mod) => mod.Header), {
    ssr: false,
 });
@@ -52,24 +55,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    const [position, setPosition] = useState<number | null>(null);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
-   // const {
-   //    state: formations,
-   //    setState: setFormations,
-   //    resetState: resetDoc,
-   //    index: docStateIndex,
-   //    lastIndex: docStateLastIndex,
-   //    goBack: undo,
-   //    goForward: red,
-   // } = useUndoableState([
-   //    {
-   //       durationSeconds: 10,
-   //       positions: [],
-   //       transition: {
-   //          durationSeconds: 5,
-   //       },
-   //       name: "Untitled",
-   //    },
-   // ]);
+
    const [formations, setFormations] = useState<formation[]>([
       {
          durationSeconds: 10,
@@ -86,6 +72,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    const [saved, setSaved] = useState<boolean>(true);
    const [editingDancer, setEditingDancer] = useState<string | null>(null);
    const [showPreviousFormation, setShowPreviousFormation] = useState<boolean>(false);
+   const [viewAllPaths, setViewAllPaths] = useState<boolean>(false);
    const [mobile, setMobile] = useState<string | null>(null);
    const [noAccess, setNoAccess] = useState<boolean>(false);
 
@@ -280,16 +267,6 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
          )}
 
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none">
-            {/* <button
-               onClick={() =>
-                  setFormations((formations) => {
-                     console.log(formations);
-                     return formations;
-                  })
-               }
-            >
-               click me
-            </button> */}
             <Header
                soundCloudTrackId={soundCloudTrackId}
                session={session}
@@ -300,6 +277,8 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                setDanceName={setDanceName}
                showPreviousFormation={showPreviousFormation}
                setShowPreviousFormation={setShowPreviousFormation}
+               viewAllPaths={viewAllPaths}
+               setViewAllPaths={setViewAllPaths}
             />
             <div className="flex flex-row grow overflow-hidden">
                <div className="flex flex-col w-[20%] relative overflow-y-scroll overflow-x-visible ml-3">
@@ -319,50 +298,67 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                      </>
                   ))}
                   <NewDancer setDancers={setDancers} />
-                  {/* <SidebarDrop setFormations={setFormations} /> */}
                </div>
 
-               <div className="flex flex-col h-full items-center w-2/3">
-                  <Canvas
-                     setSelectedFormation={setSelectedFormation}
-                     formations={formations}
-                     selectedFormation={selectedFormation}
-                     setDancers={setDancers}
-                     dancers={dancers}
-                     setFormations={setFormations}
-                     selectedDancers={selectedDancers}
-                     setSelectedDancers={setSelectedDancers}
-                  >
-                     {dancers.map((dancer, index) => (
-                        <DancerAlias
-                           selectedDancers={selectedDancers}
-                           isPlaying={isPlaying}
-                           position={position}
-                           selectedFormation={selectedFormation}
-                           setDancers={setDancers}
-                           key={index}
-                           dancer={dancer}
-                           formations={formations}
-                           setFormations={setFormations}
-                        />
-                     ))}
-                     {showPreviousFormation
-                        ? dancers.map((dancer, index) => (
-                             <DancerAliasShadow
-                                isPlaying={isPlaying}
-                                position={position}
-                                selectedFormation={selectedFormation}
-                                setDancers={setDancers}
-                                key={index}
-                                dancer={dancer}
-                                formations={formations}
-                                setFormations={setFormations}
-                             />
-                          ))
-                        : null}
-                  </Canvas>
-                  <p>audience</p>
-               </div>
+               {/* <div className="flex flex-col h-full items-center justify-center w-1/2 mx-3 "> */}
+               <Canvas
+                  setSelectedFormation={setSelectedFormation}
+                  formations={formations}
+                  selectedFormation={selectedFormation}
+                  setDancers={setDancers}
+                  dancers={dancers}
+                  setFormations={setFormations}
+                  selectedDancers={selectedDancers}
+                  setSelectedDancers={setSelectedDancers}
+               >
+                  {selectedFormation !== null && !isPlaying ? (
+                     <PathEditor
+                        setSelectedFormation={setSelectedFormation}
+                        formations={formations}
+                        selectedFormation={selectedFormation}
+                        setDancers={setDancers}
+                        dancers={dancers}
+                        setFormations={setFormations}
+                        selectedDancers={selectedDancers}
+                        setSelectedDancers={setSelectedDancers}
+                        viewAllPaths={viewAllPaths}
+                     />
+                  ) : (
+                     <></>
+                  )}
+
+                  {dancers.map((dancer, index) => (
+                     <DancerAlias
+                        selectedDancers={selectedDancers}
+                        isPlaying={isPlaying}
+                        position={position}
+                        selectedFormation={selectedFormation}
+                        setDancers={setDancers}
+                        key={index}
+                        dancer={dancer}
+                        formations={formations}
+                        setFormations={setFormations}
+                     />
+                  ))}
+                  {showPreviousFormation
+                     ? dancers.map((dancer, index) => (
+                          <DancerAliasShadow
+                             isPlaying={isPlaying}
+                             position={position}
+                             selectedFormation={selectedFormation}
+                             setDancers={setDancers}
+                             key={index}
+                             dancer={dancer}
+                             formations={formations}
+                             setFormations={setFormations}
+                             viewAllPaths={viewAllPaths}
+                          />
+                       ))
+                     : null}
+               </Canvas>
+
+               {/* <p>audience</p> */}
+               {/* </div> */}
 
                <CurrentFormation
                   selectedDancers={selectedDancers}

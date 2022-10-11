@@ -89,6 +89,9 @@ export const Dancer = ({
                                        },
                                        exitStrategy: "closest",
                                        enterStrategy: "closest",
+                                       transitionType: "linear",
+                                       controlPointStart: { x: -6, y: 1 },
+                                       controlPointEnd: { x: 6, y: 1 },
                                     },
                                  ],
                               };
