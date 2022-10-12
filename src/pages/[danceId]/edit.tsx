@@ -4,19 +4,18 @@ import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
 import { DancerAliasShadow } from "../../components/AppComponents/DancerAliasShadow";
-
 import { Dancer } from "../../components/AppComponents/Dancer";
 import { Canvas } from "../../components/AppComponents/Canvas";
-
 import { NewDancer } from "../../components/AppComponents/NewDancer";
 import { CurrentFormation } from "../../components/AppComponents/CurrentFormation";
 import { EditDancer } from "../../components/AppComponents/EditDancer";
 import { Layers } from "../../components/AppComponents/Layers";
+import { isMobile } from "react-device-detect";
+import { PathEditor } from "../../components/AppComponents/PathEditor";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import { isMobile } from "react-device-detect";
-import { PathEditor } from "../../components/AppComponents/PathEditor";
+
 const Header = dynamic<{
    saved: boolean;
    setSoundCloudTrackId: Function;
@@ -128,7 +127,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 2000),
+      }, 5000),
       [router.query.danceId]
    );
 
@@ -171,7 +170,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 2000),
+      }, 5000),
       [router.query.danceId]
    );
 
@@ -190,7 +189,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 1000),
+      }, 5000),
       [router.query.danceId]
    );
 
@@ -300,7 +299,6 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   <NewDancer setDancers={setDancers} />
                </div>
 
-               {/* <div className="flex flex-col h-full items-center justify-center w-1/2 mx-3 "> */}
                <Canvas
                   setSelectedFormation={setSelectedFormation}
                   formations={formations}
@@ -311,7 +309,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   selectedDancers={selectedDancers}
                   setSelectedDancers={setSelectedDancers}
                >
-                  {selectedFormation != null ? (
+                  {selectedFormation !== null ? (
                      <PathEditor
                         setSelectedFormation={setSelectedFormation}
                         formations={formations}
@@ -323,6 +321,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                         setSelectedDancers={setSelectedDancers}
                         viewAllPaths={viewAllPaths}
                         isPlaying={isPlaying}
+                        currentFormationIndex={whereInFormation(formations, position).currentFormationIndex}
                      />
                   ) : (
                      <></>
@@ -352,14 +351,11 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                              dancer={dancer}
                              formations={formations}
                              setFormations={setFormations}
-                             viewAllPaths={viewAllPaths}
+                             //   viewAllPaths={viewAllPaths}
                           />
                        ))
                      : null}
                </Canvas>
-
-               {/* <p>audience</p> */}
-               {/* </div> */}
 
                <CurrentFormation
                   selectedDancers={selectedDancers}
@@ -400,3 +396,17 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
 };
 
 export default Edit;
+
+const whereInFormation = (formations: formation[], position: number) => {
+   let sum = 0;
+   let currentFormationIndex = null;
+
+   for (let i = 0; i < formations.length; i++) {
+      sum = sum + formations[i].durationSeconds + formations[i]?.transition.durationSeconds;
+      if (position < sum) {
+         currentFormationIndex = i;
+         break;
+      }
+   }
+   return { currentFormationIndex };
+};

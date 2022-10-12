@@ -8,7 +8,6 @@ export interface DancerAliasProps {
    isPlaying: boolean;
    position: number | null;
    setFormations: Function;
-   // viewAllPaths: boolean;
 }
 
 export const DancerAliasShadow: React.FC<DancerAliasProps> = ({
@@ -20,12 +19,6 @@ export const DancerAliasShadow: React.FC<DancerAliasProps> = ({
    position,
    setFormations,
 }) => {
-   let currentCoords = formations[selectedFormation === formations.length - 1 ? selectedFormation - 1 : selectedFormation + 1]?.positions.find(
-      (dancerx: dancerPosition) => dancerx.id === dancer.id
-   )?.position;
-
-   if (selectedFormation === null || !currentCoords || isPlaying) return <></>;
-
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])
@@ -33,6 +26,17 @@ export const DancerAliasShadow: React.FC<DancerAliasProps> = ({
       .join("")
       .toUpperCase();
 
+   let currentCoords;
+
+   if (isPlaying) {
+      let { currentFormationIndex } = whereInFormation(formations, position);
+      currentCoords = formations[currentFormationIndex + 1]?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id)?.position;
+   } else {
+      currentCoords = formations[selectedFormation === formations.length - 1 ? selectedFormation - 1 : selectedFormation + 1]?.positions.find(
+         (dancerx: dancerPosition) => dancerx.id === dancer.id
+      )?.position;
+   }
+   if (!currentCoords) return <></>;
    let { left, top } = coordsToPosition(currentCoords.x, currentCoords.y);
 
    return (
@@ -60,4 +64,18 @@ export const DancerAliasShadow: React.FC<DancerAliasProps> = ({
          </div>
       </>
    );
+};
+
+const whereInFormation = (formations: formation[], position: number) => {
+   let sum = 0;
+   let currentFormationIndex = null;
+
+   for (let i = 0; i < formations.length; i++) {
+      sum = sum + formations[i].durationSeconds + formations[i]?.transition.durationSeconds;
+      if (position < sum) {
+         currentFormationIndex = i;
+         break;
+      }
+   }
+   return { currentFormationIndex };
 };
