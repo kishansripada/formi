@@ -100,6 +100,7 @@ export const SoundCloudComponent: React.FC<{
             });
 
             player.bind(SC.Widget.Events.PLAY, () => {
+               console.log("play fired");
                setIsPlaying(true);
             });
             player.bind(SC.Widget.Events.PAUSE, () => {

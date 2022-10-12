@@ -74,6 +74,35 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    const [viewAllPaths, setViewAllPaths] = useState<boolean>(false);
    const [mobile, setMobile] = useState<string | null>(null);
    const [noAccess, setNoAccess] = useState<boolean>(false);
+   const isMounted = useRef(false);
+
+   let currentFormationIndex = whereInFormation(formations, position).currentFormationIndex;
+   useEffect(() => {
+      if (window !== undefined) {
+         // console.log(JSON.parse(window.localStorage.getItem("viewAllPaths")));
+         setViewAllPaths(JSON.parse(window.localStorage.getItem("viewAllPaths")));
+         setShowPreviousFormation(JSON.parse(window.localStorage.getItem("showPreviousFormation")));
+      }
+   }, []);
+   useEffect(() => {
+      if (!isMounted.current) {
+         isMounted.current = true;
+         return;
+      }
+      if (window !== undefined) {
+         window.localStorage.setItem("viewAllPaths", viewAllPaths);
+      }
+   }, [viewAllPaths]);
+
+   useEffect(() => {
+      if (window !== undefined) {
+         if (!isMounted.current) {
+            isMounted.current = true;
+            return;
+         }
+         window.localStorage.setItem("showPreviousFormation", showPreviousFormation);
+      }
+   }, [showPreviousFormation]);
 
    useEffect(() => {
       setSelectedDancers([]);
@@ -84,6 +113,12 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
          setMobile(true);
       }
    }, [isMobile]);
+
+   useEffect(() => {
+      if (!isPlaying) return;
+      setSelectedFormation(currentFormationIndex);
+   }, [currentFormationIndex, isPlaying]);
+
    const router = useRouter();
 
    const removeDancer = (id: string) => {
@@ -316,7 +351,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                         selectedDancers={selectedDancers}
                         viewAllPaths={viewAllPaths}
                         isPlaying={isPlaying}
-                        currentFormationIndex={whereInFormation(formations, position).currentFormationIndex}
+                        currentFormationIndex={currentFormationIndex}
                      />
                   ) : (
                      <></>
@@ -339,11 +374,11 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                      ? dancers.map((dancer, index) => (
                           <DancerAliasShadow
                              isPlaying={isPlaying}
-                             position={position}
                              selectedFormation={selectedFormation}
                              key={index}
                              dancer={dancer}
                              formations={formations}
+                             currentFormationIndex={currentFormationIndex}
                           />
                        ))
                      : null}

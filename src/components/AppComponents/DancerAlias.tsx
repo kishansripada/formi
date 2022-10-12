@@ -58,7 +58,7 @@ export const DancerAlias: React.FC<{
                {dancer.instagramUsername ? (
                   <img className="w-[34px] h-[34px] rounded-full select-none " src={dancer.instagramUsername} alt="" />
                ) : (
-                  <div className="bg-white rounded-full w-8 h-8 grid place-items-center cursor-default  font-semibold  ">
+                  <div className="bg-white rounded-full w-[34px] h-[34px] grid place-items-center cursor-default  font-semibold  ">
                      <p className="cursor-default ">{initials}</p>
                   </div>
                )}

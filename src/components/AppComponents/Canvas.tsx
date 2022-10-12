@@ -20,8 +20,8 @@ export const Canvas: React.FC<{
    const [commandHeld, setCommandHeld] = useState(false);
    const [changingControlId, setChangingControlId] = useState<null | string>(null);
    const [changingControlType, setChangingControlType] = useState<"start" | "end" | null>(null);
-   const [scrollOffset, setScrollOffset] = useState({ x: -648, y: -684 });
-   const [zoom, setZoom] = useState(1);
+   const [scrollOffset, setScrollOffset] = useState({ x: -442, y: -310 });
+   const [zoom, setZoom] = useState(0.7);
    const [isDragging, setIsDragging] = useState(false);
    const [copiedPositions, setCopiedPositions] = useState([]);
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
