@@ -1,24 +1,12 @@
 import { dancer, dancerPosition, formation, coordsToPosition } from "../../types/types";
 
-export interface DancerAliasProps {
+export const DancerAliasShadow: React.FC<{
    dancer: dancer;
-   setDancers: Function;
    selectedFormation: number | null;
    formations: formation[];
    isPlaying: boolean;
    position: number | null;
-   setFormations: Function;
-}
-
-export const DancerAliasShadow: React.FC<DancerAliasProps> = ({
-   dancer,
-   formations,
-   setDancers,
-   selectedFormation,
-   isPlaying,
-   position,
-   setFormations,
-}) => {
+}> = ({ dancer, formations, selectedFormation, isPlaying, position }) => {
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])

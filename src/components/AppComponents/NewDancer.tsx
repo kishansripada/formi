@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { dancer, dancerPosition, formation } from "../../types/types";
 
-export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
+export const NewDancer: React.FC<{ setDancers: Function }> = ({ setDancers }) => {
    const [newName, setNewName] = useState("");
 
    const createNewDancer = () => {
@@ -36,7 +36,6 @@ export const NewDancer = ({ setDancers }: { setDancers: Function }) => {
                onChange={(e) => setNewName(e.target.value)}
                onBlur={createNewDancer}
             />
-            {/* <p className="text-gray-400 ml-auto mr-auto px-3 text-center"> enter to create</p> */}
          </div>
       </>
    );

@@ -1,7 +1,5 @@
 import Script from "next/script";
 import { useEffect, useState } from "react";
-import logo from "../../../public/logo.svg";
-import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
 import { PIXELS_PER_SECOND, formation } from "../../types/types";
@@ -91,16 +89,14 @@ export const SoundCloudComponent: React.FC<{
          let player = SC.Widget(widgetIframe);
 
          player.bind(SC.Widget.Events.READY, (e: any) => {
-            console.log("ready");
+            // console.log("ready");
             player.getDuration((e: any) => {
-               console.log("getting duration");
+               // console.log("getting duration");
                setSongDuration(e);
             });
-            console.log("new position bound");
+            // console.log("new position bound");
             player.bind(SC.Widget.Events.PLAY_PROGRESS, (e: any) => {
                setPosition(Math.ceil(e.currentPosition / 1000 / 0.033) * 0.033);
-               // setPosition(Math.round(e.currentPosition / 10) / 100);
-               // setPosition(e.currentPosition / 1000);
             });
 
             player.bind(SC.Widget.Events.PLAY, () => {

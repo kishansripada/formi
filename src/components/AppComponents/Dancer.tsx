@@ -1,17 +1,6 @@
 import { dancer, dancerPosition, formation } from "../../types/types";
 
-export const Dancer = ({
-   name,
-   id,
-   setDancers,
-   dancers,
-   selectedFormation,
-   formations,
-   instagramUsername,
-   isPlaying,
-   setEditingDancer,
-   setFormations,
-}: {
+export const Dancer: React.FC<{
    name: string;
    id: string;
    setDancers: Function;
@@ -22,7 +11,7 @@ export const Dancer = ({
    isPlaying: boolean;
    setEditingDancer: Function;
    setFormations: Function;
-}) => {
+}> = ({ name, id, setDancers, dancers, selectedFormation, formations, instagramUsername, isPlaying, setEditingDancer, setFormations }) => {
    let canBeAddedToStage =
       // there is a formation select
       selectedFormation !== null &&

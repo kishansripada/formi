@@ -13,7 +13,7 @@ export const EditDancer: React.FC<{
       <div
          id="outside"
          className="fixed top-0 left-0 z-50 flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
-         onClick={(e) => {
+         onClick={(e: any) => {
             if (e.target.id === "outside") {
                setEditingDancer(null);
             }

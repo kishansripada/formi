@@ -1,32 +1,13 @@
-import { useState, useEffect, useRef, PointerEvent, PointerEventHandler } from "react";
-
 import { dancer, dancerPosition, formation, coordsToPosition } from "../../types/types";
 
 export const PathEditor: React.FC<{
-   setDancers: Function;
-   dancers: dancer[];
-   setFormations: Function;
    selectedFormation: number | null;
    formations: formation[];
    selectedDancers: string[];
-   setSelectedDancers: Function;
-   setSelectedFormation: Function;
    viewAllPaths: boolean;
    isPlaying: boolean;
    currentFormationIndex: number | null;
-}> = ({
-   setDancers,
-   dancers,
-   setFormations,
-   selectedFormation,
-   formations,
-   setSelectedDancers,
-   selectedDancers,
-   setSelectedFormation,
-   viewAllPaths,
-   isPlaying,
-   currentFormationIndex,
-}) => {
+}> = ({ selectedFormation, formations, selectedDancers, viewAllPaths, isPlaying, currentFormationIndex }) => {
    return (
       <>
          <svg className="absolute pointer-events-none w-full h-full z-10" xmlns="http://www.w3.org/2000/svg">

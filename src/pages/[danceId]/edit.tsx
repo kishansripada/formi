@@ -311,14 +311,9 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                >
                   {selectedFormation !== null ? (
                      <PathEditor
-                        setSelectedFormation={setSelectedFormation}
                         formations={formations}
                         selectedFormation={selectedFormation}
-                        setDancers={setDancers}
-                        dancers={dancers}
-                        setFormations={setFormations}
                         selectedDancers={selectedDancers}
-                        setSelectedDancers={setSelectedDancers}
                         viewAllPaths={viewAllPaths}
                         isPlaying={isPlaying}
                         currentFormationIndex={whereInFormation(formations, position).currentFormationIndex}
@@ -346,12 +341,9 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                              isPlaying={isPlaying}
                              position={position}
                              selectedFormation={selectedFormation}
-                             setDancers={setDancers}
                              key={index}
                              dancer={dancer}
                              formations={formations}
-                             setFormations={setFormations}
-                             //   viewAllPaths={viewAllPaths}
                           />
                        ))
                      : null}

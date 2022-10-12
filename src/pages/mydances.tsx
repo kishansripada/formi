@@ -65,7 +65,7 @@ const MyDances = ({ session, setSession }: { session: Session; setSession: Funct
       if (error) {
          toast.error("there was an issue deleting your dance");
       }
-      console.log(data);
+      // console.log(data);
    };
 
    useEffect(() => {
@@ -84,9 +84,9 @@ const MyDances = ({ session, setSession }: { session: Session; setSession: Funct
 
    async function createNewDance() {
       const { data, error } = await supabase.from("dances").insert([{ user: session.user.id, last_edited: new Date() }]);
-      console.log(data);
+      // console.log(data);
       router.push(`/${data[0].id}/edit`);
-      console.log(error);
+      // console.log(error);
    }
 
    return (
