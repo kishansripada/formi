@@ -14,7 +14,8 @@ export const Layers: React.FC<{
    songDuration: number | null;
    position: number | null;
    isPlaying: boolean;
-}> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration, position, isPlaying }) => {
+   soundCloudTrackId: string;
+}> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration, position, isPlaying, soundCloudTrackId }) => {
    const clickOutsideFormations = (e: any) => {
       if (e.target.id !== "outside") return;
       e.stopPropagation();
@@ -23,21 +24,33 @@ export const Layers: React.FC<{
 
    return (
       <div
-         className="flex flex-row items-center bg-white w-full "
+         className="flex flex-col pt-2 pb-3 w-full  bg-white  max-h-[100px] justify-center "
          style={{
-            width: songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND + 123 : "100%",
+            width: songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND : "100%",
+            marginLeft: soundCloudTrackId ? (soundCloudTrackId.length < 10 ? 122 : 135) : 115,
          }}
+         id="outside"
+         onClick={clickOutsideFormations}
       >
+         <Layer
+            songDuration={songDuration}
+            setFormations={setFormations}
+            formations={formations}
+            selectedFormation={selectedFormation}
+            setSelectedFormation={setSelectedFormation}
+            isPlaying={isPlaying}
+            position={position}
+         />
          <svg
             style={{
-               left: 114 + (position !== null ? position * PIXELS_PER_SECOND : 0),
+               left: position !== null ? position * PIXELS_PER_SECOND : 0,
+               top: -40,
+               transform: "translate(-50%, 0%) scale(1.5);",
             }}
-            width="3730"
-            height="27444"
             viewBox="0 0 3730 27444"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-4 h-20 relative z-50 pointer-events-none"
+            className="w-10 h-70  relative z-50 pointer-events-none"
          >
             <path d="M1873 2248L1865.04 27443" stroke="white" strokeWidth="459" />
             <rect x="547" width="2635" height="2635" rx="400" fill="black" />
@@ -46,23 +59,6 @@ export const Layers: React.FC<{
                fill="black"
             />
          </svg>
-
-         <button className="w-[18px] text-white ">new layer</button>
-         <div
-            className="flex flex-col pt-2 pb-3 px-6  overflow-y-scroll overflow-x-clip bg-white  max-h-[100px] "
-            id="outside"
-            onClick={clickOutsideFormations}
-         >
-            <Layer
-               songDuration={songDuration}
-               setFormations={setFormations}
-               formations={formations}
-               selectedFormation={selectedFormation}
-               setSelectedFormation={setSelectedFormation}
-               isPlaying={isPlaying}
-               position={position}
-            />
-         </div>
       </div>
    );
 };

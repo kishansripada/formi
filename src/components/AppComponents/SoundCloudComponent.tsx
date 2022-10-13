@@ -18,67 +18,6 @@ export const SoundCloudComponent: React.FC<{
       const [player, setPlayer] = useState(null);
 
       console.log("SoundCloudComponent rerendered");
-      // if (!soundCloudTrackId) {
-      //    return (
-      //       <>
-      //          <div className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]">
-      //             <div className="flex  w-[700px] flex-col rounded-xl bg-white">
-      //                <div className="flex flex-col rounded-xl px-10 py-10 h-full">
-      //                   <div className="flex flex-col mt-auto">
-      //                      <p className="text-xl text-gray-500">Add a SoundCloud track to get started</p>
-
-      //                      <div className="flex flex-row items-center pt-3 ">
-      //                         <div className="flex flex-row items-center  w-full border-2 rounded-md border-black">
-      //                            <input
-      //                               onChange={(e) => setNewUrl(e.target.value)}
-      //                               className="  rounded-md focus:outline-none px-2 h-8  grow mr-3"
-      //                               type="text"
-      //                               placeholder="SoundCloud url..."
-      //                            />
-      //                            <img src="https://static.cdnlogo.com/logos/s/19/soundcloud.svg" className="w-12 mr-2" alt="" />
-      //                         </div>
-
-      //                         <button
-      //                            onClick={async () => {
-      //                               await fetch(`/api/getSoundCloudTrackId?url=${newUrl}`)
-      //                                  .then((r) => r.json())
-      //                                  .then((r) => {
-      //                                     toast.success("successfully added SoundCloud track");
-      //                                     // console.log(r.trackId);
-      //                                     setSoundCloudTrackId(r.trackId);
-      //                                  })
-      //                                  .catch((r) => {
-      //                                     toast.error("invalid SoundCloud url");
-      //                                  });
-      //                            }}
-      //                            className=" bg-pink-600 hover:bg-pink-700 rounded-md text-white px-3 py-1 ml-3 w-32"
-      //                         >
-      //                            Get Started
-      //                         </button>
-      //                      </div>
-      //                   </div>
-
-      //                   <div className="flex flex-row justify-center mt-20">
-      //                      <p>
-      //                         or{" "}
-      //                         <button
-      //                            onClick={() => {
-      //                               setSoundCloudTrackId("257461521");
-      //                               toast.success("using example track");
-      //                            }}
-      //                            className="text-pink-600"
-      //                         >
-      //                            use example track
-      //                         </button>
-      //                      </p>
-      //                   </div>
-      //                </div>
-      //             </div>
-      //          </div>
-      //          <Toaster />
-      //       </>
-      //    );
-      // }
 
       function handleLoad() {
          console.log("handling load");
@@ -177,11 +116,12 @@ export const SoundCloudComponent: React.FC<{
                   scrolling="no"
                   frameBorder="no"
                   id="iframe"
-                  width={songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND + 123 : "100%"}
+                  width={songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND + 130 : "100%"}
                   height="95"
                   allow="autoplay"
                   src={`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${soundCloudTrackId}&color=%23b42ae7&auto_play=false`}
                ></iframe>
+               er≈
             </div>
          </>
       );

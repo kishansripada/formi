@@ -18,6 +18,8 @@ export const Header: React.FC<{
    showPreviousFormation: boolean;
    viewAllPaths: boolean;
    setViewAllPaths: Function;
+   changeSoundCloudIsOpen: boolean;
+   setChangeSoundCloudIsOpen: Function;
 }> = ({
    saved,
    setSoundCloudTrackId,
@@ -30,22 +32,12 @@ export const Header: React.FC<{
    setShowPreviousFormation,
    viewAllPaths,
    setViewAllPaths,
+   changeSoundCloudIsOpen,
+   setChangeSoundCloudIsOpen,
 }) => {
    const router = useRouter();
    const wrapperRef = useRef(null);
-   useEffect(() => {
-      function handleClickOutside(event: MouseEvent) {
-         if (wrapperRef.current && !wrapperRef.current?.contains(event.target)) {
-            setChangeSoundCloudIsOpen(false);
-         }
-      }
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-         document.removeEventListener("mousedown", handleClickOutside);
-      };
-   }, [wrapperRef]);
-   let [changeSoundCloudIsOpen, setChangeSoundCloudIsOpen] = useState(false);
-   let [newSoundCloudUrl, setNewSoundCloudUrl] = useState("");
+
    return (
       <>
          <div className=" h-[75px] flex flex-row items-center shrink-0 pr-10 pl-7 bg-white justify-between">
@@ -119,7 +111,7 @@ export const Header: React.FC<{
                      change track
                   </button>
 
-                  {changeSoundCloudIsOpen ? (
+                  {/* {changeSoundCloudIsOpen ? (
                      <div className="w-[200px]  absolute bg-white border-[1px] border-gray-300 rounded-xl right-[175px] top-16 px-3 py-3 z-50">
                         <div className="flex flex-row"></div>
                         <input
@@ -154,7 +146,7 @@ export const Header: React.FC<{
                      </div>
                   ) : (
                      <></>
-                  )}
+                  )} */}
                </div>
 
                <Link href="/mydances">

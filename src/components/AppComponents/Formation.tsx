@@ -46,7 +46,7 @@ export const Formation: React.FC<{
          <div
             className="rounded-md overflow-hidden h-[40px]  mx-[2px] box-border "
             style={{
-               width: formation.transition.durationSeconds * PIXELS_PER_SECOND + formation.durationSeconds * PIXELS_PER_SECOND - 4,
+               width: (formation.transition.durationSeconds + formation.durationSeconds) * PIXELS_PER_SECOND - 4,
                // subtract 4 to account for the mx-[2px]
             }}
          >
@@ -61,7 +61,7 @@ export const Formation: React.FC<{
                   className="relative bg-pink-600 h-[23px]"
                >
                   <Resizable
-                     width={formation.durationSeconds * PIXELS_PER_SECOND}
+                     width={formation.durationSeconds * PIXELS_PER_SECOND - 2}
                      height={100}
                      onResize={onResizeFormation}
                      resizeHandles={["e"]}
@@ -79,7 +79,7 @@ export const Formation: React.FC<{
                   className=" relative bg-pink-600 h-[23px]"
                >
                   <Resizable
-                     width={formation.transition.durationSeconds * PIXELS_PER_SECOND}
+                     width={formation.transition.durationSeconds * PIXELS_PER_SECOND - 2}
                      onResize={onResizeTransition}
                      resizeHandles={["e"]}
                      height={100}

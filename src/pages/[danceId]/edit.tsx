@@ -98,6 +98,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    const [mobile, setMobile] = useState<string | null>(null);
    const [noAccess, setNoAccess] = useState<boolean>(false);
    const isMounted = useRef(false);
+   let [changeSoundCloudIsOpen, setChangeSoundCloudIsOpen] = useState(false);
 
    let currentFormationIndex = whereInFormation(formations, position).currentFormationIndex;
    useEffect(() => {
@@ -314,18 +315,25 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
          ) : (
             <></>
          )}
-         <ChooseAudioSource
-            setSelectedFormation={setSelectedFormation}
-            setFormations={setFormations}
-            soundCloudTrackId={soundCloudTrackId}
-            setSoundCloudTrackId={setSoundCloudTrackId}
-            setSongDuration={setSongDuration}
-            songDuration={songDuration}
-            setIsPlaying={setIsPlaying}
-            setPosition={setPosition}
-         />
+
+         {!soundCloudTrackId || changeSoundCloudIsOpen ? (
+            <ChooseAudioSource
+               setChangeSoundCloudIsOpen={setChangeSoundCloudIsOpen}
+               setSelectedFormation={setSelectedFormation}
+               setFormations={setFormations}
+               soundCloudTrackId={soundCloudTrackId}
+               setSoundCloudTrackId={setSoundCloudTrackId}
+               setSongDuration={setSongDuration}
+               songDuration={songDuration}
+               setIsPlaying={setIsPlaying}
+               setPosition={setPosition}
+            />
+         ) : null}
+
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none">
             <Header
+               changeSoundCloudIsOpen={changeSoundCloudIsOpen}
+               setChangeSoundCloudIsOpen={setChangeSoundCloudIsOpen}
                soundCloudTrackId={soundCloudTrackId}
                session={session}
                saved={saved}
@@ -452,6 +460,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   setSelectedFormation={setSelectedFormation}
                   isPlaying={isPlaying}
                   position={position}
+                  soundCloudTrackId={soundCloudTrackId}
                />
             </div>
          </div>

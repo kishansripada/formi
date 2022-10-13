@@ -73,7 +73,7 @@ export const FileAudioPlayer: React.FC<{
 
          <div className=" h-[95px]">
             <ReactPlayer
-               width={songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND + 210 : "100%"}
+               width={songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND + 230 : "100%"}
                height="100%"
                controls={true}
                progressInterval={33}
