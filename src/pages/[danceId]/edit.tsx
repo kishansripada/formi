@@ -15,6 +15,16 @@ import { PathEditor } from "../../components/AppComponents/PathEditor";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import Head from "next/head";
+import { ChooseAudioSource } from "../../components/AppComponents/ChooseAudioSource";
+// use effect, but not on initial render
+const useDidMountEffect = (func, deps) => {
+   const didMount = useRef(false);
+
+   useEffect(() => {
+      if (didMount.current) func();
+      else didMount.current = true;
+   }, deps);
+};
 
 const Header = dynamic<{
    saved: boolean;
@@ -42,6 +52,19 @@ const SoundCloudComponent = dynamic<{
    setSelectedFormation: Function;
    setFormations: Function;
 }>(() => import("../../components/AppComponents/SoundCloudComponent").then((mod) => mod.SoundCloudComponent), {
+   ssr: false,
+});
+
+const FileAudioPlayer = dynamic<{
+   setPosition: Function;
+   setIsPlaying: Function;
+   setSongDuration: Function;
+   songDuration: number | null;
+   soundCloudTrackId: string | null;
+   setSoundCloudTrackId: Function;
+   setSelectedFormation: Function;
+   setFormations: Function;
+}>(() => import("../../components/AppComponents/FileAudioPlayer").then((mod) => mod.FileAudioPlayer), {
    ssr: false,
 });
 
@@ -84,22 +107,14 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
          setShowPreviousFormation(JSON.parse(window.localStorage.getItem("showPreviousFormation")));
       }
    }, []);
-   useEffect(() => {
-      if (!isMounted.current) {
-         isMounted.current = true;
-         return;
-      }
+   useDidMountEffect(() => {
       if (window !== undefined) {
          window.localStorage.setItem("viewAllPaths", viewAllPaths);
       }
    }, [viewAllPaths]);
 
-   useEffect(() => {
+   useDidMountEffect(() => {
       if (window !== undefined) {
-         if (!isMounted.current) {
-            isMounted.current = true;
-            return;
-         }
          window.localStorage.setItem("showPreviousFormation", showPreviousFormation);
       }
    }, [showPreviousFormation]);
@@ -166,12 +181,12 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
       [router.query.danceId]
    );
 
-   useEffect(() => {
+   useDidMountEffect(() => {
       if (router.isReady) {
          setSaved(false);
          uploadDancers(dancers);
       }
-   }, [dancers, router.isReady]);
+   }, [dancers]);
    // ///////////
    let uploadFormations = useCallback(
       debounce(async (formations) => {
@@ -187,12 +202,12 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
       [router.query.danceId]
    );
 
-   useEffect(() => {
+   useDidMountEffect(() => {
       if (router.isReady) {
          setSaved(false);
          uploadFormations(formations);
       }
-   }, [formations, router.isReady]);
+   }, [formations]);
    //////////////////////////
    // ///////////
    let uploadSoundCloudId = useCallback(
@@ -209,12 +224,12 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
       [router.query.danceId]
    );
 
-   useEffect(() => {
+   useDidMountEffect(() => {
       if (router.isReady) {
          setSaved(false);
          uploadSoundCloudId(soundCloudTrackId);
       }
-   }, [soundCloudTrackId, router.isReady]);
+   }, [soundCloudTrackId]);
    //////////////////////////
    // ///////////
    let uploadName = useCallback(
@@ -228,12 +243,12 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
       [router.query.danceId]
    );
 
-   useEffect(() => {
+   useDidMountEffect(() => {
       if (router.isReady) {
          setSaved(false);
          uploadName(danceName);
       }
-   }, [danceName, router.isReady]);
+   }, [danceName]);
    //////////////////////////
 
    return (
@@ -299,7 +314,16 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
          ) : (
             <></>
          )}
-
+         <ChooseAudioSource
+            setSelectedFormation={setSelectedFormation}
+            setFormations={setFormations}
+            soundCloudTrackId={soundCloudTrackId}
+            setSoundCloudTrackId={setSoundCloudTrackId}
+            setSongDuration={setSongDuration}
+            songDuration={songDuration}
+            setIsPlaying={setIsPlaying}
+            setPosition={setPosition}
+         />
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none">
             <Header
                soundCloudTrackId={soundCloudTrackId}
@@ -351,7 +375,6 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                         selectedDancers={selectedDancers}
                         viewAllPaths={viewAllPaths}
                         isPlaying={isPlaying}
-                        currentFormationIndex={currentFormationIndex}
                      />
                   ) : (
                      <></>
@@ -378,7 +401,6 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                              key={index}
                              dancer={dancer}
                              formations={formations}
-                             currentFormationIndex={currentFormationIndex}
                           />
                        ))
                      : null}
@@ -395,17 +417,32 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                />
             </div>
             <div className="overflow-x-scroll min-h-[195px] bg-white ">
-               <SoundCloudComponent
-                  key={soundCloudTrackId}
-                  setSelectedFormation={setSelectedFormation}
-                  setFormations={setFormations}
-                  soundCloudTrackId={soundCloudTrackId}
-                  setSoundCloudTrackId={setSoundCloudTrackId}
-                  setSongDuration={setSongDuration}
-                  songDuration={songDuration}
-                  setIsPlaying={setIsPlaying}
-                  setPosition={setPosition}
-               />
+               {soundCloudTrackId && soundCloudTrackId.length < 10 ? (
+                  <SoundCloudComponent
+                     key={soundCloudTrackId}
+                     setSelectedFormation={setSelectedFormation}
+                     setFormations={setFormations}
+                     soundCloudTrackId={soundCloudTrackId}
+                     setSoundCloudTrackId={setSoundCloudTrackId}
+                     setSongDuration={setSongDuration}
+                     songDuration={songDuration}
+                     setIsPlaying={setIsPlaying}
+                     setPosition={setPosition}
+                  />
+               ) : null}
+
+               {soundCloudTrackId && soundCloudTrackId.length > 10 ? (
+                  <FileAudioPlayer
+                     setSelectedFormation={setSelectedFormation}
+                     setFormations={setFormations}
+                     soundCloudTrackId={soundCloudTrackId}
+                     setSoundCloudTrackId={setSoundCloudTrackId}
+                     setSongDuration={setSongDuration}
+                     songDuration={songDuration}
+                     setIsPlaying={setIsPlaying}
+                     setPosition={setPosition}
+                  ></FileAudioPlayer>
+               ) : null}
 
                <Layers
                   songDuration={songDuration}

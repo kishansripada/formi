@@ -6,13 +6,12 @@ export const PathEditor: React.FC<{
    selectedDancers: string[];
    viewAllPaths: boolean;
    isPlaying: boolean;
-   currentFormationIndex: number | null;
-}> = ({ selectedFormation, formations, selectedDancers, viewAllPaths, isPlaying, currentFormationIndex }) => {
+}> = ({ selectedFormation, formations, selectedDancers, viewAllPaths, isPlaying }) => {
    return (
       <>
          <svg className="absolute pointer-events-none w-full h-full z-10" xmlns="http://www.w3.org/2000/svg">
-            {formations?.[isPlaying ? currentFormationIndex : selectedFormation]?.positions.map((dancerPosition) => {
-               let end = formations?.[(isPlaying ? currentFormationIndex : selectedFormation) + 1]?.positions?.find(
+            {formations?.[selectedFormation]?.positions.map((dancerPosition) => {
+               let end = formations?.[selectedFormation + 1]?.positions?.find(
                   (dancerPosition2) => dancerPosition2.id === dancerPosition.id
                )?.position;
                if (!end) return <></>;
@@ -37,7 +36,7 @@ export const PathEditor: React.FC<{
                   let controlPointStart = dancerPosition.controlPointStart;
                   let controlPointEnd = dancerPosition.controlPointEnd;
                   let startCoords = dancerPosition.position;
-                  let endCoords = formations?.[(isPlaying ? currentFormationIndex : selectedFormation) + 1]?.positions?.find(
+                  let endCoords = formations?.[selectedFormation + 1]?.positions?.find(
                      (dancerPosition2) => dancerPosition2.id === dancerPosition.id
                   )?.position;
                   if (!endCoords) return <></>;
