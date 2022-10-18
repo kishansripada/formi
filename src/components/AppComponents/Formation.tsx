@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { Resizable } from "react-resizable";
 import { dancer, dancerPosition, formation } from "../../types/types";
 import { PIXELS_PER_SECOND } from "../../types/types";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+// import { useSortable } from "@dnd-kit/sortable";
+// import { CSS } from "@dnd-kit/utilities";
 
 export const Formation: React.FC<{
    formation: formation;

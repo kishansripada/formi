@@ -34,8 +34,8 @@ const Header = dynamic<{
    setDanceName: Function;
    setSession: Function;
    soundCloudTrackId: string | null;
-   setShowPreviousFormation: Function;
-   showPreviousFormation: boolean;
+   // setShowPreviousFormation: Function;
+   // showPreviousFormation: boolean;
    viewAllPaths: boolean;
    setViewAllPaths: Function;
 }>(() => import("../../components/AppComponents/Header").then((mod) => mod.Header), {
@@ -93,8 +93,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    const [danceName, setDanceName] = useState<string>("Untitled Dance");
    const [saved, setSaved] = useState<boolean>(true);
    const [editingDancer, setEditingDancer] = useState<string | null>(null);
-   const [showPreviousFormation, setShowPreviousFormation] = useState<boolean>(false);
-   const [viewAllPaths, setViewAllPaths] = useState<boolean>(false);
+   const [viewAllPaths, setViewAllPaths] = useState<boolean>(true);
    const [mobile, setMobile] = useState<string | null>(null);
    const [noAccess, setNoAccess] = useState<boolean>(false);
 
@@ -112,9 +111,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
 
    useEffect(() => {
       if (window !== undefined) {
-         // console.log(JSON.parse(window.localStorage.getItem("viewAllPaths")));
          setViewAllPaths(JSON.parse(window.localStorage.getItem("viewAllPaths")));
-         setShowPreviousFormation(JSON.parse(window.localStorage.getItem("showPreviousFormation")));
       }
    }, []);
    useDidMountEffect(() => {
@@ -123,11 +120,11 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
       }
    }, [viewAllPaths]);
 
-   useDidMountEffect(() => {
-      if (window !== undefined) {
-         window.localStorage.setItem("showPreviousFormation", showPreviousFormation);
-      }
-   }, [showPreviousFormation]);
+   // useDidMountEffect(() => {
+   //    if (window !== undefined) {
+   //       window.localStorage.setItem("showPreviousFormation", showPreviousFormation);
+   //    }
+   // }, [showPreviousFormation]);
 
    useEffect(() => {
       setSelectedDancers([]);
@@ -353,8 +350,8 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                danceName={danceName}
                setSession={setSession}
                setDanceName={setDanceName}
-               showPreviousFormation={showPreviousFormation}
-               setShowPreviousFormation={setShowPreviousFormation}
+               // showPreviousFormation={showPreviousFormation}
+               // setShowPreviousFormation={setShowPreviousFormation}
                viewAllPaths={viewAllPaths}
                setViewAllPaths={setViewAllPaths}
             />
@@ -365,21 +362,18 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   {dancers
                      .slice()
                      .reverse()
-
                      .map((dancer, index) => (
-                        <>
-                           <Dancer
-                              isPlaying={isPlaying}
-                              formations={formations}
-                              selectedFormation={selectedFormation}
-                              setDancers={setDancers}
-                              {...dancer}
-                              key={index}
-                              dancers={dancers}
-                              setEditingDancer={setEditingDancer}
-                              setFormations={setFormations}
-                           />
-                        </>
+                        <Dancer
+                           isPlaying={isPlaying}
+                           formations={formations}
+                           selectedFormation={selectedFormation}
+                           setDancers={setDancers}
+                           {...dancer}
+                           key={dancer.id}
+                           dancers={dancers}
+                           setEditingDancer={setEditingDancer}
+                           setFormations={setFormations}
+                        />
                      ))}
                </div>
 
@@ -414,24 +408,37 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                         position={position}
                         selectedFormation={selectedFormation}
                         setDancers={setDancers}
-                        key={index}
+                        key={dancer.id}
                         dancer={dancer}
                         formations={formations}
                         setFormations={setFormations}
                      />
                   ))}
-                  {showPreviousFormation
+                  {viewAllPaths
                      ? dancers.map((dancer, index) => (
                           <DancerAliasShadow
                              currentFormationIndex={currentFormationIndex}
                              isPlaying={isPlaying}
                              selectedFormation={selectedFormation}
-                             key={index}
+                             key={dancer.id}
                              dancer={dancer}
                              formations={formations}
                           />
                        ))
-                     : null}
+                     : dancers
+                          .filter((dancer) => selectedDancers.includes(dancer.id))
+                          .map((dancer, index) => {
+                             return (
+                                <DancerAliasShadow
+                                   currentFormationIndex={currentFormationIndex}
+                                   isPlaying={isPlaying}
+                                   selectedFormation={selectedFormation}
+                                   key={dancer.id}
+                                   dancer={dancer}
+                                   formations={formations}
+                                />
+                             );
+                          })}
                </Canvas>
 
                <CurrentFormation

@@ -1,5 +1,6 @@
 import { dancer, dancerPosition, formation } from "../../types/types";
 import toast, { Toaster } from "react-hot-toast";
+import { useEffect } from "react";
 
 export const CurrentFormation: React.FC<{
    selectedFormation: number | null;
@@ -10,6 +11,15 @@ export const CurrentFormation: React.FC<{
    selectedDancers: string[];
    setSelectedDancers: Function;
 }> = ({ formations, selectedFormation, setFormations, dancers, setSelectedFormation, selectedDancers, setSelectedDancers }) => {
+   useEffect(() => {
+      if (selectedDancers.length === 1) {
+         const element = document.getElementById(`scroll-${selectedDancers[0]}`);
+
+         if (!element) return;
+         element.scrollIntoView({ behavior: "smooth" });
+      }
+   }, [selectedDancers]);
+
    let dancersWhoAreNotInNextFormation =
       selectedFormation !== null
          ? formations?.[selectedFormation]?.positions.filter((dancerPosition: dancerPosition) => {
@@ -134,7 +144,7 @@ export const CurrentFormation: React.FC<{
                      <hr />
                      {dancersInThisFormation?.map((dancer) => {
                         return (
-                           <div className="">
+                           <div className="" key={dancer.id} id={`scroll-${dancer.id}`}>
                               <li
                                  onClick={() => setSelectedDancers([dancer.id])}
                                  className={` py-2 rounded-md px-2 flex flex-row items-center my-1 cursor-pointer  ${

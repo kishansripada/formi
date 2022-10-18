@@ -23,6 +23,7 @@ export const PathEditor: React.FC<{
                   if (selectedDancers.includes(dancerPosition.id) || viewAllPaths) {
                      return (
                         <path
+                           key={dancerPosition.id}
                            d={`M ${coordsToPosition(dancerPosition.position.x, dancerPosition.position.y).left} ${
                               coordsToPosition(dancerPosition.position.x, dancerPosition.position.y).top
                            } L ${coordsToPosition(endCoords.x, endCoords.y).left} ${coordsToPosition(endCoords.x, endCoords.y).top}`}

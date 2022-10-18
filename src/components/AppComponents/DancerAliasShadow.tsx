@@ -17,9 +17,7 @@ export const DancerAliasShadow: React.FC<{
    let currentCoords;
    if (isPlaying) return;
    if (selectedFormation === null) return;
-   currentCoords = formations[isPlaying ? currentFormationIndex + 1 : selectedFormation - 1]?.positions.find(
-      (dancerx: dancerPosition) => dancerx.id === dancer.id
-   )?.position;
+   currentCoords = formations[selectedFormation - 1]?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id)?.position;
 
    if (!currentCoords) return;
    let { left, top } = coordsToPosition(currentCoords.x, currentCoords.y);

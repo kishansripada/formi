@@ -1,14 +1,14 @@
 import { ReactEventHandler } from "react";
 import { Formation } from "./Formation";
-import { DndContext, closestCenter, DragOverlay } from "@dnd-kit/core";
-import { SortableContext } from "@dnd-kit/sortable";
+// import { DndContext, closestCenter, DragOverlay } from "@dnd-kit/core";
+// import { SortableContext } from "@dnd-kit/sortable";
 
 import { useCallback, useEffect, useState } from "react";
 import { dancer, dancerPosition, formation } from "../../types/types";
 import { Layer } from "./Layer";
 import cursor from "../../../public/cursor.svg";
 import { PIXELS_PER_SECOND } from "../../types/types";
-import { horizontalListSortingStrategy } from "@dnd-kit/sortable";
+// import { horizontalListSortingStrategy } from "@dnd-kit/sortable";
 
 export const Layers: React.FC<{
    formations: formation[];

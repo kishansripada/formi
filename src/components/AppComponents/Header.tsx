@@ -14,8 +14,8 @@ export const Header: React.FC<{
    setDanceName: Function;
    setSession: Function;
    soundCloudTrackId: string | null;
-   setShowPreviousFormation: Function;
-   showPreviousFormation: boolean;
+   // setShowPreviousFormation: Function;
+   // showPreviousFormation: boolean;
    viewAllPaths: boolean;
    setViewAllPaths: Function;
    changeSoundCloudIsOpen: boolean;
@@ -28,8 +28,8 @@ export const Header: React.FC<{
    setDanceName,
    setSession,
    soundCloudTrackId,
-   showPreviousFormation,
-   setShowPreviousFormation,
+   // showPreviousFormation,
+   // setShowPreviousFormation,
    viewAllPaths,
    setViewAllPaths,
    changeSoundCloudIsOpen,
@@ -76,20 +76,6 @@ export const Header: React.FC<{
                   tutorial
                </a>
             </p>
-            <div className="flex flex-col items-center justify-center">
-               <label className="inline-flex relative items-center cursor-pointer">
-                  <input
-                     checked={showPreviousFormation}
-                     type="checkbox"
-                     id="checked-toggle"
-                     className="sr-only peer"
-                     onChange={() => setShowPreviousFormation((value: boolean) => !value)}
-                  />
-                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
-               </label>
-
-               <p className="text-sm font-medium text-gray-900 dark:text-gray-300">show previous formation</p>
-            </div>
 
             <div className="flex flex-col items-center justify-center">
                <label className="inline-flex relative items-center cursor-pointer">
@@ -100,9 +86,9 @@ export const Header: React.FC<{
                      className="sr-only peer"
                      onChange={() => setViewAllPaths((value: boolean) => !value)}
                   />
-                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
+                  <div className="w-11 h-6 bg-gray-200 rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
                </label>
-               <p className="text-sm font-medium text-gray-900 dark:text-gray-300">view all paths</p>
+               <p className="text-sm font-medium text-gray-900 ">view all paths</p>
             </div>
 
             <div className=" flex flex-row items-center">
@@ -110,43 +96,6 @@ export const Header: React.FC<{
                   <button onClick={() => setChangeSoundCloudIsOpen((state) => !state)} className="bg-black text-white px-2 py-1 rounded-md ml-auto  ">
                      change track
                   </button>
-
-                  {/* {changeSoundCloudIsOpen ? (
-                     <div className="w-[200px]  absolute bg-white border-[1px] border-gray-300 rounded-xl right-[175px] top-16 px-3 py-3 z-50">
-                        <div className="flex flex-row"></div>
-                        <input
-                           placeholder="soundcloud URL"
-                           value={newSoundCloudUrl}
-                           onChange={(e) => setNewSoundCloudUrl(e.target.value)}
-                           type="text"
-                           className="border-gray-500 border-2 rounded-md  px-2 w-full focus:outline-pink-600"
-                        />
-                        <button
-                           className="bg-orange-600 py-1 px-1 w-full mt-2 rounded-md text-white hover:bg-orange-700"
-                           onClick={async () => {
-                              fetch(`/api/getSoundCloudTrackId?url=${newSoundCloudUrl}`)
-                                 .then((r) => r.json())
-                                 .then((r) => {
-                                    if (r.trackId === soundCloudTrackId) {
-                                       toast("thats the same track silly");
-                                       return;
-                                    }
-                                    toast.success("track switched!");
-                                    // console.log(r.trackId);
-                                    setSoundCloudTrackId(r.trackId);
-                                    setChangeSoundCloudIsOpen(false);
-                                 })
-                                 .catch((r) => {
-                                    toast.error("invalid SoundCloud url");
-                                 });
-                           }}
-                        >
-                           go
-                        </button>
-                     </div>
-                  ) : (
-                     <></>
-                  )} */}
                </div>
 
                <Link href="/mydances">
