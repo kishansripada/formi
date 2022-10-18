@@ -23,7 +23,7 @@ export const NewDancer: React.FC<{ setDancers: Function }> = ({ setDancers }) =>
    return (
       <>
          <div
-            className="flex flex-row items-center h-16 rounded-xl bg-white shrink-0"
+            className="flex flex-row items-center h-[55px] rounded-xl bg-white shrink-0"
             style={{
                opacity: 1,
             }}

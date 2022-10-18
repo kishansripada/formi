@@ -55,25 +55,24 @@ export const Dancer: React.FC<{
 
    return (
       <>
-         <div className={`flex flex-row items-center  border-black  rounded-xl mb-1 min-h-[64px] bg-white`} data-type={"newDancer"}>
+         <div className={`flex flex-row items-center  border-black  rounded-xl mb-1 min-h-[55px] bg-white`} data-type={"newDancer"}>
             <>
                <div
                   draggable
                   data-type={"newDancer"}
-                  onClick={addDancerToStage}
                   style={{
                      transform: "translate(0, 0)",
                   }}
-                  className={`min-w-[56px] min-h-[56px] ml-2 rounded-full grid place-items-center cursor-pointer  ${
+                  className={`min-w-[48px] min-h-[48px] ml-2 rounded-full grid place-items-center cursor-pointer  ${
                      canBeAddedToStage && !isPlaying ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" : "bg-black"
                   } `}
                >
                   {instagramUsername ? (
-                     <div className="w-[51px] h-[51px] bg-white rounded-full grid place-items-center" data-type={"newDancer"}>
+                     <div className="w-[46px] h-[46px] bg-white rounded-full grid place-items-center" data-type={"newDancer"}>
                         <img className="w-[48px]  h-[48px] rounded-full " src={instagramUsername} alt="" data-type={"newDancer"} />
                      </div>
                   ) : (
-                     <div className="bg-white rounded-full w-12 h-12 grid place-items-center" data-type={"newDancer"}>
+                     <div className="bg-white rounded-full w-[41px] h-[41px] grid place-items-center" data-type={"newDancer"}>
                         <p className="font-bold" data-type={"newDancer"}>
                            {initials}
                         </p>

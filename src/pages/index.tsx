@@ -6,7 +6,8 @@ import { useEffect } from "react";
 // import { Header } from "../components/NonAppComponents/Header";
 // import demo from "../../public/demo.mp4";
 import toast, { Toaster } from "react-hot-toast";
-
+import logo from "../../public/logo.svg";
+import Image from "next/image";
 import { useScrollYPosition } from "react-use-scroll-position";
 import { formation } from "../types/types";
 import { homeFormation } from "../../public/formationForHome";
@@ -131,35 +132,28 @@ const home = () => {
       <>
          <nav className="flex flex-row justify-between mt-5 text-gray-500 px-[10%]">
             <Head>
-               <title> Naach — Animate and Automate Your Dance Formations.</title>
+               <title>Naach — The Ultimate Choreography Formation Tool.</title>
 
-               <meta name="description" content="automate, animate and visualize your dance formations synced to music" />
+               <meta
+                  name="description"
+                  content="Easily visualize your formations synced to music. Naach is the ultimate choreographer formation tool."
+               />
                <meta name="keywords" content="dance, choreography, desi, formations" />
                <meta name="twitter:card" content="summary" />
-               <meta name="twitter:title" content="Naach — Expression Through Movement." />
+               <meta name="twitter:title" content="Naach — The Ultimate Choreography Formation Tool" />
                <meta name="twitter:image" content="https://i.imgur.com/pWxufBF.png" />
                <meta property="og:type" content="song" />
-               <meta property="og:title" content="Naach — Expression Through Movement." />
-               <meta property="og:description" content="automate, animate and visualize your dance formations synced to music" />
+               <meta property="og:title" content="Naach — The Ultimate Choreography Formation Tool" />
+               <meta
+                  property="og:description"
+                  content="Easily visualize your formations synced to music. Naach is the ultimate choreographer formation tool."
+               />
                <meta property="og:image" content="https://i.imgur.com/pWxufBF.png" />
 
-               <meta property="og:site_name" content="Naach — Expression Through Movement." />
+               <meta property="og:site_name" content="Naach — The Ultimate Choreography Formation Tool." />
             </Head>
             <div></div>
-            <ul className="flex flex-col items-center child:mx-3 justify-center child:ease-in-out child:duration-300 text-sm leading-tight displ invisible lg:visible">
-               <p> hey there 👋, we just launched. keep in mind we're still in beta 🫤.</p>
-               <p>
-                  {" "}
-                  watch a{" "}
-                  <a className="text-pink-600" target="_blank" href="https://www.youtube.com/watch?v=1dj8L5tUAjU">
-                     tutorial
-                  </a>{" "}
-                  to learn more
-               </p>
-               {/* <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md  ">about</button>
-               <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md">try it</button>
-               <button className="hover:bg-slate-100 hover:text-pink-500 px-2 py-1 rounded-md">pricing</button> */}
-            </ul>
+            <ul className="flex flex-col items-center child:mx-3 justify-center child:ease-in-out child:duration-300 text-sm leading-tight displ invisible lg:visible"></ul>
             <Link href={"/login"} className="z-50">
                <button className="bg-pink-500 hover:bg-pink-600 px-4 py-1 rounded-md text-white">get started</button>
             </Link>
@@ -167,9 +161,8 @@ const home = () => {
 
          <h1 className="text-5xl mt-[-6px] flex flex-row items-center pointer-events-none ">
             <div className="h-[2px] bg-black w-[10%]"></div>
-            <div className="flex flex-row items-end mx-5  rounded-xl bg-white relative top-[-30px]">
-               <p className="text-[35px] lg:text-5xl">naach</p>
-               <span className="text-sm ml-3"> beta</span>
+            <div className="flex flex-row items-end mx-5  rounded-xl bg-white relative ">
+               <Image className="scale-[5] select-none pointer-events-none" src={logo} width={200} height={60} />
             </div>
 
             <div className="h-[2px] bg-black w-full"></div>
@@ -181,7 +174,14 @@ const home = () => {
             <span className=" rotate-3 inline-block text-blue-600 bg-blue-200 py-1 px-3 rounded-xl"> dancers.</span>
          </h1>
 
-         <h1
+         <div className="flex flex-col items-center w-full justify-center ">
+            <Link href={"/141/edit"} className="z-50">
+               <button className="bg-pink-500 hover:bg-pink-600 px-4 py-1 rounded-md text-white mt-12 text-xl">view a demo</button>
+            </Link>
+            <img src="https://i.imgur.com/NBKSDEC.png" className="w-2/3 mt-16" alt="" />
+         </div>
+
+         {/* <h1
             className="text-5xl lg:text-7xl font-space fixed text-center pointer-events-none"
             style={{
                left: "50%",
@@ -191,7 +191,7 @@ const home = () => {
             }}
          >
             bring your formations to life
-         </h1>
+         </h1> */}
 
          {/* <h1
             className="text-7xl font-space fixed text-center text-orange-600 ml-auto mr-auto"
@@ -205,8 +205,8 @@ const home = () => {
          >
             synced to SoundCloud
          </h1> */}
-
-         {/* riya */}
+         {/* 
+     
          <div
             className={`w-[50px] h-[50px] fixed rounded-full grid place-items-center  z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 pointer-events-none`}
             style={{
@@ -222,7 +222,7 @@ const home = () => {
             />
          </div>
 
-         {/* aadi */}
+       
          <div
             className={`w-[50px] h-[50px] fixed rounded-full grid place-items-center  z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 pointer-events-none`}
             style={{
@@ -238,7 +238,7 @@ const home = () => {
             />
          </div>
 
-         {/* nandan */}
+
          <div
             className={`w-[50px] h-[50px] fixed rounded-full grid place-items-center  z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 pointer-events-none`}
             style={{
@@ -254,7 +254,7 @@ const home = () => {
             />
          </div>
 
-         {/* sasha */}
+
          <div
             className={`w-[50px] h-[50px] fixed rounded-full grid place-items-center  z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 pointer-events-none`}
             style={{
@@ -270,7 +270,7 @@ const home = () => {
             />
          </div>
 
-         {/* gargi */}
+
          <div
             className={`w-[50px] h-[50px] fixed rounded-full grid place-items-center  z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 pointer-events-none`}
             style={{
@@ -286,7 +286,7 @@ const home = () => {
             />
          </div>
 
-         {/* ME */}
+     
          <div
             className={`w-[50px] h-[50px] fixed rounded-full grid place-items-center  z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 pointer-events-none`}
             style={{
@@ -297,10 +297,10 @@ const home = () => {
          >
             <img
                className="w-[45px] h-[45px] rounded-full"
-               src="https://media-exp1.licdn.com/dms/image/C4E03AQH0s4csZL4s5A/profile-displayphoto-shrink_400_400/0/1649337837468?e=1668038400&v=beta&t=MBFDE9ia0WqsVfDoDTTZ0Fx_2mLVsk08AdqDer97JuE"
+               src="https://media-exp1.licdn.com/dms/image/D5603AQHbW3XWBqUP4Q/profile-displayphoto-shrink_400_400/0/1665512089885?e=1671667200&v=beta&t=aOkl7p4gfGAm-f0vO6mrSUaw1gq9Zz6tqckGBF9DNJg"
                alt=""
             />
-         </div>
+         </div> */}
 
          <div className="h-[3000px]"></div>
 

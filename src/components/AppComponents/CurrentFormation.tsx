@@ -83,64 +83,65 @@ export const CurrentFormation: React.FC<{
                      defaultValue={formations[selectedFormation]?.name || ""}
                   />
                   <hr className="mx-[-12px] " />
+                  <li className=" mt-2 flex flex-row justify-between items-end font-semibold ">
+                     <p className="w-[45%] ">Name</p>
+                     <p className="w-[15%] ">Path</p>
+                     <div className="flex flex-col items-center w-[15%] ">
+                        <button className="peer ml-1">
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-4 h-4"
+                           >
+                              <path
+                                 strokeLinecap="round"
+                                 strokeLinejoin="round"
+                                 d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                              />
+                           </svg>
+                        </button>
+                        <p className=""> Enter from:</p>
+                        <div className="peer-hover:opacity-100 absolute right-[160px]  text-wrap w-96 z-50 py-2 px-3 text-sm  text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 pointer-events-none">
+                           <p>
+                              available to dancers who are not in the previous formation and must enter the stage during the previous formation's
+                              transition
+                           </p>
+
+                           <p>choose which side of the stage they enter from</p>
+                        </div>
+                     </div>
+                     <div className="flex flex-col items-center w-[15%]">
+                        <button className="peer ml-1">
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-4 h-4"
+                           >
+                              <path
+                                 strokeLinecap="round"
+                                 strokeLinejoin="round"
+                                 d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                              />
+                           </svg>
+                        </button>
+                        Exit to:
+                        <div className="peer-hover:opacity-100 absolute right-[50px]  w-96 z-50 py-2 px-3 text-sm  text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition duration-300 pointer-events-none">
+                           <div>
+                              available to dancers who are not in the next formation and must exit the stage during this formation's transition
+                           </div>
+
+                           <div>choose which side of the stage they exit towards</div>
+                        </div>
+                     </div>
+                  </li>
+
                   <ul className="mt-4 flex flex-col overflow-y-scroll pr-3 text-sm">
-                     <li className=" mt-2 flex flex-row justify-between font-semibold ">
-                        <p className="w-[45%] ">Name</p>
-                        <p className="w-[15%] ">Path</p>
-                        <div className="flex flex-col items-center w-[15%] ">
-                           <button className="peer ml-1">
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth={1.5}
-                                 stroke="currentColor"
-                                 className="w-4 h-4"
-                              >
-                                 <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                                 />
-                              </svg>
-                           </button>
-                           <p className=""> Enter from:</p>
-                           <div className="peer-hover:opacity-100 absolute right-[160px]  text-wrap w-96 z-50 py-2 px-3 text-sm  text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 pointer-events-none">
-                              <p>
-                                 available to dancers who are not in the previous formation and must enter the stage during the previous formation's
-                                 transition
-                              </p>
-
-                              <p>choose which side of the stage they enter from</p>
-                           </div>
-                        </div>
-                        <div className="flex flex-col items-center w-[15%]">
-                           <button className="peer ml-1">
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth={1.5}
-                                 stroke="currentColor"
-                                 className="w-4 h-4"
-                              >
-                                 <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                                 />
-                              </svg>
-                           </button>
-                           Exit to:
-                           <div className="peer-hover:opacity-100 absolute right-[50px]  w-96 z-50 py-2 px-3 text-sm  text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition duration-300 pointer-events-none">
-                              <div>
-                                 available to dancers who are not in the next formation and must exit the stage during this formation's transition
-                              </div>
-
-                              <div>choose which side of the stage they exit towards</div>
-                           </div>
-                        </div>
-                     </li>
                      <hr />
                      {dancersInThisFormation?.map((dancer) => {
                         return (
@@ -159,13 +160,60 @@ export const CurrentFormation: React.FC<{
                                     }
                                     onChange={(e) =>
                                        setFormations((formations: formation[]) => {
+                                          let start = formations[selectedFormation - 1]?.positions.find(
+                                             (dancerPosition) => dancerPosition.id === dancer.id
+                                          )?.position;
+
+                                          let end = formations[selectedFormation]?.positions.find(
+                                             (dancerPosition) => dancerPosition.id === dancer.id
+                                          )?.position;
+                                          if (!start || !end) return;
+
+                                          const getMidpoint = (x1, y1, x2, y2) => ({ x: (x1 + x2) / 2, y: (y1 + y2) / 2 });
+                                          const getSlope = (x1, y1, x2, y2) => {
+                                             if (x2 === x1) {
+                                                return undefined;
+                                             }
+                                             if (y2 === y1) {
+                                                return 0;
+                                             }
+                                             return (y2 - y1) / (x2 - x1);
+                                          };
+
+                                          let midpoint = getMidpoint(start.x, start.y, end.x, end.y);
+                                          let slope = getSlope(start.x, start.y, end.x, end.y);
+                                          let controlPointStart = (() => {
+                                             if (slope === undefined) {
+                                                return { x: midpoint.x + 0.25, y: midpoint.y };
+                                             }
+                                             if (slope === 0) {
+                                                return { x: midpoint.x, y: midpoint.y + 0.25 };
+                                             }
+                                             return { x: midpoint.x + slope / 4, y: midpoint.y + 1 / slope / 4 };
+                                          })();
+                                          let controlPointEnd = (() => {
+                                             if (slope === undefined) {
+                                                return { x: midpoint.x - 0.25, y: midpoint.y };
+                                             }
+                                             if (slope === 0) {
+                                                return { x: midpoint.x, y: midpoint.y - 0.25 };
+                                             }
+                                             return { x: midpoint.x - slope / 4, y: midpoint.y - 1 / slope / 4 };
+                                          })();
+
                                           return formations.map((formation, index: number) => {
                                              if (index === selectedFormation - 1) {
                                                 return {
                                                    ...formation,
+
                                                    positions: formation.positions.map((dancerPosition) => {
                                                       if (dancerPosition.id === dancer.id) {
-                                                         return { ...dancerPosition, transitionType: e.target.value };
+                                                         return {
+                                                            ...dancerPosition,
+                                                            transitionType: e.target.value,
+                                                            controlPointStart,
+                                                            controlPointEnd,
+                                                         };
                                                       }
                                                       return dancerPosition;
                                                    }),
@@ -175,7 +223,9 @@ export const CurrentFormation: React.FC<{
                                           });
                                        })
                                     }
-                                    className={`w-[20%] mx-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500   py-[5px]`}
+                                    className={`w-[20%] ${
+                                       selectedFormation === 0 ? "opacity-30 pointer-events-none" : ""
+                                    } mx-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500   py-[5px]`}
                                  >
                                     <option value="linear">linear</option>
                                     <option value="cubic">cubic</option>

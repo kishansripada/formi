@@ -18,7 +18,7 @@ export const PathEditor: React.FC<{
                )?.position;
                if (!endCoords) return <></>;
 
-               if (dancerPosition.transitionType === "linear") {
+               if (dancerPosition.transitionType === "linear" || !dancerPosition.transitionType) {
                   // either viewAllPaths is true or the dancer is selected to show their linear path
                   if (selectedDancers.includes(dancerPosition.id) || viewAllPaths) {
                      return (
@@ -84,7 +84,7 @@ export const PathEditor: React.FC<{
                                     data-type={"controlPointStart"}
                                     cx={coordsToPosition(controlPointStart.x, controlPointStart.y).left}
                                     cy={coordsToPosition(controlPointStart.x, controlPointStart.y).top}
-                                    r="5"
+                                    r="7"
                                     className="hover:fill-blue-500 pointer-events-auto z-[60]"
                                  />
                                  <circle
@@ -92,7 +92,7 @@ export const PathEditor: React.FC<{
                                     data-type={"controlPointEnd"}
                                     cx={coordsToPosition(controlPointEnd.x, controlPointEnd.y).left}
                                     cy={coordsToPosition(controlPointEnd.x, controlPointEnd.y).top}
-                                    r="5"
+                                    r="7"
                                     className="hover:fill-blue-500 pointer-events-auto z-[60]"
                                  />
                               </>

@@ -224,10 +224,6 @@ export const Canvas: React.FC<{
                                  x: dancerPosition.position.x + e.movementX / PIXELS_PER_SQUARE / zoom,
                                  y: dancerPosition.position.y - e.movementY / PIXELS_PER_SQUARE / zoom,
                               },
-                              // controlPointEnd: {
-                              //    x: dancerPosition.controlPointEnd.x + e.movementX / PIXELS_PER_SQUARE / zoom,
-                              //    y: dancerPosition.controlPointEnd.y - e.movementY / PIXELS_PER_SQUARE / zoom,
-                              // },
                            };
                         }
                         return dancerPosition;
@@ -238,7 +234,7 @@ export const Canvas: React.FC<{
                   return {
                      ...formation,
                      positions: formation.positions.map((dancerPosition) => {
-                        if (selectedDancers.includes(dancerPosition.id)) {
+                        if (selectedDancers.includes(dancerPosition.id) && dancerPosition.transitionType === "cubic") {
                            return {
                               ...dancerPosition,
                               controlPointEnd: {
@@ -357,7 +353,11 @@ export const Canvas: React.FC<{
       }
    };
    return (
-      <div className="flex flex-row  h-full cursor-default w-1/2 overflow-hidden mx-4 px-3 rounded-xl  " id="stage" onPointerUp={pointerUp}>
+      <div
+         className="flex flex-row  h-full cursor-default w-1/2 overflow-hidden mx-4 px-3 rounded-xl overscroll-contain "
+         id="stage"
+         onPointerUp={pointerUp}
+      >
          <div
             className="relative bg-white "
             onPointerDown={pointerDown}

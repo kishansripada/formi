@@ -339,7 +339,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
             />
          ) : null}
 
-         <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none">
+         <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none ">
             <Header
                changeSoundCloudIsOpen={changeSoundCloudIsOpen}
                setChangeSoundCloudIsOpen={setChangeSoundCloudIsOpen}
@@ -356,7 +356,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                setViewAllPaths={setViewAllPaths}
             />
             <div className="flex flex-row grow overflow-hidden">
-               <div className="flex flex-col w-[20%] relative overflow-y-scroll overflow-x-visible ml-3">
+               <div className="flex flex-col w-[15%] relative overflow-y-scroll overflow-x-visible ml-3 ">
                   <NewDancer setDancers={setDancers} />
 
                   {dancers
@@ -451,7 +451,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   selectedFormation={selectedFormation}
                />
             </div>
-            <div className="overflow-x-scroll min-h-[195px] bg-white ">
+            <div className="overflow-x-scroll min-h-[195px] bg-white overscroll-contain  ">
                {soundCloudTrackId && soundCloudTrackId.length < 15 ? (
                   <SoundCloudComponent
                      key={soundCloudTrackId}
