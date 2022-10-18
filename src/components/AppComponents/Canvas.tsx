@@ -14,11 +14,24 @@ export const Canvas: React.FC<{
    selectedDancers: string[];
    setSelectedDancers: Function;
    setSelectedFormation: Function;
-}> = ({ children, setDancers, dancers, setFormations, selectedFormation, formations, setSelectedDancers, selectedDancers, setSelectedFormation }) => {
+   setIsPlaying: Function;
+}> = ({
+   children,
+   setDancers,
+   dancers,
+   setFormations,
+   selectedFormation,
+   formations,
+   setSelectedDancers,
+   selectedDancers,
+   setSelectedFormation,
+   setIsPlaying,
+}) => {
    let [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
    const [shiftHeld, setShiftHeld] = useState(false);
    const [commandHeld, setCommandHeld] = useState(false);
    const [changingControlId, setChangingControlId] = useState<null | string>(null);
+   const [addingNewDancerId, setAddingNewDancerId] = useState<null | string>(null);
    const [changingControlType, setChangingControlType] = useState<"start" | "end" | null>(null);
    const [scrollOffset, setScrollOffset] = useState({ x: -442, y: -310 });
    const [zoom, setZoom] = useState(0.7);
@@ -28,15 +41,27 @@ export const Canvas: React.FC<{
    useEffect(() => {
       window.addEventListener("keydown", downHandler);
       window.addEventListener("keyup", upHandler);
+      window.addEventListener("pointerdown", pointerForNewDancer);
       return () => {
          window.removeEventListener("keydown", downHandler);
          window.removeEventListener("keyup", upHandler);
+         window.addEventListener("pointerdown", pointerForNewDancer);
       };
    }, [selectedFormation, commandHeld, selectedDancers, formations, copiedPositions]);
 
+   const pointerForNewDancer = (e) => {
+      if (e.target.dataset.type === "newDancer") {
+         setAddingNewDancerId(true);
+      }
+   };
+
    const downHandler = (e: any) => {
       if (e?.path?.[0]?.tagName === "INPUT") return;
-
+      console.log(e.key);
+      // if (e.key === " ") {
+      //    setIsPlaying((isPlaying: boolean) => !isPlaying);
+      //    e.preventDefault();
+      // }
       if (e.key === "Meta") {
          setCommandHeld(true);
       }
@@ -109,10 +134,11 @@ export const Canvas: React.FC<{
    }
 
    const handleDragMove = (e: any) => {
+      if (selectedFormation === null) return;
       if (changingControlId) {
          setFormations((formations: formation[]) => {
             return formations.map((formation, index: number) => {
-               if (index === selectedFormation) {
+               if (index === selectedFormation - 1) {
                   return {
                      ...formation,
                      positions: formation.positions.map((dancerPosition) => {
@@ -198,10 +224,10 @@ export const Canvas: React.FC<{
                               x: dancerPosition.position.x + e.movementX / PIXELS_PER_SQUARE / zoom,
                               y: dancerPosition.position.y - e.movementY / PIXELS_PER_SQUARE / zoom,
                            },
-                           controlPointStart: {
-                              x: dancerPosition.controlPointStart.x + e.movementX / PIXELS_PER_SQUARE / zoom,
-                              y: dancerPosition.controlPointStart.y - e.movementY / PIXELS_PER_SQUARE / zoom,
-                           },
+                           // controlPointEnd: {
+                           //    x: dancerPosition.controlPointEnd.x + e.movementX / PIXELS_PER_SQUARE / zoom,
+                           //    y: dancerPosition.controlPointEnd.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                           // },
                         };
                      }
                      return dancerPosition;
@@ -214,6 +240,8 @@ export const Canvas: React.FC<{
    };
 
    const pointerDown = (e: any) => {
+      console.log(e.target.dataset.type);
+
       if (e.target.dataset.type === "controlPointStart") {
          setChangingControlId(e.target.id);
          setChangingControlType("start");
@@ -319,7 +347,9 @@ export const Canvas: React.FC<{
             style={{
                top: scrollOffset.y,
                left: scrollOffset.x,
-               transform: `scale(${zoom})`,
+               // transformOrigin: `${scrollOffset.x}px ${scrollOffset.y}px`,
+               transform: `scale(${zoom}) `,
+               // translate(${scrollOffset.x}px, ${scrollOffset.y}px)
                height: GRID_HEIGHT * PIXELS_PER_SQUARE,
                width: GRID_WIDTH * PIXELS_PER_SQUARE,
             }}

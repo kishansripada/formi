@@ -25,22 +25,58 @@ export const Dancer: React.FC<{
       .join("")
       .toUpperCase();
 
+   const addDancerToStage = () => {
+      setFormations((formations: formation[]) => {
+         return formations.map((formation, i) => {
+            if (i === selectedFormation) {
+               return {
+                  ...formation,
+                  positions: [
+                     ...formation.positions,
+                     {
+                        id: id,
+                        position: {
+                           x: 0,
+                           y: 6,
+                        },
+                        exitStrategy: "closest",
+                        enterStrategy: "closest",
+                        transitionType: "linear",
+                        controlPointStart: { x: -6, y: 1 },
+                        controlPointEnd: { x: 6, y: 1 },
+                     },
+                  ],
+               };
+            }
+            return formation;
+         });
+      });
+   };
+
    return (
       <>
-         <div className={`flex flex-row items-center  border-black  rounded-xl mb-1 min-h-[64px] bg-white`}>
+         <div className={`flex flex-row items-center  border-black  rounded-xl mb-1 min-h-[64px] bg-white`} data-type={"newDancer"}>
             <>
                <div
-                  className={`min-w-[56px] min-h-[56px] ml-2 rounded-full grid place-items-center ${
+                  draggable
+                  data-type={"newDancer"}
+                  onClick={addDancerToStage}
+                  style={{
+                     transform: "translate(0, 0)",
+                  }}
+                  className={`min-w-[56px] min-h-[56px] ml-2 rounded-full grid place-items-center cursor-pointer  ${
                      canBeAddedToStage && !isPlaying ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" : "bg-black"
                   } `}
                >
                   {instagramUsername ? (
-                     <div className="w-[51px] h-[51px] bg-white rounded-full grid place-items-center">
-                        <img className="w-[48px]  h-[48px] rounded-full " src={instagramUsername} alt="" />
+                     <div className="w-[51px] h-[51px] bg-white rounded-full grid place-items-center" data-type={"newDancer"}>
+                        <img className="w-[48px]  h-[48px] rounded-full " src={instagramUsername} alt="" data-type={"newDancer"} />
                      </div>
                   ) : (
-                     <div className="bg-white rounded-full w-12 h-12 grid place-items-center">
-                        <p className="font-bold">{initials}</p>
+                     <div className="bg-white rounded-full w-12 h-12 grid place-items-center" data-type={"newDancer"}>
+                        <p className="font-bold" data-type={"newDancer"}>
+                           {initials}
+                        </p>
                      </div>
                   )}
                </div>
@@ -61,35 +97,7 @@ export const Dancer: React.FC<{
                }}
             />
             {canBeAddedToStage ? (
-               <button
-                  onClick={() => {
-                     setFormations((formations: formation[]) => {
-                        return formations.map((formation, i) => {
-                           if (i === selectedFormation) {
-                              return {
-                                 ...formation,
-                                 positions: [
-                                    ...formation.positions,
-                                    {
-                                       id: id,
-                                       position: {
-                                          x: 0,
-                                          y: 6,
-                                       },
-                                       exitStrategy: "closest",
-                                       enterStrategy: "closest",
-                                       transitionType: "linear",
-                                       controlPointStart: { x: -6, y: 1 },
-                                       controlPointEnd: { x: 6, y: 1 },
-                                    },
-                                 ],
-                              };
-                           }
-                           return formation;
-                        });
-                     });
-                  }}
-               >
+               <button onClick={addDancerToStage}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                   </svg>

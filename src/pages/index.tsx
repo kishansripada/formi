@@ -131,7 +131,7 @@ const home = () => {
       <>
          <nav className="flex flex-row justify-between mt-5 text-gray-500 px-[10%]">
             <Head>
-               <title> Naach — Expression Through Movement.</title>
+               <title> Naach — Animate and Automate Your Dance Formations.</title>
 
                <meta name="description" content="automate, animate and visualize your dance formations synced to music" />
                <meta name="keywords" content="dance, choreography, desi, formations" />

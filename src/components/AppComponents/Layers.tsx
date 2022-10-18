@@ -1,10 +1,14 @@
 import { ReactEventHandler } from "react";
 import { Formation } from "./Formation";
+import { DndContext, closestCenter, DragOverlay } from "@dnd-kit/core";
+import { SortableContext } from "@dnd-kit/sortable";
+
 import { useCallback, useEffect, useState } from "react";
 import { dancer, dancerPosition, formation } from "../../types/types";
 import { Layer } from "./Layer";
 import cursor from "../../../public/cursor.svg";
 import { PIXELS_PER_SECOND } from "../../types/types";
+import { horizontalListSortingStrategy } from "@dnd-kit/sortable";
 
 export const Layers: React.FC<{
    formations: formation[];
@@ -16,22 +20,46 @@ export const Layers: React.FC<{
    isPlaying: boolean;
    soundCloudTrackId: string;
 }> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration, position, isPlaying, soundCloudTrackId }) => {
+   const [activeId, setActiveId] = useState(null);
+
    const clickOutsideFormations = (e: any) => {
       if (e.target.id !== "outside") return;
       e.stopPropagation();
       setSelectedFormation(null);
    };
+   // function handleDragStart(event) {
+   //    console.log(event);
+   //    // const { active } = event;
 
+   //    // setActiveId(active.id);
+   // }
+
+   // function handleDragEnd(event) {
+   //    const { active, over } = event;
+
+   //    // if (active.id !== over.id) {
+   //    //    setItems((items) => {
+   //    //       const oldIndex = items.indexOf(active.id);
+   //    //       const newIndex = items.indexOf(over.id);
+
+   //    //       return arrayMove(items, oldIndex, newIndex);
+   //    //    });
+   //    // }
+
+   //    setActiveId(null);
+   // }
    return (
+      // <DndContext collisionDetection={closestCenter} onDragStart={handleDragStart}>
       <div
-         className="flex flex-col pt-2 pb-3 w-full  bg-white  max-h-[100px] justify-center "
+         className="flex flex-col pt-2 pb-3 w-full  bg-white  max-h-[100px] overflow-x-scroll  "
          style={{
             width: songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND : "100%",
-            marginLeft: soundCloudTrackId ? (soundCloudTrackId.length < 10 ? 122 : 135) : 115,
+            marginLeft: soundCloudTrackId ? (soundCloudTrackId.length < 15 ? 122 : 135) : 115,
          }}
          id="outside"
          onClick={clickOutsideFormations}
       >
+         {/* <SortableContext strategy={horizontalListSortingStrategy} items={formations.map((formation) => formation.id)}> */}
          <Layer
             songDuration={songDuration}
             setFormations={setFormations}
@@ -41,11 +69,13 @@ export const Layers: React.FC<{
             isPlaying={isPlaying}
             position={position}
          />
+         {/* </SortableContext> */}
+         <DragOverlay>{activeId ? <Formation id={activeId} /> : null}</DragOverlay>
          <svg
             style={{
                left: position !== null ? position * PIXELS_PER_SECOND : 0,
                top: -40,
-               transform: "translate(-50%, 0%) scale(1.5);",
+               transform: "translate(-50%, 0%) scale(2)",
             }}
             viewBox="0 0 3730 27444"
             fill="none"
@@ -60,5 +90,6 @@ export const Layers: React.FC<{
             />
          </svg>
       </div>
+      // </DndContext>
    );
 };

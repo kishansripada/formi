@@ -12,6 +12,13 @@ export const Formation: React.FC<{
    setFormations: Function;
    setSelectedFormation: Function;
 }> = ({ formation, amSelected, index, setFormations, setSelectedFormation }) => {
+   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: formation.id });
+
+   const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+   };
+
    const onResizeFormation = (event: any, { size }: { size: any }) => {
       setFormations((formations: formation[]) => {
          return formations.map((formation, i) => {
@@ -44,8 +51,12 @@ export const Formation: React.FC<{
    return (
       <>
          <div
-            className="rounded-md overflow-hidden h-[40px]  mx-[2px] box-border "
+            className="rounded-md overflow-hidden h-[40px]  mx-[2px] box-border  "
+            ref={setNodeRef}
+            {...attributes}
+            {...listeners}
             style={{
+               ...style,
                width: (formation.transition.durationSeconds + formation.durationSeconds) * PIXELS_PER_SECOND - 4,
                // subtract 4 to account for the mx-[2px]
             }}
@@ -61,11 +72,11 @@ export const Formation: React.FC<{
                   className="relative bg-pink-600 h-[23px]"
                >
                   <Resizable
-                     width={formation.durationSeconds * PIXELS_PER_SECOND - 2}
+                     width={formation.durationSeconds * PIXELS_PER_SECOND}
                      height={100}
                      onResize={onResizeFormation}
                      resizeHandles={["e"]}
-                     handle={<div className="bg-pink-200 h-full  w-[6px] cursor-ew-resize absolute right-[-5px] z-50 "></div>}
+                     handle={<div data-no-dnd="true" className="bg-pink-200 h-full  w-[6px] cursor-ew-resize absolute right-[-5px] z-50 "></div>}
                      minConstraints={[0, 100]}
                   >
                      <span></span>
@@ -79,11 +90,11 @@ export const Formation: React.FC<{
                   className=" relative bg-pink-600 h-[23px]"
                >
                   <Resizable
-                     width={formation.transition.durationSeconds * PIXELS_PER_SECOND - 2}
+                     width={formation.transition.durationSeconds * PIXELS_PER_SECOND}
                      onResize={onResizeTransition}
                      resizeHandles={["e"]}
                      height={100}
-                     handle={<div className="h-full bg-pink-200  absolute right-0  w-[6px] cursor-ew-resize"></div>}
+                     handle={<div data-no-dnd="true" className="h-full bg-pink-200  absolute right-0  w-[6px] cursor-ew-resize"></div>}
                   >
                      <span></span>
                   </Resizable>

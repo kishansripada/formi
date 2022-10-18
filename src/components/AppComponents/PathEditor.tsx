@@ -6,15 +6,17 @@ export const PathEditor: React.FC<{
    selectedDancers: string[];
    viewAllPaths: boolean;
    isPlaying: boolean;
-}> = ({ selectedFormation, formations, selectedDancers, viewAllPaths, isPlaying }) => {
+   currentFormationIndex: number | null;
+}> = ({ selectedFormation, formations, selectedDancers, viewAllPaths, isPlaying, currentFormationIndex }) => {
+   if (isPlaying) return;
    return (
       <>
          <svg className="absolute pointer-events-none w-full h-full z-10" xmlns="http://www.w3.org/2000/svg">
-            {formations?.[selectedFormation]?.positions.map((dancerPosition) => {
-               let end = formations?.[selectedFormation + 1]?.positions?.find(
+            {formations?.[selectedFormation - 1]?.positions.map((dancerPosition) => {
+               let endCoords = formations?.[selectedFormation]?.positions?.find(
                   (dancerPosition2) => dancerPosition2.id === dancerPosition.id
                )?.position;
-               if (!end) return <></>;
+               if (!endCoords) return <></>;
 
                if (dancerPosition.transitionType === "linear") {
                   // either viewAllPaths is true or the dancer is selected to show their linear path
@@ -23,7 +25,7 @@ export const PathEditor: React.FC<{
                         <path
                            d={`M ${coordsToPosition(dancerPosition.position.x, dancerPosition.position.y).left} ${
                               coordsToPosition(dancerPosition.position.x, dancerPosition.position.y).top
-                           } L ${coordsToPosition(end.x, end.y).left} ${coordsToPosition(end.x, end.y).top}`}
+                           } L ${coordsToPosition(endCoords.x, endCoords.y).left} ${coordsToPosition(endCoords.x, endCoords.y).top}`}
                            stroke="red"
                            fill="transparent"
                            strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
@@ -36,9 +38,10 @@ export const PathEditor: React.FC<{
                   let controlPointStart = dancerPosition.controlPointStart;
                   let controlPointEnd = dancerPosition.controlPointEnd;
                   let startCoords = dancerPosition.position;
-                  let endCoords = formations?.[selectedFormation + 1]?.positions?.find(
+                  let endCoords = formations?.[selectedFormation]?.positions?.find(
                      (dancerPosition2) => dancerPosition2.id === dancerPosition.id
                   )?.position;
+
                   if (!endCoords) return <></>;
                   if (selectedDancers.includes(dancerPosition.id) || viewAllPaths) {
                      return (

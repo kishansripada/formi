@@ -15,6 +15,7 @@ export type dancerPosition = {
 };
 
 export type formation = {
+   id: string;
    durationSeconds: number;
    positions: dancerPosition[];
    transition: {

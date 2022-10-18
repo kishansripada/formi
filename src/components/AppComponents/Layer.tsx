@@ -23,7 +23,7 @@ export const Layer: React.FC<{
    return (
       <>
          <div
-            className=" flex flex-row bg-white items-center border-y-black border-y-[1px] w-full"
+            className=" flex flex-row bg-white items-center border-y-black border-y-[1px] w-full my-1"
             style={
                {
                   // width: songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND : "100%",
@@ -83,6 +83,7 @@ export const Layer: React.FC<{
 
             {formations.map((formation, index) => (
                <div
+                  // draggable={true}
                   key={index}
                   id="formation"
                   onClick={(e: any) => {

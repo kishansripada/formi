@@ -50,9 +50,9 @@ export const DancerAlias: React.FC<{
             <div
                className={`w-[38px] h-[38px]  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  pointer-events-none cursor-default `}
                style={{
-                  transform: "translate(-50%, -50%)",
-                  left: myPosition.left,
-                  top: myPosition.top,
+                  transform: `translate(-50%, -50%) translate(${myPosition.left}px, ${myPosition.top}px)`,
+                  // left: myPosition.left,
+                  // top: myPosition.top,
                }}
             >
                {dancer.instagramUsername ? (

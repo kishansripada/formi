@@ -144,13 +144,13 @@ export const CurrentFormation: React.FC<{
                                  <p className="w-[40%]">{dancer.name}</p>
                                  <select
                                     value={
-                                       formations[selectedFormation]?.positions.find((dancerPosition) => dancer.id === dancerPosition.id)
+                                       formations[selectedFormation - 1]?.positions.find((dancerPosition) => dancer.id === dancerPosition.id)
                                           ?.transitionType
                                     }
                                     onChange={(e) =>
                                        setFormations((formations: formation[]) => {
                                           return formations.map((formation, index: number) => {
-                                             if (index === selectedFormation) {
+                                             if (index === selectedFormation - 1) {
                                                 return {
                                                    ...formation,
                                                    positions: formation.positions.map((dancerPosition) => {

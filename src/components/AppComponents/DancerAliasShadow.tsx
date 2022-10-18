@@ -5,7 +5,8 @@ export const DancerAliasShadow: React.FC<{
    selectedFormation: number | null;
    formations: formation[];
    isPlaying: boolean;
-}> = ({ dancer, formations, selectedFormation, isPlaying }) => {
+   currentFormationIndex: number | null;
+}> = ({ dancer, formations, selectedFormation, isPlaying, currentFormationIndex }) => {
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])
@@ -14,9 +15,9 @@ export const DancerAliasShadow: React.FC<{
       .toUpperCase();
 
    let currentCoords;
-
+   if (isPlaying) return;
    if (selectedFormation === null) return;
-   currentCoords = formations[selectedFormation === formations.length - 1 ? selectedFormation - 1 : selectedFormation + 1]?.positions.find(
+   currentCoords = formations[isPlaying ? currentFormationIndex + 1 : selectedFormation - 1]?.positions.find(
       (dancerx: dancerPosition) => dancerx.id === dancer.id
    )?.position;
 

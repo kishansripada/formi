@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
 import { PIXELS_PER_SECOND, formation } from "../../types/types";
+import { v4 as uuidv4 } from "uuid";
+
 export const SoundCloudComponent: React.FC<{
    setPosition: Function;
    setIsPlaying: Function;
@@ -80,6 +82,7 @@ export const SoundCloudComponent: React.FC<{
                            return [
                               ...formations,
                               {
+                                 id: uuidv4(),
                                  durationSeconds: 10,
                                  positions: [],
                                  transition: {
@@ -121,7 +124,6 @@ export const SoundCloudComponent: React.FC<{
                   allow="autoplay"
                   src={`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${soundCloudTrackId}&color=%23b42ae7&auto_play=false`}
                ></iframe>
-               er≈
             </div>
          </>
       );

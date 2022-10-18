@@ -4,6 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
 import { PIXELS_PER_SECOND, formation } from "../../types/types";
 import ReactPlayer from "react-player/file";
+import { v4 as uuidv4 } from "uuid";
 
 export const FileAudioPlayer: React.FC<{
    setPosition: Function;
@@ -14,7 +15,18 @@ export const FileAudioPlayer: React.FC<{
    setSoundCloudTrackId: Function;
    setSelectedFormation: Function;
    setFormations: Function;
-}> = ({ setPosition, setIsPlaying, setSongDuration, songDuration, soundCloudTrackId, setSoundCloudTrackId, setFormations, setSelectedFormation }) => {
+   isPlaying: boolean;
+}> = ({
+   setPosition,
+   setIsPlaying,
+   setSongDuration,
+   songDuration,
+   soundCloudTrackId,
+   setSoundCloudTrackId,
+   setFormations,
+   setSelectedFormation,
+   isPlaying,
+}) => {
    return (
       <>
          <div
@@ -24,7 +36,10 @@ export const FileAudioPlayer: React.FC<{
                transform: "translateX(-50%)",
             }}
          >
-            <button onClick={() => console.log("play file")} className=" rounded-b-md bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 mx-1 ">
+            <button
+               onClick={() => setIsPlaying((isPlaying) => !isPlaying)}
+               className=" rounded-b-md bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 mx-1 "
+            >
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                   <path
                      strokeLinecap="round"
@@ -54,6 +69,7 @@ export const FileAudioPlayer: React.FC<{
                         return [
                            ...formations,
                            {
+                              id: uuidv4(),
                               ...formations[formations.length - 1],
                               name: `Untitled ${formations.length + 1}`,
                               transition: {
@@ -73,6 +89,7 @@ export const FileAudioPlayer: React.FC<{
 
          <div className=" h-[95px]">
             <ReactPlayer
+               playing={isPlaying}
                width={songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND + 230 : "100%"}
                height="100%"
                controls={true}

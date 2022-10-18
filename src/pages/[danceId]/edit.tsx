@@ -97,10 +97,19 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    const [viewAllPaths, setViewAllPaths] = useState<boolean>(false);
    const [mobile, setMobile] = useState<string | null>(null);
    const [noAccess, setNoAccess] = useState<boolean>(false);
-   const isMounted = useRef(false);
+
    let [changeSoundCloudIsOpen, setChangeSoundCloudIsOpen] = useState(false);
 
    let currentFormationIndex = whereInFormation(formations, position).currentFormationIndex;
+
+   useEffect(() => {
+      if (!session) {
+         setNoAccess(true);
+      } else {
+         setNoAccess(false);
+      }
+   }, [session]);
+
    useEffect(() => {
       if (window !== undefined) {
          // console.log(JSON.parse(window.localStorage.getItem("viewAllPaths")));
@@ -255,9 +264,12 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    return (
       <>
          <Head>
-            <title> Naach — Expression Through Movement.</title>
+            <title> Naach — Visualize Your Choreography With Ease</title>
 
-            <meta name="description" content="automate, animate and visualize your dance formations synced to music" />
+            <meta
+               name="description"
+               content="Easily visualize your dance formations. Simply drag and drop dancers onto a canvas of your dancers and see what works best!"
+            />
             <meta name="keywords" content="dance, choreography, desi, formations" />
             <meta name="twitter:card" content="summary" />
             <meta name="twitter:title" content="Naach — Expression Through Movement." />
@@ -348,22 +360,27 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
             />
             <div className="flex flex-row grow overflow-hidden">
                <div className="flex flex-col w-[20%] relative overflow-y-scroll overflow-x-visible ml-3">
-                  {dancers.map((dancer, index) => (
-                     <>
-                        <Dancer
-                           isPlaying={isPlaying}
-                           formations={formations}
-                           selectedFormation={selectedFormation}
-                           setDancers={setDancers}
-                           {...dancer}
-                           key={index}
-                           dancers={dancers}
-                           setEditingDancer={setEditingDancer}
-                           setFormations={setFormations}
-                        />
-                     </>
-                  ))}
                   <NewDancer setDancers={setDancers} />
+
+                  {dancers
+                     .slice()
+                     .reverse()
+
+                     .map((dancer, index) => (
+                        <>
+                           <Dancer
+                              isPlaying={isPlaying}
+                              formations={formations}
+                              selectedFormation={selectedFormation}
+                              setDancers={setDancers}
+                              {...dancer}
+                              key={index}
+                              dancers={dancers}
+                              setEditingDancer={setEditingDancer}
+                              setFormations={setFormations}
+                           />
+                        </>
+                     ))}
                </div>
 
                <Canvas
@@ -375,9 +392,11 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   setFormations={setFormations}
                   selectedDancers={selectedDancers}
                   setSelectedDancers={setSelectedDancers}
+                  setIsPlaying={setIsPlaying}
                >
                   {selectedFormation !== null ? (
                      <PathEditor
+                        currentFormationIndex={currentFormationIndex}
                         formations={formations}
                         selectedFormation={selectedFormation}
                         selectedDancers={selectedDancers}
@@ -404,6 +423,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   {showPreviousFormation
                      ? dancers.map((dancer, index) => (
                           <DancerAliasShadow
+                             currentFormationIndex={currentFormationIndex}
                              isPlaying={isPlaying}
                              selectedFormation={selectedFormation}
                              key={index}
@@ -425,7 +445,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                />
             </div>
             <div className="overflow-x-scroll min-h-[195px] bg-white ">
-               {soundCloudTrackId && soundCloudTrackId.length < 10 ? (
+               {soundCloudTrackId && soundCloudTrackId.length < 15 ? (
                   <SoundCloudComponent
                      key={soundCloudTrackId}
                      setSelectedFormation={setSelectedFormation}
@@ -439,8 +459,9 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   />
                ) : null}
 
-               {soundCloudTrackId && soundCloudTrackId.length > 10 ? (
+               {soundCloudTrackId && soundCloudTrackId.length > 15 ? (
                   <FileAudioPlayer
+                     isPlaying={isPlaying}
                      setSelectedFormation={setSelectedFormation}
                      setFormations={setFormations}
                      soundCloudTrackId={soundCloudTrackId}
