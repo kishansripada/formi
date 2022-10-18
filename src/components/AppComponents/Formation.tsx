@@ -12,12 +12,12 @@ export const Formation: React.FC<{
    setFormations: Function;
    setSelectedFormation: Function;
 }> = ({ formation, amSelected, index, setFormations, setSelectedFormation }) => {
-   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: formation.id });
+   // const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: formation.id });
 
-   const style = {
-      transform: CSS.Transform.toString(transform),
-      transition,
-   };
+   // const style = {
+   //    transform: CSS.Transform.toString(transform),
+   //    transition,
+   // };
 
    const onResizeFormation = (event: any, { size }: { size: any }) => {
       setFormations((formations: formation[]) => {
@@ -51,12 +51,12 @@ export const Formation: React.FC<{
    return (
       <>
          <div
-            className="rounded-md overflow-hidden h-[40px]  mx-[2px] box-border  "
-            ref={setNodeRef}
-            {...attributes}
-            {...listeners}
+            className="rounded-md overflow-hidden h-[40px]  mx-[2px] box-border cursor-pointer  "
+            // ref={setNodeRef}
+            // {...attributes}
+            // {...listeners}
             style={{
-               ...style,
+               // ...style,
                width: (formation.transition.durationSeconds + formation.durationSeconds) * PIXELS_PER_SECOND - 4,
                // subtract 4 to account for the mx-[2px]
             }}

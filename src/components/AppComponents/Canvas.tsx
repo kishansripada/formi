@@ -210,33 +210,51 @@ export const Canvas: React.FC<{
             );
          }
       }
-      if (!draggingDancerId) return;
-      setFormations((formations: formation[]) => {
-         return formations.map((formation, index: number) => {
-            if (index === selectedFormation) {
-               return {
-                  ...formation,
-                  positions: formation.positions.map((dancerPosition) => {
-                     if (selectedDancers.includes(dancerPosition.id)) {
-                        return {
-                           ...dancerPosition,
-                           position: {
-                              x: dancerPosition.position.x + e.movementX / PIXELS_PER_SQUARE / zoom,
-                              y: dancerPosition.position.y - e.movementY / PIXELS_PER_SQUARE / zoom,
-                           },
-                           // controlPointEnd: {
-                           //    x: dancerPosition.controlPointEnd.x + e.movementX / PIXELS_PER_SQUARE / zoom,
-                           //    y: dancerPosition.controlPointEnd.y - e.movementY / PIXELS_PER_SQUARE / zoom,
-                           // },
-                        };
-                     }
-                     return dancerPosition;
-                  }),
-               };
-            }
-            return formation;
+      if (draggingDancerId) {
+         setFormations((formations: formation[]) => {
+            return formations.map((formation, index: number) => {
+               if (index === selectedFormation) {
+                  return {
+                     ...formation,
+                     positions: formation.positions.map((dancerPosition) => {
+                        if (selectedDancers.includes(dancerPosition.id)) {
+                           return {
+                              ...dancerPosition,
+                              position: {
+                                 x: dancerPosition.position.x + e.movementX / PIXELS_PER_SQUARE / zoom,
+                                 y: dancerPosition.position.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                              },
+                              // controlPointEnd: {
+                              //    x: dancerPosition.controlPointEnd.x + e.movementX / PIXELS_PER_SQUARE / zoom,
+                              //    y: dancerPosition.controlPointEnd.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                              // },
+                           };
+                        }
+                        return dancerPosition;
+                     }),
+                  };
+               }
+               if (index === selectedFormation - 1) {
+                  return {
+                     ...formation,
+                     positions: formation.positions.map((dancerPosition) => {
+                        if (selectedDancers.includes(dancerPosition.id)) {
+                           return {
+                              ...dancerPosition,
+                              controlPointEnd: {
+                                 x: dancerPosition.controlPointEnd.x + e.movementX / PIXELS_PER_SQUARE / zoom,
+                                 y: dancerPosition.controlPointEnd.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                              },
+                           };
+                        }
+                        return dancerPosition;
+                     }),
+                  };
+               }
+               return formation;
+            });
          });
-      });
+      }
    };
 
    const pointerDown = (e: any) => {

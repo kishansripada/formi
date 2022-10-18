@@ -77,16 +77,24 @@ export const SoundCloudComponent: React.FC<{
                <button
                   onClick={() => {
                      setFormations((formations: formation[]) => {
+                        let totalFormationLength = formations
+                           .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
+                           .reduce((a, b) => a + b, 0);
+                        let roomLeft = songDuration / 1000 - totalFormationLength;
+
+                        if (roomLeft < 3) {
+                           toast.error("there's not enough room!");
+                           return formations;
+                        }
                         if (!formations.length) {
                            setSelectedFormation(formations.length);
                            return [
                               ...formations,
                               {
-                                 id: uuidv4(),
-                                 durationSeconds: 10,
+                                 durationSeconds: roomLeft > 15 ? 10 : roomLeft / 2,
                                  positions: [],
                                  transition: {
-                                    durationSeconds: 5,
+                                    durationSeconds: roomLeft > 15 ? 5 : roomLeft / 2,
                                  },
                                  name: `Untitled ${formations.length + 1}`,
                               },
@@ -96,12 +104,13 @@ export const SoundCloudComponent: React.FC<{
                            return [
                               ...formations,
                               {
+                                 id: uuidv4(),
                                  ...formations[formations.length - 1],
                                  name: `Untitled ${formations.length + 1}`,
                                  transition: {
-                                    durationSeconds: 5,
+                                    durationSeconds: roomLeft > 15 ? 10 : roomLeft / 2,
                                  },
-                                 durationSeconds: 10,
+                                 durationSeconds: roomLeft > 15 ? 5 : roomLeft / 2,
                               },
                            ];
                         }

@@ -70,7 +70,7 @@ export const Layers: React.FC<{
             position={position}
          />
          {/* </SortableContext> */}
-         <DragOverlay>{activeId ? <Formation id={activeId} /> : null}</DragOverlay>
+         {/* <DragOverlay>{activeId ? <Formation id={activeId} /> : null}</DragOverlay> */}
          <svg
             style={{
                left: position !== null ? position * PIXELS_PER_SECOND : 0,
