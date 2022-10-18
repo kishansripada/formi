@@ -11,7 +11,7 @@ const Login = ({ session, setSession }: { session: Session; setSession: Function
 
    useEffect(() => {
       if (router.isReady) {
-         console.log(session);
+         // console.log(session);
          if (session) {
             router.push("/mydances");
          }

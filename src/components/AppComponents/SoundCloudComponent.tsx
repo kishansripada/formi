@@ -19,10 +19,10 @@ export const SoundCloudComponent: React.FC<{
       const [newUrl, setNewUrl] = useState("");
       const [player, setPlayer] = useState(null);
 
-      console.log("SoundCloudComponent rerendered");
+      // console.log("SoundCloudComponent rerendered");
 
       function handleLoad() {
-         console.log("handling load");
+         // console.log("handling load");
 
          let SC = (window as any).SC;
          var widgetIframe = document.getElementById("iframe");

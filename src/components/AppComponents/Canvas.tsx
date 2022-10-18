@@ -57,7 +57,7 @@ export const Canvas: React.FC<{
 
    const downHandler = (e: any) => {
       if (e?.path?.[0]?.tagName === "INPUT") return;
-      console.log(e.key);
+      // console.log(e.key);
       // if (e.key === " ") {
       //    setIsPlaying((isPlaying: boolean) => !isPlaying);
       //    e.preventDefault();
@@ -254,7 +254,7 @@ export const Canvas: React.FC<{
    };
 
    const pointerDown = (e: any) => {
-      console.log(e.target.dataset.type);
+      // console.log(e.target.dataset.type);
 
       if (e.target.dataset.type === "controlPointStart") {
          setChangingControlId(e.target.id);

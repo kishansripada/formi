@@ -138,7 +138,7 @@ export const ChooseAudioSource: React.FC<{
                                  error: <b>Could not upload file.</b>,
                               }
                            );
-                           console.log(data);
+                           // console.log(data);
                            if (data) {
                               setSoundCloudTrackId(`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/${data?.Key}`);
                               setChangeSoundCloudIsOpen(false);
