@@ -55,6 +55,7 @@ export const Formation: React.FC<{
             // ref={setNodeRef}
             // {...attributes}
             // {...listeners}
+            //
             style={{
                // ...style,
                width: (formation.transition.durationSeconds + formation.durationSeconds) * PIXELS_PER_SECOND - 4,
