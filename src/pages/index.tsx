@@ -176,7 +176,7 @@ const home = () => {
 
          <div className="flex flex-col items-center w-full justify-center ">
             <Link href={"/141/edit"} className="z-50">
-               <button className="bg-pink-500 hover:bg-pink-600 px-4 py-1 rounded-md text-white mt-12 text-xl">view a demo</button>
+               <button className="bg-pink-500 hover:bg-pink-600 px-4 py-1 rounded-md text-white mt-12 text-xl hidden lg:block">view a demo</button>
             </Link>
             <img src="https://i.imgur.com/NBKSDEC.png" className="w-2/3 mt-16" alt="" />
          </div>

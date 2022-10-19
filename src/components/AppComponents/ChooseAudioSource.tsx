@@ -156,6 +156,7 @@ export const ChooseAudioSource: React.FC<{
                            onClick={() => {
                               setSoundCloudTrackId("257461521");
                               toast.success("using example track");
+                              setChangeSoundCloudIsOpen(false);
                            }}
                            className="text-pink-600"
                         >
