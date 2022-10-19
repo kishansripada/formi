@@ -168,7 +168,7 @@ const home = () => {
             <div className="h-[2px] bg-black w-full"></div>
          </h1>
 
-         <h1 className="text-5xl leading-[70px] lg:text-7xl font-space font-semibold text-center px-[15%]  lg:leading-[90px] relative  mt-24 z-10">
+         <h1 className="text-3xl leading-[50px] lg:text-7xl font-space font-semibold text-center px-[15%]  lg:leading-[90px] relative  mt-24 z-10">
             taking care of the
             <span className=" -rotate-3 inline-block text-pink-600 bg-pink-200 py-1 px-3 rounded-xl">formations,</span> so you can focus on your
             <span className=" rotate-3 inline-block text-blue-600 bg-blue-200 py-1 px-3 rounded-xl"> dancers.</span>
@@ -302,7 +302,7 @@ const home = () => {
             />
          </div> */}
 
-         <div className="h-[3000px]"></div>
+         {/* <div className="h-[3000px]"></div> */}
 
          <div
             className="h-screen w-[2000px] fixed top-0 left-0  pointer-events-none -z-50"
