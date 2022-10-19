@@ -13,7 +13,8 @@ export const Layer: React.FC<{
    songDuration: number | null;
    position: number | null;
    isPlaying: boolean;
-}> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration, position, isPlaying }) => {
+   viewOnly: boolean;
+}> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration, position, isPlaying, viewOnly }) => {
    const clickOutsideFormations = (e: any) => {
       if (e.target.id !== "outside") return;
       e.stopPropagation();

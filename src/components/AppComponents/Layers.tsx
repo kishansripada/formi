@@ -19,7 +19,8 @@ export const Layers: React.FC<{
    position: number | null;
    isPlaying: boolean;
    soundCloudTrackId: string;
-}> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration, position, isPlaying, soundCloudTrackId }) => {
+   viewOnly: boolean;
+}> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration, position, isPlaying, soundCloudTrackId, viewOnly }) => {
    const [activeId, setActiveId] = useState(null);
 
    const clickOutsideFormations = (e: any) => {
@@ -61,6 +62,7 @@ export const Layers: React.FC<{
       >
          {/* <SortableContext strategy={horizontalListSortingStrategy} items={formations.map((formation) => formation.id)}> */}
          <Layer
+            viewOnly={viewOnly}
             songDuration={songDuration}
             setFormations={setFormations}
             formations={formations}

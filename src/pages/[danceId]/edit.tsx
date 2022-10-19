@@ -15,6 +15,7 @@ import { PathEditor } from "../../components/AppComponents/PathEditor";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import Head from "next/head";
+import { Share } from "../../components/AppComponents/Share";
 import { ChooseAudioSource } from "../../components/AppComponents/ChooseAudioSource";
 // use effect, but not on initial render
 const useDidMountEffect = (func, deps) => {
@@ -38,6 +39,7 @@ const Header = dynamic<{
    // showPreviousFormation: boolean;
    viewAllPaths: boolean;
    setViewAllPaths: Function;
+   setShareIsOpen: Function;
 }>(() => import("../../components/AppComponents/Header").then((mod) => mod.Header), {
    ssr: false,
 });
@@ -99,15 +101,18 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
 
    let [changeSoundCloudIsOpen, setChangeSoundCloudIsOpen] = useState(false);
 
+   let [shareIsOpen, setShareIsOpen] = useState(false);
+   let [viewOnly, setViewOnly] = useState(false);
+
    let currentFormationIndex = whereInFormation(formations, position).currentFormationIndex;
 
-   useEffect(() => {
-      if (!session) {
-         setNoAccess(true);
-      } else {
-         setNoAccess(false);
-      }
-   }, [session]);
+   // useEffect(() => {
+   //    if (!session) {
+   //       setNoAccess(true);
+   //    } else {
+   //       setNoAccess(false);
+   //    }
+   // }, [session]);
 
    useEffect(() => {
       if (window !== undefined) {
@@ -339,8 +344,11 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
             />
          ) : null}
 
+         {/* {shareIsOpen ? <Share setShareIsOpen={setShareIsOpen} /> : null} */}
+
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none ">
             <Header
+               setShareIsOpen={setShareIsOpen}
                changeSoundCloudIsOpen={changeSoundCloudIsOpen}
                setChangeSoundCloudIsOpen={setChangeSoundCloudIsOpen}
                soundCloudTrackId={soundCloudTrackId}
@@ -350,32 +358,33 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                danceName={danceName}
                setSession={setSession}
                setDanceName={setDanceName}
-               // showPreviousFormation={showPreviousFormation}
-               // setShowPreviousFormation={setShowPreviousFormation}
                viewAllPaths={viewAllPaths}
                setViewAllPaths={setViewAllPaths}
+               viewOnly={viewOnly}
             />
             <div className="flex flex-row grow overflow-hidden">
-               <div className="flex flex-col w-[15%] relative overflow-y-scroll overflow-x-visible ml-3 ">
-                  <NewDancer setDancers={setDancers} />
+               {!viewOnly ? (
+                  <div className="flex flex-col w-[30%] relative overflow-y-scroll overflow-x-visible ml-3 ">
+                     <NewDancer setDancers={setDancers} />
 
-                  {dancers
-                     .slice()
-                     .reverse()
-                     .map((dancer, index) => (
-                        <Dancer
-                           isPlaying={isPlaying}
-                           formations={formations}
-                           selectedFormation={selectedFormation}
-                           setDancers={setDancers}
-                           {...dancer}
-                           key={dancer.id}
-                           dancers={dancers}
-                           setEditingDancer={setEditingDancer}
-                           setFormations={setFormations}
-                        />
-                     ))}
-               </div>
+                     {dancers
+                        .slice()
+                        .reverse()
+                        .map((dancer, index) => (
+                           <Dancer
+                              isPlaying={isPlaying}
+                              formations={formations}
+                              selectedFormation={selectedFormation}
+                              setDancers={setDancers}
+                              {...dancer}
+                              key={dancer.id}
+                              dancers={dancers}
+                              setEditingDancer={setEditingDancer}
+                              setFormations={setFormations}
+                           />
+                        ))}
+                  </div>
+               ) : null}
 
                <Canvas
                   setSelectedFormation={setSelectedFormation}
@@ -440,16 +449,17 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                              );
                           })}
                </Canvas>
-
-               <CurrentFormation
-                  selectedDancers={selectedDancers}
-                  setSelectedDancers={setSelectedDancers}
-                  setSelectedFormation={setSelectedFormation}
-                  dancers={dancers}
-                  setFormations={setFormations}
-                  formations={formations}
-                  selectedFormation={selectedFormation}
-               />
+               {!viewOnly ? (
+                  <CurrentFormation
+                     selectedDancers={selectedDancers}
+                     setSelectedDancers={setSelectedDancers}
+                     setSelectedFormation={setSelectedFormation}
+                     dancers={dancers}
+                     setFormations={setFormations}
+                     formations={formations}
+                     selectedFormation={selectedFormation}
+                  />
+               ) : null}
             </div>
             <div className="overflow-x-scroll min-h-[195px] bg-white overscroll-contain  ">
                {soundCloudTrackId && soundCloudTrackId.length < 15 ? (
@@ -481,6 +491,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                ) : null}
 
                <Layers
+                  viewOnly={viewOnly}
                   songDuration={songDuration}
                   setFormations={setFormations}
                   formations={formations}

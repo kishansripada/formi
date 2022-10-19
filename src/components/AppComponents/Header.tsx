@@ -20,6 +20,8 @@ export const Header: React.FC<{
    setViewAllPaths: Function;
    changeSoundCloudIsOpen: boolean;
    setChangeSoundCloudIsOpen: Function;
+   setShareIsOpen: Function;
+   viewOnly: boolean;
 }> = ({
    saved,
    setSoundCloudTrackId,
@@ -34,9 +36,10 @@ export const Header: React.FC<{
    setViewAllPaths,
    changeSoundCloudIsOpen,
    setChangeSoundCloudIsOpen,
+   setShareIsOpen,
+   viewOnly,
 }) => {
    const router = useRouter();
-   const wrapperRef = useRef(null);
 
    return (
       <>
@@ -69,34 +72,44 @@ export const Header: React.FC<{
                <hr />
             </div>
 
-            <p>
-               stuck? watch a
-               <a className="text-pink-600" href="https://www.youtube.com/watch?v=1dj8L5tUAjU" target={"_blank"}>
-                  {" "}
-                  tutorial
-               </a>
-            </p>
-
-            <div className="flex flex-col items-center justify-center">
-               <label className="inline-flex relative items-center cursor-pointer">
-                  <input
-                     checked={viewAllPaths}
-                     type="checkbox"
-                     id="checked-toggle"
-                     className="sr-only peer"
-                     onChange={() => setViewAllPaths((value: boolean) => !value)}
-                  />
-                  <div className="w-11 h-6 bg-gray-200 rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
-               </label>
-               <p className="text-sm font-medium text-gray-900 ">view all paths</p>
-            </div>
-
-            <div className=" flex flex-row items-center">
-               <div ref={wrapperRef}>
-                  <button onClick={() => setChangeSoundCloudIsOpen((state) => !state)} className="bg-black text-white px-2 py-1 rounded-md ml-auto  ">
-                     change track
-                  </button>
-               </div>
+            <div className=" flex flex-row items-center ml-auto">
+               <p className="mx-5">
+                  stuck? watch a
+                  <a className="text-pink-600" href="https://www.youtube.com/watch?v=1dj8L5tUAjU" target={"_blank"}>
+                     {" "}
+                     tutorial
+                  </a>
+               </p>
+               {!viewOnly ? (
+                  <>
+                     <div className="flex flex-col items-center justify-center mx-5">
+                        <label className="inline-flex relative items-center cursor-pointer">
+                           <input
+                              checked={viewAllPaths}
+                              type="checkbox"
+                              id="checked-toggle"
+                              className="sr-only peer"
+                              onChange={() => setViewAllPaths((value: boolean) => !value)}
+                           />
+                           <div className="w-11 h-6 bg-gray-200 rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
+                        </label>
+                        <p className="text-sm font-medium text-gray-900 ">view all paths</p>
+                     </div>
+                     <button
+                        onClick={() => setChangeSoundCloudIsOpen((state: boolean) => !state)}
+                        className="bg-black text-white px-2 py-1 rounded-md ml-2  "
+                     >
+                        change track
+                     </button>
+                     {/* 
+                     <button
+                        onClick={() => setShareIsOpen((state: boolean) => !state)}
+                        className="bg-blue-600 text-white px-2 py-1 rounded-md  ml-2 "
+                     >
+                        share
+                     </button> */}
+                  </>
+               ) : null}
 
                <Link href="/mydances">
                   {session ? <a className="ml-2 bg-pink-600 hover:bg-pink-700 px-2 py-1 rounded-md text-white">my dances</a> : <></>}
