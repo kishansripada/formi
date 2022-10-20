@@ -40,10 +40,10 @@ const home = () => {
             }
          `}</style>
          <div
-            className="fixed top-0 -z-50 h-full w-full body"
+            className="fixed top-0 -z-50 h-full w-full body bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
             style={{
-               backgroundImage:
-                  "linear-gradient(\n  115deg,\n  hsl(298deg 100% 51%) 0%,\n  hsl(286deg 90% 59%) 40%,\n  hsl(266deg 74% 69%) 65%,\n  hsl(219deg 51% 76%) 100%\n)",
+               // backgroundImage:
+               // "linear-gradient(\n  115deg,\n  hsl(298deg 100% 51%) 0%,\n  hsl(286deg 90% 59%) 40%,\n  hsl(266deg 74% 69%) 65%,\n  hsl(219deg 51% 76%) 100%\n)",
                // background: "linear-gradient(to right top, #ff34bf, #e93ac2, #d33ec3, #bc42c3, #a545c1)",
                backgroundSize: "400% 400%",
                height: "100vh",
@@ -90,7 +90,7 @@ const home = () => {
             <div className="flex flex-row items-end mx-5  rounded-xl  relative "></div>
          </h1> */}
          <div className="flex flex-row justify-center mt-16">
-            <Image className=" select-none pointer-events-none" src="/logoWhite.png" width={300} height={100} />
+            <img className=" select-none pointer-events-none w-48 lg:w-72" src="/logoWhite.png" />
          </div>
          <h1 className="text-3xl text-white leading-[50px] lg:text-7xl font-space font-semibold text-center px-[15%]  lg:leading-[90px] relative  mt-24 z-10">
             let's reinvent the choreographer toolkit 🕺
@@ -102,7 +102,7 @@ const home = () => {
                   launch a playground
                </button>
             </Link>
-            <img src="https://i.imgur.com/NBKSDEC.png" className="w-2/3 mt-16 rounded-xl" alt="" />
+            <img src="https://i.imgur.com/NBKSDEC.png" className="w-[90%] lg:w-2/3 mt-16 rounded-xl" alt="" />
          </div>
 
          <div
@@ -110,7 +110,7 @@ const home = () => {
             style={{
                left: "50%",
                transform: " translateX(-50%)",
-               opacity: linear(200, 400, 0, 0.4, scrollY),
+               opacity: 0.2,
             }}
          >
             <div className="flex flex-row h-full justify-between">

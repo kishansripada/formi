@@ -46,10 +46,10 @@ const Login = ({ session, setSession }: { session: Session; setSession: Function
             }
          `}</style>
          <div
-            className="fixed top-0 -z-50 h-full w-full body"
+            className="fixed top-0 -z-50 h-full w-full body bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
             style={{
-               backgroundImage:
-                  "linear-gradient(\n  115deg,\n  hsl(298deg 100% 51%) 0%,\n  hsl(286deg 90% 59%) 40%,\n  hsl(266deg 74% 69%) 65%,\n  hsl(219deg 51% 76%) 100%\n)",
+               // backgroundImage:
+               // "linear-gradient(\n  115deg,\n  hsl(298deg 100% 51%) 0%,\n  hsl(286deg 90% 59%) 40%,\n  hsl(266deg 74% 69%) 65%,\n  hsl(219deg 51% 76%) 100%\n)",
                // background: "linear-gradient(to right top, #ff34bf, #e93ac2, #d33ec3, #bc42c3, #a545c1)",
                backgroundSize: "400% 400%",
                height: "100vh",
