@@ -101,8 +101,8 @@ export const Header: React.FC<{
                      >
                         change track
                      </button>
-                     {/* 
-                     <button
+
+                     {/* <button
                         onClick={() => setShareIsOpen((state: boolean) => !state)}
                         className="bg-blue-600 text-white px-2 py-1 rounded-md  ml-2 "
                      >

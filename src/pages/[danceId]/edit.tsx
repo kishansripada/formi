@@ -27,6 +27,24 @@ const useDidMountEffect = (func, deps) => {
    }, deps);
 };
 
+// <script>
+//   window.fbAsyncInit = function() {
+//     FB.init({
+//       appId      : '609340487348279',
+//       xfbml      : true,
+//       version    : 'v15.0'
+//     });
+//     FB.AppEvents.logPageView();
+//   };
+
+//   (function(d, s, id){
+//      var js, fjs = d.getElementsByTagName(s)[0];
+//      if (d.getElementById(id)) {return;}
+//      js = d.createElement(s); js.id = id;
+//      js.src = "https://connect.facebook.net/en_US/sdk.js";
+//      fjs.parentNode.insertBefore(js, fjs);
+//    }(document, 'script', 'facebook-jssdk'));
+// </script>
 const Header = dynamic<{
    saved: boolean;
    setSoundCloudTrackId: Function;
@@ -98,11 +116,11 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    const [viewAllPaths, setViewAllPaths] = useState<boolean>(true);
    const [mobile, setMobile] = useState<string | null>(null);
    const [noAccess, setNoAccess] = useState<boolean>(false);
-
    let [changeSoundCloudIsOpen, setChangeSoundCloudIsOpen] = useState(false);
-
    let [shareIsOpen, setShareIsOpen] = useState(false);
    let [viewOnly, setViewOnly] = useState(false);
+   let [shareSettings, setShareSettings] = useState({});
+   let [anyoneCanView, setAnyoneCanView] = useState(false);
 
    let currentFormationIndex = whereInFormation(formations, position).currentFormationIndex;
 
@@ -124,12 +142,6 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
          window.localStorage.setItem("viewAllPaths", viewAllPaths);
       }
    }, [viewAllPaths]);
-
-   // useDidMountEffect(() => {
-   //    if (window !== undefined) {
-   //       window.localStorage.setItem("showPreviousFormation", showPreviousFormation);
-   //    }
-   // }, [showPreviousFormation]);
 
    useEffect(() => {
       setSelectedDancers([]);
@@ -171,11 +183,26 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   setNoAccess(true);
                   return;
                }
-               let { soundCloudId, dancers, formations, name } = r?.data?.[0];
+               console.log(r.data[0]);
+               let { soundCloudId, dancers, formations, name, sharesettings, anyonecanview, user } = r?.data?.[0];
+
                setSoundCloudTrackId(soundCloudId);
                setFormations(formations);
                setDancers(dancers);
                setDanceName(name);
+               // setShareSettings(sharesettings);
+               // setAnyoneCanView(anyonecanview);
+
+               // if (user === session?.user?.id) {
+               //    setViewOnly(false);
+               //    return;
+               // }
+               // if (anyonecanview) {
+               //    setViewOnly(true);
+               // }
+               // if (sharesettings[session?.user?.email] === "view") {
+               //    setViewOnly(true);
+               // }
             });
       }
    }, [router.query.danceId]);
@@ -344,7 +371,15 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
             />
          ) : null}
 
-         {/* {shareIsOpen ? <Share setShareIsOpen={setShareIsOpen} /> : null} */}
+         {/* {shareIsOpen ? (
+            <Share
+               shareSettings={shareSettings}
+               setShareSettings={setShareSettings}
+               anyoneCanView={anyoneCanView}
+               setAnyoneCanView={setAnyoneCanView}
+               setShareIsOpen={setShareIsOpen}
+            />
+         ) : null} */}
 
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none ">
             <Header

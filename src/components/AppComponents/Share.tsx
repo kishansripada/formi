@@ -5,32 +5,23 @@ import { memo } from "react";
 import { PIXELS_PER_SECOND, formation } from "../../types/types";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
+import e from "express";
 
 export const Share: React.FC<{
    setShareIsOpen: Function;
-}> = ({ setShareIsOpen }) => {
-   let [users, setUsers] = useState({});
-
+   setShareSettings: Function;
+   shareSettings: any;
+   anyoneCanView: boolean;
+   setAnyoneCanView: Function;
+}> = ({ setShareIsOpen, shareSettings, setShareSettings, anyoneCanView, setAnyoneCanView }) => {
    let [newUserEmail, setNewUserEmail] = useState("");
    const router = useRouter();
-   useEffect(() => {
-      if (router.query.danceId) {
-         supabase
-            .from("dances")
-            .select("sharesettings")
-            .eq("id", router.query.danceId)
-            .then((r) => {
-               if (!r?.data?.length) {
-                  return;
-               }
-               let { sharesettings } = r?.data?.[0];
 
-               setUsers(sharesettings);
-            });
-      }
-   }, [router.query.id]);
    const updateShareSettings = async () => {
-      const { data, error } = await supabase.from("dances").update({ sharesettings: users, last_edited: new Date() }).eq("id", router.query.danceId);
+      const { data, error } = await supabase
+         .from("dances")
+         .update({ sharesettings: shareSettings, last_edited: new Date() })
+         .eq("id", router.query.danceId);
       if (data) {
          toast.success("share settings updated");
       }
@@ -70,13 +61,16 @@ export const Share: React.FC<{
                               type="checkbox"
                               id="checked-toggle"
                               className="sr-only peer"
+                              checked={anyoneCanView}
                               onChange={async (e) => {
                                  const { data, error } = await supabase
                                     .from("dances")
-                                    .update({ anyonecanview: e.target.checked, last_edited: new Date() })
+                                    .update({ anyonecanview: !anyoneCanView, last_edited: new Date() })
                                     .eq("id", router.query.danceId);
+
                                  if (data) {
                                     toast.success("share settings updated");
+                                    setAnyoneCanView(data[0].anyonecanview);
                                  }
                                  if (error) {
                                     toast.error("there was an error saving your settings");
@@ -99,11 +93,11 @@ export const Share: React.FC<{
                               toast.error("please enter a valid email");
                               return;
                            }
-                           if (users[e.target.value]) {
+                           if (shareSettings[e.target.value]) {
                               toast.error("you've already entered that email");
                               return;
                            }
-                           setUsers((users) => {
+                           setShareSettings((users) => {
                               return { ...users, [e.target.value]: "view" };
                            });
                            setNewUserEmail("");
@@ -114,7 +108,7 @@ export const Share: React.FC<{
                      placeholder="enter an email"
                   />
                   <div className="mt-5">
-                     {Object.entries(users).map((user) => {
+                     {Object.entries(shareSettings).map((user) => {
                         return (
                            <div className="flex flex-row mb-3" key={user[0]}>
                               <p>{user[0]}</p>
@@ -123,7 +117,7 @@ export const Share: React.FC<{
                                  name=""
                                  id=""
                                  onChange={(e) => {
-                                    setUsers((users) => {
+                                    setShareSettings((users) => {
                                        return { ...users, [user[0]]: e.target.value };
                                     });
                                  }}
@@ -133,7 +127,7 @@ export const Share: React.FC<{
                               </select>
                               <button
                                  onClick={() => {
-                                    setUsers((users) => {
+                                    setShareSettings((users) => {
                                        //    let test = users;
                                        //    delete test[user[0]];
                                        //    return test;
@@ -159,7 +153,7 @@ export const Share: React.FC<{
                         );
                      })}
                   </div>
-                  {users.length ? <p className="text-gray-500 text-xs italic">collaborative editing is coming soon</p> : null}
+                  {Object.entries(shareSettings).length ? <p className="text-gray-500 text-xs italic">collaborative editing is coming soon</p> : null}
                   <button className="ml-auto bg-blue-600 text-white px-3 mt-5 py-1 rounded-md" onClick={updateShareSettings}>
                      save
                   </button>

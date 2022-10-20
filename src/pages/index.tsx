@@ -26,6 +26,37 @@ const home = () => {
 
    return (
       <>
+         <style jsx>{`
+            @keyframes gradient {
+               0% {
+                  background-position: 0% 50%;
+               }
+               50% {
+                  background-position: 100% 50%;
+               }
+               100% {
+                  background-position: 0% 50%;
+               }
+            }
+         `}</style>
+         <div
+            className="fixed top-0 -z-50 h-full w-full body"
+            style={{
+               backgroundImage:
+                  "linear-gradient(\n  115deg,\n  hsl(298deg 100% 51%) 0%,\n  hsl(286deg 90% 59%) 40%,\n  hsl(266deg 74% 69%) 65%,\n  hsl(219deg 51% 76%) 100%\n)",
+               // background: "linear-gradient(to right top, #ff34bf, #e93ac2, #d33ec3, #bc42c3, #a545c1)",
+               backgroundSize: "400% 400%",
+               height: "100vh",
+               animation: "gradient 15s ease infinite",
+            }}
+         ></div>
+         <div
+            className="fixed top-0 -z-40 h-full w-full body bg-black opacity-50"
+            style={{
+               backgroundSize: "400% 400%",
+               height: "100vh",
+            }}
+         ></div>
          <nav className="flex flex-row justify-between mt-5 text-gray-500 px-[10%]">
             <Head>
                <title>Naach — The Ultimate Choreography Formation Tool.</title>
@@ -51,30 +82,27 @@ const home = () => {
             <div></div>
             <ul className="flex flex-col items-center child:mx-3 justify-center child:ease-in-out child:duration-300 text-sm leading-tight displ invisible lg:visible"></ul>
             <Link href={"/login"} className="z-50">
-               <button className="bg-pink-500 hover:bg-pink-600 px-4 py-1 rounded-md text-white">get started</button>
+               <button className="bg-pink-500 hover:bg-pink-600 px-4 py-1 rounded-md text-white">login / signup</button>
             </Link>
          </nav>
 
-         <h1 className="text-5xl mt-[-6px] flex flex-row items-center pointer-events-none ">
-            <div className="h-[2px] bg-black w-[10%]"></div>
-            <div className="flex flex-row items-end mx-5  rounded-xl bg-white relative ">
-               <Image className="scale-[5] select-none pointer-events-none" src={logo} width={200} height={60} />
-            </div>
-
-            <div className="h-[2px] bg-black w-full"></div>
-         </h1>
-
-         <h1 className="text-3xl leading-[50px] lg:text-7xl font-space font-semibold text-center px-[15%]  lg:leading-[90px] relative  mt-24 z-10">
-            taking care of the
-            <span className=" -rotate-3 inline-block text-pink-600 bg-pink-200 py-1 px-3 rounded-xl">formations,</span> so you can focus on your
-            <span className=" rotate-3 inline-block text-blue-600 bg-blue-200 py-1 px-3 rounded-xl"> dancers.</span>
+         {/* <h1 className="text-5xl mt-[-6px] flex flex-row items-center pointer-events-none ">
+            <div className="flex flex-row items-end mx-5  rounded-xl  relative "></div>
+         </h1> */}
+         <div className="flex flex-row justify-center mt-16">
+            <Image className=" select-none pointer-events-none" src="/logoWhite.png" width={300} height={100} />
+         </div>
+         <h1 className="text-3xl text-white leading-[50px] lg:text-7xl font-space font-semibold text-center px-[15%]  lg:leading-[90px] relative  mt-24 z-10">
+            let's reinvent the choreographer toolkit 🕺
          </h1>
 
          <div className="flex flex-col items-center w-full justify-center ">
             <Link href={"/141/edit"} className="z-50">
-               <button className="bg-pink-500 hover:bg-pink-600 px-4 py-1 rounded-md text-white mt-12 text-xl hidden lg:block">view a demo</button>
+               <button className="bg-pink-500 hover:bg-pink-600 px-4 py-1 rounded-md text-white mt-12 text-xl hidden lg:block">
+                  launch a playground
+               </button>
             </Link>
-            <img src="https://i.imgur.com/NBKSDEC.png" className="w-2/3 mt-16" alt="" />
+            <img src="https://i.imgur.com/NBKSDEC.png" className="w-2/3 mt-16 rounded-xl" alt="" />
          </div>
 
          <div
@@ -116,9 +144,3 @@ const home = () => {
    );
 };
 export default home;
-
-let test = {
-   anyoneCanView: false,
-   canView: [],
-   canEdit: [],
-};
