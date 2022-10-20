@@ -82,7 +82,7 @@ const home = () => {
             <div></div>
             <ul className="flex flex-col items-center child:mx-3 justify-center child:ease-in-out child:duration-300 text-sm leading-tight displ invisible lg:visible"></ul>
             <Link href={"/login"} className="z-50">
-               <button className="bg-pink-500 hover:bg-pink-600 px-4 py-1 rounded-md text-white">login / signup</button>
+               <button className="ring-2 ring-white px-4 py-1 rounded-md text-white hover:bg-white/20">login / signup</button>
             </Link>
          </nav>
 
@@ -93,12 +93,21 @@ const home = () => {
             <img className=" select-none pointer-events-none w-48 lg:w-72" src="/logoWhite.png" />
          </div>
          <h1 className="text-3xl text-white leading-[50px] lg:text-7xl font-space font-semibold text-center px-[15%]  lg:leading-[90px] relative  mt-24 z-10">
-            let's reinvent the choreographer toolkit 🕺
+            let's reinvent the choreographer{" "}
+            <span
+               style={{
+                  textDecorationColor: "red",
+                  textDecoration: "underline",
+               }}
+            >
+               toolkit
+            </span>{" "}
+            🕺
          </h1>
 
          <div className="flex flex-col items-center w-full justify-center ">
             <Link href={"/141/edit"} className="z-50">
-               <button className="bg-pink-500 hover:bg-pink-600 px-4 py-1 rounded-md text-white mt-12 text-xl hidden lg:block">
+               <button className="ring-2 ring-white hover:bg-white/20 px-4 py-1 rounded-md text-white mt-12 text-xl hidden lg:block">
                   launch a playground
                </button>
             </Link>
