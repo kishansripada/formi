@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { debounce, isEqual } from "lodash";
+import { debounce } from "lodash";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
@@ -27,37 +27,17 @@ const useDidMountEffect = (func, deps) => {
    }, deps);
 };
 
-// <script>
-//   window.fbAsyncInit = function() {
-//     FB.init({
-//       appId      : '609340487348279',
-//       xfbml      : true,
-//       version    : 'v15.0'
-//     });
-//     FB.AppEvents.logPageView();
-//   };
-
-//   (function(d, s, id){
-//      var js, fjs = d.getElementsByTagName(s)[0];
-//      if (d.getElementById(id)) {return;}
-//      js = d.createElement(s); js.id = id;
-//      js.src = "https://connect.facebook.net/en_US/sdk.js";
-//      fjs.parentNode.insertBefore(js, fjs);
-//    }(document, 'script', 'facebook-jssdk'));
-// </script>
 const Header = dynamic<{
    saved: boolean;
-   setSoundCloudTrackId: Function;
    session: any;
    danceName: string;
    setDanceName: Function;
    setSession: Function;
-   soundCloudTrackId: string | null;
-   // setShowPreviousFormation: Function;
-   // showPreviousFormation: boolean;
    viewAllPaths: boolean;
    setViewAllPaths: Function;
+   setChangeSoundCloudIsOpen: Function;
    setShareIsOpen: Function;
+   viewOnly: boolean;
 }>(() => import("../../components/AppComponents/Header").then((mod) => mod.Header), {
    ssr: false,
 });
@@ -124,14 +104,6 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
 
    let currentFormationIndex = whereInFormation(formations, position).currentFormationIndex;
 
-   // useEffect(() => {
-   //    if (!session) {
-   //       setNoAccess(true);
-   //    } else {
-   //       setNoAccess(false);
-   //    }
-   // }, [session]);
-
    useEffect(() => {
       if (window !== undefined) {
          setViewAllPaths(JSON.parse(window.localStorage.getItem("viewAllPaths")));
@@ -173,6 +145,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    };
 
    useEffect(() => {
+      let mySub;
       if (router.query.danceId) {
          supabase
             .from("dances")
@@ -190,21 +163,45 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                setFormations(formations);
                setDancers(dancers);
                setDanceName(name);
-               // setShareSettings(sharesettings);
-               // setAnyoneCanView(anyonecanview);
+               setShareSettings(sharesettings);
+               setAnyoneCanView(anyonecanview);
 
-               // if (user === session?.user?.id) {
-               //    setViewOnly(false);
-               //    return;
-               // }
-               // if (anyonecanview) {
-               //    setViewOnly(true);
-               // }
-               // if (sharesettings[session?.user?.email] === "view") {
-               //    setViewOnly(true);
-               // }
+               if (!session) {
+                  setViewOnly(true);
+                  return;
+               }
+               if (user === session?.user?.id) {
+                  setViewOnly(false);
+                  return;
+               }
+               if (anyonecanview) {
+                  setViewOnly(true);
+                  return;
+               }
+               if (sharesettings[session?.user?.email] === "view") {
+                  setViewOnly(true);
+                  return;
+               }
+               // setNoAccess(true);
             });
+         // mySub = supabase
+         //    .from(`dances:id=eq.${router.query.danceId}`)
+         //    // .eq("id", router.query.danceId)
+         //    .on("*", (r) => {
+         //       // console.log(r);
+         //       console.log(r.new);
+         //       let { soundCloudId, dancers, formations, name, sharesettings, anyonecanview, user } = r.new;
+
+         //       setSoundCloudTrackId(soundCloudId);
+         //       setFormations(formations);
+         //       setDancers(dancers);
+         //       setDanceName(name);
+         //    })
+         //    .subscribe();
       }
+      return () => {
+         // supabase.removeSubscription(mySub);
+      };
    }, [router.query.danceId]);
 
    /////////////////////////////
@@ -293,7 +290,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    return (
       <>
          <Head>
-            <title> Naach — Visualize Your Choreography With Ease</title>
+            <title>Naach: Online formation building software</title>
 
             <meta
                name="description"
@@ -371,7 +368,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
             />
          ) : null}
 
-         {/* {shareIsOpen ? (
+         {shareIsOpen ? (
             <Share
                shareSettings={shareSettings}
                setShareSettings={setShareSettings}
@@ -379,22 +376,19 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                setAnyoneCanView={setAnyoneCanView}
                setShareIsOpen={setShareIsOpen}
             />
-         ) : null} */}
+         ) : null}
 
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none ">
             <Header
-               setShareIsOpen={setShareIsOpen}
-               changeSoundCloudIsOpen={changeSoundCloudIsOpen}
-               setChangeSoundCloudIsOpen={setChangeSoundCloudIsOpen}
-               soundCloudTrackId={soundCloudTrackId}
                session={session}
                saved={saved}
-               setSoundCloudTrackId={setSoundCloudTrackId}
                danceName={danceName}
-               setSession={setSession}
                setDanceName={setDanceName}
+               setSession={setSession}
                viewAllPaths={viewAllPaths}
                setViewAllPaths={setViewAllPaths}
+               setChangeSoundCloudIsOpen={setChangeSoundCloudIsOpen}
+               setShareIsOpen={setShareIsOpen}
                viewOnly={viewOnly}
             />
             <div className="flex flex-row grow overflow-hidden">
@@ -422,6 +416,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                ) : null}
 
                <Canvas
+                  viewOnly={viewOnly}
                   setSelectedFormation={setSelectedFormation}
                   formations={formations}
                   selectedFormation={selectedFormation}
@@ -496,7 +491,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   />
                ) : null}
             </div>
-            <div className="overflow-x-scroll min-h-[195px] bg-white overscroll-contain  ">
+            <div className="overflow-x-scroll min-h-[170px] bg-white overscroll-contain  ">
                {soundCloudTrackId && soundCloudTrackId.length < 15 ? (
                   <SoundCloudComponent
                      key={soundCloudTrackId}
@@ -508,6 +503,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                      songDuration={songDuration}
                      setIsPlaying={setIsPlaying}
                      setPosition={setPosition}
+                     viewOnly={viewOnly}
                   />
                ) : null}
 
@@ -522,6 +518,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                      songDuration={songDuration}
                      setIsPlaying={setIsPlaying}
                      setPosition={setPosition}
+                     viewOnly={viewOnly}
                   ></FileAudioPlayer>
                ) : null}
 

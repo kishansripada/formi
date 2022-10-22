@@ -15,6 +15,7 @@ export const Canvas: React.FC<{
    setSelectedDancers: Function;
    setSelectedFormation: Function;
    setIsPlaying: Function;
+   viewOnly: boolean;
 }> = ({
    children,
    setDancers,
@@ -26,6 +27,7 @@ export const Canvas: React.FC<{
    selectedDancers,
    setSelectedFormation,
    setIsPlaying,
+   viewOnly,
 }) => {
    let [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
    const [shiftHeld, setShiftHeld] = useState(false);
@@ -356,11 +358,11 @@ export const Canvas: React.FC<{
       <div
          className="flex flex-row  h-full cursor-default w-full overflow-hidden mx-4 px-3 rounded-xl overscroll-contain "
          id="stage"
-         onPointerUp={pointerUp}
+         onPointerUp={!viewOnly ? pointerUp : null}
       >
          <div
             className="relative bg-white "
-            onPointerDown={pointerDown}
+            onPointerDown={!viewOnly ? pointerDown : null}
             onPointerMove={handleDragMove}
             style={{
                top: scrollOffset.y,

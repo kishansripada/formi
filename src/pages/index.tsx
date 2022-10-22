@@ -1,29 +1,6 @@
-// import { supabase } from "../utils/supabase";
-// import type { NextPage } from "next";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-// import { supabase } from "../utils/supabase";
-// import { Header } from "../components/NonAppComponents/Header";
-// import demo from "../../public/demo.mp4";
-import toast, { Toaster } from "react-hot-toast";
-import logo from "../../public/logo.svg";
-import Image from "next/image";
-import { useScrollYPosition } from "react-use-scroll-position";
-import { formation } from "../types/types";
-import { homeFormation } from "../../public/formationForHome";
 import Link from "next/link";
 import Head from "next/head";
 const home = () => {
-   let router = useRouter();
-
-   const linear = (iStart: number, iEnd: number, oStart: number, oEnd: number, i: number) => {
-      if (i < iStart) return oStart;
-      if (i > iEnd) return oEnd;
-      return ((i - iStart) / (iEnd - iStart)) * (oEnd - oStart) + oStart;
-   };
-
-   const scrollY = useScrollYPosition();
-
    return (
       <>
          <style jsx>{`
@@ -36,6 +13,18 @@ const home = () => {
                }
                100% {
                   background-position: 0% 50%;
+               }
+            }
+            @keyframes skew {
+               0% {
+                  transform: skew(15deg, 15deg);
+               }
+
+               50% {
+                  transform: skew(-15deg, -15deg);
+               }
+               100% {
+                  transform: skew(15deg, 15deg);
                }
             }
          `}</style>
@@ -51,7 +40,7 @@ const home = () => {
             }}
          ></div>
          <div
-            className="fixed top-0 -z-40 h-full w-full body bg-black opacity-50"
+            className="fixed top-0 -z-40 h-full w-full body bg-black opacity-60"
             style={{
                backgroundSize: "400% 400%",
                height: "100vh",
@@ -59,7 +48,7 @@ const home = () => {
          ></div>
          <nav className="flex flex-row justify-between mt-5 text-gray-500 px-[10%]">
             <Head>
-               <title>Naach — The Ultimate Choreography Formation Tool.</title>
+               <title>Naach: Online dance formation building software</title>
 
                <meta
                   name="description"
@@ -67,22 +56,22 @@ const home = () => {
                />
                <meta name="keywords" content="dance, choreography, desi, formations" />
                <meta name="twitter:card" content="summary" />
-               <meta name="twitter:title" content="Naach — The Ultimate Choreography Formation Tool" />
+               <meta name="twitter:title" content="Naach: Online dance formation building software" />
                <meta name="twitter:image" content="https://i.imgur.com/pWxufBF.png" />
                <meta property="og:type" content="song" />
-               <meta property="og:title" content="Naach — The Ultimate Choreography Formation Tool" />
+               <meta property="og:title" content="Naach: Online dance formation building software" />
                <meta
                   property="og:description"
                   content="Easily visualize your formations synced to music. Naach is the ultimate choreographer formation tool."
                />
                <meta property="og:image" content="https://i.imgur.com/pWxufBF.png" />
 
-               <meta property="og:site_name" content="Naach — The Ultimate Choreography Formation Tool." />
+               <meta property="og:site_name" content="Naach: Online dance formation building software" />
             </Head>
             <div></div>
             <ul className="flex flex-col items-center child:mx-3 justify-center child:ease-in-out child:duration-300 text-sm leading-tight displ invisible lg:visible"></ul>
             <Link href={"/login"} className="z-50">
-               <button className="ring-2 ring-white px-4 py-1 rounded-md text-white hover:bg-white/20">login / signup</button>
+               <button className="ring-2 ring-white px-4 py-1 rounded-md text-white hover:bg-white/20">login / signup 🚀</button>
             </Link>
          </nav>
 
@@ -100,26 +89,48 @@ const home = () => {
                   textDecoration: "underline",
                }}
             >
-               toolkit
+               toolkit.
             </span>{" "}
-            🕺
          </h1>
 
          <div className="flex flex-col items-center w-full justify-center ">
             <Link href={"/141/edit"} className="z-50">
                <button className="ring-2 ring-white hover:bg-white/20 px-4 py-1 rounded-md text-white mt-12 text-xl hidden lg:block">
-                  launch a playground
+                  open a playground 🛝
                </button>
             </Link>
             <img src="https://i.imgur.com/NBKSDEC.png" className="w-[90%] lg:w-2/3 mt-16 rounded-xl" alt="" />
          </div>
 
+         <div className="px-[10%] flex flex-col lg:flex-row text-center lg:text-left mt-36">
+            <div className="lg:w-1/2 py-[10%]">
+               <h1 className="text-2xl text-white leading-[50px] lg:text-5xl font-space font-semibold">
+                  visualize your formation transitions in time with your music 🎸
+               </h1>
+            </div>
+
+            <div className="lg:w-1/2">
+               <video src="/demo.mov" className="rounded-xl" autoPlay loop muted></video>
+            </div>
+         </div>
+         {/* 
+         <div className="px-[10%] flex flex-col lg:flex-row text-center lg:text-right mt-36">
+            <div className="lg:w-1/2">
+               <video src="/demo.mov" className="rounded-xl" autoPlay loop muted></video>
+            </div>
+            <div className="lg:w-1/2 py-[10%]">
+               <h1 className="text-3xl text-white leading-[50px] lg:text-6xl font-space font-semibold">unleash a new world of creativity</h1>
+               <p className="font-space  text-white mt-5"> </p>
+            </div>
+         </div> */}
+
          <div
-            className="h-screen w-[2000px] fixed top-0 left-0  pointer-events-none -z-50"
+            className="h-screen w-[2000px] fixed top-0 left-0  pointer-events-none -z-50 "
             style={{
-               left: "50%",
+               // left: "50%",
                transform: " translateX(-50%)",
-               opacity: 0.2,
+               opacity: 0.4,
+               animation: "skew 15s ease infinite",
             }}
          >
             <div className="flex flex-row h-full justify-between">
@@ -129,7 +140,6 @@ const home = () => {
                      className="h-full bg-gray-300"
                      style={{
                         width: i % 5 === 0 ? (1 / 1) * 2.5 : 1 / 1,
-                        // backgroundColor: i === 10 ? "black" : "rgb(209 213 219)",
                         zIndex: i === 10 ? 1 : 0,
                      }}
                   ></div>
@@ -142,7 +152,6 @@ const home = () => {
                      className=" w-full bg-gray-300"
                      style={{
                         height: i % 5 === 0 ? (1 / 1) * 2.5 : 1 / 1,
-                        // backgroundColor: i === 10 ? "black" : "rgb(209 213 219)",
                         zIndex: i === 10 ? 1 : 0,
                      }}
                   ></div>

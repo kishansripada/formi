@@ -8,38 +8,39 @@ import toast, { Toaster } from "react-hot-toast";
 
 export const Header: React.FC<{
    saved: boolean;
-   setSoundCloudTrackId: Function;
    session: any;
    danceName: string;
    setDanceName: Function;
    setSession: Function;
-   soundCloudTrackId: string | null;
-   // setShowPreviousFormation: Function;
-   // showPreviousFormation: boolean;
    viewAllPaths: boolean;
    setViewAllPaths: Function;
-   changeSoundCloudIsOpen: boolean;
    setChangeSoundCloudIsOpen: Function;
    setShareIsOpen: Function;
    viewOnly: boolean;
 }> = ({
    saved,
-   setSoundCloudTrackId,
    session,
    danceName,
    setDanceName,
    setSession,
-   soundCloudTrackId,
-   // showPreviousFormation,
-   // setShowPreviousFormation,
    viewAllPaths,
    setViewAllPaths,
-   changeSoundCloudIsOpen,
    setChangeSoundCloudIsOpen,
    setShareIsOpen,
    viewOnly,
 }) => {
    const router = useRouter();
+
+   let [profileIsOpen, setProfileIsOpen] = useState(false);
+   const initials = (name) => {
+      if (!name) return "";
+      return name
+         .split(" ")
+         .map((word) => word[0])
+         .slice(0, 3)
+         .join("")
+         .toUpperCase();
+   };
 
    return (
       <>
@@ -53,18 +54,30 @@ export const Header: React.FC<{
                      <input
                         value={danceName}
                         onChange={(e) => setDanceName(e.target.value)}
-                        className="h-6 text-xl px-1 focus:outline-pink-600 rounded-sm  ml-3  hover:outline-gray-400 focus:outline-2 hover:outline-2 focus:outline hover:outline "
+                        className={`h-6 text-xl px-1 focus:outline-pink-600 rounded-sm  ml-3  hover:outline-gray-400 focus:outline-2 hover:outline-2 focus:outline hover:outline ${
+                           viewOnly ? "pointer-events-none" : ""
+                        } `}
                      />
-                     {saved ? (
-                        <p className="ml-3 text-gray-500 flex flex-row items-center">saved</p>
+
+                     {!viewOnly ? (
+                        <>
+                           {saved ? (
+                              <p className="ml-3 text-gray-500 flex flex-row items-center">saved</p>
+                           ) : (
+                              <div className="flex flex-row items-center  ml-3">
+                                 <p className="text-gray-500">saving...</p>
+                              </div>
+                           )}
+                        </>
                      ) : (
-                        <div className="flex flex-row items-center  ml-3">
-                           <p className="text-gray-500">saving...</p>
-                        </div>
+                        <p className="text-gray-500">viewing only</p>
                      )}
                   </div>
-
-                  <p className="text-sm ml-4 ">Welcome back, {session?.user?.user_metadata?.full_name}</p>
+                  {session ? (
+                     <p className="text-sm ml-4 ">Welcome back, {session?.user?.user_metadata?.full_name}</p>
+                  ) : (
+                     <p className="text-sm ml-4 ">Not signed in</p>
+                  )}
                </div>
             </div>
 
@@ -73,15 +86,15 @@ export const Header: React.FC<{
             </div>
 
             <div className=" flex flex-row items-center ml-auto">
-               <p className="mx-5">
-                  stuck? watch a
-                  <a className="text-pink-600" href="https://www.youtube.com/watch?v=1dj8L5tUAjU" target={"_blank"}>
-                     {" "}
-                     tutorial
-                  </a>
-               </p>
                {!viewOnly ? (
                   <>
+                     <p className="mx-5">
+                        stuck? watch a
+                        <a className="text-pink-600" href="https://www.youtube.com/watch?v=1dj8L5tUAjU" target={"_blank"}>
+                           {" "}
+                           tutorial
+                        </a>
+                     </p>
                      <div className="flex flex-col items-center justify-center mx-5">
                         <label className="inline-flex relative items-center cursor-pointer">
                            <input
@@ -102,28 +115,48 @@ export const Header: React.FC<{
                         change track
                      </button>
 
-                     {/* <button
+                     <button
                         onClick={() => setShareIsOpen((state: boolean) => !state)}
                         className="bg-blue-600 text-white px-2 py-1 rounded-md  ml-2 "
                      >
                         share
-                     </button> */}
+                     </button>
                   </>
                ) : null}
 
                <Link href="/mydances">
                   {session ? <a className="ml-2 bg-pink-600 hover:bg-pink-700 px-2 py-1 rounded-md text-white">my dances</a> : <></>}
                </Link>
+
                <button
-                  className="ml-6"
                   onClick={() => {
-                     router.push("/login");
-                     setSession(null);
-                     supabase.auth.signOut();
+                     setProfileIsOpen((state) => !state);
                   }}
+                  className={`w-[50px] ml-6 h-[50px]  rounded-full flex flex-row justify-center items-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500   `}
                >
-                  sign out
+                  {session?.user?.user_metadata?.avatar_url ? (
+                     <img className="w-[45px] h-[45px] rounded-full select-none " src={session?.user?.user_metadata?.avatar_url} alt="" />
+                  ) : (
+                     <div className="bg-white rounded-full w-[45px] h-[45px] grid place-items-center cursor-default  font-semibold  ">
+                        <p className="cursor-default ">{initials(session?.user?.user_metadata?.full_name)}</p>
+                     </div>
+                  )}
                </button>
+
+               {profileIsOpen ? (
+                  <div className="bg-white ring-gray-500 ring-1 absolute w-24 h-10 right-10 top-[70px] z-50 rounded-md flex flex-col justify-center items-center">
+                     <button
+                        className=""
+                        onClick={() => {
+                           router.push("/login");
+                           setSession(null);
+                           supabase.auth.signOut();
+                        }}
+                     >
+                        sign out
+                     </button>
+                  </div>
+               ) : null}
             </div>
          </div>
          <hr className="mb-2" />

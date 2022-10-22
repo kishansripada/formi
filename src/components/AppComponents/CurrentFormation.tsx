@@ -83,11 +83,11 @@ export const CurrentFormation: React.FC<{
                      defaultValue={formations[selectedFormation]?.name || ""}
                   />
                   <hr className="mx-[-12px] " />
-                  <li className=" mt-2 flex flex-row justify-between items-end font-semibold ">
-                     <p className="w-[45%] ">Name</p>
-                     <p className="w-[15%] ">Path</p>
-                     <div className="flex flex-col items-center w-[15%] ">
-                        <button className="peer ml-1">
+                  <li className=" mt-2 flex flex-row justify-between items-end font-semibold pr-3 ">
+                     <p className="w-[40%] text-sm mx-1 ">name</p>
+                     <p className="w-[20%]  text-sm text-center mx-1">path to here</p>
+                     <div className="flex flex-col items-center w-[20%] justify-center mx-1">
+                        <button className="peer">
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
@@ -103,7 +103,7 @@ export const CurrentFormation: React.FC<{
                               />
                            </svg>
                         </button>
-                        <p className=""> Enter from:</p>
+                        <p className=" text-sm text-center ">enter from:</p>
                         <div className="peer-hover:opacity-100 absolute right-[160px]  text-wrap w-96 z-50 py-2 px-3 text-sm  text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 pointer-events-none">
                            <p>
                               available to dancers who are not in the previous formation and must enter the stage during the previous formation's
@@ -113,8 +113,8 @@ export const CurrentFormation: React.FC<{
                            <p>choose which side of the stage they enter from</p>
                         </div>
                      </div>
-                     <div className="flex flex-col items-center w-[15%]">
-                        <button className="peer ml-1">
+                     <div className="flex flex-col items-center w-[20%] justify-center mx-1">
+                        <button className="peer">
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
@@ -130,8 +130,9 @@ export const CurrentFormation: React.FC<{
                               />
                            </svg>
                         </button>
-                        Exit to:
-                        <div className="peer-hover:opacity-100 absolute right-[50px]  w-96 z-50 py-2 px-3 text-sm  text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition duration-300 pointer-events-none">
+                        <p className=" text-sm text-center ">exit to:</p>
+
+                        <div className="peer-hover:opacity-100 absolute right-[80px]  w-96 z-50 py-2 px-3 text-sm  text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition duration-300 pointer-events-none">
                            <div>
                               available to dancers who are not in the next formation and must exit the stage during this formation's transition
                            </div>
@@ -141,7 +142,7 @@ export const CurrentFormation: React.FC<{
                      </div>
                   </li>
 
-                  <ul className="mt-4 flex flex-col overflow-y-scroll pr-3 text-sm">
+                  <ul className="mt-1 flex flex-col overflow-y-scroll pr-3 text-sm">
                      <hr />
                      {dancersInThisFormation?.map((dancer) => {
                         return (

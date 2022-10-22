@@ -14,8 +14,19 @@ export const SoundCloudComponent: React.FC<{
    setSoundCloudTrackId: Function;
    setSelectedFormation: Function;
    setFormations: Function;
+   viewOnly: boolean;
 }> = memo(
-   ({ setPosition, setIsPlaying, setSongDuration, songDuration, soundCloudTrackId, setSoundCloudTrackId, setFormations, setSelectedFormation }) => {
+   ({
+      setPosition,
+      setIsPlaying,
+      setSongDuration,
+      songDuration,
+      soundCloudTrackId,
+      setSoundCloudTrackId,
+      setFormations,
+      setSelectedFormation,
+      viewOnly,
+   }) => {
       const [newUrl, setNewUrl] = useState("");
       const [player, setPlayer] = useState(null);
 
@@ -74,52 +85,54 @@ export const SoundCloudComponent: React.FC<{
                      />
                   </svg>
                </button>
-               <button
-                  onClick={() => {
-                     setFormations((formations: formation[]) => {
-                        let totalFormationLength = formations
-                           .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
-                           .reduce((a, b) => a + b, 0);
-                        let roomLeft = songDuration / 1000 - totalFormationLength;
+               {!viewOnly ? (
+                  <button
+                     onClick={() => {
+                        setFormations((formations: formation[]) => {
+                           let totalFormationLength = formations
+                              .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
+                              .reduce((a, b) => a + b, 0);
+                           let roomLeft = songDuration / 1000 - totalFormationLength;
 
-                        if (roomLeft < 3) {
-                           toast.error("there's not enough room!");
-                           return formations;
-                        }
-                        if (!formations.length) {
-                           setSelectedFormation(formations.length);
-                           return [
-                              ...formations,
-                              {
-                                 durationSeconds: roomLeft > 15 ? 10 : roomLeft / 2,
-                                 positions: [],
-                                 transition: {
+                           if (roomLeft < 3) {
+                              toast.error("there's not enough room!");
+                              return formations;
+                           }
+                           if (!formations.length) {
+                              setSelectedFormation(formations.length);
+                              return [
+                                 ...formations,
+                                 {
+                                    durationSeconds: roomLeft > 15 ? 10 : roomLeft / 2,
+                                    positions: [],
+                                    transition: {
+                                       durationSeconds: roomLeft > 15 ? 5 : roomLeft / 2,
+                                    },
+                                    name: `Untitled ${formations.length + 1}`,
+                                 },
+                              ];
+                           } else {
+                              setSelectedFormation(formations.length);
+                              return [
+                                 ...formations,
+                                 {
+                                    id: uuidv4(),
+                                    ...formations[formations.length - 1],
+                                    name: `Untitled ${formations.length + 1}`,
+                                    transition: {
+                                       durationSeconds: roomLeft > 15 ? 10 : roomLeft / 2,
+                                    },
                                     durationSeconds: roomLeft > 15 ? 5 : roomLeft / 2,
                                  },
-                                 name: `Untitled ${formations.length + 1}`,
-                              },
-                           ];
-                        } else {
-                           setSelectedFormation(formations.length);
-                           return [
-                              ...formations,
-                              {
-                                 id: uuidv4(),
-                                 ...formations[formations.length - 1],
-                                 name: `Untitled ${formations.length + 1}`,
-                                 transition: {
-                                    durationSeconds: roomLeft > 15 ? 10 : roomLeft / 2,
-                                 },
-                                 durationSeconds: roomLeft > 15 ? 5 : roomLeft / 2,
-                              },
-                           ];
-                        }
-                     });
-                  }}
-                  className=" rounded-b-md bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 mx-1 cursor-pointer"
-               >
-                  + new formation
-               </button>
+                              ];
+                           }
+                        });
+                     }}
+                     className=" rounded-b-md bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 mx-1 cursor-pointer"
+                  >
+                     + new formation
+                  </button>
+               ) : null}
             </div>
             <Script onReady={handleLoad} strategy="lazyOnload" src="https://w.soundcloud.com/player/api.js" />
 

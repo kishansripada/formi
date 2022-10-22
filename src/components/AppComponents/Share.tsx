@@ -45,6 +45,7 @@ export const Share: React.FC<{
             id="outside"
             onClick={(e) => {
                if (e.target.id === "outside") {
+                  updateShareSettings();
                   setShareIsOpen(false);
                }
             }}
@@ -81,32 +82,36 @@ export const Share: React.FC<{
                         </label>
                      </div>
                   </div>
-                  <input
-                     value={newUserEmail}
-                     onChange={(e) => {
-                        setNewUserEmail(e.target.value);
-                     }}
-                     onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                           e.preventDefault();
-                           if (!validateEmail(newUserEmail)) {
-                              toast.error("please enter a valid email");
-                              return;
+                  <div className="flex flex-row justify-between items-center mt-10 ">
+                     <input
+                        value={newUserEmail}
+                        onChange={(e) => {
+                           setNewUserEmail(e.target.value);
+                        }}
+                        onKeyDown={(e) => {
+                           if (e.key === "Enter") {
+                              e.preventDefault();
+                              if (!validateEmail(newUserEmail)) {
+                                 toast.error("please enter a valid email");
+                                 return;
+                              }
+                              if (shareSettings[e.target.value]) {
+                                 toast.error("you've already entered that email");
+                                 return;
+                              }
+                              setShareSettings((users) => {
+                                 return { ...users, [e.target.value]: "view" };
+                              });
+                              setNewUserEmail("");
                            }
-                           if (shareSettings[e.target.value]) {
-                              toast.error("you've already entered that email");
-                              return;
-                           }
-                           setShareSettings((users) => {
-                              return { ...users, [e.target.value]: "view" };
-                           });
-                           setNewUserEmail("");
-                        }
-                     }}
-                     className="mt-10 focus:outline-pink-600 rounded-sm w-2/3 h-8  outline-gray-400 focus:outline-2  outline-2 focus:outline outline px-2"
-                     type="text"
-                     placeholder="enter an email"
-                  />
+                        }}
+                        className="focus:outline-pink-600 rounded-sm w-2/3 h-8  outline-gray-400 focus:outline-2  outline-2 focus:outline outline px-2"
+                        type="text"
+                        placeholder="enter an email"
+                     />
+                     <p className="text-xs text-gray-500">press enter to add</p>
+                  </div>
+
                   <div className="mt-5">
                      {Object.entries(shareSettings).map((user) => {
                         return (
@@ -128,9 +133,9 @@ export const Share: React.FC<{
                               <button
                                  onClick={() => {
                                     setShareSettings((users) => {
-                                       //    let test = users;
-                                       //    delete test[user[0]];
-                                       //    return test;
+                                       let state = { ...users };
+                                       delete state[user[0]];
+                                       return state;
                                     });
                                  }}
                               >

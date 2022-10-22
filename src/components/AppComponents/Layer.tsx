@@ -93,6 +93,7 @@ export const Layer: React.FC<{
                   }}
                >
                   <Formation
+                     viewOnly={viewOnly}
                      setSelectedFormation={setSelectedFormation}
                      setFormations={setFormations}
                      formation={formation}

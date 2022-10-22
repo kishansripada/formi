@@ -52,7 +52,7 @@ export const Layers: React.FC<{
    return (
       // <DndContext collisionDetection={closestCenter} onDragStart={handleDragStart}>
       <div
-         className="flex flex-col pt-2 pb-3 w-full  bg-white  max-h-[100px] overflow-x-scroll  "
+         className="flex flex-col pt-2 pb-3 w-full  bg-white  max-h-[75px] overflow-x-scroll  "
          style={{
             width: songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND : "100%",
             marginLeft: soundCloudTrackId ? (soundCloudTrackId.length < 15 ? 122 : 135) : 115,
