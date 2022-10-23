@@ -71,7 +71,7 @@ const home = () => {
             <div></div>
             <ul className="flex flex-col items-center child:mx-3 justify-center child:ease-in-out child:duration-300 text-sm leading-tight displ invisible lg:visible"></ul>
             <Link href={"/login"} className="z-50">
-               <button className="ring-2 ring-white px-4 py-1 rounded-md text-white hover:bg-white/20">login / signup</button>
+               <button className="ring-2 ring-white px-4 py-1 rounded-md text-white hover:bg-white/20">get started 🚀</button>
             </Link>
          </nav>
 
