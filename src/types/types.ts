@@ -15,13 +15,13 @@ export type dancerPosition = {
 };
 
 export type formation = {
-   id: string;
    durationSeconds: number;
    positions: dancerPosition[];
    transition: {
       durationSeconds: number;
    };
    name: string | null;
+   notes: string | null | undefined;
 };
 
 export type dragBoxCoords = { start: { x: number | null; y: number | null }; end: { x: number | null; y: number | null } };

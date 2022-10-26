@@ -19,7 +19,6 @@ const home = () => {
                0% {
                   transform: skew(15deg, 15deg);
                }
-
                50% {
                   transform: skew(-15deg, -15deg);
                }
@@ -71,7 +70,7 @@ const home = () => {
             <div></div>
             <ul className="flex flex-col items-center child:mx-3 justify-center child:ease-in-out child:duration-300 text-sm leading-tight displ invisible lg:visible"></ul>
             <Link href={"/login"} className="z-50">
-               <button className="ring-2 ring-white px-4 py-1 rounded-md text-white hover:bg-white/20">login / signup 🚀</button>
+               <button className="ring-2 ring-white px-4 py-1 rounded-md text-white hover:bg-white/20">get started 🚀</button>
             </Link>
          </nav>
 
@@ -85,7 +84,6 @@ const home = () => {
             let's reinvent the choreographer{" "}
             <span
                style={{
-                  textDecorationColor: "red",
                   textDecoration: "underline",
                }}
             >
@@ -102,7 +100,7 @@ const home = () => {
             <img src="https://i.imgur.com/NBKSDEC.png" className="w-[90%] lg:w-2/3 mt-16 rounded-xl" alt="" />
          </div>
 
-         <div className="px-[10%] flex flex-col lg:flex-row text-center lg:text-left mt-36">
+         {/* <div className="px-[10%] flex flex-col lg:flex-row text-center lg:text-left mt-36">
             <div className="lg:w-1/2 py-[10%]">
                <h1 className="text-2xl text-white leading-[50px] lg:text-5xl font-space font-semibold">
                   visualize your formation transitions in time with your music 🎸
@@ -111,16 +109,6 @@ const home = () => {
 
             <div className="lg:w-1/2">
                <video src="/demo.mov" className="rounded-xl" autoPlay loop muted></video>
-            </div>
-         </div>
-         {/* 
-         <div className="px-[10%] flex flex-col lg:flex-row text-center lg:text-right mt-36">
-            <div className="lg:w-1/2">
-               <video src="/demo.mov" className="rounded-xl" autoPlay loop muted></video>
-            </div>
-            <div className="lg:w-1/2 py-[10%]">
-               <h1 className="text-3xl text-white leading-[50px] lg:text-6xl font-space font-semibold">unleash a new world of creativity</h1>
-               <p className="font-space  text-white mt-5"> </p>
             </div>
          </div> */}
 

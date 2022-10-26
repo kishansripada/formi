@@ -2,7 +2,6 @@ import Script from "next/script";
 import { useEffect, useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
-import { PIXELS_PER_SECOND, formation } from "../../types/types";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
 

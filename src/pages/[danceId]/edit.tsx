@@ -48,9 +48,9 @@ const SoundCloudComponent = dynamic<{
    setSongDuration: Function;
    songDuration: number | null;
    soundCloudTrackId: string | null;
-   setSoundCloudTrackId: Function;
    setSelectedFormation: Function;
    setFormations: Function;
+   viewOnly: boolean;
 }>(() => import("../../components/AppComponents/SoundCloudComponent").then((mod) => mod.SoundCloudComponent), {
    ssr: false,
 });
@@ -61,9 +61,10 @@ const FileAudioPlayer = dynamic<{
    setSongDuration: Function;
    songDuration: number | null;
    soundCloudTrackId: string | null;
-   setSoundCloudTrackId: Function;
    setSelectedFormation: Function;
    setFormations: Function;
+   viewOnly: boolean;
+   pixelsPerSecond: number;
 }>(() => import("../../components/AppComponents/FileAudioPlayer").then((mod) => mod.FileAudioPlayer), {
    ssr: false,
 });
@@ -96,6 +97,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    const [viewAllPaths, setViewAllPaths] = useState<boolean>(true);
    const [mobile, setMobile] = useState<string | null>(null);
    const [noAccess, setNoAccess] = useState<boolean>(false);
+   const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(15);
    let [changeSoundCloudIsOpen, setChangeSoundCloudIsOpen] = useState(false);
    let [shareIsOpen, setShareIsOpen] = useState(false);
    let [viewOnly, setViewOnly] = useState(false);
@@ -119,6 +121,12 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
       setSelectedDancers([]);
    }, [selectedFormation]);
 
+   // useEffect(() => {
+   //    if (!window) return;
+
+   //    setPixelsPerSecond((window.screen.width - 130) / songDuration);
+   // }, []);
+
    useEffect(() => {
       if (isMobile) {
          setMobile(true);
@@ -129,6 +137,14 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
       if (!isPlaying) return;
       setSelectedFormation(currentFormationIndex);
    }, [currentFormationIndex, isPlaying]);
+
+   useEffect(() => {
+      if (!songDuration) return;
+      console.log("setting original");
+      if (pixelsPerSecond * (songDuration / 1000) < window.screen.width - 20) {
+         setPixelsPerSecond((window.screen.width - 20) / (songDuration / 1000));
+      }
+   }, [soundCloudTrackId, songDuration]);
 
    const router = useRouter();
 
@@ -416,6 +432,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                ) : null}
 
                <Canvas
+                  songDuration={songDuration}
                   viewOnly={viewOnly}
                   setSelectedFormation={setSelectedFormation}
                   formations={formations}
@@ -426,6 +443,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   selectedDancers={selectedDancers}
                   setSelectedDancers={setSelectedDancers}
                   setIsPlaying={setIsPlaying}
+                  setPixelsPerSecond={setPixelsPerSecond}
                >
                   {selectedFormation !== null ? (
                      <PathEditor
@@ -493,33 +511,46 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
             </div>
             <div className="overflow-x-scroll min-h-[170px] bg-white overscroll-contain  ">
                {soundCloudTrackId && soundCloudTrackId.length < 15 ? (
-                  <SoundCloudComponent
-                     key={soundCloudTrackId}
-                     setSelectedFormation={setSelectedFormation}
-                     setFormations={setFormations}
-                     soundCloudTrackId={soundCloudTrackId}
-                     setSoundCloudTrackId={setSoundCloudTrackId}
-                     setSongDuration={setSongDuration}
-                     songDuration={songDuration}
-                     setIsPlaying={setIsPlaying}
-                     setPosition={setPosition}
-                     viewOnly={viewOnly}
-                  />
+                  <div
+                     style={{
+                        width: songDuration ? (songDuration / 1000) * pixelsPerSecond + 130 : "100%",
+                     }}
+                  >
+                     <SoundCloudComponent
+                        key={soundCloudTrackId}
+                        setSelectedFormation={setSelectedFormation}
+                        setFormations={setFormations}
+                        soundCloudTrackId={soundCloudTrackId}
+                        setSongDuration={setSongDuration}
+                        songDuration={songDuration}
+                        setIsPlaying={setIsPlaying}
+                        setPosition={setPosition}
+                        viewOnly={viewOnly}
+                     />
+                  </div>
                ) : null}
 
                {soundCloudTrackId && soundCloudTrackId.length > 15 ? (
-                  <FileAudioPlayer
-                     isPlaying={isPlaying}
-                     setSelectedFormation={setSelectedFormation}
-                     setFormations={setFormations}
-                     soundCloudTrackId={soundCloudTrackId}
-                     setSoundCloudTrackId={setSoundCloudTrackId}
-                     setSongDuration={setSongDuration}
-                     songDuration={songDuration}
-                     setIsPlaying={setIsPlaying}
-                     setPosition={setPosition}
-                     viewOnly={viewOnly}
-                  ></FileAudioPlayer>
+                  <div
+                     className="relative"
+                     style={{
+                        left: 10,
+                        width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
+                     }}
+                  >
+                     <FileAudioPlayer
+                        key={soundCloudTrackId}
+                        setSelectedFormation={setSelectedFormation}
+                        setFormations={setFormations}
+                        soundCloudTrackId={soundCloudTrackId}
+                        setSongDuration={setSongDuration}
+                        songDuration={songDuration}
+                        setIsPlaying={setIsPlaying}
+                        setPosition={setPosition}
+                        viewOnly={viewOnly}
+                        pixelsPerSecond={pixelsPerSecond}
+                     ></FileAudioPlayer>
+                  </div>
                ) : null}
 
                <Layers
@@ -532,6 +563,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                   isPlaying={isPlaying}
                   position={position}
                   soundCloudTrackId={soundCloudTrackId}
+                  pixelsPerSecond={pixelsPerSecond}
                />
             </div>
          </div>

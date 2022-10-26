@@ -68,8 +68,8 @@ export const Dancer: React.FC<{
                   } `}
                >
                   {instagramUsername ? (
-                     <div className="w-[46px] h-[46px] bg-white rounded-full grid place-items-center" data-type={"newDancer"}>
-                        <img className="w-[48px]  h-[48px] rounded-full " src={instagramUsername} alt="" data-type={"newDancer"} />
+                     <div className="w-[41px] h-[41px] bg-white rounded-full grid place-items-center" data-type={"newDancer"}>
+                        <img className="w-[41px] h-[41px] rounded-full " src={instagramUsername} alt="" data-type={"newDancer"} />
                      </div>
                   ) : (
                      <div className="bg-white rounded-full w-[41px] h-[41px] grid place-items-center" data-type={"newDancer"}>

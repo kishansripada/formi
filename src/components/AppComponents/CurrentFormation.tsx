@@ -303,7 +303,48 @@ export const CurrentFormation: React.FC<{
                         );
                      })}
                   </ul>
+                  <hr />
+                  <div>
+                     <textarea
+                        onKeyDown={(e) =>
+                           e.key === "Enter"
+                              ? setFormations((formations: formation[]) => {
+                                   return formations.map((formation, i) => {
+                                      if (i === selectedFormation) {
+                                         return {
+                                            ...formation,
+                                            notes: e.target.value,
+                                         };
+                                      }
 
+                                      return formation;
+                                   });
+                                })
+                              : null
+                        }
+                        onBlur={(e) => {
+                           setFormations((formations: formation[]) => {
+                              return formations.map((formation, i) => {
+                                 if (i === selectedFormation) {
+                                    return {
+                                       ...formation,
+                                       notes: e.target.value,
+                                    };
+                                 }
+
+                                 return formation;
+                              });
+                           });
+                        }}
+                        key={formations[selectedFormation]?.notes}
+                        defaultValue={formations[selectedFormation]?.notes || ""}
+                        placeholder="notes..."
+                        className="resize-none w-full px-1 py-1"
+                        name=""
+                        id=""
+                        rows={3}
+                     ></textarea>
+                  </div>
                   <div className="flex flex-row  mt-auto pt-3">
                      <button
                         className="text-white bg-red-600 px-2 py-1 rounded-md mb-2  flex flex-row items-center justify-center w-1/2 mx-2"

@@ -20,47 +20,28 @@ export const Layers: React.FC<{
    isPlaying: boolean;
    soundCloudTrackId: string;
    viewOnly: boolean;
-}> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration, position, isPlaying, soundCloudTrackId, viewOnly }) => {
-   const [activeId, setActiveId] = useState(null);
-
-   const clickOutsideFormations = (e: any) => {
-      if (e.target.id !== "outside") return;
-      e.stopPropagation();
-      setSelectedFormation(null);
-   };
-   // function handleDragStart(event) {
-   //    console.log(event);
-   //    // const { active } = event;
-
-   //    // setActiveId(active.id);
-   // }
-
-   // function handleDragEnd(event) {
-   //    const { active, over } = event;
-
-   //    // if (active.id !== over.id) {
-   //    //    setItems((items) => {
-   //    //       const oldIndex = items.indexOf(active.id);
-   //    //       const newIndex = items.indexOf(over.id);
-
-   //    //       return arrayMove(items, oldIndex, newIndex);
-   //    //    });
-   //    // }
-
-   //    setActiveId(null);
-   // }
+   pixelsPerSecond: number;
+}> = ({
+   formations,
+   selectedFormation,
+   setSelectedFormation,
+   setFormations,
+   songDuration,
+   position,
+   isPlaying,
+   soundCloudTrackId,
+   viewOnly,
+   pixelsPerSecond,
+}) => {
    return (
-      // <DndContext collisionDetection={closestCenter} onDragStart={handleDragStart}>
       <div
          className="flex flex-col pt-2 pb-3 w-full  bg-white  max-h-[75px] overflow-x-scroll  "
          style={{
-            width: songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND : "100%",
-            marginLeft: soundCloudTrackId ? (soundCloudTrackId.length < 15 ? 122 : 135) : 115,
+            width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
+            marginLeft: soundCloudTrackId ? (soundCloudTrackId.length < 15 ? 122 : 10) : 115,
          }}
-         id="outside"
-         onClick={clickOutsideFormations}
+         id="layers"
       >
-         {/* <SortableContext strategy={horizontalListSortingStrategy} items={formations.map((formation) => formation.id)}> */}
          <Layer
             viewOnly={viewOnly}
             songDuration={songDuration}
@@ -70,14 +51,14 @@ export const Layers: React.FC<{
             setSelectedFormation={setSelectedFormation}
             isPlaying={isPlaying}
             position={position}
+            pixelsPerSecond={pixelsPerSecond}
          />
-         {/* </SortableContext> */}
-         {/* <DragOverlay>{activeId ? <Formation id={activeId} /> : null}</DragOverlay> */}
+
          <svg
             style={{
-               left: position !== null ? position * PIXELS_PER_SECOND : 0,
-               top: -40,
-               transform: "translate(-50%, 0%) scale(2)",
+               left: position !== null ? position * pixelsPerSecond : 0,
+               top: -30,
+               transform: "translate(-50%, 0%) scale(12)",
             }}
             viewBox="0 0 3730 27444"
             fill="none"
@@ -92,6 +73,5 @@ export const Layers: React.FC<{
             />
          </svg>
       </div>
-      // </DndContext>
    );
 };

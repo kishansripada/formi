@@ -44,10 +44,12 @@ export const Header: React.FC<{
 
    return (
       <>
-         <div className=" h-[75px] flex flex-row items-center shrink-0 pr-10 pl-7 bg-white justify-between">
+         <div className=" h-[75px] flex flex-row items-center shrink-0 lg:pr-10 lg:pl-7 bg-white justify-between">
             <div className="flex flex-row items-center shrink-0">
-               <Image className="scale-[3.5]" src={logo} width={150} height={60} />
-               <div className="h-[40px] w-[1px] bg-gray-400 ml-3"></div>
+               <div className=" flex-row items-center shrink-0 hidden lg:flex">
+                  <Image className=" scale-[3.5]" src={logo} width={150} height={60} />
+                  <div className="h-[40px] w-[1px] bg-gray-400 ml-3"></div>
+               </div>
 
                <div className="h-full ">
                   <div className="flex flex-row justify-center items-center">
@@ -70,7 +72,7 @@ export const Header: React.FC<{
                            )}
                         </>
                      ) : (
-                        <p className="text-gray-500">viewing only</p>
+                        <p className="text-gray-500">viewing</p>
                      )}
                   </div>
                   {session ? (
@@ -125,23 +127,25 @@ export const Header: React.FC<{
                ) : null}
 
                <Link href="/mydances">
-                  {session ? <a className="ml-2 bg-pink-600 hover:bg-pink-700 px-2 py-1 rounded-md text-white">my dances</a> : <></>}
+                  {session ? <a className="ml-2 bg-pink-600 hover:bg-pink-700 px-2 py-1 rounded-md text-white ">my dances</a> : <></>}
                </Link>
-
-               <button
-                  onClick={() => {
-                     setProfileIsOpen((state) => !state);
-                  }}
-                  className={`w-[50px] ml-6 h-[50px]  rounded-full flex flex-row justify-center items-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500   `}
-               >
-                  {session?.user?.user_metadata?.avatar_url ? (
-                     <img className="w-[45px] h-[45px] rounded-full select-none " src={session?.user?.user_metadata?.avatar_url} alt="" />
-                  ) : (
-                     <div className="bg-white rounded-full w-[45px] h-[45px] grid place-items-center cursor-default  font-semibold  ">
-                        <p className="cursor-default ">{initials(session?.user?.user_metadata?.full_name)}</p>
-                     </div>
-                  )}
-               </button>
+               <script src=""></script>
+               {session ? (
+                  <button
+                     onClick={() => {
+                        setProfileIsOpen((state) => !state);
+                     }}
+                     className={`w-[50px] ml-6 h-[50px] hidden lg:flex  rounded-full  flex-row justify-center items-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500   `}
+                  >
+                     {session?.user?.user_metadata?.avatar_url ? (
+                        <img className="w-[45px] h-[45px] rounded-full select-none " src={session?.user?.user_metadata?.avatar_url} alt="" />
+                     ) : session?.user?.user_metadata?.full_name ? (
+                        <div className="bg-white rounded-full w-[45px] h-[45px] grid place-items-center cursor-default  font-semibold  ">
+                           <p className="cursor-default ">{initials(session?.user?.user_metadata?.full_name)}</p>
+                        </div>
+                     ) : null}
+                  </button>
+               ) : null}
 
                {profileIsOpen ? (
                   <div className="bg-white ring-gray-500 ring-1 absolute w-24 h-10 right-10 top-[70px] z-50 rounded-md flex flex-col justify-center items-center">

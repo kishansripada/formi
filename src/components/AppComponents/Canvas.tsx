@@ -16,6 +16,8 @@ export const Canvas: React.FC<{
    setSelectedFormation: Function;
    setIsPlaying: Function;
    viewOnly: boolean;
+   setPixelsPerSecond: Function;
+   songDuration: number | null;
 }> = ({
    children,
    setDancers,
@@ -28,6 +30,8 @@ export const Canvas: React.FC<{
    setSelectedFormation,
    setIsPlaying,
    viewOnly,
+   setPixelsPerSecond,
+   songDuration,
 }) => {
    let [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
    const [shiftHeld, setShiftHeld] = useState(false);
@@ -58,7 +62,7 @@ export const Canvas: React.FC<{
    };
 
    const downHandler = (e: any) => {
-      if (e?.path?.[0]?.tagName === "INPUT") return;
+      if (e?.path?.[0]?.tagName === "INPUT" || e?.path?.[0]?.tagName === "TEXTAREA") return;
       // console.log(e.key);
       // if (e.key === " ") {
       //    setIsPlaying((isPlaying: boolean) => !isPlaying);
@@ -352,6 +356,28 @@ export const Canvas: React.FC<{
       ) {
          e.preventDefault();
          setZoom((zoom) => (zoom - e.deltaY / 200 > 0.2 && zoom - e.deltaY / 200 < 1.2 ? zoom - e.deltaY / 200 : zoom));
+      }
+      if (
+         e
+            .composedPath()
+            .map((elem) => elem.id)
+            .includes("layers") &&
+         e.ctrlKey === true
+      ) {
+         e.preventDefault();
+         setPixelsPerSecond((pixelsPerSecond) => {
+            // if ((songDuration * (pixelsPerSecond - e.deltaY / 25)) / 1000 < window.screen.width - 20) return pixelsPerSecond;
+            return pixelsPerSecond - e.deltaY / 25;
+            // if (pixelsPerSecond - e.deltaY / 25 < 38) {
+            //    return pixelsPerSecond - e.deltaY / 25;
+            // }
+            // if (pixelsPerSecond - e.deltaY / 25 > 38) {
+            //    return 38;
+            // }
+            // if (pixelsPerSecond - e.deltaY / 25 < 5) {
+            //    return 5;
+            // }
+         });
       }
    };
    return (

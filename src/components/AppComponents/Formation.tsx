@@ -12,7 +12,8 @@ export const Formation: React.FC<{
    setFormations: Function;
    setSelectedFormation: Function;
    viewOnly: boolean;
-}> = ({ formation, amSelected, index, setFormations, setSelectedFormation, viewOnly }) => {
+   pixelsPerSecond: number;
+}> = ({ formation, amSelected, index, setFormations, setSelectedFormation, viewOnly, pixelsPerSecond }) => {
    // const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: formation.id });
 
    // const style = {
@@ -26,9 +27,9 @@ export const Formation: React.FC<{
             if (i === index) {
                return {
                   ...formation,
-                  durationSeconds: size.width / PIXELS_PER_SECOND,
+                  durationSeconds: size.width / pixelsPerSecond,
                   transition: {
-                     durationSeconds: formation.transition.durationSeconds + (formation.durationSeconds - size.width / PIXELS_PER_SECOND),
+                     durationSeconds: formation.transition.durationSeconds + (formation.durationSeconds - size.width / pixelsPerSecond),
                   },
                };
             }
@@ -42,7 +43,7 @@ export const Formation: React.FC<{
       setFormations((formations: formation[]) => {
          return formations.map((formation, i) => {
             if (i === index) {
-               return { ...formation, transition: { ...formation.transition, durationSeconds: size.width / PIXELS_PER_SECOND } };
+               return { ...formation, transition: { ...formation.transition, durationSeconds: size.width / pixelsPerSecond } };
             }
             return formation;
          });
@@ -59,7 +60,7 @@ export const Formation: React.FC<{
             //
             style={{
                // ...style,
-               width: (formation.transition.durationSeconds + formation.durationSeconds) * PIXELS_PER_SECOND - 4,
+               width: (formation.transition.durationSeconds + formation.durationSeconds) * pixelsPerSecond - 4,
                // subtract 4 to account for the mx-[2px]
             }}
          >
@@ -69,12 +70,12 @@ export const Formation: React.FC<{
             <div className={` flex flex-row  box-border`}>
                <div
                   style={{
-                     width: formation.durationSeconds * PIXELS_PER_SECOND - 2,
+                     width: formation.durationSeconds * pixelsPerSecond - 2,
                   }}
                   className="relative bg-pink-600 h-[23px]"
                >
                   <Resizable
-                     width={formation.durationSeconds * PIXELS_PER_SECOND}
+                     width={formation.durationSeconds * pixelsPerSecond}
                      height={100}
                      onResize={!viewOnly ? onResizeFormation : null}
                      resizeHandles={["e"]}
@@ -87,12 +88,12 @@ export const Formation: React.FC<{
 
                <div
                   style={{
-                     width: formation.transition.durationSeconds * PIXELS_PER_SECOND - 2,
+                     width: formation.transition.durationSeconds * pixelsPerSecond - 2,
                   }}
                   className=" relative bg-pink-600 h-[23px]"
                >
                   <Resizable
-                     width={formation.transition.durationSeconds * PIXELS_PER_SECOND}
+                     width={formation.transition.durationSeconds * pixelsPerSecond}
                      onResize={!viewOnly ? onResizeTransition : null}
                      resizeHandles={["e"]}
                      height={100}

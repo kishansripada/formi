@@ -1,7 +1,7 @@
 import { ReactEventHandler } from "react";
 import { Formation } from "./Formation";
 import { useCallback, useEffect, useState } from "react";
-import { dancer, dancerPosition, formation, PIXELS_PER_SECOND } from "../../types/types";
+import { dancer, dancerPosition, formation } from "../../types/types";
 // import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 // import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 
@@ -14,7 +14,8 @@ export const Layer: React.FC<{
    position: number | null;
    isPlaying: boolean;
    viewOnly: boolean;
-}> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration, position, isPlaying, viewOnly }) => {
+   pixelsPerSecond: number;
+}> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration, position, isPlaying, viewOnly, pixelsPerSecond }) => {
    const clickOutsideFormations = (e: any) => {
       if (e.target.id !== "outside") return;
       e.stopPropagation();
@@ -25,11 +26,6 @@ export const Layer: React.FC<{
       <>
          <div
             className=" flex flex-row bg-white items-center border-y-black border-y-[1px] w-full my-1"
-            style={
-               {
-                  // width: songDuration ? (songDuration / 1000) * PIXELS_PER_SECOND : "100%",
-               }
-            }
             id="outside"
             onClick={clickOutsideFormations}
          >
@@ -99,6 +95,7 @@ export const Layer: React.FC<{
                      formation={formation}
                      index={index}
                      amSelected={index === selectedFormation}
+                     pixelsPerSecond={pixelsPerSecond}
                   />
                </div>
             ))}
