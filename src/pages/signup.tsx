@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { supabase } from "../utils/supabase";
+
 import type { NextPage } from "next";
 
 const Signup = () => {

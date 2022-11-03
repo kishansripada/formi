@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { supabase } from "../../utils/supabase";
 import { Session } from "@supabase/supabase-js";
 
-export const Header = ({ session, setSession }: { session: Session; setSession: Function }) => {
+export const Header = ({ session }: { session: Session | null }) => {
    const router = useRouter();
    return (
       <>
@@ -16,7 +16,7 @@ export const Header = ({ session, setSession }: { session: Session; setSession: 
                className="ml-auto"
                onClick={() => {
                   supabase.auth.signOut();
-                  setSession(null);
+
                   router.push("/login");
                }}
             >

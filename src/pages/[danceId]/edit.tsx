@@ -10,13 +10,17 @@ import { NewDancer } from "../../components/AppComponents/NewDancer";
 import { CurrentFormation } from "../../components/AppComponents/CurrentFormation";
 import { EditDancer } from "../../components/AppComponents/EditDancer";
 import { Layers } from "../../components/AppComponents/Layers";
-import { isMobile } from "react-device-detect";
+import { isMobile, useMobileOrientation } from "react-device-detect";
 import { PathEditor } from "../../components/AppComponents/PathEditor";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { Share } from "../../components/AppComponents/Share";
 import { ChooseAudioSource } from "../../components/AppComponents/ChooseAudioSource";
+import { withPageAuth } from "@supabase/auth-helpers-nextjs";
+import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
+var changesets = require("json-diff-ts");
+import { applyChangeset } from "json-diff-ts";
 // use effect, but not on initial render
 const useDidMountEffect = (func, deps) => {
    const didMount = useRef(false);
@@ -70,25 +74,22 @@ const FileAudioPlayer = dynamic<{
 });
 
 import { dancer, dancerPosition, formation } from "../../types/types";
-import { Session } from "@supabase/supabase-js";
+import { formatWithOptions } from "util";
 
-const Edit = ({ session, setSession }: { session: Session; setSession: Function }) => {
+const Edit = ({ initialData }: {}) => {
+   // if (!initialData?.id) {
+   //    router.push("/noaccess");
+   // }
+   let session = useSession();
+   const supabase = useSupabaseClient();
+
    const [songDuration, setSongDuration] = useState<number | null>(null);
    const [dancers, setDancers] = useState<dancer[]>([]);
    const [position, setPosition] = useState<number | null>(null);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
 
-   const [formations, setFormations] = useState<formation[]>([
-      {
-         durationSeconds: 10,
-         positions: [],
-         transition: {
-            durationSeconds: 5,
-         },
-         name: "Untitled",
-      },
-   ]);
+   const [formations, setFormations] = useState<formation[]>(initialData.formations);
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(null);
    const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
    const [danceName, setDanceName] = useState<string>("Untitled Dance");
@@ -103,6 +104,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    let [viewOnly, setViewOnly] = useState(false);
    let [shareSettings, setShareSettings] = useState({});
    let [anyoneCanView, setAnyoneCanView] = useState(false);
+   let [channelGloabl, setChannel] = useState(null);
 
    let currentFormationIndex = whereInFormation(formations, position).currentFormationIndex;
 
@@ -161,147 +163,141 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
    };
 
    useEffect(() => {
-      let mySub;
-      if (router.query.danceId) {
-         supabase
-            .from("dances")
-            .select("*")
-            .eq("id", router.query.danceId)
-            .then((r) => {
-               if (!r?.data?.length) {
-                  setNoAccess(true);
-                  return;
-               }
-               console.log(r.data[0]);
-               let { soundCloudId, dancers, formations, name, sharesettings, anyonecanview, user } = r?.data?.[0];
+      let { soundCloudId, dancers, formations, name, sharesettings, anyonecanview, user } = initialData;
 
-               setSoundCloudTrackId(soundCloudId);
-               setFormations(formations);
-               setDancers(dancers);
-               setDanceName(name);
-               setShareSettings(sharesettings);
-               setAnyoneCanView(anyonecanview);
+      setSoundCloudTrackId(soundCloudId);
+      // setFormations(formations);
+      setDancers(dancers);
+      setDanceName(name);
+      setShareSettings(sharesettings);
+      setAnyoneCanView(anyonecanview);
 
-               if (!session) {
-                  setViewOnly(true);
-                  return;
-               }
-               if (user === session?.user?.id) {
-                  setViewOnly(false);
-                  return;
-               }
-               if (anyonecanview) {
-                  setViewOnly(true);
-                  return;
-               }
-               if (sharesettings[session?.user?.email] === "view") {
-                  setViewOnly(true);
-                  return;
-               }
-               // setNoAccess(true);
+      let channel = supabase.channel("177");
+      setChannel(channel);
+      channel
+         .on("broadcast", { event: "cursor-pos" }, ({ payload }) => {
+            console.log(payload?.[0]?.changes);
+            // if (!payload.length) return;
+            setFormations((formations) => {
+               console.log(payload);
+               return applyChangeset(formations, payload[0].changes);
             });
-         // mySub = supabase
-         //    .from(`dances:id=eq.${router.query.danceId}`)
-         //    // .eq("id", router.query.danceId)
-         //    .on("*", (r) => {
-         //       // console.log(r);
-         //       console.log(r.new);
-         //       let { soundCloudId, dancers, formations, name, sharesettings, anyonecanview, user } = r.new;
+         })
+         .subscribe((status) => {
+            if (status === "SUBSCRIBED") {
+               console.log("subbedd");
+            }
+         });
 
-         //       setSoundCloudTrackId(soundCloudId);
-         //       setFormations(formations);
-         //       setDancers(dancers);
-         //       setDanceName(name);
-         //    })
-         //    .subscribe();
-      }
       return () => {
          // supabase.removeSubscription(mySub);
       };
    }, [router.query.danceId]);
 
-   /////////////////////////////
-   let uploadDancers = useCallback(
-      debounce(async (dancers) => {
-         console.log("uploading dancers");
-         const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
+   function usePrevious(value) {
+      const ref = useRef();
+      useEffect(() => {
+         ref.current = value; //assign the value of ref to the argument
+      }, [value]); //this code will run when the value of 'value' changes
+      return ref.current; //in the end, return the current ref value.
+   }
 
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 5000),
-      [router.query.danceId]
-   );
+   const prevFormations = usePrevious(formations);
 
    useDidMountEffect(() => {
-      if (router.isReady) {
-         setSaved(false);
-         uploadDancers(dancers);
-      }
-   }, [dancers]);
-   // ///////////
-   let uploadFormations = useCallback(
-      debounce(async (formations) => {
-         console.log("uploading formations");
-         const { data, error } = await supabase
-            .from("dances")
-            .update({ formations: formations, last_edited: new Date() })
-            .eq("id", router.query.danceId);
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 10000),
-      [router.query.danceId]
-   );
+      console.log({ prevFormations });
+      if (!changesets) return;
+      if (!channelGloabl) return;
+      let diffs = changesets.diff(prevFormations, formations);
+      if (!diffs.length) return;
+      channelGloabl.send({
+         type: "broadcast",
+         event: "cursor-pos",
+         payload: diffs,
+      });
+   }, [formations, prevFormations, channelGloabl]);
+   // /////////////////////////////
+   // let uploadDancers = useCallback(
+   //    debounce(async (dancers) => {
+   //       console.log("uploading dancers");
+   //       const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
 
-   useDidMountEffect(() => {
-      if (router.isReady) {
-         setSaved(false);
-         uploadFormations(formations);
-      }
-   }, [formations]);
-   //////////////////////////
-   // ///////////
-   let uploadSoundCloudId = useCallback(
-      debounce(async (soundCloudTrackId) => {
-         console.log("uploading formations");
-         const { data, error } = await supabase
-            .from("dances")
-            .update({ soundCloudId: soundCloudTrackId, last_edited: new Date() })
-            .eq("id", router.query.danceId);
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 5000),
-      [router.query.danceId]
-   );
+   //       console.log({ data });
+   //       console.log({ error });
+   //       setSaved(true);
+   //    }, 5000),
+   //    [router.query.danceId]
+   // );
 
-   useDidMountEffect(() => {
-      if (router.isReady) {
-         setSaved(false);
-         uploadSoundCloudId(soundCloudTrackId);
-      }
-   }, [soundCloudTrackId]);
-   //////////////////////////
-   // ///////////
-   let uploadName = useCallback(
-      debounce(async (danceName) => {
-         console.log("uploading name");
-         const { data, error } = await supabase.from("dances").update({ name: danceName }).eq("id", router.query.danceId);
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 5000),
-      [router.query.danceId]
-   );
+   // useDidMountEffect(() => {
+   //    if (router.isReady) {
+   //       setSaved(false);
+   //       uploadDancers(dancers);
+   //    }
+   // }, [dancers]);
+   // // ///////////
+   // let uploadFormations = useCallback(
+   //    debounce(async (formations) => {
+   //       console.log("uploading formations");
+   //       const { data, error } = await supabase
+   //          .from("dances")
+   //          .update({ formations: formations, last_edited: new Date() })
+   //          .eq("id", router.query.danceId);
+   //       console.log({ data });
+   //       console.log({ error });
+   //       setSaved(true);
+   //    }, 10000),
+   //    [router.query.danceId]
+   // );
 
-   useDidMountEffect(() => {
-      if (router.isReady) {
-         setSaved(false);
-         uploadName(danceName);
-      }
-   }, [danceName]);
-   //////////////////////////
+   // useDidMountEffect(() => {
+   //    if (router.isReady) {
+   //       setSaved(false);
+   //       uploadFormations(formations);
+   //    }
+   // }, [formations]);
+   // //////////////////////////
+   // // ///////////
+   // let uploadSoundCloudId = useCallback(
+   //    debounce(async (soundCloudTrackId) => {
+   //       console.log("uploading formations");
+   //       const { data, error } = await supabase
+   //          .from("dances")
+   //          .update({ soundCloudId: soundCloudTrackId, last_edited: new Date() })
+   //          .eq("id", router.query.danceId);
+   //       console.log({ data });
+   //       console.log({ error });
+   //       setSaved(true);
+   //    }, 5000),
+   //    [router.query.danceId]
+   // );
+
+   // useDidMountEffect(() => {
+   //    if (router.isReady) {
+   //       setSaved(false);
+   //       uploadSoundCloudId(soundCloudTrackId);
+   //    }
+   // }, [soundCloudTrackId]);
+   // //////////////////////////
+   // // ///////////
+   // let uploadName = useCallback(
+   //    debounce(async (danceName) => {
+   //       console.log("uploading name");
+   //       const { data, error } = await supabase.from("dances").update({ name: danceName }).eq("id", router.query.danceId);
+   //       console.log({ data });
+   //       console.log({ error });
+   //       setSaved(true);
+   //    }, 5000),
+   //    [router.query.danceId]
+   // );
+
+   // useDidMountEffect(() => {
+   //    if (router.isReady) {
+   //       setSaved(false);
+   //       uploadName(danceName);
+   //    }
+   // }, [danceName]);
+   // //////////////////////////
 
    return (
       <>
@@ -400,7 +396,7 @@ const Edit = ({ session, setSession }: { session: Session; setSession: Function 
                saved={saved}
                danceName={danceName}
                setDanceName={setDanceName}
-               setSession={setSession}
+               // setSession={setSession}
                viewAllPaths={viewAllPaths}
                setViewAllPaths={setViewAllPaths}
                setChangeSoundCloudIsOpen={setChangeSoundCloudIsOpen}
@@ -586,3 +582,45 @@ const whereInFormation = (formations: formation[], position: number) => {
    }
    return { currentFormationIndex };
 };
+
+export const getServerSideProps = withPageAuth({
+   redirectTo: "/login",
+   async getServerSideProps(ctx, supabase) {
+      // const {
+      //    data: { session },
+      //    error,
+      // } = await supabase.auth.getSession();
+      // if (error) {
+      //    throw error;
+      // }
+      // // if (!session) {
+      // //    return { props: {} };
+      // // }
+      // // const { user } = session;
+
+      const { data } = await supabase.from("dances").select("*").eq("id", ctx.query.danceId).single();
+
+      return {
+         props: {
+            initialData: data,
+         },
+      };
+   },
+});
+
+// if (!session) {
+//    setViewOnly(true);
+//    return;
+// }
+// if (user === session?.user?.id) {
+//    setViewOnly(false);
+//    return;
+// }
+// if (anyonecanview) {
+//    setViewOnly(true);
+//    return;
+// }
+// if (sharesettings[session?.user?.email] === "view") {
+//    setViewOnly(true);
+//    return;
+// }

@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { supabase } from "../utils/supabase";
+
 import { useRouter } from "next/router";
 import { type } from "os";
 import Link from "next/link";

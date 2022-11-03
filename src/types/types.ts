@@ -9,9 +9,9 @@ export type dancerPosition = {
    position: { x: number; y: number };
    exitStrategy: "left" | "right" | "closest";
    enterStrategy: "left" | "right" | "closest";
-   transitionType: "linear" | "cubic";
-   controlPointStart: { x: number | null; y: number | null };
-   controlPointEnd: { x: number | null; y: number | null };
+   transitionType?: "linear" | "cubic";
+   controlPointStart?: { x: number | null; y: number | null };
+   controlPointEnd?: { x: number | null; y: number | null };
 };
 
 export type formation = {
@@ -21,7 +21,7 @@ export type formation = {
       durationSeconds: number;
    };
    name: string | null;
-   notes: string | null | undefined;
+   notes?: string | null | undefined;
 };
 
 export type dragBoxCoords = { start: { x: number | null; y: number | null }; end: { x: number | null; y: number | null } };

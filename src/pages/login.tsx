@@ -2,31 +2,33 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { supabase } from "../utils/supabase";
+// import { supabase } from "../utils/supabase";
 import { Header } from "../components/NonAppComponents/Header";
 import { Session } from "@supabase/supabase-js";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 
-const Login = ({ session, setSession }: { session: Session; setSession: Function }) => {
+const Login = () => {
    const router = useRouter();
+   const session = useSession();
+   const supabase = useSupabaseClient();
 
-   useEffect(() => {
-      if (router.isReady) {
-         // console.log(session);
-         if (session) {
-            router.push("/mydances");
-         }
-      }
-   }, [router, session]);
+   // useEffect(() => {
+   //    if (router.isReady) {
+   //       // console.log(session);
+   //       if (session) {
+   //          router.push("/mydances");
+   //       }
+   //    }
+   // }, [router, session]);
 
    const handleLogin = async () => {
-      await supabase.auth.signIn(
-         {
-            provider: "google",
+      const { data } = await supabase.auth.signInWithOAuth({
+         provider: "google",
+         options: {
+            redirectTo: "http://localhost:3000/mydances",
          },
-         {
-            redirectTo: "https://www.naach.app/mydances",
-         }
-      );
+      });
+      console.log(data);
    };
 
    return (
