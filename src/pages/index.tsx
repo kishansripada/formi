@@ -94,7 +94,7 @@ const home = () => {
          </h1>
 
          <div className="flex flex-col items-center w-full justify-center ">
-            <Link href={"/141/edit"} className="z-50">
+            <Link href={"/207/edit"} className="z-50">
                <button className="ring-2 ring-white hover:bg-white/20 px-4 py-1 rounded-md text-white mt-12 text-xl hidden lg:block">
                   open a playground
                </button>
