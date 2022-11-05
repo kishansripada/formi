@@ -2,8 +2,8 @@ import Script from "next/script";
 import { useEffect, useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
-import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
+import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 
 export const ChooseAudioSource: React.FC<{
    setPosition: Function;
@@ -29,7 +29,8 @@ export const ChooseAudioSource: React.FC<{
    const [newUrl, setNewUrl] = useState("");
    const [file, setFile] = useState("");
    const router = useRouter();
-
+   let session = useSession();
+   const supabase = useSupabaseClient();
    return (
       <>
          <div
@@ -122,7 +123,8 @@ export const ChooseAudioSource: React.FC<{
                         if (file) {
                            const body = new FormData();
                            body.append("file", file);
-                           let userId = supabase?.auth?.currentUser.id;
+
+                           let userId = session?.user?.id;
 
                            const { data, error } = await toast.promise(
                               supabase.storage
@@ -137,9 +139,9 @@ export const ChooseAudioSource: React.FC<{
                                  error: <b>Could not upload file.</b>,
                               }
                            );
-                           // console.log(data);
-                           if (data) {
-                              setSoundCloudTrackId(`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/${data?.Key}`);
+
+                           if (data?.path) {
+                              setSoundCloudTrackId(`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/audiofiles/${data.path}`);
                               setChangeSoundCloudIsOpen(false);
                            }
                         }

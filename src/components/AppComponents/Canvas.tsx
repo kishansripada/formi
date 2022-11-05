@@ -332,7 +332,7 @@ export const Canvas: React.FC<{
       return () => {
          window.removeEventListener("wheel", handleScroll);
       };
-   }, []);
+   }, [songDuration]);
 
    const handleScroll = (e) => {
       if (
@@ -366,17 +366,11 @@ export const Canvas: React.FC<{
       ) {
          e.preventDefault();
          setPixelsPerSecond((pixelsPerSecond) => {
-            // if ((songDuration * (pixelsPerSecond - e.deltaY / 25)) / 1000 < window.screen.width - 20) return pixelsPerSecond;
+            if ((songDuration * (pixelsPerSecond - e.deltaY / 25)) / 1000 < window.screen.width - 20) return pixelsPerSecond;
+            if (pixelsPerSecond - e.deltaY / 25 > 38) {
+               return 38;
+            }
             return pixelsPerSecond - e.deltaY / 25;
-            // if (pixelsPerSecond - e.deltaY / 25 < 38) {
-            //    return pixelsPerSecond - e.deltaY / 25;
-            // }
-            // if (pixelsPerSecond - e.deltaY / 25 > 38) {
-            //    return 38;
-            // }
-            // if (pixelsPerSecond - e.deltaY / 25 < 5) {
-            //    return 5;
-            // }
          });
       }
    };

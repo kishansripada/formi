@@ -6,19 +6,21 @@ import { DancerAlias } from "../../components/AppComponents/DancerAlias";
 import { DancerAliasShadow } from "../../components/AppComponents/DancerAliasShadow";
 import { Dancer } from "../../components/AppComponents/Dancer";
 import { Canvas } from "../../components/AppComponents/Canvas";
+
+import { Header } from "../../components/AppComponents/Header";
 import { NewDancer } from "../../components/AppComponents/NewDancer";
 import { CurrentFormation } from "../../components/AppComponents/CurrentFormation";
 import { EditDancer } from "../../components/AppComponents/EditDancer";
 import { Layers } from "../../components/AppComponents/Layers";
 import { isMobile, useMobileOrientation } from "react-device-detect";
 import { PathEditor } from "../../components/AppComponents/PathEditor";
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { Share } from "../../components/AppComponents/Share";
 import { ChooseAudioSource } from "../../components/AppComponents/ChooseAudioSource";
-import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+
 var changesets = require("json-diff-ts");
 import { applyChangeset } from "json-diff-ts";
 // use effect, but not on initial render
@@ -30,21 +32,6 @@ const useDidMountEffect = (func, deps) => {
       else didMount.current = true;
    }, deps);
 };
-
-const Header = dynamic<{
-   saved: boolean;
-   session: any;
-   danceName: string;
-   setDanceName: Function;
-   setSession: Function;
-   viewAllPaths: boolean;
-   setViewAllPaths: Function;
-   setChangeSoundCloudIsOpen: Function;
-   setShareIsOpen: Function;
-   viewOnly: boolean;
-}>(() => import("../../components/AppComponents/Header").then((mod) => mod.Header), {
-   ssr: false,
-});
 
 const SoundCloudComponent = dynamic<{
    setPosition: Function;
@@ -74,37 +61,34 @@ const FileAudioPlayer = dynamic<{
 });
 
 import { dancer, dancerPosition, formation } from "../../types/types";
-import { formatWithOptions } from "util";
 
-const Edit = ({ initialData }: {}) => {
-   // if (!initialData?.id) {
-   //    router.push("/noaccess");
-   // }
+const Edit = ({ initialData, viewOnly }: {}) => {
    let session = useSession();
    const supabase = useSupabaseClient();
 
+   const [danceName, setDanceName] = useState<string>(initialData.name);
+   const [shareSettings, setShareSettings] = useState(initialData.sharesettings);
+   const [formations, setFormations] = useState<formation[]>(initialData.formations);
+   const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(initialData.soundCloudId);
+   const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
+
    const [songDuration, setSongDuration] = useState<number | null>(null);
-   const [dancers, setDancers] = useState<dancer[]>([]);
    const [position, setPosition] = useState<number | null>(null);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
-   const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
 
-   const [formations, setFormations] = useState<formation[]>(initialData.formations);
-   const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(null);
+   const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
    const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
-   const [danceName, setDanceName] = useState<string>("Untitled Dance");
-   const [saved, setSaved] = useState<boolean>(true);
    const [editingDancer, setEditingDancer] = useState<string | null>(null);
+
+   const [saved, setSaved] = useState<boolean>(true);
    const [viewAllPaths, setViewAllPaths] = useState<boolean>(true);
    const [mobile, setMobile] = useState<string | null>(null);
-   const [noAccess, setNoAccess] = useState<boolean>(false);
    const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(15);
-   let [changeSoundCloudIsOpen, setChangeSoundCloudIsOpen] = useState(false);
-   let [shareIsOpen, setShareIsOpen] = useState(false);
-   let [viewOnly, setViewOnly] = useState(false);
-   let [shareSettings, setShareSettings] = useState({});
+   const [changeSoundCloudIsOpen, setChangeSoundCloudIsOpen] = useState(false);
+   const [shareIsOpen, setShareIsOpen] = useState(false);
+
    let [anyoneCanView, setAnyoneCanView] = useState(false);
-   let [channelGloabl, setChannel] = useState(null);
+   // let [channelGloabl, setChannel] = useState(null);
 
    let currentFormationIndex = whereInFormation(formations, position).currentFormationIndex;
 
@@ -163,141 +147,132 @@ const Edit = ({ initialData }: {}) => {
    };
 
    useEffect(() => {
-      let { soundCloudId, dancers, formations, name, sharesettings, anyonecanview, user } = initialData;
-
-      setSoundCloudTrackId(soundCloudId);
-      // setFormations(formations);
-      setDancers(dancers);
-      setDanceName(name);
-      setShareSettings(sharesettings);
-      setAnyoneCanView(anyonecanview);
-
-      let channel = supabase.channel("177");
-      setChannel(channel);
-      channel
-         .on("broadcast", { event: "cursor-pos" }, ({ payload }) => {
-            console.log(payload?.[0]?.changes);
-            // if (!payload.length) return;
-            setFormations((formations) => {
-               console.log(payload);
-               return applyChangeset(formations, payload[0].changes);
-            });
-         })
-         .subscribe((status) => {
-            if (status === "SUBSCRIBED") {
-               console.log("subbedd");
-            }
-         });
+      // let channel = supabase.channel("177");
+      // setChannel(channel);
+      // channel
+      //    .on("broadcast", { event: "cursor-pos" }, ({ payload }) => {
+      //       console.log(payload?.[0]?.changes);
+      //       // if (!payload.length) return;
+      //       setFormations((formations) => {
+      //          console.log(payload);
+      //          return applyChangeset(formations, payload[0].changes);
+      //       });
+      //    })
+      //    .subscribe((status) => {
+      //       if (status === "SUBSCRIBED") {
+      //          console.log("subbedd");
+      //       }
+      //    });
 
       return () => {
          // supabase.removeSubscription(mySub);
       };
    }, [router.query.danceId]);
 
-   function usePrevious(value) {
-      const ref = useRef();
-      useEffect(() => {
-         ref.current = value; //assign the value of ref to the argument
-      }, [value]); //this code will run when the value of 'value' changes
-      return ref.current; //in the end, return the current ref value.
-   }
+   // function usePrevious(value) {
+   //    const ref = useRef();
+   //    useEffect(() => {
+   //       ref.current = value; //assign the value of ref to the argument
+   //    }, [value]); //this code will run when the value of 'value' changes
+   //    return ref.current; //in the end, return the current ref value.
+   // }
 
-   const prevFormations = usePrevious(formations);
+   // const prevFormations = usePrevious(formations);
+
+   // useDidMountEffect(() => {
+   //    console.log({ prevFormations });
+   //    if (!changesets) return;
+   //    if (!channelGloabl) return;
+   //    let diffs = changesets.diff(prevFormations, formations);
+   //    if (!diffs.length) return;
+   //    channelGloabl.send({
+   //       type: "broadcast",
+   //       event: "cursor-pos",
+   //       payload: diffs,
+   //    });
+   // }, [formations, prevFormations, channelGloabl]);
+   // /////////////////////////////
+   let uploadDancers = useCallback(
+      debounce(async (dancers) => {
+         console.log("uploading dancers");
+         const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
+
+         console.log({ data });
+         console.log({ error });
+         setSaved(true);
+      }, 2000),
+      [router.query.danceId]
+   );
 
    useDidMountEffect(() => {
-      console.log({ prevFormations });
-      if (!changesets) return;
-      if (!channelGloabl) return;
-      let diffs = changesets.diff(prevFormations, formations);
-      if (!diffs.length) return;
-      channelGloabl.send({
-         type: "broadcast",
-         event: "cursor-pos",
-         payload: diffs,
-      });
-   }, [formations, prevFormations, channelGloabl]);
-   // /////////////////////////////
-   // let uploadDancers = useCallback(
-   //    debounce(async (dancers) => {
-   //       console.log("uploading dancers");
-   //       const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
-
-   //       console.log({ data });
-   //       console.log({ error });
-   //       setSaved(true);
-   //    }, 5000),
-   //    [router.query.danceId]
-   // );
-
-   // useDidMountEffect(() => {
-   //    if (router.isReady) {
-   //       setSaved(false);
-   //       uploadDancers(dancers);
-   //    }
-   // }, [dancers]);
+      if (router.isReady) {
+         setSaved(false);
+         uploadDancers(dancers);
+      }
+   }, [dancers]);
    // // ///////////
-   // let uploadFormations = useCallback(
-   //    debounce(async (formations) => {
-   //       console.log("uploading formations");
-   //       const { data, error } = await supabase
-   //          .from("dances")
-   //          .update({ formations: formations, last_edited: new Date() })
-   //          .eq("id", router.query.danceId);
-   //       console.log({ data });
-   //       console.log({ error });
-   //       setSaved(true);
-   //    }, 10000),
-   //    [router.query.danceId]
-   // );
+   let uploadFormations = useCallback(
+      debounce(async (formations) => {
+         console.log("uploading formations");
+         const { data, error } = await supabase
+            .from("dances")
+            .update({ formations: formations, last_edited: new Date() })
+            .eq("id", router.query.danceId);
+         console.log({ data });
+         console.log({ error });
+         setSaved(true);
+      }, 3000),
+      [router.query.danceId]
+   );
 
-   // useDidMountEffect(() => {
-   //    if (router.isReady) {
-   //       setSaved(false);
-   //       uploadFormations(formations);
-   //    }
-   // }, [formations]);
-   // //////////////////////////
-   // // ///////////
-   // let uploadSoundCloudId = useCallback(
-   //    debounce(async (soundCloudTrackId) => {
-   //       console.log("uploading formations");
-   //       const { data, error } = await supabase
-   //          .from("dances")
-   //          .update({ soundCloudId: soundCloudTrackId, last_edited: new Date() })
-   //          .eq("id", router.query.danceId);
-   //       console.log({ data });
-   //       console.log({ error });
-   //       setSaved(true);
-   //    }, 5000),
-   //    [router.query.danceId]
-   // );
+   useDidMountEffect(() => {
+      if (router.isReady) {
+         setSaved(false);
+         uploadFormations(formations);
+      }
+   }, [formations]);
+   //////////////////////////
+   // ///////////
+   let uploadSoundCloudId = useCallback(
+      debounce(async (soundCloudTrackId) => {
+         console.log("uploading formations");
+         const { data, error } = await supabase
+            .from("dances")
+            .update({ soundCloudId: soundCloudTrackId, last_edited: new Date() })
+            .eq("id", router.query.danceId);
+         console.log({ data });
+         console.log({ error });
+         setSaved(true);
+      }, 100),
+      [router.query.danceId]
+   );
 
-   // useDidMountEffect(() => {
-   //    if (router.isReady) {
-   //       setSaved(false);
-   //       uploadSoundCloudId(soundCloudTrackId);
-   //    }
-   // }, [soundCloudTrackId]);
+   useDidMountEffect(() => {
+      if (router.isReady) {
+         setSaved(false);
+         uploadSoundCloudId(soundCloudTrackId);
+      }
+   }, [soundCloudTrackId]);
    // //////////////////////////
-   // // ///////////
-   // let uploadName = useCallback(
-   //    debounce(async (danceName) => {
-   //       console.log("uploading name");
-   //       const { data, error } = await supabase.from("dances").update({ name: danceName }).eq("id", router.query.danceId);
-   //       console.log({ data });
-   //       console.log({ error });
-   //       setSaved(true);
-   //    }, 5000),
-   //    [router.query.danceId]
-   // );
+   // ///////////
+   let uploadName = useCallback(
+      debounce(async (danceName) => {
+         console.log("uploading name");
+         const { data, error } = await supabase.from("dances").update({ name: danceName }).eq("id", router.query.danceId);
+         console.log({ data });
+         console.log({ error });
+         setSaved(true);
+      }, 100),
+      [router.query.danceId]
+   );
 
-   // useDidMountEffect(() => {
-   //    if (router.isReady) {
-   //       setSaved(false);
-   //       uploadName(danceName);
-   //    }
-   // }, [danceName]);
-   // //////////////////////////
+   useDidMountEffect(() => {
+      if (router.isReady) {
+         setSaved(false);
+         uploadName(danceName);
+      }
+   }, [danceName]);
+   //////////////////////////
 
    return (
       <>
@@ -334,22 +309,7 @@ const Edit = ({ initialData }: {}) => {
          ) : (
             <></>
          )}
-         {noAccess ? (
-            <>
-               <div className="fixed top-0 left-0 z-[100] flex h-screen w-screen items-center justify-center bg-black/70 backdrop-blur-[8px]">
-                  <div className="flex  w-[700px] flex-col rounded-xl bg-white">
-                     <div className="flex flex-col rounded-xl px-10 py-10 h-full text-center">
-                        <div className="flex flex-col mt-auto">you don't have access to this dance 🫢</div>
-                        <Link href="/mydances">
-                           <a className="ml-2  px-2 py-1 rounded-md text-pink-600"> back to my dances</a>
-                        </Link>
-                     </div>
-                  </div>
-               </div>
-            </>
-         ) : (
-            <></>
-         )}
+
          <Head>
             <title>Edit | Naach</title>
          </Head>
@@ -396,7 +356,6 @@ const Edit = ({ initialData }: {}) => {
                saved={saved}
                danceName={danceName}
                setDanceName={setDanceName}
-               // setSession={setSession}
                viewAllPaths={viewAllPaths}
                setViewAllPaths={setViewAllPaths}
                setChangeSoundCloudIsOpen={setChangeSoundCloudIsOpen}
@@ -583,44 +542,74 @@ const whereInFormation = (formations: formation[], position: number) => {
    return { currentFormationIndex };
 };
 
-export const getServerSideProps = withPageAuth({
-   redirectTo: "/login",
-   async getServerSideProps(ctx, supabase) {
-      // const {
-      //    data: { session },
-      //    error,
-      // } = await supabase.auth.getSession();
-      // if (error) {
-      //    throw error;
-      // }
-      // // if (!session) {
-      // //    return { props: {} };
-      // // }
-      // // const { user } = session;
+export const getServerSideProps = async (ctx) => {
+   // Create authenticated Supabase Client
+   const supabase = createServerSupabaseClient(ctx);
+   // Check if we have a session
+   const {
+      data: { session },
+   } = await supabase.auth.getSession();
 
-      const { data } = await supabase.from("dances").select("*").eq("id", ctx.query.danceId).single();
+   // if (!session){
+   //    return {
+   //       redirect: {
+   //          destination: "/",
+   //          permanent: false,
+   //       },
+   //    };
+   // }
+   // function detectMob(agent) {
+   //    const toMatch = [/Android/i, /webOS/i, /iPhone/i, /iPad/i, /iPod/i, /BlackBerry/i, /Windows Phone/i];
 
+   //    return toMatch.some((toMatchItem) => {
+   //       return agent.match(toMatchItem);
+   //    });
+   // }
+
+   // console.log(detectMob(ctx.req.rawHeaders[7]));
+   // Run queries with RLS on the server
+   const { data } = await supabase.from("dances").select("*").eq("id", ctx.query.danceId).single();
+
+   if (data?.user === session?.user?.id) {
       return {
          props: {
             initialData: data,
          },
       };
-   },
-});
+   }
 
-// if (!session) {
-//    setViewOnly(true);
-//    return;
-// }
-// if (user === session?.user?.id) {
-//    setViewOnly(false);
-//    return;
-// }
-// if (anyonecanview) {
-//    setViewOnly(true);
-//    return;
-// }
-// if (sharesettings[session?.user?.email] === "view") {
-//    setViewOnly(true);
-//    return;
-// }
+   if (!session) {
+      return {
+         props: {
+            initialData: data,
+            viewOnly: true,
+         },
+      };
+   }
+
+   if (data?.anyonecanview) {
+      return {
+         props: {
+            initialData: data,
+            viewOnly: true,
+         },
+      };
+   }
+   if (data?.sharesettings[session?.user?.email] === "view") {
+      return {
+         props: {
+            initialData: data,
+            viewOnly: true,
+         },
+      };
+   }
+
+   if (!data) {
+      return {
+         redirect: {
+            destination: "/noaccess",
+            permanent: false,
+         },
+      };
+   }
+};

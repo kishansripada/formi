@@ -2,7 +2,7 @@ import Script from "next/script";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
-import { PIXELS_PER_SECOND, formation } from "../../types/types";
+import { formation } from "../../types/types";
 import { v4 as uuidv4 } from "uuid";
 
 export const FileAudioPlayer: React.FC<{
@@ -32,7 +32,7 @@ export const FileAudioPlayer: React.FC<{
       useEffect(() => {
          if (!player) return;
          player.zoom(pixelsPerSecond);
-         console.log("zoomed");
+         // console.log("zoomed");
       }, [pixelsPerSecond, player, soundCloudTrackId]);
 
       useEffect(() => {
@@ -53,21 +53,20 @@ export const FileAudioPlayer: React.FC<{
             progressColor: "#db2777",
             cursorColor: "#4353FF",
             // backgroundColor: "#D3D3D3",
-            barWidth: 5,
-            barRadius: 6,
+            barWidth: 3,
+            barRadius: 3,
             cursorWidth: 1,
             height: 60,
             barGap: 1,
          });
          wavesurfer.load(soundCloudTrackId);
          wavesurfer.on("audioprocess", function (e) {
-            // 30fps
-            setPosition(Math.ceil(e / 0.033) * 0.033);
-
-            // setPosition(e);
+            setPosition(Math.ceil(e / 0.033) * 0.033); // 30fps
          });
          wavesurfer.on("ready", function (e) {
-            setSongDuration(wavesurfer.getDuration() * 1000);
+            console.log("ready");
+            let duration = wavesurfer.getDuration() * 1000;
+            setSongDuration(duration);
             wavesurfer.zoom(pixelsPerSecond);
          });
          wavesurfer.on("play", function (e) {
@@ -159,7 +158,13 @@ export const FileAudioPlayer: React.FC<{
             <Script onReady={handleLoad} strategy="lazyOnload" src="https://unpkg.com/wavesurfer.js" />
 
             <div className=" h-[95px] flex flex-col justify-end w-full">
-               <div id="waveform" className="w-full"></div>
+               <div
+                  id="waveform"
+                  style={{
+                     overflowX: "hidden",
+                  }}
+                  className="w-full"
+               ></div>
             </div>
          </>
       );

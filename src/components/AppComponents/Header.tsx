@@ -11,24 +11,13 @@ export const Header: React.FC<{
    session: any;
    danceName: string;
    setDanceName: Function;
-   setSession: Function;
+
    viewAllPaths: boolean;
    setViewAllPaths: Function;
    setChangeSoundCloudIsOpen: Function;
    setShareIsOpen: Function;
    viewOnly: boolean;
-}> = ({
-   saved,
-   session,
-   danceName,
-   setDanceName,
-   setSession,
-   viewAllPaths,
-   setViewAllPaths,
-   setChangeSoundCloudIsOpen,
-   setShareIsOpen,
-   viewOnly,
-}) => {
+}> = ({ saved, session, danceName, setDanceName, viewAllPaths, setViewAllPaths, setChangeSoundCloudIsOpen, setShareIsOpen, viewOnly }) => {
    const router = useRouter();
 
    let [profileIsOpen, setProfileIsOpen] = useState(false);

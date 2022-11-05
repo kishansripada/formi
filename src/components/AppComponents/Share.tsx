@@ -2,9 +2,8 @@ import Script from "next/script";
 import { useEffect, useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
-import { supabase } from "../../utils/supabase";
+import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
-import e from "express";
 
 export const Share: React.FC<{
    setShareIsOpen: Function;
@@ -15,13 +14,14 @@ export const Share: React.FC<{
 }> = ({ setShareIsOpen, shareSettings, setShareSettings, anyoneCanView, setAnyoneCanView }) => {
    let [newUserEmail, setNewUserEmail] = useState("");
    const router = useRouter();
-
+   let session = useSession();
+   const supabase = useSupabaseClient();
    const updateShareSettings = async () => {
       const { data, error } = await supabase
          .from("dances")
          .update({ sharesettings: shareSettings, last_edited: new Date() })
          .eq("id", router.query.danceId);
-      if (data) {
+      if (!error) {
          toast.success("share settings updated");
       }
       if (error) {
@@ -44,7 +44,6 @@ export const Share: React.FC<{
             id="outside"
             onClick={(e) => {
                if (e.target.id === "outside") {
-                  updateShareSettings();
                   setShareIsOpen(false);
                }
             }}
@@ -67,10 +66,10 @@ export const Share: React.FC<{
                                     .from("dances")
                                     .update({ anyonecanview: !anyoneCanView, last_edited: new Date() })
                                     .eq("id", router.query.danceId);
-
-                                 if (data) {
+                                 console.log(data);
+                                 if (!error) {
                                     toast.success("share settings updated");
-                                    setAnyoneCanView(data[0].anyonecanview);
+                                    setAnyoneCanView(!anyoneCanView);
                                  }
                                  if (error) {
                                     toast.error("there was an error saving your settings");
