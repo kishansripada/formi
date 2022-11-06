@@ -28,7 +28,6 @@ const Login = () => {
             redirectTo: "http://localhost:3000/mydances",
          },
       });
-      console.log(data);
    };
 
    return (

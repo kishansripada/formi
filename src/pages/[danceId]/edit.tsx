@@ -107,12 +107,6 @@ const Edit = ({ initialData, viewOnly }: {}) => {
       setSelectedDancers([]);
    }, [selectedFormation]);
 
-   // useEffect(() => {
-   //    if (!window) return;
-
-   //    setPixelsPerSecond((window.screen.width - 130) / songDuration);
-   // }, []);
-
    useEffect(() => {
       if (isMobile) {
          setMobile(true);

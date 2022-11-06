@@ -10,7 +10,11 @@ import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 const NoAccess = () => {
    return (
       <>
-         <p>nice try 😉. you can't view this dance</p>
+         <div className="flex flex-col items-center justify-center h-screen">
+            <div className="flex flex-row items-center">
+               <p>ummmm, you can't view this dance</p>
+            </div>
+         </div>
       </>
    );
 };

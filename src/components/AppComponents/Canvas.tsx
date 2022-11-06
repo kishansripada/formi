@@ -368,7 +368,7 @@ export const Canvas: React.FC<{
          setPixelsPerSecond((pixelsPerSecond) => {
             if ((songDuration * (pixelsPerSecond - e.deltaY / 25)) / 1000 < window.screen.width - 20) return pixelsPerSecond;
             if (pixelsPerSecond - e.deltaY / 25 > 38) {
-               return 38;
+               return pixelsPerSecond;
             }
             return pixelsPerSecond - e.deltaY / 25;
          });
