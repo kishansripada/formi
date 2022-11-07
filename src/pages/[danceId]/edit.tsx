@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { debounce } from "lodash";
+import { debounce, initial } from "lodash";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
@@ -71,23 +71,22 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    const [formations, setFormations] = useState<formation[]>(initialData.formations);
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(initialData.soundCloudId);
    const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
+   const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
 
    const [songDuration, setSongDuration] = useState<number | null>(null);
-   const [position, setPosition] = useState<number | null>(null);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
-
+   const [position, setPosition] = useState<number | null>(null);
+   const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(15);
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
    const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
    const [editingDancer, setEditingDancer] = useState<string | null>(null);
+   const [viewAllPaths, setViewAllPaths] = useState<boolean>(true);
 
    const [saved, setSaved] = useState<boolean>(true);
-   const [viewAllPaths, setViewAllPaths] = useState<boolean>(true);
    const [mobile, setMobile] = useState<string | null>(null);
-   const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(15);
    const [changeSoundCloudIsOpen, setChangeSoundCloudIsOpen] = useState(false);
    const [shareIsOpen, setShareIsOpen] = useState(false);
 
-   let [anyoneCanView, setAnyoneCanView] = useState(false);
    // let [channelGloabl, setChannel] = useState(null);
 
    let currentFormationIndex = whereInFormation(formations, position).currentFormationIndex;
@@ -346,7 +345,6 @@ const Edit = ({ initialData, viewOnly }: {}) => {
 
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none ">
             <Header
-               session={session}
                saved={saved}
                danceName={danceName}
                setDanceName={setDanceName}
@@ -358,7 +356,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
             />
             <div className="flex flex-row grow overflow-hidden">
                {!viewOnly ? (
-                  <div className="flex flex-col w-[30%] relative overflow-y-scroll overflow-x-visible ml-3 ">
+                  <div className="flex flex-col w-[30%] relative overflow-y-scroll overflow-x-hidden ml-3 ">
                      <NewDancer setDancers={setDancers} />
 
                      {dancers
@@ -563,6 +561,14 @@ export const getServerSideProps = async (ctx) => {
    // console.log(detectMob(ctx.req.rawHeaders[7]));
    // Run queries with RLS on the server
    const { data } = await supabase.from("dances").select("*").eq("id", ctx.query.danceId).single();
+   if (!data) {
+      return {
+         redirect: {
+            destination: "/noaccess",
+            permanent: false,
+         },
+      };
+   }
 
    if (data?.user === session?.user?.id) {
       return {
@@ -594,15 +600,6 @@ export const getServerSideProps = async (ctx) => {
          props: {
             initialData: data,
             viewOnly: true,
-         },
-      };
-   }
-
-   if (!data) {
-      return {
-         redirect: {
-            destination: "/noaccess",
-            permanent: false,
          },
       };
    }

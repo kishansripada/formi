@@ -56,9 +56,9 @@ export const DancerAlias: React.FC<{
                }}
             >
                {dancer.instagramUsername ? (
-                  <img className="w-[34px] h-[34px] rounded-full select-none " src={dancer.instagramUsername} alt="" />
+                  <img className="w-[32px] h-[32px] rounded-full select-none " src={dancer.instagramUsername} alt="" />
                ) : (
-                  <div className="bg-white rounded-full w-[34px] h-[34px] grid place-items-center cursor-default  font-semibold  ">
+                  <div className="bg-white rounded-full w-[32px] h-[32px] grid place-items-center cursor-default  font-semibold  ">
                      <p className="cursor-default ">{initials}</p>
                   </div>
                )}
@@ -79,21 +79,20 @@ export const DancerAlias: React.FC<{
    return (
       <>
          <div
-            style={{ left, top, transform: "translate(-50%, -50%)" }}
+            style={{ left, top, transform: "translate(-50%, -50%)", backgroundColor: dancer.color || "" }}
             id={dancer.id}
             data-type={"dancer"}
-            className={` ${
-               selectedDancers.includes(dancer.id)
-                  ? "bg-blue-500 w-[41px] h-[41px]"
-                  : "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 w-[38px] h-[38px]"
-            }  rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
+            className={` ${dancer.color === "#FFFFFF" || !dancer.color ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" : ""}
+              rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default ${
+                 selectedDancers.includes(dancer.id) ? "w-[41px] h-[41px]" : "w-[38px] h-[38px]"
+              } `}
          >
             {dancer.instagramUsername ? (
                <img
                   id={dancer.id}
                   data-type={"dancer"}
                   draggable={false}
-                  className="w-[34px] h-[34px] rounded-full select-none"
+                  className="w-[32px] h-[32px] rounded-full select-none"
                   src={dancer.instagramUsername}
                   alt={dancer.name}
                />
@@ -101,7 +100,7 @@ export const DancerAlias: React.FC<{
                <div
                   id={dancer.id}
                   data-type={"dancer"}
-                  className="bg-white rounded-full w-[34px] h-[34px] grid place-items-center select-none cursor-default "
+                  className="bg-white rounded-full w-[32px] h-[32px] grid place-items-center select-none cursor-default "
                >
                   <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
                      {initials}

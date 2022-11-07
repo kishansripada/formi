@@ -1,6 +1,7 @@
 import toast, { Toaster } from "react-hot-toast";
 import { dancer, dancerPosition, formation } from "../../types/types";
 import { MouseEvent } from "react";
+import { TwitterPicker, CirclePicker } from "react-color";
 
 export const EditDancer: React.FC<{
    setEditingDancer: Function;
@@ -19,13 +20,12 @@ export const EditDancer: React.FC<{
             }
          }}
       >
-         <div className="flex  w-[400px] flex-col rounded-xl bg-white pt-10 pb-3 px-3 hi">
-            <p className="text-3xl text-center mb-8">{dancers.find((dancer) => dancer.id === editingDancer)?.name}</p>
-
-            <div className="flex flex-col mt-auto">
-               <div className="flex flex-col items-center">
-                  <div className="flex flex-col items-start">
-                     <p className="text-sm">image url:</p>
+         <div className="flex  flex-col rounded-xl bg-white pt-6 pb-6 ">
+            <p className="text-3xl text-center ">{dancers.find((dancer) => dancer.id === editingDancer)?.name}</p>
+            <hr className="mb-8 mt-3" />
+            <div className="flex flex-col mt-auto px-10">
+               <div className="flex flex-row items-center justify-center">
+                  <div className="flex flex-col items-start mr-5">
                      <input
                         defaultValue={dancers.find((dancer) => dancer.id === editingDancer)?.instagramUsername || ""}
                         onBlur={(e) => {
@@ -38,11 +38,31 @@ export const EditDancer: React.FC<{
                               });
                            });
                         }}
-                        className=" border-black border-2 rounded-md focus:outline-none px-2 h-8  grow "
+                        placeholder="instagram username"
+                        className=" border-black border-2 rounded-md focus:outline-none px-2 h-8  grow text-sm "
                         type="text"
+                     />
+                     <p className="text-xs text-gray-500 italic">for profile picture</p>
+                  </div>
+
+                  <div className="ml-5 grid place-items-center">
+                     <CirclePicker
+                        color={dancers.find((dancer) => dancer.id === editingDancer)?.color}
+                        onChangeComplete={(color, event) => {
+                           setDancers((dancers: dancer[]) => {
+                              return dancers.map((dancer) => {
+                                 if (dancer.id === editingDancer) {
+                                    return { ...dancer, color: color.hex };
+                                 }
+                                 return dancer;
+                              });
+                           });
+                           console.log(color);
+                        }}
                      />
                   </div>
                </div>
+
                <div className="flex flex-row justify-between">
                   <button
                      className="bg-red-600 flex flex-row mt-6 text-white px-2 py-1 rounded-md "

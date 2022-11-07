@@ -28,6 +28,7 @@ const Login = () => {
             redirectTo: "http://localhost:3000/mydances",
          },
       });
+      // router.push("/mydances");
    };
 
    return (
@@ -86,18 +87,11 @@ const Login = () => {
                }}
             ></div>
             <div className="flex flex-row w-full items-center justify-center ">
-               {/* <div className="bg-white w-full h-[2px]"></div>
-               <div className="h-[2px] w-[100px]"></div> */}
                <div className="text-3xl flex flex-col items-center justify-center text-white">
                   <img src="https://i.imgur.com/MgHYste.png" className="w-16 h-16 rounded-xl" alt="" />
-                  <p className="mt-3"> welcome to naach 🎉</p>
-                  <p className="  italic text-xs">
-                     the ultimate choreography tool <span className="not-italic">😏</span>
-                  </p>
-                  <p className="text-sm mt-4">we missed you </p>
+                  <p className="mt-3"> welcome to naach 😛</p>
+                  <p className="  italic text-xs">the ultimate choreography tool</p>
                </div>
-               {/* <div className="h-[2px] w-[100px]"></div>
-               <div className="bg-white w-full h-[2px]"></div> */}
             </div>
 
             <div className="flex flex-col items-center  justify-center mt-[50px] z-[100]">

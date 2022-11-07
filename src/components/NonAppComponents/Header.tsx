@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { supabase } from "../../utils/supabase";
-import { Session } from "@supabase/supabase-js";
+import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 
-export const Header = ({ session }: { session: Session | null }) => {
+export const Header = () => {
    const router = useRouter();
+   let session = useSession();
+   const supabase = useSupabaseClient();
    return (
       <>
          <div className="h-20 flex flex-row items-center px-[5%]">
@@ -16,7 +17,6 @@ export const Header = ({ session }: { session: Session | null }) => {
                className="ml-auto"
                onClick={() => {
                   supabase.auth.signOut();
-
                   router.push("/login");
                }}
             >

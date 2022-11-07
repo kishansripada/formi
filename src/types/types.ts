@@ -1,7 +1,8 @@
 export type dancer = {
    name: string;
    id: string;
-   instagramUsername: string | null;
+   instagramUsername?: string | null;
+   color?: string | null;
 };
 
 export type dancerPosition = {

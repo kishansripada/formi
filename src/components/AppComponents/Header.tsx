@@ -5,21 +5,21 @@ import { useRouter } from "next/router";
 import logo from "../../../public/logo.svg";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
+import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 
 export const Header: React.FC<{
    saved: boolean;
-   session: any;
    danceName: string;
    setDanceName: Function;
-
    viewAllPaths: boolean;
    setViewAllPaths: Function;
    setChangeSoundCloudIsOpen: Function;
    setShareIsOpen: Function;
    viewOnly: boolean;
-}> = ({ saved, session, danceName, setDanceName, viewAllPaths, setViewAllPaths, setChangeSoundCloudIsOpen, setShareIsOpen, viewOnly }) => {
+}> = ({ saved, danceName, setDanceName, viewAllPaths, setViewAllPaths, setChangeSoundCloudIsOpen, setShareIsOpen, viewOnly }) => {
    const router = useRouter();
-
+   let session = useSession();
+   const supabase = useSupabaseClient();
    let [profileIsOpen, setProfileIsOpen] = useState(false);
    const initials = (name) => {
       if (!name) return "";
@@ -114,10 +114,16 @@ export const Header: React.FC<{
                      </button>
                   </>
                ) : null}
+               {session ? (
+                  <Link href="/mydances">
+                     <a className="ml-2 bg-pink-600 hover:bg-pink-700 px-2 py-1 rounded-md text-white ">my dances</a>
+                  </Link>
+               ) : (
+                  <Link href="/login">
+                     <a className="ml-2 bg-pink-600 hover:bg-pink-700 px-2 py-1 rounded-md text-white ">sign in</a>
+                  </Link>
+               )}
 
-               <Link href="/mydances">
-                  {session ? <a className="ml-2 bg-pink-600 hover:bg-pink-700 px-2 py-1 rounded-md text-white ">my dances</a> : <></>}
-               </Link>
                <script src=""></script>
                {session ? (
                   <button
@@ -140,10 +146,9 @@ export const Header: React.FC<{
                   <div className="bg-white ring-gray-500 ring-1 absolute w-24 h-10 right-10 top-[70px] z-50 rounded-md flex flex-col justify-center items-center">
                      <button
                         className=""
-                        onClick={() => {
+                        onClick={async () => {
                            router.push("/login");
-                           setSession(null);
-                           supabase.auth.signOut();
+                           const { error } = await supabase.auth.signOut();
                         }}
                      >
                         sign out

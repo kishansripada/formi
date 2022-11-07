@@ -23,7 +23,7 @@ export const NewDancer: React.FC<{ setDancers: Function }> = ({ setDancers }) =>
    return (
       <>
          <div
-            className="flex flex-row items-center h-[55px] rounded-xl bg-white shrink-0"
+            className="flex flex-row items-center h-[55px] rounded-xl bg-white shrink-0 mb-1"
             style={{
                opacity: 1,
             }}
@@ -31,7 +31,7 @@ export const NewDancer: React.FC<{ setDancers: Function }> = ({ setDancers }) =>
             <input
                className="ml-3 focus:outline-pink-600 rounded-md  hover:outline-gray-400 focus:outline-2  hover:outline-2 focus:outline hover:outline px-2"
                onKeyDown={(event) => (event.key === "Enter" ? createNewDancer() : null)}
-               placeholder="New dancer"
+               placeholder="new dancer"
                value={newName}
                onChange={(e) => setNewName(e.target.value)}
                onBlur={createNewDancer}
