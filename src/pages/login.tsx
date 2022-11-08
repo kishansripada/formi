@@ -93,7 +93,7 @@ const Login = ({ session, setSession }: { session: Session; setSession: Function
                   <p className="  italic text-xs">
                      the ultimate choreography tool <span className="not-italic">😏</span>
                   </p>
-                  <p className="text-sm mt-4">we missed you </p>
+         
                </div>
                {/* <div className="h-[2px] w-[100px]"></div>
                <div className="bg-white w-full h-[2px]"></div> */}
