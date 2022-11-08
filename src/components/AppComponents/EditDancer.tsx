@@ -37,7 +37,7 @@ export const EditDancer: React.FC<{
                               });
                            });
                         }}
-                        placeholder="instagram username"
+                        placeholder="image url"
                         className=" border-black border-2 rounded-md focus:outline-none px-2 h-8  grow text-sm "
                         type="text"
                      />

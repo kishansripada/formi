@@ -28,22 +28,24 @@ export const FileAudioPlayer: React.FC<{
       pixelsPerSecond,
    }) => {
       const [player, setPlayer] = useState(null);
+      const [ready, setReady] = useState(false);
+
+      useEffect(() => {
+         if (!document.getElementById("waveform")?.firstChild) return;
+         document.getElementById("waveform").firstChild.style.overflowX = "hidden";
+      }, [document.getElementById("waveform")?.firstChild]);
 
       useEffect(() => {
          if (!player) return;
          player.zoom(pixelsPerSecond);
-         // console.log("zoomed");
       }, [pixelsPerSecond, player, soundCloudTrackId]);
 
       useEffect(() => {
          return () => {
-            console.log("cleanin up");
             if (!player) return;
-            console.log("cleanup");
             player.destroy();
          };
       }, [soundCloudTrackId, player]);
-      // console.log("SoundCloudComponent rerendered");
 
       function handleLoad() {
          if (document.getElementById("waveform")?.innerHTML) return;
@@ -71,7 +73,6 @@ export const FileAudioPlayer: React.FC<{
          });
          wavesurfer.on("play", function (e) {
             setIsPlaying(true);
-            wavesurfer.zoom(pixelsPerSecond);
          });
 
          wavesurfer.on("pause", function (e) {

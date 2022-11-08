@@ -96,6 +96,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
          setViewAllPaths(JSON.parse(window.localStorage.getItem("viewAllPaths")));
       }
    }, []);
+
    useDidMountEffect(() => {
       if (window !== undefined) {
          window.localStorage.setItem("viewAllPaths", viewAllPaths);
@@ -356,25 +357,28 @@ const Edit = ({ initialData, viewOnly }: {}) => {
             />
             <div className="flex flex-row grow overflow-hidden">
                {!viewOnly ? (
-                  <div className="flex flex-col w-[30%] relative overflow-y-scroll overflow-x-hidden ml-3 ">
-                     <NewDancer setDancers={setDancers} />
+                  <div className="flex flex-col w-[30%] ml-3">
+                     <p className="text-xl font-bold mb-2 ml-2">My dancers</p>
+                     <div className="flex flex-col  relative overflow-y-scroll overflow-x-hidden  ">
+                        <NewDancer setDancers={setDancers} />
 
-                     {dancers
-                        .slice()
-                        .reverse()
-                        .map((dancer, index) => (
-                           <Dancer
-                              isPlaying={isPlaying}
-                              formations={formations}
-                              selectedFormation={selectedFormation}
-                              setDancers={setDancers}
-                              {...dancer}
-                              key={dancer.id}
-                              dancers={dancers}
-                              setEditingDancer={setEditingDancer}
-                              setFormations={setFormations}
-                           />
-                        ))}
+                        {dancers
+                           .slice()
+                           .reverse()
+                           .map((dancer, index) => (
+                              <Dancer
+                                 isPlaying={isPlaying}
+                                 formations={formations}
+                                 selectedFormation={selectedFormation}
+                                 setDancers={setDancers}
+                                 {...dancer}
+                                 key={dancer.id}
+                                 dancers={dancers}
+                                 setEditingDancer={setEditingDancer}
+                                 setFormations={setFormations}
+                              />
+                           ))}
+                     </div>
                   </div>
                ) : null}
 
@@ -561,6 +565,7 @@ export const getServerSideProps = async (ctx) => {
    // console.log(detectMob(ctx.req.rawHeaders[7]));
    // Run queries with RLS on the server
    const { data } = await supabase.from("dances").select("*").eq("id", ctx.query.danceId).single();
+   console.log(data);
    if (!data) {
       return {
          redirect: {
@@ -596,6 +601,15 @@ export const getServerSideProps = async (ctx) => {
       };
    }
    if (data?.sharesettings[session?.user?.email] === "view") {
+      return {
+         props: {
+            initialData: data,
+            viewOnly: true,
+         },
+      };
+   }
+
+   if (data) {
       return {
          props: {
             initialData: data,
