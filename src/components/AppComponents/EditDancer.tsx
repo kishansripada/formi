@@ -1,7 +1,6 @@
 import toast, { Toaster } from "react-hot-toast";
 import { dancer, dancerPosition, formation } from "../../types/types";
-import { MouseEvent } from "react";
-import { TwitterPicker, CirclePicker } from "react-color";
+import { CirclePicker } from "react-color";
 
 export const EditDancer: React.FC<{
    setEditingDancer: Function;

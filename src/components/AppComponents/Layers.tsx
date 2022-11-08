@@ -1,14 +1,6 @@
-import { ReactEventHandler } from "react";
-import { Formation } from "./Formation";
-// import { DndContext, closestCenter, DragOverlay } from "@dnd-kit/core";
-// import { SortableContext } from "@dnd-kit/sortable";
-
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { dancer, dancerPosition, formation } from "../../types/types";
 import { Layer } from "./Layer";
-import cursor from "../../../public/cursor.svg";
-import { PIXELS_PER_SECOND } from "../../types/types";
-// import { horizontalListSortingStrategy } from "@dnd-kit/sortable";
 
 export const Layers: React.FC<{
    formations: formation[];
@@ -33,6 +25,51 @@ export const Layers: React.FC<{
    viewOnly,
    pixelsPerSecond,
 }) => {
+   const [resizingTransition, setResizingTransition] = useState<number | null>(null);
+   const [resizingFormation, setResizingFormation] = useState<number | null>(null);
+
+   const pointerUp = (e) => {
+      setResizingTransition(null);
+      setResizingFormation(null);
+   };
+   const pointerDown = (e) => {
+      if (e.target.dataset.type === "transition-resize") {
+         setResizingTransition(e.target.id);
+      }
+      if (e.target.dataset.type === "formation-resize") {
+         setResizingFormation(e.target.id);
+      }
+   };
+   const pointerMove = (e) => {
+      if (!resizingFormation && !resizingTransition) return;
+
+      if (resizingFormation !== null) {
+         setFormations((formations: formation[]) => {
+            return formations.map((formation, i) => {
+               if (i === parseInt(resizingFormation) && formation.durationSeconds + e.movementX / pixelsPerSecond > 0) {
+                  return { ...formation, durationSeconds: formation.durationSeconds + e.movementX / pixelsPerSecond };
+               }
+               return formation;
+            });
+         });
+      }
+
+      if (resizingTransition !== null) {
+         setFormations((formations: formation[]) => {
+            return formations.map((formation, i) => {
+               if (i === parseInt(resizingTransition) && formation.transition.durationSeconds - e.movementX / pixelsPerSecond > 2) {
+                  return {
+                     ...formation,
+                     durationSeconds: formation.durationSeconds + e.movementX / pixelsPerSecond,
+                     transition: { ...formation.transition, durationSeconds: formation.transition.durationSeconds - e.movementX / pixelsPerSecond },
+                  };
+               }
+               return formation;
+            });
+         });
+      }
+   };
+
    return (
       <div
          className="flex flex-col pt-2 pb-3 w-full  bg-white  max-h-[75px] overflow-x-scroll  "
@@ -40,6 +77,9 @@ export const Layers: React.FC<{
             width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
             marginLeft: soundCloudTrackId ? (soundCloudTrackId.length < 15 ? 122 : 10) : 115,
          }}
+         onPointerUp={pointerUp}
+         onPointerDown={pointerDown}
+         onPointerMove={pointerMove}
          id="layers"
       >
          <Layer

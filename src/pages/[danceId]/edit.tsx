@@ -1,25 +1,25 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { debounce, initial } from "lodash";
-import { supabase } from "../../utils/supabase";
+import { debounce } from "lodash";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
+import Head from "next/head";
+
+import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+
+import { Header } from "../../components/AppComponents/Header";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
 import { DancerAliasShadow } from "../../components/AppComponents/DancerAliasShadow";
 import { Dancer } from "../../components/AppComponents/Dancer";
 import { Canvas } from "../../components/AppComponents/Canvas";
-
-import { Header } from "../../components/AppComponents/Header";
 import { NewDancer } from "../../components/AppComponents/NewDancer";
 import { CurrentFormation } from "../../components/AppComponents/CurrentFormation";
 import { EditDancer } from "../../components/AppComponents/EditDancer";
 import { Layers } from "../../components/AppComponents/Layers";
-import { isMobile, useMobileOrientation } from "react-device-detect";
+import { isMobile } from "react-device-detect";
 import { PathEditor } from "../../components/AppComponents/PathEditor";
-import dynamic from "next/dynamic";
-import Head from "next/head";
 import { Share } from "../../components/AppComponents/Share";
 import { ChooseAudioSource } from "../../components/AppComponents/ChooseAudioSource";
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 var changesets = require("json-diff-ts");
 import { applyChangeset } from "json-diff-ts";
@@ -214,7 +214,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 3000),
+      }, 10000),
       [router.query.danceId]
    );
 
