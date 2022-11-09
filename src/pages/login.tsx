@@ -12,20 +12,11 @@ const Login = () => {
    const session = useSession();
    const supabase = useSupabaseClient();
 
-   // useEffect(() => {
-   //    if (router.isReady) {
-   //       // console.log(session);
-   //       if (session) {
-   //          router.push("/mydances");
-   //       }
-   //    }
-   // }, [router, session]);
-
    const handleLogin = async () => {
       const { data } = await supabase.auth.signInWithOAuth({
          provider: "google",
          options: {
-            redirectTo: "http://localhost:3000/mydances",
+            redirectTo: "https://naach.app/mydances",
          },
       });
       // router.push("/mydances");
