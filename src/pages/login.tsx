@@ -16,10 +16,9 @@ const Login = () => {
       const { data } = await supabase.auth.signInWithOAuth({
          provider: "google",
          options: {
-            redirectTo: "https://naach.app/mydances",
+            redirectTo: `${window.location.origin}/mydances`,
          },
       });
-      router.push("/mydances");
    };
 
    return (
