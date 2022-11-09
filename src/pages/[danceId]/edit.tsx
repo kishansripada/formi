@@ -577,9 +577,9 @@ export const getServerSideProps = async (ctx) => {
       };
    }
 
-   if (data.id === "207") {
+ if (data.id === 207) {
       return {
-         redirect: {
+         props: {
             initialData: data,
          },
       };
