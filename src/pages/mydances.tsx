@@ -71,15 +71,21 @@ const MyDances = ({ dances }: {}) => {
             >
                <div className="flex  w-[700px] flex-col rounded-xl bg-white">
                   <div className="flex flex-col rounded-xl px-10 pt-10 pb-6 h-full">
-                     <p>paste an uploaded link from danceapp.us</p>
+                     <h1 className="text-2xl font-bold"> Import from danceapp.us</h1>
+
                      <input
                         value={danceAppLink}
                         onChange={(e) => {
                            setDanceAppLink(e.target.value);
                         }}
+                        placeholder="danceapp.us link"
                         type="text"
-                        className=" outline outline-2"
+                        className=" outline outline-2 rounded px-2 mt-6"
                      />
+                     <div className="flex flex-row items-center justify-center">
+                        <img src="https://i.imgur.com/mBCNO7A.png" className="w-48 rounded-xl mt-10" alt="" />
+                        <p className="w-48 ml-10">make sure the dance is uploaded before pasting the url</p>
+                     </div>
                      <button onClick={importFromDanceApp} className="ml-auto bg-blue-600 text-white px-3 mt-5 py-1 rounded-md">
                         import
                      </button>

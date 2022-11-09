@@ -124,8 +124,7 @@ export const Header: React.FC<{
                   </Link>
                )}
 
-               <script src=""></script>
-               {session ? (
+               {/* {session ? (
                   <button
                      onClick={() => {
                         setProfileIsOpen((state) => !state);
@@ -154,7 +153,7 @@ export const Header: React.FC<{
                         sign out
                      </button>
                   </div>
-               ) : null}
+               ) : null} */}
             </div>
          </div>
          <hr className="mb-2" />

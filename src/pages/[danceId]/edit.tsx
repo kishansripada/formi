@@ -103,6 +103,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
       }
    }, [viewAllPaths]);
 
+   // remove this eventually
    useEffect(() => {
       setSelectedDancers([]);
    }, [selectedFormation]);
@@ -121,6 +122,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    useEffect(() => {
       if (!songDuration) return;
       console.log("setting original");
+      setPixelsPerSecond(15);
       if (pixelsPerSecond * (songDuration / 1000) < window.screen.width - 20) {
          setPixelsPerSecond((window.screen.width - 20) / (songDuration / 1000));
       }

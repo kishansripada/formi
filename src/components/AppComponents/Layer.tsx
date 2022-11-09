@@ -34,7 +34,7 @@ export const Layer: React.FC<{
                   key={index}
                   id="formation"
                   onClick={(e: any) => {
-                     if (e.target.id === "delete") return;
+                     setselec;
                      setSelectedFormation(index);
                   }}
                >

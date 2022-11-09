@@ -41,6 +41,7 @@ export const Layers: React.FC<{
       }
    };
    const pointerMove = (e) => {
+      if (viewOnly) return;
       if (!resizingFormation && !resizingTransition) return;
 
       if (resizingFormation !== null) {
