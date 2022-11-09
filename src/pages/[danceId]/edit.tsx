@@ -577,6 +577,13 @@ export const getServerSideProps = async (ctx) => {
       };
    }
 
+   if (data.id === "207") {
+      return {
+         redirect: {
+            initialData: data,
+         },
+      };
+   }
    if (data?.user === session?.user?.id) {
       return {
          props: {
