@@ -577,14 +577,21 @@ export const getServerSideProps = async (ctx) => {
       };
    }
 
+<<<<<<< HEAD
    if (data.id === 207) {
+=======
+ if (data.id === 207) {
+>>>>>>> e732113fe76c1db362e020d3b749baffa3435f2d
       return {
          props: {
             initialData: data,
          },
       };
    }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e732113fe76c1db362e020d3b749baffa3435f2d
    if (data?.user === session?.user?.id) {
       return {
          props: {
