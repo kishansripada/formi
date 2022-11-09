@@ -96,7 +96,7 @@ const MyDances = ({ dances }: {}) => {
          <>
             <div className="h-screen flex flex-col">
                <Toaster></Toaster>
-               <Header session={session}></Header>
+               <Header></Header>
                <hr />
                <div className="px-[10%]">
                   <div className="flex flex-row">

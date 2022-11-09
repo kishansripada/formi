@@ -16,8 +16,9 @@ export const Header = () => {
             <button
                className="ml-auto"
                onClick={() => {
-                  supabase.auth.signOut();
-                  router.push("/login");
+                  supabase.auth.signOut().then(() => {
+                     router.push("/login");
+                  });
                }}
             >
                sign out
