@@ -19,6 +19,7 @@ const Login = () => {
             redirectTo: "https://naach.app/mydances",
          },
       });
+      router.push("/mydances");
    };
 
    return (
