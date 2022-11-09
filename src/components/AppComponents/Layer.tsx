@@ -34,7 +34,6 @@ export const Layer: React.FC<{
                   key={index}
                   id="formation"
                   onClick={(e: any) => {
-                     setselec;
                      setSelectedFormation(index);
                   }}
                >
