@@ -12,6 +12,12 @@ const Login = () => {
    const session = useSession();
    const supabase = useSupabaseClient();
 
+   useEffect(() => {
+      if (session) {
+         router.push("/mydances");
+      }
+   }, [session]);
+
    const handleLogin = async () => {
       const { data } = await supabase.auth.signInWithOAuth({
          provider: "google",
@@ -19,6 +25,7 @@ const Login = () => {
             redirectTo: `${window.location.origin}/mydances`,
          },
       });
+      console.log(`${window.location.origin}/mydances`);
    };
 
    return (
