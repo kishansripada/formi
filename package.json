@@ -21,7 +21,6 @@
     "react-device-detect": "^2.2.2",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.3.0",
-    "react-player": "^2.11.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

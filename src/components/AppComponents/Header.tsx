@@ -81,7 +81,7 @@ export const Header: React.FC<{
                   <>
                      <p className="mx-5">
                         stuck? watch a
-                        <a className="text-pink-600" href="https://www.youtube.com/watch?v=1dj8L5tUAjU" target={"_blank"}>
+                        <a className="text-pink-600" href="https://www.youtube.com/watch?v=wXaq0cF0dkI" target={"_blank"}>
                            {" "}
                            tutorial
                         </a>
