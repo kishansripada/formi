@@ -74,7 +74,7 @@ export const Layers: React.FC<{
 
    return (
       <div
-         className="flex flex-col pt-2 pb-3 w-full  bg-white  max-h-[75px] overflow-x-scroll  "
+         className="flex flex-col pt-2 pb-3 w-full  bg-white  max-h-[75px] overflow-hidden "
          style={{
             width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
             marginLeft: soundCloudTrackId ? (soundCloudTrackId.length < 15 ? 122 : 10) : 115,

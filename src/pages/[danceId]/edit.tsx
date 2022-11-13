@@ -80,7 +80,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
    const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
    const [editingDancer, setEditingDancer] = useState<string | null>(null);
-   const [viewAllPaths, setViewAllPaths] = useState<boolean>(true);
+   const [viewAllPaths, setViewAllPaths] = useState<boolean>(false);
 
    const [saved, setSaved] = useState<boolean>(true);
    const [mobile, setMobile] = useState<string | null>(null);
