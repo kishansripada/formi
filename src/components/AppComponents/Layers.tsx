@@ -59,7 +59,7 @@ export const Layers: React.FC<{
       if (resizingTransition !== null) {
          setFormations((formations: formation[]) => {
             return formations.map((formation, i) => {
-               if (i === parseInt(resizingTransition) && formation.transition.durationSeconds - e.movementX / pixelsPerSecond > 2) {
+               if (i === parseInt(resizingTransition) && formation.transition.durationSeconds - e.movementX / pixelsPerSecond > 1) {
                   return {
                      ...formation,
                      durationSeconds: formation.durationSeconds + e.movementX / pixelsPerSecond,
