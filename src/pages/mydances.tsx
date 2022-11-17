@@ -104,30 +104,51 @@ const MyDances = ({ dances }: {}) => {
                         <div className="flex flex-row items-center">
                            <p className="text-3xl font-semibold mb-6 mt-3">My dances</p>
                            <div className="ml-auto">
-                              <button onClick={() => setImportIsOpen(true)} className=" px-3 py-2 text-pink-600">
-                                 import from Danceapp.us
+                              <button
+                                 onClick={() => setImportIsOpen(true)}
+                                 className=" px-3 py-1 outline-1 box-border mr-2 outline-gray-300 text-gray-600 outline rounded "
+                              >
+                                 import from Danceapp
                               </button>
-                              <button onClick={createNewDance} className=" px-3 py-2 text-white rounded-md  bg-pink-600 hover:bg-pink-700 ">
-                                 New Dance
+                              <button onClick={createNewDance} className=" px-3 py-1 text-white rounded-md  bg-pink-600 hover:bg-pink-700 ">
+                                 <div className="flex flex-row items-center">
+                                    <svg
+                                       xmlns="http://www.w3.org/2000/svg"
+                                       fill="none"
+                                       viewBox="0 0 24 24"
+                                       strokeWidth={2}
+                                       stroke="currentColor"
+                                       className="w-4 h-4 mr-1"
+                                    >
+                                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                    </svg>
+                                    <p className=" "> new dance</p>
+                                 </div>
                               </button>
                            </div>
                         </div>
-                        <div className="flex flex-row text-gray-500">
-                           <p>name</p>
-                           <p className="ml-auto mr-9">created</p>
+                        <div className="flex flex-row text-gray-500 mb-2">
+                           <p className="text-xs font-semibold">NAME</p>
+                           <div className="flex flex-row items-center ml-auto">
+                              <p className="ml-auto mr-9 text-xs font-semibold">UPDATED</p>
+                              <p className="ml-auto mr-9 text-xs font-semibold">CREATED</p>
+                           </div>
                         </div>
                         <hr />
                         {myDances.length ? (
                            myDances
-                              .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                              .sort((a, b) => new Date(b.last_edited) - new Date(a.last_edited))
                               .map((dance) => {
                                  return (
                                     <>
-                                       <div className="flex flex-row items-center h-16 cursor-pointer">
+                                       <div className="flex flex-row items-center h-12 cursor-pointer text-gray-700">
                                           <Link key={dance.id} href={`/${dance.id}/edit`}>
                                              <div className="flex flex-row items-center grow">
                                                 <p className="mt-1">{dance.name}</p>
-                                                <p className="mt-1 ml-auto mr-3">{timeSince(dance.created_at)} ago</p>
+                                                <div className="flex flex-row items-center ml-auto">
+                                                   <p className="mt-1 ml-auto mr-3">{timeSince(dance.last_edited)} ago</p>
+                                                   <p className="mt-1 ml-auto mr-3">{timeSince(dance.created_at)} ago</p>
+                                                </div>
                                              </div>
                                           </Link>
                                           <svg

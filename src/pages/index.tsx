@@ -81,14 +81,7 @@ const home = () => {
             <img className=" select-none pointer-events-none w-48 lg:w-72" src="/logoWhite.png" />
          </div>
          <h1 className="text-3xl text-white leading-[50px] lg:text-7xl font-space font-semibold text-center px-[15%]  lg:leading-[90px] relative  mt-24 z-10">
-            let's reinvent the choreographer{" "}
-            <span
-               style={{
-                  textDecoration: "underline",
-               }}
-            >
-               toolkit.
-            </span>{" "}
+            quickly build dance formations synced to music
          </h1>
 
          <div className="flex flex-col items-center w-full justify-center ">
@@ -97,25 +90,25 @@ const home = () => {
                   open a playground 🛝
                </button>
             </Link>
-            <img src="https://i.imgur.com/NBKSDEC.png" className="w-[90%] lg:w-2/3 mt-16 rounded-xl" alt="" />
+
+            <img src="editDemo.png" className="w-[90%] lg:w-2/3 mt-16 rounded-xl" alt="" />
          </div>
 
-         {/* <div className="px-[10%] flex flex-col lg:flex-row text-center lg:text-left mt-36">
+         <div className="px-[10%] flex flex-col lg:flex-row text-center lg:text-left mt-36">
             <div className="lg:w-1/2 py-[10%]">
-               <h1 className="text-2xl text-white leading-[50px] lg:text-5xl font-space font-semibold">
-                  visualize your formation transitions in time with your music 🎸
-               </h1>
+               <h1 className="text-2xl text-white leading-[50px] lg:text-5xl font-space font-semibold">easily share with your dancers</h1>
             </div>
 
             <div className="lg:w-1/2">
-               <video src="/demo.mov" className="rounded-xl" autoPlay loop muted></video>
+               <img src="viewDemo.png" className=" rounded-xl" alt="" />
             </div>
-         </div> */}
+         </div>
 
          <div
             className="h-screen w-[2000px] fixed top-0 left-0  pointer-events-none -z-50 "
             style={{
                // left: "50%",
+
                transform: " translateX(-50%)",
                opacity: 0.4,
                animation: "skew 15s ease infinite",

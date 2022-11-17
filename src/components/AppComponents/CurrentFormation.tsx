@@ -85,7 +85,7 @@ export const CurrentFormation: React.FC<{
                   <hr className="mx-[-12px] " />
                   <li className=" mt-2 flex flex-row justify-between items-end font-semibold pr-3 ">
                      <p className="w-[40%] text-sm mx-1 ">name</p>
-                     <p className="w-[20%]  text-sm text-center mx-1">path to here</p>
+                     {/* <p className="w-[20%]  text-sm text-center mx-1">path to here</p> */}
                      <div className="flex flex-col items-center w-[20%] justify-center mx-1">
                         <button className="peer">
                            <svg
@@ -149,12 +149,12 @@ export const CurrentFormation: React.FC<{
                            <div className="" key={dancer.id} id={`scroll-${dancer.id}`}>
                               <li
                                  onClick={() => setSelectedDancers([dancer.id])}
-                                 className={` py-2 rounded-md px-2 flex flex-row items-center my-1 cursor-pointer  ${
+                                 className={` py-2 rounded-md px-2 flex flex-row items-center my-1 cursor-pointer justify-between  ${
                                     selectedDancers.includes(dancer.id) ? "bg-pink-200" : ""
                                  }`}
                               >
                                  <p className="w-[40%]">{dancer.name}</p>
-                                 <select
+                                 {/* <select
                                     value={
                                        formations[selectedFormation - 1]?.positions.find((dancerPosition) => dancer.id === dancerPosition.id)
                                           ?.transitionType
@@ -230,7 +230,7 @@ export const CurrentFormation: React.FC<{
                                  >
                                     <option value="linear">linear</option>
                                     <option value="cubic">cubic</option>
-                                 </select>
+                                 </select> */}
                                  <select
                                     value={
                                        formations[selectedFormation]?.positions.find((dancerPosition) => dancer.id === dancerPosition.id)
