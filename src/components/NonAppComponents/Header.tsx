@@ -8,9 +8,7 @@ export const Header = () => {
    const router = useRouter();
    let session = useSession();
    const supabase = useSupabaseClient();
-   for (let index = 0; index < array.length; index++) {
-      const element = array[index];
-   }
+
    return (
       <>
          <div className="h-20 flex flex-row items-center px-[5%] justify-between">
