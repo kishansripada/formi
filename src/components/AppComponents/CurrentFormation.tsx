@@ -47,7 +47,7 @@ export const CurrentFormation: React.FC<{
             {selectedFormation !== null && formations[selectedFormation]?.name !== null ? (
                <div className="h-full  flex flex-col">
                   <input
-                     className="font-semibold w-full text-center h-6 text-2xl focus:outline-pink-600 rounded-sm  hover:outline-gray-400 focus:outline-2  hover:outline-2 focus:outline hover:outline mt-4 py-4 mb-2"
+                     className="font-semibold w-full text-center h-6 text-2xl focus:outline-pink-700 rounded-sm  hover:outline-gray-400 focus:outline-2  hover:outline-2 focus:outline hover:outline mt-4 py-4 mb-2"
                      onKeyDown={(e) =>
                         e.key === "Enter"
                            ? setFormations((formations: formation[]) => {
@@ -368,10 +368,10 @@ export const CurrentFormation: React.FC<{
                               clipRule="evenodd"
                            />
                         </svg>
-                        delete
+                        <p className="text-[14px] font-medium"> delete</p>
                      </button>
                      <button
-                        className="text-white bg-blue-600 px-2 py-1 rounded-md mb-2  flex flex-row items-center justify-center w-1/2 mx-2"
+                        className=" border-gray-500 text-[14px] font-medium border-[1px] border-box border-solid text-[#404452] px-2 h-8  ml-2  py-1 rounded-md mb-2  flex flex-row items-center justify-center w-1/2 mx-2"
                         onClick={() => {
                            setFormations((formations: formation[]) => {
                               return formations.map((formation, index) => {

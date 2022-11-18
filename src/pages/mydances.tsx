@@ -102,7 +102,7 @@ const MyDances = ({ dances }: {}) => {
                   <div className="flex flex-row">
                      <div className="w-full">
                         <div className="flex flex-row items-center">
-                           <p className="text-3xl font-semibold mb-6 mt-3">My dances</p>
+                           <p className="text-3xl font-semibold mb-6 mt-3">My performances</p>
                            <div className="ml-auto">
                               <button
                                  onClick={() => setImportIsOpen(true)}
@@ -110,7 +110,7 @@ const MyDances = ({ dances }: {}) => {
                               >
                                  import from Danceapp
                               </button>
-                              <button onClick={createNewDance} className=" px-3 py-1 text-white rounded-md  bg-pink-600 hover:bg-pink-700 ">
+                              <button onClick={createNewDance} className=" px-3 py-1 text-white rounded-md  bg-pink-700 hover:bg-pink-700 ">
                                  <div className="flex flex-row items-center">
                                     <svg
                                        xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +122,7 @@ const MyDances = ({ dances }: {}) => {
                                     >
                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                     </svg>
-                                    <p className=" "> new dance</p>
+                                    <p className=" "> new performance</p>
                                  </div>
                               </button>
                            </div>

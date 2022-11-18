@@ -97,7 +97,7 @@ export const FileAudioPlayer: React.FC<{
             >
                <button
                   onClick={() => (player ? player.playPause() : null)}
-                  className=" rounded-b-md bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 mx-1 "
+                  className=" rounded-b-md bg-pink-700 hover:bg-pink-700 text-white px-3 py-1 mx-1 "
                >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                      <path
@@ -150,7 +150,7 @@ export const FileAudioPlayer: React.FC<{
                            }
                         });
                      }}
-                     className=" rounded-b-md bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 mx-1 cursor-pointer"
+                     className=" rounded-b-md bg-pink-700 hover:bg-pink-700 text-white px-3 py-1 mx-1 cursor-pointer"
                   >
                      + new formation
                   </button>

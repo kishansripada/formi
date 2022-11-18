@@ -18,7 +18,7 @@ export const Formation: React.FC<{
                // subtract 4 to account for the mx-[2px]
             }}
          >
-            <div className={`${amSelected ? " bg-pink-200" : "bg-pink-600"} h-[17px]  px-2 overflow-clip`}>
+            <div className={`${amSelected ? " bg-pink-200" : "bg-pink-700"} h-[17px]  px-2 overflow-clip`}>
                <p className={`text-[12px] pointer-events-none select-none ${amSelected ? " text-pink-700" : "text-pink-100"}`}>{formation.name}</p>
             </div>
             <div className={` flex flex-row  box-border`}>
@@ -26,7 +26,7 @@ export const Formation: React.FC<{
                   style={{
                      width: formation.durationSeconds * pixelsPerSecond - 2,
                   }}
-                  className="relative bg-pink-600 h-[23px]"
+                  className="relative bg-pink-700 h-[23px]"
                >
                   <div
                      id={index.toString()}
@@ -39,7 +39,7 @@ export const Formation: React.FC<{
                   style={{
                      width: formation.transition.durationSeconds * pixelsPerSecond - 2,
                   }}
-                  className=" relative bg-pink-600 h-[23px]"
+                  className=" relative bg-pink-700 h-[23px]"
                >
                   <div
                      data-type="formation-resize"

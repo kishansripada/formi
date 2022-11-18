@@ -45,61 +45,55 @@ export const ChooseAudioSource: React.FC<{
             <div className="flex  w-[700px] flex-col rounded-xl bg-white">
                <div className="flex flex-col rounded-xl px-10 py-10 h-full">
                   <div className="flex flex-col mt-auto">
-                     <p className="text-xl text-gray-500">Add your mix to get started</p>
+                     <p className="text-xl font-bold text-[#1A1B25]">change track</p>
 
-                     <div className="flex flex-row items-center pt-3 ">
-                        <div className="flex flex-row items-center  w-full border-2 rounded-md border-black">
+                     <p className="text-[#414552] font-medium pt-3 text-[14px]">soundcloud url</p>
+                     <div className="flex flex-row items-center  ">
+                        <div className="flex flex-row items-center  w-full border-[1px] rounded-md border-gray-300">
                            <input
                               onChange={(e) => setNewUrl(e.target.value)}
-                              className="  rounded-md focus:outline-none px-2 h-8  grow mr-3"
+                              className="  rounded-md focus:outline-none px-2 h-8 font-light grow mr-3"
                               type="text"
-                              placeholder="paste soundcloud url here"
+                              placeholder="https://soundcloud.com/..."
                            />
-                           <img src="https://static.cdnlogo.com/logos/s/19/soundcloud.svg" className="w-12 mr-2" alt="" />
                         </div>
                      </div>
 
-                     <p className="mr-auto ml-auto my-6">-or-</p>
-                     <div className="flex justify-center items-center w-full">
-                        <label
-                           htmlFor="dropzone-file"
-                           className="flex flex-col justify-center items-center w-full h-36 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer "
-                        >
-                           <div className="flex flex-col justify-center items-center pt-5 pb-6">
-                              <svg
-                                 aria-hidden="true"
-                                 className="mb-3 w-10 h-10 text-gray-400"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 viewBox="0 0 24 24"
-                                 xmlns="http://www.w3.org/2000/svg"
-                              >
-                                 <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                                 ></path>
-                              </svg>
-                              <p>{file?.name}</p>
-                              <p className="mb-2 text-sm text-gray-500 ">
-                                 <span className="font-semibold">Click to upload</span>
-                              </p>
-                              <p className="text-xs text-gray-500 "> MP3 OR WAV</p>
-                           </div>
+                     <p className=" my-6 text-[#414552] font-bold">OR</p>
+
+                     <div className="  ">
+                        <div className="mb-3 w-96">
+                           <label htmlFor="formFile" className="form-label inline-block mb-2 text-gray-700 font-medium text-[14px]">
+                              upload mp3 or wav file
+                           </label>
                            <input
+                              className="form-control
+    block
+    w-full
+    px-3
+    py-1.5
+    text-base
+    font-normal
+    text-gray-700
+    bg-white bg-clip-padding
+    border border-solid border-gray-300
+    rounded
+    transition
+    ease-in-out
+    m-0
+    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                              type="file"
+                              id="formFile"
                               accept=".mp3,.wav"
                               onChange={(event) => {
                                  if (event.target.files && event.target.files[0]) {
                                     const i = event.target.files[0];
+                                    console.log(i);
                                     setFile(i);
                                  }
                               }}
-                              id="dropzone-file"
-                              type="file"
-                              className="hidden"
                            />
-                        </label>
+                        </div>
                      </div>
                   </div>
 
@@ -146,11 +140,11 @@ export const ChooseAudioSource: React.FC<{
                            }
                         }
                      }}
-                     className="mr-auto ml-auto bg-pink-600 hover:bg-pink-700 rounded-md text-white px-3 py-1 mt-6 w-32"
+                     className="mr-auto ml-auto bg-pink-700 rounded-md text-white font-medium text-[14px] h-8 px-2 py-1 mt-6 "
                   >
-                     Get Started
+                     get started
                   </button>
-                  <div className="flex flex-row justify-center mt-10">
+                  <div className="flex flex-row justify-center mt-2">
                      <p>
                         or{" "}
                         <button
@@ -159,7 +153,7 @@ export const ChooseAudioSource: React.FC<{
                               toast.success("using example track");
                               setChangeSoundCloudIsOpen(false);
                            }}
-                           className="text-pink-600"
+                           className="text-pink-700"
                         >
                            use example soundcloud track
                         </button>

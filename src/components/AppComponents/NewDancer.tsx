@@ -29,7 +29,7 @@ export const NewDancer: React.FC<{ setDancers: Function }> = ({ setDancers }) =>
             }}
          >
             <input
-               className="ml-3 focus:outline-pink-600 rounded-md  hover:outline-gray-400 focus:outline-2  hover:outline-2 focus:outline hover:outline px-2"
+               className="ml-3 focus:outline-pink-700 rounded-md  hover:outline-gray-400 focus:outline-2  hover:outline-2 focus:outline hover:outline px-2"
                onKeyDown={(event) => (event.key === "Enter" ? createNewDancer() : null)}
                placeholder="new dancer"
                value={newName}

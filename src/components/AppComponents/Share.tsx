@@ -103,7 +103,7 @@ export const Share: React.FC<{
                               setNewUserEmail("");
                            }
                         }}
-                        className="focus:outline-pink-600 rounded-sm w-2/3 h-8  outline-gray-400 focus:outline-2  outline-2 focus:outline outline px-2"
+                        className="focus:outline-pink-700 rounded-sm w-2/3 h-8  outline-gray-400 focus:outline-2  outline-2 focus:outline outline px-2"
                         type="text"
                         placeholder="enter an email"
                      />

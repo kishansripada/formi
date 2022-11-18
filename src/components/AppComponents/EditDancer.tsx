@@ -80,7 +80,7 @@ export const EditDancer: React.FC<{
                      delete dancer
                   </button>
                   <button
-                     className="bg-pink-600 flex flex-row mt-6 text-white px-2 py-1 rounded-md"
+                     className="bg-pink-700 flex flex-row mt-6 text-white px-2 py-1 rounded-md"
                      onClick={() => {
                         setEditingDancer(null);
                      }}

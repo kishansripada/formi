@@ -97,23 +97,41 @@ export const Layers: React.FC<{
          />
 
          <svg
-            style={{
-               left: position !== null ? position * pixelsPerSecond : 0,
-               top: -30,
-               transform: "translate(-50%, 0%) scale(12)",
-            }}
-            viewBox="0 0 3730 27444"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-10 h-70  relative z-50 pointer-events-none"
+            viewBox="547 0 2635 27672.5"
+            style={{
+               // left: position !== null ? position * pixelsPerSecond : 0,
+               transform: `translateX(${position !== null ? position * pixelsPerSecond : 0}px)`,
+               top: -30,
+            }}
          >
-            <path d="M1873 2248L1865.04 27443" stroke="white" strokeWidth="459" />
-            <rect x="547" width="2635" height="2635" rx="400" fill="black" />
+            <path d="m1873 2248-7.96 25195" stroke="#fff" strokeWidth={459} />
+            <rect x={547} width={2635} height={2635} rx={400} fill="#000" />
             <path
-               d="M2200.22 3874.07C2042.45 4116.42 1687.55 4116.42 1529.78 3874.07L652.332 2526.23C479.11 2260.14 670.054 1908 987.557 1908L2742.44 1908C3059.95 1908 3250.89 2260.15 3077.67 2526.23L2200.22 3874.07Z"
-               fill="black"
+               d="M2200.22 3874.07c-157.77 242.35-512.67 242.35-670.44 0L652.332 2526.23C479.11 2260.14 670.054 1908 987.557 1908H2742.44c317.51 0 508.45 352.15 335.23 618.23l-877.45 1347.84Z"
+               fill="#000"
             />
          </svg>
+
+         {/* <svg
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="547 0 2635 27672.5"
+            style={{
+               // left: position !== null ? position * pixelsPerSecond : 0,
+               transform: `translateX(${position !== null ? position * pixelsPerSecond : 0}px)`,
+               top: -30,
+            }}
+            className="h-[100px] w-4"
+         >
+            <path d="m1873 2248-7.96 25195" stroke="#fff" stroke-width="459"></path>
+            <rect x="547" width="2635" height="2635" rx="400" fill="#000"></rect>
+            <path
+               d="M2200.22 3874.07c-157.77 242.35-512.67 242.35-670.44 0L652.332 2526.23C479.11 2260.14 670.054 1908 987.557 1908H2742.44c317.51 0 508.45 352.15 335.23 618.23l-877.45 1347.84Z"
+               fill="#000"
+            ></path>
+         </svg> */}
       </div>
    );
 };
