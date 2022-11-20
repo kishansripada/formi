@@ -35,7 +35,7 @@ export const SoundCloudComponent: React.FC<{
          });
          // console.log("new position bound");
          player.bind(SC.Widget.Events.PLAY_PROGRESS, (e: any) => {
-            setPosition(Math.ceil(e.currentPosition / 1000 / 0.033) * 0.033);
+            setPosition(Math.ceil(e.currentPosition / 1000 / 0.01666) * 0.01666);
          });
 
          player.bind(SC.Widget.Events.PLAY, () => {

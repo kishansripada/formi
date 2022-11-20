@@ -12,9 +12,8 @@ export const Header = () => {
    return (
       <>
          <div className="h-20 flex flex-row items-center px-[5%] justify-between">
-            <p></p>
             <div>
-               <Image className="" width={200} src={logo}></Image>
+               <Image className="pointer-events-none" width={200} height={200} src={logo}></Image>
             </div>
             <button
                className=""

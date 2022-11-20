@@ -189,6 +189,13 @@ const animate = (
          return null;
       }
    }
+
+   function easeInOutSine(x: number): number {
+      return -(Math.cos(Math.PI * x) - 1) / 2;
+   }
+
+   percentThroughTransition = easeInOutSine(percentThroughTransition);
+
    if (inThisFormation?.transitionType === "cubic" && inThisFormation?.controlPointStart?.y && inThisFormation?.controlPointStart?.x) {
       return coordsToPosition(
          (1 - percentThroughTransition) ** 3 * from.x +

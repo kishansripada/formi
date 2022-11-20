@@ -45,7 +45,7 @@ export const ChooseAudioSource: React.FC<{
             <div className="flex  w-[700px] flex-col rounded-xl bg-white">
                <div className="flex flex-col rounded-xl px-10 py-10 h-full">
                   <div className="flex flex-col mt-auto">
-                     <p className="text-xl font-bold text-[#1A1B25]">change track</p>
+                     <p className="text-xl font-bold text-[#1A1B25]"> {soundCloudTrackId ? "change track" : "add your mix to get started"}</p>
 
                      <p className="text-[#414552] font-medium pt-3 text-[14px]">soundcloud url</p>
                      <div className="flex flex-row items-center  ">
