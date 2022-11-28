@@ -43,7 +43,7 @@ export const CurrentFormation: React.FC<{
 
    return (
       <>
-         <div className=" flex flex-col  w-[35%] mr-3 border-black rounded-xl border-1 mb-6 px-3 bg-white">
+         <div className=" flex flex-col  w-[23%] px-3 bg-white border-r border-r-gray-300">
             {selectedFormation !== null && formations[selectedFormation]?.name !== null ? (
                <div className="h-full  flex flex-col">
                   <input

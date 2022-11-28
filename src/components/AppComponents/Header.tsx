@@ -20,7 +20,7 @@ export const Header: React.FC<{
    const router = useRouter();
    let session = useSession();
    const supabase = useSupabaseClient();
-   let [profileIsOpen, setProfileIsOpen] = useState(false);
+
    const initials = (name) => {
       if (!name) return "";
       return name
@@ -33,12 +33,12 @@ export const Header: React.FC<{
 
    return (
       <>
-         <div className=" h-[75px] flex flex-row items-center shrink-0 lg:pr-10 lg:pl-7 bg-white justify-between">
-            <div className="flex flex-row items-center shrink-0">
-               <div className=" flex-row items-center shrink-0 hidden lg:flex">
+         <div className=" min-h-[75px] flex flex-row items-center   bg-white border-b border-b-300">
+            <div className="flex flex-row items-center ">
+               {/* <div className=" flex-row items-center hidden lg:flex">
                   <Image className=" scale-[3.5]" src={logo} width={150} height={60} />
                   <div className="h-[40px] w-[1px] bg-gray-400 ml-3"></div>
-               </div>
+               </div> */}
 
                <div className="h-full ">
                   <div className="flex flex-row justify-center items-center">
@@ -53,10 +53,10 @@ export const Header: React.FC<{
                      {!viewOnly ? (
                         <>
                            {saved ? (
-                              <p className="ml-3 text-gray-500 flex flex-row items-center">saved</p>
+                              <></>
                            ) : (
                               <div className="flex flex-row items-center  ml-3">
-                                 <p className="text-gray-500">saving...</p>
+                                 <p className="text-gray-500 text-sm">saving...</p>
                               </div>
                            )}
                         </>
@@ -64,40 +64,17 @@ export const Header: React.FC<{
                         <p className="text-gray-500">viewing</p>
                      )}
                   </div>
-                  {session ? (
-                     <p className="text-sm ml-4 ">Welcome back, {session?.user?.user_metadata?.full_name}</p>
-                  ) : (
-                     <p className="text-sm ml-4 ">Not signed in</p>
-                  )}
+                  {session ? <></> : <p className="text-sm ml-4 ">Not signed in</p>}
                </div>
             </div>
 
-            <div>
-               <hr />
-            </div>
-
-            <div className=" flex flex-row items-center ml-auto">
+            <div className=" flex flex-row items-center ml-auto ">
                {!viewOnly ? (
                   <>
-                     <a href="https://www.youtube.com/watch?v=wXaq0cF0dkI" target={"_blank"} className="btn btn-outline btn-sm h-10 ml-2  ">
-                        <div className="flex flex-row items-center">
-                           <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-5 h-5"
-                           >
-                              <path
-                                 strokeLinecap="round"
-                                 strokeLinejoin="round"
-                                 d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
-                              />
-                           </svg>
-
-                           <p className="ml-1 "> watch a tutorial</p>
-                        </div>
+                     <a href="https://www.youtube.com/watch?v=wXaq0cF0dkI" target={"_blank"}>
+                        <p className="text-sm text-gray-500">
+                           stuck? — <span className="underline text-blue-500">watch a tutorial</span>{" "}
+                        </p>
                      </a>
 
                      <button onClick={() => setShareIsOpen((state: boolean) => !state)} className="btn btn-secondary btn-sm h-10 ml-2">
@@ -175,8 +152,8 @@ export const Header: React.FC<{
                ) : null} */}
             </div>
          </div>
-         <hr className="mb-2" />
-         <Toaster />
+         {/* <hr className="mb-2" />
+         <Toaster /> */}
       </>
    );
 };

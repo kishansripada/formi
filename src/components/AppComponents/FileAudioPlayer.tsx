@@ -38,10 +38,10 @@ export const FileAudioPlayer: React.FC<{
          document.getElementById("waveform").firstChild.style.overflowX = "hidden";
       }, [document.getElementById("waveform")?.firstChild]);
 
-      useEffect(() => {
-         if (!player) return;
-         player.zoom(pixelsPerSecond);
-      }, [pixelsPerSecond, player, soundCloudTrackId]);
+      // useEffect(() => {
+      //    if (!player) return;
+      //    player.zoom(pixelsPerSecond);
+      // }, [pixelsPerSecond, player, soundCloudTrackId]);
 
       useEffect(() => {
          return () => {

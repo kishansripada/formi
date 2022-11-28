@@ -382,7 +382,7 @@ export const Canvas: React.FC<{
    };
    return (
       <div
-         className="flex flex-row relative  h-full cursor-default w-full overflow-hidden mx-4 px-3 rounded-xl overscroll-contain "
+         className="flex flex-row relative  h-full cursor-default w-full overflow-hidden  overscroll-contain "
          id="stage"
          onPointerUp={!viewOnly ? pointerUp : null}
       >
