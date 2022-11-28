@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation, coordsToPosition, GRID_WIDTH, PIXELS_PER_SQUARE } from "../../types/types";
+import { dancer, dancerPosition, formation, GRID_WIDTH } from "../../types/types";
 
 export const DancerAlias: React.FC<{
    dancer: dancer;
@@ -9,7 +9,8 @@ export const DancerAlias: React.FC<{
    position: number | null;
    setFormations: Function;
    selectedDancers: string[];
-}> = ({ dancer, formations, setDancers, selectedFormation, isPlaying, position, setFormations, selectedDancers }) => {
+   coordsToPosition: Function;
+}> = ({ dancer, formations, setDancers, selectedFormation, isPlaying, position, setFormations, selectedDancers, coordsToPosition }) => {
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])
@@ -41,7 +42,7 @@ export const DancerAlias: React.FC<{
 
    // if the track is playing then  return with the animation function
    if (isPlaying && position !== null) {
-      let myPosition = animate(formations, dancer.id, currentFormationIndex, percentThroughTransition);
+      let myPosition = animate(formations, dancer.id, currentFormationIndex, percentThroughTransition, coordsToPosition);
 
       // if the animation function returns null, the dancer is not on the stage
       if (myPosition === null) return <></>;
@@ -78,16 +79,25 @@ export const DancerAlias: React.FC<{
    if (!currentCoords) return <></>;
 
    let { left, top } = coordsToPosition(currentCoords.x, currentCoords.y);
-
+   console.log(left);
    return (
       <>
          <div
-            style={{ left, top, transform: "translate(-50%, -50%)", backgroundColor: dancer.color || "" }}
+            style={{
+               left,
+               top,
+               transform: "translate(-50%, -50%)",
+               backgroundColor: selectedDancers.includes(dancer.id) ? "black" : dancer.color || "",
+            }}
             id={dancer.id}
             data-type={"dancer"}
-            className={` ${dancer.color === "#FFFFFF" || !dancer.color ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" : ""}
-              rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default ${
-                 selectedDancers.includes(dancer.id) ? "w-[41px] h-[41px]" : "w-[38px] h-[38px]"
+            className={` 
+              rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default  ${
+                 selectedDancers.includes(dancer.id)
+                    ? "w-[41px] h-[41px]"
+                    : ` w-[38px] h-[38px] ${
+                         dancer.color === "#FFFFFF" || !dancer.color ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" : ""
+                      }`
               } `}
          >
             {dancer.instagramUsername ? (
@@ -119,7 +129,8 @@ const animate = (
    formations: formation[],
    id: string,
    currentFormationIndex: number | null,
-   percentThroughTransition: number | undefined
+   percentThroughTransition: number | undefined,
+   coordsToPosition: Function
 ): { left: number; top: number } | null => {
    // if the position is beyond all the formation, return off stage
    if (currentFormationIndex === null) return null;
@@ -194,7 +205,10 @@ const animate = (
       return -(Math.cos(Math.PI * x) - 1) / 2;
    }
 
-   percentThroughTransition = easeInOutSine(percentThroughTransition);
+   function easeInOutQuad(x: number): number {
+      return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+   }
+   percentThroughTransition = easeInOutQuad(percentThroughTransition);
 
    if (inThisFormation?.transitionType === "cubic" && inThisFormation?.controlPointStart?.y && inThisFormation?.controlPointStart?.x) {
       return coordsToPosition(

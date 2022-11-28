@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation, coordsToPosition } from "../../types/types";
+import { dancer, dancerPosition, formation } from "../../types/types";
 
 export const DancerAliasShadow: React.FC<{
    dancer: dancer;
@@ -6,7 +6,8 @@ export const DancerAliasShadow: React.FC<{
    formations: formation[];
    isPlaying: boolean;
    currentFormationIndex: number | null;
-}> = ({ dancer, formations, selectedFormation, isPlaying, currentFormationIndex }) => {
+   coordsToPosition: Function;
+}> = ({ dancer, formations, selectedFormation, isPlaying, currentFormationIndex, coordsToPosition }) => {
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])

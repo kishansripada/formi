@@ -1,5 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  daisyui: {
+    styled: true,
+    base: true,
+    utils: true,
+    logs: true,
+    rtl: false,
+    prefix: "",
+    themes: ["fantasy"],
+    darkTheme: "light",
+  },
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     // colors: {
@@ -16,6 +26,7 @@ module.exports = {
     },
   },
   plugins: [
+    require("daisyui"),
     function ({ addVariant }) {
       addVariant('child', '& > *');
       addVariant('child-hover', '& > *:hover');

@@ -13,9 +13,11 @@ function MyApp({
    const [supabaseClient] = useState(() => createBrowserSupabaseClient());
 
    return (
-      <SessionContextProvider supabaseClient={supabaseClient} initialSession={pageProps.initialSession}>
-         <Component {...pageProps} />
-      </SessionContextProvider>
+      <div data-theme="cupcake" className="bg-transparent">
+         <SessionContextProvider supabaseClient={supabaseClient} initialSession={pageProps.initialSession}>
+            <Component {...pageProps} />
+         </SessionContextProvider>
+      </div>
    );
 }
 

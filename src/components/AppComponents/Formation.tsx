@@ -12,9 +12,10 @@ export const Formation: React.FC<{
    return (
       <>
          <div
-            className="rounded-md overflow-hidden h-[40px]  mx-[2px] box-border cursor-pointer  "
+            className="rounded-md overflow-hidden h-[40px]  mx-[2px] box-border cursor-pointer relative z-[99999]  "
             style={{
                width: (formation.transition.durationSeconds + formation.durationSeconds) * pixelsPerSecond - 4,
+               // top: index === 5 ? 100 : null,
                // subtract 4 to account for the mx-[2px]
             }}
          >

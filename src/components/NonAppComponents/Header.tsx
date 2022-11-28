@@ -16,7 +16,7 @@ export const Header = () => {
                <Image className="pointer-events-none" width={200} height={200} src={logo}></Image>
             </div>
             <button
-               className=""
+               className="btn btn-ghost"
                onClick={() => {
                   supabase.auth.signOut().then(() => {
                      router.push("/login");

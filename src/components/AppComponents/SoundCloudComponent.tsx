@@ -53,7 +53,7 @@ export const SoundCloudComponent: React.FC<{
 
    return (
       <>
-         <div
+         {/* <div
             className="fixed flex flex-row justify-start "
             style={{
                left: "50%",
@@ -120,7 +120,7 @@ export const SoundCloudComponent: React.FC<{
                   + new formation
                </button>
             ) : null}
-         </div>
+         </div> */}
          <Script onReady={handleLoad} strategy="lazyOnload" src="https://w.soundcloud.com/player/api.js" />
 
          <div className="">

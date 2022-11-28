@@ -67,7 +67,7 @@ export const Dancer: React.FC<{
                   }}
                   className={`min-w-[48px] min-h-[48px] ml-2 rounded-full grid place-items-center cursor-pointer ${
                      !color || color === "#FFFFFF" ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" : ""
-                  }  ${canBeAddedToStage && !isPlaying ? "" : "opacity-50"} `}
+                  }  `}
                >
                   {instagramUsername ? (
                      <div className="w-[41px] h-[41px] bg-white rounded-full grid place-items-center" data-type={"newDancer"}>

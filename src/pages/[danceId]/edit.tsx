@@ -3,7 +3,7 @@ import { debounce } from "lodash";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-
+import { PIXELS_PER_SQUARE } from "../../types/types";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
@@ -71,6 +71,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    const [formations, setFormations] = useState<formation[]>(initialData.formations);
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(initialData.soundCloudId);
    const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
+   const [stageDimensions, setStageDimensions] = useState({ width: 40, height: 30 });
    const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
 
    const [songDuration, setSongDuration] = useState<number | null>(null);
@@ -87,7 +88,14 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    const [changeSoundCloudIsOpen, setChangeSoundCloudIsOpen] = useState(false);
    const [shareIsOpen, setShareIsOpen] = useState(false);
 
-   // let [channelGloabl, setChannel] = useState(null);
+   const [player, setPlayer] = useState(null);
+
+   const coordsToPosition = (x: number, y: number) => {
+      return {
+         left: (PIXELS_PER_SQUARE * stageDimensions.width) / 2 + PIXELS_PER_SQUARE * x,
+         top: (PIXELS_PER_SQUARE * stageDimensions.height) / 2 + PIXELS_PER_SQUARE * -y,
+      };
+   };
 
    let currentFormationIndex = whereInFormation(formations, position).currentFormationIndex;
 
@@ -397,6 +405,9 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                   setSelectedDancers={setSelectedDancers}
                   setIsPlaying={setIsPlaying}
                   setPixelsPerSecond={setPixelsPerSecond}
+                  stageDimensions={stageDimensions}
+                  setStageDimensions={setStageDimensions}
+                  coordsToPosition={coordsToPosition}
                >
                   {selectedFormation !== null ? (
                      <PathEditor
@@ -406,6 +417,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                         selectedDancers={selectedDancers}
                         viewAllPaths={viewAllPaths}
                         isPlaying={isPlaying}
+                        coordsToPosition={coordsToPosition}
                      />
                   ) : (
                      <></>
@@ -413,6 +425,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
 
                   {dancers.map((dancer, index) => (
                      <DancerAlias
+                        coordsToPosition={coordsToPosition}
                         selectedDancers={selectedDancers}
                         isPlaying={isPlaying}
                         position={position}
@@ -427,6 +440,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                   {viewAllPaths
                      ? dancers.map((dancer, index) => (
                           <DancerAliasShadow
+                             coordsToPosition={coordsToPosition}
                              currentFormationIndex={currentFormationIndex}
                              isPlaying={isPlaying}
                              selectedFormation={selectedFormation}
@@ -462,7 +476,128 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                   />
                ) : null}
             </div>
-            <div className="overflow-x-scroll min-h-[170px] bg-white overscroll-contain  ">
+            <div className="min-h-[50px] bg-white w-full border-t border-gray-300 flex flex-row items-center justify-between">
+               <div className="w-[45%] pl-10 flex flex-row justify-center items-center">
+                  <button
+                     onClick={() => setChangeSoundCloudIsOpen((state: boolean) => !state)}
+                     className=" rounded-md   text-gray-500 px-3 py-1 cursor-pointer outline mr-auto  "
+                  >
+                     <div className="flex flex-row items-center">
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
+                           stroke="currentColor"
+                           className="w-5 h-5"
+                        >
+                           <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
+                           />
+                        </svg>
+                        <p className="ml-1"> change track</p>
+                     </div>
+                  </button>
+
+                  <div className="flex flex-row items-center justify-center mx-5">
+                     <label className="inline-flex relative items-center cursor-pointer">
+                        <input
+                           checked={viewAllPaths}
+                           type="checkbox"
+                           id="checked-toggle"
+                           className="sr-only peer"
+                           onChange={() => setViewAllPaths((value: boolean) => !value)}
+                        />
+                        <div className="w-11 h-6 bg-gray-200 rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
+                     </label>
+                     <p className="text-sm font-medium text-gray-900 ">view all paths</p>
+                  </div>
+               </div>
+               <div className="flex flex-row items-center justify-center w-[10%] ">
+                  {isPlaying ? (
+                     <button
+                        className="hover:bg-gray-100 transition duration-300 p-1 rounded-2xl"
+                        onClick={() => (player ? player.playPause() : null)}
+                     >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 fill-gray-600">
+                           <path
+                              fillRule="evenodd"
+                              d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7.5 0A.75.75 0 0115 4.5h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75V5.25z"
+                              clipRule="evenodd"
+                           />
+                        </svg>
+                     </button>
+                  ) : (
+                     <button
+                        className="hover:bg-gray-100 transition duration-300 p-1 rounded-2xl"
+                        onClick={() => (player ? player.playPause() : null)}
+                     >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 fill-gray-600">
+                           <path
+                              fillRule="evenodd"
+                              d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
+                              clipRule="evenodd"
+                           />
+                        </svg>
+                     </button>
+                  )}
+               </div>
+
+               <div className="w-[45%] flex flex-row items-center justify-center pr-10">
+                  <p className=" mr-auto text-gray-600">
+                     {msToTime(position * 1000)}:<span className="text-gray-500">{Math.round((position * 10) % 10)}</span>
+                  </p>
+                  <button
+                     onClick={() => {
+                        setFormations((formations: formation[]) => {
+                           let totalFormationLength = formations
+                              .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
+                              .reduce((a, b) => a + b, 0);
+                           let roomLeft = songDuration / 1000 - totalFormationLength;
+
+                           if (roomLeft < 3) {
+                              toast.error("there's not enough room!");
+                              return formations;
+                           }
+                           if (!formations.length) {
+                              setSelectedFormation(formations.length);
+                              return [
+                                 ...formations,
+                                 {
+                                    durationSeconds: roomLeft > 15 ? 10 : roomLeft / 2,
+                                    positions: [],
+                                    transition: {
+                                       durationSeconds: roomLeft > 15 ? 5 : roomLeft / 2,
+                                    },
+                                    name: `Untitled ${formations.length + 1}`,
+                                 },
+                              ];
+                           } else {
+                              setSelectedFormation(formations.length);
+                              return [
+                                 ...formations,
+                                 {
+                                    id: uuidv4(),
+                                    ...formations[formations.length - 1],
+                                    name: `Untitled ${formations.length + 1}`,
+                                    transition: {
+                                       durationSeconds: roomLeft > 15 ? 10 : roomLeft / 2,
+                                    },
+                                    durationSeconds: roomLeft > 15 ? 5 : roomLeft / 2,
+                                 },
+                              ];
+                           }
+                        });
+                     }}
+                     className=" rounded-md ml-auto  text-gray-500 px-3 py-1 mx-1 cursor-pointer outline "
+                  >
+                     + new formation
+                  </button>
+               </div>
+            </div>
+            <div className="overflow-x-scroll min-h-[120px] bg-white overscroll-contain  ">
                {soundCloudTrackId && soundCloudTrackId.length < 15 ? (
                   <div
                      style={{
@@ -492,6 +627,8 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                      }}
                   >
                      <FileAudioPlayer
+                        player={player}
+                        setPlayer={setPlayer}
                         key={soundCloudTrackId}
                         setSelectedFormation={setSelectedFormation}
                         setFormations={setFormations}
@@ -628,3 +765,13 @@ export const getServerSideProps = async (ctx) => {
       };
    }
 };
+
+function msToTime(duration) {
+   var seconds = parseInt((duration / 1000) % 60),
+      minutes = parseInt((duration / (1000 * 60)) % 60),
+      hours = hours < 10 ? "0" + hours : hours;
+   minutes = minutes < 10 ? "0" + minutes : minutes;
+   seconds = seconds < 10 ? "0" + seconds : seconds;
+
+   return minutes + ":" + seconds;
+}

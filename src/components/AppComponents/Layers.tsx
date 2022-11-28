@@ -34,22 +34,33 @@ export const Layers: React.FC<{
    };
    const pointerDown = (e) => {
       if (e.target.dataset.type === "transition-resize") {
-         setResizingTransition(e.target.id);
+         setResizingTransition(parseInt(e.target.id));
       }
       if (e.target.dataset.type === "formation-resize") {
-         setResizingFormation(e.target.id);
+         setResizingFormation(parseInt(e.target.id));
       }
    };
    const pointerMove = (e) => {
       if (viewOnly) return;
-      if (!resizingFormation && !resizingTransition) return;
+      if (resizingFormation === null && resizingTransition === null) return;
 
       if (resizingFormation !== null) {
          setFormations((formations: formation[]) => {
             return formations.map((formation, i) => {
-               // console.log(formation.durationSeconds);
-               if (i === parseInt(resizingFormation) && formation.durationSeconds + e.movementX / pixelsPerSecond > 0) {
-                  return { ...formation, durationSeconds: formation.durationSeconds + e.movementX / pixelsPerSecond };
+               if (i === resizingFormation) {
+                  if (formations[i].durationSeconds + e.movementX / pixelsPerSecond >= 0) {
+                     return { ...formation, durationSeconds: formations[i].durationSeconds + e.movementX / pixelsPerSecond };
+                  } else {
+                     if (formation.transition.durationSeconds + e.movementX / pixelsPerSecond > 1) {
+                        return {
+                           ...formation,
+                           transition: {
+                              ...formation.transition,
+                              durationSeconds: formation.transition.durationSeconds + e.movementX / pixelsPerSecond,
+                           },
+                        };
+                     }
+                  }
                }
                return formation;
             });
@@ -59,7 +70,13 @@ export const Layers: React.FC<{
       if (resizingTransition !== null) {
          setFormations((formations: formation[]) => {
             return formations.map((formation, i) => {
-               if (i === parseInt(resizingTransition) && formation.transition.durationSeconds - e.movementX / pixelsPerSecond > 1) {
+               if (
+                  i === resizingTransition &&
+                  // transition should be longer than 1 second
+                  formation.transition.durationSeconds - e.movementX / pixelsPerSecond > 1 &&
+                  // formation should be longer than 0 seconds
+                  formation.durationSeconds + e.movementX / pixelsPerSecond > 0
+               ) {
                   return {
                      ...formation,
                      durationSeconds: formation.durationSeconds + e.movementX / pixelsPerSecond,
@@ -74,7 +91,7 @@ export const Layers: React.FC<{
 
    return (
       <div
-         className="flex flex-col pt-2 pb-3 w-full  bg-white  max-h-[75px] overflow-hidden "
+         className="flex flex-col pt-2 pb-3 w-full  bg-white  max-h-[75px] overflow-hidden select-none"
          style={{
             width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
             marginLeft: soundCloudTrackId ? (soundCloudTrackId.length < 15 ? 122 : 10) : 115,

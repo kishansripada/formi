@@ -49,10 +49,10 @@ export const ChooseAudioSource: React.FC<{
 
                      <p className="text-[#414552] font-medium pt-3 text-[14px]">soundcloud url</p>
                      <div className="flex flex-row items-center  ">
-                        <div className="flex flex-row items-center  w-full border-[1px] rounded-md border-gray-300">
+                        <div className="flex flex-row items-center  w-full ">
                            <input
                               onChange={(e) => setNewUrl(e.target.value)}
-                              className="  rounded-md focus:outline-none px-2 h-8 font-light grow mr-3"
+                              className="input-sm	input w-full mr-3 mt-2"
                               type="text"
                               placeholder="https://soundcloud.com/..."
                            />
@@ -67,21 +67,7 @@ export const ChooseAudioSource: React.FC<{
                               upload mp3 or wav file
                            </label>
                            <input
-                              className="form-control
-    block
-    w-full
-    px-3
-    py-1.5
-    text-base
-    font-normal
-    text-gray-700
-    bg-white bg-clip-padding
-    border border-solid border-gray-300
-    rounded
-    transition
-    ease-in-out
-    m-0
-    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                              className="file-input w-full	"
                               type="file"
                               id="formFile"
                               accept=".mp3,.wav"
@@ -140,7 +126,7 @@ export const ChooseAudioSource: React.FC<{
                            }
                         }
                      }}
-                     className="mr-auto ml-auto bg-pink-700 rounded-md text-white font-medium text-[14px] h-8 px-2 py-1 mt-6 "
+                     className="mr-auto ml-auto btn btn-primary"
                   >
                      get started
                   </button>

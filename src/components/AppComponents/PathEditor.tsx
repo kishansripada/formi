@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation, coordsToPosition } from "../../types/types";
+import { dancer, dancerPosition, formation } from "../../types/types";
 
 export const PathEditor: React.FC<{
    selectedFormation: number | null;
@@ -7,7 +7,8 @@ export const PathEditor: React.FC<{
    viewAllPaths: boolean;
    isPlaying: boolean;
    currentFormationIndex: number | null;
-}> = ({ selectedFormation, formations, selectedDancers, viewAllPaths, isPlaying, currentFormationIndex }) => {
+   coordsToPosition: Function;
+}> = ({ selectedFormation, formations, selectedDancers, viewAllPaths, isPlaying, currentFormationIndex, coordsToPosition }) => {
    if (isPlaying) return;
    return (
       <>

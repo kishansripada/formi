@@ -79,11 +79,7 @@ export const Header: React.FC<{
             <div className=" flex flex-row items-center ml-auto">
                {!viewOnly ? (
                   <>
-                     <a
-                        href="https://www.youtube.com/watch?v=wXaq0cF0dkI"
-                        target={"_blank"}
-                        className="flex flex-row items-center border-gray-500 text-[14px] font-medium border-[1px] border-box border-solid text-[#404452] px-2 h-8 rounded-md ml-2  "
-                     >
+                     <a href="https://www.youtube.com/watch?v=wXaq0cF0dkI" target={"_blank"} className="btn btn-outline btn-sm h-10 ml-2  ">
                         <div className="flex flex-row items-center">
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -100,50 +96,11 @@ export const Header: React.FC<{
                               />
                            </svg>
 
-                           <p className="ml-1"> watch a tutorial</p>
+                           <p className="ml-1 "> watch a tutorial</p>
                         </div>
                      </a>
 
-                     <div className="flex flex-col items-center justify-center mx-5">
-                        <label className="inline-flex relative items-center cursor-pointer">
-                           <input
-                              checked={viewAllPaths}
-                              type="checkbox"
-                              id="checked-toggle"
-                              className="sr-only peer"
-                              onChange={() => setViewAllPaths((value: boolean) => !value)}
-                           />
-                           <div className="w-11 h-6 bg-gray-200 rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
-                        </label>
-                        <p className="text-sm font-medium text-gray-900 ">view all paths</p>
-                     </div>
-                     <button
-                        onClick={() => setChangeSoundCloudIsOpen((state: boolean) => !state)}
-                        className=" border-gray-500 text-[14px] font-medium border-[1px] border-box border-solid text-[#404452] px-2 h-8 rounded-md ml-2  "
-                     >
-                        <div className="flex flex-row items-center">
-                           <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-5 h-5"
-                           >
-                              <path
-                                 strokeLinecap="round"
-                                 strokeLinejoin="round"
-                                 d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
-                              />
-                           </svg>
-                           <p className="ml-1"> change track</p>
-                        </div>
-                     </button>
-
-                     <button
-                        onClick={() => setShareIsOpen((state: boolean) => !state)}
-                        className="  border-gray-500 text-[14px] font-medium border-[1px] border-box border-solid text-[#404452] px-2 h-8 rounded-md ml-2"
-                     >
+                     <button onClick={() => setShareIsOpen((state: boolean) => !state)} className="btn btn-secondary btn-sm h-10 ml-2">
                         <div className="flex flex-row items-center">
                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                               <path
@@ -160,7 +117,7 @@ export const Header: React.FC<{
                ) : null}
                {session ? (
                   <Link href="/mydances">
-                     <button className="ml-2 h-8 text-[14px] font-medium bg-pink-700  px-2  rounded-md text-white ">
+                     <button className="ml-2 btn btn-primary btn-sm h-10 ">
                         <div className="flex flex-row items-center">
                            <svg
                               xmlns="http://www.w3.org/2000/svg"

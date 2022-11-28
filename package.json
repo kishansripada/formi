@@ -13,6 +13,7 @@
     "@supabase/auth-helpers-react": "^0.3.1",
     "@supabase/auth-ui-react": "^0.2.2",
     "@supabase/supabase-js": "^2.0.4",
+    "daisyui": "^2.41.0",
     "json-diff-ts": "^1.2.5",
     "lodash": "^4.17.21",
     "next": "12.2.5",

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, PointerEvent, PointerEventHandler, useMemo } from "react";
 
 import { GridLines } from "./GridLines";
-import { dancer, dancerPosition, formation, dragBoxCoords, coordsToPosition, PIXELS_PER_SQUARE, GRID_HEIGHT, GRID_WIDTH } from "../../types/types";
+import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE } from "../../types/types";
 import { CurrentFormation } from "./CurrentFormation";
 
 export const Canvas: React.FC<{
@@ -18,6 +18,9 @@ export const Canvas: React.FC<{
    viewOnly: boolean;
    setPixelsPerSecond: Function;
    songDuration: number | null;
+   stageDimensions: { width: number; height: number };
+   setStageDimensions: Function;
+   coordsToPosition: Function;
 }> = ({
    children,
    setDancers,
@@ -32,6 +35,9 @@ export const Canvas: React.FC<{
    viewOnly,
    setPixelsPerSecond,
    songDuration,
+   setStageDimensions,
+   stageDimensions,
+   coordsToPosition,
 }) => {
    let [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
    const [shiftHeld, setShiftHeld] = useState(false);
@@ -80,23 +86,23 @@ export const Canvas: React.FC<{
       }
       if (selectedFormation === null) return;
 
-      if (e.key === "Backspace") {
-         e.preventDefault();
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, i) => {
-               if (i === selectedFormation) {
-                  return {
-                     ...formation,
-                     positions: formation.positions.filter((dancerPosition: dancerPosition) => {
-                        return !selectedDancers.find((id) => dancerPosition.id === id);
-                     }),
-                  };
-               }
-               return formation;
-            });
-         });
-         setSelectedDancers([]);
-      }
+      // if (e.key === "Backspace") {
+      //    e.preventDefault();
+      //    setFormations((formations: formation[]) => {
+      //       return formations.map((formation, i) => {
+      //          if (i === selectedFormation) {
+      //             return {
+      //                ...formation,
+      //                positions: formation.positions.filter((dancerPosition: dancerPosition) => {
+      //                   return !selectedDancers.find((id) => dancerPosition.id === id);
+      //                }),
+      //             };
+      //          }
+      //          return formation;
+      //       });
+      //    });
+      //    setSelectedDancers([]);
+      // }
 
       if (!commandHeld) return;
 
@@ -376,7 +382,7 @@ export const Canvas: React.FC<{
    };
    return (
       <div
-         className="flex flex-row  h-full cursor-default w-full overflow-hidden mx-4 px-3 rounded-xl overscroll-contain "
+         className="flex flex-row relative  h-full cursor-default w-full overflow-hidden mx-4 px-3 rounded-xl overscroll-contain "
          id="stage"
          onPointerUp={!viewOnly ? pointerUp : null}
       >
@@ -390,8 +396,8 @@ export const Canvas: React.FC<{
                // transformOrigin: `${scrollOffset.x}px ${scrollOffset.y}px`,
                transform: `scale(${zoom}) `,
                // translate(${scrollOffset.x}px, ${scrollOffset.y}px)
-               height: GRID_HEIGHT * PIXELS_PER_SQUARE,
-               width: GRID_WIDTH * PIXELS_PER_SQUARE,
+               height: stageDimensions.height * PIXELS_PER_SQUARE,
+               width: stageDimensions.width * PIXELS_PER_SQUARE,
             }}
          >
             {children}
@@ -410,7 +416,100 @@ export const Canvas: React.FC<{
                <></>
             )}
 
-            <GridLines />
+            <div
+               className=" h-10 w-32 flex flex-col items-center absolute select-none"
+               style={{
+                  left: "50%",
+                  transform: "translate(-50%, 0)",
+                  top: -100,
+               }}
+            >
+               <p className="text-gray-700 text-sm font-semibold">width</p>
+
+               <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1 bg-gray-300 ">
+                  <button
+                     onClick={() =>
+                        setStageDimensions((dimensions) => {
+                           return { ...dimensions, width: dimensions.width - 2 };
+                        })
+                     }
+                     className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
+                  >
+                     <span className="m-auto text-2xl font-thin">−</span>
+                  </button>
+                  <div className="flex flex-row items-center justify-center  w-full">
+                     <p className=" focus:outline-none text-center h-full   bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none">
+                        {stageDimensions.width}
+                     </p>
+                  </div>
+
+                  <button
+                     onClick={() =>
+                        setStageDimensions((dimensions) => {
+                           return { ...dimensions, width: dimensions.width + 2 };
+                        })
+                     }
+                     className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
+                  >
+                     <span className="m-auto text-2xl font-thin">+</span>
+                  </button>
+               </div>
+            </div>
+
+            <div
+               className="rotate-90 h-10 w-32 flex flex-col items-center absolute select-none"
+               style={{
+                  top: "50%",
+                  transform: "translate(0, -50%) rotate(90deg)",
+                  // top: -100,
+                  right: -150,
+               }}
+            >
+               <p className="text-gray-700 text-sm font-semibold">height</p>
+
+               <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1 bg-gray-300">
+                  <button
+                     onClick={() =>
+                        setStageDimensions((dimensions) => {
+                           return { ...dimensions, height: dimensions.height - 2 };
+                        })
+                     }
+                     className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
+                  >
+                     <span className="m-auto text-2xl font-thin">−</span>
+                  </button>
+                  <div className="flex flex-row items-center justify-center  w-full">
+                     <p className=" focus:outline-none text-center h-full   bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none">
+                        {stageDimensions.height}
+                     </p>
+                  </div>
+
+                  <button
+                     onClick={() =>
+                        setStageDimensions((dimensions) => {
+                           return { ...dimensions, height: dimensions.height + 2 };
+                        })
+                     }
+                     className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
+                  >
+                     <span className="m-auto text-2xl font-thin">+</span>
+                  </button>
+               </div>
+            </div>
+
+            <div
+               style={{
+                  width: PIXELS_PER_SQUARE * 3,
+               }}
+               className="absolute h-full bg-black opacity-30 z-[100] pointer-events-none border-black border-r-2 border-opacity-100 "
+            ></div>
+            <div
+               style={{
+                  width: PIXELS_PER_SQUARE * 3,
+               }}
+               className="absolute h-full bg-black opacity-30 z-[100] right-0 pointer-events-none"
+            ></div>
+            <GridLines stageDimensions={stageDimensions} />
          </div>
       </div>
    );

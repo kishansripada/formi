@@ -51,9 +51,9 @@ const home = () => {
 
                <meta
                   name="description"
-                  content="Easily visualize your formations synced to music. Naach is the ultimate choreographer formation tool."
+                  content="Easily build, create and visualize your dance and cheer formations synced to music. Naach is the ultimate choreographer formation tool."
                />
-               <meta name="keywords" content="dance, choreography, desi, formations" />
+               <meta name="keywords" content="dance, choreography, desi, formations, cheer, cheerleading, formation building tool" />
                <meta name="twitter:card" content="summary" />
                <meta name="twitter:title" content="Naach: Online dance formation building software" />
                <meta name="twitter:image" content="https://i.imgur.com/pWxufBF.png" />
@@ -61,7 +61,7 @@ const home = () => {
                <meta property="og:title" content="Naach: Online dance formation building software" />
                <meta
                   property="og:description"
-                  content="Easily visualize your formations synced to music. Naach is the ultimate choreographer formation tool."
+                  content="Easily build, create and visualize your dance and cheer formations synced to music. Naach is the ultimate choreographer formation tool."
                />
                <meta property="og:image" content="https://i.imgur.com/pWxufBF.png" />
 
@@ -74,9 +74,15 @@ const home = () => {
             </Link>
          </nav>
 
-         {/* <h1 className="text-5xl mt-[-6px] flex flex-row items-center pointer-events-none ">
-            <div className="flex flex-row items-end mx-5  rounded-xl  relative "></div>
-         </h1> */}
+         <iframe
+            src="https://www.youtube.com/embed/trOjXFjYESQ?controls=0&autoplay=1"
+            allow="accelerometer; autoplay; modestbranding; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen={false}
+            autoplay="1"
+            loop="1"
+            className="w-full h-[500px] pointer-events-none"
+         ></iframe>
+
          <div className="flex flex-row justify-center mt-16">
             <img className=" select-none pointer-events-none w-48 lg:w-72" src="/logoWhite.png" />
          </div>
@@ -114,7 +120,7 @@ const home = () => {
                animation: "skew 15s ease infinite",
             }}
          >
-            <div className="flex flex-row h-full justify-between">
+            {/* <div className="flex flex-row h-full justify-between">
                {new Array(51).fill(0).map((_, i) => (
                   <div
                      key={i}
@@ -137,7 +143,7 @@ const home = () => {
                      }}
                   ></div>
                ))}
-            </div>
+            </div> */}
          </div>
       </>
    );

@@ -43,7 +43,7 @@ export const CurrentFormation: React.FC<{
 
    return (
       <>
-         <div className=" flex flex-col  w-[50%] mr-3 border-black rounded-xl border-1 mb-6 px-3 bg-white">
+         <div className=" flex flex-col  w-[35%] mr-3 border-black rounded-xl border-1 mb-6 px-3 bg-white">
             {selectedFormation !== null && formations[selectedFormation]?.name !== null ? (
                <div className="h-full  flex flex-col">
                   <input
@@ -84,9 +84,9 @@ export const CurrentFormation: React.FC<{
                   />
                   <hr className="mx-[-12px] " />
                   <li className=" mt-2 flex flex-row justify-between items-end font-semibold pr-3 ">
-                     <p className="w-[40%] text-sm mx-1 ">name</p>
-                     {/* <p className="w-[20%]  text-sm text-center mx-1">path to here</p> */}
-                     <div className="flex flex-col items-center w-[20%] justify-center mx-1">
+                     <p className="w-[60%] text-sm mx-1 ">name</p>
+                     <p className="w-[40%]  text-sm text-center mx-1">path to here</p>
+                     {/* <div className="flex flex-col items-center w-[20%] justify-center mx-1">
                         <button className="peer">
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +139,7 @@ export const CurrentFormation: React.FC<{
 
                            <div>choose which side of the stage they exit towards</div>
                         </div>
-                     </div>
+                     </div> */}
                   </li>
 
                   <ul className="mt-1 flex flex-col overflow-y-scroll pr-3 text-sm">
@@ -153,8 +153,8 @@ export const CurrentFormation: React.FC<{
                                     selectedDancers.includes(dancer.id) ? "bg-pink-200" : ""
                                  }`}
                               >
-                                 <p className="w-[40%]">{dancer.name}</p>
-                                 {/* <select
+                                 <p className="w-[60%]">{dancer.name}</p>
+                                 <select
                                     value={
                                        formations[selectedFormation - 1]?.positions.find((dancerPosition) => dancer.id === dancerPosition.id)
                                           ?.transitionType
@@ -224,14 +224,14 @@ export const CurrentFormation: React.FC<{
                                           });
                                        })
                                     }
-                                    className={`w-[20%] ${
+                                    className={`w-[40%] ${
                                        selectedFormation === 0 ? "opacity-30 pointer-events-none" : ""
                                     } mx-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500   py-[5px]`}
                                  >
                                     <option value="linear">linear</option>
                                     <option value="cubic">cubic</option>
-                                 </select> */}
-                                 <select
+                                 </select>
+                                 {/* <select
                                     value={
                                        formations[selectedFormation]?.positions.find((dancerPosition) => dancer.id === dancerPosition.id)
                                           ?.enterStrategy
@@ -296,7 +296,7 @@ export const CurrentFormation: React.FC<{
                                     <option value="closest"></option>
                                     <option value="left">left</option>
                                     <option value="right">right</option>
-                                 </select>
+                                 </select> */}
                               </li>
                               <hr />
                            </div>
@@ -345,9 +345,9 @@ export const CurrentFormation: React.FC<{
                         rows={3}
                      ></textarea>
                   </div>
-                  <div className="flex flex-row  mt-auto pt-3">
+                  <div className="flex flex-row  mt-auto pt-3 justify-center items-center ">
                      <button
-                        className="text-white bg-red-600 px-2 py-1 rounded-md mb-2  flex flex-row items-center justify-center w-1/2 mx-2"
+                        className="btn btn-error btn-sm  mx-2 w-1/2 "
                         onClick={() => {
                            if (selectedFormation === formations.length - 1) {
                               setSelectedFormation((selectedFormation: number) => selectedFormation - 1);
@@ -361,17 +361,17 @@ export const CurrentFormation: React.FC<{
                            toast.success("formation deleted");
                         }}
                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className=" fill-white w-5 h-5 mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" className=" w-5 h-5 mr-2">
                            <path
                               fillRule="evenodd"
                               d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
                               clipRule="evenodd"
                            />
                         </svg>
-                        <p className="text-[14px] font-medium"> delete</p>
+                        <p className=""> delete</p>
                      </button>
                      <button
-                        className=" border-gray-500 text-[14px] font-medium border-[1px] border-box border-solid text-[#404452] px-2 h-8  ml-2  py-1 rounded-md mb-2  flex flex-row items-center justify-center w-1/2 mx-2"
+                        className="btn btn-outline btn-sm  mx-2 w-1/2"
                         onClick={() => {
                            setFormations((formations: formation[]) => {
                               return formations.map((formation, index) => {

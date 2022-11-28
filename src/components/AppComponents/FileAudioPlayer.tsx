@@ -15,6 +15,8 @@ export const FileAudioPlayer: React.FC<{
    setFormations: Function;
    viewOnly: boolean;
    pixelsPerSecond: number;
+   player: any;
+   setPlayer: Function;
 }> = memo(
    ({
       setPosition,
@@ -26,8 +28,9 @@ export const FileAudioPlayer: React.FC<{
       setSelectedFormation,
       viewOnly,
       pixelsPerSecond,
+      player,
+      setPlayer,
    }) => {
-      const [player, setPlayer] = useState(null);
       const [ready, setReady] = useState(false);
 
       useEffect(() => {
@@ -51,15 +54,15 @@ export const FileAudioPlayer: React.FC<{
          if (document.getElementById("waveform")?.innerHTML) return;
          var wavesurfer = WaveSurfer.create({
             container: "#waveform",
-            waveColor: "#420979",
-            progressColor: "#db2777",
+            waveColor: "#9ca3af",
+            progressColor: "#6b7280",
             cursorColor: "#4353FF",
             // backgroundColor: "#D3D3D3",
-            barWidth: 3,
-            barRadius: 3,
+            barWidth: 4,
+            barRadius: 5,
             cursorWidth: 1,
             height: 60,
-            barGap: 1,
+            barGap: 2,
          });
          wavesurfer.load(soundCloudTrackId);
          wavesurfer.on("audioprocess", function (e) {
@@ -67,6 +70,7 @@ export const FileAudioPlayer: React.FC<{
          });
          wavesurfer.on("ready", function (e) {
             console.log("ready");
+            setReady(true);
             let duration = wavesurfer.getDuration() * 1000;
             setSongDuration(duration);
             wavesurfer.zoom(pixelsPerSecond);
@@ -88,7 +92,7 @@ export const FileAudioPlayer: React.FC<{
 
       return (
          <>
-            <div
+            {/* <div
                className="fixed flex flex-row justify-start "
                style={{
                   left: "50%",
@@ -155,10 +159,21 @@ export const FileAudioPlayer: React.FC<{
                      + new formation
                   </button>
                ) : null}
-            </div>
+            </div> */}
             <Script onReady={handleLoad} strategy="lazyOnload" src="https://unpkg.com/wavesurfer.js" />
 
-            <div className=" h-[95px] flex flex-col justify-end w-full">
+            {!ready ? (
+               <div className="h-[60px] flex flex-row items-center">
+                  <p>loading audio...</p>
+               </div>
+            ) : null}
+
+            <div
+               style={{
+                  display: ready ? "flex" : "none",
+               }}
+               className={` h-[60px]  flex-col justify-end w-full`}
+            >
                <div
                   id="waveform"
                   style={{
