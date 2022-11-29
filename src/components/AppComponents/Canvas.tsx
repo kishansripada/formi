@@ -46,10 +46,13 @@ export const Canvas: React.FC<{
    const [addingNewDancerId, setAddingNewDancerId] = useState<null | string>(null);
    const [changingControlType, setChangingControlType] = useState<"start" | "end" | null>(null);
    const [scrollOffset, setScrollOffset] = useState({ x: -442, y: -310 });
-   const [zoom, setZoom] = useState(0.7);
+   const [zoom, setZoom] = useState(0.959);
    const [isDragging, setIsDragging] = useState(false);
    const [copiedPositions, setCopiedPositions] = useState([]);
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
+
+   const container = useRef();
+   const stage = useRef();
    useEffect(() => {
       window.addEventListener("keydown", downHandler);
       window.addEventListener("keyup", upHandler);
@@ -60,6 +63,12 @@ export const Canvas: React.FC<{
          window.addEventListener("pointerdown", pointerForNewDancer);
       };
    }, [selectedFormation, commandHeld, selectedDancers, formations, copiedPositions]);
+
+   useEffect(() => {
+      let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
+      let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
+      setZoom(Math.min(heightPercentage, widthPercentage));
+   }, [container?.current?.clientHeight, stage?.current?.clientHeight]);
 
    const pointerForNewDancer = (e) => {
       if (e.target.dataset.type === "newDancer") {
@@ -341,6 +350,8 @@ export const Canvas: React.FC<{
    }, [songDuration]);
 
    const handleScroll = (e) => {
+      console.log(container.current.clientHeight);
+      console.log(stage.current.clientHeight);
       if (
          e
             .composedPath()
@@ -380,19 +391,22 @@ export const Canvas: React.FC<{
          });
       }
    };
+
    return (
       <div
-         className="flex flex-row relative  h-full cursor-default w-full overflow-hidden  overscroll-contain "
+         className="flex flex-row relative justify-center  h-full cursor-default w-full overflow-hidden  overscroll-contain items-center "
          id="stage"
+         ref={container}
          onPointerUp={!viewOnly ? pointerUp : null}
       >
          <div
+            ref={stage}
             className="relative bg-white "
             onPointerDown={!viewOnly ? pointerDown : null}
             onPointerMove={handleDragMove}
             style={{
-               top: scrollOffset.y,
-               left: scrollOffset.x,
+               // top: scrollOffset.y,
+               // left: scrollOffset.x,
                // transformOrigin: `${scrollOffset.x}px ${scrollOffset.y}px`,
                transform: `scale(${zoom}) `,
                // translate(${scrollOffset.x}px, ${scrollOffset.y}px)
@@ -415,87 +429,6 @@ export const Canvas: React.FC<{
             ) : (
                <></>
             )}
-
-            <div
-               className=" h-10 w-32 flex flex-col items-center absolute select-none"
-               style={{
-                  left: "50%",
-                  transform: "translate(-50%, 0)",
-                  top: -100,
-               }}
-            >
-               <p className="text-gray-700 text-sm font-semibold">width</p>
-
-               <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1 bg-gray-300 ">
-                  <button
-                     onClick={() =>
-                        setStageDimensions((dimensions) => {
-                           return { ...dimensions, width: dimensions.width - 2 };
-                        })
-                     }
-                     className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
-                  >
-                     <span className="m-auto text-2xl font-thin">−</span>
-                  </button>
-                  <div className="flex flex-row items-center justify-center  w-full">
-                     <p className=" focus:outline-none text-center h-full   bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none">
-                        {stageDimensions.width}
-                     </p>
-                  </div>
-
-                  <button
-                     onClick={() =>
-                        setStageDimensions((dimensions) => {
-                           return { ...dimensions, width: dimensions.width + 2 };
-                        })
-                     }
-                     className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
-                  >
-                     <span className="m-auto text-2xl font-thin">+</span>
-                  </button>
-               </div>
-            </div>
-
-            <div
-               className="rotate-90 h-10 w-32 flex flex-col items-center absolute select-none"
-               style={{
-                  top: "50%",
-                  transform: "translate(0, -50%) rotate(90deg)",
-                  // top: -100,
-                  right: -150,
-               }}
-            >
-               <p className="text-gray-700 text-sm font-semibold">height</p>
-
-               <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1 bg-gray-300">
-                  <button
-                     onClick={() =>
-                        setStageDimensions((dimensions) => {
-                           return { ...dimensions, height: dimensions.height - 2 };
-                        })
-                     }
-                     className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
-                  >
-                     <span className="m-auto text-2xl font-thin">−</span>
-                  </button>
-                  <div className="flex flex-row items-center justify-center  w-full">
-                     <p className=" focus:outline-none text-center h-full   bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700  outline-none">
-                        {stageDimensions.height}
-                     </p>
-                  </div>
-
-                  <button
-                     onClick={() =>
-                        setStageDimensions((dimensions) => {
-                           return { ...dimensions, height: dimensions.height + 2 };
-                        })
-                     }
-                     className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
-                  >
-                     <span className="m-auto text-2xl font-thin">+</span>
-                  </button>
-               </div>
-            </div>
 
             <div
                style={{
