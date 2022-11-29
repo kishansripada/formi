@@ -4,7 +4,7 @@ export const GridLines: React.FC<{ stageDimensions: { width: number; height: num
    return (
       <>
          <div
-            className="flex flex-row h-full justify-between  "
+            className="flex flex-row h-full justify-between rounded-xl "
             style={{
                width: PIXELS_PER_SQUARE * stageDimensions.width,
             }}
@@ -16,13 +16,13 @@ export const GridLines: React.FC<{ stageDimensions: { width: number; height: num
                   style={{
                      width: (i - stageDimensions.width / 2) % 5 === 0 ? (1 / 1) * 2.5 : 1 / 1,
                      backgroundColor: i === stageDimensions.width / 2 ? "black" : "rgb(209 213 219)",
-                     zIndex: i === 10 ? 1 : 0,
+                     zIndex: i === stageDimensions.width / 2 ? 1 : 0,
                   }}
                ></div>
             ))}
          </div>
          <div
-            className="flex flex-col justify-between relative"
+            className="flex flex-col justify-between relative rounded-xl"
             style={{
                height: PIXELS_PER_SQUARE * stageDimensions.height,
                top: -PIXELS_PER_SQUARE * stageDimensions.height,
@@ -35,7 +35,7 @@ export const GridLines: React.FC<{ stageDimensions: { width: number; height: num
                   style={{
                      height: (i - stageDimensions.height / 2) % 5 === 0 ? (1 / 1) * 2.5 : 1 / 1,
                      backgroundColor: i === stageDimensions.height / 2 ? "black" : "rgb(209 213 219)",
-                     zIndex: i === 10 ? 1 : 0,
+                     zIndex: i === stageDimensions.height / 2 ? 1 : 0,
                   }}
                ></div>
             ))}

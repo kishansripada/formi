@@ -20,12 +20,12 @@ export const CurrentFormation: React.FC<{
       }
    }, [selectedDancers]);
 
-   let dancersWhoAreNotInNextFormation =
-      selectedFormation !== null
-         ? formations?.[selectedFormation]?.positions.filter((dancerPosition: dancerPosition) => {
-              return !formations[selectedFormation + 1]?.positions.find((dancer) => dancer.id === dancerPosition.id);
-           })
-         : [];
+   // let dancersWhoAreNotInNextFormation =
+   //    selectedFormation !== null
+   //       ? formations?.[selectedFormation]?.positions.filter((dancerPosition: dancerPosition) => {
+   //            return !formations[selectedFormation + 1]?.positions.find((dancer) => dancer.id === dancerPosition.id);
+   //         })
+   //       : [];
 
    let dancersInThisFormation =
       selectedFormation !== null
@@ -34,55 +34,105 @@ export const CurrentFormation: React.FC<{
            })
          : [];
 
-   let dancersWhoAreNotInPreviousFormation =
-      selectedFormation === 0 || selectedFormation === null
-         ? []
-         : formations[selectedFormation]?.positions.filter((dancerPosition: dancerPosition) => {
-              return !formations[selectedFormation - 1]?.positions.find((dancer) => dancer.id === dancerPosition.id);
-           });
+   // let dancersWhoAreNotInPreviousFormation =
+   //    selectedFormation === 0 || selectedFormation === null
+   //       ? []
+   //       : formations[selectedFormation]?.positions.filter((dancerPosition: dancerPosition) => {
+   //            return !formations[selectedFormation - 1]?.positions.find((dancer) => dancer.id === dancerPosition.id);
+   //         });
 
    return (
       <>
          <div className=" flex flex-col  w-[23%] px-3 bg-white border-r border-r-gray-300">
             {selectedFormation !== null && formations[selectedFormation]?.name !== null ? (
                <div className="h-full  flex flex-col">
-                  <input
-                     className="font-semibold w-full text-center h-6 text-2xl focus:outline-pink-700 rounded-sm  hover:outline-gray-400 focus:outline-2  hover:outline-2 focus:outline hover:outline mt-4 py-4 mb-2"
-                     onKeyDown={(e) =>
-                        e.key === "Enter"
-                           ? setFormations((formations: formation[]) => {
-                                return formations.map((formation, i) => {
-                                   if (i === selectedFormation) {
-                                      return {
-                                         ...formation,
-                                         name: e.target.value,
-                                      };
-                                   }
+                  <div className="flex flex-row items-center justify-between">
+                     <input
+                        className="font-semibold w-[80%] px-2  h-6 text-2xl focus:outline-pink-700 rounded-sm  hover:outline-gray-400 focus:outline-2  hover:outline-2 focus:outline hover:outline mt-4 py-4 mb-2"
+                        onKeyDown={(e) =>
+                           e.key === "Enter"
+                              ? setFormations((formations: formation[]) => {
+                                   return formations.map((formation, i) => {
+                                      if (i === selectedFormation) {
+                                         return {
+                                            ...formation,
+                                            name: e.target.value,
+                                         };
+                                      }
 
-                                   return formation;
-                                });
-                             })
-                           : null
-                     }
-                     onBlur={(e) => {
-                        setFormations((formations: formation[]) => {
-                           return formations.map((formation, i) => {
-                              if (i === selectedFormation) {
-                                 return {
-                                    ...formation,
-                                    name: e.target.value,
-                                 };
-                              }
+                                      return formation;
+                                   });
+                                })
+                              : null
+                        }
+                        onBlur={(e) => {
+                           setFormations((formations: formation[]) => {
+                              return formations.map((formation, i) => {
+                                 if (i === selectedFormation) {
+                                    return {
+                                       ...formation,
+                                       name: e.target.value,
+                                    };
+                                 }
 
-                              return formation;
+                                 return formation;
+                              });
                            });
-                        });
-                     }}
-                     type="text"
-                     key={formations[selectedFormation]?.name}
-                     defaultValue={formations[selectedFormation]?.name || ""}
-                  />
+                        }}
+                        type="text"
+                        key={formations[selectedFormation]?.name}
+                        defaultValue={formations[selectedFormation]?.name || ""}
+                     />
+                     <p className="text-lg text-gray-500">
+                        {Math.round(
+                           (formations[selectedFormation]?.durationSeconds + formations[selectedFormation]?.transition.durationSeconds) * 10
+                        ) / 10}
+                        s
+                     </p>
+                  </div>
+
                   <hr className="mx-[-12px] " />
+                  <div>
+                     <textarea
+                        onKeyDown={(e) =>
+                           e.key === "Enter"
+                              ? setFormations((formations: formation[]) => {
+                                   return formations.map((formation, i) => {
+                                      if (i === selectedFormation) {
+                                         return {
+                                            ...formation,
+                                            notes: e.target.value,
+                                         };
+                                      }
+
+                                      return formation;
+                                   });
+                                })
+                              : null
+                        }
+                        onBlur={(e) => {
+                           setFormations((formations: formation[]) => {
+                              return formations.map((formation, i) => {
+                                 if (i === selectedFormation) {
+                                    return {
+                                       ...formation,
+                                       notes: e.target.value,
+                                    };
+                                 }
+
+                                 return formation;
+                              });
+                           });
+                        }}
+                        key={formations[selectedFormation]?.notes}
+                        defaultValue={formations[selectedFormation]?.notes || ""}
+                        placeholder="notes..."
+                        className="resize-none w-full px-1 py-1"
+                        name=""
+                        id=""
+                        rows={8}
+                     ></textarea>
+                  </div>
                   <li className=" mt-2 flex flex-row justify-between items-end font-semibold pr-3 ">
                      <p className="w-[60%] text-sm mx-1 ">name</p>
                      <p className="w-[40%]  text-sm text-center mx-1">path to here</p>
@@ -304,48 +354,8 @@ export const CurrentFormation: React.FC<{
                      })}
                   </ul>
                   <hr />
-                  <div>
-                     <textarea
-                        onKeyDown={(e) =>
-                           e.key === "Enter"
-                              ? setFormations((formations: formation[]) => {
-                                   return formations.map((formation, i) => {
-                                      if (i === selectedFormation) {
-                                         return {
-                                            ...formation,
-                                            notes: e.target.value,
-                                         };
-                                      }
 
-                                      return formation;
-                                   });
-                                })
-                              : null
-                        }
-                        onBlur={(e) => {
-                           setFormations((formations: formation[]) => {
-                              return formations.map((formation, i) => {
-                                 if (i === selectedFormation) {
-                                    return {
-                                       ...formation,
-                                       notes: e.target.value,
-                                    };
-                                 }
-
-                                 return formation;
-                              });
-                           });
-                        }}
-                        key={formations[selectedFormation]?.notes}
-                        defaultValue={formations[selectedFormation]?.notes || ""}
-                        placeholder="notes..."
-                        className="resize-none w-full px-1 py-1"
-                        name=""
-                        id=""
-                        rows={3}
-                     ></textarea>
-                  </div>
-                  <div className="flex flex-row  mt-auto pt-3 justify-center items-center ">
+                  <div className="flex flex-row mt-auto pb-3  pt-3 justify-center items-center ">
                      <button
                         className="btn btn-error btn-sm  mx-2 w-1/2 "
                         onClick={() => {
@@ -369,21 +379,6 @@ export const CurrentFormation: React.FC<{
                            />
                         </svg>
                         <p className=""> delete</p>
-                     </button>
-                     <button
-                        className="btn btn-outline btn-sm  mx-2 w-1/2"
-                        onClick={() => {
-                           setFormations((formations: formation[]) => {
-                              return formations.map((formation, index) => {
-                                 if (index === selectedFormation) {
-                                    return { ...formation, positions: [] };
-                                 }
-                                 return formation;
-                              });
-                           });
-                        }}
-                     >
-                        clear dancers
                      </button>
                   </div>
                </div>

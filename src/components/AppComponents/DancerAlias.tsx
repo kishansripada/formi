@@ -219,7 +219,7 @@ const animate = (
    function easeInOutQuad(x: number): number {
       return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
    }
-   percentThroughTransition = easeInOutElastic(percentThroughTransition);
+   percentThroughTransition = easeInOutQuad(percentThroughTransition);
 
    if (inThisFormation?.transitionType === "cubic" && inThisFormation?.controlPointStart?.y && inThisFormation?.controlPointStart?.x) {
       return coordsToPosition(

@@ -33,10 +33,40 @@ export const ChooseAudioSource: React.FC<{
    const supabase = useSupabaseClient();
    return (
       <>
-         <div className="flex  flex-col  bg-white border-r border-r-gray-300">
+         <div className="flex  flex-col  bg-white border-r border-r-gray-300 w-[23%]  px-6 py-6">
             <div className="flex flex-col  ">
                <div className="flex flex-col mt-auto">
-                  <p className="text-xl font-bold text-[#1A1B25]"> {soundCloudTrackId ? "change track" : "add your mix to get started"}</p>
+                  <p className="text-xl font-medium text-[#1A1B25] h-12"> add audio</p>
+
+                  <button className="relative border border-dashed border-gray-300 h-36 w-full rounded-xl bg-gray-50 ">
+                     <input
+                        accept="audio/mp4,audio/mpeg,.aac,.wav,.m4a,audio/*"
+                        type="file"
+                        autoComplete="off"
+                        tabIndex={-1}
+                        className="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50"
+                        onChange={(event) => {
+                           if (event.target.files && event.target.files[0]) {
+                              const i = event.target.files[0];
+                              console.log(i);
+                              setFile(i);
+                           }
+                        }}
+                     />
+                     <div className=" w-full h-full rounded-xl absolute top-0 right-0 left-0 m-auto  flex flex-col items-center justify-center">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" width="24" height="24" color="#5D647B">
+                           <path d="M16 16l-4-4-4 4M12 12v9" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
+                           <path
+                              d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                           ></path>
+                           <path d="M16 16l-4-4-4 4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
+                        </svg>
+                        <p className="text-sm">upload a file</p>
+                     </div>
+                  </button>
 
                   <p className="text-[#414552] font-medium pt-3 text-[14px]">soundcloud url</p>
                   <div className="flex flex-row items-center  ">
@@ -46,29 +76,6 @@ export const ChooseAudioSource: React.FC<{
                            className="input-sm	input  mr-3 mt-2"
                            type="text"
                            placeholder="https://soundcloud.com/..."
-                        />
-                     </div>
-                  </div>
-
-                  <p className=" my-6 text-[#414552] font-bold">OR</p>
-
-                  <div className="  ">
-                     <div className="mb-3 ">
-                        <label htmlFor="formFile" className="form-label inline-block mb-2 text-gray-700 font-medium text-[14px]">
-                           upload mp3 or wav file
-                        </label>
-                        <input
-                           className="file-input	"
-                           type="file"
-                           id="formFile"
-                           accept=".mp3,.wav"
-                           onChange={(event) => {
-                              if (event.target.files && event.target.files[0]) {
-                                 const i = event.target.files[0];
-                                 console.log(i);
-                                 setFile(i);
-                              }
-                           }}
                         />
                      </div>
                   </div>

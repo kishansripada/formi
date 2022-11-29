@@ -536,7 +536,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                ) : menuOpen === "audio" ? (
                   <ChooseAudioSource></ChooseAudioSource>
                ) : menuOpen === "settings" ? (
-                  <Settings></Settings>
+                  <Settings stageDimensions={stageDimensions} setStageDimensions={setStageDimensions}></Settings>
                ) : (
                   <CurrentFormation
                      selectedDancers={selectedDancers}

@@ -40,7 +40,8 @@ export const Header: React.FC<{
                      <input
                         value={danceName}
                         onChange={(e) => setDanceName(e.target.value)}
-                        className={`h-6 text-xl px-1 focus:outline-pink-700 rounded-sm  ml-3  hover:outline-gray-400 focus:outline-2 hover:outline-2 focus:outline hover:outline ${
+                        placeholder={"performance name"}
+                        className={`h-6  px-3 py-4 transition duration-300  rounded-md  ml-3 hover:bg-gray-100 text-gray-500 focus:bg-gray-100 outline-none cursor-pointer  ${
                            viewOnly ? "pointer-events-none" : ""
                         } `}
                      />
