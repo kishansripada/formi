@@ -35,12 +35,7 @@ export const Header: React.FC<{
       <>
          <div className=" min-h-[75px] flex flex-row items-center   bg-white border-b border-b-300">
             <div className="flex flex-row items-center ">
-               {/* <div className=" flex-row items-center hidden lg:flex">
-                  <Image className=" scale-[3.5]" src={logo} width={150} height={60} />
-                  <div className="h-[40px] w-[1px] bg-gray-400 ml-3"></div>
-               </div> */}
-
-               <div className="h-full ">
+               <div className="h-full">
                   <div className="flex flex-row justify-center items-center">
                      <input
                         value={danceName}
