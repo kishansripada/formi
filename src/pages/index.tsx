@@ -1,149 +1,161 @@
 import Link from "next/link";
 import Head from "next/head";
+
 const home = () => {
    return (
       <>
          <style jsx>{`
-            @keyframes gradient {
+            @keyframes sidetoside {
                0% {
-                  background-position: 0% 50%;
+                  left: 0%;
                }
                50% {
-                  background-position: 100% 50%;
+                  left: 100%;
                }
                100% {
-                  background-position: 0% 50%;
+                  left: 0%;
                }
             }
-            @keyframes skew {
+
+            @keyframes upanddown {
                0% {
-                  transform: skew(15deg, 15deg);
+                  top: -100px;
                }
                50% {
-                  transform: skew(-15deg, -15deg);
+                  top: 100px;
                }
                100% {
-                  transform: skew(15deg, 15deg);
+                  top: -100px;
                }
             }
          `}</style>
-         <div
-            className="fixed top-0 -z-50 h-full w-full body bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
-            style={{
-               // backgroundImage:
-               // "linear-gradient(\n  115deg,\n  hsl(298deg 100% 51%) 0%,\n  hsl(286deg 90% 59%) 40%,\n  hsl(266deg 74% 69%) 65%,\n  hsl(219deg 51% 76%) 100%\n)",
-               // background: "linear-gradient(to right top, #ff34bf, #e93ac2, #d33ec3, #bc42c3, #a545c1)",
-               backgroundSize: "400% 400%",
-               height: "100vh",
-               animation: "gradient 15s ease infinite",
-            }}
-         ></div>
-         <div
-            className="fixed top-0 -z-40 h-full w-full body bg-black opacity-60"
-            style={{
-               backgroundSize: "400% 400%",
-               height: "100vh",
-            }}
-         ></div>
-         <nav className="flex flex-row justify-between mt-5 text-gray-500 px-[10%]">
-            <Head>
-               <title>Naach: Online dance formation building software</title>
+         <Head>
+            <title>Naach: Online dance formation building software</title>
 
-               <meta
-                  name="description"
-                  content="Easily build, create and visualize your dance and cheer formations synced to music. Naach is the ultimate choreographer formation tool."
+            <meta
+               name="description"
+               content="Easily build, create and visualize your dance and cheer formations synced to music. Naach is the ultimate choreographer formation tool."
+            />
+            <meta name="keywords" content="dance, choreography, desi, formations, cheer, cheerleading, formation building tool" />
+            <meta name="twitter:card" content="summary" />
+            <meta name="twitter:title" content="Naach: Online dance formation building software" />
+            <meta name="twitter:image" content="https://i.imgur.com/pWxufBF.png" />
+            <meta property="og:type" content="song" />
+            <meta property="og:title" content="Naach: Online dance formation building software" />
+            <meta
+               property="og:description"
+               content="Easily build, create and visualize your dance and cheer formations synced to music. Naach is the ultimate choreographer formation tool."
+            />
+            <meta property="og:image" content="https://i.imgur.com/pWxufBF.png" />
+
+            <meta property="og:site_name" content="Naach: Online dance formation building software" />
+         </Head>
+         <div className="bg-[#fafafa]">
+            <div className="font-proxima pt-16 px-[20%] bg-[#fafafa]">
+               <nav className="flex flex-row justify-between text-black items-center ">
+                  {/* <img src="/newLogo.png" className="w-64 pointer-events-none select-none" alt="" /> */}
+                  <h1 className="text-7xl font-bold">NAACH</h1>
+                  <Link href={"/login"} className="z-50">
+                     <button className="border-black border px-4 py-1  rounded-md ">sign in 🚀</button>
+                  </Link>
+               </nav>
+
+               <h1 className=" text-black  text-[42px] font-semibold w-[70%] leading-[51px] relative  mt-28 z-10">
+                  stage performance planning reimagined.
+               </h1>
+               <p className="text-gray-500 w-[60%] mt-5">
+                  plan out your dance and cheer formations, visualizing the transitions all synced to music.
+               </p>
+
+               <Link href={"/207/edit"} className="z-50">
+                  <button className="bg-pink-600 text-white px-8 py-4 shadow-xl rounded-full mt-12 text-xl hidden lg:block group">
+                     create your first performance <span className="relative left-0 group-hover:left-3 transition-all duration-300">👉</span>
+                  </button>
+               </Link>
+            </div>
+            <div className="px-[15%] mt-24 relative overflow-hidden  ">
+               <img src="/editDemo.png" className="rounded-xl shadow-2xl z-50 relative pointer-events-none select-none " alt="" />
+               <div
+                  className="pointer-events-none absolute  h-[1000px] w-[1000px] "
+                  style={{
+                     backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
+                     top: 0,
+                     right: -300,
+                     opacity: 0.5,
+                  }}
+               ></div>
+               <div
+                  className="pointer-events-none absolute  h-[1000px] w-[1000px] "
+                  style={{
+                     backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #9333ea 0%, rgba(239, 255, 250, 0) 100%)",
+                     top: 0,
+                     left: -300,
+                     opacity: 0.5,
+                  }}
+               ></div>
+            </div>
+            <div className="h-[200px] bg-[#efefef] flex flex-row items-center justify-center child:mx-8 pointer-events-none select-none">
+               <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cornell_University_logo.svg/1280px-Cornell_University_logo.svg.png"
+                  className="grayscale w-48 opacity-40"
+                  alt=""
                />
-               <meta name="keywords" content="dance, choreography, desi, formations, cheer, cheerleading, formation building tool" />
-               <meta name="twitter:card" content="summary" />
-               <meta name="twitter:title" content="Naach: Online dance formation building software" />
-               <meta name="twitter:image" content="https://i.imgur.com/pWxufBF.png" />
-               <meta property="og:type" content="song" />
-               <meta property="og:title" content="Naach: Online dance formation building software" />
-               <meta
-                  property="og:description"
-                  content="Easily build, create and visualize your dance and cheer formations synced to music. Naach is the ultimate choreographer formation tool."
+               <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/University_of_Michigan_logo.svg/2560px-University_of_Michigan_logo.svg.png"
+                  className="grayscale w-48 opacity-40"
+                  alt=""
                />
-               <meta property="og:image" content="https://i.imgur.com/pWxufBF.png" />
-
-               <meta property="og:site_name" content="Naach: Online dance formation building software" />
-            </Head>
-            <div></div>
-            <ul className="flex flex-col items-center child:mx-3 justify-center child:ease-in-out child:duration-300 text-sm leading-tight displ invisible lg:visible"></ul>
-            <Link href={"/login"} className="z-50">
-               <button className="ring-2 ring-white px-4 py-1 rounded-md text-white hover:bg-white/20">get started 🚀</button>
-            </Link>
-         </nav>
-
-         <iframe
-            src="https://www.youtube.com/embed/trOjXFjYESQ?controls=0&autoplay=1"
-            allow="accelerometer; autoplay; modestbranding; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen={false}
-            autoplay="1"
-            loop="1"
-            className="w-full h-[500px] pointer-events-none"
-         ></iframe>
-
-         <div className="flex flex-row justify-center mt-16">
-            <img className=" select-none pointer-events-none w-48 lg:w-72" src="/logoWhite.png" />
-         </div>
-         <h1 className="text-3xl text-white leading-[50px] lg:text-7xl font-space font-semibold text-center px-[15%]  lg:leading-[90px] relative  mt-24 z-10">
-            quickly build dance formations synced to music
-         </h1>
-
-         <div className="flex flex-col items-center w-full justify-center ">
-            <Link href={"/207/edit"} className="z-50">
-               <button className="ring-2 ring-white hover:bg-white/20 px-4 py-1 rounded-md text-white mt-12 text-xl hidden lg:block">
-                  open a playground 🛝
-               </button>
-            </Link>
-
-            <img src="editDemo.png" className="w-[90%] lg:w-2/3 mt-16 rounded-xl" alt="" />
-         </div>
-
-         <div className="px-[10%] flex flex-col lg:flex-row text-center lg:text-left mt-36">
-            <div className="lg:w-1/2 py-[10%]">
-               <h1 className="text-2xl text-white leading-[50px] lg:text-5xl font-space font-semibold">easily share with your dancers</h1>
+               <img
+                  src=" https://images.givelively.org/nonprofits/460ef676-33fe-4637-8b80-d9a31f11d415/logos/desi-dance-network-incorporated_processed_a5bf047c897ca650200a7cc0d546411966e88bb5e6240b4b4ac74b83266fcead_logo.png
+               "
+                  className="grayscale w-24 opacity-40"
+                  alt=""
+               />
+               <img
+                  src=" https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/University_of_California%2C_Berkeley_logo.svg/2560px-University_of_California%2C_Berkeley_logo.svg.png
+               "
+                  className="grayscale w-32 opacity-40"
+                  alt=""
+               />
+               <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/University_of_Texas_at_Austin_logo.svg/1280px-University_of_Texas_at_Austin_logo.svg.png
+               "
+                  className="grayscale w-32 opacity-40"
+                  alt=""
+               />
+               <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Stanford_Cardinal_logo.svg/1341px-Stanford_Cardinal_logo.svg.png
+               "
+                  className="grayscale w-12 opacity-40"
+                  alt=""
+               />
             </div>
-
-            <div className="lg:w-1/2">
-               <img src="viewDemo.png" className=" rounded-xl" alt="" />
-            </div>
-         </div>
-
-         <div
-            className="h-screen w-[2000px] fixed top-0 left-0  pointer-events-none -z-50 "
-            style={{
-               // left: "50%",
-
-               transform: " translateX(-50%)",
-               opacity: 0.4,
-               animation: "skew 15s ease infinite",
-            }}
-         >
-            {/* <div className="flex flex-row h-full justify-between">
-               {new Array(51).fill(0).map((_, i) => (
+            <div className="bg-[#efefef] flex flex-row items-center justify-between px-[15%] pt-24 pb-48">
+               <div className="w-[50%] relative mr-20">
                   <div
-                     key={i}
-                     className="h-full bg-gray-300"
                      style={{
-                        width: i % 5 === 0 ? (1 / 1) * 2.5 : 1 / 1,
-                        zIndex: i === 10 ? 1 : 0,
+                        position: "absolute",
+                        animation: "sidetoside 5s cubic-bezier(0.65, 0, 0.35, 1) infinite",
                      }}
-                  ></div>
-               ))}
+                     className={` rounded-full shadow-xl  flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default w-[41px] h-[41px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 `}
+                  >
+                     <div className="bg-white rounded-full w-[32px] h-[32px] grid place-items-center select-none cursor-default ">
+                        <p data-type={"dancer"} className="select-none font-semibold cursor-default  ">
+                           KS
+                        </p>
+                     </div>
+                  </div>
+               </div>
+               <div className="w-[50%]">
+                  <h1 className="font-semibold text-3xl text-gray-800 relative z-10 w-[70%]">
+                     drag and drop your dancers, then watch them come to life
+                  </h1>
+                  <div className="bg-blue-400 relative h-3 opacity-40 top-[-10px]"></div>
+                  <p className="text-lg text-gray-400 w-[70%] mt-3">
+                     automatically determine if your dancers will <span className="font-bold text-gray-500 ">collide</span> on stage
+                  </p>
+               </div>
             </div>
-            <div className="flex flex-col h-[800px] justify-between relative top-[-800px]">
-               {new Array(21).fill(0).map((_, i) => (
-                  <div
-                     key={i}
-                     className=" w-full bg-gray-300"
-                     style={{
-                        height: i % 5 === 0 ? (1 / 1) * 2.5 : 1 / 1,
-                        zIndex: i === 10 ? 1 : 0,
-                     }}
-                  ></div>
-               ))}
-            </div> */}
          </div>
       </>
    );

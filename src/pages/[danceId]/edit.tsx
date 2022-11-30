@@ -6,6 +6,7 @@ import Head from "next/head";
 import { PIXELS_PER_SQUARE } from "../../types/types";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import toast, { Toaster } from "react-hot-toast";
 
 import { Header } from "../../components/AppComponents/Header";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
@@ -64,6 +65,7 @@ const FileAudioPlayer = dynamic<{
 import { dancer, dancerPosition, formation } from "../../types/types";
 
 const Edit = ({ initialData, viewOnly }: {}) => {
+   viewOnly = false;
    let session = useSession();
    const supabase = useSupabaseClient();
 
@@ -282,6 +284,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
 
    return (
       <>
+         <Toaster></Toaster>
          <Head>
             <title>Naach: Online formation building software</title>
 
@@ -510,8 +513,8 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                </div>
 
                {menuOpen === "dancers" ? (
-                  <div className="flex flex-col w-[23%] px-3 ">
-                     <p className="text-xl font-bold mb-2 ml-2">My dancers</p>
+                  <div className="flex flex-col w-[23%] px-6 py-6 bg-white border-r border-r-gray-300">
+                     <p className="text-xl font-medium mb-2">my dancers</p>
                      <div className="flex flex-col  relative overflow-y-scroll overflow-x-hidden  ">
                         <NewDancer setDancers={setDancers} />
 
@@ -633,7 +636,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                   </Canvas>
                </div>
             </div>
-            <div className="min-h-[50px] bg-white w-full border-t border-gray-300 flex flex-row items-center justify-between">
+            <div className="min-h-[50px] bg-[#fafafa] w-full border-t border-gray-300 flex flex-row items-center justify-between">
                <div className="w-[45%] pl-10 flex flex-row justify-center items-center">
                   <div className="flex flex-row items-center justify-center mx-5">
                      <label className="inline-flex relative items-center cursor-pointer">

@@ -43,12 +43,13 @@ export const CurrentFormation: React.FC<{
 
    return (
       <>
-         <div className=" flex flex-col  w-[23%] px-3 bg-white border-r border-r-gray-300">
+         <div className=" flex flex-col  w-[23%]  bg-white border-r border-r-gray-300 px-6 py-6">
             {selectedFormation !== null && formations[selectedFormation]?.name !== null ? (
                <div className="h-full  flex flex-col">
-                  <div className="flex flex-row items-center justify-between">
+                  <div className="flex flex-row items-center mb-3 ">
+                     <p className="text-2xl text-gray-500 mr-2 ">#{selectedFormation + 1}</p>
                      <input
-                        className="font-semibold w-[80%] px-2  h-6 text-2xl focus:outline-pink-700 rounded-sm  hover:outline-gray-400 focus:outline-2  hover:outline-2 focus:outline hover:outline mt-4 py-4 mb-2"
+                        className="font-medium w-full px-2 rounded-md  h-6 text-2xl  py-4 transition duration-300 hover:bg-gray-100 text-gray-600 focus:bg-gray-100 outline-none cursor-pointer "
                         onKeyDown={(e) =>
                            e.key === "Enter"
                               ? setFormations((formations: formation[]) => {
@@ -83,14 +84,16 @@ export const CurrentFormation: React.FC<{
                         key={formations[selectedFormation]?.name}
                         defaultValue={formations[selectedFormation]?.name || ""}
                      />
+                  </div>
+                  <div className="flex flex-row items-center justify-between w-full">
                      <p className="text-lg text-gray-500">
                         {Math.round(
                            (formations[selectedFormation]?.durationSeconds + formations[selectedFormation]?.transition.durationSeconds) * 10
                         ) / 10}
                         s
                      </p>
+                     <p className="text-lg text-gray-500 ">7 </p>
                   </div>
-
                   <hr className="mx-[-12px] " />
                   <div>
                      <textarea

@@ -22,6 +22,7 @@ module.exports = {
     extend: {
       fontFamily: {
         space: ["Space Grotesk", "sans-serif"],
+        proxima: ["proxima-nova", "sans-serif"]
       },
     },
   },

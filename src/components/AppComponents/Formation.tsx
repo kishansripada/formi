@@ -32,7 +32,7 @@ export const Formation: React.FC<{
                   <div
                      id={index.toString()}
                      data-type="transition-resize"
-                     className="bg-pink-200 h-full  w-[6px] cursor-ew-resize absolute right-[-5px] z-50 "
+                     className="bg-pink-200 h-full  w-[6px] cursor-col-resize	 absolute right-[-5px] z-50 "
                   ></div>
                </div>
 
@@ -45,7 +45,7 @@ export const Formation: React.FC<{
                   <div
                      data-type="formation-resize"
                      id={index.toString()}
-                     className="h-full bg-pink-200  absolute right-0  w-[6px] cursor-ew-resize"
+                     className="h-full bg-pink-200  absolute right-0  w-[6px] cursor-col-resize	"
                   ></div>
 
                   <div className="flex flex-row h-full  pointer-events-none mr-[2px] ml-[5px]">

@@ -341,56 +341,56 @@ export const Canvas: React.FC<{
       setIsDragging(false);
    };
 
-   // useEffect(() => {
-   //    window.addEventListener("wheel", handleScroll, { passive: false });
+   useEffect(() => {
+      window.addEventListener("wheel", handleScroll, { passive: false });
 
-   //    return () => {
-   //       window.removeEventListener("wheel", handleScroll);
-   //    };
-   // }, [songDuration]);
+      return () => {
+         window.removeEventListener("wheel", handleScroll);
+      };
+   }, [songDuration]);
 
-   // const handleScroll = (e) => {
-   //    console.log(container.current.clientHeight);
-   //    console.log(stage.current.clientHeight);
-   //    if (
-   //       e
-   //          .composedPath()
-   //          .map((elem) => elem.id)
-   //          .includes("stage") &&
-   //       e.ctrlKey === false
-   //    ) {
-   //       e.preventDefault();
-   //       setScrollOffset((scrollOffset) => {
-   //          return { y: scrollOffset.y - e.deltaY, x: scrollOffset.x - e.deltaX };
-   //       });
-   //    }
-   //    if (
-   //       e
-   //          .composedPath()
-   //          .map((elem) => elem.id)
-   //          .includes("stage") &&
-   //       e.ctrlKey === true
-   //    ) {
-   //       e.preventDefault();
-   //       setZoom((zoom) => (zoom - e.deltaY / 200 > 0.2 && zoom - e.deltaY / 200 < 1.2 ? zoom - e.deltaY / 200 : zoom));
-   //    }
-   //    if (
-   //       e
-   //          .composedPath()
-   //          .map((elem) => elem.id)
-   //          .includes("layers") &&
-   //       e.ctrlKey === true
-   //    ) {
-   //       e.preventDefault();
-   //       setPixelsPerSecond((pixelsPerSecond) => {
-   //          if ((songDuration * (pixelsPerSecond - e.deltaY / 25)) / 1000 < window.screen.width - 20) return pixelsPerSecond;
-   //          if (pixelsPerSecond - e.deltaY / 25 > 38) {
-   //             return pixelsPerSecond;
-   //          }
-   //          return pixelsPerSecond - e.deltaY / 25;
-   //       });
-   //    }
-   // };
+   const handleScroll = (e) => {
+      console.log(container.current.clientHeight);
+      console.log(stage.current.clientHeight);
+      // if (
+      //    e
+      //       .composedPath()
+      //       .map((elem) => elem.id)
+      //       .includes("stage") &&
+      //    e.ctrlKey === false
+      // ) {
+      //    e.preventDefault();
+      //    setScrollOffset((scrollOffset) => {
+      //       return { y: scrollOffset.y - e.deltaY, x: scrollOffset.x - e.deltaX };
+      //    });
+      // }
+      // if (
+      //    e
+      //       .composedPath()
+      //       .map((elem) => elem.id)
+      //       .includes("stage") &&
+      //    e.ctrlKey === true
+      // ) {
+      //    e.preventDefault();
+      //    setZoom((zoom) => (zoom - e.deltaY / 200 > 0.2 && zoom - e.deltaY / 200 < 1.2 ? zoom - e.deltaY / 200 : zoom));
+      // }
+      if (
+         e
+            .composedPath()
+            .map((elem) => elem.id)
+            .includes("layers") &&
+         e.ctrlKey === true
+      ) {
+         e.preventDefault();
+         setPixelsPerSecond((pixelsPerSecond) => {
+            if ((songDuration * (pixelsPerSecond - e.deltaY / 25)) / 1000 < window.screen.width - 20) return pixelsPerSecond;
+            if (pixelsPerSecond - e.deltaY / 25 > 38) {
+               return pixelsPerSecond;
+            }
+            return pixelsPerSecond - e.deltaY / 25;
+         });
+      }
+   };
 
    return (
       <div
@@ -401,7 +401,7 @@ export const Canvas: React.FC<{
       >
          <div
             ref={stage}
-            className="relative bg-white rounded-xl"
+            className="relative bg-[#fafafa] rounded-xl"
             onPointerDown={!viewOnly ? pointerDown : null}
             onPointerMove={handleDragMove}
             style={{
