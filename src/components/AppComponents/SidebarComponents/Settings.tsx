@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation } from "../../types/types";
+import { dancer, dancerPosition, formation } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 
@@ -76,6 +76,25 @@ export const Settings: React.FC<{
                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                   </svg>
                </button>
+            </div>
+            <p className="font-medium h-10">previous formation</p>
+            <div className="border border-gray-200 rounded-xl w-full text-sm shadow-sm cursor-pointer ">
+               <div className="p-4 flex flex-row items-center">
+                  <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                  <p>none</p>
+               </div>
+               <hr />
+               <div className="p-4 flex flex-row items-center">
+                  <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                  <p>view ghost dancers</p>
+               </div>
+               <hr />
+               <div className="p-4 flex flex-row items-center">
+                  <div className="rounded-full h-4 w-4 border-blue-400 border mr-3 grid place-items-center">
+                     <div className="rounded-full h-2 w-2 bg-blue-400"></div>
+                  </div>
+                  <p>view ghost dancers and paths</p>
+               </div>
             </div>
          </div>
       </>

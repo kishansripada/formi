@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { debounce } from "lodash";
 import { useRouter } from "next/router";
+import { v4 as uuidv4 } from "uuid";
+
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { PIXELS_PER_SQUARE } from "../../types/types";
@@ -11,17 +13,15 @@ import toast, { Toaster } from "react-hot-toast";
 import { Header } from "../../components/AppComponents/Header";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
 import { DancerAliasShadow } from "../../components/AppComponents/DancerAliasShadow";
-import { Dancer } from "../../components/AppComponents/Dancer";
 import { Canvas } from "../../components/AppComponents/Canvas";
-import { NewDancer } from "../../components/AppComponents/NewDancer";
-import { CurrentFormation } from "../../components/AppComponents/CurrentFormation";
-import { Settings } from "../../components/AppComponents/Settings";
+import { CurrentFormation } from "../../components/AppComponents/SidebarComponents/CurrentFormation";
+import { Settings } from "../../components/AppComponents/SidebarComponents/Settings";
 import { EditDancer } from "../../components/AppComponents/EditDancer";
 import { Layers } from "../../components/AppComponents/Layers";
 import { isMobile } from "react-device-detect";
 import { PathEditor } from "../../components/AppComponents/PathEditor";
 import { Share } from "../../components/AppComponents/Share";
-import { ChooseAudioSource } from "../../components/AppComponents/ChooseAudioSource";
+import { ChooseAudioSource } from "../../components/AppComponents/SidebarComponents/ChooseAudioSource";
 
 var changesets = require("json-diff-ts");
 import { applyChangeset } from "json-diff-ts";
@@ -63,6 +63,7 @@ const FileAudioPlayer = dynamic<{
 });
 
 import { dancer, dancerPosition, formation } from "../../types/types";
+import { Roster } from "../../components/AppComponents/SidebarComponents/Roster";
 
 const Edit = ({ initialData, viewOnly }: {}) => {
    viewOnly = false;
@@ -84,7 +85,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
    const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
    const [editingDancer, setEditingDancer] = useState<string | null>(null);
-   const [viewAllPaths, setViewAllPaths] = useState<boolean>(false);
+   const [viewAllPaths, setViewAllPaths] = useState<boolean>(true);
 
    const [saved, setSaved] = useState<boolean>(true);
    const [mobile, setMobile] = useState<string | null>(null);
@@ -102,18 +103,6 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    };
 
    let currentFormationIndex = whereInFormation(formations, position).currentFormationIndex;
-
-   useEffect(() => {
-      if (window !== undefined) {
-         setViewAllPaths(JSON.parse(window.localStorage.getItem("viewAllPaths")));
-      }
-   }, []);
-
-   useDidMountEffect(() => {
-      if (window !== undefined) {
-         window.localStorage.setItem("viewAllPaths", viewAllPaths);
-      }
-   }, [viewAllPaths]);
 
    // remove this eventually
    useEffect(() => {
@@ -414,14 +403,14 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                            </linearGradient>
                         </defs>
                      </svg>
-                     <p className="text-xs text-gray-500">formations</p>
+                     <p className="text-xs text-gray-500"> formation</p>
                   </button>
 
                   <button onClick={() => setMenuOpen("dancers")}>
                      <svg height="48" width="48" className="fill-gray-400 scale-75">
                         <path d="M1.9 40v-4.7q0-1.75.9-3.175Q3.7 30.7 5.3 30q3.65-1.6 6.575-2.3Q14.8 27 17.9 27q3.1 0 6 .7t6.55 2.3q1.6.7 2.525 2.125.925 1.425.925 3.175V40Zm35 0v-4.7q0-3.15-1.6-5.175t-4.2-3.275q3.45.4 6.5 1.175t4.95 1.775q1.65.95 2.6 2.35.95 1.4.95 3.15V40Zm-19-16.05q-3.3 0-5.4-2.1-2.1-2.1-2.1-5.4 0-3.3 2.1-5.4 2.1-2.1 5.4-2.1 3.3 0 5.4 2.1 2.1 2.1 2.1 5.4 0 3.3-2.1 5.4-2.1 2.1-5.4 2.1Zm18-7.5q0 3.3-2.1 5.4-2.1 2.1-5.4 2.1-.55 0-1.225-.075T25.95 23.6q1.2-1.25 1.825-3.075.625-1.825.625-4.075t-.625-3.975Q27.15 10.75 25.95 9.3q.55-.15 1.225-.25t1.225-.1q3.3 0 5.4 2.1 2.1 2.1 2.1 5.4ZM4.9 37h26v-1.7q0-.8-.475-1.55T29.25 32.7q-3.6-1.6-6.05-2.15-2.45-.55-5.3-.55-2.85 0-5.325.55T6.5 32.7q-.7.3-1.15 1.05-.45.75-.45 1.55Zm13-16.05q1.95 0 3.225-1.275Q22.4 18.4 22.4 16.45q0-1.95-1.275-3.225Q19.85 11.95 17.9 11.95q-1.95 0-3.225 1.275Q13.4 14.5 13.4 16.45q0 1.95 1.275 3.225Q15.95 20.95 17.9 20.95Zm0 16.05Zm0-20.55Z" />
                      </svg>
-                     <p className="text-xs text-gray-500">dancers</p>
+                     <p className="text-xs text-gray-500">roster</p>
                   </button>
                   <button onClick={() => setMenuOpen("audio")}>
                      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -513,29 +502,13 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                </div>
 
                {menuOpen === "dancers" ? (
-                  <div className="flex flex-col w-[23%] px-6 py-6 bg-white border-r border-r-gray-300">
-                     <p className="text-xl font-medium mb-2">my dancers</p>
-                     <div className="flex flex-col  relative overflow-y-scroll overflow-x-hidden  ">
-                        <NewDancer setDancers={setDancers} />
-
-                        {dancers
-                           .slice()
-                           .reverse()
-                           .map((dancer, index) => (
-                              <Dancer
-                                 isPlaying={isPlaying}
-                                 formations={formations}
-                                 selectedFormation={selectedFormation}
-                                 setDancers={setDancers}
-                                 {...dancer}
-                                 key={dancer.id}
-                                 dancers={dancers}
-                                 setEditingDancer={setEditingDancer}
-                                 setFormations={setFormations}
-                              />
-                           ))}
-                     </div>
-                  </div>
+                  <Roster
+                     setDancers={setDancers}
+                     dancers={dancers}
+                     formations={formations}
+                     selectedFormation={selectedFormation}
+                     setEditingDancer={setEditingDancer}
+                  ></Roster>
                ) : menuOpen === "audio" ? (
                   <ChooseAudioSource></ChooseAudioSource>
                ) : menuOpen === "settings" ? (
@@ -551,7 +524,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                      selectedFormation={selectedFormation}
                   />
                )}
-               <div className="flex flex-col w-[70%]">
+               <div className="flex flex-col w-[70%] items-center">
                   <Header
                      saved={saved}
                      danceName={danceName}
@@ -562,6 +535,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                      setShareIsOpen={setShareIsOpen}
                      viewOnly={viewOnly}
                   />
+
                   <Canvas
                      songDuration={songDuration}
                      viewOnly={viewOnly}
@@ -637,21 +611,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                </div>
             </div>
             <div className="min-h-[50px] bg-[#fafafa] w-full border-t border-gray-300 flex flex-row items-center justify-between">
-               <div className="w-[45%] pl-10 flex flex-row justify-center items-center">
-                  <div className="flex flex-row items-center justify-center mx-5">
-                     <label className="inline-flex relative items-center cursor-pointer">
-                        <input
-                           checked={viewAllPaths}
-                           type="checkbox"
-                           id="checked-toggle"
-                           className="sr-only peer"
-                           onChange={() => setViewAllPaths((value: boolean) => !value)}
-                        />
-                        <div className="w-11 h-6 bg-gray-200 rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
-                     </label>
-                     <p className="text-sm font-medium text-gray-900 ">view all paths</p>
-                  </div>
-               </div>
+               <div className="w-[45%] pl-10 flex flex-row justify-center items-center"></div>
                <div className="flex flex-row items-center justify-center w-[10%] ">
                   {isPlaying ? (
                      <button

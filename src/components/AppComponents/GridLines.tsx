@@ -12,10 +12,10 @@ export const GridLines: React.FC<{ stageDimensions: { width: number; height: num
             {new Array(stageDimensions.width + 1).fill(0).map((_, i) => (
                <div
                   key={i}
-                  className="h-full bg-gray-300"
+                  className={`h-full ${i === stageDimensions.width / 2 ? "bg-gray-600" : "bg-gray-300"} `}
                   style={{
-                     width: (i - stageDimensions.width / 2) % 5 === 0 ? (1 / 1) * 2.5 : 1 / 1,
-                     backgroundColor: i === stageDimensions.width / 2 ? "black" : "rgb(209 213 219)",
+                     width: i === stageDimensions.width || i === 0 ? 0 : (i - stageDimensions.width / 2) % 5 === 0 ? 2.5 : 1,
+                     // backgroundColor: i === stageDimensions.width / 2 ? "black" : "rgb(209 213 219)",
                      zIndex: i === stageDimensions.width / 2 ? 1 : 0,
                   }}
                ></div>
@@ -31,10 +31,10 @@ export const GridLines: React.FC<{ stageDimensions: { width: number; height: num
             {new Array(stageDimensions.height + 1).fill(0).map((_, i) => (
                <div
                   key={i}
-                  className=" w-full bg-gray-300"
+                  className={`w-full ${i === stageDimensions.height / 2 ? "bg-gray-600" : "bg-gray-300"} `}
                   style={{
-                     height: (i - stageDimensions.height / 2) % 5 === 0 ? (1 / 1) * 2.5 : 1 / 1,
-                     backgroundColor: i === stageDimensions.height / 2 ? "black" : "rgb(209 213 219)",
+                     height: i === stageDimensions.height || i === 0 ? 0 : (i - stageDimensions.height / 2) % 5 === 0 ? (1 / 1) * 2.5 : 1 / 1,
+                     // backgroundColor: i === stageDimensions.height / 2 ? "black" : "rgb(209 213 219)",
                      zIndex: i === stageDimensions.height / 2 ? 1 : 0,
                   }}
                ></div>

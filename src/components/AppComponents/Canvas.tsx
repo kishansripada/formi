@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, PointerEvent, PointerEventHandler, useMemo
 
 import { GridLines } from "./GridLines";
 import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE } from "../../types/types";
-import { CurrentFormation } from "./CurrentFormation";
+import { CurrentFormation } from "./SidebarComponents/CurrentFormation";
 
 export const Canvas: React.FC<{
    children: React.ReactNode;
@@ -401,7 +401,7 @@ export const Canvas: React.FC<{
       >
          <div
             ref={stage}
-            className="relative bg-[#fafafa] rounded-xl"
+            className="relative bg-white rounded-xl"
             onPointerDown={!viewOnly ? pointerDown : null}
             onPointerMove={handleDragMove}
             style={{
@@ -432,13 +432,13 @@ export const Canvas: React.FC<{
 
             <div
                style={{
-                  width: PIXELS_PER_SQUARE * 3,
+                  width: PIXELS_PER_SQUARE * 2.5,
                }}
-               className="absolute h-full bg-black opacity-30 z-[100] pointer-events-none border-black border-r-2 border-opacity-100 "
+               className="absolute h-full bg-black opacity-30 z-[100] pointer-events-none "
             ></div>
             <div
                style={{
-                  width: PIXELS_PER_SQUARE * 3,
+                  width: PIXELS_PER_SQUARE * 2.5,
                }}
                className="absolute h-full bg-black opacity-30 z-[100] right-0 pointer-events-none"
             ></div>

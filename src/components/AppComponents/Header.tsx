@@ -33,7 +33,7 @@ export const Header: React.FC<{
 
    return (
       <>
-         <div className=" min-h-[75px] flex flex-row items-center   bg-white border-b border-b-300">
+         <div className=" min-h-[75px] flex flex-row items-center w-full  bg-white border-b border-b-300 ">
             <div className="flex flex-row items-center ">
                <div className="h-full">
                   <div className="flex flex-row justify-center items-center">
@@ -73,25 +73,11 @@ export const Header: React.FC<{
                         </p>
                      </a>
 
-                     <button onClick={() => setShareIsOpen((state: boolean) => !state)} className="btn btn-secondary btn-sm h-10 ml-2">
-                        <div className="flex flex-row items-center">
-                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                              <path
-                                 fillRule="evenodd"
-                                 d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
-                                 clipRule="evenodd"
-                              />
-                           </svg>
-
-                           <p className="ml-1">share</p>
-                        </div>
-                     </button>
-                  </>
-               ) : null}
-               {session ? (
-                  <Link href="/mydances">
-                     <button className="ml-2 btn btn-primary btn-sm h-10 ">
-                        <div className="flex flex-row items-center">
+                     <button
+                        onClick={() => setShareIsOpen((state: boolean) => !state)}
+                        className="border border-black text-sm rounded-md px-3 py-3 ml-4"
+                     >
+                        <div className="flex flex-row items-center ">
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
@@ -103,10 +89,33 @@ export const Header: React.FC<{
                               <path
                                  strokeLinecap="round"
                                  strokeLinejoin="round"
+                                 d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
+                              />
+                           </svg>
+
+                           <p className="ml-1">invite</p>
+                        </div>
+                     </button>
+                  </>
+               ) : null}
+               {session ? (
+                  <Link href="/mydances">
+                     <button className="bg-slate-800  text-white text-sm rounded-md px-3 py-3 ml-4 ">
+                        <div className="flex flex-row items-center">
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              className="w-5 h-5 stroke-gray-300"
+                           >
+                              <path
+                                 strokeLinecap="round"
+                                 strokeLinejoin="round"
                                  d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
                               />
                            </svg>
-                           <p className="ml-1"> my dances</p>
+                           <p className="ml-2 text-gray-100">dashboard</p>
                         </div>
                      </button>
                   </Link>

@@ -23,13 +23,34 @@ export const NewDancer: React.FC<{ setDancers: Function }> = ({ setDancers }) =>
    return (
       <>
          <div
-            className="flex flex-row items-center h-[55px] rounded-xl bg-white shrink-0 mb-1"
+            className="flex flex-row items-center h-[55px]  bg-white shrink-0 mb-1 px-3"
             style={{
                opacity: 1,
             }}
          >
+            <div
+               style={{
+                  transform: "translate(0, 0)",
+               }}
+               className={`min-w-[48px] min-h-[48px] ml-2 rounded-full grid place-items-center cursor-pointer bg-black  `}
+            >
+               <div className="bg-white rounded-full w-[41px] h-[41px] grid place-items-center" data-type={"newDancer"}>
+                  <p className="font-bold" data-type={"newDancer"}>
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                     >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                     </svg>
+                  </p>
+               </div>
+            </div>
             <input
-               className="ml-3 focus:outline-pink-700 rounded-md  hover:outline-gray-400 focus:outline-2  hover:outline-2 focus:outline hover:outline px-2"
+               className="h-6  px-3 py-4 transition duration-300  rounded-md  ml-3 hover:bg-gray-100 text-gray-500 focus:bg-gray-100 outline-none cursor-pointer"
                onKeyDown={(event) => (event.key === "Enter" ? createNewDancer() : null)}
                placeholder="new dancer"
                value={newName}
@@ -37,6 +58,7 @@ export const NewDancer: React.FC<{ setDancers: Function }> = ({ setDancers }) =>
                onBlur={createNewDancer}
             />
          </div>
+         <hr />
       </>
    );
 };

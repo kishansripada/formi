@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation } from "../../types/types";
+import { dancer, dancerPosition, formation } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 

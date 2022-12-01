@@ -1,18 +1,14 @@
 import { dancer, dancerPosition, formation } from "../../types/types";
 
 export const Dancer: React.FC<{
-   name: string;
-   id: string;
    setDancers: Function;
    dancers: dancer[];
    selectedFormation: number | null;
    formations: formation[];
-   instagramUsername: string | null;
-   isPlaying: boolean;
+   dancer: dancer;
    setEditingDancer: Function;
-   setFormations: Function;
-   color: string | null | undefined;
-}> = ({ name, id, setDancers, dancers, selectedFormation, formations, instagramUsername, isPlaying, setEditingDancer, setFormations, color }) => {
+}> = ({ setDancers, dancers, selectedFormation, formations, setEditingDancer, dancer }) => {
+   let { name, id, instagramUsername, color } = dancer;
    let canBeAddedToStage =
       // there is a formation select
       selectedFormation !== null &&
@@ -26,41 +22,39 @@ export const Dancer: React.FC<{
       .join("")
       .toUpperCase();
 
-   const addDancerToStage = () => {
-      setFormations((formations: formation[]) => {
-         return formations.map((formation, i) => {
-            if (i === selectedFormation) {
-               return {
-                  ...formation,
-                  positions: [
-                     ...formation.positions,
-                     {
-                        id: id,
-                        position: {
-                           x: 0,
-                           y: 6,
-                        },
-                        exitStrategy: "closest",
-                        enterStrategy: "closest",
-                        transitionType: "linear",
-                        controlPointStart: { x: -6, y: 1 },
-                        controlPointEnd: { x: 6, y: 1 },
-                     },
-                  ],
-               };
-            }
-            return formation;
-         });
-      });
-   };
+   // const addDancerToStage = () => {
+   //    setFormations((formations: formation[]) => {
+   //       return formations.map((formation, i) => {
+   //          if (i === selectedFormation) {
+   //             return {
+   //                ...formation,
+   //                positions: [
+   //                   ...formation.positions,
+   //                   {
+   //                      id: id,
+   //                      position: {
+   //                         x: 0,
+   //                         y: 6,
+   //                      },
+   //                      exitStrategy: "closest",
+   //                      enterStrategy: "closest",
+   //                      transitionType: "linear",
+   //                      controlPointStart: { x: -6, y: 1 },
+   //                      controlPointEnd: { x: 6, y: 1 },
+   //                   },
+   //                ],
+   //             };
+   //          }
+   //          return formation;
+   //       });
+   //    });
+   // };
 
    return (
       <>
-         <div className={`flex flex-row items-center  border-black  rounded-xl mb-1 min-h-[55px] bg-white`} data-type={"newDancer"}>
+         <div className={`flex flex-row items-center px-3    mb-1 min-h-[55px] bg-white`} data-type={"newDancer"}>
             <>
                <div
-                  draggable
-                  data-type={"newDancer"}
                   style={{
                      transform: "translate(0, 0)",
                      backgroundColor: color || "",
@@ -84,7 +78,7 @@ export const Dancer: React.FC<{
             </>
 
             <input
-               className="ml-2 px-2 py-1 rounded-md focus:outline-pink-500 w-full mr-3"
+               className="h-6  px-3 py-4 transition duration-300  rounded-md  ml-3 hover:bg-gray-100 text-gray-500 focus:bg-gray-100 outline-none cursor-pointer"
                defaultValue={name}
                key={name}
                onKeyDown={(e) => {
@@ -117,6 +111,7 @@ export const Dancer: React.FC<{
                </svg>
             </button>
          </div>
+         <hr />
       </>
    );
 };
