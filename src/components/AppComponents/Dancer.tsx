@@ -59,19 +59,17 @@ export const Dancer: React.FC<{
                      transform: "translate(0, 0)",
                      backgroundColor: color || "",
                   }}
-                  className={`min-w-[48px] min-h-[48px] ml-2 rounded-full grid place-items-center cursor-pointer ${
+                  className={`min-w-[48px] min-h-[48px] ml-2 rounded-full grid place-items-center cursor-pointer pointer-events-none select-none ${
                      !color || color === "#FFFFFF" ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" : ""
                   }  `}
                >
                   {instagramUsername ? (
-                     <div className="w-[41px] h-[41px] bg-white rounded-full grid place-items-center" data-type={"newDancer"}>
-                        <img className="w-[41px] h-[41px] rounded-full " src={instagramUsername} alt="" data-type={"newDancer"} />
+                     <div className="w-[41px] h-[41px] bg-white rounded-full grid place-items-center">
+                        <img className="w-[41px] h-[41px] rounded-full " src={instagramUsername} alt="" />
                      </div>
                   ) : (
-                     <div className="bg-white rounded-full w-[41px] h-[41px] grid place-items-center" data-type={"newDancer"}>
-                        <p className="font-bold" data-type={"newDancer"}>
-                           {initials}
-                        </p>
+                     <div className="bg-white rounded-full w-[41px] h-[41px] grid place-items-center text-gray-700" data-type={"newDancer"}>
+                        <p className="font-semibold">{initials}</p>
                      </div>
                   )}
                </div>
@@ -91,7 +89,7 @@ export const Dancer: React.FC<{
                   setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)));
                }}
             />
-            {canBeAddedToStage ? (
+            {/* {canBeAddedToStage ? (
                <button onClick={addDancerToStage}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -99,7 +97,7 @@ export const Dancer: React.FC<{
                </button>
             ) : (
                <></>
-            )}
+            )} */}
 
             <button className="ml-auto mr-3" onClick={() => setEditingDancer(id)}>
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">

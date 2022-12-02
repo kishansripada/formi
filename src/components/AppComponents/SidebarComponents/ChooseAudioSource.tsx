@@ -6,31 +6,36 @@ import { useRouter } from "next/router";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 
 export const ChooseAudioSource: React.FC<{
-   setPosition: Function;
-   setIsPlaying: Function;
-   setSongDuration: Function;
-   songDuration: number | null;
-   soundCloudTrackId: string | null;
+   audioFiles: any;
+   soundCloudTrackId: number | null;
    setSoundCloudTrackId: Function;
-   setSelectedFormation: Function;
-   setFormations: Function;
-   setChangeSoundCloudIsOpen: Function;
-}> = ({
-   setPosition,
-   setIsPlaying,
-   setSongDuration,
-   songDuration,
-   soundCloudTrackId,
-   setSoundCloudTrackId,
-   setFormations,
-   setSelectedFormation,
-   setChangeSoundCloudIsOpen,
-}) => {
-   const [newUrl, setNewUrl] = useState("");
-   const [file, setFile] = useState("");
+}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId }) => {
+   const [file, setFile] = useState(null);
    const router = useRouter();
    let session = useSession();
    const supabase = useSupabaseClient();
+
+   console.log(audioFiles);
+   useEffect(() => {
+      if (!file?.name) return;
+      const body = new FormData();
+      body.append("file", file);
+
+      let userId = session?.user?.id;
+
+      toast.promise(
+         supabase.storage.from("audiofiles").upload(`${userId}/${file.name}?q=${Math.floor(Math.random() * 10000)}`, body, {
+            cacheControl: "no-cache",
+            upsert: true,
+         }),
+         {
+            loading: "Uploading file...",
+            success: <b>File uploaded!</b>,
+            error: <b>Could not upload file.</b>,
+         }
+      );
+   }, [file]);
+
    return (
       <>
          <div className="flex  flex-col  bg-white border-r border-r-gray-300 w-[23%]  px-6 py-6">
@@ -67,82 +72,61 @@ export const ChooseAudioSource: React.FC<{
                         <p className="text-sm">upload a file</p>
                      </div>
                   </button>
-
-                  <p className="text-[#414552] font-medium pt-3 text-[14px]">soundcloud url</p>
-                  <div className="flex flex-row items-center  ">
-                     <div className="flex flex-row items-center   ">
-                        <input
-                           onChange={(e) => setNewUrl(e.target.value)}
-                           className="input-sm	input  mr-3 mt-2"
-                           type="text"
-                           placeholder="https://soundcloud.com/..."
-                        />
-                     </div>
-                  </div>
                </div>
 
-               <button
-                  onClick={async () => {
-                     if (newUrl.length) {
-                        await fetch(`/api/getSoundCloudTrackId?url=${newUrl}`)
-                           .then((r) => r.json())
-                           .then((r) => {
-                              toast.success("successfully added SoundCloud track");
-                              // console.log(r.trackId);
-                              setSoundCloudTrackId(r.trackId);
-                           })
-                           .catch((r) => {
-                              toast.error("invalid SoundCloud url");
-                           });
-                        setChangeSoundCloudIsOpen(false);
-                        return;
-                     }
-
-                     if (file) {
-                        const body = new FormData();
-                        body.append("file", file);
-
-                        let userId = session?.user?.id;
-
-                        const { data, error } = await toast.promise(
-                           supabase.storage
-                              .from("audiofiles")
-                              .upload(`${userId}/${router.query.danceId}.mp3?q=${Math.floor(Math.random() * 10000)}`, body, {
-                                 cacheControl: "no-cache",
-                                 upsert: true,
-                              }),
-                           {
-                              loading: "Uploading file...",
-                              success: <b>File uploaded!</b>,
-                              error: <b>Could not upload file.</b>,
+               <p className=" font-medium mb-2 mt-12">my audio files</p>
+               <div className="flex flex-col overflow-y-scroll removeScrollBar h-[400px]">
+                  {[...audioFiles.data].reverse().map((audiofile) => {
+                     return (
+                        <div
+                           onClick={() =>
+                              setSoundCloudTrackId(
+                                 `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/audiofiles/${session?.user.id}/${audiofile.name}`
+                              )
                            }
-                        );
+                           className="p-3 border border-gray-300 rounded-md my-1 cursor-pointer w-full min-h-[48px] flex flex-row items-center justify-center whitespace-nowrap overflow-hidden "
+                        >
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth="1.5"
+                              stroke="currentColor"
+                              className="w-6 h-6 mr-2 shrink-0"
+                           >
+                              <path
+                                 strokeLinecap="round"
+                                 strokeLinejoin="round"
+                                 d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
+                              />
+                           </svg>
+                           <p className="text-gray-700 text-sm font-medium w-full">{audiofile.name}</p>
+                        </div>
+                     );
+                  })}
+               </div>
 
-                        if (data?.path) {
-                           setSoundCloudTrackId(`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/audiofiles/${data.path}`);
-                           setChangeSoundCloudIsOpen(false);
-                        }
-                     }
+               {/* <button
+                  onClick={async () => {
+                     // if (newUrl.length) {
+                     //    await fetch(`/api/getSoundCloudTrackId?url=${newUrl}`)
+                     //       .then((r) => r.json())
+                     //       .then((r) => {
+                     //          toast.success("successfully added SoundCloud track");
+                     //          // console.log(r.trackId);
+                     //          setSoundCloudTrackId(r.trackId);
+                     //       })
+                     //       .catch((r) => {
+                     //          toast.error("invalid SoundCloud url");
+                     //       });
+                     //    setChangeSoundCloudIsOpen(false);
+                     //    return;
+                     // }
                   }}
-                  className="mr-auto ml-auto btn btn-primary"
+                  className=""
                >
                   get started
-               </button>
-               <div className="flex flex-row justify-center mt-2">
-                  <p>
-                     or{" "}
-                     <button
-                        onClick={() => {
-                           setSoundCloudTrackId("257461521");
-                           toast.success("using example track");
-                           setChangeSoundCloudIsOpen(false);
-                        }}
-                        className="text-pink-700"
-                     >
-                        use example soundcloud track
-                     </button>
-                  </p>
-               </div>
+               </button> */}
             </div>
          </div>
 

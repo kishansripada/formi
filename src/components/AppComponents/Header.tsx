@@ -11,12 +11,11 @@ export const Header: React.FC<{
    saved: boolean;
    danceName: string;
    setDanceName: Function;
-   viewAllPaths: boolean;
-   setViewAllPaths: Function;
+
    setChangeSoundCloudIsOpen: Function;
    setShareIsOpen: Function;
    viewOnly: boolean;
-}> = ({ saved, danceName, setDanceName, viewAllPaths, setViewAllPaths, setChangeSoundCloudIsOpen, setShareIsOpen, viewOnly }) => {
+}> = ({ saved, danceName, setDanceName, setChangeSoundCloudIsOpen, setShareIsOpen, viewOnly }) => {
    const router = useRouter();
    let session = useSession();
    const supabase = useSupabaseClient();

@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 export const Settings: React.FC<{
    stageDimensions: any;
    setStageDimensions: Function;
-}> = ({ stageDimensions, setStageDimensions }) => {
-   const handleMouseMove = () => {};
+   previousFormationView: "none" | "ghostDancers" | "ghostDancersAndPaths";
+   setPreviousFormationView: Function;
+}> = ({ stageDimensions, setStageDimensions, setPreviousFormationView, previousFormationView }) => {
    return (
       <>
          <div className="w-[23%] bg-white border-r border-r-gray-300 px-6 py-6">
@@ -79,20 +80,37 @@ export const Settings: React.FC<{
             </div>
             <p className="font-medium h-10">previous formation</p>
             <div className="border border-gray-200 rounded-xl w-full text-sm shadow-sm cursor-pointer ">
-               <div className="p-4 flex flex-row items-center">
-                  <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+               <div className="p-4 flex flex-row items-center" onClick={() => setPreviousFormationView("none")}>
+                  {previousFormationView === "none" ? (
+                     <div className="rounded-full h-4 w-4 border-blue-400 border mr-3 grid place-items-center">
+                        <div className="rounded-full h-2 w-2 bg-blue-400"></div>
+                     </div>
+                  ) : (
+                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                  )}
                   <p>none</p>
                </div>
                <hr />
-               <div className="p-4 flex flex-row items-center">
-                  <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+               <div className="p-4 flex flex-row items-center" onClick={() => setPreviousFormationView("ghostDancers")}>
+                  {previousFormationView === "ghostDancers" ? (
+                     <div className="rounded-full h-4 w-4 border-blue-400 border mr-3 grid place-items-center">
+                        <div className="rounded-full h-2 w-2 bg-blue-400"></div>
+                     </div>
+                  ) : (
+                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                  )}
                   <p>view ghost dancers</p>
                </div>
                <hr />
-               <div className="p-4 flex flex-row items-center">
-                  <div className="rounded-full h-4 w-4 border-blue-400 border mr-3 grid place-items-center">
-                     <div className="rounded-full h-2 w-2 bg-blue-400"></div>
-                  </div>
+               <div className="p-4 flex flex-row items-center" onClick={() => setPreviousFormationView("ghostDancersAndPaths")}>
+                  {previousFormationView === "ghostDancersAndPaths" ? (
+                     <div className="rounded-full h-4 w-4 border-blue-400 border mr-3 grid place-items-center">
+                        <div className="rounded-full h-2 w-2 bg-blue-400"></div>
+                     </div>
+                  ) : (
+                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                  )}
+
                   <p>view ghost dancers and paths</p>
                </div>
             </div>

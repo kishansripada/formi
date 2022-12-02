@@ -4,11 +4,11 @@ export const PathEditor: React.FC<{
    selectedFormation: number | null;
    formations: formation[];
    selectedDancers: string[];
-   viewAllPaths: boolean;
+   previousFormationView: "none" | "ghostDancers" | "ghostDancersAndPaths";
    isPlaying: boolean;
    currentFormationIndex: number | null;
    coordsToPosition: Function;
-}> = ({ selectedFormation, formations, selectedDancers, viewAllPaths, isPlaying, currentFormationIndex, coordsToPosition }) => {
+}> = ({ selectedFormation, formations, selectedDancers, previousFormationView, isPlaying, currentFormationIndex, coordsToPosition }) => {
    if (isPlaying) return;
    return (
       <>
@@ -20,8 +20,8 @@ export const PathEditor: React.FC<{
                if (!endCoords) return <></>;
 
                if (dancerPosition.transitionType === "linear" || !dancerPosition.transitionType) {
-                  // either viewAllPaths is true or the dancer is selected to show their linear path
-                  if (selectedDancers.includes(dancerPosition.id) || viewAllPaths) {
+                  // either previousFormationView is true or the dancer is selected to show their linear path
+                  if (selectedDancers.includes(dancerPosition.id) || previousFormationView === "ghostDancersAndPaths") {
                      return (
                         <path
                            key={dancerPosition.id}
@@ -45,7 +45,7 @@ export const PathEditor: React.FC<{
                   )?.position;
 
                   if (!endCoords) return <></>;
-                  if (selectedDancers.includes(dancerPosition.id) || viewAllPaths) {
+                  if (selectedDancers.includes(dancerPosition.id) || previousFormationView === "ghostDancersAndPaths") {
                      return (
                         <>
                            <path

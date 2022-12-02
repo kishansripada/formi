@@ -79,7 +79,7 @@ export const DancerAlias: React.FC<{
    if (!currentCoords) return <></>;
 
    let { left, top } = coordsToPosition(currentCoords.x, currentCoords.y);
-   console.log(left);
+
    return (
       <>
          <div

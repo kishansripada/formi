@@ -56,11 +56,11 @@ export const FileAudioPlayer: React.FC<{
             container: "#waveform",
             waveColor: "#9ca3af",
             progressColor: "#6b7280",
-            cursorColor: "#4353FF",
+            cursorColor: "#db2777",
             backgroundColor: "#fafafa",
             barWidth: 4,
             barRadius: 5,
-            cursorWidth: 1,
+            cursorWidth: 2,
             height: 60,
             barGap: 2,
          });

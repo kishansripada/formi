@@ -434,14 +434,16 @@ export const Canvas: React.FC<{
                style={{
                   width: PIXELS_PER_SQUARE * 2.5,
                }}
-               className="absolute h-full bg-black opacity-30 z-[100] pointer-events-none "
+               className="absolute h-full bg-black opacity-30 z-[100] pointer-events-none border-r-red-700 border-r-4 "
             ></div>
             <div
                style={{
                   width: PIXELS_PER_SQUARE * 2.5,
                }}
-               className="absolute h-full bg-black opacity-30 z-[100] right-0 pointer-events-none"
-            ></div>
+               className="absolute h-full bg-black opacity-40 z-[100] right-0 pointer-events-none flex flex-col justify-center border-l-red-700 border-l-4"
+            >
+               {/* <p className="text-white opacity-100 rotate-90 text-3xl text-center ">OFF STAGE</p> */}
+            </div>
             <GridLines stageDimensions={stageDimensions} />
          </div>
       </div>
