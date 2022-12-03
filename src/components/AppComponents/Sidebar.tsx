@@ -8,11 +8,12 @@ export const Sidebar: React.FC<{
 }> = ({ setMenuOpen, menuOpen }) => {
    return (
       <>
-         <div className="flex flex-col w-[6%] border-r-gray-300 border-r items-center justify-start pt-7 child:pb-3">
+         <div className="flex flex-col w-[6%] border-r-gray-300 border-r items-center justify-start pt-7 child:pb-3 ">
             <button className="flex flex-col items-center justify-center" onClick={() => setMenuOpen("formations")}>
                <svg width="40" height="40" fill="none">
                   <g filter="url(#a)" fill-rule="evenodd" clip-rule="evenodd">
                      <path
+                        className="transition duration-300 ease-in-out"
                         d="M8 17.6c0-3.3603 0-5.0405.65396-6.3239.57524-1.129 1.49314-2.0469 2.62214-2.62214C12.5595 8 14.2397 8 17.6 8h4.8c3.3603 0 5.0405 0 6.3239.65396 1.129.57524 2.0469 1.49314 2.6221 2.62214C32 12.5595 32 14.2397 32 17.6v4.8c0 3.3603 0 5.0405-.654 6.3239-.5752 1.129-1.4931 2.0469-2.6221 2.6221C27.4405 32 25.7603 32 22.4 32h-4.8c-3.3603 0-5.0405 0-6.3239-.654-1.129-.5752-2.0469-1.4931-2.62214-2.6221C8 27.4405 8 25.7603 8 22.4v-4.8Zm12.5649 2.9183c.1207.294.4656.5283 1.1555.9969l3.8726 2.6304c.8563.5816 1.2845.8725 1.6401.8534.3097-.0166.5964-.1685.7842-.4153.2155-.2835.2155-.8011.2155-1.8362v-5.2609c0-1.0351 0-1.5527-.2155-1.8361-.1878-.2469-.4745-.3988-.7842-.4154-.3556-.0191-.7838.2718-1.6401.8534l-3.8726 2.6304c-.6899.4686-1.0348.7029-1.1555.9969-.1056.2571-.1056.5454 0 .8025Z"
                         fill={menuOpen === "formations" ? "#db2777" : "#C5C7D0"}
                      />
@@ -65,7 +66,11 @@ export const Sidebar: React.FC<{
             </button>
 
             <button onClick={() => setMenuOpen("dancers")}>
-               <svg height="48" width="48" className={` ${menuOpen === "dancers" ? "fill-pink-600" : "fill-gray-400"} scale-75`}>
+               <svg
+                  height="48"
+                  width="48"
+                  className={` ${menuOpen === "dancers" ? "fill-pink-600" : "fill-gray-400"} scale-75 transition duration-300 ease-in-out`}
+               >
                   <path d="M1.9 40v-4.7q0-1.75.9-3.175Q3.7 30.7 5.3 30q3.65-1.6 6.575-2.3Q14.8 27 17.9 27q3.1 0 6 .7t6.55 2.3q1.6.7 2.525 2.125.925 1.425.925 3.175V40Zm35 0v-4.7q0-3.15-1.6-5.175t-4.2-3.275q3.45.4 6.5 1.175t4.95 1.775q1.65.95 2.6 2.35.95 1.4.95 3.15V40Zm-19-16.05q-3.3 0-5.4-2.1-2.1-2.1-2.1-5.4 0-3.3 2.1-5.4 2.1-2.1 5.4-2.1 3.3 0 5.4 2.1 2.1 2.1 2.1 5.4 0 3.3-2.1 5.4-2.1 2.1-5.4 2.1Zm18-7.5q0 3.3-2.1 5.4-2.1 2.1-5.4 2.1-.55 0-1.225-.075T25.95 23.6q1.2-1.25 1.825-3.075.625-1.825.625-4.075t-.625-3.975Q27.15 10.75 25.95 9.3q.55-.15 1.225-.25t1.225-.1q3.3 0 5.4 2.1 2.1 2.1 2.1 5.4ZM4.9 37h26v-1.7q0-.8-.475-1.55T29.25 32.7q-3.6-1.6-6.05-2.15-2.45-.55-5.3-.55-2.85 0-5.325.55T6.5 32.7q-.7.3-1.15 1.05-.45.75-.45 1.55Zm13-16.05q1.95 0 3.225-1.275Q22.4 18.4 22.4 16.45q0-1.95-1.275-3.225Q19.85 11.95 17.9 11.95q-1.95 0-3.225 1.275Q13.4 14.5 13.4 16.45q0 1.95 1.275 3.225Q15.95 20.95 17.9 20.95Zm0 16.05Zm0-20.55Z" />
                </svg>
                <p className="text-xs text-gray-500">roster</p>
@@ -74,7 +79,15 @@ export const Sidebar: React.FC<{
                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle className="background" opacity="0" cx="20" cy="20" r="20" fill="#9094A5"></circle>
                   <g filter="url(#filter0_i_5002_422651)">
-                     <rect className="main" x="8" y="8" width="24" height="24" rx="7" fill={menuOpen === "audio" ? "#db2777" : "#C5C7D0"}></rect>
+                     <rect
+                        className="main transition duration-300 ease-in-out"
+                        x="8"
+                        y="8"
+                        width="24"
+                        height="24"
+                        rx="7"
+                        fill={menuOpen === "audio" ? "#db2777" : "#C5C7D0"}
+                     ></rect>
                      <rect x="8" y="8" width="24" height="24" rx="7" fill="url(#paint0_linear_5002_422651)" fill-opacity="0.2"></rect>
                   </g>
                   <g filter="url(#filter1_d_5002_422651)">

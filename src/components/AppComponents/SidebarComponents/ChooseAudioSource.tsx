@@ -9,8 +9,9 @@ export const ChooseAudioSource: React.FC<{
    audioFiles: any;
    soundCloudTrackId: string | null;
    setSoundCloudTrackId: Function;
-}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId }) => {
-   const [file, setFile] = useState(null);
+   setAudiofiles: Function;
+}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, setAudiofiles }) => {
+   const [file, setFile] = useState<File>();
    const router = useRouter();
    let session = useSession();
    const supabase = useSupabaseClient();
@@ -23,17 +24,26 @@ export const ChooseAudioSource: React.FC<{
 
       let userId = session?.user?.id;
 
-      toast.promise(
-         supabase.storage.from("audiofiles").upload(`${userId}/${file.name}?q=${Math.floor(Math.random() * 10000)}`, body, {
-            cacheControl: "no-cache",
-            upsert: true,
-         }),
-         {
-            loading: "Uploading file...",
-            success: <b>File uploaded!</b>,
-            error: <b>Could not upload file.</b>,
-         }
-      );
+      toast
+         .promise(
+            supabase.storage.from("audiofiles").upload(`${userId}/${file.name}?q=${Math.floor(Math.random() * 10000)}`, body, {
+               cacheControl: "no-cache",
+               upsert: true,
+            }),
+            {
+               loading: "Uploading file...",
+               success: <b>File uploaded!</b>,
+               error: <b>Could not upload file.</b>,
+            }
+         )
+         .then((r) => {
+            supabase.storage
+               .from("audiofiles")
+               .list(session?.user.id, {})
+               .then((r) => {
+                  setAudiofiles(r);
+               });
+         });
    }, [file]);
 
    return (
@@ -100,33 +110,25 @@ export const ChooseAudioSource: React.FC<{
                                  d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
                               />
                            </svg>
-                           <p className="text-gray-700 text-sm font-medium w-full">{audiofile.name}</p>
+                           <p className="text-gray-700 text-sm font-medium w-[90%] text-ellipsis">{audiofile.name}</p>
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-6 h-6"
+                           >
+                              <path
+                                 strokeLinecap="round"
+                                 strokeLinejoin="round"
+                                 d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                              />
+                           </svg>
                         </div>
                      );
                   })}
                </div>
-
-               {/* <button
-                  onClick={async () => {
-                     // if (newUrl.length) {
-                     //    await fetch(`/api/getSoundCloudTrackId?url=${newUrl}`)
-                     //       .then((r) => r.json())
-                     //       .then((r) => {
-                     //          toast.success("successfully added SoundCloud track");
-                     //          // console.log(r.trackId);
-                     //          setSoundCloudTrackId(r.trackId);
-                     //       })
-                     //       .catch((r) => {
-                     //          toast.error("invalid SoundCloud url");
-                     //       });
-                     //    setChangeSoundCloudIsOpen(false);
-                     //    return;
-                     // }
-                  }}
-                  className=""
-               >
-                  get started
-               </button> */}
             </div>
          </div>
 

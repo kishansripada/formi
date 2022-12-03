@@ -91,10 +91,10 @@ export const Layers: React.FC<{
 
    return (
       <div
-         className="flex flex-col   w-full  bg-[#fafafa]  max-h-[75px] overflow-hidden select-none"
+         className="flex flex-col   w-full  bg-[#fafafa]   overflow-hidden select-none"
          style={{
             width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
-            marginLeft: soundCloudTrackId ? (soundCloudTrackId.length < 15 ? 122 : 10) : 115,
+            marginLeft: 10,
          }}
          onPointerUp={pointerUp}
          onPointerDown={pointerDown}
@@ -113,7 +113,7 @@ export const Layers: React.FC<{
             pixelsPerSecond={pixelsPerSecond}
          />
 
-         <svg
+         {/* <svg
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="547 0 2635 27672.5"
@@ -129,7 +129,7 @@ export const Layers: React.FC<{
                d="M2200.22 3874.07c-157.77 242.35-512.67 242.35-670.44 0L652.332 2526.23C479.11 2260.14 670.054 1908 987.557 1908H2742.44c317.51 0 508.45 352.15 335.23 618.23l-877.45 1347.84Z"
                fill="#000"
             />
-         </svg>
+         </svg> */}
 
          {/* <svg
             fill="none"

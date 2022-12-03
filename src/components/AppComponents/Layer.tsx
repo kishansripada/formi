@@ -24,7 +24,7 @@ export const Layer: React.FC<{
 
    return (
       <>
-         <div className=" flex flex-row  items-center  w-full my-1" id="outside" onClick={clickOutsideFormations}>
+         <div className=" flex flex-row  items-center  w-full " id="outside" onClick={clickOutsideFormations}>
             {formations.map((formation, index) => (
                <div
                   key={index}

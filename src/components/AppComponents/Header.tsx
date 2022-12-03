@@ -65,10 +65,13 @@ export const Header: React.FC<{
             <div className=" flex flex-row items-center ml-auto ">
                {!viewOnly ? (
                   <>
-                     <a href="https://www.youtube.com/watch?v=wXaq0cF0dkI" target={"_blank"}>
+                     {/* <a href="https://www.youtube.com/watch?v=wXaq0cF0dkI" target={"_blank"}>
                         <p className="text-sm text-gray-500">
                            stuck? — <span className="underline text-blue-500">watch a tutorial</span>{" "}
                         </p>
+                     </a> */}
+                     <a href="https://www.youtube.com/watch?v=wXaq0cF0dkI" target={"_blank"}>
+                        <p className="text-sm text-gray-500">upgrade ⚡️</p>
                      </a>
 
                      <button

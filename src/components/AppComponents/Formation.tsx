@@ -12,7 +12,7 @@ export const Formation: React.FC<{
    return (
       <>
          <div
-            className={`rounded-md  h-[50px]  mx-[2px] box-border cursor-pointer z-auto  ${
+            className={`rounded-md  mx-[2px] box-border cursor-pointer z-auto  ${
                amSelected ? "border-pink-600" : "border-gray-700"
             } border-4 relative  `}
             style={{

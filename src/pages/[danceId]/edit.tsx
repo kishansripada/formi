@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { debounce } from "lodash";
+import { debounce, divide } from "lodash";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 
@@ -85,6 +85,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    const [mobile, setMobile] = useState<string | null>(null);
    const [shareIsOpen, setShareIsOpen] = useState(false);
    const [menuOpen, setMenuOpen] = useState<string>(initialData.soundCloudId ? "formations" : "audio");
+   const [pricingTier, setPricingTier] = useState<string>("basic");
 
    const [player, setPlayer] = useState(null);
 
@@ -285,7 +286,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
       <>
          <Toaster></Toaster>
          <Head>
-            <title>Naach: Online formation building software</title>
+            <title>Formi: Online formation building software</title>
 
             <meta
                name="description"
@@ -293,13 +294,13 @@ const Edit = ({ initialData, viewOnly }: {}) => {
             />
             <meta name="keywords" content="dance, choreography, desi, formations" />
             <meta name="twitter:card" content="summary" />
-            <meta name="twitter:title" content="Naach — Expression Through Movement." />
-            <meta name="twitter:image" content="https://i.imgur.com/woDsnv8.png" />
+            <meta name="twitter:title" content="Formi — Expression Through Movement." />
+            <meta name="twitter:image" content="https://i.imgur.com/83VsfSG.png" />
             <meta property="og:type" content="song" />
-            <meta property="og:title" content="Naach — Expression Through Movement." />
+            <meta property="og:title" content="Formi — Expression Through Movement." />
             <meta property="og:description" content="automate, animate and visualize your dance formations synced to music" />
-            <meta property="og:image" content="https://i.imgur.com/woDsnv8.png" />
-            <meta property="og:site_name" content="Naach — Expression Through Movement." />
+            <meta property="og:image" content="https://i.imgur.com/83VsfSG.png" />
+            <meta property="og:site_name" content="Formi — Expression Through Movement." />
          </Head>
          {mobile ? (
             <>
@@ -319,7 +320,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
          )}
 
          <Head>
-            <title>Edit | Naach</title>
+            <title>Edit | Formi</title>
          </Head>
 
          {editingDancer !== null ? (
@@ -361,9 +362,11 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                      soundCloudTrackId={soundCloudTrackId}
                      setSoundCloudTrackId={setSoundCloudTrackId}
                      audioFiles={audioFiles}
+                     setAudiofiles={setAudiofiles}
                   ></ChooseAudioSource>
                ) : menuOpen === "settings" ? (
                   <Settings
+                     pricingTier={pricingTier}
                      previousFormationView={previousFormationView}
                      setPreviousFormationView={setPreviousFormationView}
                      stageDimensions={stageDimensions}
@@ -372,6 +375,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                   ></Settings>
                ) : (
                   <CurrentFormation
+                     pricingTier={pricingTier}
                      stageDimensions={stageDimensions}
                      selectedDancers={selectedDancers}
                      setSelectedDancers={setSelectedDancers}
@@ -465,54 +469,61 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                   </Canvas>
                </div>
             </div>
-            <AudioControls
-               soundCloudTrackId={soundCloudTrackId}
-               setSelectedFormation={setSelectedFormation}
-               player={player}
-               isPlaying={isPlaying}
-               setIsPlaying={setIsPlaying}
-               formations={formations}
-               position={position}
-               setFormations={setFormations}
-            ></AudioControls>
-            <div className="overflow-x-scroll min-h-[120px] bg-white overscroll-contain removeScrollBar ">
-               {soundCloudTrackId && soundCloudTrackId.length > 15 ? (
-                  <div
-                     className="relative"
-                     style={{
-                        left: 10,
-                        width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
-                     }}
-                  >
-                     <FileAudioPlayer
-                        player={player}
-                        setPlayer={setPlayer}
-                        key={soundCloudTrackId}
-                        setSelectedFormation={setSelectedFormation}
-                        setFormations={setFormations}
-                        soundCloudTrackId={soundCloudTrackId}
-                        setSongDuration={setSongDuration}
-                        songDuration={songDuration}
-                        setIsPlaying={setIsPlaying}
-                        setPosition={setPosition}
-                        viewOnly={viewOnly}
-                        pixelsPerSecond={pixelsPerSecond}
-                     ></FileAudioPlayer>
-                  </div>
-               ) : null}
 
-               <Layers
-                  viewOnly={viewOnly}
+            <div className="pb-2">
+               <AudioControls
                   songDuration={songDuration}
-                  setFormations={setFormations}
-                  formations={formations}
-                  selectedFormation={selectedFormation}
-                  setSelectedFormation={setSelectedFormation}
-                  isPlaying={isPlaying}
-                  position={position}
                   soundCloudTrackId={soundCloudTrackId}
-                  pixelsPerSecond={pixelsPerSecond}
-               />
+                  setSelectedFormation={setSelectedFormation}
+                  player={player}
+                  isPlaying={isPlaying}
+                  setIsPlaying={setIsPlaying}
+                  formations={formations}
+                  position={position}
+                  setFormations={setFormations}
+               ></AudioControls>
+
+               <div className="overflow-x-scroll  bg-white overscroll-contain removeScrollBar ">
+                  {soundCloudTrackId ? (
+                     <div
+                        className="relative"
+                        style={{
+                           left: 10,
+                           width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
+                        }}
+                     >
+                        <FileAudioPlayer
+                           player={player}
+                           setPlayer={setPlayer}
+                           key={soundCloudTrackId}
+                           setSelectedFormation={setSelectedFormation}
+                           setFormations={setFormations}
+                           soundCloudTrackId={soundCloudTrackId}
+                           setSongDuration={setSongDuration}
+                           songDuration={songDuration}
+                           setIsPlaying={setIsPlaying}
+                           setPosition={setPosition}
+                           viewOnly={viewOnly}
+                           pixelsPerSecond={pixelsPerSecond}
+                        ></FileAudioPlayer>
+                     </div>
+                  ) : (
+                     <></>
+                  )}
+
+                  <Layers
+                     viewOnly={viewOnly}
+                     songDuration={songDuration}
+                     setFormations={setFormations}
+                     formations={formations}
+                     selectedFormation={selectedFormation}
+                     setSelectedFormation={setSelectedFormation}
+                     isPlaying={isPlaying}
+                     position={position}
+                     soundCloudTrackId={soundCloudTrackId}
+                     pixelsPerSecond={pixelsPerSecond}
+                  />
+               </div>
             </div>
          </div>
       </>

@@ -86,7 +86,7 @@ const Login = () => {
             <div className="flex flex-row w-full items-center justify-center ">
                <div className="text-3xl flex flex-col items-center justify-center text-white">
                   <img src="https://i.imgur.com/MgHYste.png" className="w-16 h-16 rounded-xl" alt="" />
-                  <p className="mt-3"> welcome to naach 😛</p>
+                  <p className="mt-3"> welcome to formi 😛</p>
                   <p className="  italic text-xs">the ultimate choreography tool</p>
                </div>
             </div>

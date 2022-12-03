@@ -26,6 +26,7 @@ export type formation = {
 };
 
 export type dragBoxCoords = { start: { x: number | null; y: number | null }; end: { x: number | null; y: number | null } };
+export type stageDimensions = { width: number; height: number };
 
 export const PIXELS_PER_SECOND = 15;
 

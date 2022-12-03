@@ -30,33 +30,33 @@ const home = () => {
             }
          `}</style>
          <Head>
-            <title>Naach: Online dance formation building software</title>
+            <title>Formi: Online dance formation building software</title>
 
             <meta
                name="description"
-               content="Easily build, create and visualize your dance and cheer formations synced to music. Naach is the ultimate choreographer formation tool."
+               content="Easily build, create and visualize your dance and cheer formations synced to music. Formi is the ultimate choreographer formation tool."
             />
             <meta name="keywords" content="dance, choreography, desi, formations, cheer, cheerleading, formation building tool" />
             <meta name="twitter:card" content="summary" />
-            <meta name="twitter:title" content="Naach: Online dance formation building software" />
-            <meta name="twitter:image" content="https://i.imgur.com/eJL5HQD.png" />
+            <meta name="twitter:title" content="Formi: Online dance formation building software" />
+            <meta name="twitter:image" content="https://i.imgur.com/83VsfSG.png" />
             <meta property="og:type" content="song" />
-            <meta property="og:title" content="Naach: Online dance formation building software" />
+            <meta property="og:title" content="Formi: Online dance formation building software" />
             <meta
                property="og:description"
-               content="Easily build, create and visualize your dance and cheer formations synced to music. Naach is the ultimate choreographer formation tool."
+               content="Easily build, create and visualize your dance and cheer formations synced to music. Formi is the ultimate choreographer formation tool."
             />
-            <meta property="og:image" content="https://i.imgur.com/eJL5HQD.png" />
+            <meta property="og:image" content="https://i.imgur.com/83VsfSG.png" />
 
-            <meta property="og:site_name" content="Naach: Online dance formation building software" />
+            <meta property="og:site_name" content="Formi: Online dance formation building software" />
          </Head>
          <div className="bg-[#fafafa]">
             <div className="font-proxima pt-16 px-[10%] lg:px-[20%] bg-[#fafafa] ">
                <nav className="flex flex-row lg:justify-between text-black items-center justify-center ">
-                  <div>
+                  <div className="w-[250px]">
                      {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
-                     <h1 className="text-6xl font-bold z-10 relative">formi</h1>
+                     <h1 className="text-6xl font-bold z-10 relative">FORMI</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[100%]"></div>
                   </div>
                   {/* <div>

@@ -11,7 +11,18 @@ export const CurrentFormation: React.FC<{
    selectedDancers: string[];
    setSelectedDancers: Function;
    stageDimensions: any;
-}> = ({ formations, selectedFormation, setFormations, dancers, setSelectedFormation, selectedDancers, setSelectedDancers, stageDimensions }) => {
+   pricingTier: string;
+}> = ({
+   formations,
+   selectedFormation,
+   setFormations,
+   dancers,
+   setSelectedFormation,
+   selectedDancers,
+   setSelectedDancers,
+   stageDimensions,
+   pricingTier,
+}) => {
    useEffect(() => {
       if (selectedDancers.length === 1) {
          const element = document.getElementById(`scroll-${selectedDancers[0]}`);
@@ -97,7 +108,7 @@ export const CurrentFormation: React.FC<{
                      </div>
                   </div>
                   <hr className=" " />
-                  <div className=" px-4 overflow-y-scroll removeScrollBar pt-4 ">
+                  {/* <div className=" px-4 overflow-y-scroll removeScrollBar pt-4 ">
                      <div className="rounded-md border border-gray-300  text-sm flex flex-col items-center justify-center ,t-3">
                         <div className="bg-blue-200 h-6 w-full text-black rounded-t-md px-3 flex flex-col justify-center">
                            <p>Kishan Sripada</p>
@@ -133,7 +144,7 @@ export const CurrentFormation: React.FC<{
                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                         </p>
                      </div>
-                  </div>
+                  </div> */}
 
                   <hr className="mt-auto" />
                   <div className="px-6 mt-2 mb-4">
@@ -211,8 +222,15 @@ export const CurrentFormation: React.FC<{
                         </div>
 
                         <div
-                           className="p-4 flex flex-row items-center"
+                           className={`p-4 flex flex-row items-center `}
                            onClick={() => {
+                              if (pricingTier === "basic") {
+                                 toast("that's a premium feature", {
+                                    icon: "😛",
+                                 });
+                                 return;
+                              }
+
                               selectedDancers.forEach((selectedDancer) => {
                                  setFormations((formations: formation[]) => {
                                     let start = formations[selectedFormation - 1]?.positions.find(
@@ -280,21 +298,27 @@ export const CurrentFormation: React.FC<{
                               });
                            }}
                         >
-                           {selectedDancers.length &&
-                           formations[selectedFormation - 1]?.positions
-                              .filter((dancer) => {
-                                 return selectedDancers.includes(dancer.id);
-                              })
-                              .map((dancer) => dancer.transitionType)
-                              .every((item) => item === "cubic") ? (
-                              <div className="rounded-full h-4 w-4 border-blue-400 border mr-3 grid place-items-center">
-                                 <div className="rounded-full h-2 w-2 bg-blue-400"></div>
-                              </div>
+                           {pricingTier === "basic" ? (
+                              <p className="mr-3 text-[18px]">⚡️</p>
                            ) : (
-                              <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                              <>
+                                 {selectedDancers.length &&
+                                 formations[selectedFormation - 1]?.positions
+                                    .filter((dancer) => {
+                                       return selectedDancers.includes(dancer.id);
+                                    })
+                                    .map((dancer) => dancer.transitionType)
+                                    .every((item) => item === "cubic") ? (
+                                    <div className="rounded-full h-4 w-4 border-blue-400 border mr-3 grid place-items-center">
+                                       <div className="rounded-full h-2 w-2 bg-blue-400"></div>
+                                    </div>
+                                 ) : (
+                                    <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                                 )}
+                              </>
                            )}
 
-                           <p>curved</p>
+                           <p className={`${pricingTier === "basic" ? "opacity-40" : ""}`}>curved</p>
                         </div>
                      </div>
                   </div>

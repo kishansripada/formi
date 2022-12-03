@@ -1,6 +1,7 @@
 import { dancer, dancerPosition, formation } from "../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export const AudioControls: React.FC<{
    soundCloudTrackId: string | null;
@@ -11,7 +12,8 @@ export const AudioControls: React.FC<{
    formations: formation[];
    position: number | null;
    setFormations: Function;
-}> = ({ soundCloudTrackId, setSelectedFormation, player, isPlaying, setIsPlaying, formations, position, setFormations }) => {
+   songDuration: number | null;
+}> = ({ soundCloudTrackId, setSelectedFormation, player, isPlaying, setIsPlaying, formations, position, setFormations, songDuration }) => {
    return (
       <>
          <div className="min-h-[50px] bg-[#fafafa] w-full border-t border-gray-300 flex flex-row items-center justify-between select-none">
@@ -31,10 +33,17 @@ export const AudioControls: React.FC<{
                   />
                </svg>
 
-               <p className="mr-auto font-medium">{soundCloudTrackId?.split("/").slice(-1)[0]}</p>
+               <p className="mr-auto font-medium">{soundCloudTrackId ? soundCloudTrackId?.split("/").slice(-1)[0] : "no audio file selected"}</p>
             </div>
-            <div className="flex flex-row items-center justify-center w-[10%] ">
-               <button onClick={() => setSelectedFormation((i) => (i === 0 ? 0 : i - 1))}>
+            <div className={`flex flex-row items-center justify-center w-[10%] `}>
+               <button
+                  onClick={() =>
+                     setSelectedFormation((i: number | null) => {
+                        if (i === null) return 0;
+                        return i === 0 ? 0 : i - 1;
+                     })
+                  }
+               >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                      <path
                         strokeLinecap="round"
@@ -45,7 +54,9 @@ export const AudioControls: React.FC<{
                </button>
                {isPlaying ? (
                   <button
-                     className="hover:bg-gray-100 transition duration-300 p-1 rounded-2xl mx-3 select-none"
+                     className={`hover:bg-gray-100 transition duration-300 p-1 rounded-2xl mx-3 select-none ${
+                        !soundCloudTrackId ? "opacity-40 pointer-events-none" : ""
+                     }`}
                      onClick={() => {
                         player ? player.playPause() : null;
                         setIsPlaying(!isPlaying);
@@ -61,7 +72,9 @@ export const AudioControls: React.FC<{
                   </button>
                ) : (
                   <button
-                     className="hover:bg-gray-100 transition duration-300 p-1 rounded-2xl mx-3 select-none"
+                     className={`hover:bg-gray-100 transition duration-300 p-1 rounded-2xl mx-3 select-none ${
+                        !soundCloudTrackId ? "opacity-40 pointer-events-none" : ""
+                     }`}
                      onClick={() => {
                         player ? player.playPause() : null;
                         setIsPlaying(!isPlaying);
@@ -89,7 +102,7 @@ export const AudioControls: React.FC<{
 
             <div className="w-[45%] flex flex-row items-center justify-center pr-10">
                <p className=" mr-auto text-gray-600">
-                  {msToTime(position * 1000)}:<span className="text-gray-500">{Math.round((position * 10) % 10)}</span>
+                  {msToTime((position || 0) * 1000)}:<span className="text-gray-500">{Math.round(((position || 0) * 10) % 10)}</span>
                </p>
                <button
                   onClick={() => {
