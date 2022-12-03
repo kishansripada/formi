@@ -7,7 +7,8 @@ export const Settings: React.FC<{
    setStageDimensions: Function;
    previousFormationView: "none" | "ghostDancers" | "ghostDancersAndPaths";
    setPreviousFormationView: Function;
-}> = ({ stageDimensions, setStageDimensions, setPreviousFormationView, previousFormationView }) => {
+   setFormations: Function;
+}> = ({ stageDimensions, setStageDimensions, setPreviousFormationView, previousFormationView, setFormations }) => {
    return (
       <>
          <div className="w-[23%] bg-white border-r border-r-gray-300 px-6 py-6">
@@ -19,11 +20,27 @@ export const Settings: React.FC<{
             <div className="my-6 flex flex-row justify-center items-center">
                <button
                   className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
-                  onClick={() =>
+                  onClick={() => {
+                     setFormations((formations: formation[]) => {
+                        return formations.map((formation, i) => {
+                           return {
+                              ...formation,
+                              positions: formation.positions.map((position) => {
+                                 if (position.position.x < -(stageDimensions.width / 2 - 3)) {
+                                    return { ...position, position: { ...position.position, x: position.position.x + 1 } };
+                                 }
+                                 if (position.position.x > stageDimensions.width / 2 - 3) {
+                                    return { ...position, position: { ...position.position, x: position.position.x - 1 } };
+                                 }
+                                 return position;
+                              }),
+                           };
+                        });
+                     });
                      setStageDimensions((stageDimensions) => {
                         return { ...stageDimensions, width: stageDimensions.width - 2 };
-                     })
-                  }
+                     });
+                  }}
                >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
@@ -35,11 +52,27 @@ export const Settings: React.FC<{
                </div>
                <button
                   className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
-                  onClick={() =>
+                  onClick={() => {
+                     setFormations((formations: formation[]) => {
+                        return formations.map((formation, i) => {
+                           return {
+                              ...formation,
+                              positions: formation.positions.map((position) => {
+                                 if (position.position.x < -(stageDimensions.width / 2 - 3)) {
+                                    return { ...position, position: { ...position.position, x: position.position.x - 1 } };
+                                 }
+                                 if (position.position.x > stageDimensions.width / 2 - 3) {
+                                    return { ...position, position: { ...position.position, x: position.position.x + 1 } };
+                                 }
+                                 return position;
+                              }),
+                           };
+                        });
+                     });
                      setStageDimensions((stageDimensions) => {
                         return { ...stageDimensions, width: stageDimensions.width + 2 };
-                     })
-                  }
+                     });
+                  }}
                >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />

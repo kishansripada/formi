@@ -10,7 +10,8 @@ export const DancerAlias: React.FC<{
    setFormations: Function;
    selectedDancers: string[];
    coordsToPosition: Function;
-}> = ({ dancer, formations, setDancers, selectedFormation, isPlaying, position, setFormations, selectedDancers, coordsToPosition }) => {
+   isDragging: boolean;
+}> = ({ dancer, formations, setDancers, selectedFormation, isPlaying, position, setFormations, selectedDancers, coordsToPosition, isDragging }) => {
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])
@@ -46,6 +47,7 @@ export const DancerAlias: React.FC<{
 
       // if the animation function returns null, the dancer is not on the stage
       if (myPosition === null) return <></>;
+      let { left, top } = myPosition;
       return (
          <>
             <div
@@ -53,10 +55,11 @@ export const DancerAlias: React.FC<{
                   dancer.color === "#FFFFFF" || !dancer.color ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" : ""
                } rounded-full w-[38px] h-[38px] flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default  `}
                style={{
-                  transform: `translate(-50%, -50%) translate(${myPosition.left}px, ${myPosition.top}px)`,
+                  // transform: `translate(-50%, -50%) translate(${left}px, ${top}px)`,
                   backgroundColor: dancer.color || "",
-                  // left: myPosition.left,
-                  // top: myPosition.top,
+                  left,
+                  top,
+                  transform: "translate(-50%, -50%)",
                }}
             >
                {dancer.instagramUsername ? (
@@ -87,7 +90,9 @@ export const DancerAlias: React.FC<{
                left,
                top,
                transform: "translate(-50%, -50%)",
+               // transform: `translate(-50%, -50%) translate(${left}px, ${top}px)`,
                backgroundColor: selectedDancers.includes(dancer.id) ? "black" : dancer.color || "",
+               transition: !isDragging ? "all 0.33s ease-in-out" : "",
             }}
             id={dancer.id}
             data-type={"dancer"}

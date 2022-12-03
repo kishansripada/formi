@@ -56,7 +56,7 @@ const home = () => {
                   <div>
                      {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
-                     <h1 className="text-6xl font-bold z-10 relative">formotion</h1>
+                     <h1 className="text-6xl font-bold z-10 relative">formi</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[100%]"></div>
                   </div>
                   {/* <div>

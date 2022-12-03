@@ -10,7 +10,8 @@ export const CurrentFormation: React.FC<{
    setSelectedFormation: Function;
    selectedDancers: string[];
    setSelectedDancers: Function;
-}> = ({ formations, selectedFormation, setFormations, dancers, setSelectedFormation, selectedDancers, setSelectedDancers }) => {
+   stageDimensions: any;
+}> = ({ formations, selectedFormation, setFormations, dancers, setSelectedFormation, selectedDancers, setSelectedDancers, stageDimensions }) => {
    useEffect(() => {
       if (selectedDancers.length === 1) {
          const element = document.getElementById(`scroll-${selectedDancers[0]}`);
@@ -86,7 +87,13 @@ export const CurrentFormation: React.FC<{
                               d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
                            />
                         </svg>
-                        <p className="text-lg text-gray-500 ">7 </p>
+                        <p className="text-lg text-gray-500 ">
+                           {
+                              formations[selectedFormation]?.positions.filter((dancer) => {
+                                 return dancer.position.x > -(stageDimensions.width / 2 - 2) && dancer.position.x < stageDimensions.width / 2 - 2;
+                              }).length
+                           }
+                        </p>
                      </div>
                   </div>
                   <hr className=" " />
@@ -138,13 +145,24 @@ export const CurrentFormation: React.FC<{
                               ? dancers.find((dancer) => dancer.id === selectedDancers[0])?.name
                               : "multiple dancers selected"}
                         </p>
-                        <p className="italic text-xs text-gray-600">off stage</p>
+
+                        {selectedDancers.length &&
+                        formations[selectedFormation]?.positions
+                           .filter((dancer) => {
+                              return selectedDancers.includes(dancer.id);
+                           })
+                           .map((dancer) => dancer.position.x > -(stageDimensions.width / 2 - 2))
+                           .every((value) => value) ? (
+                           <p className="italic text-xs text-gray-600">on stage</p>
+                        ) : (
+                           <p className="italic text-xs text-gray-600">off stage</p>
+                        )}
                      </div>
                      <p className="font-medium mt-5 mb-2">path to this formation</p>
                      <div
                         style={{
-                           opacity: selectedDancers.length ? 1 : 0.4,
-                           pointerEvents: selectedDancers.length ? "auto" : "none",
+                           opacity: selectedDancers.length && selectedFormation !== 0 ? 1 : 0.4,
+                           pointerEvents: selectedDancers.length && selectedFormation !== 0 ? "auto" : "none",
                         }}
                         className="border select-none  border-gray-200 flex flex-row justify-around rounded-xl w-full text-sm shadow-sm cursor-pointer "
                      >

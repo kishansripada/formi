@@ -7,7 +7,7 @@ import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 
 export const ChooseAudioSource: React.FC<{
    audioFiles: any;
-   soundCloudTrackId: number | null;
+   soundCloudTrackId: string | null;
    setSoundCloudTrackId: Function;
 }> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId }) => {
    const [file, setFile] = useState(null);

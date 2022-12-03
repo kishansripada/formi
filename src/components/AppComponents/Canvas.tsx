@@ -21,7 +21,11 @@ export const Canvas: React.FC<{
    stageDimensions: { width: number; height: number };
    setStageDimensions: Function;
    coordsToPosition: Function;
+   isDragging: boolean;
+   setIsDragging: Function;
+   player: any;
 }> = ({
+   player,
    children,
    setDancers,
    dancers,
@@ -38,6 +42,8 @@ export const Canvas: React.FC<{
    setStageDimensions,
    stageDimensions,
    coordsToPosition,
+   isDragging,
+   setIsDragging,
 }) => {
    let [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
    const [shiftHeld, setShiftHeld] = useState(false);
@@ -46,8 +52,7 @@ export const Canvas: React.FC<{
    const [addingNewDancerId, setAddingNewDancerId] = useState<null | string>(null);
    const [changingControlType, setChangingControlType] = useState<"start" | "end" | null>(null);
    const [scrollOffset, setScrollOffset] = useState({ x: -442, y: -310 });
-   const [zoom, setZoom] = useState(0.959);
-   const [isDragging, setIsDragging] = useState(false);
+   const [zoom, setZoom] = useState(1);
    const [copiedPositions, setCopiedPositions] = useState([]);
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
 
@@ -80,9 +85,18 @@ export const Canvas: React.FC<{
       if (e?.path?.[0]?.tagName === "INPUT" || e?.path?.[0]?.tagName === "TEXTAREA") return;
       // console.log(e.key);
       // if (e.key === " ") {
+      //    player ? player.playPause() : null;
       //    setIsPlaying((isPlaying: boolean) => !isPlaying);
       //    e.preventDefault();
       // }
+      if (e.key === "ArrowRight") {
+         e.preventDefault();
+         setSelectedFormation((i) => (i === formations.length - 1 ? i : i + 1));
+      }
+      if (e.key === "ArrowLeft") {
+         e.preventDefault();
+         setSelectedFormation((i) => (i === 0 ? 0 : i - 1));
+      }
       if (e.key === "Meta") {
          setCommandHeld(true);
       }
@@ -94,24 +108,6 @@ export const Canvas: React.FC<{
          setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
       }
       if (selectedFormation === null) return;
-
-      // if (e.key === "Backspace") {
-      //    e.preventDefault();
-      //    setFormations((formations: formation[]) => {
-      //       return formations.map((formation, i) => {
-      //          if (i === selectedFormation) {
-      //             return {
-      //                ...formation,
-      //                positions: formation.positions.filter((dancerPosition: dancerPosition) => {
-      //                   return !selectedDancers.find((id) => dancerPosition.id === id);
-      //                }),
-      //             };
-      //          }
-      //          return formation;
-      //       });
-      //    });
-      //    setSelectedDancers([]);
-      // }
 
       if (!commandHeld) return;
 
@@ -275,8 +271,6 @@ export const Canvas: React.FC<{
    };
 
    const pointerDown = (e: any) => {
-      // console.log(e.target.dataset.type);
-
       if (e.target.dataset.type === "controlPointStart") {
          setChangingControlId(e.target.id);
          setChangingControlType("start");
@@ -350,30 +344,6 @@ export const Canvas: React.FC<{
    }, [songDuration]);
 
    const handleScroll = (e) => {
-      console.log(container.current.clientHeight);
-      console.log(stage.current.clientHeight);
-      // if (
-      //    e
-      //       .composedPath()
-      //       .map((elem) => elem.id)
-      //       .includes("stage") &&
-      //    e.ctrlKey === false
-      // ) {
-      //    e.preventDefault();
-      //    setScrollOffset((scrollOffset) => {
-      //       return { y: scrollOffset.y - e.deltaY, x: scrollOffset.x - e.deltaX };
-      //    });
-      // }
-      // if (
-      //    e
-      //       .composedPath()
-      //       .map((elem) => elem.id)
-      //       .includes("stage") &&
-      //    e.ctrlKey === true
-      // ) {
-      //    e.preventDefault();
-      //    setZoom((zoom) => (zoom - e.deltaY / 200 > 0.2 && zoom - e.deltaY / 200 < 1.2 ? zoom - e.deltaY / 200 : zoom));
-      // }
       if (
          e
             .composedPath()

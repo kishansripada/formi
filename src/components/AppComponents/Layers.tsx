@@ -10,7 +10,7 @@ export const Layers: React.FC<{
    songDuration: number | null;
    position: number | null;
    isPlaying: boolean;
-   soundCloudTrackId: string;
+   soundCloudTrackId: string | null;
    viewOnly: boolean;
    pixelsPerSecond: number;
 }> = ({
@@ -91,7 +91,7 @@ export const Layers: React.FC<{
 
    return (
       <div
-         className="flex flex-col  pb-3 w-full  bg-[#fafafa]  max-h-[75px] overflow-hidden select-none"
+         className="flex flex-col   w-full  bg-[#fafafa]  max-h-[75px] overflow-hidden select-none"
          style={{
             width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
             marginLeft: soundCloudTrackId ? (soundCloudTrackId.length < 15 ? 122 : 10) : 115,
