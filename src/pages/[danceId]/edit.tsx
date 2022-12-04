@@ -79,7 +79,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    const [previousFormationView, setPreviousFormationView] = useState<"none" | "ghostDancers" | "ghostDancersAndPaths">(
       initialData.settings.previousFormationView
    );
-   const [isDragging, setIsDragging] = useState(false);
+   let [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
 
    const [saved, setSaved] = useState<boolean>(true);
    const [mobile, setMobile] = useState<string | null>(null);
@@ -389,13 +389,13 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                   />
                )}
 
-               <div className="flex flex-col w-[70%] items-center">
+               <div className={`flex flex-col w-[70%] items-center `}>
                   <Header saved={saved} danceName={danceName} setDanceName={setDanceName} setShareIsOpen={setShareIsOpen} viewOnly={viewOnly} />
 
                   <Canvas
                      player={player}
-                     isDragging={isDragging}
-                     setIsDragging={setIsDragging}
+                     draggingDancerId={draggingDancerId}
+                     setDraggingDancerId={setDraggingDancerId}
                      songDuration={songDuration}
                      viewOnly={viewOnly}
                      setSelectedFormation={setSelectedFormation}
@@ -438,7 +438,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                            dancer={dancer}
                            formations={formations}
                            setFormations={setFormations}
-                           isDragging={isDragging}
+                           draggingDancerId={draggingDancerId}
                         />
                      ))}
                      {previousFormationView !== "none"

@@ -10,8 +10,19 @@ export const DancerAlias: React.FC<{
    setFormations: Function;
    selectedDancers: string[];
    coordsToPosition: Function;
-   isDragging: boolean;
-}> = ({ dancer, formations, setDancers, selectedFormation, isPlaying, position, setFormations, selectedDancers, coordsToPosition, isDragging }) => {
+   draggingDancerId: string | null;
+}> = ({
+   dancer,
+   formations,
+   setDancers,
+   selectedFormation,
+   isPlaying,
+   position,
+   setFormations,
+   selectedDancers,
+   coordsToPosition,
+   draggingDancerId,
+}) => {
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])
@@ -92,7 +103,7 @@ export const DancerAlias: React.FC<{
                transform: "translate(-50%, -50%)",
                // transform: `translate(-50%, -50%) translate(${left}px, ${top}px)`,
                backgroundColor: selectedDancers.includes(dancer.id) ? "black" : dancer.color || "",
-               transition: !isDragging ? "all 0.33s ease-in-out" : "",
+               transition: !draggingDancerId ? "all 0.33s ease-in-out" : "",
             }}
             id={dancer.id}
             data-type={"dancer"}

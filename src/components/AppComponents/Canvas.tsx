@@ -21,8 +21,8 @@ export const Canvas: React.FC<{
    stageDimensions: { width: number; height: number };
    setStageDimensions: Function;
    coordsToPosition: Function;
-   isDragging: boolean;
-   setIsDragging: Function;
+   draggingDancerId: string | null;
+   setDraggingDancerId: Function;
    player: any;
 }> = ({
    player,
@@ -42,30 +42,27 @@ export const Canvas: React.FC<{
    setStageDimensions,
    stageDimensions,
    coordsToPosition,
-   isDragging,
-   setIsDragging,
+   draggingDancerId,
+   setDraggingDancerId,
 }) => {
-   let [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
    const [shiftHeld, setShiftHeld] = useState(false);
    const [commandHeld, setCommandHeld] = useState(false);
    const [changingControlId, setChangingControlId] = useState<null | string>(null);
-   const [addingNewDancerId, setAddingNewDancerId] = useState<null | string>(null);
    const [changingControlType, setChangingControlType] = useState<"start" | "end" | null>(null);
    const [scrollOffset, setScrollOffset] = useState({ x: -442, y: -310 });
    const [zoom, setZoom] = useState(1);
    const [copiedPositions, setCopiedPositions] = useState([]);
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
+   const [isDragging, setIsDragging] = useState(false);
 
    const container = useRef();
    const stage = useRef();
    useEffect(() => {
       window.addEventListener("keydown", downHandler);
       window.addEventListener("keyup", upHandler);
-      window.addEventListener("pointerdown", pointerForNewDancer);
       return () => {
          window.removeEventListener("keydown", downHandler);
          window.removeEventListener("keyup", upHandler);
-         window.addEventListener("pointerdown", pointerForNewDancer);
       };
    }, [selectedFormation, commandHeld, selectedDancers, formations, copiedPositions]);
 
@@ -74,12 +71,6 @@ export const Canvas: React.FC<{
       let widthPercentage = (container.current.clientWidth - 50) / stage.current.clientWidth;
       setZoom(Math.min(heightPercentage, widthPercentage));
    }, [container?.current?.clientHeight, stage?.current?.clientHeight, stageDimensions]);
-
-   const pointerForNewDancer = (e) => {
-      if (e.target.dataset.type === "newDancer") {
-         setAddingNewDancerId(true);
-      }
-   };
 
    const downHandler = (e: any) => {
       if (e?.path?.[0]?.tagName === "INPUT" || e?.path?.[0]?.tagName === "TEXTAREA") return;
@@ -412,7 +403,7 @@ export const Canvas: React.FC<{
                }}
                className="absolute h-full bg-black opacity-40 z-[100] right-0 pointer-events-none flex flex-col justify-center border-l-red-700 border-l-4"
             >
-               {/* <p className="text-white opacity-100 rotate-90 text-3xl text-center ">OFF STAGE</p> */}
+               {/* <p className="text-white z-50  text-3xl  ">text</p> */}
             </div>
             <GridLines stageDimensions={stageDimensions} />
          </div>
