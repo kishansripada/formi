@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation } from "../../../types/types";
+import { dancer, dancerPosition, formation, stageDimensions } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { NewDancer } from "../NewDancer";
@@ -10,7 +10,9 @@ export const Roster: React.FC<{
    formations: formation[];
    selectedFormation: number | null;
    setEditingDancer: Function;
-}> = ({ setDancers, dancers, setEditingDancer, formations, selectedFormation }) => {
+   stageDimensions: stageDimensions;
+   setFormations: Function;
+}> = ({ setDancers, dancers, setEditingDancer, formations, selectedFormation, stageDimensions, setFormations }) => {
    return (
       <>
          <div className="flex flex-col w-[23%]  bg-white border-r border-r-gray-300">
@@ -38,7 +40,7 @@ export const Roster: React.FC<{
             </div>
 
             <div className="flex flex-col  relative overflow-y-scroll overflow-x-hidden  ">
-               <NewDancer setDancers={setDancers} />
+               <NewDancer setFormations={setFormations} stageDimensions={stageDimensions} setDancers={setDancers} />
 
                {dancers
                   .slice()

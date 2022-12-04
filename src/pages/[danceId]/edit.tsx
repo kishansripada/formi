@@ -356,6 +356,8 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                      formations={formations}
                      selectedFormation={selectedFormation}
                      setEditingDancer={setEditingDancer}
+                     stageDimensions={stageDimensions}
+                     setFormations={setFormations}
                   ></Roster>
                ) : menuOpen === "audio" ? (
                   <ChooseAudioSource

@@ -155,11 +155,11 @@ export const Sidebar: React.FC<{
             <button onClick={() => setMenuOpen("settings")} className="mt-auto">
                <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke=""
-                  className="w-8 h-8 stroke-gray-400 ml-auto mr-auto"
+                  fill="white"
+                  className={`w-8 h-8 transition duration-300  ml-auto mr-auto ${menuOpen === "settings" ? "stroke-[#db2777]" : "stroke-[#C5C7D0]"}`}
                >
                   <path
                      strokeLinecap="round"

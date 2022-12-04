@@ -100,7 +100,7 @@ export const Header: React.FC<{
                   </>
                ) : null}
                {session ? (
-                  <Link href="/mydances">
+                  <Link href="/dashboard">
                      <button className="bg-slate-800  text-white text-sm rounded-md px-3 py-3 ml-4 ">
                         <div className="flex flex-row items-center">
                            <svg

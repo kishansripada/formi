@@ -1,22 +1,52 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { dancer, dancerPosition, formation } from "../../types/types";
+import { dancer, dancerPosition, formation, stageDimensions } from "../../types/types";
 
-export const NewDancer: React.FC<{ setDancers: Function }> = ({ setDancers }) => {
+export const NewDancer: React.FC<{ setDancers: Function; stageDimensions: stageDimensions; setFormations: Function }> = ({
+   setDancers,
+   stageDimensions,
+   setFormations,
+}) => {
    const [newName, setNewName] = useState("");
 
    const createNewDancer = () => {
       if (newName === "") return;
+      let id = uuidv4();
       setDancers((dancers: dancer[]) => {
          return [
             ...dancers,
             {
                name: newName,
-               id: uuidv4(),
+               id,
                instagramUsername: null,
             },
          ];
+      });
+
+      setFormations((formations: formation[]) => {
+         return formations.map((formation, index) => {
+            let position = { x: 0, y: 0 };
+            for (let y = stageDimensions.height / 2 - 1; y >= -(stageDimensions.height / 2 - 1); y--) {
+               let leftSide = formation.positions.find(
+                  (position) => position.position.x === -(stageDimensions.width / 2 - 1) && position.position.y === y
+               );
+               if (!leftSide) {
+                  position = { x: -(stageDimensions.width / 2 - 1), y };
+                  break;
+               }
+
+               let rightSide = formation.positions.find(
+                  (position) => position.position.x === stageDimensions.width / 2 - 1 && position.position.y === y
+               );
+               if (!rightSide) {
+                  position = { x: stageDimensions.width / 2 - 1, y };
+                  break;
+               }
+            }
+
+            return { ...formation, positions: [...formation.positions, { id, position }] };
+         });
       });
       setNewName("");
    };

@@ -14,7 +14,7 @@ const Login = () => {
 
    useEffect(() => {
       if (session) {
-         router.push("/mydances");
+         router.push("/dashboard");
       }
    }, [session]);
 
@@ -22,10 +22,10 @@ const Login = () => {
       const { data } = await supabase.auth.signInWithOAuth({
          provider: "google",
          options: {
-            redirectTo: `${window.location.origin}/mydances`,
+            redirectTo: `${window.location.origin}/dashboard`,
          },
       });
-      console.log(`${window.location.origin}/mydances`);
+      console.log(`${window.location.origin}/dashboard`);
    };
 
    return (
