@@ -363,6 +363,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                      soundCloudTrackId={soundCloudTrackId}
                      setSoundCloudTrackId={setSoundCloudTrackId}
                      audioFiles={audioFiles}
+                     sampleAudioFiles={initialData.sampleAudioFiles}
                      setAudiofiles={setAudiofiles}
                   ></ChooseAudioSource>
                ) : menuOpen === "settings" ? (
@@ -473,6 +474,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
 
             <div className="pb-2">
                <AudioControls
+                  selectedFormation={selectedFormation}
                   songDuration={songDuration}
                   soundCloudTrackId={soundCloudTrackId}
                   setSelectedFormation={setSelectedFormation}
@@ -558,6 +560,7 @@ export const getServerSideProps = async (ctx) => {
    // console.log(session?.user.id);
 
    const audioFiles = await supabase.storage.from("audiofiles").list(session?.user.id, {});
+   const sampleAudioFiles = await supabase.storage.from("audiofiles").list("sample", {});
 
    // if (!session){
    //    return {
@@ -578,7 +581,7 @@ export const getServerSideProps = async (ctx) => {
    // console.log(detectMob(ctx.req.rawHeaders[7]));
    // Run queries with RLS on the server
    let { data } = await supabase.from("dances").select("*").eq("id", ctx.query.danceId).single();
-   data = { ...data, audioFiles };
+   data = { ...data, audioFiles, sampleAudioFiles };
    if (!data) {
       return {
          redirect: {

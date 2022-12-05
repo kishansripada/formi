@@ -100,8 +100,8 @@ export const FileAudioPlayer: React.FC<{
             <Script onReady={handleLoad} strategy="lazyOnload" src="https://unpkg.com/wavesurfer.js" />
 
             {!ready ? (
-               <div className="h-[60px] flex flex-row items-center">
-                  <p className="font-semibold text-xl">loading audio...</p>
+               <div className="h-[60px] flex flex-row items-center justify-center bg-[#fafafa] w-screen">
+                  <p className="font-semibold text-xl animate-bounce">loading audio...</p>
                </div>
             ) : null}
 

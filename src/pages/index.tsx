@@ -55,7 +55,7 @@ const home = () => {
             }
          `}</style>
          <Head>
-            <title>Formi: Online dance formation building software</title>
+            <title>FORMI: Online dance formation building software</title>
 
             <meta
                name="description"

@@ -13,7 +13,19 @@ export const AudioControls: React.FC<{
    position: number | null;
    setFormations: Function;
    songDuration: number | null;
-}> = ({ soundCloudTrackId, setSelectedFormation, player, isPlaying, setIsPlaying, formations, position, setFormations, songDuration }) => {
+   selectedFormation: number | null;
+}> = ({
+   soundCloudTrackId,
+   setSelectedFormation,
+   player,
+   isPlaying,
+   setIsPlaying,
+   formations,
+   position,
+   setFormations,
+   songDuration,
+   selectedFormation,
+}) => {
    return (
       <>
          <div className="min-h-[50px] bg-[#fafafa] w-full border-t border-gray-300 flex flex-row items-center justify-between select-none">
@@ -104,6 +116,7 @@ export const AudioControls: React.FC<{
                <p className=" mr-auto text-gray-600">
                   {msToTime((position || 0) * 1000)}:<span className="text-gray-500">{Math.round(((position || 0) * 10) % 10)}</span>
                </p>
+
                <button
                   onClick={() => {
                      setFormations((formations: formation[]) => {
@@ -149,6 +162,28 @@ export const AudioControls: React.FC<{
                   className=" rounded-md ml-auto  text-gray-500 px-3 py-1 mx-1 cursor-pointer outline "
                >
                   + new formation
+               </button>
+               <button
+                  onClick={() => {
+                     if (selectedFormation === null) return;
+                     if (formations.length === 1) {
+                        toast.error("you must have at least one formation");
+                        return;
+                     }
+                     if (selectedFormation === formations.length - 1) {
+                        setSelectedFormation(selectedFormation - 1);
+                     }
+
+                     setFormations((formations: formation[]) => {
+                        return formations.filter((formation, index) => {
+                           return index !== selectedFormation;
+                        });
+                     });
+                     toast.success("formation deleted");
+                  }}
+                  className=" rounded-md   text-gray-500 px-3 py-1 mx-1 cursor-pointer outline"
+               >
+                  delete formation
                </button>
             </div>
          </div>

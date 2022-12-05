@@ -185,7 +185,7 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
 
                <div className="flex flex-col bg-gray-100 w-[83%] pl-10 font-proxima">
                   <div className="flex flex-row items-center justify-end p-6 text-gray-500">
-                     <button className="mr-5">upgrade ⚡️</button>
+                     {/* <button className="mr-5">upgrade ⚡️</button> */}
                      <button
                         onClick={() => {
                            supabase.auth.signOut().then((r) => {

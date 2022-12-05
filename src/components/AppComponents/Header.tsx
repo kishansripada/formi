@@ -71,7 +71,7 @@ export const Header: React.FC<{
                         </p>
                      </a> */}
                      <a href="https://www.youtube.com/watch?v=wXaq0cF0dkI" target={"_blank"}>
-                        <p className="text-sm text-gray-500">upgrade ⚡️</p>
+                        {/* <p className="text-sm text-gray-500">upgrade ⚡️</p> */}
                      </a>
 
                      <button
