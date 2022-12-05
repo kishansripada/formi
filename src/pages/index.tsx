@@ -1,7 +1,32 @@
 import Link from "next/link";
 import Head from "next/head";
+import { useRef, useState, useEffect } from "react";
 
 const home = () => {
+   const videoRef = useRef();
+
+   const [scrollPosition, setScrollPosition] = useState(0);
+   const handleScroll = () => {
+      let position = window.pageYOffset;
+      // setScrollPosition(position);
+      position = Math.round(position / 10) * 10;
+      // if (!videoRef?.current?.currentTime) return;
+      videoRef.current.currentTime = (position / 900) * 4;
+   };
+
+   useEffect(() => {
+      window.addEventListener("scroll", handleScroll, { passive: true });
+
+      return () => {
+         window.removeEventListener("scroll", handleScroll);
+      };
+   }, []);
+
+   // useEffect(() => {
+   //    console.log(scrollPosition)
+   //    videoRef.current.currentTime = (scrollPosition / 900) * 4;
+   // }, [scrollPosition]);
+
    return (
       <>
          <style jsx>{`
@@ -112,7 +137,17 @@ const home = () => {
                </div>
             </div>
             <div className="lg:px-[15%] px-[5%] mt-24 relative overflow-hidden  ">
-               <img src="/editDemo.png" className="rounded-xl shadow-2xl z-50 relative pointer-events-none select-none " alt="" />
+               {/* <img src="/editDemo.png" className="rounded-xl shadow-2xl z-50 relative pointer-events-none select-none " alt="" /> */}
+               <video
+                  ref={videoRef}
+                  playsinline="true"
+                  webkit-playsinline="true"
+                  preload="auto"
+                  muted={true}
+                  className="rounded-xl shadow-2xl z-50 relative pointer-events-none select-none"
+               >
+                  <source src="/videoScroll.mp4" type="video/mp4"></source>
+               </video>
                <div
                   className="pointer-events-none absolute  h-[1000px] w-[1000px] "
                   style={{

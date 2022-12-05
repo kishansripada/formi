@@ -11,7 +11,7 @@ export const Sidebar: React.FC<{
          <div className="flex flex-col w-[6%] border-r-gray-300 border-r items-center justify-start pt-7 child:pb-3 ">
             <button className="flex flex-col items-center justify-center" onClick={() => setMenuOpen("formations")}>
                <svg width="40" height="40" fill="none">
-                  <g filter="url(#a)" fill-rule="evenodd" clip-rule="evenodd">
+                  <g filter="url(#a)" fillRule="evenodd" clipRule="evenodd">
                      <path
                         className="transition duration-300 ease-in-out"
                         d="M8 17.6c0-3.3603 0-5.0405.65396-6.3239.57524-1.129 1.49314-2.0469 2.62214-2.62214C12.5595 8 14.2397 8 17.6 8h4.8c3.3603 0 5.0405 0 6.3239.65396 1.129.57524 2.0469 1.49314 2.6221 2.62214C32 12.5595 32 14.2397 32 17.6v4.8c0 3.3603 0 5.0405-.654 6.3239-.5752 1.129-1.4931 2.0469-2.6221 2.6221C27.4405 32 25.7603 32 22.4 32h-4.8c-3.3603 0-5.0405 0-6.3239-.654-1.129-.5752-2.0469-1.4931-2.62214-2.6221C8 27.4405 8 25.7603 8 22.4v-4.8Zm12.5649 2.9183c.1207.294.4656.5283 1.1555.9969l3.8726 2.6304c.8563.5816 1.2845.8725 1.6401.8534.3097-.0166.5964-.1685.7842-.4153.2155-.2835.2155-.8011.2155-1.8362v-5.2609c0-1.0351 0-1.5527-.2155-1.8361-.1878-.2469-.4745-.3988-.7842-.4154-.3556-.0191-.7838.2718-1.6401.8534l-3.8726 2.6304c-.6899.4686-1.0348.7029-1.1555.9969-.1056.2571-.1056.5454 0 .8025Z"
@@ -20,7 +20,7 @@ export const Sidebar: React.FC<{
                      <path
                         d="M8 17.6c0-3.3603 0-5.0405.65396-6.3239.57524-1.129 1.49314-2.0469 2.62214-2.62214C12.5595 8 14.2397 8 17.6 8h4.8c3.3603 0 5.0405 0 6.3239.65396 1.129.57524 2.0469 1.49314 2.6221 2.62214C32 12.5595 32 14.2397 32 17.6v4.8c0 3.3603 0 5.0405-.654 6.3239-.5752 1.129-1.4931 2.0469-2.6221 2.6221C27.4405 32 25.7603 32 22.4 32h-4.8c-3.3603 0-5.0405 0-6.3239-.654-1.129-.5752-2.0469-1.4931-2.62214-2.6221C8 27.4405 8 25.7603 8 22.4v-4.8Zm12.5649 2.9183c.1207.294.4656.5283 1.1555.9969l3.8726 2.6304c.8563.5816 1.2845.8725 1.6401.8534.3097-.0166.5964-.1685.7842-.4153.2155-.2835.2155-.8011.2155-1.8362v-5.2609c0-1.0351 0-1.5527-.2155-1.8361-.1878-.2469-.4745-.3988-.7842-.4154-.3556-.0191-.7838.2718-1.6401.8534l-3.8726 2.6304c-.6899.4686-1.0348.7029-1.1555.9969-.1056.2571-.1056.5454 0 .8025Z"
                         fill="url(#b)"
-                        fill-opacity=".2"
+                        fillOpacity=".2"
                      />
                   </g>
                   <g filter="url(#c)">
@@ -30,8 +30,8 @@ export const Sidebar: React.FC<{
                      />
                   </g>
                   <defs>
-                     <filter id="a" x="8" y="8" width="24" height="24" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                     <filter id="a" x="8" y="8" width="24" height="24" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                        <feFlood floodOpacity="0" result="BackgroundImageFix" />
                         <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                         <feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
                         <feOffset dy=".5" />
@@ -46,9 +46,9 @@ export const Sidebar: React.FC<{
                         width="11.7471"
                         height="13.7657"
                         filterUnits="userSpaceOnUse"
-                        color-interpolation-filters="sRGB"
+                        colorInterpolationFilters="sRGB"
                      >
-                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                        <feFlood floodOpacity="0" result="BackgroundImageFix" />
                         <feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
                         <feOffset dy="1" />
                         <feGaussianBlur stdDeviation="1" />
@@ -57,8 +57,8 @@ export const Sidebar: React.FC<{
                         <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
                      </filter>
                      <linearGradient id="b" x1="20" y1="8" x2="20" y2="32" gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#fff" />
-                        <stop offset="1" stop-color="#fff" stop-opacity="0" />
+                        <stop stopColor="#fff" />
+                        <stop offset="1" stopColor="#fff" stopOpacity="0" />
                      </linearGradient>
                   </defs>
                </svg>
@@ -88,12 +88,12 @@ export const Sidebar: React.FC<{
                         rx="7"
                         fill={menuOpen === "audio" ? "#db2777" : "#C5C7D0"}
                      ></rect>
-                     <rect x="8" y="8" width="24" height="24" rx="7" fill="url(#paint0_linear_5002_422651)" fill-opacity="0.2"></rect>
+                     <rect x="8" y="8" width="24" height="24" rx="7" fill="url(#paint0_linear_5002_422651)" fillOpacity="0.2"></rect>
                   </g>
                   <g filter="url(#filter1_d_5002_422651)">
                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
+                        fillRule="evenodd"
+                        clipRule="evenodd"
                         d="M21 24.4956V16.8823C21 16.378 21.3755 15.9526 21.876 15.89L24.1238 15.609C24.6243 15.5465 24.9998 15.1211 24.9998 14.6168V13.0889C24.9998 12.5033 24.4988 12.043 23.9153 12.0925L21.0025 12.3396C19.9425 12.4295 19.1384 13.3335 19.1726 14.3968L19.4126 21.8526C18.9916 21.6275 18.5107 21.4998 18 21.4998C16.3431 21.4998 15 22.843 15 24.4998C15 26.1567 16.3431 27.4998 18 27.4998C19.6313 27.4998 20.9584 26.1979 20.999 24.5764H21V24.504C21 24.5026 21 24.5012 21 24.4998C21 24.4984 21 24.497 21 24.4956Z"
                         fill="white"
                      ></path>
@@ -106,9 +106,9 @@ export const Sidebar: React.FC<{
                         width="24"
                         height="24"
                         filterUnits="userSpaceOnUse"
-                        color-interpolation-filters="sRGB"
+                        colorInterpolationFilters="sRGB"
                      >
-                        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                        <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
                         <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
                         <feColorMatrix
                            in="SourceAlpha"
@@ -128,9 +128,9 @@ export const Sidebar: React.FC<{
                         width="14"
                         height="19.4111"
                         filterUnits="userSpaceOnUse"
-                        color-interpolation-filters="sRGB"
+                        colorInterpolationFilters="sRGB"
                      >
-                        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                        <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
                         <feColorMatrix
                            in="SourceAlpha"
                            type="matrix"
@@ -145,8 +145,8 @@ export const Sidebar: React.FC<{
                         <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_5002_422651" result="shape"></feBlend>
                      </filter>
                      <linearGradient id="paint0_linear_5002_422651" x1="20" y1="8" x2="20" y2="32" gradientUnits="userSpaceOnUse">
-                        <stop stop-color="white"></stop>
-                        <stop offset="1" stop-color="white" stop-opacity="0"></stop>
+                        <stop stopColor="white"></stop>
+                        <stop offset="1" stopColor="white" stopOpacity="0"></stop>
                      </linearGradient>
                   </defs>
                </svg>

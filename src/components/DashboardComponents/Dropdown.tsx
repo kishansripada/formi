@@ -5,7 +5,11 @@ import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 
-export const Dropdown: React.FC<{ dance: any; invalidateDances: Function }> = ({ dance, invalidateDances }) => {
+export const Dropdown: React.FC<{ dance: any; invalidateDances: Function; setOpenPerformanceMenu: Function }> = ({
+   dance,
+   invalidateDances,
+   setOpenPerformanceMenu,
+}) => {
    let session = useSession();
    const supabase = useSupabaseClient();
    const moveToTrash = async (id: string) => {
@@ -31,14 +35,18 @@ export const Dropdown: React.FC<{ dance: any; invalidateDances: Function }> = ({
       invalidateDances();
       toast.success("duplicated dance");
    };
+
    return (
       <div
          id="dropdown"
-         className="bg-white w-[200px] h-[300px] absolute rounded-xl right-[-170px] p-1 top-[250px] z-50  border-gray-200 border shadow-md flex flex-col font-semibold child:mt-2"
+         className="bg-white w-[200px] absolute rounded-xl right-[-170px] p-1 top-[250px] z-50  border-gray-200 border shadow-md flex flex-col font-semibold py-2"
       >
          <Toaster></Toaster>
          <button
-            onClick={() => moveToTrash(dance.id)}
+            onClick={() => {
+               moveToTrash(dance.id);
+               setOpenPerformanceMenu(null);
+            }}
             className="flex flex-row items-center justify-start w-full  hover:bg-pink-600 hover:text-white  rounded px-2 py-1"
          >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-2">
@@ -52,7 +60,10 @@ export const Dropdown: React.FC<{ dance: any; invalidateDances: Function }> = ({
             <p className=""> move to trash</p>
          </button>
          <button
-            onClick={() => duplicateDance(dance)}
+            onClick={() => {
+               duplicateDance(dance);
+               setOpenPerformanceMenu(null);
+            }}
             className="flex flex-row items-center justify-start w-full hover:bg-pink-600 hover:text-white  rounded px-2 py-1"
          >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-2">
@@ -64,17 +75,6 @@ export const Dropdown: React.FC<{ dance: any; invalidateDances: Function }> = ({
             </svg>
 
             <p className="">duplicate</p>
-         </button>
-         <button className="flex flex-row items-center justify-start w-full hover:bg-pink-600 hover:text-white  rounded px-2 py-1">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-2">
-               <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"
-               />
-            </svg>
-
-            <p className="">share</p>
          </button>
       </div>
    );

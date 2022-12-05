@@ -19,9 +19,13 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
    const [myDances, setMyDances] = useState(dances);
    const [menuOpen, setMenuOpen] = useState<"mydances" | "rosters" | "audio" | "trash">("mydances");
 
-   useEffect(() => {
-      console.log(session);
-   }, [session]);
+   const removeFromTrash = async (id: string) => {
+      console.log(id);
+      const { data, error } = await supabase.from("dances").update({ isInTrash: false }).eq("id", id);
+      console.log(error);
+      invalidateDances();
+      toast.success("moved to trash");
+   };
 
    const invalidateDances = async () => {
       const { data } = await supabase.from("dances").select("*").eq("user", session?.user.id);
@@ -29,13 +33,14 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
    };
 
    const deleteDance = async (id: number) => {
+      console.log(id);
       const { data, error } = await supabase.from("dances").delete().eq("id", id);
-      if (data) {
-         toast.success("deleted dance");
-      }
       if (error) {
          toast.error("there was an issue deleting your dance");
+         return;
       }
+      toast.success("deleted dance");
+      invalidateDances();
    };
 
    async function createNewDance() {
@@ -183,8 +188,9 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                      <button className="mr-5">upgrade ⚡️</button>
                      <button
                         onClick={() => {
-                           supabase.auth.signOut();
-                           router.push("/");
+                           supabase.auth.signOut().then((r) => {
+                              router.push("/login");
+                           });
                         }}
                         className="mr-5"
                      >
@@ -198,7 +204,7 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                   ) : menuOpen === "audio" ? (
                      <AudioFiles audioFiles={audioFiles}></AudioFiles>
                   ) : menuOpen === "trash" ? (
-                     <Trash trash={myDances.filter((dance) => dance.isInTrash)}></Trash>
+                     <Trash removeFromTrash={removeFromTrash} deleteDance={deleteDance} trash={myDances.filter((dance) => dance.isInTrash)}></Trash>
                   ) : null}
                </div>
             </div>

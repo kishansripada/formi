@@ -40,7 +40,11 @@ export const FileAudioPlayer: React.FC<{
 
       useEffect(() => {
          if (!player) return;
-         player.zoom(pixelsPerSecond);
+         try {
+            player.zoom(pixelsPerSecond);
+         } catch {
+            console.log("zoom error");
+         }
       }, [pixelsPerSecond, player]);
 
       useEffect(() => {
