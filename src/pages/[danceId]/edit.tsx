@@ -55,7 +55,6 @@ import { Roster } from "../../components/AppComponents/SidebarComponents/Roster"
 import { Sidebar } from "../../components/AppComponents/Sidebar";
 
 const Edit = ({ initialData, viewOnly }: {}) => {
-   console.log(initialData);
    viewOnly = false;
    let session = useSession();
    const supabase = useSupabaseClient();
@@ -85,7 +84,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    const [mobile, setMobile] = useState<string | null>(null);
    const [shareIsOpen, setShareIsOpen] = useState(false);
    const [menuOpen, setMenuOpen] = useState<string>(initialData.soundCloudId ? "formations" : "audio");
-   const [pricingTier, setPricingTier] = useState<string>("basic");
+   const [pricingTier, setPricingTier] = useState<string>("premium");
 
    const [player, setPlayer] = useState(null);
 
@@ -308,7 +307,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                   <div className="flex  w-[700px] flex-col rounded-xl bg-white">
                      <div className="flex flex-col rounded-xl px-10 py-10 h-full text-center">
                         <div className="flex flex-col mt-auto">
-                           editing dances with Naach is unfortunately not yet optimized for mobile devices, please visit naach.app on your desktop to
+                           editing dances with Formi is unfortunately not yet optimized for mobile devices, please visit naach.app on your desktop to
                            edit your formations
                         </div>
                      </div>

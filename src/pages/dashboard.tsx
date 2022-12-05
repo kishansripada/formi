@@ -7,19 +7,27 @@ import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { MyDances } from "../components/DashboardComponents/MyDances";
 import { Rosters } from "../components/DashboardComponents/Rosters";
+import { AudioFiles } from "../components/DashboardComponents/AudioFiles";
+import { Trash } from "../components/DashboardComponents/Trash";
 
-const Dashboard = ({ dances }: {}) => {
+const Dashboard = ({ dances, audioFiles }: {}) => {
    let session = useSession();
    const supabase = useSupabaseClient();
    const [importIsOpen, setImportIsOpen] = useState(false);
    const [danceAppLink, setDanceAppLink] = useState("");
    const router = useRouter();
    const [myDances, setMyDances] = useState(dances);
-   const [menuOpen, setMenuOpen] = useState<"mydances" | "rosters" | "audio">("mydances");
+   const [menuOpen, setMenuOpen] = useState<"mydances" | "rosters" | "audio" | "trash">("mydances");
 
    useEffect(() => {
       console.log(session);
    }, [session]);
+
+   const invalidateDances = async () => {
+      const { data } = await supabase.from("dances").select("*").eq("user", session?.user.id);
+      setMyDances(data);
+   };
+
    const deleteDance = async (id: number) => {
       const { data, error } = await supabase.from("dances").delete().eq("id", id);
       if (data) {
@@ -161,8 +169,10 @@ const Dashboard = ({ dances }: {}) => {
                      <p>uploaded audio</p>
                   </button>
                   <button
-                     className="flex flex-row justify-between items-center mt-auto text-black  font-medium  w-full py-3 px-3 rounded-lg "
-                     onClick={createNewDance}
+                     className={`flex flex-row justify-between items-center mt-auto ${
+                        menuOpen === "trash" ? "bg-gray-200" : ""
+                     } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
+                     onClick={() => setMenuOpen("trash")}
                   >
                      <p>trash</p>
                   </button>
@@ -170,9 +180,26 @@ const Dashboard = ({ dances }: {}) => {
 
                <div className="flex flex-col bg-gray-100 w-[83%] pl-10 font-proxima">
                   <div className="flex flex-row items-center justify-end p-6 text-gray-500">
-                     <button>upgrade ⚡️</button>
+                     <button className="mr-5">upgrade ⚡️</button>
+                     <button
+                        onClick={() => {
+                           supabase.auth.signOut();
+                           router.push("/");
+                        }}
+                        className="mr-5"
+                     >
+                        sign out
+                     </button>
                   </div>
-                  {menuOpen === "mydances" ? <MyDances myDances={myDances}></MyDances> : menuOpen === "rosters" ? <Rosters></Rosters> : null}
+                  {menuOpen === "mydances" ? (
+                     <MyDances invalidateDances={invalidateDances} myDances={myDances.filter((dance) => !dance.isInTrash)}></MyDances>
+                  ) : menuOpen === "rosters" ? (
+                     <Rosters></Rosters>
+                  ) : menuOpen === "audio" ? (
+                     <AudioFiles audioFiles={audioFiles}></AudioFiles>
+                  ) : menuOpen === "trash" ? (
+                     <Trash trash={myDances.filter((dance) => dance.isInTrash)}></Trash>
+                  ) : null}
                </div>
             </div>
          </>
@@ -196,9 +223,10 @@ export const getServerSideProps = withPageAuth({
          return { props: {} };
       }
       const { user } = session;
+      const audioFiles = await supabase.storage.from("audiofiles").list(session?.user.id, {});
 
       const { data } = await supabase.from("dances").select("*").eq("user", user.id);
 
-      return { props: { dances: data } };
+      return { props: { dances: data, audioFiles } };
    },
 });

@@ -38,10 +38,10 @@ export const FileAudioPlayer: React.FC<{
          document.getElementById("waveform").firstChild.style.overflowX = "hidden";
       }, [document.getElementById("waveform")?.firstChild]);
 
-      // useEffect(() => {
-      //    if (!player) return;
-      //    player.zoom(pixelsPerSecond);
-      // }, [pixelsPerSecond, player, soundCloudTrackId]);
+      useEffect(() => {
+         if (!player) return;
+         player.zoom(pixelsPerSecond);
+      }, [pixelsPerSecond, player]);
 
       useEffect(() => {
          return () => {
@@ -71,6 +71,7 @@ export const FileAudioPlayer: React.FC<{
          wavesurfer.on("ready", function (e) {
             console.log("ready");
             setReady(true);
+
             let duration = wavesurfer.getDuration() * 1000;
             setSongDuration(duration);
             wavesurfer.zoom(pixelsPerSecond);
@@ -96,7 +97,7 @@ export const FileAudioPlayer: React.FC<{
 
             {!ready ? (
                <div className="h-[60px] flex flex-row items-center">
-                  <p>loading audio...</p>
+                  <p className="font-semibold text-xl">loading audio...</p>
                </div>
             ) : null}
 
