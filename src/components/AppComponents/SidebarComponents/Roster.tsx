@@ -18,7 +18,7 @@ export const Roster: React.FC<{
          <div className="flex flex-col w-[23%]  bg-white border-r border-r-gray-300">
             <div className="flex flex-row justify-between items-center px-6">
                <p className="text-xl font-medium mb-2  py-6">roster</p>
-               <div className="flex flex-row justify-center items-center">
+               <div className="flex flex-row justify-center items-center dfs">
                   {/* <p className="text-sm text-gray-500 mr-2">manzat core</p>
                   <button>
                      <svg
