@@ -31,14 +31,14 @@ export const AudioControls: React.FC<{
    return (
       <>
          <div className="min-h-[50px] bg-[#fafafa] w-full border-t border-gray-300 flex flex-row items-center justify-between select-none">
-            <div className="w-[45%] pl-10 flex flex-row justify-center items-center">
+            <div className="w-[45%] pl-10 flex flex-row justify-center items-center ">
                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"
                   stroke="currentColor"
-                  className="w-6 h-6 mr-2"
+                  className="w-6 h-6 mr-2 lg:block hidden"
                >
                   <path
                      strokeLinecap="round"
@@ -47,7 +47,9 @@ export const AudioControls: React.FC<{
                   />
                </svg>
 
-               <p className="mr-auto font-medium">{soundCloudTrackId ? soundCloudTrackId?.split("/").slice(-1)[0] : "no audio file selected"}</p>
+               <p className="mr-auto font-medium whitespace-nowrap overflow-hidden lg:block hidden ">
+                  {soundCloudTrackId ? soundCloudTrackId?.split("/").slice(-1)[0] : "no audio file selected"}
+               </p>
             </div>
             <div className={`flex flex-row items-center justify-center w-[10%] `}>
                <button
@@ -115,7 +117,7 @@ export const AudioControls: React.FC<{
             </div>
 
             <div className="w-[45%] flex flex-row items-center justify-center pr-10">
-               <p className=" mr-auto text-gray-600">
+               <p className=" ml-auto lg:mr-auto text-gray-600 ">
                   {msToTime((position || 0) * 1000)}:<span className="text-gray-500">{Math.round(((position || 0) * 10) % 10)}</span>
                </p>
                {!viewOnly ? (

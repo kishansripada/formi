@@ -56,6 +56,7 @@ const FileAudioPlayer = dynamic<{
 });
 
 const Edit = ({ initialData, viewOnly }: {}) => {
+   viewOnly = true;
    let session = useSession();
    const supabase = useSupabaseClient();
 
