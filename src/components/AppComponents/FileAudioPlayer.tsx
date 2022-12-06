@@ -116,7 +116,7 @@ export const FileAudioPlayer: React.FC<{
                   style={{
                      overflowX: "hidden",
                   }}
-                  className="w-full"
+                  // className="w-full"
                ></div>
             </div>
          </>

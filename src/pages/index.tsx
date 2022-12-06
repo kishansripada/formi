@@ -1,26 +1,26 @@
 import Link from "next/link";
 import Head from "next/head";
 import { useRef, useState, useEffect } from "react";
-
+import { useRouter } from "next/router";
 const home = () => {
    const videoRef = useRef();
+   let router = useRouter();
+   // const [scrollPosition, setScrollPosition] = useState(0);
+   // const handleScroll = () => {
+   //    let position = window.pageYOffset;
+   //    // setScrollPosition(position);
+   //    position = Math.round(position / 10) * 10;
+   //    // if (!videoRef?.current?.currentTime) return;
+   //    videoRef.current.currentTime = (position / 900) * 4;
+   // };
 
-   const [scrollPosition, setScrollPosition] = useState(0);
-   const handleScroll = () => {
-      let position = window.pageYOffset;
-      // setScrollPosition(position);
-      position = Math.round(position / 10) * 10;
-      // if (!videoRef?.current?.currentTime) return;
-      videoRef.current.currentTime = (position / 900) * 4;
-   };
+   // useEffect(() => {
+   //    window.addEventListener("scroll", handleScroll, { passive: true });
 
-   useEffect(() => {
-      window.addEventListener("scroll", handleScroll, { passive: true });
-
-      return () => {
-         window.removeEventListener("scroll", handleScroll);
-      };
-   }, []);
+   //    return () => {
+   //       window.removeEventListener("scroll", handleScroll);
+   //    };
+   // }, []);
 
    // useEffect(() => {
    //    console.log(scrollPosition)
@@ -55,26 +55,38 @@ const home = () => {
             }
          `}</style>
          <Head>
-            <title>FORMI: Online dance formation building software</title>
-
+            <title>FORMI: Online performance planning software.</title>
             <meta
                name="description"
                content="Easily build, create and visualize your dance and cheer formations synced to music. Formi is the ultimate choreographer formation tool."
             />
             <meta name="keywords" content="dance, choreography, desi, formations, cheer, cheerleading, formation building tool" />
             <meta name="twitter:card" content="summary" />
-            <meta name="twitter:title" content="Formi: Online dance formation building software" />
+            <meta name="twitter:title" content="FORMI: Online performance planning software." />
             <meta name="twitter:image" content="https://i.imgur.com/83VsfSG.png" />
             <meta property="og:type" content="song" />
-            <meta property="og:title" content="Formi: Online dance formation building software" />
+            <meta property="og:title" content="FORMI: Online performance planning software." />
             <meta
                property="og:description"
                content="Easily build, create and visualize your dance and cheer formations synced to music. Formi is the ultimate choreographer formation tool."
             />
             <meta property="og:image" content="https://i.imgur.com/83VsfSG.png" />
 
-            <meta property="og:site_name" content="Formi: Online dance formation building software" />
+            <meta property="og:site_name" content="FORMI: Online performance planning software." />
          </Head>
+         {/* {router.query.ref === "naach" ? (
+            <>
+               <div className="fixed top-0 left-0 z-[100] flex h-screen w-screen items-center justify-center font-proxima ">
+                  <div className="flex  w-[700px] flex-col rounded-xl bg-white border border-black">
+                     <div className="flex flex-col rounded-xl px-10 py-10 h-full text-center">
+                        <div className="flex flex-col mt-auto text-5xl">naach is now FORMI!</div>
+                     </div>
+                  </div>
+               </div>
+            </>
+         ) : (
+            <></>
+         )} */}
          <div className="bg-[#fafafa]">
             <div className="font-proxima pt-16 px-[10%] lg:px-[20%] bg-[#fafafa] ">
                <nav className="flex flex-row lg:justify-between text-black items-center justify-center ">
@@ -89,9 +101,9 @@ const home = () => {
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-full"></div>
                   </div> */}
                   <div className="flex flex-row items-center justify-center">
-                     <Link href={"/login"} className="z-50">
+                     {/* <Link href={"/upgrade"} className="z-50">
                         <button className=" border-pink-600 border-2 mr-3 px-4 py-1 hidden lg:block  rounded-md ">pricing</button>
-                     </Link>
+                     </Link> */}
                      <Link href={"/login"} className="z-50">
                         <button className="border-black border px-4 py-1 hidden lg:block  rounded-md ">sign in</button>
                      </Link>
@@ -104,7 +116,7 @@ const home = () => {
                         collaborative performance planning for the web.
                      </h1>
                      <p className="text-gray-500 lg:w-[85%] mt-5">
-                        plan out your dance and cheer formations, visualizing the transitions all synced to music.
+                        plan out your dance and cheer formations, visualizing the transitions synced to music.
                      </p>
 
                      <Link href={"/207/edit"} className="">
@@ -127,12 +139,12 @@ const home = () => {
                   </div>
 
                   <div className="w-[30%] hidden lg:block ">
-                     <img
+                     {/* <img
                         className="w-[400px]  absolute right-[250px] top-[60px] pointer-events-none select-none"
                         src="
                         https://purepng.com/public/uploads/large/dancer-8yz.png"
                         alt=""
-                     />
+                     /> */}
                   </div>
                </div>
             </div>
@@ -144,6 +156,8 @@ const home = () => {
                   webkit-playsinline="true"
                   preload="auto"
                   muted={true}
+                  autoPlay
+                  loop
                   className="rounded-xl shadow-2xl z-50 relative pointer-events-none select-none"
                >
                   <source src="/videoScroll.mp4" type="video/mp4"></source>

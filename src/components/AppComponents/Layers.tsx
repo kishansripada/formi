@@ -13,6 +13,7 @@ export const Layers: React.FC<{
    soundCloudTrackId: string | null;
    viewOnly: boolean;
    pixelsPerSecond: number;
+   setSelectedDancers: Function;
 }> = ({
    formations,
    selectedFormation,
@@ -24,6 +25,7 @@ export const Layers: React.FC<{
    soundCloudTrackId,
    viewOnly,
    pixelsPerSecond,
+   setSelectedDancers,
 }) => {
    const [resizingTransition, setResizingTransition] = useState<number | null>(null);
    const [resizingFormation, setResizingFormation] = useState<number | null>(null);
@@ -91,9 +93,22 @@ export const Layers: React.FC<{
 
    return (
       <div
-         className="flex flex-col   w-full  bg-[#fafafa]   overflow-hidden select-none"
+         className="flex flex-col     bg-[#fafafa]  select-none"
          style={{
-            width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
+            width: songDuration
+               ? Math.max(
+                    formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0) *
+                       pixelsPerSecond,
+                    (songDuration / 1000) * pixelsPerSecond
+                 )
+               : "100%",
+            // width: "100%",
+            // width: songDuration
+            //    ? Math.max(
+            //         formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0),
+            //         (songDuration / 1000) * pixelsPerSecond
+            //      )
+            //    : "100%",
             marginLeft: 10,
          }}
          onPointerUp={pointerUp}
@@ -102,6 +117,7 @@ export const Layers: React.FC<{
          id="layers"
       >
          <Layer
+            setSelectedDancers={setSelectedDancers}
             viewOnly={viewOnly}
             songDuration={songDuration}
             setFormations={setFormations}

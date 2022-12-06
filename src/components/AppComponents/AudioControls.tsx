@@ -14,6 +14,7 @@ export const AudioControls: React.FC<{
    setFormations: Function;
    songDuration: number | null;
    selectedFormation: number | null;
+   viewOnly: boolean;
 }> = ({
    soundCloudTrackId,
    setSelectedFormation,
@@ -25,6 +26,7 @@ export const AudioControls: React.FC<{
    setFormations,
    songDuration,
    selectedFormation,
+   viewOnly,
 }) => {
    return (
       <>
@@ -116,75 +118,70 @@ export const AudioControls: React.FC<{
                <p className=" mr-auto text-gray-600">
                   {msToTime((position || 0) * 1000)}:<span className="text-gray-500">{Math.round(((position || 0) * 10) % 10)}</span>
                </p>
+               {!viewOnly ? (
+                  <>
+                     {" "}
+                     <button
+                        onClick={() => {
+                           setFormations((formations: formation[]) => {
+                              if (!formations.length) {
+                                 setSelectedFormation(formations.length);
+                                 return [
+                                    ...formations,
+                                    {
+                                       durationSeconds: 10,
+                                       positions: [],
+                                       transition: {
+                                          durationSeconds: 5,
+                                       },
+                                       name: `Untitled ${formations.length + 1}`,
+                                    },
+                                 ];
+                              } else {
+                                 setSelectedFormation(formations.length);
+                                 return [
+                                    ...formations,
+                                    {
+                                       id: uuidv4(),
+                                       ...formations[formations.length - 1],
+                                       name: `Untitled ${formations.length + 1}`,
+                                       transition: {
+                                          durationSeconds: 5,
+                                       },
+                                       durationSeconds: 10,
+                                    },
+                                 ];
+                              }
+                           });
+                        }}
+                        className=" rounded-md ml-auto  text-gray-500 px-3 py-1 mx-1 cursor-pointer outline "
+                     >
+                        + new formation
+                     </button>
+                     <button
+                        onClick={() => {
+                           if (selectedFormation === null) return;
+                           if (formations.length === 1) {
+                              toast.error("you must have at least one formation");
+                              return;
+                           }
+                           if (selectedFormation === formations.length - 1) {
+                              setSelectedFormation(selectedFormation - 1);
+                           }
 
-               <button
-                  onClick={() => {
-                     setFormations((formations: formation[]) => {
-                        let totalFormationLength = formations
-                           .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
-                           .reduce((a, b) => a + b, 0);
-                        let roomLeft = songDuration / 1000 - totalFormationLength;
-
-                        if (roomLeft < 3) {
-                           toast.error("there's not enough room!");
-                           return formations;
-                        }
-                        if (!formations.length) {
-                           setSelectedFormation(formations.length);
-                           return [
-                              ...formations,
-                              {
-                                 durationSeconds: roomLeft > 15 ? 10 : roomLeft / 2,
-                                 positions: [],
-                                 transition: {
-                                    durationSeconds: roomLeft > 15 ? 5 : roomLeft / 2,
-                                 },
-                                 name: `Untitled ${formations.length + 1}`,
-                              },
-                           ];
-                        } else {
-                           setSelectedFormation(formations.length);
-                           return [
-                              ...formations,
-                              {
-                                 id: uuidv4(),
-                                 ...formations[formations.length - 1],
-                                 name: `Untitled ${formations.length + 1}`,
-                                 transition: {
-                                    durationSeconds: roomLeft > 15 ? 10 : roomLeft / 2,
-                                 },
-                                 durationSeconds: roomLeft > 15 ? 5 : roomLeft / 2,
-                              },
-                           ];
-                        }
-                     });
-                  }}
-                  className=" rounded-md ml-auto  text-gray-500 px-3 py-1 mx-1 cursor-pointer outline "
-               >
-                  + new formation
-               </button>
-               <button
-                  onClick={() => {
-                     if (selectedFormation === null) return;
-                     if (formations.length === 1) {
-                        toast.error("you must have at least one formation");
-                        return;
-                     }
-                     if (selectedFormation === formations.length - 1) {
-                        setSelectedFormation(selectedFormation - 1);
-                     }
-
-                     setFormations((formations: formation[]) => {
-                        return formations.filter((formation, index) => {
-                           return index !== selectedFormation;
-                        });
-                     });
-                     toast.success("formation deleted");
-                  }}
-                  className=" rounded-md   text-gray-500 px-3 py-1 mx-1 cursor-pointer outline"
-               >
-                  delete formation
-               </button>
+                           setFormations((formations: formation[]) => {
+                              return formations.filter((formation, index) => {
+                                 return index !== selectedFormation;
+                              });
+                           });
+                           toast.success("formation deleted");
+                        }}
+                        className=" rounded-md   text-gray-500 px-3 py-1 mx-1 cursor-pointer outline"
+                     >
+                        delete formation
+                     </button>
+                  </>
+               ) : null}
             </div>
          </div>
       </>

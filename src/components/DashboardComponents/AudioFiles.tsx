@@ -14,8 +14,8 @@ export const AudioFiles: React.FC<{ audioFiles: any }> = ({ audioFiles }) => {
                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                .map((audioFile) => {
                   return (
-                     <div>
-                        <div className="bg-gray-200 rounded-xl w-[200px] h-[100px] mr-3 grid place-items-center">
+                     <div className="overflow-hidden w-[200px] mr-3 whitespace-nowrap">
+                        <div className="bg-gray-200 rounded-xl w-[200px] h-[100px]  grid place-items-center ">
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
@@ -31,7 +31,7 @@ export const AudioFiles: React.FC<{ audioFiles: any }> = ({ audioFiles }) => {
                               />
                            </svg>
                         </div>
-                        <p className="font-bold">{audioFile.name}</p>
+                        <p className="font-bold w-full text-ellipsis">{audioFile.name}</p>
                         <p className="text-sm text-gray-500">{timeSince(audioFile.created_at)} ago</p>
                      </div>
                   );

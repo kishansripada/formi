@@ -103,7 +103,7 @@ export const DancerAlias: React.FC<{
                transform: "translate(-50%, -50%)",
                // transform: `translate(-50%, -50%) translate(${left}px, ${top}px)`,
                backgroundColor: selectedDancers.includes(dancer.id) ? "black" : dancer.color || "",
-               transition: !draggingDancerId ? "all 0.33s ease-in-out" : "",
+               transition: !draggingDancerId ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",
             }}
             id={dancer.id}
             data-type={"dancer"}

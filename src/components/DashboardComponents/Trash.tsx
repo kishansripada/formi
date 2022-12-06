@@ -96,7 +96,7 @@ export const Trash: React.FC<{ trash: any; deleteDance: Function; removeFromTras
                      );
                   })
             ) : (
-               <p>looks like you don't have any dances</p>
+               <p>nothing here 🤷🏽‍♂️</p>
             )}
          </div>
       </>

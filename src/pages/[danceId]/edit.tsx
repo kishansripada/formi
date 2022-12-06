@@ -21,10 +21,13 @@ import { Layers } from "../../components/AppComponents/Layers";
 import { PathEditor } from "../../components/AppComponents/PathEditor";
 import { Share } from "../../components/AppComponents/Share";
 import { ChooseAudioSource } from "../../components/AppComponents/SidebarComponents/ChooseAudioSource";
-
+import { dancer, dancerPosition, formation } from "../../types/types";
+import { Roster } from "../../components/AppComponents/SidebarComponents/Roster";
+import { Sidebar } from "../../components/AppComponents/Sidebar";
+// import { FileAudioPlayer } from "../../components/AppComponents/FileAudioPlayer";
 import { AudioControls } from "../../components/AppComponents/AudioControls";
 
-var changesets = require("json-diff-ts");
+// var changesets = require("json-diff-ts");
 import { applyChangeset } from "json-diff-ts";
 // use effect, but not on initial render
 const useDidMountEffect = (func, deps) => {
@@ -46,16 +49,13 @@ const FileAudioPlayer = dynamic<{
    setFormations: Function;
    viewOnly: boolean;
    pixelsPerSecond: number;
+   player: any;
+   setPlayer: Function;
 }>(() => import("../../components/AppComponents/FileAudioPlayer").then((mod) => mod.FileAudioPlayer), {
    ssr: false,
 });
 
-import { dancer, dancerPosition, formation } from "../../types/types";
-import { Roster } from "../../components/AppComponents/SidebarComponents/Roster";
-import { Sidebar } from "../../components/AppComponents/Sidebar";
-
 const Edit = ({ initialData, viewOnly }: {}) => {
-   viewOnly = false;
    let session = useSession();
    const supabase = useSupabaseClient();
 
@@ -97,11 +97,6 @@ const Edit = ({ initialData, viewOnly }: {}) => {
 
    let currentFormationIndex = whereInFormation(formations, position).currentFormationIndex;
 
-   // remove this eventually
-   useEffect(() => {
-      setSelectedDancers([]);
-   }, [selectedFormation]);
-
    useEffect(() => {
       if (!isPlaying) return;
       setSelectedFormation(currentFormationIndex);
@@ -130,28 +125,28 @@ const Edit = ({ initialData, viewOnly }: {}) => {
       });
    };
 
-   useEffect(() => {
-      // let channel = supabase.channel("177");
-      // setChannel(channel);
-      // channel
-      //    .on("broadcast", { event: "cursor-pos" }, ({ payload }) => {
-      //       console.log(payload?.[0]?.changes);
-      //       // if (!payload.length) return;
-      //       setFormations((formations) => {
-      //          console.log(payload);
-      //          return applyChangeset(formations, payload[0].changes);
-      //       });
-      //    })
-      //    .subscribe((status) => {
-      //       if (status === "SUBSCRIBED") {
-      //          console.log("subbedd");
-      //       }
-      //    });
+   // useEffect(() => {
+   //    // let channel = supabase.channel("177");
+   //    // setChannel(channel);
+   //    // channel
+   //    //    .on("broadcast", { event: "cursor-pos" }, ({ payload }) => {
+   //    //       console.log(payload?.[0]?.changes);
+   //    //       // if (!payload.length) return;
+   //    //       setFormations((formations) => {
+   //    //          console.log(payload);
+   //    //          return applyChangeset(formations, payload[0].changes);
+   //    //       });
+   //    //    })
+   //    //    .subscribe((status) => {
+   //    //       if (status === "SUBSCRIBED") {
+   //    //          console.log("subbedd");
+   //    //       }
+   //    //    });
 
-      return () => {
-         // supabase.removeSubscription(mySub);
-      };
-   }, [router.query.danceId]);
+   //    return () => {
+   //       // supabase.removeSubscription(mySub);
+   //    };
+   // }, [router.query.danceId]);
 
    // function usePrevious(value) {
    //    const ref = useRef();
@@ -285,7 +280,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
       <>
          <Toaster></Toaster>
          <Head>
-            <title>Formi: Online formation building software</title>
+            <title>FORMI: Online performance planning software.</title>
 
             <meta
                name="description"
@@ -293,14 +288,15 @@ const Edit = ({ initialData, viewOnly }: {}) => {
             />
             <meta name="keywords" content="dance, choreography, desi, formations" />
             <meta name="twitter:card" content="summary" />
-            <meta name="twitter:title" content="Formi — Expression Through Movement." />
+            <meta name="twitter:title" content="FORMI — Online performance planning software." />
             <meta name="twitter:image" content="https://i.imgur.com/83VsfSG.png" />
             <meta property="og:type" content="song" />
-            <meta property="og:title" content="Formi — Expression Through Movement." />
+            <meta property="og:title" content="FORMI — Online performance planning software." />
             <meta property="og:description" content="automate, animate and visualize your dance formations synced to music" />
             <meta property="og:image" content="https://i.imgur.com/83VsfSG.png" />
-            <meta property="og:site_name" content="Formi — Expression Through Movement." />
+            <meta property="og:site_name" content="FORMI — Online performance planning software." />
          </Head>
+
          {mobile ? (
             <>
                <div className="fixed top-0 left-0 z-[100] flex h-screen w-screen items-center justify-center bg-black/95 backdrop-blur-[2px]">
@@ -319,7 +315,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
          )}
 
          <Head>
-            <title>Edit | Formi</title>
+            <title>Edit | FORMI</title>
          </Head>
 
          {editingDancer !== null ? (
@@ -346,50 +342,54 @@ const Edit = ({ initialData, viewOnly }: {}) => {
 
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none ">
             <div className="flex flex-row grow overflow-hidden">
-               <Sidebar setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
+               {!viewOnly ? (
+                  <>
+                     {" "}
+                     <Sidebar setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
+                     {menuOpen === "dancers" ? (
+                        <Roster
+                           setDancers={setDancers}
+                           dancers={dancers}
+                           formations={formations}
+                           selectedFormation={selectedFormation}
+                           setEditingDancer={setEditingDancer}
+                           stageDimensions={stageDimensions}
+                           setFormations={setFormations}
+                        ></Roster>
+                     ) : menuOpen === "audio" ? (
+                        <ChooseAudioSource
+                           soundCloudTrackId={soundCloudTrackId}
+                           setSoundCloudTrackId={setSoundCloudTrackId}
+                           audioFiles={audioFiles}
+                           sampleAudioFiles={initialData.sampleAudioFiles}
+                           setAudiofiles={setAudiofiles}
+                        ></ChooseAudioSource>
+                     ) : menuOpen === "settings" ? (
+                        <Settings
+                           pricingTier={pricingTier}
+                           previousFormationView={previousFormationView}
+                           setPreviousFormationView={setPreviousFormationView}
+                           stageDimensions={stageDimensions}
+                           setStageDimensions={setStageDimensions}
+                           setFormations={setFormations}
+                        ></Settings>
+                     ) : (
+                        <CurrentFormation
+                           pricingTier={pricingTier}
+                           stageDimensions={stageDimensions}
+                           selectedDancers={selectedDancers}
+                           setSelectedDancers={setSelectedDancers}
+                           setSelectedFormation={setSelectedFormation}
+                           dancers={dancers}
+                           setFormations={setFormations}
+                           formations={formations}
+                           selectedFormation={selectedFormation}
+                        />
+                     )}
+                  </>
+               ) : null}
 
-               {menuOpen === "dancers" ? (
-                  <Roster
-                     setDancers={setDancers}
-                     dancers={dancers}
-                     formations={formations}
-                     selectedFormation={selectedFormation}
-                     setEditingDancer={setEditingDancer}
-                     stageDimensions={stageDimensions}
-                     setFormations={setFormations}
-                  ></Roster>
-               ) : menuOpen === "audio" ? (
-                  <ChooseAudioSource
-                     soundCloudTrackId={soundCloudTrackId}
-                     setSoundCloudTrackId={setSoundCloudTrackId}
-                     audioFiles={audioFiles}
-                     sampleAudioFiles={initialData.sampleAudioFiles}
-                     setAudiofiles={setAudiofiles}
-                  ></ChooseAudioSource>
-               ) : menuOpen === "settings" ? (
-                  <Settings
-                     pricingTier={pricingTier}
-                     previousFormationView={previousFormationView}
-                     setPreviousFormationView={setPreviousFormationView}
-                     stageDimensions={stageDimensions}
-                     setStageDimensions={setStageDimensions}
-                     setFormations={setFormations}
-                  ></Settings>
-               ) : (
-                  <CurrentFormation
-                     pricingTier={pricingTier}
-                     stageDimensions={stageDimensions}
-                     selectedDancers={selectedDancers}
-                     setSelectedDancers={setSelectedDancers}
-                     setSelectedFormation={setSelectedFormation}
-                     dancers={dancers}
-                     setFormations={setFormations}
-                     formations={formations}
-                     selectedFormation={selectedFormation}
-                  />
-               )}
-
-               <div className={`flex flex-col w-[70%] items-center `}>
+               <div className={`flex flex-col ${viewOnly ? "w-[100%]" : "w-[70%]"} items-center `}>
                   <Header saved={saved} danceName={danceName} setDanceName={setDanceName} setShareIsOpen={setShareIsOpen} viewOnly={viewOnly} />
 
                   <Canvas
@@ -474,6 +474,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
 
             <div className="pb-2">
                <AudioControls
+                  viewOnly={viewOnly}
                   selectedFormation={selectedFormation}
                   songDuration={songDuration}
                   soundCloudTrackId={soundCloudTrackId}
@@ -486,7 +487,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                   setFormations={setFormations}
                ></AudioControls>
 
-               <div className="overflow-x-scroll  bg-white overscroll-contain removeScrollBar ">
+               <div className="overflow-x-scroll  bg-[#fafafa] overscroll-contain removeScrollBar ">
                   {soundCloudTrackId ? (
                      <div
                         className="relative"
@@ -515,6 +516,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                   )}
 
                   <Layers
+                     setSelectedDancers={setSelectedDancers}
                      viewOnly={viewOnly}
                      songDuration={songDuration}
                      setFormations={setFormations}

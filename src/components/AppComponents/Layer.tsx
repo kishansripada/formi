@@ -15,7 +15,19 @@ export const Layer: React.FC<{
    isPlaying: boolean;
    viewOnly: boolean;
    pixelsPerSecond: number;
-}> = ({ formations, selectedFormation, setSelectedFormation, setFormations, songDuration, position, isPlaying, viewOnly, pixelsPerSecond }) => {
+   setSelectedDancers: Function;
+}> = ({
+   formations,
+   selectedFormation,
+   setSelectedFormation,
+   setFormations,
+   songDuration,
+   position,
+   isPlaying,
+   viewOnly,
+   pixelsPerSecond,
+   setSelectedDancers,
+}) => {
    const clickOutsideFormations = (e: any) => {
       if (e.target.id !== "outside") return;
       e.stopPropagation();
@@ -24,12 +36,14 @@ export const Layer: React.FC<{
 
    return (
       <>
-         <div className=" flex flex-row  items-center  w-full " id="outside" onClick={clickOutsideFormations}>
+         <div className=" flex flex-row  items-center w-full bg-[#fafafa] " id="outside" onClick={clickOutsideFormations}>
             {formations.map((formation, index) => (
                <div
                   key={index}
                   id="formation"
                   onClick={(e: any) => {
+                     if (selectedFormation === index) return;
+                     setSelectedDancers([]);
                      setSelectedFormation(index);
                   }}
                >

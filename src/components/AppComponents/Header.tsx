@@ -58,7 +58,7 @@ export const Header: React.FC<{
                         <p className="text-gray-500">viewing</p>
                      )}
                   </div>
-                  {session ? <></> : <p className="text-sm ml-4 ">Not signed in</p>}
+                  {session ? <></> : <p className="text-sm ml-6 text-gray-500 ">not signed in</p>}
                </div>
             </div>
 
@@ -101,7 +101,7 @@ export const Header: React.FC<{
                ) : null}
                {session ? (
                   <Link href="/dashboard">
-                     <button className="bg-slate-800  text-white text-sm rounded-md px-3 py-3 ml-4 ">
+                     <button className="bg-slate-800  text-white text-sm rounded-md px-3 py-3 ml-4 mr-4 ">
                         <div className="flex flex-row items-center">
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +122,9 @@ export const Header: React.FC<{
                   </Link>
                ) : (
                   <Link href="/login">
-                     <a className="ml-2 bg-pink-700 hover:bg-pink-700 px-2 py-1 rounded-md text-white ">sign in</a>
+                     <button className="bg-slate-800  text-white text-sm rounded-md px-3 py-3 ml-4 mr-4 ">
+                        <p className=" text-gray-100">log in</p>
+                     </button>
                   </Link>
                )}
 

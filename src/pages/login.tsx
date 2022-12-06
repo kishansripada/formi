@@ -7,6 +7,7 @@ import { Header } from "../components/NonAppComponents/Header";
 import { Session } from "@supabase/supabase-js";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import Link from "next/link";
 
 const Login = () => {
    const router = useRouter();
@@ -65,12 +66,17 @@ const Login = () => {
          ></div> */}
          <div className="flex  flex-col  h-screen overflow-hidden relative font-proxima">
             <div className="flex flex-col items-center mt-36">
-               <div className="w-[250px] pointer-events-none select-none ">
-                  {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
+               <Link href={"/"}>
+                  <div className="w-[250px]  select-none cursor-pointer  ">
+                     {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
-                  <h1 className="text-6xl font-bold z-10 relative">FORMI</h1>
-                  <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[100%]"></div>
-               </div>
+
+                     <>
+                        <h1 className="text-6xl font-bold z-10 relative">FORMI</h1>
+                        <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[100%]"></div>
+                     </>
+                  </div>
+               </Link>
                <p className="tracking-widest text-gray-500 font-semibold">SIGN IN</p>
                <p className="text-3xl mt-8 font-bold">the most intuitive performance planning software</p>
                <p className="text-2xl mt-2 font-thin">join thousands of artists that use formi to perfect their performances</p>
