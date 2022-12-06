@@ -220,10 +220,14 @@ const home = () => {
             </div>
             <hr />
             <div className="bg-white flex flex-col font-proxima items-center relative overflow-hidden ">
-               <p className="tracking-widest text-pink-600 mt-24">VISUALIZE DANCE FORMATIONS RIGHT IN YOUR BROWSER</p>
-               <h1 className="text-7xl">full-featured. not complicated</h1>
+               <p className="tracking-widest text-pink-600 mt-24 px-10 text-center">VISUALIZE DANCE FORMATIONS RIGHT IN YOUR BROWSER</p>
+               <h1 className=" text-5xl lg:text-7xl text-center mt-12">full-featured. not complicated</h1>
 
-               <img className="w-1/2 rounded-xl shadow-2xl mt-16 relative z-50 mb-16 pointer-events-none select-none" src="/curveDemo.png" alt="" />
+               <img
+                  className="w-[95%] lg:w-3/4 rounded-xl shadow-2xl mt-16 relative z-50 mb-16 pointer-events-none select-none"
+                  src="/curveDemo.png"
+                  alt=""
+               />
 
                <div
                   className="pointer-events-none absolute  h-[1000px] w-[1000px] "
@@ -261,8 +265,8 @@ const home = () => {
                   />
                </svg>
 
-               <p className="text-4xl text-center w-1/2 mt-8">edit and share polished plans with your performers.</p>
-               <p className="mt-5 w-1/2 text-center">
+               <p className="text-4xl text-center lg:w-1/2 mt-8">edit and share polished plans with your performers.</p>
+               <p className="mt-5 lg:w-1/2 text-center">
                   with a few clicks share a view only experience of your polished choreography, making rehersal more efficient
                </p>
                <div></div>
