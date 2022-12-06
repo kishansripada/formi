@@ -182,7 +182,7 @@ const home = () => {
                ></div>
             </div>
             <hr />
-            <div className=" bg-[#efefef]  flex-wrap flex flex-row items-center justify-center child:mx-8 child:my-8  select-none  ">
+            <div className=" bg-[#efefef]  flex-wrap flex flex-row items-center justify-center child:mx-8 child:my-8  select-none   ">
                <img
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cornell_University_logo.svg/1280px-Cornell_University_logo.svg.png"
                   className="grayscale w-48 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"

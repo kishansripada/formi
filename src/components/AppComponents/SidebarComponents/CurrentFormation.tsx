@@ -108,6 +108,45 @@ export const CurrentFormation: React.FC<{
                      </div>
                   </div>
                   <hr className=" " />
+                  <div className="p-4">
+                     <textarea
+                        onKeyDown={(e) =>
+                           e.key === "Enter"
+                              ? setFormations((formations: formation[]) => {
+                                   return formations.map((formation, i) => {
+                                      if (i === selectedFormation) {
+                                         return {
+                                            ...formation,
+                                            notes: e.target.value,
+                                         };
+                                      }
+
+                                      return formation;
+                                   });
+                                })
+                              : null
+                        }
+                        onBlur={(e) => {
+                           setFormations((formations: formation[]) => {
+                              return formations.map((formation, i) => {
+                                 if (i === selectedFormation) {
+                                    return {
+                                       ...formation,
+                                       notes: e.target.value,
+                                    };
+                                 }
+
+                                 return formation;
+                              });
+                           });
+                        }}
+                        key={formations[selectedFormation]?.notes}
+                        defaultValue={formations[selectedFormation]?.notes || ""}
+                        placeholder="formation notes..."
+                        className="resize-none w-full p-2 text-gray-800 h-full border border-gray-400 focus:outline-none rounded-md"
+                        rows={15}
+                     ></textarea>
+                  </div>
                   {/* <div className=" px-4 overflow-y-scroll removeScrollBar pt-4 ">
                      <div className="rounded-md border border-gray-300  text-sm flex flex-col items-center justify-center ,t-3">
                         <div className="bg-blue-200 h-6 w-full text-black rounded-t-md px-3 flex flex-col justify-center">
