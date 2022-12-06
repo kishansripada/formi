@@ -56,7 +56,6 @@ const FileAudioPlayer = dynamic<{
 });
 
 const Edit = ({ initialData, viewOnly }: {}) => {
-   viewOnly = true;
    let session = useSession();
    const supabase = useSupabaseClient();
 
@@ -125,6 +124,12 @@ const Edit = ({ initialData, viewOnly }: {}) => {
          return dancers.filter((dancer) => dancer.id !== id);
       });
    };
+
+   // useEffect(() => {
+   //    if (mobile) {
+   //       viewOnly = true;
+   //    }
+   // }, []);
 
    // useEffect(() => {
    //    // let channel = supabase.channel("177");
