@@ -56,6 +56,7 @@ const FileAudioPlayer = dynamic<{
 });
 
 const Edit = ({ initialData, viewOnly }: {}) => {
+   // viewOnly = false;
    let session = useSession();
    const supabase = useSupabaseClient();
 
@@ -372,6 +373,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                         ></ChooseAudioSource>
                      ) : menuOpen === "settings" ? (
                         <Settings
+                           formations={formations}
                            pricingTier={pricingTier}
                            previousFormationView={previousFormationView}
                            setPreviousFormationView={setPreviousFormationView}

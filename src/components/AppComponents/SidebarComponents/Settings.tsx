@@ -9,7 +9,8 @@ export const Settings: React.FC<{
    setPreviousFormationView: Function;
    setFormations: Function;
    pricingTier: string;
-}> = ({ stageDimensions, setStageDimensions, setPreviousFormationView, previousFormationView, setFormations, pricingTier }) => {
+   formations: formation[];
+}> = ({ stageDimensions, setStageDimensions, setPreviousFormationView, previousFormationView, setFormations, pricingTier, formations }) => {
    return (
       <>
          <Toaster></Toaster>
@@ -23,6 +24,18 @@ export const Settings: React.FC<{
                <button
                   className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
                   onClick={() => {
+                     for (let i = 0; i < formations.length; i++) {
+                        for (let j = 0; j < formations[i].positions.length; j++) {
+                           if (
+                              formations[i].positions[j]?.position.x === stageDimensions.width / 2 - 3 ||
+                              formations[i].positions[j]?.position.x === -stageDimensions.width / 2 + 3
+                           ) {
+                              toast.error("dancers will fall off the stage");
+                              return;
+                           }
+                        }
+                     }
+
                      setFormations((formations: formation[]) => {
                         return formations.map((formation, i) => {
                            return {
@@ -86,11 +99,23 @@ export const Settings: React.FC<{
             <div className="my-6 flex flex-row justify-center items-center">
                <button
                   className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
-                  onClick={() =>
+                  onClick={() => {
+                     for (let i = 0; i < formations.length; i++) {
+                        for (let j = 0; j < formations[i].positions.length; j++) {
+                           if (
+                              formations[i].positions[j]?.position.y === stageDimensions.height / 2 - 1 ||
+                              formations[i].positions[j]?.position.y === -stageDimensions.height / 2 + 1
+                           ) {
+                              toast.error("dancers will fall off the stage");
+                              return;
+                           }
+                        }
+                     }
+
                      setStageDimensions((stageDimensions: stageDimensions) => {
                         return { ...stageDimensions, height: stageDimensions.height - 2 };
-                     })
-                  }
+                     });
+                  }}
                >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
