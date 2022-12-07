@@ -23,33 +23,29 @@ export const Dancer: React.FC<{
       .join("")
       .toUpperCase();
 
-   // const addDancerToStage = () => {
-   //    setFormations((formations: formation[]) => {
-   //       return formations.map((formation, i) => {
-   //          if (i === selectedFormation) {
-   //             return {
-   //                ...formation,
-   //                positions: [
-   //                   ...formation.positions,
-   //                   {
-   //                      id: id,
-   //                      position: {
-   //                         x: 0,
-   //                         y: 6,
-   //                      },
-   //                      exitStrategy: "closest",
-   //                      enterStrategy: "closest",
-   //                      transitionType: "linear",
-   //                      controlPointStart: { x: -6, y: 1 },
-   //                      controlPointEnd: { x: 6, y: 1 },
-   //                   },
-   //                ],
-   //             };
-   //          }
-   //          return formation;
-   //       });
-   //    });
-   // };
+   const addDancerToStage = () => {
+      setFormations((formations: formation[]) => {
+         return formations.map((formation, i) => {
+            if (i === selectedFormation) {
+               return {
+                  ...formation,
+                  positions: [
+                     ...formation.positions,
+                     {
+                        id: id,
+                        position: {
+                           x: 0,
+                           y: 6,
+                        },
+                        transitionType: "linear",
+                     },
+                  ],
+               };
+            }
+            return formation;
+         });
+      });
+   };
 
    return (
       <>
@@ -90,7 +86,7 @@ export const Dancer: React.FC<{
                   setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)));
                }}
             />
-            {/* {canBeAddedToStage ? (
+            {canBeAddedToStage ? (
                <button onClick={addDancerToStage}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -98,7 +94,7 @@ export const Dancer: React.FC<{
                </button>
             ) : (
                <></>
-            )} */}
+            )}
 
             <button className="ml-auto mr-3" onClick={() => setEditingDancer(id)}>
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">

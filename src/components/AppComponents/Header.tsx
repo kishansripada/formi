@@ -34,7 +34,7 @@ export const Header: React.FC<{
          <div className=" min-h-[75px] flex flex-row items-center w-full  bg-white border-b border-b-300 ">
             <div className="flex flex-row items-center ">
                <div className="h-full">
-                  <div className="flex flex-row justify-center items-center">
+                  <div className="flex flex-col lg:flex-row justify-center lg:items-center">
                      <input
                         value={danceName}
                         onChange={(e) => setDanceName(e.target.value)}
@@ -55,10 +55,9 @@ export const Header: React.FC<{
                            )}
                         </>
                      ) : (
-                        <p className="text-gray-500">viewing</p>
+                        <p className="text-gray-500 ml-6 lg:ml-0">viewing</p>
                      )}
                   </div>
-                  {session ? <></> : <p className="text-sm ml-6 text-gray-500 ">not signed in</p>}
                </div>
             </div>
 

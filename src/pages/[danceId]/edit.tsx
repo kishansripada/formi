@@ -304,7 +304,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
             <meta property="og:site_name" content="FORMI — Online performance planning software." />
          </Head>
 
-         {mobile ? (
+         {/* {mobile ? (
             <>
                <div className="fixed top-0 left-0 z-[100] flex h-screen w-screen items-center justify-center bg-black/95 backdrop-blur-[2px]">
                   <div className="flex  w-[700px] flex-col rounded-xl bg-white">
@@ -319,7 +319,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
             </>
          ) : (
             <></>
-         )}
+         )} */}
 
          <Head>
             <title>Edit | FORMI</title>
@@ -347,7 +347,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
             />
          ) : null}
 
-         <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none ">
+         <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none  ">
             <div className="flex flex-row grow overflow-hidden">
                {!viewOnly ? (
                   <>
@@ -581,15 +581,14 @@ export const getServerSideProps = async (ctx) => {
    //       },
    //    };
    // }
-   // function detectMob(agent) {
-   //    const toMatch = [/Android/i, /webOS/i, /iPhone/i, /iPad/i, /iPod/i, /BlackBerry/i, /Windows Phone/i];
+   function detectMob(agent) {
+      const toMatch = [/Android/i, /webOS/i, /iPhone/i, /iPad/i, /iPod/i, /BlackBerry/i, /Windows Phone/i];
 
-   //    return toMatch.some((toMatchItem) => {
-   //       return agent.match(toMatchItem);
-   //    });
-   // }
+      return toMatch.some((toMatchItem) => {
+         return agent.match(toMatchItem);
+      });
+   }
 
-   // console.log(detectMob(ctx.req.rawHeaders[7]));
    // Run queries with RLS on the server
    let { data } = await supabase.from("dances").select("*").eq("id", ctx.query.danceId).single();
    data = { ...data, audioFiles, sampleAudioFiles };
@@ -606,6 +605,7 @@ export const getServerSideProps = async (ctx) => {
       return {
          props: {
             initialData: data,
+            viewOnly: detectMob(ctx.req.rawHeaders[7]),
          },
       };
    }
@@ -614,6 +614,7 @@ export const getServerSideProps = async (ctx) => {
       return {
          props: {
             initialData: data,
+            viewOnly: detectMob(ctx.req.rawHeaders[7]),
          },
       };
    }
