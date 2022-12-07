@@ -47,6 +47,7 @@ export const Roster: React.FC<{
                   .reverse()
                   .map((dancer, index) => (
                      <Dancer
+                        setFormations={setFormations}
                         formations={formations}
                         selectedFormation={selectedFormation}
                         setDancers={setDancers}

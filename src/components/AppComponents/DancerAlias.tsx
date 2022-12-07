@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation, GRID_WIDTH } from "../../types/types";
+import { dancer, dancerPosition, formation, stageDimensions } from "../../types/types";
 
 export const DancerAlias: React.FC<{
    dancer: dancer;
@@ -11,6 +11,7 @@ export const DancerAlias: React.FC<{
    selectedDancers: string[];
    coordsToPosition: Function;
    draggingDancerId: string | null;
+   stageDimensions: any;
 }> = ({
    dancer,
    formations,
@@ -22,6 +23,7 @@ export const DancerAlias: React.FC<{
    selectedDancers,
    coordsToPosition,
    draggingDancerId,
+   stageDimensions,
 }) => {
    let initials = dancer.name
       .split(" ")
@@ -54,7 +56,7 @@ export const DancerAlias: React.FC<{
 
    // if the track is playing then  return with the animation function
    if (isPlaying && position !== null) {
-      let myPosition = animate(formations, dancer.id, currentFormationIndex, percentThroughTransition, coordsToPosition);
+      let myPosition = animate(formations, dancer.id, currentFormationIndex, percentThroughTransition, coordsToPosition, stageDimensions);
 
       // if the animation function returns null, the dancer is not on the stage
       if (myPosition === null) return <></>;
@@ -146,7 +148,8 @@ const animate = (
    id: string,
    currentFormationIndex: number | null,
    percentThroughTransition: number | undefined,
-   coordsToPosition: Function
+   coordsToPosition: Function,
+   stageDimensions: stageDimensions
 ): { left: number; top: number } | null => {
    // if the position is beyond all the formation, return off stage
    if (currentFormationIndex === null) return null;
@@ -171,18 +174,19 @@ const animate = (
             // transition between current and exit strategy specified in current
             // requires animation don't return yet
             from = inThisFormation.position;
-            to = (() => {
-               if (inThisFormation.exitStrategy === "closest") {
-                  if (from.x >= 0) return { x: GRID_WIDTH / 2 + 1, y: from.y };
-                  if (from.x < 0) return { x: -(GRID_WIDTH / 2 + 1), y: from.y };
-               }
-               if (inThisFormation.exitStrategy === "right") {
-                  return { x: GRID_WIDTH / 2 + 1, y: from.y };
-               }
-               if (inThisFormation.exitStrategy === "left") {
-                  return { x: -(GRID_WIDTH / 2 + 1), y: from.y };
-               }
-            })();
+            to = inThisFormation.position;
+            // to = (() => {
+            //    // if (inThisFormation.exitStrategy === "closest") {
+            //    if (from.x >= 0) return { x: stageDimensions.width / 2 + 1, y: from.y };
+            //    if (from.x < 0) return { x: -(stageDimensions.width / 2 + 1), y: from.y };
+            //    // }
+            //    // if (inThisFormation.exitStrategy === "right") {
+            //    //    return { x: stageDimensions.width / 2 + 1, y: from.y };
+            //    // }
+            //    // if (inThisFormation.exitStrategy === "left") {
+            //    //    return { x: -(stageDimensions.width / 2 + 1), y: from.y };
+            //    // }
+            // })();
          }
       } else {
          if (inNextFormation) {
@@ -191,16 +195,17 @@ const animate = (
             to = inNextFormation.position;
 
             from = (() => {
-               if (inNextFormation.enterStrategy === "closest") {
-                  if (to.x >= 0) return { x: GRID_WIDTH / 2 + 1, y: to.y };
-                  if (to.x < 0) return { x: -(GRID_WIDTH / 2 + 1), y: to.y };
-               }
-               if (inNextFormation.enterStrategy === "right") {
-                  return { x: GRID_WIDTH / 2 + 1, y: to.y };
-               }
-               if (inNextFormation.enterStrategy === "left") {
-                  return { x: -(GRID_WIDTH / 2 + 1), y: to.y };
-               }
+               return { x: stageDimensions.width / 2 + 1, y: to.y };
+               // if (inNextFormation.enterStrategy === "closest") {
+               //    if (to.x >= 0) return { x: stageDimensions.width / 2 + 1, y: to.y };
+               //    if (to.x < 0) return { x: -(stageDimensions.width / 2 + 1), y: to.y };
+               // }
+               // if (inNextFormation.enterStrategy === "right") {
+               //    return { x: stageDimensions.width / 2 + 1, y: to.y };
+               // }
+               // if (inNextFormation.enterStrategy === "left") {
+               //    return { x: -(stageDimensions.width / 2 + 1), y: to.y };
+               // }
             })();
          } else {
             // return off stage

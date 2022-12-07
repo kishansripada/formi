@@ -436,6 +436,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
 
                      {dancers.map((dancer, index) => (
                         <DancerAlias
+                           stageDimensions={stageDimensions}
                            coordsToPosition={coordsToPosition}
                            selectedDancers={selectedDancers}
                            isPlaying={isPlaying}

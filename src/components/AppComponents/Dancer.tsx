@@ -7,7 +7,8 @@ export const Dancer: React.FC<{
    formations: formation[];
    dancer: dancer;
    setEditingDancer: Function;
-}> = ({ setDancers, dancers, selectedFormation, formations, setEditingDancer, dancer }) => {
+   setFormations: Function;
+}> = ({ setDancers, dancers, selectedFormation, formations, setEditingDancer, dancer, setFormations }) => {
    let { name, id, instagramUsername, color } = dancer;
    let canBeAddedToStage =
       // there is a formation select
