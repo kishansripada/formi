@@ -193,12 +193,12 @@ const home = () => {
                   className="grayscale w-48 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
                   alt=""
                />
-               <img
+               {/* <img
                   src=" https://images.givelively.org/nonprofits/460ef676-33fe-4637-8b80-d9a31f11d415/logos/desi-dance-network-incorporated_processed_a5bf047c897ca650200a7cc0d546411966e88bb5e6240b4b4ac74b83266fcead_logo.png
                "
                   className="grayscale w-24 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
                   alt=""
-               />
+               /> */}
                <img
                   src=" https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/University_of_California%2C_Berkeley_logo.svg/2560px-University_of_California%2C_Berkeley_logo.svg.png
                "
