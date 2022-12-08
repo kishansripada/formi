@@ -24,6 +24,8 @@ export const Canvas: React.FC<{
    draggingDancerId: string | null;
    setDraggingDancerId: Function;
    player: any;
+   setFormationsStack: Function;
+   formationsStack: formation[][];
 }> = ({
    player,
    children,
@@ -44,6 +46,8 @@ export const Canvas: React.FC<{
    coordsToPosition,
    draggingDancerId,
    setDraggingDancerId,
+   setFormationsStack,
+   formationsStack,
 }) => {
    const [shiftHeld, setShiftHeld] = useState(false);
    const [commandHeld, setCommandHeld] = useState(false);
@@ -129,6 +133,13 @@ export const Canvas: React.FC<{
       if (e.key === "c" && selectedDancers.length) {
          e.preventDefault();
          setCopiedPositions(formations[selectedFormation].positions.filter((dancerPosition) => selectedDancers.includes(dancerPosition.id)));
+      }
+
+      if (e.key === "z") {
+         e.preventDefault();
+         if (!formationsStack.length) return;
+         setFormations(formationsStack[formationsStack.length - 1]);
+         setFormationsStack(formationsStack.slice(0, formationsStack.length - 1));
       }
    };
 
@@ -287,6 +298,10 @@ export const Canvas: React.FC<{
          });
       }
       if (e.target.dataset.type === "dancer") {
+         setFormationsStack((formationStack: formation[][]) => {
+            console.log(formationStack);
+            return [...formationStack.slice(formationStack.length - 20, formationStack.length), formations];
+         });
          setDraggingDancerId(e.target.id);
          if (!shiftHeld && !selectedDancers.includes(e.target.id)) {
             setSelectedDancers([e.target.id]);
@@ -322,6 +337,7 @@ export const Canvas: React.FC<{
             });
          });
       }
+
       setDraggingDancerId(null);
       setIsDragging(false);
    };

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { formation } from "../../types/types";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/router";
 import logo from "../../../public/logo.svg";
@@ -11,23 +12,15 @@ export const Header: React.FC<{
    saved: boolean;
    danceName: string;
    setDanceName: Function;
-
+   formationsStack: formation[][];
+   setFormationsStack: Function;
    setShareIsOpen: Function;
    viewOnly: boolean;
-}> = ({ saved, danceName, setDanceName, setShareIsOpen, viewOnly }) => {
+   setFormations: Function;
+}> = ({ saved, danceName, setDanceName, setShareIsOpen, viewOnly, formationsStack, setFormationsStack, setFormations }) => {
    const router = useRouter();
    let session = useSession();
    const supabase = useSupabaseClient();
-
-   const initials = (name) => {
-      if (!name) return "";
-      return name
-         .split(" ")
-         .map((word) => word[0])
-         .slice(0, 3)
-         .join("")
-         .toUpperCase();
-   };
 
    return (
       <>
@@ -64,15 +57,25 @@ export const Header: React.FC<{
             <div className=" flex flex-row items-center ml-auto ">
                {!viewOnly ? (
                   <>
-                     {/* <a href="https://www.youtube.com/watch?v=wXaq0cF0dkI" target={"_blank"}>
-                        <p className="text-sm text-gray-500">
-                           stuck? — <span className="underline text-blue-500">watch a tutorial</span>{" "}
-                        </p>
-                     </a> */}
-                     <a href="https://www.youtube.com/watch?v=wXaq0cF0dkI" target={"_blank"}>
-                        {/* <p className="text-sm text-gray-500">upgrade ⚡️</p> */}
-                     </a>
-
+                     <button
+                        className="mr-3"
+                        onClick={() => {
+                           if (!formationsStack.length) return;
+                           setFormations(formationsStack[formationsStack.length - 1]);
+                           setFormationsStack(formationsStack.slice(0, formationsStack.length - 1));
+                        }}
+                     >
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
+                           stroke="currentColor"
+                           className="w-6 h-6"
+                        >
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                        </svg>
+                     </button>
                      <button
                         onClick={() => setShareIsOpen((state: boolean) => !state)}
                         className="border border-black text-sm rounded-md px-3 py-3 ml-4"

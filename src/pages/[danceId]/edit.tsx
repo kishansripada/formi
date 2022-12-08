@@ -60,11 +60,14 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    let session = useSession();
    const supabase = useSupabaseClient();
 
+   const [formationsStack, setFormationsStack] = useState([]);
+
    const [formations, setFormations] = useState<formation[]>(initialData.formations);
+   const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
+
    const [danceName, setDanceName] = useState<string>(initialData.name);
    const [shareSettings, setShareSettings] = useState(initialData.sharesettings);
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(initialData.soundCloudId);
-   const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
    const [stageDimensions, setStageDimensions] = useState(initialData.settings.stageDimensions);
    const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
@@ -398,9 +401,20 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                ) : null}
 
                <div className={`flex flex-col ${viewOnly ? "w-[100%]" : "w-[70%]"} items-center `}>
-                  <Header saved={saved} danceName={danceName} setDanceName={setDanceName} setShareIsOpen={setShareIsOpen} viewOnly={viewOnly} />
+                  <Header
+                     setFormations={setFormations}
+                     formationsStack={formationsStack}
+                     setFormationsStack={setFormationsStack}
+                     saved={saved}
+                     danceName={danceName}
+                     setDanceName={setDanceName}
+                     setShareIsOpen={setShareIsOpen}
+                     viewOnly={viewOnly}
+                  />
 
                   <Canvas
+                     formationsStack={formationsStack}
+                     setFormationsStack={setFormationsStack}
                      player={player}
                      draggingDancerId={draggingDancerId}
                      setDraggingDancerId={setDraggingDancerId}
