@@ -117,7 +117,7 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                <Toaster></Toaster>
                {/* <Header></Header> */}
 
-               <div className="w-[17%] px-6 py-4 h-screen flex flex-col shadow-xl ">
+               <div className="min-w-[300px] lg:w-[20%] px-6 py-4 h-screen lg:flex hidden flex-col shadow-xl  ">
                   <div className=" font-proxima">
                      <h1 className="text-5xl font-bold z-10 relative select-none">FORMI</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[100%]"></div>
@@ -183,7 +183,7 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                   </button>
                </div>
 
-               <div className="flex flex-col bg-gray-100 w-[83%] pl-10 font-proxima">
+               <div className="flex flex-col bg-gray-100  pl-10 font-proxima w-full  lg:w-[80%]">
                   <div className="flex flex-row items-center justify-end p-6 text-gray-500">
                      {/* <button className="mr-5">upgrade ⚡️</button> */}
                      <button
