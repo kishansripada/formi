@@ -619,7 +619,7 @@ export const getServerSideProps = async (ctx) => {
       return {
          props: {
             initialData: data,
-            viewOnly: detectMob(ctx.req.rawHeaders[7]),
+            viewOnly: false,
          },
       };
    }
@@ -628,7 +628,7 @@ export const getServerSideProps = async (ctx) => {
       return {
          props: {
             initialData: data,
-            viewOnly: detectMob(ctx.req.rawHeaders[7]),
+            viewOnly: false,
          },
       };
    }

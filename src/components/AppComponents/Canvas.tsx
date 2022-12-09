@@ -131,6 +131,9 @@ export const Canvas: React.FC<{
       }
 
       if (e.key === "c" && selectedDancers.length) {
+         setFormationsStack((formationStack: formation[][]) => {
+            return [...formationStack.slice(formationStack.length - 20, formationStack.length), formations];
+         });
          e.preventDefault();
          setCopiedPositions(formations[selectedFormation].positions.filter((dancerPosition) => selectedDancers.includes(dancerPosition.id)));
       }
@@ -299,7 +302,6 @@ export const Canvas: React.FC<{
       }
       if (e.target.dataset.type === "dancer") {
          setFormationsStack((formationStack: formation[][]) => {
-            console.log(formationStack);
             return [...formationStack.slice(formationStack.length - 20, formationStack.length), formations];
          });
          setDraggingDancerId(e.target.id);
