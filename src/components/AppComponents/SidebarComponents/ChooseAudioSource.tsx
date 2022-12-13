@@ -49,7 +49,7 @@ export const ChooseAudioSource: React.FC<{
 
    return (
       <>
-         <div className="flex  flex-col   bg-white border-r border-r-gray-300 w-[23%]  px-6 py-6 overflow-hidden">
+         <div className="lg:flex hidden  min-w-[350px] w-[23%]  flex-col   bg-white border-r border-r-gray-300   px-6 py-6 overflow-hidden">
             <div className="flex flex-col ">
                <p className="text-xl font-medium text-[#1A1B25] h-12"> add audio</p>
 

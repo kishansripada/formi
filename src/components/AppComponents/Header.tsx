@@ -32,7 +32,7 @@ export const Header: React.FC<{
                         value={danceName}
                         onChange={(e) => setDanceName(e.target.value)}
                         placeholder={"performance name"}
-                        className={`h-6  px-3 py-4 transition duration-300  rounded-md  ml-3 hover:bg-gray-100 text-gray-500 focus:bg-gray-100 outline-none cursor-pointer  ${
+                        className={`h-6  px-3 py-4 w-fit  transition duration-300  rounded-md  ml-3 hover:bg-gray-100 text-gray-500 focus:bg-gray-100 outline-none cursor-pointer  ${
                            viewOnly ? "pointer-events-none" : ""
                         } `}
                      />
@@ -58,7 +58,7 @@ export const Header: React.FC<{
                {!viewOnly ? (
                   <>
                      <button
-                        className="mr-3"
+                        className="mr-3 hidden lg:block"
                         onClick={() => {
                            if (!formationsStack.length) return;
                            setFormations(formationsStack[formationsStack.length - 1]);
@@ -78,7 +78,7 @@ export const Header: React.FC<{
                      </button>
                      <button
                         onClick={() => setShareIsOpen((state: boolean) => !state)}
-                        className="border border-black text-sm rounded-md px-3 py-3 ml-4"
+                        className="border hidden lg:block border-black text-sm rounded-md px-3 py-3 ml-4"
                      >
                         <div className="flex flex-row items-center ">
                            <svg

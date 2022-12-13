@@ -8,7 +8,7 @@ export const Sidebar: React.FC<{
 }> = ({ setMenuOpen, menuOpen }) => {
    return (
       <>
-         <div className="flex flex-col w-[6%] border-r-gray-300 border-r items-center justify-start pt-7 child:pb-3 ">
+         <div className="lg:flex hidden flex-col min-w-[90px] border-r-gray-300 border-r items-center justify-start pt-7 child:pb-3 ">
             <button className="flex flex-col items-center justify-center" onClick={() => setMenuOpen("formations")}>
                <svg width="40" height="40" fill="none">
                   <g filter="url(#a)" fillRule="evenodd" clipRule="evenodd">

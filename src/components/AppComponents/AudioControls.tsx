@@ -69,8 +69,8 @@ export const AudioControls: React.FC<{
                   </svg>
                </button>
                {isPlaying ? (
-                  <button
-                     className={`hover:bg-gray-100 transition duration-300 p-1 rounded-2xl mx-3 select-none ${
+                  <div
+                     className={`hover:bg-gray-100 transition duration-300 cursor-pointer p-1 rounded-2xl mx-3 select-none ${
                         !soundCloudTrackId ? "opacity-40 pointer-events-none" : ""
                      }`}
                      onClick={() => {
@@ -85,10 +85,10 @@ export const AudioControls: React.FC<{
                            clipRule="evenodd"
                         />
                      </svg>
-                  </button>
+                  </div>
                ) : (
-                  <button
-                     className={`hover:bg-gray-100 transition duration-300 p-1 rounded-2xl mx-3 select-none ${
+                  <div
+                     className={`hover:bg-gray-100 transition duration-300 p-1 rounded-2xl mx-3 select-none cursor-pointer ${
                         !soundCloudTrackId ? "opacity-40 pointer-events-none" : ""
                      }`}
                      onClick={() => {
@@ -103,7 +103,7 @@ export const AudioControls: React.FC<{
                            clipRule="evenodd"
                         />
                      </svg>
-                  </button>
+                  </div>
                )}
                <button onClick={() => setSelectedFormation((i) => (i === formations.length - 1 ? i : i + 1))}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -156,7 +156,7 @@ export const AudioControls: React.FC<{
                               }
                            });
                         }}
-                        className=" rounded-md ml-auto  text-gray-500 px-3 py-1 mx-1 cursor-pointer outline "
+                        className=" rounded-md ml-auto hidden lg:block  text-gray-500 px-3 py-1 mx-1 cursor-pointer outline "
                      >
                         + new formation
                      </button>
@@ -178,7 +178,7 @@ export const AudioControls: React.FC<{
                            });
                            toast.success("formation deleted");
                         }}
-                        className=" rounded-md   text-gray-500 px-3 py-1 mx-1 cursor-pointer outline"
+                        className=" rounded-md hidden lg:block  text-gray-500 px-3 py-1 mx-1 cursor-pointer outline"
                      >
                         delete formation
                      </button>

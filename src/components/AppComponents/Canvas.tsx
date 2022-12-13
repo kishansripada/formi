@@ -79,11 +79,16 @@ export const Canvas: React.FC<{
    const downHandler = (e: any) => {
       if (e?.path?.[0]?.tagName === "INPUT" || e?.path?.[0]?.tagName === "TEXTAREA") return;
       // console.log(e.key);
-      // if (e.key === " ") {
-      //    player ? player.playPause() : null;
-      //    setIsPlaying((isPlaying: boolean) => !isPlaying);
-      //    e.preventDefault();
-      // }
+      if (e.key === " ") {
+         e.preventDefault();
+         console.log(player);
+         setIsPlaying((isPlaying: boolean) => {
+            if (player) {
+               player.playPause();
+               return !isPlaying;
+            }
+         });
+      }
       if (e.key === "ArrowRight") {
          e.preventDefault();
          setSelectedFormation((i) => (i === formations.length - 1 ? i : i + 1));

@@ -15,7 +15,7 @@ export const Roster: React.FC<{
 }> = ({ setDancers, dancers, setEditingDancer, formations, selectedFormation, stageDimensions, setFormations }) => {
    return (
       <>
-         <div className="flex flex-col w-[23%]  bg-white border-r border-r-gray-300">
+         <div className="lg:flex hidden  min-w-[350px] flex-col w-[23%]  bg-white border-r border-r-gray-300">
             <div className="flex flex-row justify-between items-center px-6">
                <p className="text-xl font-medium mb-2  py-6">roster</p>
                <div className="flex flex-row justify-center items-center dfs">

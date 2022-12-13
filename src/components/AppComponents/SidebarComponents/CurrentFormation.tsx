@@ -34,7 +34,7 @@ export const CurrentFormation: React.FC<{
 
    return (
       <>
-         <div className=" flex flex-col  w-[23%]  bg-white border-r border-r-gray-300 ">
+         <div className=" lg:flex hidden  min-w-[350px] w-[23%] flex-col   bg-white border-r border-r-gray-300 ">
             {selectedFormation !== null && formations[selectedFormation]?.name !== null ? (
                <div className="h-full  flex flex-col ">
                   <div className="flex flex-row items-center mb-3 px-6 pt-6 ">
