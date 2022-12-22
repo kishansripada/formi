@@ -9,6 +9,8 @@ import { PIXELS_PER_SQUARE } from "../../types/types";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import toast, { Toaster } from "react-hot-toast";
+// import {RealtimePresenceState} from
+// import { RealtimePresenceState } from 'lib/database.types'
 
 import { Header } from "../../components/AppComponents/Header";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
@@ -27,8 +29,8 @@ import { Sidebar } from "../../components/AppComponents/Sidebar";
 // import { FileAudioPlayer } from "../../components/AppComponents/FileAudioPlayer";
 import { AudioControls } from "../../components/AppComponents/AudioControls";
 
-// var changesets = require("json-diff-ts");
-import { applyChangeset } from "json-diff-ts";
+var changesets = require("json-diff-ts");
+import { applyChangeset, flattenChangeset, unflattenChanges } from "json-diff-ts";
 // use effect, but not on initial render
 const useDidMountEffect = (func, deps) => {
    const didMount = useRef(false);
@@ -56,13 +58,23 @@ const FileAudioPlayer = dynamic<{
 });
 
 const Edit = ({ initialData, viewOnly }: {}) => {
+   // console.log(unflattenChanges(initialData.deltas.map((delta) => delta.delta).flat(Infinity)));
+
+   let diffForms = applyChangeset(
+      { formations: [...initialData.formations] },
+      unflattenChanges(initialData.deltas.map((delta) => delta.delta).flat(Infinity))
+   );
+
    viewOnly = false;
    let session = useSession();
+
+   const colors = ["#DFFF00", "#FFBF00", "#FF7F50", "#DE3163", "#9FE2BF", "#40E0D0", "#6495ED", "#CCCCFF"];
+
    const supabase = useSupabaseClient();
 
-   const [formationsStack, setFormationsStack] = useState([]);
-
-   const [formations, setFormations] = useState<formation[]>(initialData.formations);
+   const [formationsStack, setFormationsStack] = useState<formation[][]>([]);
+   const [formations, setFormations] = useState<formation[]>(diffForms.formations);
+   const [deltas, setDeltas] = useState([]);
    const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
 
    const [danceName, setDanceName] = useState<string>(initialData.name);
@@ -82,15 +94,17 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    const [previousFormationView, setPreviousFormationView] = useState<"none" | "ghostDancers" | "ghostDancersAndPaths">(
       initialData.settings.previousFormationView
    );
-   let [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
+   const [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
+   const [onlineUsers, setOnlineUsers] = useState<string>();
 
    const [saved, setSaved] = useState<boolean>(true);
-   const [mobile, setMobile] = useState<string | null>(null);
    const [shareIsOpen, setShareIsOpen] = useState(false);
    const [menuOpen, setMenuOpen] = useState<string>(initialData.soundCloudId ? "formations" : "audio");
    const [pricingTier, setPricingTier] = useState<string>("premium");
-
    const [player, setPlayer] = useState(null);
+
+   const [channelGlobal, setChannelGlobal] = useState();
+   const [userPositions, setUserPositions] = useState({});
 
    const coordsToPosition = (x: number, y: number) => {
       return {
@@ -102,13 +116,22 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    let currentFormationIndex = whereInFormation(formations, position).currentFormationIndex;
 
    useEffect(() => {
+      console.log(deltas);
+      setFormations((formations: formation[]) => {
+         let newFormations = { formations: [...formations] };
+         applyChangeset(newFormations, unflattenChanges(deltas));
+         return [...newFormations.formations];
+      });
+   }, [deltas]);
+
+   useEffect(() => {
       if (!isPlaying) return;
       setSelectedFormation(currentFormationIndex);
    }, [currentFormationIndex, isPlaying]);
 
    useEffect(() => {
       if (!songDuration) return;
-      console.log("setting original");
+
       setPixelsPerSecond(15);
       if (pixelsPerSecond * (songDuration / 1000) < window.screen.width - 20) {
          setPixelsPerSecond((window.screen.width - 20) / (songDuration / 1000));
@@ -129,34 +152,110 @@ const Edit = ({ initialData, viewOnly }: {}) => {
       });
    };
 
-   // useEffect(() => {
-   //    if (mobile) {
-   //       viewOnly = true;
-   //    }
-   // }, []);
+   const addToStack = () => {
+      console.log("add to stack");
+      setFormationsStack((formationStack: formation[][]) => {
+         return [...formationStack, formations];
+      });
+      // console.log(formationsStack);
+   };
 
-   // useEffect(() => {
-   //    // let channel = supabase.channel("177");
-   //    // setChannel(channel);
-   //    // channel
-   //    //    .on("broadcast", { event: "cursor-pos" }, ({ payload }) => {
-   //    //       console.log(payload?.[0]?.changes);
-   //    //       // if (!payload.length) return;
-   //    //       setFormations((formations) => {
-   //    //          console.log(payload);
-   //    //          return applyChangeset(formations, payload[0].changes);
-   //    //       });
-   //    //    })
-   //    //    .subscribe((status) => {
-   //    //       if (status === "SUBSCRIBED") {
-   //    //          console.log("subbedd");
-   //    //       }
-   //    //    });
+   const pushChange = () => {
+      console.log("push change");
 
-   //    return () => {
-   //       // supabase.removeSubscription(mySub);
-   //    };
-   // }, [router.query.danceId]);
+      setFormationsStack((formationsStack: formation[][]) => {
+         setFormations((formations) => {
+            let diffs = changesets.diff({ formations: formationsStack[formationsStack.length - 1] }, { formations }, { formations: "id" });
+            diffs = flattenChangeset(diffs);
+            console.log({ old: formationsStack[formationsStack.length - 1] });
+            console.log({ new: formations });
+            console.log(diffs);
+            if (diffs.length) {
+               channelGlobal.send({
+                  type: "broadcast",
+                  event: "formation-update",
+                  payload: diffs,
+               });
+               supabase
+                  .from("deltas")
+                  .insert([{ userid: session?.user?.id, timestamp: new Date(), delta: diffs, danceid: router.query.danceId }])
+                  .then((r) => console.log(r));
+            }
+
+            return formations;
+         });
+         return formationsStack;
+      });
+   };
+
+   useEffect(() => {
+      if (!channelGlobal) return;
+      if (!session) return;
+      channelGlobal.send({
+         type: "broadcast",
+         event: "user-position-update",
+         payload: {
+            selectedFormation,
+            selectedDancers,
+            userId: session?.user?.id,
+         },
+      });
+   }, [selectedFormation, selectedDancers, channelGlobal]);
+
+   useEffect(() => {
+      if (!session) return;
+      let channel = supabase.channel("207", {
+         config: {
+            presence: {
+               key: session?.user.id,
+            },
+         },
+      });
+
+      setChannelGlobal(channel);
+      const usersChannel = channel.on("presence", { event: "sync" }, () => {
+         console.log("Online users: ", channel.presenceState());
+
+         let users = channel.presenceState();
+         Object.keys(users).forEach((id, index) => {
+            users[id][0].color = colors[index];
+         });
+         // setOnlineUsers({ ...users });
+         setOnlineUsers({ ...channel.presenceState() });
+      });
+
+      channel.on("presence", { event: "join" }, ({ newPresences }) => {
+         console.log("New users have joined: ", newPresences);
+      });
+
+      const formsChannel = channel
+         .on("broadcast", { event: "user-position-update" }, ({ payload }) => {
+            // setUserPositions((userPositions) => {
+            //    return { ...userPositions, [payload.userId]: payload };
+            // });
+         })
+         .on("broadcast", { event: "formation-update" }, ({ payload }) => {
+            console.log(payload);
+            setDeltas((deltas) => [...deltas, ...payload]);
+            // setFormations((formations: formation[]) => {
+            //    let newFormations = { formations: [...formations] };
+            //    applyChangeset(newFormations, unflattenChanges(payload));
+            //    return [...newFormations.formations];
+            // });
+         })
+         .subscribe(async (status) => {
+            if (status === "SUBSCRIBED") {
+               console.log("subbedd");
+               const status = await channel.track({ online_at: new Date().toISOString() }); //online_at: new Date().toISOString(), //user: session?.user
+               console.log({ status });
+            }
+         });
+
+      return () => {
+         usersChannel.unsubscribe();
+         formsChannel.unsubscribe();
+      };
+   }, [router.query.danceId, session]);
 
    // function usePrevious(value) {
    //    const ref = useRef();
@@ -169,122 +268,123 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    // const prevFormations = usePrevious(formations);
 
    // useDidMountEffect(() => {
-   //    console.log({ prevFormations });
+   //    // console.log({ prevFormations });
    //    if (!changesets) return;
-   //    if (!channelGloabl) return;
+   //    if (!channelGlobal) return;
    //    let diffs = changesets.diff(prevFormations, formations);
    //    if (!diffs.length) return;
-   //    channelGloabl.send({
+   //    console.log(diffs);
+   //    channelGlobal.send({
    //       type: "broadcast",
    //       event: "cursor-pos",
    //       payload: diffs,
    //    });
-   // }, [formations, prevFormations, channelGloabl]);
+   // }, [formations, prevFormations, channelGlobal]);
    // /////////////////////////////
 
-   let uploadSettings = useCallback(
-      debounce(async (previousFormationView, stageDimensions) => {
-         console.log("uploading settings");
-         const { data, error } = await supabase
-            .from("dances")
-            .update({ settings: { previousFormationView: previousFormationView, stageDimensions: stageDimensions }, last_edited: new Date() })
-            .eq("id", router.query.danceId);
+   // let uploadSettings = useCallback(
+   //    debounce(async (previousFormationView, stageDimensions) => {
+   //       console.log("uploading settings");
+   //       const { data, error } = await supabase
+   //          .from("dances")
+   //          .update({ settings: { previousFormationView: previousFormationView, stageDimensions: stageDimensions }, last_edited: new Date() })
+   //          .eq("id", router.query.danceId);
 
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 2000),
-      [router.query.danceId]
-   );
+   //       console.log({ data });
+   //       console.log({ error });
+   //       setSaved(true);
+   //    }, 2000),
+   //    [router.query.danceId]
+   // );
 
-   useDidMountEffect(() => {
-      if (router.isReady) {
-         setSaved(false);
-         uploadSettings(previousFormationView, stageDimensions);
-      }
-   }, [previousFormationView, stageDimensions]);
+   // useDidMountEffect(() => {
+   //    if (router.isReady) {
+   //       setSaved(false);
+   //       uploadSettings(previousFormationView, stageDimensions);
+   //    }
+   // }, [previousFormationView, stageDimensions]);
 
-   let uploadDancers = useCallback(
-      debounce(async (dancers) => {
-         console.log("uploading dancers");
-         const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
+   // let uploadDancers = useCallback(
+   //    debounce(async (dancers) => {
+   //       console.log("uploading dancers");
+   //       const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
 
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 2000),
-      [router.query.danceId]
-   );
+   //       console.log({ data });
+   //       console.log({ error });
+   //       setSaved(true);
+   //    }, 2000),
+   //    [router.query.danceId]
+   // );
 
-   useDidMountEffect(() => {
-      if (router.isReady) {
-         setSaved(false);
-         uploadDancers(dancers);
-      }
-   }, [dancers]);
-   // // ///////////
-   let uploadFormations = useCallback(
-      debounce(async (formations) => {
-         console.log("uploading formations");
-         const { data, error } = await supabase
-            .from("dances")
-            .update({ formations: formations, last_edited: new Date() })
-            .eq("id", router.query.danceId);
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 10000),
-      [router.query.danceId]
-   );
+   // useDidMountEffect(() => {
+   //    if (router.isReady) {
+   //       setSaved(false);
+   //       uploadDancers(dancers);
+   //    }
+   // }, [dancers]);
+   // // // ///////////
+   // let uploadFormations = useCallback(
+   //    debounce(async (formations) => {
+   //       console.log("uploading formations");
+   //       const { data, error } = await supabase
+   //          .from("dances")
+   //          .update({ formations: formations, last_edited: new Date() })
+   //          .eq("id", router.query.danceId);
+   //       console.log({ data });
+   //       console.log({ error });
+   //       setSaved(true);
+   //    }, 10000),
+   //    [router.query.danceId]
+   // );
 
-   useDidMountEffect(() => {
-      if (router.isReady) {
-         setSaved(false);
-         uploadFormations(formations);
-      }
-   }, [formations]);
-   //////////////////////////
-   // ///////////
-   let uploadSoundCloudId = useCallback(
-      debounce(async (soundCloudTrackId) => {
-         console.log("uploading formations");
-         const { data, error } = await supabase
-            .from("dances")
-            .update({ soundCloudId: soundCloudTrackId, last_edited: new Date() })
-            .eq("id", router.query.danceId);
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 100),
-      [router.query.danceId]
-   );
-
-   useDidMountEffect(() => {
-      if (router.isReady) {
-         setSaved(false);
-         uploadSoundCloudId(soundCloudTrackId);
-      }
-   }, [soundCloudTrackId]);
+   // useDidMountEffect(() => {
+   //    if (router.isReady) {
+   //       setSaved(false);
+   //       uploadFormations(formations);
+   //    }
+   // }, [formations]);
    // //////////////////////////
-   // ///////////
-   let uploadName = useCallback(
-      debounce(async (danceName) => {
-         console.log("uploading name");
-         const { data, error } = await supabase.from("dances").update({ name: danceName }).eq("id", router.query.danceId);
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 100),
-      [router.query.danceId]
-   );
+   // // ///////////
+   // let uploadSoundCloudId = useCallback(
+   //    debounce(async (soundCloudTrackId) => {
+   //       console.log("uploading formations");
+   //       const { data, error } = await supabase
+   //          .from("dances")
+   //          .update({ soundCloudId: soundCloudTrackId, last_edited: new Date() })
+   //          .eq("id", router.query.danceId);
+   //       console.log({ data });
+   //       console.log({ error });
+   //       setSaved(true);
+   //    }, 100),
+   //    [router.query.danceId]
+   // );
 
-   useDidMountEffect(() => {
-      if (router.isReady) {
-         setSaved(false);
-         uploadName(danceName);
-      }
-   }, [danceName]);
-   //////////////////////////
+   // useDidMountEffect(() => {
+   //    if (router.isReady) {
+   //       setSaved(false);
+   //       uploadSoundCloudId(soundCloudTrackId);
+   //    }
+   // }, [soundCloudTrackId]);
+   // // //////////////////////////
+   // // ///////////
+   // let uploadName = useCallback(
+   //    debounce(async (danceName) => {
+   //       console.log("uploading name");
+   //       const { data, error } = await supabase.from("dances").update({ name: danceName }).eq("id", router.query.danceId);
+   //       console.log({ data });
+   //       console.log({ error });
+   //       setSaved(true);
+   //    }, 100),
+   //    [router.query.danceId]
+   // );
+
+   // useDidMountEffect(() => {
+   //    if (router.isReady) {
+   //       setSaved(false);
+   //       uploadName(danceName);
+   //    }
+   // }, [danceName]);
+   // //////////////////////////
 
    return (
       <>
@@ -369,6 +469,8 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                         ></Settings>
                      ) : (
                         <CurrentFormation
+                           addToStack={addToStack}
+                           pushChange={pushChange}
                            pricingTier={pricingTier}
                            stageDimensions={stageDimensions}
                            selectedDancers={selectedDancers}
@@ -385,6 +487,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
 
                <div className={`flex flex-col min-w-0 flex-grow items-center `}>
                   <Header
+                     onlineUsers={onlineUsers}
                      setFormations={setFormations}
                      formationsStack={formationsStack}
                      setFormationsStack={setFormationsStack}
@@ -396,8 +499,10 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                   />
 
                   <Canvas
+                     pushChange={pushChange}
                      formationsStack={formationsStack}
                      setFormationsStack={setFormationsStack}
+                     addToStack={addToStack}
                      player={player}
                      draggingDancerId={draggingDancerId}
                      setDraggingDancerId={setDraggingDancerId}
@@ -406,15 +511,12 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                      setSelectedFormation={setSelectedFormation}
                      formations={formations}
                      selectedFormation={selectedFormation}
-                     setDancers={setDancers}
-                     dancers={dancers}
                      setFormations={setFormations}
                      selectedDancers={selectedDancers}
                      setSelectedDancers={setSelectedDancers}
                      setIsPlaying={setIsPlaying}
                      setPixelsPerSecond={setPixelsPerSecond}
                      stageDimensions={stageDimensions}
-                     setStageDimensions={setStageDimensions}
                      coordsToPosition={coordsToPosition}
                   >
                      {selectedFormation !== null ? (
@@ -480,6 +582,8 @@ const Edit = ({ initialData, viewOnly }: {}) => {
 
             <div className="pb-2">
                <AudioControls
+                  addToStack={addToStack}
+                  pushChange={pushChange}
                   viewOnly={viewOnly}
                   selectedFormation={selectedFormation}
                   songDuration={songDuration}
@@ -522,6 +626,10 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                   )}
 
                   <Layers
+                     userPositions={userPositions}
+                     onlineUsers={onlineUsers}
+                     addToStack={addToStack}
+                     pushChange={pushChange}
                      setSelectedDancers={setSelectedDancers}
                      viewOnly={viewOnly}
                      songDuration={songDuration}
@@ -588,7 +696,9 @@ export const getServerSideProps = async (ctx) => {
 
    // Run queries with RLS on the server
    let { data } = await supabase.from("dances").select("*").eq("id", ctx.query.danceId).single();
-   data = { ...data, audioFiles, sampleAudioFiles };
+   let { data: deltas } = await supabase.from("deltas").select("*").eq("danceid", ctx.query.danceId);
+
+   data = { ...data, audioFiles, sampleAudioFiles, deltas };
    if (!data) {
       return {
          redirect: {

@@ -15,6 +15,8 @@ export const AudioControls: React.FC<{
    songDuration: number | null;
    selectedFormation: number | null;
    viewOnly: boolean;
+   addToStack: Function;
+   pushChange: Function;
 }> = ({
    soundCloudTrackId,
    setSelectedFormation,
@@ -27,6 +29,8 @@ export const AudioControls: React.FC<{
    songDuration,
    selectedFormation,
    viewOnly,
+   addToStack,
+   pushChange,
 }) => {
    return (
       <>
@@ -125,36 +129,27 @@ export const AudioControls: React.FC<{
                      {" "}
                      <button
                         onClick={() => {
+                           addToStack();
+                           let id = uuidv4();
+                           console.log(id);
+
                            setFormations((formations: formation[]) => {
-                              if (!formations.length) {
-                                 setSelectedFormation(formations.length);
-                                 return [
-                                    ...formations,
-                                    {
-                                       durationSeconds: 10,
-                                       positions: [],
-                                       transition: {
-                                          durationSeconds: 5,
-                                       },
-                                       name: `Untitled ${formations.length + 1}`,
+                              return [
+                                 ...formations,
+                                 {
+                                    ...formations[formations.length - 1],
+                                    id,
+                                    name: `Untitled ${formations.length + 1}`,
+                                    transition: {
+                                       durationSeconds: 5,
                                     },
-                                 ];
-                              } else {
-                                 setSelectedFormation(formations.length);
-                                 return [
-                                    ...formations,
-                                    {
-                                       id: uuidv4(),
-                                       ...formations[formations.length - 1],
-                                       name: `Untitled ${formations.length + 1}`,
-                                       transition: {
-                                          durationSeconds: 5,
-                                       },
-                                       durationSeconds: 10,
-                                    },
-                                 ];
-                              }
+                                    durationSeconds: 10,
+                                 },
+                              ];
+                              //   }
                            });
+                           setSelectedFormation(formations.length);
+                           pushChange();
                         }}
                         className=" rounded-md ml-auto hidden lg:block  text-gray-500 px-3 py-1 mx-1 cursor-pointer outline "
                      >
@@ -163,10 +158,12 @@ export const AudioControls: React.FC<{
                      <button
                         onClick={() => {
                            if (selectedFormation === null) return;
+
                            if (formations.length === 1) {
                               toast.error("you must have at least one formation");
                               return;
                            }
+                           addToStack();
                            if (selectedFormation === formations.length - 1) {
                               setSelectedFormation(selectedFormation - 1);
                            }
@@ -177,6 +174,7 @@ export const AudioControls: React.FC<{
                               });
                            });
                            toast.success("formation deleted");
+                           pushChange();
                         }}
                         className=" rounded-md hidden lg:block  text-gray-500 px-3 py-1 mx-1 cursor-pointer outline"
                      >

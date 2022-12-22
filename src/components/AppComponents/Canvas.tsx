@@ -6,8 +6,6 @@ import { CurrentFormation } from "./SidebarComponents/CurrentFormation";
 
 export const Canvas: React.FC<{
    children: React.ReactNode;
-   setDancers: Function;
-   dancers: dancer[];
    setFormations: Function;
    selectedFormation: number | null;
    formations: formation[];
@@ -19,18 +17,17 @@ export const Canvas: React.FC<{
    setPixelsPerSecond: Function;
    songDuration: number | null;
    stageDimensions: { width: number; height: number };
-   setStageDimensions: Function;
    coordsToPosition: Function;
    draggingDancerId: string | null;
    setDraggingDancerId: Function;
    player: any;
    setFormationsStack: Function;
    formationsStack: formation[][];
+   addToStack: Function;
+   pushChange: Function;
 }> = ({
    player,
    children,
-   setDancers,
-   dancers,
    setFormations,
    selectedFormation,
    formations,
@@ -41,13 +38,14 @@ export const Canvas: React.FC<{
    viewOnly,
    setPixelsPerSecond,
    songDuration,
-   setStageDimensions,
    stageDimensions,
    coordsToPosition,
    draggingDancerId,
    setDraggingDancerId,
    setFormationsStack,
    formationsStack,
+   addToStack,
+   pushChange,
 }) => {
    const [shiftHeld, setShiftHeld] = useState(false);
    const [commandHeld, setCommandHeld] = useState(false);
@@ -136,9 +134,7 @@ export const Canvas: React.FC<{
       }
 
       if (e.key === "c" && selectedDancers.length) {
-         setFormationsStack((formationStack: formation[][]) => {
-            return [...formationStack.slice(formationStack.length - 20, formationStack.length), formations];
-         });
+         addToStack();
          e.preventDefault();
          setCopiedPositions(formations[selectedFormation].positions.filter((dancerPosition) => selectedDancers.includes(dancerPosition.id)));
       }
@@ -306,9 +302,7 @@ export const Canvas: React.FC<{
          });
       }
       if (e.target.dataset.type === "dancer") {
-         setFormationsStack((formationStack: formation[][]) => {
-            return [...formationStack.slice(formationStack.length - 20, formationStack.length), formations];
-         });
+         addToStack();
          setDraggingDancerId(e.target.id);
          if (!shiftHeld && !selectedDancers.includes(e.target.id)) {
             setSelectedDancers([e.target.id]);
@@ -343,7 +337,9 @@ export const Canvas: React.FC<{
                };
             });
          });
+         pushChange();
       }
+      // console.log(formations);
 
       setDraggingDancerId(null);
       setIsDragging(false);

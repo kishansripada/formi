@@ -14,7 +14,7 @@ export const Settings: React.FC<{
    return (
       <>
          <Toaster></Toaster>
-         <div className=" w-[23%]  min-w-[350px] hidden lg:block bg-white border-r border-r-gray-300 px-6 py-6">
+         <div className=" w-[23%]  min-w-[350px] hidden lg:block bg-white border-r border-r-gray-300 px-6 py-6 overflow-y-scroll">
             <h1 className="h-12 font-medium text-xl">performance settings</h1>
 
             <p className="font-medium h-10">stage dimensions</p>

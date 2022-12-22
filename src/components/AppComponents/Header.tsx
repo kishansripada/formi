@@ -17,10 +17,21 @@ export const Header: React.FC<{
    setShareIsOpen: Function;
    viewOnly: boolean;
    setFormations: Function;
-}> = ({ saved, danceName, setDanceName, setShareIsOpen, viewOnly, formationsStack, setFormationsStack, setFormations }) => {
+   onlineUsers: any;
+}> = ({ saved, danceName, setDanceName, setShareIsOpen, viewOnly, formationsStack, setFormationsStack, setFormations, onlineUsers }) => {
    const router = useRouter();
    let session = useSession();
    const supabase = useSupabaseClient();
+
+   let initials = (name: string) => {
+      if (!name) return "";
+      return name
+         .split(" ")
+         .map((word: string) => word[0])
+         .slice(0, 3)
+         .join("")
+         .toUpperCase();
+   };
 
    return (
       <>
@@ -55,6 +66,24 @@ export const Header: React.FC<{
             </div>
 
             <div className=" flex flex-row items-center ml-auto ">
+               {onlineUsers
+                  ? Object.keys(onlineUsers).map((id, i) => {
+                       return (
+                          <>
+                             <div
+                                style={{
+                                   border: "4px solid",
+                                   borderColor: onlineUsers[id][0].color,
+                                }}
+                                className="bg-white grid place-items-center w-9 select-none cursor-pointer  h-9 rounded-full mr-2"
+                             >
+                                <p className="font-bold">{initials(onlineUsers[id][0]?.user?.user_metadata?.name)}</p>
+                             </div>
+                          </>
+                       );
+                    })
+                  : null}
+
                {!viewOnly ? (
                   <>
                      <button
@@ -101,6 +130,7 @@ export const Header: React.FC<{
                      </button>
                   </>
                ) : null}
+
                {session ? (
                   <Link href="/dashboard">
                      <button className="bg-slate-800  text-white text-sm rounded-md px-3 py-3 ml-4 mr-4 ">

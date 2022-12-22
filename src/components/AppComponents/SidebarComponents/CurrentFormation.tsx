@@ -12,6 +12,8 @@ export const CurrentFormation: React.FC<{
    setSelectedDancers: Function;
    stageDimensions: any;
    pricingTier: string;
+   addToStack: Function;
+   pushChange: Function;
 }> = ({
    formations,
    selectedFormation,
@@ -22,6 +24,8 @@ export const CurrentFormation: React.FC<{
    setSelectedDancers,
    stageDimensions,
    pricingTier,
+   addToStack,
+   pushChange,
 }) => {
    useEffect(() => {
       if (selectedDancers.length === 1) {
@@ -76,6 +80,7 @@ export const CurrentFormation: React.FC<{
                         defaultValue={formations[selectedFormation]?.name || ""}
                      />
                   </div>
+
                   <div className="flex flex-row items-center justify-between w-full px-6 ">
                      <p className="text-lg text-gray-500">
                         {Math.round(
@@ -108,7 +113,46 @@ export const CurrentFormation: React.FC<{
                      </div>
                   </div>
                   <hr className=" " />
-                  <div className="p-4">
+                  <div className="px-4 py-3 flex flex-row items-center">
+                     <input
+                        className=" w-full px-2 rounded-md  h-6 text-sm  py-4 transition duration-300 bg-gray-100 text-gray-600  outline-none  "
+                        type="text"
+                        placeholder="leave a comment..."
+                        key={formations[selectedFormation]?.name}
+                        defaultValue={formations[selectedFormation]?.name || ""}
+                     />
+                     <button className="bg-gray-700 text-white px-2 py-1 rounded-md ml-3 text-sm h-full">send</button>
+                  </div>
+                  <hr />
+                  <div className="overflow-scroll">
+                     <div className=" py-3 px-6">
+                        <p className="font-bold">Sasha Shrestha</p>
+                        <p>Yeah i really like this part of the formation but I think we could space the top row a little bit out more</p>
+                     </div>
+                     <hr />
+                     <div className=" py-3 px-6">
+                        <p className="font-bold">Sasha Shrestha</p>
+                        <p>Yeah i really like this part of the formation but I think we could space the top row a little bit out more</p>
+                     </div>
+                     <hr />{" "}
+                     <div className=" py-3 px-6">
+                        <p className="font-bold">Sasha Shrestha</p>
+                        <p>Yeah i really like this part of the formation but I think we could space the top row a little bit out more</p>
+                     </div>
+                     <hr />{" "}
+                     <div className=" py-3 px-6">
+                        <p className="font-bold">Sasha Shrestha</p>
+                        <p>Yeah i really like this part of the formation but I think we could space the top row a little bit out more</p>
+                     </div>
+                     <hr />{" "}
+                     <div className=" py-3 px-6">
+                        <p className="font-bold">Sasha Shrestha</p>
+                        <p>Yeah i really like this part of the formation but I think we could space the top row a little bit out more</p>
+                     </div>
+                     <hr />
+                  </div>
+
+                  {/* <div className="p-4">
                      <textarea
                         onKeyDown={(e) =>
                            e.key === "Enter"
@@ -144,9 +188,9 @@ export const CurrentFormation: React.FC<{
                         defaultValue={formations[selectedFormation]?.notes || ""}
                         placeholder="formation notes..."
                         className="resize-none w-full p-2 text-gray-800 h-full border border-gray-400 focus:outline-none rounded-md"
-                        rows={15}
+                        rows={10}
                      ></textarea>
-                  </div>
+                  </div> */}
                   {/* <div className=" px-4 overflow-y-scroll removeScrollBar pt-4 ">
                      <div className="rounded-md border border-gray-300  text-sm flex flex-col items-center justify-center ,t-3">
                         <div className="bg-blue-200 h-6 w-full text-black rounded-t-md px-3 flex flex-col justify-center">
@@ -186,7 +230,8 @@ export const CurrentFormation: React.FC<{
                   </div> */}
 
                   <hr className="mt-auto" />
-                  <div className="px-6 mt-2 mb-4">
+
+                  <div className="px-6 mt-2 mb-4 min-h-[130px]">
                      <div className="flex flex-row items-end justify-center ">
                         <p className="font-medium text-xl mr-auto">
                            {selectedDancers.length === 0
@@ -219,6 +264,7 @@ export const CurrentFormation: React.FC<{
                         <div
                            className="p-4 flex flex-row items-center"
                            onClick={() => {
+                              addToStack();
                               selectedDancers.forEach((selectedDancer) => {
                                  setFormations((formations: formation[]) => {
                                     return formations.map((formation, index: number) => {
@@ -241,6 +287,7 @@ export const CurrentFormation: React.FC<{
                                     });
                                  });
                               });
+                              pushChange();
                            }}
                         >
                            {selectedDancers.length &&
@@ -269,7 +316,7 @@ export const CurrentFormation: React.FC<{
                                  });
                                  return;
                               }
-
+                              addToStack();
                               selectedDancers.forEach((selectedDancer) => {
                                  setFormations((formations: formation[]) => {
                                     let start = formations[selectedFormation - 1]?.positions.find(
@@ -335,6 +382,7 @@ export const CurrentFormation: React.FC<{
                                     });
                                  });
                               });
+                              pushChange();
                            }}
                         >
                            {pricingTier === "basic" ? (

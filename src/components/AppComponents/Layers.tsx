@@ -14,6 +14,10 @@ export const Layers: React.FC<{
    viewOnly: boolean;
    pixelsPerSecond: number;
    setSelectedDancers: Function;
+   addToStack: Function;
+   pushChange: Function;
+   userPositions: any;
+   onlineUsers: any;
 }> = ({
    formations,
    selectedFormation,
@@ -26,19 +30,27 @@ export const Layers: React.FC<{
    viewOnly,
    pixelsPerSecond,
    setSelectedDancers,
+   pushChange,
+   addToStack,
+   userPositions,
+   onlineUsers,
 }) => {
    const [resizingTransition, setResizingTransition] = useState<number | null>(null);
    const [resizingFormation, setResizingFormation] = useState<number | null>(null);
 
    const pointerUp = (e) => {
+      if (resizingFormation === null && resizingTransition === null) return;
       setResizingTransition(null);
       setResizingFormation(null);
+      pushChange();
    };
    const pointerDown = (e) => {
       if (e.target.dataset.type === "transition-resize") {
+         addToStack();
          setResizingTransition(parseInt(e.target.id));
       }
       if (e.target.dataset.type === "formation-resize") {
+         addToStack();
          setResizingFormation(parseInt(e.target.id));
       }
    };
@@ -117,6 +129,8 @@ export const Layers: React.FC<{
          id="layers"
       >
          <Layer
+            userPositions={userPositions}
+            onlineUsers={onlineUsers}
             setSelectedDancers={setSelectedDancers}
             viewOnly={viewOnly}
             songDuration={songDuration}

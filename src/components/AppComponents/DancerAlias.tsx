@@ -110,7 +110,7 @@ export const DancerAlias: React.FC<{
             id={dancer.id}
             data-type={"dancer"}
             className={` 
-              rounded-full flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default  ${
+              rounded-full flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default  ${
                  selectedDancers.includes(dancer.id)
                     ? "w-[41px] h-[41px]"
                     : ` w-[38px] h-[38px] ${
@@ -118,6 +118,8 @@ export const DancerAlias: React.FC<{
                       }`
               } `}
          >
+            {/* <span className="animate-ping absolute  inline-flex w-[30px] h-[30px] rounded-full bg-sky-400 opacity-75"></span> */}
+
             {dancer.instagramUsername ? (
                <img
                   id={dancer.id}
