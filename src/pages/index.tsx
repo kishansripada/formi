@@ -121,7 +121,7 @@ const home = () => {
 
                      <Link href={"/207/edit"} className="">
                         <button className="border-4  flex-row items-center  border-pink-600  px-8 py-4  hidden lg:flex rounded-full mt-12 text-xl group">
-                           <span className="mr-2 ">create your first performance </span>{" "}
+                           <span className="mr-2 ">view demo </span>{" "}
                            <span className="relative left-0 group-hover:left-3 transition-all duration-300">
                               <svg
                                  xmlns="http://www.w3.org/2000/svg"

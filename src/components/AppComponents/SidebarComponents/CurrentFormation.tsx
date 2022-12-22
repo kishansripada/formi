@@ -144,7 +144,7 @@ export const CurrentFormation: React.FC<{
                         defaultValue={formations[selectedFormation]?.notes || ""}
                         placeholder="formation notes..."
                         className="resize-none w-full p-2 text-gray-800 h-full border border-gray-400 focus:outline-none rounded-md"
-                        rows={15}
+                        rows={10}
                      ></textarea>
                   </div>
                   {/* <div className=" px-4 overflow-y-scroll removeScrollBar pt-4 ">
