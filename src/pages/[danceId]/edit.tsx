@@ -56,7 +56,6 @@ const FileAudioPlayer = dynamic<{
 });
 
 const Edit = ({ initialData, viewOnly }: {}) => {
-   viewOnly = false;
    let session = useSession();
    const supabase = useSupabaseClient();
 
@@ -85,7 +84,6 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    let [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
 
    const [saved, setSaved] = useState<boolean>(true);
-   const [mobile, setMobile] = useState<string | null>(null);
    const [shareIsOpen, setShareIsOpen] = useState(false);
    const [menuOpen, setMenuOpen] = useState<string>(initialData.soundCloudId ? "formations" : "audio");
    const [pricingTier, setPricingTier] = useState<string>("premium");
@@ -128,59 +126,6 @@ const Edit = ({ initialData, viewOnly }: {}) => {
          return dancers.filter((dancer) => dancer.id !== id);
       });
    };
-
-   // useEffect(() => {
-   //    if (mobile) {
-   //       viewOnly = true;
-   //    }
-   // }, []);
-
-   // useEffect(() => {
-   //    // let channel = supabase.channel("177");
-   //    // setChannel(channel);
-   //    // channel
-   //    //    .on("broadcast", { event: "cursor-pos" }, ({ payload }) => {
-   //    //       console.log(payload?.[0]?.changes);
-   //    //       // if (!payload.length) return;
-   //    //       setFormations((formations) => {
-   //    //          console.log(payload);
-   //    //          return applyChangeset(formations, payload[0].changes);
-   //    //       });
-   //    //    })
-   //    //    .subscribe((status) => {
-   //    //       if (status === "SUBSCRIBED") {
-   //    //          console.log("subbedd");
-   //    //       }
-   //    //    });
-
-   //    return () => {
-   //       // supabase.removeSubscription(mySub);
-   //    };
-   // }, [router.query.danceId]);
-
-   // function usePrevious(value) {
-   //    const ref = useRef();
-   //    useEffect(() => {
-   //       ref.current = value; //assign the value of ref to the argument
-   //    }, [value]); //this code will run when the value of 'value' changes
-   //    return ref.current; //in the end, return the current ref value.
-   // }
-
-   // const prevFormations = usePrevious(formations);
-
-   // useDidMountEffect(() => {
-   //    console.log({ prevFormations });
-   //    if (!changesets) return;
-   //    if (!channelGloabl) return;
-   //    let diffs = changesets.diff(prevFormations, formations);
-   //    if (!diffs.length) return;
-   //    channelGloabl.send({
-   //       type: "broadcast",
-   //       event: "cursor-pos",
-   //       payload: diffs,
-   //    });
-   // }, [formations, prevFormations, channelGloabl]);
-   // /////////////////////////////
 
    let uploadSettings = useCallback(
       debounce(async (previousFormationView, stageDimensions) => {
@@ -578,13 +523,6 @@ export const getServerSideProps = async (ctx) => {
    //       },
    //    };
    // }
-   function detectMob(agent) {
-      const toMatch = [/Android/i, /webOS/i, /iPhone/i, /iPad/i, /iPod/i, /BlackBerry/i, /Windows Phone/i];
-
-      return toMatch.some((toMatchItem) => {
-         return agent.match(toMatchItem);
-      });
-   }
 
    // Run queries with RLS on the server
    let { data } = await supabase.from("dances").select("*").eq("id", ctx.query.danceId).single();

@@ -93,7 +93,7 @@ export const Layers: React.FC<{
 
    return (
       <div
-         className="flex flex-col     bg-[#fafafa]  select-none"
+         className="flex flex-col  bg-[#fafafa]  select-none"
          style={{
             width: songDuration
                ? Math.max(

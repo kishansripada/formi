@@ -24,7 +24,7 @@ export const Formation: React.FC<{
             <div
                data-type="formation-resize"
                id={index.toString()}
-               className="h-full   absolute right-[-4px]  w-[4px] cursor-col-resize	z-[99999]"
+               className="h-full lg:pointer-events-auto pointer-events-none   absolute right-[-4px]  w-[4px] cursor-col-resize	z-[99999]"
             ></div>
 
             <div className={`bg-white h-[17px]  px-2 overflow-clip border-b border-gray-300`}>
@@ -40,7 +40,7 @@ export const Formation: React.FC<{
                   <div
                      id={index.toString()}
                      data-type="transition-resize"
-                     className=" h-[26px]  w-[4px] cursor-col-resize	 absolute right-[-5px] z-50 flex flex-row justify-between"
+                     className=" h-[26px] lg:pointer-events-auto pointer-events-none   w-[4px] cursor-col-resize	 absolute right-[-5px] z-50 flex flex-row justify-between"
                   >
                      <div className="h-full w-[1px] bg-black pointer-events-none"></div>
                      <div className="h-full w-[1px] bg-black pointer-events-none"></div>

@@ -378,7 +378,7 @@ export const Canvas: React.FC<{
 
    return (
       <div
-         className="flex flex-row relative justify-center  h-full cursor-default w-full overflow-hidden  overscroll-contain items-center "
+         className="flex flex-row relative justify-center  h-full cursor-default w-full overflow-hidden  overscroll-contain items-center lg:pointer-events-auto pointer-events-none "
          id="stage"
          ref={container}
          onPointerUp={!viewOnly ? pointerUp : null}
