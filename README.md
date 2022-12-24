@@ -1,3 +1,3 @@
-# Naach
+# FORMI
 
-Quickly mockup and automate dance formations synced to SoundCloud.
+Quickly mockup and automate dance formations synced to music.
