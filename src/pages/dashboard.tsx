@@ -183,8 +183,8 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                   </button>
                </div>
 
-               <div className="flex flex-col bg-gray-100  pl-10 font-proxima w-full  lg:w-[80%]">
-                  <div className="flex flex-row items-center justify-end p-6 text-gray-500">
+               <div className="flex flex-col bg-gray-100  lg:pl-10 font-proxima w-full justify-center items-center lg:items-start  lg:w-[80%]">
+                  <div className="flex flex-row items-center justify-end p-6 text-gray-500 ml-auto">
                      {/* <button className="mr-5">upgrade ⚡️</button> */}
                      <button
                         onClick={() => {

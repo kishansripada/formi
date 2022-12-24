@@ -33,7 +33,7 @@ export const MyDances: React.FC<{ myDances: any; invalidateDances: Function }> =
          </h1>
          <p className="mt-9 font-medium">recent performances</p>
          <p className=" font-medium lg:hidden">create dances on your laptop and view them here</p>
-         <div className="w-full flex flex-col items-start lg:flex-row overflow-x-scroll mt-7 removeScrollBar h-full overscroll-contain">
+         <div className="w-full flex flex-col lg:items-start lg:flex-row overflow-x-scroll mt-7 removeScrollBar h-full overscroll-contain items-center">
             {myDances.length ? (
                myDances
                   .sort((a, b) => new Date(b.last_edited) - new Date(a.last_edited))
