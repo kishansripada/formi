@@ -66,7 +66,7 @@ export const Header: React.FC<{
             </div>
 
             <div className=" flex flex-row items-center ml-auto ">
-               {onlineUsers
+               {/* {onlineUsers
                   ? Object.keys(onlineUsers).map((id, i) => {
                        return (
                           <>
@@ -77,12 +77,12 @@ export const Header: React.FC<{
                                 }}
                                 className="bg-white grid place-items-center w-9 select-none cursor-pointer  h-9 rounded-full mr-2"
                              >
-                                <p className="font-bold">{initials(onlineUsers[id][0]?.user?.user_metadata?.name)}</p>
+                                <p className="font-bold">{initials(onlineUsers[id][0]?.name)}</p>
                              </div>
                           </>
                        );
                     })
-                  : null}
+                  : null} */}
 
                {!viewOnly ? (
                   <>

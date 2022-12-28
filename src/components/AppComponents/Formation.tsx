@@ -1,5 +1,7 @@
 import { dancer, dancerPosition, formation } from "../../types/types";
-
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { useRef } from "react";
 export const Formation: React.FC<{
    formation: formation;
    amSelected: boolean;
@@ -10,28 +12,77 @@ export const Formation: React.FC<{
    pixelsPerSecond: number;
    userPositions: any;
    onlineUsers: any;
-}> = ({ formation, amSelected, index, setFormations, setSelectedFormation, viewOnly, pixelsPerSecond, userPositions, onlineUsers }) => {
-   // let idsOnThisFormation = Object.values(userPositions).filter((position) => position.selectedFormation === index);
+   addToStack: Function;
+   activeId: string;
+}> = ({
+   formation,
+   amSelected,
+   index,
+   setFormations,
+   setSelectedFormation,
+   viewOnly,
+   pixelsPerSecond,
+   userPositions,
+   onlineUsers,
+   addToStack,
+   activeId,
+}) => {
+   // console.log(onlineUsers);
+   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: formation.id });
+   const style = {
+      transform: CSS.Translate.toString(transform),
+      transition,
+   };
+   let idsOnThisFormation = Object.keys(userPositions).filter((id) => userPositions[id].selectedFormation === index);
 
-   // let ids = idsOnThisFormation ? idsOnThisFormation.map((value) => onlineUsers[value.userId]) : null;
-   // // console.log({ onlineUsers });
-   // console.log(ids);
+   let colorsOnThisFormation = idsOnThisFormation.map((id) => onlineUsers[id][0].color);
+   let firstNamesOnThisFormation = idsOnThisFormation.map((id) => onlineUsers[id][0].name).map((name) => name.split(" ")[0]);
+   let listOfNames = ((list) => {
+      if (!list.length) return null;
+      if (list.length === 1) return list[0];
+      if (list.length === 2) return `${list[0] & list[1]}`;
+      return list.slice(0, -1).join(", ") + " & " + list[list.length - 1];
+   })(firstNamesOnThisFormation);
+
+   if (amSelected) {
+      colorsOnThisFormation = [...colorsOnThisFormation, "#DB2777"];
+   }
+
    return (
       <>
          <div
-            className={`rounded-md  mx-[2px] box-border cursor-pointer z-auto  border-4 relative  `}
+            ref={setNodeRef}
+            className={`rounded-md  mx-[2px] box-border cursor-pointer bg-white  border-4 border-t-[8px] relative group `}
             style={{
+               zIndex: activeId === formation.id ? 2 : 0,
+               ...style,
                width: (formation.transition.durationSeconds + formation.durationSeconds) * pixelsPerSecond - 4,
-               borderColor: amSelected ? "rgb(219 39 119)" : "rgb(55 65 81)",
+               borderColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#000000",
                // top: index === 5 ? 100 : null,
                // subtract 4 to account for the mx-[2px]
             }}
          >
+            {listOfNames ? (
+               <div
+                  className="absolute h-5 right-[-4px] top-[-20px] z-10 w-fit px-2 text-xs text-white opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out pointer-events-none "
+                  style={{ backgroundColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "black" }}
+               >
+                  <p>{listOfNames}</p>
+               </div>
+            ) : null}
+
             <div
-               data-type="formation-resize"
-               id={index.toString()}
-               className="h-full   absolute right-[-4px]  w-[4px] cursor-col-resize	z-[99999]"
+               data-type="drag-handle"
+               onClick={() => {
+                  addToStack();
+               }}
+               id={formation.id}
+               {...attributes}
+               {...listeners}
+               className="w-full opacity-0 absolute top-[-8px] h-[8px] bg-blue-500 cursor-move	z-[99999]"
             ></div>
+
+            <div data-type="formation-resize" id={formation.id} className="h-full absolute right-[-4px]  w-[4px] cursor-col-resize	z-[99999]"></div>
 
             <div className={`bg-white h-[17px]  px-2 overflow-clip border-b border-gray-300`}>
                <p className={`text-[12px] pointer-events-none select-none text-black font-medium`}>{formation.name}</p>
@@ -44,7 +95,7 @@ export const Formation: React.FC<{
                   className="relative  h-[23px]"
                >
                   <div
-                     id={index.toString()}
+                     id={formation.id}
                      data-type="transition-resize"
                      className=" h-[26px]  w-[4px] cursor-col-resize	 absolute right-[-5px] z-50 flex flex-row justify-between"
                   >
@@ -75,6 +126,9 @@ export const Formation: React.FC<{
 };
 
 function averageHex(colors) {
+   if (colors.length === 1) {
+      return colors[0];
+   }
    // transform all hex codes to integer arrays, e.g. [[R, G, B], [R,G,B], ...]
    let numbers = colors.map(function (hex) {
       // split in seperate R, G and B

@@ -35,10 +35,11 @@ export const Layers: React.FC<{
    userPositions,
    onlineUsers,
 }) => {
-   const [resizingTransition, setResizingTransition] = useState<number | null>(null);
-   const [resizingFormation, setResizingFormation] = useState<number | null>(null);
+   const [resizingTransition, setResizingTransition] = useState<string | null>(null);
+   const [resizingFormation, setResizingFormation] = useState<string | null>(null);
 
    const pointerUp = (e) => {
+      // round formation length
       if (resizingFormation === null && resizingTransition === null) return;
       setResizingTransition(null);
       setResizingFormation(null);
@@ -47,11 +48,11 @@ export const Layers: React.FC<{
    const pointerDown = (e) => {
       if (e.target.dataset.type === "transition-resize") {
          addToStack();
-         setResizingTransition(parseInt(e.target.id));
+         setResizingTransition(e.target.id);
       }
       if (e.target.dataset.type === "formation-resize") {
          addToStack();
-         setResizingFormation(parseInt(e.target.id));
+         setResizingFormation(e.target.id);
       }
    };
    const pointerMove = (e) => {
@@ -61,9 +62,9 @@ export const Layers: React.FC<{
       if (resizingFormation !== null) {
          setFormations((formations: formation[]) => {
             return formations.map((formation, i) => {
-               if (i === resizingFormation) {
-                  if (formations[i].durationSeconds + e.movementX / pixelsPerSecond >= 0) {
-                     return { ...formation, durationSeconds: formations[i].durationSeconds + e.movementX / pixelsPerSecond };
+               if (formation.id === resizingFormation) {
+                  if (formation.durationSeconds + e.movementX / pixelsPerSecond >= 0) {
+                     return { ...formation, durationSeconds: formation.durationSeconds + e.movementX / pixelsPerSecond };
                   } else {
                      if (formation.transition.durationSeconds + e.movementX / pixelsPerSecond > 1) {
                         return {
@@ -83,9 +84,9 @@ export const Layers: React.FC<{
 
       if (resizingTransition !== null) {
          setFormations((formations: formation[]) => {
-            return formations.map((formation, i) => {
+            return formations.map((formation) => {
                if (
-                  i === resizingTransition &&
+                  formation.id === resizingTransition &&
                   // transition should be longer than 1 second
                   formation.transition.durationSeconds - e.movementX / pixelsPerSecond > 1 &&
                   // formation should be longer than 0 seconds
@@ -105,7 +106,7 @@ export const Layers: React.FC<{
 
    return (
       <div
-         className="flex flex-col     bg-[#fafafa]  select-none"
+         className="flex flex-col  bg-[#fafafa]  select-none"
          style={{
             width: songDuration
                ? Math.max(
@@ -141,6 +142,8 @@ export const Layers: React.FC<{
             isPlaying={isPlaying}
             position={position}
             pixelsPerSecond={pixelsPerSecond}
+            addToStack={addToStack}
+            pushChange={pushChange}
          />
 
          {/* <svg

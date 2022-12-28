@@ -2,6 +2,8 @@ import { dancer, dancerPosition, formation, stageDimensions } from "../../types/
 
 export const DancerAlias: React.FC<{
    dancer: dancer;
+   currentFormationIndex: number | null;
+   percentThroughTransition: number;
    setDancers: Function;
    selectedFormation: number | null;
    formations: formation[];
@@ -12,8 +14,12 @@ export const DancerAlias: React.FC<{
    coordsToPosition: Function;
    draggingDancerId: string | null;
    stageDimensions: any;
+   userPositions: any;
+   onlineUsers: any;
 }> = ({
    dancer,
+   currentFormationIndex,
+   percentThroughTransition,
    formations,
    setDancers,
    selectedFormation,
@@ -24,6 +30,8 @@ export const DancerAlias: React.FC<{
    coordsToPosition,
    draggingDancerId,
    stageDimensions,
+   userPositions,
+   onlineUsers,
 }) => {
    let initials = dancer.name
       .split(" ")
@@ -31,28 +39,6 @@ export const DancerAlias: React.FC<{
       .slice(0, 3)
       .join("")
       .toUpperCase();
-
-   const whereInFormation = (formations: formation[], position: number) => {
-      let sum = 0;
-      let currentFormationIndex = null;
-
-      let percentThroughTransition;
-      for (let i = 0; i < formations.length; i++) {
-         sum = sum + formations[i].durationSeconds + formations[i]?.transition.durationSeconds;
-         if (position < sum) {
-            currentFormationIndex = i;
-            let durationThroughTransition = position - (sum - formations[i]?.transition?.durationSeconds);
-
-            if (durationThroughTransition > 0) {
-               percentThroughTransition = durationThroughTransition / formations[i]?.transition?.durationSeconds;
-            }
-            break;
-         }
-      }
-      return { currentFormationIndex, percentThroughTransition };
-   };
-
-   let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
 
    // if the track is playing then  return with the animation function
    if (isPlaying && position !== null) {
@@ -96,6 +82,17 @@ export const DancerAlias: React.FC<{
 
    let { left, top } = coordsToPosition(currentCoords.x, currentCoords.y);
 
+   // since only one person should be selecting a single dancer, we just choose the first person that's selecting that dancer
+   let idSelectingMe = Object.keys(userPositions).filter(
+      (id) => userPositions[id].selectedFormation === selectedFormation && userPositions[id].selectedDancers.includes(dancer.id)
+   )?.[0];
+
+   let color = onlineUsers?.[idSelectingMe]?.[0]?.color || dancer.color;
+   let name = onlineUsers?.[idSelectingMe]?.[0]?.name;
+
+   // console.log(color);
+   // let firstNamesOnThisFormation = idsOnThisFormation.map((id) => onlineUsers[id][0].name).map((name) => name.split(" ")[0]);
+   // console.log(idSelectingMe);
    return (
       <>
          <div
@@ -103,8 +100,9 @@ export const DancerAlias: React.FC<{
                left,
                top,
                transform: "translate(-50%, -50%)",
+               pointerEvents: idSelectingMe ? "none" : "auto",
                // transform: `translate(-50%, -50%) translate(${left}px, ${top}px)`,
-               backgroundColor: selectedDancers.includes(dancer.id) ? "black" : dancer.color || "",
+               backgroundColor: selectedDancers.includes(dancer.id) ? "black" : color || "",
                transition: !draggingDancerId ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",
             }}
             id={dancer.id}
@@ -119,6 +117,17 @@ export const DancerAlias: React.FC<{
               } `}
          >
             {/* <span className="animate-ping absolute  inline-flex w-[30px] h-[30px] rounded-full bg-sky-400 opacity-75"></span> */}
+
+            {idSelectingMe ? (
+               <div
+                  className="absolute h-4 text-xs text-white w-fit  px-1 bottom-[-14px]"
+                  style={{
+                     backgroundColor: color,
+                  }}
+               >
+                  <p className="text-center">{name}</p>
+               </div>
+            ) : null}
 
             {dancer.instagramUsername ? (
                <img

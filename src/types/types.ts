@@ -8,8 +8,6 @@ export type dancer = {
 export type dancerPosition = {
    id: string;
    position: { x: number; y: number };
-   exitStrategy: "left" | "right" | "closest";
-   enterStrategy: "left" | "right" | "closest";
    transitionType?: "linear" | "cubic";
    controlPointStart?: { x: number | null; y: number | null };
    controlPointEnd?: { x: number | null; y: number | null };
@@ -21,6 +19,7 @@ export type formation = {
    transition: {
       durationSeconds: number;
    };
+   id: string;
    name: string | null;
    notes?: string | null | undefined;
 };

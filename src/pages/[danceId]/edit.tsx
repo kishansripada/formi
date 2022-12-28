@@ -9,8 +9,6 @@ import { PIXELS_PER_SQUARE } from "../../types/types";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import toast, { Toaster } from "react-hot-toast";
-// import {RealtimePresenceState} from
-// import { RealtimePresenceState } from 'lib/database.types'
 
 import { Header } from "../../components/AppComponents/Header";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
@@ -26,11 +24,11 @@ import { ChooseAudioSource } from "../../components/AppComponents/SidebarCompone
 import { dancer, dancerPosition, formation } from "../../types/types";
 import { Roster } from "../../components/AppComponents/SidebarComponents/Roster";
 import { Sidebar } from "../../components/AppComponents/Sidebar";
-// import { FileAudioPlayer } from "../../components/AppComponents/FileAudioPlayer";
 import { AudioControls } from "../../components/AppComponents/AudioControls";
 
 var changesets = require("json-diff-ts");
 import { applyChangeset, flattenChangeset, unflattenChanges } from "json-diff-ts";
+import { createClient } from "@supabase/supabase-js";
 // use effect, but not on initial render
 const useDidMountEffect = (func, deps) => {
    const didMount = useRef(false);
@@ -58,19 +56,22 @@ const FileAudioPlayer = dynamic<{
 });
 
 const Edit = ({ initialData, viewOnly }: {}) => {
-   // console.log(unflattenChanges(initialData.deltas.map((delta) => delta.delta).flat(Infinity)));
-
-   // let diffForms = applyChangeset(
-   //    { formations: [...initialData.formations] },
-   //    unflattenChanges(initialData.deltas.map((delta) => delta.delta).flat(Infinity))
-   // );
-
    viewOnly = false;
    let session = useSession();
 
-   const colors = ["#DFFF00", "#FFBF00", "#FF7F50", "#DE3163", "#9FE2BF", "#40E0D0", "#6495ED", "#CCCCFF"];
+   const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
 
    const supabase = useSupabaseClient();
+   // const supabase = createClient(
+   //    "https://dxtxbxkkvoslcrsxbfai.supabase.co",
+   //    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4dHhieGtrdm9zbGNyc3hiZmFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjE0NjM3NDYsImV4cCI6MTk3NzAzOTc0Nn0.caFbFV4Ck7MrTSwsPXyIifjeKWYJWXisKR9-zFA33Ng",
+   //    {
+   //       realtime: {
+   //          params: {
+   //             eventsPerSecond: 1,
+   //          },
+   //       },
+   //    }
 
    const [formationsStack, setFormationsStack] = useState<formation[][]>([]);
    const [formations, setFormations] = useState<formation[]>(initialData.formations);
@@ -95,7 +96,15 @@ const Edit = ({ initialData, viewOnly }: {}) => {
       initialData.settings.previousFormationView
    );
    const [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
-   const [onlineUsers, setOnlineUsers] = useState<string>();
+   const [onlineUsers, setOnlineUsers] = useState({
+      "f30197ba-cf06-4234-bcdb-5d40d83c7999": [{ name: "Kishan Sripada", color: "#e6194B" }],
+      "0e5f35d1-3989-401c-9693-f6a632954d0b": [
+         {
+            name: "Sasha Shrestha",
+            color: "#4363d8",
+         },
+      ],
+   });
 
    const [saved, setSaved] = useState<boolean>(true);
    const [shareIsOpen, setShareIsOpen] = useState(false);
@@ -113,12 +122,11 @@ const Edit = ({ initialData, viewOnly }: {}) => {
       };
    };
 
-   let currentFormationIndex = whereInFormation(formations, position).currentFormationIndex;
+   let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
 
    useEffect(() => {
-      console.log(deltas);
       setFormations((formations: formation[]) => {
-         let newFormations = { formations: [...formations] };
+         let newFormations = { formations: [...initialData.formations] };
          applyChangeset(newFormations, unflattenChanges(deltas));
          return [...newFormations.formations];
       });
@@ -161,8 +169,6 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    };
 
    const pushChange = () => {
-      console.log("push change");
-
       setFormationsStack((formationsStack: formation[][]) => {
          setFormations((formations) => {
             let diffs = changesets.diff({ formations: formationsStack[formationsStack.length - 1] }, { formations }, { formations: "id" });
@@ -171,11 +177,12 @@ const Edit = ({ initialData, viewOnly }: {}) => {
             // console.log({ new: formations });
             console.log(diffs);
             if (diffs.length) {
-               channelGlobal.send({
-                  type: "broadcast",
-                  event: "formation-update",
-                  payload: diffs,
-               });
+               setDeltas((deltas) => [...deltas, ...diffs]);
+               // channelGlobal.send({
+               //    type: "broadcast",
+               //    event: "formation-update",
+               //    payload: diffs,
+               // });
                setSaved(false);
                supabase
                   .from("deltas")
@@ -192,72 +199,73 @@ const Edit = ({ initialData, viewOnly }: {}) => {
       });
    };
 
-   useEffect(() => {
-      if (!channelGlobal) return;
-      if (!session) return;
-      channelGlobal.send({
-         type: "broadcast",
-         event: "user-position-update",
-         payload: {
-            selectedFormation,
-            selectedDancers,
-            userId: session?.user?.id,
-         },
-      });
-   }, [selectedFormation, selectedDancers, channelGlobal]);
+   // useEffect(() => {
+   //    if (!channelGlobal) return;
+   //    if (!session) return;
+   //    channelGlobal.send({
+   //       type: "broadcast",
+   //       event: "user-position-update",
+   //       payload: {
+   //          [session?.user?.id]: {
+   //             selectedFormation,
+   //             selectedDancers,
+   //          },
+   //       },
+   //    });
+   // }, [selectedFormation, selectedDancers, channelGlobal]);
 
    useEffect(() => {
-      if (!session) return;
-      let channel = supabase.channel("207", {
-         config: {
-            presence: {
-               key: session?.user.id,
-            },
-         },
-      });
+      // if (!session) return;
+      // let channel = supabase.channel("207", {
+      //    config: {
+      //       presence: {
+      //          key: session?.user.id,
+      //       },
+      //    },
+      // });
 
-      setChannelGlobal(channel);
+      // setChannelGlobal(channel);
       // const usersChannel = channel.on("presence", { event: "sync" }, () => {
-      //    console.log("Online users: ", channel.presenceState());
-
-      //    let users = channel.presenceState();
-      //    Object.keys(users).forEach((id, index) => {
-      //       users[id][0].color = colors[index];
-      //    });
+      //    // console.log("Online users: ", channel.presenceState());
+      //    // let users = channel.presenceState();
+      //    // Object.keys(users).forEach((id, index) => {
+      //    //    users[id][0].color = colors[index];
+      //    // });
       //    // setOnlineUsers({ ...users });
-      //    setOnlineUsers({ ...channel.presenceState() });
+      //    // // setOnlineUsers({ ...channel.presenceState() });
       // });
 
       // channel.on("presence", { event: "join" }, ({ newPresences }) => {
       //    console.log("New users have joined: ", newPresences);
       // });
 
-      const formsChannel = channel
-         // .on("broadcast", { event: "user-position-update" }, ({ payload }) => {
-         //    setUserPositions((userPositions) => {
-         //       return { ...userPositions, [payload.userId]: payload };
-         //    });
-         // })
-         .on("broadcast", { event: "formation-update" }, ({ payload }) => {
-            // console.log(payload);
-            // setDeltas((deltas) => [...deltas, ...payload]);
-            // setFormations((formations: formation[]) => {
-            //    let newFormations = { formations: [...formations] };
-            //    applyChangeset(newFormations, unflattenChanges(payload));
-            //    return [...newFormations.formations];
-            // });
-         });
-      // .subscribe(async (status) => {
-      //    if (status === "SUBSCRIBED") {
-      //       console.log("subbedd");
-      //       const status = await channel.track({ online_at: new Date().toISOString() }); //online_at: new Date().toISOString(), //user: session?.user
-      //       console.log({ status });
-      //    }
-      // });
+      // const formsChannel = channel
+      //    .on("broadcast", { event: "user-position-update" }, ({ payload }) => {
+      //       console.log(payload);
+      //       setUserPositions((userPositions) => {
+      //          return { ...userPositions, ...payload };
+      //       });
+      //    })
+      //    .on("broadcast", { event: "formation-update" }, ({ payload }) => {
+      //       console.log(payload);
+      //       setDeltas((deltas) => [...deltas, ...payload]);
+      //       // setFormations((formations: formation[]) => {
+      //       //    let newFormations = { formations: [...formations] };
+      //       //    applyChangeset(newFormations, unflattenChanges(payload));
+      //       //    return [...newFormations.formations];
+      //       // });
+      //    })
+      //    .subscribe(async (status) => {
+      //       if (status === "SUBSCRIBED") {
+      //          console.log("subbedd");
+      //          // const status = await channel.track({ name: session?.user.user_metadata.full_name }); //online_at: new Date().toISOString(), //user: session?.user
+      //          console.log({ status });
+      //       }
+      //    });
 
       return () => {
          // usersChannel.unsubscribe();
-         formsChannel.unsubscribe();
+         // formsChannel.unsubscribe();
       };
    }, [router.query.danceId, session]);
 
@@ -507,6 +515,10 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                            formations={formations}
                            setFormations={setFormations}
                            draggingDancerId={draggingDancerId}
+                           userPositions={userPositions}
+                           onlineUsers={onlineUsers}
+                           currentFormationIndex={currentFormationIndex}
+                           percentThroughTransition={percentThroughTransition}
                         />
                      ))}
                      {previousFormationView !== "none"
@@ -615,14 +627,20 @@ const whereInFormation = (formations: formation[], position: number) => {
    let sum = 0;
    let currentFormationIndex = null;
 
+   let percentThroughTransition;
    for (let i = 0; i < formations.length; i++) {
       sum = sum + formations[i].durationSeconds + formations[i]?.transition.durationSeconds;
       if (position < sum) {
          currentFormationIndex = i;
+         let durationThroughTransition = position - (sum - formations[i]?.transition?.durationSeconds);
+
+         if (durationThroughTransition > 0) {
+            percentThroughTransition = durationThroughTransition / formations[i]?.transition?.durationSeconds;
+         }
          break;
       }
    }
-   return { currentFormationIndex };
+   return { currentFormationIndex, percentThroughTransition };
 };
 
 export const getServerSideProps = async (ctx) => {
