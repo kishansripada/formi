@@ -73,9 +73,9 @@ export const Formation: React.FC<{
 
             <div
                data-type="drag-handle"
-               onClick={() => {
-                  addToStack();
-               }}
+               // onClick={() => {
+               //    addToStack();
+               // }}
                id={formation.id}
                {...attributes}
                {...listeners}

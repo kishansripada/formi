@@ -54,6 +54,7 @@ export const Layer: React.FC<{
       })
    );
    function handleDragStart(event) {
+      addToStack();
       setActiveId(event.active.id);
    }
 
@@ -67,8 +68,8 @@ export const Layer: React.FC<{
 
             return arrayMove(formations, oldIndex, newIndex);
          });
-         pushChange();
       }
+      pushChange();
       setActiveId(null);
    }
 

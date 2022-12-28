@@ -73,7 +73,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    //       },
    //    }
 
-   const [formationsStack, setFormationsStack] = useState<formation[][]>([]);
+   const [previousFormation, setPreviousFormation] = useState<formation[]>();
    const [formations, setFormations] = useState<formation[]>(initialData.formations);
    const [deltas, setDeltas] = useState([]);
    const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
@@ -108,7 +108,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
 
    const [saved, setSaved] = useState<boolean>(true);
    const [shareIsOpen, setShareIsOpen] = useState(false);
-   const [menuOpen, setMenuOpen] = useState<string>(initialData.soundCloudId ? "formations" : "audio");
+   const [menuOpen, setMenuOpen] = useState<string>(initialData.soundCloudId ? "dancers" : "audio");
    const [pricingTier, setPricingTier] = useState<string>("premium");
    const [player, setPlayer] = useState(null);
 
@@ -124,13 +124,13 @@ const Edit = ({ initialData, viewOnly }: {}) => {
 
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
 
-   useEffect(() => {
-      setFormations((formations: formation[]) => {
-         let newFormations = { formations: [...initialData.formations] };
-         applyChangeset(newFormations, unflattenChanges(deltas));
-         return [...newFormations.formations];
-      });
-   }, [deltas]);
+   // useEffect(() => {
+   //    setFormations((formations: formation[]) => {
+   //       let newFormations = { formations: [...initialData.formations] };
+   //       applyChangeset({ ...newFormations }, unflattenChanges([...deltas]));
+   //       return [...newFormations.formations];
+   //    });
+   // }, [deltas]);
 
    useEffect(() => {
       if (!isPlaying) return;
@@ -160,18 +160,34 @@ const Edit = ({ initialData, viewOnly }: {}) => {
       });
    };
 
-   const addToStack = () => {
-      console.log("add to stack");
-      setFormationsStack((formationStack: formation[][]) => {
-         return [...formationStack, formations];
+   const undo = () => {
+      setFormations((formations: formation[]) => {
+         let newFormations = applyChangeset({ formations: [...initialData.formations] }, unflattenChanges([...deltas].slice(0, -1))).formations;
+         return [...newFormations];
       });
+      setDeltas((deltas) => {
+         return [...deltas].slice(0, -1);
+      });
+      console.log(deltas);
+   };
+
+   const addToStack = () => {
+      console.log("set previous formation");
+
+      setPreviousFormation(formations);
+      // console.log(previousFormation);
       // console.log(formationsStack);
    };
 
    const pushChange = () => {
-      setFormationsStack((formationsStack: formation[][]) => {
+      console.log("push change");
+
+      setPreviousFormation((previousFormation: formation[]) => {
          setFormations((formations) => {
-            let diffs = changesets.diff({ formations: formationsStack[formationsStack.length - 1] }, { formations }, { formations: "id" });
+            console.log(previousFormation);
+            console.log(formations);
+            let diffs = changesets.diff({ formations: previousFormation }, { formations }, { formations: "id" });
+
             diffs = flattenChangeset(diffs);
             // console.log({ old: formationsStack[formationsStack.length - 1] });
             // console.log({ new: formations });
@@ -195,7 +211,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
 
             return formations;
          });
-         return formationsStack;
+         return previousFormation;
       });
    };
 
@@ -402,6 +418,7 @@ const Edit = ({ initialData, viewOnly }: {}) => {
          ) : null}
 
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none  ">
+            <button onClick={undo}>click me</button>
             <div className="flex flex-row  overflow-hidden w-screen">
                {!viewOnly ? (
                   <>
@@ -457,8 +474,8 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                   <Header
                      onlineUsers={onlineUsers}
                      setFormations={setFormations}
-                     formationsStack={formationsStack}
-                     setFormationsStack={setFormationsStack}
+                     // formationsStack={formationsStack}
+                     // setFormationsStack={setFormationsStack}
                      saved={saved}
                      danceName={danceName}
                      setDanceName={setDanceName}
@@ -468,8 +485,8 @@ const Edit = ({ initialData, viewOnly }: {}) => {
 
                   <Canvas
                      pushChange={pushChange}
-                     formationsStack={formationsStack}
-                     setFormationsStack={setFormationsStack}
+                     // formationsStack={formationsStack}
+                     // setFormationsStack={setFormationsStack}
                      addToStack={addToStack}
                      player={player}
                      draggingDancerId={draggingDancerId}

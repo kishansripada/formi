@@ -19,26 +19,37 @@ export const PathEditor: React.FC<{
                )?.position;
                if (!endCoords) return <></>;
 
+               let midpoint = { x: (dancerPosition.position.x + endCoords.x) / 2, y: (dancerPosition.position.y + endCoords.y) / 2 };
                if (dancerPosition.transitionType === "linear" || !dancerPosition.transitionType) {
                   // either previousFormationView is true or the dancer is selected to show their linear path
                   if (selectedDancers.includes(dancerPosition.id) || previousFormationView === "ghostDancersAndPaths") {
                      return (
-                        <path
-                           key={dancerPosition.id}
-                           d={`M ${coordsToPosition(dancerPosition.position.x, dancerPosition.position.y).left} ${
-                              coordsToPosition(dancerPosition.position.x, dancerPosition.position.y).top
-                           } L ${coordsToPosition(endCoords.x, endCoords.y).left} ${coordsToPosition(endCoords.x, endCoords.y).top}`}
-                           stroke="red"
-                           fill="transparent"
-                           strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
-                        />
+                        <>
+                           <path
+                              key={dancerPosition.id}
+                              d={`M ${coordsToPosition(dancerPosition.position.x, dancerPosition.position.y).left} ${
+                                 coordsToPosition(dancerPosition.position.x, dancerPosition.position.y).top
+                              } L ${coordsToPosition(endCoords.x, endCoords.y).left} ${coordsToPosition(endCoords.x, endCoords.y).top}`}
+                              stroke="red"
+                              fill="transparent"
+                              strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
+                           />
+                           <path
+                              key={dancerPosition.id}
+                              d={`M ${coordsToPosition(midpoint.x, midpoint.y).left} ${coordsToPosition(midpoint.x, midpoint.y).top} L ${
+                                 coordsToPosition(midpoint.x, midpoint.y).left + 100
+                              } ${coordsToPosition(midpoint.x, midpoint.y).top + 100}`}
+                              stroke="red"
+                              fill="transparent"
+                              strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
+                           />
+                        </>
                      );
                   }
                }
 
                if (dancerPosition.transitionType === "cubic") {
-                  let controlPointStart = dancerPosition.controlPointStart;
-                  let controlPointEnd = dancerPosition.controlPointEnd;
+                  let { controlPointStart, controlPointEnd } = dancerPosition;
                   let startCoords = dancerPosition.position;
                   let endCoords = formations?.[selectedFormation]?.positions?.find(
                      (dancerPosition2) => dancerPosition2.id === dancerPosition.id
