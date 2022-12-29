@@ -6,7 +6,7 @@ export const DancerAliasShadow: React.FC<{
    formations: formation[];
    isPlaying: boolean;
    currentFormationIndex: number | null;
-   coordsToPosition: Function;
+   coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
 }> = ({ dancer, formations, selectedFormation, isPlaying, currentFormationIndex, coordsToPosition }) => {
    let initials = dancer.name
       .split(" ")
@@ -21,7 +21,7 @@ export const DancerAliasShadow: React.FC<{
    currentCoords = formations[selectedFormation - 1]?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id)?.position;
 
    if (!currentCoords) return;
-   let { left, top } = coordsToPosition(currentCoords.x, currentCoords.y);
+   let { left, top } = coordsToPosition(currentCoords);
 
    return (
       <>

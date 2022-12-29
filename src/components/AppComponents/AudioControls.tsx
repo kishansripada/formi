@@ -126,35 +126,6 @@ export const AudioControls: React.FC<{
                </p>
                {!viewOnly ? (
                   <>
-                     {" "}
-                     <button
-                        onClick={() => {
-                           addToStack();
-                           let id = uuidv4();
-                           console.log(id);
-
-                           setFormations((formations: formation[]) => {
-                              return [
-                                 ...formations,
-                                 {
-                                    ...formations[formations.length - 1],
-                                    id,
-                                    name: `Untitled ${formations.length + 1}`,
-                                    transition: {
-                                       durationSeconds: 5,
-                                    },
-                                    durationSeconds: 10,
-                                 },
-                              ];
-                              //   }
-                           });
-                           setSelectedFormation(formations.length);
-                           pushChange();
-                        }}
-                        className=" rounded-md ml-auto hidden lg:block  text-gray-500 px-3 py-1 mx-1 cursor-pointer outline "
-                     >
-                        + new formation
-                     </button>
                      <button
                         onClick={() => {
                            if (selectedFormation === null) return;
@@ -176,9 +147,56 @@ export const AudioControls: React.FC<{
                            toast.success("formation deleted");
                            pushChange();
                         }}
-                        className=" rounded-md hidden lg:block  text-gray-500 px-3 py-1 mx-1 cursor-pointer outline"
+                        className="rounded-md  hidden transition duration-300 ml-auto  text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-3 py-2 mx-1 cursor-pointer "
                      >
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
+                           stroke="currentColor"
+                           className="w-6 h-6 mr-2"
+                        >
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                         delete formation
+                     </button>
+                     <button
+                        onClick={() => {
+                           addToStack();
+                           let id = uuidv4();
+                           setFormations((formations: formation[]) => {
+                              return [
+                                 ...formations,
+                                 {
+                                    ...formations[formations.length - 1],
+                                    id,
+                                    name: `Untitled ${formations.length + 1}`,
+                                    transition: {
+                                       durationSeconds: 5,
+                                    },
+                                    durationSeconds: 10,
+                                 },
+                              ];
+                              //   }
+                           });
+                           setSelectedFormation(formations.length);
+                           pushChange();
+                        }}
+                        className=" rounded-md  hidden transition duration-300  text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-3 py-2 mx-1 cursor-pointer  "
+                     >
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
+                           stroke="currentColor"
+                           className="w-5 h-5 mr-2"
+                        >
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+
+                        <p>new formation</p>
                      </button>
                   </>
                ) : null}

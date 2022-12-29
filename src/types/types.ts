@@ -9,8 +9,8 @@ export type dancerPosition = {
    id: string;
    position: { x: number; y: number };
    transitionType?: "linear" | "cubic";
-   controlPointStart?: { x: number | null; y: number | null };
-   controlPointEnd?: { x: number | null; y: number | null };
+   controlPointStart?: { x: number; y: number };
+   controlPointEnd?: { x: number; y: number };
 };
 
 export type formation = {
@@ -32,7 +32,3 @@ export const PIXELS_PER_SECOND = 15;
 export const PIXELS_PER_SQUARE = 40;
 export const GRID_WIDTH = 26;
 export const GRID_HEIGHT = 20;
-
-export const coordsToPosition = (x: number, y: number) => {
-   return { left: (PIXELS_PER_SQUARE * GRID_WIDTH) / 2 + PIXELS_PER_SQUARE * x, top: (PIXELS_PER_SQUARE * GRID_HEIGHT) / 2 + PIXELS_PER_SQUARE * -y };
-};

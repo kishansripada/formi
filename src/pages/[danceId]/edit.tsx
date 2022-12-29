@@ -25,10 +25,12 @@ import { dancer, dancerPosition, formation } from "../../types/types";
 import { Roster } from "../../components/AppComponents/SidebarComponents/Roster";
 import { Sidebar } from "../../components/AppComponents/Sidebar";
 import { AudioControls } from "../../components/AppComponents/AudioControls";
+var jsondiffpatch = require("jsondiffpatch").create({
+   objectHash: function (obj) {
+      return obj.id;
+   },
+});
 
-var changesets = require("json-diff-ts");
-import { applyChangeset, flattenChangeset, unflattenChanges } from "json-diff-ts";
-import { createClient } from "@supabase/supabase-js";
 // use effect, but not on initial render
 const useDidMountEffect = (func, deps) => {
    const didMount = useRef(false);
@@ -55,13 +57,15 @@ const FileAudioPlayer = dynamic<{
    ssr: false,
 });
 
-const Edit = ({ initialData, viewOnly }: {}) => {
+const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    viewOnly = false;
-   let session = useSession();
-
+   let pricingTier = "premium";
    const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
 
    const supabase = useSupabaseClient();
+   let session = useSession();
+   const router = useRouter();
+
    // const supabase = createClient(
    //    "https://dxtxbxkkvoslcrsxbfai.supabase.co",
    //    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4dHhieGtrdm9zbGNyc3hiZmFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjE0NjM3NDYsImV4cCI6MTk3NzAzOTc0Nn0.caFbFV4Ck7MrTSwsPXyIifjeKWYJWXisKR9-zFA33Ng",
@@ -109,13 +113,13 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    const [saved, setSaved] = useState<boolean>(true);
    const [shareIsOpen, setShareIsOpen] = useState(false);
    const [menuOpen, setMenuOpen] = useState<string>(initialData.soundCloudId ? "dancers" : "audio");
-   const [pricingTier, setPricingTier] = useState<string>("premium");
    const [player, setPlayer] = useState(null);
 
    const [channelGlobal, setChannelGlobal] = useState();
    const [userPositions, setUserPositions] = useState({});
 
-   const coordsToPosition = (x: number, y: number) => {
+   const coordsToPosition = (coords: { x: number; y: number }) => {
+      let { x, y } = coords;
       return {
          left: (PIXELS_PER_SQUARE * stageDimensions.width) / 2 + PIXELS_PER_SQUARE * x,
          top: (PIXELS_PER_SQUARE * stageDimensions.height) / 2 + PIXELS_PER_SQUARE * -y,
@@ -146,8 +150,6 @@ const Edit = ({ initialData, viewOnly }: {}) => {
       }
    }, [soundCloudTrackId, songDuration]);
 
-   const router = useRouter();
-
    const removeDancer = (id: string) => {
       // remove dancer and all their positions
       setFormations((formations) => {
@@ -161,14 +163,18 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    };
 
    const undo = () => {
-      setFormations((formations: formation[]) => {
-         let newFormations = applyChangeset({ formations: [...initialData.formations] }, unflattenChanges([...deltas].slice(0, -1))).formations;
-         return [...newFormations];
-      });
-      setDeltas((deltas) => {
-         return [...deltas].slice(0, -1);
-      });
-      console.log(deltas);
+      console.log(formations);
+      // addToStack();
+      // setFormations([]);
+      // pushChange();
+      // setFormations((formations: formation[]) => {
+      //    let newFormations = applyChangeset({ formations: [...initialData.formations] }, unflattenChanges([...deltas].slice(0, -1))).formations;
+      //    return [...newFormations];
+      // });
+      // setDeltas((deltas) => {
+      //    return [...deltas].slice(0, -1);
+      // });
+      // console.log(deltas);
    };
 
    const addToStack = () => {
@@ -180,20 +186,19 @@ const Edit = ({ initialData, viewOnly }: {}) => {
    };
 
    const pushChange = () => {
-      console.log("push change");
-
-      setPreviousFormation((previousFormation: formation[]) => {
+      setPreviousFormation((previousFormations: formation[]) => {
          setFormations((formations) => {
-            console.log(previousFormation);
-            console.log(formations);
-            let diffs = changesets.diff({ formations: previousFormation }, { formations }, { formations: "id" });
+            var delta = jsondiffpatch.diff(previousFormations, formations);
+            console.log(delta);
+            if (delta) {
+               // let diffs = changesets.diff({ formations: [...previousFormations] }, { formations: [...formations] }, { formations: "id" });
 
-            diffs = flattenChangeset(diffs);
-            // console.log({ old: formationsStack[formationsStack.length - 1] });
-            // console.log({ new: formations });
-            console.log(diffs);
-            if (diffs.length) {
-               setDeltas((deltas) => [...deltas, ...diffs]);
+               // diffs = flattenChangeset(diffs);
+               // console.log({ old: formationsStack[formationsStack.length - 1] });
+               // console.log({ new: formations });
+               // console.log(diffs);
+               // if (diffs.length) {
+               // setDeltas((deltas) => [...deltas, ...diffs]);
                // channelGlobal.send({
                //    type: "broadcast",
                //    event: "formation-update",
@@ -202,16 +207,16 @@ const Edit = ({ initialData, viewOnly }: {}) => {
                setSaved(false);
                supabase
                   .from("deltas")
-                  .insert([{ userid: session?.user?.id, timestamp: new Date(), delta: diffs, danceid: router.query.danceId }])
+                  .insert([{ userid: session?.user?.id, timestamp: new Date(), delta: delta, danceid: router.query.danceId }])
                   .then((r) => {
                      setSaved(true);
                      console.log(r);
                   });
             }
-
+            // }
             return formations;
          });
-         return previousFormation;
+         return previousFormations;
       });
    };
 
@@ -690,17 +695,16 @@ export const getServerSideProps = async (ctx) => {
 
    let sortedDeltas = deltas?.sort((a, b) => a.timestamp - b.timestamp);
 
-   let diffForms = applyChangeset(
-      { formations: [...dance.formations] },
-      unflattenChanges(sortedDeltas.map((delta) => delta.delta).flat(Infinity))
-   ).formations;
+   for (let i = 0; i < sortedDeltas.length; i++) {
+      jsondiffpatch.patch(dance.formations, sortedDeltas[i].delta);
+   }
 
    let _ = await Promise.all([
       supabase.from("deltas").delete().eq("danceid", ctx.query.danceId),
-      supabase.from("dances").update({ formations: diffForms }).eq("id", ctx.query.danceId),
+      supabase.from("dances").update({ formations: dance.formations }).eq("id", ctx.query.danceId),
    ]);
 
-   dance = { ...{ ...dance, formations: diffForms }, audioFiles, sampleAudioFiles };
+   dance = { ...{ ...dance, formations: dance.formations }, audioFiles, sampleAudioFiles };
 
    if (!dance) {
       return {

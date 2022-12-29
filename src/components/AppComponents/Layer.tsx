@@ -2,11 +2,9 @@ import { ReactEventHandler } from "react";
 import { Formation } from "./Formation";
 import { useCallback, useEffect, useState } from "react";
 import { dancer, dancerPosition, formation } from "../../types/types";
-// import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-// import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { v4 as uuidv4 } from "uuid";
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay } from "@dnd-kit/core";
-
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy } from "@dnd-kit/sortable";
+import { SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 
 export const Layer: React.FC<{
    formations: formation[];
@@ -69,7 +67,7 @@ export const Layer: React.FC<{
             return arrayMove(formations, oldIndex, newIndex);
          });
       }
-      pushChange();
+      pushChange({ isSwap: true });
       setActiveId(null);
    }
 

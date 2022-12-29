@@ -17,7 +17,7 @@ export const Canvas: React.FC<{
    setPixelsPerSecond: Function;
    songDuration: number | null;
    stageDimensions: { width: number; height: number };
-   coordsToPosition: Function;
+   coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
    draggingDancerId: string | null;
    setDraggingDancerId: Function;
    player: any;
@@ -219,14 +219,10 @@ export const Canvas: React.FC<{
                formations?.[selectedFormation]?.positions
                   .filter((dancerPosition: dancerPosition) => {
                      return (
-                        coordsToPosition(dancerPosition.position.x, dancerPosition.position.y).left >
-                           Math.min(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
-                        coordsToPosition(dancerPosition.position.x, dancerPosition.position.y).left <
-                           Math.max(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
-                        coordsToPosition(dancerPosition.position.x, dancerPosition.position.y).top >
-                           Math.min(dragBoxCoords.start.y, dragBoxCoords.end.y) &&
-                        coordsToPosition(dancerPosition.position.x, dancerPosition.position.y).top <
-                           Math.max(dragBoxCoords.start.y, dragBoxCoords.end.y)
+                        coordsToPosition(dancerPosition.position).left > Math.min(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
+                        coordsToPosition(dancerPosition.position).left < Math.max(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
+                        coordsToPosition(dancerPosition.position).top > Math.min(dragBoxCoords.start.y, dragBoxCoords.end.y) &&
+                        coordsToPosition(dancerPosition.position).top < Math.max(dragBoxCoords.start.y, dragBoxCoords.end.y)
                      );
                   })
                   .map((dancerPosition: dancerPosition) => dancerPosition.id)

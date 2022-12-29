@@ -11,7 +11,7 @@ export const DancerAlias: React.FC<{
    position: number | null;
    setFormations: Function;
    selectedDancers: string[];
-   coordsToPosition: Function;
+   coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
    draggingDancerId: string | null;
    stageDimensions: any;
    userPositions: any;
@@ -80,7 +80,7 @@ export const DancerAlias: React.FC<{
    // if the dancer does not have any coordinates right now, return nothing since it shouln't be displayed
    if (!currentCoords) return <></>;
 
-   let { left, top } = coordsToPosition(currentCoords.x, currentCoords.y);
+   let { left, top } = coordsToPosition(currentCoords);
 
    // since only one person should be selecting a single dancer, we just choose the first person that's selecting that dancer
    let idSelectingMe = Object.keys(userPositions).filter(
@@ -101,8 +101,9 @@ export const DancerAlias: React.FC<{
                top,
                transform: "translate(-50%, -50%)",
                pointerEvents: idSelectingMe ? "none" : "auto",
+               boxShadow: selectedDancers.includes(dancer.id) ? `0 0 8px ${color}, inset 0 0 8px ${color}` : "",
                // transform: `translate(-50%, -50%) translate(${left}px, ${top}px)`,
-               backgroundColor: selectedDancers.includes(dancer.id) ? "black" : color || "",
+               backgroundColor: color || "",
                transition: !draggingDancerId ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",
             }}
             id={dancer.id}
@@ -142,7 +143,10 @@ export const DancerAlias: React.FC<{
                <div
                   id={dancer.id}
                   data-type={"dancer"}
-                  className="bg-white rounded-full w-[32px] h-[32px] grid place-items-center select-none cursor-default "
+                  // style={{
+                  //    backgroundColor: selectedDancers.includes(dancer.id) ? "black" : color || "",
+                  // }}
+                  className="bg-white  rounded-full w-[32px] h-[32px] grid place-items-center select-none cursor-default "
                >
                   <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
                      {initials}
@@ -226,7 +230,7 @@ const animate = (
    } else {
       if (inThisFormation) {
          // return position from this formation
-         return coordsToPosition(inThisFormation.position.x, inThisFormation.position.y);
+         return coordsToPosition(inThisFormation.position);
       } else {
          // return off stage
          return null;
@@ -254,16 +258,18 @@ const animate = (
    percentThroughTransition = easeInOutQuad(percentThroughTransition);
 
    if (inThisFormation?.transitionType === "cubic" && inThisFormation?.controlPointStart?.y && inThisFormation?.controlPointStart?.x) {
-      return coordsToPosition(
-         (1 - percentThroughTransition) ** 3 * from.x +
+      return coordsToPosition({
+         x:
+            (1 - percentThroughTransition) ** 3 * from.x +
             3 * (1 - percentThroughTransition) ** 2 * percentThroughTransition * inThisFormation.controlPointStart.x +
             3 * (1 - percentThroughTransition) * percentThroughTransition ** 2 * inThisFormation.controlPointEnd.x +
             percentThroughTransition ** 3 * to.x,
-         (1 - percentThroughTransition) ** 3 * from.y +
+         y:
+            (1 - percentThroughTransition) ** 3 * from.y +
             3 * (1 - percentThroughTransition) ** 2 * percentThroughTransition * inThisFormation.controlPointStart.y +
             3 * (1 - percentThroughTransition) * percentThroughTransition ** 2 * inThisFormation.controlPointEnd.y +
-            percentThroughTransition ** 3 * to.y
-      );
+            percentThroughTransition ** 3 * to.y,
+      });
    }
-   return coordsToPosition(from.x + (to.x - from.x) * percentThroughTransition, from.y + (to.y - from.y) * percentThroughTransition);
+   return coordsToPosition({ x: from.x + (to.x - from.x) * percentThroughTransition, y: from.y + (to.y - from.y) * percentThroughTransition });
 };
