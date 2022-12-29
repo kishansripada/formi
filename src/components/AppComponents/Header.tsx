@@ -12,13 +12,12 @@ export const Header: React.FC<{
    saved: boolean;
    danceName: string;
    setDanceName: Function;
-   formationsStack: formation[][];
-   setFormationsStack: Function;
+   undo: Function;
    setShareIsOpen: Function;
    viewOnly: boolean;
    setFormations: Function;
    onlineUsers: any;
-}> = ({ saved, danceName, setDanceName, setShareIsOpen, viewOnly, formationsStack, setFormationsStack, setFormations, onlineUsers }) => {
+}> = ({ saved, danceName, setDanceName, setShareIsOpen, viewOnly, setFormations, onlineUsers, undo }) => {
    const router = useRouter();
    let session = useSession();
    const supabase = useSupabaseClient();
@@ -86,14 +85,7 @@ export const Header: React.FC<{
 
                {!viewOnly ? (
                   <>
-                     <button
-                        className="mr-3 hidden lg:block"
-                        onClick={() => {
-                           if (!formationsStack.length) return;
-                           setFormations(formationsStack[formationsStack.length - 1]);
-                           setFormationsStack(formationsStack.slice(0, formationsStack.length - 1));
-                        }}
-                     >
+                     <button className="mr-3 hidden lg:block" onClick={undo}>
                         <svg
                            xmlns="http://www.w3.org/2000/svg"
                            fill="none"

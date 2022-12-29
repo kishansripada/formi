@@ -39,8 +39,17 @@ export const Layers: React.FC<{
    const [resizingFormation, setResizingFormation] = useState<string | null>(null);
 
    const pointerUp = (e) => {
-      // round formation length
       if (resizingFormation === null && resizingTransition === null) return;
+      setFormations((formations: formation[]) => {
+         return formations.map((formation, i) => {
+            return {
+               ...formation,
+               durationSeconds: Math.round(formation.durationSeconds * 100) / 100,
+               transition: { durationSeconds: Math.round(formation.transition.durationSeconds * 100) / 100 },
+            };
+         });
+      });
+
       setResizingTransition(null);
       setResizingFormation(null);
       pushChange();

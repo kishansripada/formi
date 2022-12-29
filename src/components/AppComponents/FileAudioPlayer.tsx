@@ -70,7 +70,7 @@ export const FileAudioPlayer: React.FC<{
          });
          wavesurfer.load(soundCloudTrackId);
          wavesurfer.on("audioprocess", function (e) {
-            setPosition(Math.ceil(e / 0.01666) * 0.01666); // 30fps
+            setPosition(Math.ceil(e / 0.01) * 0.01); // 100fps
          });
          wavesurfer.on("ready", function (e) {
             console.log("ready");

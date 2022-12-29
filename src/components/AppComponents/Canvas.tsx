@@ -21,8 +21,7 @@ export const Canvas: React.FC<{
    draggingDancerId: string | null;
    setDraggingDancerId: Function;
    player: any;
-   setFormationsStack: Function;
-   formationsStack: formation[][];
+   undo: Function;
    addToStack: Function;
    pushChange: Function;
 }> = ({
@@ -42,8 +41,7 @@ export const Canvas: React.FC<{
    coordsToPosition,
    draggingDancerId,
    setDraggingDancerId,
-   setFormationsStack,
-   formationsStack,
+   undo,
    addToStack,
    pushChange,
 }) => {
@@ -141,9 +139,7 @@ export const Canvas: React.FC<{
 
       if (e.key === "z") {
          e.preventDefault();
-         if (!formationsStack.length) return;
-         setFormations(formationsStack[formationsStack.length - 1]);
-         setFormationsStack(formationsStack.slice(0, formationsStack.length - 1));
+         undo();
       }
    };
 

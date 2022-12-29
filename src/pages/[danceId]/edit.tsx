@@ -164,25 +164,32 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
 
    const undo = () => {
       console.log(formations);
-      // addToStack();
-      // setFormations([]);
-      // pushChange();
-      // setFormations((formations: formation[]) => {
-      //    let newFormations = applyChangeset({ formations: [...initialData.formations] }, unflattenChanges([...deltas].slice(0, -1))).formations;
-      //    return [...newFormations];
-      // });
-      // setDeltas((deltas) => {
-      //    return [...deltas].slice(0, -1);
-      // });
-      // console.log(deltas);
+      return;
+      if (!deltas.length) return;
+      setSaved(false);
+
+      let reverseDelta = jsondiffpatch.reverse(deltas[deltas.length - 1]);
+      setDeltas((deltas) => {
+         return [...deltas].slice(0, -1);
+      });
+      console.log(reverseDelta);
+      setFormations((formations: formation[]) => {
+         jsondiffpatch.patch(formations, reverseDelta);
+
+         return [...formations];
+      });
+
+      supabase
+         .from("deltas")
+         .insert([{ userid: session?.user?.id, timestamp: new Date(), delta: reverseDelta, danceid: router.query.danceId }])
+         .then((r) => {
+            setSaved(true);
+            console.log(r);
+         });
    };
 
    const addToStack = () => {
-      console.log("set previous formation");
-
       setPreviousFormation(formations);
-      // console.log(previousFormation);
-      // console.log(formationsStack);
    };
 
    const pushChange = () => {
@@ -191,14 +198,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
             var delta = jsondiffpatch.diff(previousFormations, formations);
             console.log(delta);
             if (delta) {
-               // let diffs = changesets.diff({ formations: [...previousFormations] }, { formations: [...formations] }, { formations: "id" });
-
-               // diffs = flattenChangeset(diffs);
-               // console.log({ old: formationsStack[formationsStack.length - 1] });
-               // console.log({ new: formations });
-               // console.log(diffs);
-               // if (diffs.length) {
-               // setDeltas((deltas) => [...deltas, ...diffs]);
+               setDeltas((deltas) => [...deltas, delta]);
                // channelGlobal.send({
                //    type: "broadcast",
                //    event: "formation-update",
@@ -213,7 +213,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                      console.log(r);
                   });
             }
-            // }
+
             return formations;
          });
          return previousFormations;
@@ -423,7 +423,6 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          ) : null}
 
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none  ">
-            <button onClick={undo}>click me</button>
             <div className="flex flex-row  overflow-hidden w-screen">
                {!viewOnly ? (
                   <>
@@ -479,8 +478,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   <Header
                      onlineUsers={onlineUsers}
                      setFormations={setFormations}
-                     // formationsStack={formationsStack}
-                     // setFormationsStack={setFormationsStack}
+                     undo={undo}
                      saved={saved}
                      danceName={danceName}
                      setDanceName={setDanceName}
@@ -490,8 +488,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
 
                   <Canvas
                      pushChange={pushChange}
-                     // formationsStack={formationsStack}
-                     // setFormationsStack={setFormationsStack}
+                     undo={undo}
                      addToStack={addToStack}
                      player={player}
                      draggingDancerId={draggingDancerId}
