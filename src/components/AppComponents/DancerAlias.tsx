@@ -101,7 +101,7 @@ export const DancerAlias: React.FC<{
                top,
                transform: "translate(-50%, -50%)",
                pointerEvents: idSelectingMe ? "none" : "auto",
-               boxShadow: selectedDancers.includes(dancer.id) ? `0 0 8px ${color}, inset 0 0 8px ${color}` : "",
+               // boxShadow: selectedDancers.includes(dancer.id) ? `0 0 8px ${color}, inset 0 0 8px ${color}` : "",
                // transform: `translate(-50%, -50%) translate(${left}px, ${top}px)`,
                backgroundColor: color || "",
                transition: !draggingDancerId ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",

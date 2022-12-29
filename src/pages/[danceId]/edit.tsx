@@ -163,8 +163,6 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    };
 
    const undo = () => {
-      console.log(formations);
-      return;
       if (!deltas.length) return;
       setSaved(false);
 

@@ -59,6 +59,7 @@ export const Layer: React.FC<{
    function handleDragEnd(event) {
       const { active, over } = event;
 
+      if (!over?.id) return;
       if (active.id !== over?.id) {
          setFormations((formations: formation[]) => {
             const oldIndex = formations.findIndex((formation) => formation.id === active.id);

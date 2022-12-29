@@ -13,7 +13,7 @@ export const Formation: React.FC<{
    userPositions: any;
    onlineUsers: any;
    addToStack: Function;
-   activeId: string;
+   activeId: string | null;
 }> = ({
    formation,
    amSelected,
