@@ -3,15 +3,18 @@ import { v4 as uuidv4 } from "uuid";
 
 import { dancer, dancerPosition, formation, stageDimensions } from "../../types/types";
 
-export const NewDancer: React.FC<{ setDancers: Function; stageDimensions: stageDimensions; setFormations: Function }> = ({
-   setDancers,
-   stageDimensions,
-   setFormations,
-}) => {
+export const NewDancer: React.FC<{
+   setDancers: Function;
+   stageDimensions: stageDimensions;
+   setFormations: Function;
+   addToStack: Function;
+   pushChange: Function;
+}> = ({ setDancers, stageDimensions, setFormations, addToStack, pushChange }) => {
    const [newName, setNewName] = useState("");
 
    const createNewDancer = () => {
       if (newName === "") return;
+      addToStack();
       let id = uuidv4();
       setDancers((dancers: dancer[]) => {
          return [
@@ -49,6 +52,7 @@ export const NewDancer: React.FC<{ setDancers: Function; stageDimensions: stageD
          });
       });
       setNewName("");
+      pushChange();
    };
    return (
       <>

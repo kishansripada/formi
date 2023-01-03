@@ -12,7 +12,21 @@ export const Roster: React.FC<{
    setEditingDancer: Function;
    stageDimensions: stageDimensions;
    setFormations: Function;
-}> = ({ setDancers, dancers, setEditingDancer, formations, selectedFormation, stageDimensions, setFormations }) => {
+   addToStack: Function;
+   pushChange: Function;
+   selectedDancers: string[];
+}> = ({
+   setDancers,
+   dancers,
+   setEditingDancer,
+   formations,
+   selectedFormation,
+   stageDimensions,
+   setFormations,
+   pushChange,
+   addToStack,
+   selectedDancers,
+}) => {
    return (
       <>
          <div className="lg:flex hidden  min-w-[350px] flex-col w-[23%]  bg-white border-r border-r-gray-300">
@@ -40,13 +54,20 @@ export const Roster: React.FC<{
             </div>
 
             <div className="flex flex-col  relative overflow-y-scroll overflow-x-hidden  ">
-               <NewDancer setFormations={setFormations} stageDimensions={stageDimensions} setDancers={setDancers} />
+               <NewDancer
+                  pushChange={pushChange}
+                  addToStack={addToStack}
+                  setFormations={setFormations}
+                  stageDimensions={stageDimensions}
+                  setDancers={setDancers}
+               />
 
                {dancers
                   .slice()
                   .reverse()
                   .map((dancer, index) => (
                      <Dancer
+                        selectedDancers={selectedDancers}
                         setFormations={setFormations}
                         formations={formations}
                         selectedFormation={selectedFormation}

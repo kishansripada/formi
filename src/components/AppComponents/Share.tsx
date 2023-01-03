@@ -51,9 +51,9 @@ export const Share: React.FC<{
             <div className="flex  w-[700px] flex-col rounded-xl bg-white">
                <div className="flex flex-col rounded-xl px-10 pt-10 pb-6 h-full">
                   <div className="flex flex-row">
-                     <h1 className="text-2xl font-semibold mr-auto">Sharing settings</h1>
-                     <div className="flex flex-row items-center justify-center mx-5">
-                        <p className="text-sm font-medium text-gray-900 mr-3">anyone with the link can view</p>
+                     <h1 className="text-2xl  mr-auto">sharing settings</h1>
+                     <div className="flex flex-col items-end justify-center mx-5">
+                        <p className="text-sm  text-gray-700  mb-3">anyone with the link can view</p>
 
                         <label className="inline-flex relative items-center cursor-pointer">
                            <input
@@ -103,19 +103,38 @@ export const Share: React.FC<{
                               setNewUserEmail("");
                            }
                         }}
-                        className="focus:outline-pink-700 rounded-sm w-2/3 h-8  outline-gray-400 focus:outline-2  outline-2 focus:outline outline px-2"
+                        className="focus:border-pink-700 focus:border-2 rounded-md w-full mr-10 h-8 py-4 border-gray-300 border text-sm shadow-sm px-2 focus:outline-none"
                         type="text"
                         placeholder="enter an email"
                      />
-                     <p className="text-xs text-gray-500">press enter to add</p>
+                     <button
+                        onClick={(e) => {
+                           e.preventDefault();
+                           if (!validateEmail(newUserEmail)) {
+                              toast.error("please enter a valid email");
+                              return;
+                           }
+                           if (shareSettings[e.target.value]) {
+                              toast.error("you've already entered that email");
+                              return;
+                           }
+                           setShareSettings((users) => {
+                              return { ...users, [e.target.value]: "view" };
+                           });
+                           setNewUserEmail("");
+                        }}
+                        className="text-gray-700 text-sm border border-gray-300 rounded-md px-2 py-1 ml-auto"
+                     >
+                        add
+                     </button>
                   </div>
 
                   <div className="mt-5">
                      {Object.entries(shareSettings).map((user) => {
                         return (
-                           <div className="flex flex-row mb-3" key={user[0]}>
-                              <p>{user[0]}</p>
-                              <select
+                           <div className="flex flex-row py-2 rounded-md px-2 hover:bg-gray-100" key={user[0]}>
+                              <p className="text-gray-700">{user[0]}</p>
+                              {/* <select
                                  className="ml-auto"
                                  name=""
                                  id=""
@@ -126,8 +145,7 @@ export const Share: React.FC<{
                                  }}
                               >
                                  <option value="view">view</option>
-                                 {/* <option value="edit">edit</option> */}
-                              </select>
+                              </select> */}
                               <button
                                  onClick={() => {
                                     setShareSettings((users) => {
@@ -136,28 +154,21 @@ export const Share: React.FC<{
                                        return state;
                                     });
                                  }}
+                                 className="text-gray-700 text-sm border border-gray-300 rounded-md px-2 py-1 ml-auto"
                               >
-                                 <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="w-6 h-6 ml-3"
-                                 >
-                                    <path
-                                       strokeLinecap="round"
-                                       strokeLinejoin="round"
-                                       d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                                    />
-                                 </svg>
+                                 remove
                               </button>
                            </div>
                         );
                      })}
                   </div>
-                  {Object.entries(shareSettings).length ? <p className="text-gray-500 text-xs italic">collaborative editing is coming soon</p> : null}
-                  <button className="ml-auto bg-blue-600 text-white px-3 mt-5 py-1 rounded-md" onClick={updateShareSettings}>
+                  {Object.entries(shareSettings).length ? <p className="text-gray-400 text-xs mt-4 ">collaborative editing is coming soon</p> : null}
+               </div>
+               <div className="flex flex-row justify-between items-center w-full bg-gray-100 h-16 rounded-b-xl px-5">
+                  <button onClick={() => setShareIsOpen(false)} className=" border border-gray-300 bg-white hover:bg-gray-100 px-4  py-2 rounded-md">
+                     cancel
+                  </button>
+                  <button className="ml-auto bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md" onClick={updateShareSettings}>
                      save
                   </button>
                </div>

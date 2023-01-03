@@ -115,7 +115,7 @@ export const Layers: React.FC<{
 
    return (
       <div
-         className="flex flex-col  bg-[#fafafa]  select-none"
+         className="flex flex-col  bg-[#fafafa]  select-none mt-2"
          style={{
             width: songDuration
                ? Math.max(
@@ -124,6 +124,7 @@ export const Layers: React.FC<{
                     (songDuration / 1000) * pixelsPerSecond
                  )
                : "100%",
+
             // width: "100%",
             // width: songDuration
             //    ? Math.max(

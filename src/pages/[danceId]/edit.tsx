@@ -1,30 +1,32 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { debounce, divide } from "lodash";
-import { useRouter } from "next/router";
-import { v4 as uuidv4 } from "uuid";
-
-import dynamic from "next/dynamic";
 import Head from "next/head";
-import { PIXELS_PER_SQUARE } from "../../types/types";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+
+import { debounce } from "lodash";
+import toast, { Toaster } from "react-hot-toast";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import toast, { Toaster } from "react-hot-toast";
 
+import { PIXELS_PER_SQUARE } from "../../types/types";
+import { dancer, dancerPosition, formation } from "../../types/types";
+
+import { AudioControls } from "../../components/AppComponents/AudioControls";
 import { Header } from "../../components/AppComponents/Header";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
 import { DancerAliasShadow } from "../../components/AppComponents/DancerAliasShadow";
 import { Canvas } from "../../components/AppComponents/Canvas";
-import { CurrentFormation } from "../../components/AppComponents/SidebarComponents/CurrentFormation";
 import { Settings } from "../../components/AppComponents/SidebarComponents/Settings";
 import { EditDancer } from "../../components/AppComponents/EditDancer";
 import { Layers } from "../../components/AppComponents/Layers";
 import { PathEditor } from "../../components/AppComponents/PathEditor";
 import { Share } from "../../components/AppComponents/Share";
+
 import { ChooseAudioSource } from "../../components/AppComponents/SidebarComponents/ChooseAudioSource";
-import { dancer, dancerPosition, formation } from "../../types/types";
 import { Roster } from "../../components/AppComponents/SidebarComponents/Roster";
 import { Sidebar } from "../../components/AppComponents/Sidebar";
-import { AudioControls } from "../../components/AppComponents/AudioControls";
+import { CurrentFormation } from "../../components/AppComponents/SidebarComponents/CurrentFormation";
+
 var jsondiffpatch = require("jsondiffpatch").create({
    objectHash: function (obj) {
       return obj.id;
@@ -165,7 +167,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
 
    const undo = () => {
       if (!deltas.length) return;
-      setSaved(false);
+      // setSaved(false);
 
       let reverseDelta = jsondiffpatch.reverse(deltas[deltas.length - 1]);
       setDeltas((deltas) => {
@@ -178,13 +180,13 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          return [...formations];
       });
 
-      supabase
-         .from("deltas")
-         .insert([{ userid: session?.user?.id, timestamp: new Date(), delta: reverseDelta, danceid: router.query.danceId }])
-         .then((r) => {
-            setSaved(true);
-            console.log(r);
-         });
+      // supabase
+      //    .from("deltas")
+      //    .insert([{ userid: session?.user?.id, timestamp: new Date(), delta: reverseDelta, danceid: router.query.danceId }])
+      //    .then((r) => {
+      //       setSaved(true);
+      //       console.log(r);
+      //    });
    };
 
    const addToStack = () => {
@@ -195,7 +197,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       setPreviousFormation((previousFormations: formation[]) => {
          setFormations((formations) => {
             var delta = jsondiffpatch.diff(previousFormations, formations);
-            console.log(delta);
+            // console.log(delta);
             if (delta) {
                setDeltas((deltas) => [...deltas, delta]);
                // channelGlobal.send({
@@ -203,14 +205,14 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                //    event: "formation-update",
                //    payload: diffs,
                // });
-               setSaved(false);
-               supabase
-                  .from("deltas")
-                  .insert([{ userid: session?.user?.id, timestamp: new Date(), delta: delta, danceid: router.query.danceId }])
-                  .then((r) => {
-                     setSaved(true);
-                     console.log(r);
-                  });
+               // setSaved(false);
+               // supabase
+               //    .from("deltas")
+               //    .insert([{ userid: session?.user?.id, timestamp: new Date(), delta: delta, danceid: router.query.danceId }])
+               //    .then((r) => {
+               //       setSaved(true);
+               //       console.log(r);
+               //    });
             }
 
             return formations;
@@ -294,7 +296,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          console.log("uploading settings");
          const { data, error } = await supabase
             .from("dances")
-            .update({ settings: { stageDimensions: stageDimensions }, last_edited: new Date() })
+            .update({ settings: { previousFormationView: previousFormationView, stageDimensions: stageDimensions }, last_edited: new Date() })
             .eq("id", router.query.danceId);
 
          console.log({ data });
@@ -319,7 +321,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 0),
+      }, 2000),
       [router.query.danceId]
    );
 
@@ -330,7 +332,27 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       }
    }, [dancers]);
    // // ///////////
+   let uploadFormations = useCallback(
+      debounce(async (formations) => {
+         console.log("uploading formations");
+         const { data, error } = await supabase
+            .from("dances")
+            .update({ formations: formations, last_edited: new Date() })
+            .eq("id", router.query.danceId);
+         console.log({ data });
+         console.log({ error });
+         setSaved(true);
+      }, 10000),
+      [router.query.danceId]
+   );
 
+   useDidMountEffect(() => {
+      if (router.isReady) {
+         setSaved(false);
+         uploadFormations(formations);
+      }
+   }, [formations]);
+   ////////////////////////
    // ///////////
    let uploadSoundCloudId = useCallback(
       debounce(async (soundCloudTrackId) => {
@@ -342,7 +364,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 0),
+      }, 100),
       [router.query.danceId]
    );
 
@@ -353,7 +375,6 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       }
    }, [soundCloudTrackId]);
    // //////////////////////////
-
    // ///////////
    let uploadName = useCallback(
       debounce(async (danceName) => {
@@ -362,7 +383,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 0),
+      }, 100),
       [router.query.danceId]
    );
 
@@ -422,13 +443,15 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          ) : null}
 
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none text-gray-900  ">
-            <div className="flex flex-row  overflow-hidden w-screen">
+            <div className="flex flex-row  overflow-hidden w-screen h-full">
                {!viewOnly ? (
                   <>
                      <Sidebar setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
 
                      {menuOpen === "dancers" ? (
                         <Roster
+                           addToStack={addToStack}
+                           pushChange={pushChange}
                            setDancers={setDancers}
                            dancers={dancers}
                            formations={formations}
@@ -436,6 +459,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            setEditingDancer={setEditingDancer}
                            stageDimensions={stageDimensions}
                            setFormations={setFormations}
+                           selectedDancers={selectedDancers}
                         ></Roster>
                      ) : menuOpen === "audio" ? (
                         <ChooseAudioSource
@@ -663,8 +687,6 @@ const whereInFormation = (formations: formation[], position: number) => {
 };
 
 export const getServerSideProps = async (ctx) => {
-   console.log(ctx.req.headers.host);
-
    // Create authenticated Supabase Client
    const supabase = createServerSupabaseClient(ctx);
    // Check if we have a session

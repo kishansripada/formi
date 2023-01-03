@@ -34,7 +34,7 @@ export const AudioControls: React.FC<{
 }) => {
    return (
       <>
-         <div className="min-h-[50px] bg-[#fafafa] w-full border-t border-gray-300 flex flex-row items-center justify-between select-none">
+         <div className="min-h-[60px] bg-[#fafafa] w-full border-t border-gray-300 flex flex-row items-center justify-between select-none">
             <div className="w-[45%] pl-10 flex flex-row justify-center items-center ">
                <svg
                   xmlns="http://www.w3.org/2000/svg"

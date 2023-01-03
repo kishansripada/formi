@@ -8,8 +8,12 @@ export const Dancer: React.FC<{
    dancer: dancer;
    setEditingDancer: Function;
    setFormations: Function;
-}> = ({ setDancers, dancers, selectedFormation, formations, setEditingDancer, dancer, setFormations }) => {
+   selectedDancers: string[];
+}> = ({ setDancers, dancers, selectedFormation, formations, setEditingDancer, dancer, setFormations, selectedDancers }) => {
    let { name, id, instagramUsername, color } = dancer;
+
+   let amSelected = selectedDancers.includes(id);
+
    let canBeAddedToStage =
       // there is a formation select
       selectedFormation !== null &&
@@ -49,16 +53,19 @@ export const Dancer: React.FC<{
 
    return (
       <>
-         <div className={`flex flex-row items-center px-3  select-none  mb-1 min-h-[55px] bg-white`}>
+         <div
+            style={{
+               backgroundColor: amSelected ? "#e5e7eb" : "white",
+            }}
+            className={`flex flex-row items-center px-3  select-none  mb-1 min-h-[55px] bg-white`}
+         >
             <>
                <div
                   style={{
                      transform: "translate(0, 0)",
-                     backgroundColor: color || "",
+                     backgroundColor: color || "#db2777",
                   }}
-                  className={`min-w-[48px] min-h-[48px] ml-2 rounded-full grid place-items-center cursor-pointer pointer-events-none select-none ${
-                     !color || color === "#FFFFFF" ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" : ""
-                  }  `}
+                  className={`min-w-[48px] min-h-[48px] ml-2 rounded-full grid place-items-center cursor-pointer pointer-events-none select-none`}
                >
                   {instagramUsername ? (
                      <div className="w-[41px] h-[41px] bg-white rounded-full grid place-items-center">

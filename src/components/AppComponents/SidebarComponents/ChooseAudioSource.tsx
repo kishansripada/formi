@@ -85,7 +85,7 @@ export const ChooseAudioSource: React.FC<{
             </div>
 
             <div>
-               <p className=" font-medium mb-2 mt-4">selected file</p>
+               <p className=" font-medium mb-2 mt-4 text-gray-600">selected file</p>
                <div className="p-3 rounded-md my-1 cursor-pointer w-full min-h-[48px] flex flex-row items-center justify-center whitespace-nowrap bg-pink-100 border-pink-600 border-2">
                   {soundCloudTrackId ? (
                      <>
@@ -138,7 +138,7 @@ export const ChooseAudioSource: React.FC<{
                </div>
             </div>
 
-            <p className=" font-medium mb-2 mt-6">my uploaded files</p>
+            <p className=" font-medium mb-2 mt-6 text-gray-600">my uploaded files</p>
             <div className="h-[300px]">
                <div className=" flex flex-col overflow-scroll removeScrollBar ">
                   {audioFiles.data.length ? (
@@ -214,7 +214,7 @@ export const ChooseAudioSource: React.FC<{
                </div>
             </div>
 
-            <p className=" font-medium mb-2 mt-6">sample audio files</p>
+            <p className=" font-medium mb-2 mt-6 text-gray-600">sample audio files</p>
             <div className=" flex flex-col overflow-scroll removeScrollBar h-full ">
                {sampleAudioFiles.data.length ? (
                   [...sampleAudioFiles.data]
