@@ -8,8 +8,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
-import { PIXELS_PER_SQUARE } from "../../types/types";
-import { dancer, dancerPosition, formation } from "../../types/types";
+import { dancer, dancerPosition, formation, PIXELS_PER_SQUARE } from "../../types/types";
 
 import { AudioControls } from "../../components/AppComponents/AudioControls";
 import { Header } from "../../components/AppComponents/Header";
@@ -60,7 +59,6 @@ const FileAudioPlayer = dynamic<{
 });
 
 const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
-   viewOnly = false;
    let pricingTier = "premium";
    const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
 
@@ -117,7 +115,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [menuOpen, setMenuOpen] = useState<string>(initialData.soundCloudId ? "dancers" : "audio");
    const [player, setPlayer] = useState(null);
 
-   const [channelGlobal, setChannelGlobal] = useState();
+   // const [channelGlobal, setChannelGlobal] = useState();
    const [userPositions, setUserPositions] = useState({});
 
    const coordsToPosition = (coords: { x: number; y: number } | null | undefined) => {
@@ -696,7 +694,7 @@ export const getServerSideProps = async (ctx) => {
 
    // console.log(session?.user.id);
 
-   // if (!session){
+   // if (!session) {
    //    return {
    //       redirect: {
    //          destination: "/",
@@ -705,27 +703,31 @@ export const getServerSideProps = async (ctx) => {
    //    };
    // }
 
-   let [{ data: dance }, { data: deltas }, audioFiles, sampleAudioFiles] = await Promise.all([
+   // let [{ data: dance }, { data: deltas }, audioFiles, sampleAudioFiles] = await Promise.all([
+   //    supabase.from("dances").select("*").eq("id", ctx.query.danceId).single(),
+   //    supabase.from("deltas").select("*").eq("danceid", ctx.query.danceId),
+   //    supabase.storage.from("audiofiles").list(session?.user.id, {}),
+   //    supabase.storage.from("audiofiles").list("sample", {}),
+   // ]);
+
+   let [{ data: dance }, audioFiles, sampleAudioFiles] = await Promise.all([
       supabase.from("dances").select("*").eq("id", ctx.query.danceId).single(),
-      supabase.from("deltas").select("*").eq("danceid", ctx.query.danceId),
       supabase.storage.from("audiofiles").list(session?.user.id, {}),
       supabase.storage.from("audiofiles").list("sample", {}),
    ]);
 
-   let sortedDeltas = deltas?.sort((a, b) => a.timestamp - b.timestamp);
+   // let sortedDeltas = deltas?.sort((a, b) => a.timestamp - b.timestamp);
 
-   for (let i = 0; i < sortedDeltas.length; i++) {
-      jsondiffpatch.patch(dance.formations, sortedDeltas[i].delta);
-   }
+   // for (let i = 0; i < sortedDeltas.length; i++) {
+   //    jsondiffpatch.patch(dance.formations, sortedDeltas[i].delta);
+   // }
 
-   let _ = await Promise.all([
-      supabase.from("deltas").delete().eq("danceid", ctx.query.danceId),
-      supabase.from("dances").update({ formations: dance.formations }).eq("id", ctx.query.danceId),
-   ]);
+   // let _ = await Promise.all([
+   //    supabase.from("deltas").delete().eq("danceid", ctx.query.danceId),
+   //    supabase.from("dances").update({ formations: dance.formations }).eq("id", ctx.query.danceId),
+   // ]);
 
-   dance = { ...{ ...dance, formations: dance.formations }, audioFiles, sampleAudioFiles };
-
-   if (!dance) {
+   if (!dance?.formations) {
       return {
          redirect: {
             destination: "/noaccess",
@@ -733,57 +735,35 @@ export const getServerSideProps = async (ctx) => {
          },
       };
    }
+   let viewOnly = true;
 
-   if (dance.id === 207) {
-      return {
-         props: {
-            initialData: dance,
-            viewOnly: false,
-         },
-      };
+   if (dance.id === 207 || dance?.user === session?.user?.id) {
+      viewOnly = false;
    }
+   dance = { ...{ ...dance, formations: dance.formations }, audioFiles, sampleAudioFiles };
 
-   if (dance?.user === session?.user?.id) {
-      return {
-         props: {
-            initialData: dance,
-            viewOnly: false,
-         },
-      };
-   }
+   return {
+      props: {
+         initialData: dance,
+         viewOnly,
+      },
+   };
 
-   if (!session) {
-      return {
-         props: {
-            initialData: dance,
-            viewOnly: true,
-         },
-      };
-   }
+   // if (dance?.sharesettings[session?.user?.email] === "view") {
+   //    return {
+   //       props: {
+   //          initialData: dance,
+   //          viewOnly: true,
+   //       },
+   //    };
+   // }
 
-   if (dance?.anyonecanview) {
-      return {
-         props: {
-            initialData: dance,
-            viewOnly: true,
-         },
-      };
-   }
-   if (dance?.sharesettings[session?.user?.email] === "view") {
-      return {
-         props: {
-            initialData: dance,
-            viewOnly: true,
-         },
-      };
-   }
-
-   if (dance) {
-      return {
-         props: {
-            initialData: dance,
-            viewOnly: true,
-         },
-      };
-   }
+   // if (dance) {
+   //    return {
+   //       props: {
+   //          initialData: dance,
+   //          viewOnly: true,
+   //       },
+   //    };
+   // }
 };

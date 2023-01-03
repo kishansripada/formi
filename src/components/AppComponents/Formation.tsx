@@ -76,13 +76,20 @@ export const Formation: React.FC<{
                // onClick={() => {
                //    addToStack();
                // }}
+               style={{
+                  pointerEvents: viewOnly ? "none" : "auto",
+               }}
                id={formation.id}
                {...attributes}
                {...listeners}
-               className="w-full opacity-0 absolute top-[-8px] h-[8px] bg-blue-500 cursor-move	z-[99999]"
+               className="w-full opacity-0 absolute top-[-8px] h-[8px] bg-blue-500 cursor-move lg:pointer-events-auto pointer-events-none	z-[99999]"
             ></div>
 
-            <div data-type="formation-resize" id={formation.id} className="h-full absolute right-[-4px]  w-[4px] cursor-col-resize	z-[99999]"></div>
+            <div
+               data-type="formation-resize"
+               id={formation.id}
+               className="h-full absolute right-[-4px] lg:pointer-events-auto pointer-events-none w-[4px] cursor-col-resize	z-[99999]"
+            ></div>
 
             <div className={`bg-white h-[17px]  px-2 overflow-clip border-b border-gray-300`}>
                <p className={`text-[12px] pointer-events-none select-none text-black font-medium`}>{formation.name}</p>
@@ -97,7 +104,7 @@ export const Formation: React.FC<{
                   <div
                      id={formation.id}
                      data-type="transition-resize"
-                     className=" h-[26px]  w-[4px] cursor-col-resize	 absolute right-[-5px] z-50 flex flex-row justify-between"
+                     className=" h-[26px]  w-[4px] lg:pointer-events-auto pointer-events-none cursor-col-resize	 absolute right-[-5px] z-50 flex flex-row justify-between"
                   >
                      <div className="h-full w-[1px] bg-black pointer-events-none"></div>
                      <div className="h-full w-[1px] bg-black pointer-events-none"></div>

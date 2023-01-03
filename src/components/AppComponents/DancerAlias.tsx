@@ -80,13 +80,13 @@ export const DancerAlias: React.FC<{
 
    let { left, top } = coordsToPosition(currentCoords);
 
-   // since only one person should be selecting a single dancer, we just choose the first person that's selecting that dancer
-   let idSelectingMe = Object.keys(userPositions).filter(
-      (id) => userPositions[id].selectedFormation === selectedFormation && userPositions[id].selectedDancers.includes(dancer.id)
-   )?.[0];
+   // // since only one person should be selecting a single dancer, we just choose the first person that's selecting that dancer
+   // let idSelectingMe = Object.keys(userPositions).filter(
+   //    (id) => userPositions[id].selectedFormation === selectedFormation && userPositions[id].selectedDancers.includes(dancer.id)
+   // )?.[0];
 
-   let color = onlineUsers?.[idSelectingMe]?.[0]?.color || dancer.color;
-   let name = onlineUsers?.[idSelectingMe]?.[0]?.name;
+   // let color = onlineUsers?.[idSelectingMe]?.[0]?.color || dancer.color;
+   // let name = onlineUsers?.[idSelectingMe]?.[0]?.name;
 
    // console.log(color);
    // let firstNamesOnThisFormation = idsOnThisFormation.map((id) => onlineUsers[id][0].name).map((name) => name.split(" ")[0]);
@@ -97,19 +97,19 @@ export const DancerAlias: React.FC<{
             style={{
                left,
                top,
-               pointerEvents: idSelectingMe ? "none" : "auto",
-               backgroundColor: color || "#db2777",
+               // pointerEvents: idSelectingMe ? "none" : "auto",
+               backgroundColor: dancer?.color || "#db2777",
                transition: !draggingDancerId ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",
                width: selectedDancers.includes(dancer.id) ? 41 : 38,
                height: selectedDancers.includes(dancer.id) ? 41 : 38,
             }}
             id={dancer.id}
             data-type={"dancer"}
-            className={`rounded-full flex -translate-y-1/2 -translate-x-1/2  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
+            className={`rounded-full lg:pointer-events-auto pointer-events-none flex -translate-y-1/2 -translate-x-1/2  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
          >
             {/* <span className="animate-ping absolute  inline-flex w-[30px] h-[30px] rounded-full bg-sky-400 opacity-75"></span> */}
 
-            {idSelectingMe ? (
+            {/* {idSelectingMe ? (
                <div
                   className="absolute h-4 text-xs text-white w-fit  px-1 bottom-[-14px]"
                   style={{
@@ -118,7 +118,7 @@ export const DancerAlias: React.FC<{
                >
                   <p className="text-center">{name}</p>
                </div>
-            ) : null}
+            ) : null} */}
 
             {dancer.instagramUsername ? (
                <img

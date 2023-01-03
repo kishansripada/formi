@@ -313,7 +313,7 @@ export const CurrentFormation: React.FC<{
                                  return selectedDancers.includes(dancer.id);
                               })
                               .map((dancer) => dancer.transitionType)
-                              .every((item) => item === "linear") ? (
+                              .every((item) => item === "linear" || !item) ? (
                               <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
                                  <div className="rounded-full h-2 w-2 bg-pink-400"></div>
                               </div>
