@@ -38,7 +38,7 @@ export const Layers: React.FC<{
    const [resizingTransition, setResizingTransition] = useState<string | null>(null);
    const [resizingFormation, setResizingFormation] = useState<string | null>(null);
 
-   const pointerUp = (e) => {
+   const pointerUp = (e: PointerEvent) => {
       if (resizingFormation === null && resizingTransition === null) return;
       setFormations((formations: formation[]) => {
          return formations.map((formation, i) => {
@@ -64,7 +64,7 @@ export const Layers: React.FC<{
          setResizingFormation(e.target.id);
       }
    };
-   const pointerMove = (e) => {
+   const pointerMove = (e: PointerEvent) => {
       if (viewOnly) return;
       if (resizingFormation === null && resizingTransition === null) return;
 

@@ -57,7 +57,7 @@ export const Formation: React.FC<{
                zIndex: activeId === formation.id ? 2 : 0,
                ...style,
                width: (formation.transition.durationSeconds + formation.durationSeconds) * pixelsPerSecond - 4,
-               borderColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#000000",
+               borderColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#18191B",
                // top: index === 5 ? 100 : null,
                // subtract 4 to account for the mx-[2px]
             }}

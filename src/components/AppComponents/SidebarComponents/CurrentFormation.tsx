@@ -41,10 +41,9 @@ export const CurrentFormation: React.FC<{
          <div className=" lg:flex hidden  min-w-[350px] w-[23%] flex-col   bg-white border-r border-r-gray-300 ">
             {selectedFormation !== null && formations[selectedFormation]?.name !== null ? (
                <div className="h-full  flex flex-col ">
-                  <div className="flex flex-row items-center mb-3 px-6 pt-6 ">
-                     <p className="text-2xl text-gray-500 mr-2 ">#{selectedFormation + 1}</p>
+                  <div className="flex flex-row items-center mb-3 px-6 pt-10 ">
                      <input
-                        className="font-medium w-full px-2 rounded-md  h-6 text-2xl  py-4 transition duration-300 hover:bg-gray-100 text-gray-600 focus:bg-gray-100 outline-none cursor-pointer "
+                        className="font-medium w-full px-2 rounded-md  h-6 text-2xl  py-4 transition duration-300 hover:bg-gray-100 text-gray-800 focus:bg-gray-100 outline-none cursor-pointer "
                         onKeyDown={(e) =>
                            e.key === "Enter"
                               ? setFormations((formations: formation[]) => {
@@ -112,8 +111,8 @@ export const CurrentFormation: React.FC<{
                         </p>
                      </div>
                   </div>
-                  <hr className=" " />
-                  <div className="px-4 py-3 flex flex-row items-center">
+                  <hr className="mt-3 " />
+                  {/* <div className="px-4 py-3 flex flex-row items-center">
                      <input
                         className=" w-full px-2 rounded-md  h-6 text-sm  py-4 transition duration-300 bg-gray-100 text-gray-600  outline-none  "
                         type="text"
@@ -123,8 +122,8 @@ export const CurrentFormation: React.FC<{
                      />
                      <button className="bg-gray-700 text-white px-2 py-1 rounded-md ml-3 text-sm h-full">send</button>
                   </div>
-                  <hr />
-                  <div className="overflow-scroll">
+                  <hr /> */}
+                  {/* <div className="overflow-scroll">
                      <div className=" py-3 px-6">
                         <p className="font-bold">Sasha Shrestha</p>
                         <p>Yeah i really like this part of the formation but I think we could space the top row a little bit out more</p>
@@ -150,7 +149,7 @@ export const CurrentFormation: React.FC<{
                         <p>Yeah i really like this part of the formation but I think we could space the top row a little bit out more</p>
                      </div>
                      <hr />
-                  </div>
+                  </div> */}
 
                   {/* <div className="p-4">
                      <textarea
@@ -229,31 +228,49 @@ export const CurrentFormation: React.FC<{
                      </div>
                   </div> */}
 
-                  <hr className="mt-auto" />
+                  <div className="px-6 mt-6 mb-4 min-h-[130px]">
+                     <div className="flex flex-row  justify-between items-start  ">
+                        <div className="flex flex-col ">
+                           <p
+                              className="font-medium text-xl mr-auto z-10"
+                              // style={{
+                              //    textDecoration: selectedDancers.length === 1 ? "underline" : "none",
+                              //    textDecorationColor: dancers.find((dancer) => dancer.id === selectedDancers[0])?.color,
+                              //    textDecorationWidth: 100,
+                              //    textDecorationThickness: 4,
+                              // }}
+                           >
+                              {selectedDancers.length === 0
+                                 ? "no dancers selected"
+                                 : selectedDancers.length === 1
+                                 ? dancers.find((dancer) => dancer.id === selectedDancers[0])?.name
+                                 : "multiple dancers selected"}
+                           </p>
 
-                  <div className="px-6 mt-2 mb-4 min-h-[130px]">
-                     <div className="flex flex-row items-end justify-center ">
-                        <p className="font-medium text-xl mr-auto">
-                           {selectedDancers.length === 0
-                              ? "no dancers selected"
-                              : selectedDancers.length === 1
-                              ? dancers.find((dancer) => dancer.id === selectedDancers[0])?.name
-                              : "multiple dancers selected"}
-                        </p>
+                           <div
+                              className="w-full h-2 relative "
+                              style={{
+                                 backgroundColor: dancers.find((dancer) => dancer.id === selectedDancers[0])?.color,
+                                 opacity: 0.7,
+                                 bottom: 5,
+                              }}
+                           ></div>
+                        </div>
 
-                        {selectedDancers.length &&
-                        formations[selectedFormation]?.positions
-                           .filter((dancer) => {
-                              return selectedDancers.includes(dancer.id);
-                           })
-                           .map((dancer) => dancer.position.x > -(stageDimensions.width / 2 - 2))
-                           .every((value) => value) ? (
-                           <p className="italic text-xs text-gray-600">on stage</p>
-                        ) : (
-                           <p className="italic text-xs text-gray-600">off stage</p>
-                        )}
+                        {selectedDancers.length === 1 ? (
+                           formations[selectedFormation]?.positions
+                              .filter((dancer) => {
+                                 return selectedDancers.includes(dancer.id);
+                              })
+                              .map((dancer) => dancer.position.x > -(stageDimensions.width / 2 - 2))
+                              .every((value) => value) ? (
+                              <p className="font-semibold text-xs text-green-700 bg-green-200 px-2 py-1 rounded-full">on stage</p>
+                           ) : (
+                              <p className="font-semibold text-xs text-red-700 bg-red-200 px-2 py-1 rounded-full">off stage</p>
+                           )
+                        ) : null}
                      </div>
-                     <p className="font-medium mt-5 mb-2">path to this formation</p>
+                     <p className=" mt-7 mb-2 font-medium text-gray-700">path</p>
                      <div
                         style={{
                            opacity: selectedDancers.length && selectedFormation !== 0 ? 1 : 0.4,
@@ -297,8 +314,8 @@ export const CurrentFormation: React.FC<{
                               })
                               .map((dancer) => dancer.transitionType)
                               .every((item) => item === "linear") ? (
-                              <div className="rounded-full h-4 w-4 border-blue-400 border mr-3 grid place-items-center">
-                                 <div className="rounded-full h-2 w-2 bg-blue-400"></div>
+                              <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                                 <div className="rounded-full h-2 w-2 bg-pink-400"></div>
                               </div>
                            ) : (
                               <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
@@ -396,8 +413,8 @@ export const CurrentFormation: React.FC<{
                                     })
                                     .map((dancer) => dancer.transitionType)
                                     .every((item) => item === "cubic") ? (
-                                    <div className="rounded-full h-4 w-4 border-blue-400 border mr-3 grid place-items-center">
-                                       <div className="rounded-full h-2 w-2 bg-blue-400"></div>
+                                    <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                                       <div className="rounded-full h-2 w-2 bg-pink-400"></div>
                                     </div>
                                  ) : (
                                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
@@ -409,10 +426,6 @@ export const CurrentFormation: React.FC<{
                         </div>
                      </div>
                   </div>
-
-                  <ul className="mt-1 flex flex-col overflow-y-scroll pr-3 text-sm">
-                     <hr />
-                  </ul>
 
                   {/* <div className="flex flex-row mt-auto pb-3  pt-3 justify-center items-center ">
                      <button

@@ -49,7 +49,7 @@ export const Dancer: React.FC<{
 
    return (
       <>
-         <div className={`flex flex-row items-center px-3  select-none  mb-1 min-h-[55px] bg-white`} data-type={"newDancer"}>
+         <div className={`flex flex-row items-center px-3  select-none  mb-1 min-h-[55px] bg-white`}>
             <>
                <div
                   style={{
@@ -73,7 +73,7 @@ export const Dancer: React.FC<{
             </>
 
             <input
-               className="h-6  px-3 py-4 transition duration-300  rounded-md  ml-3 hover:bg-gray-100 text-gray-600 focus:bg-gray-100 outline-none cursor-pointer"
+               className="h-6  px-3 py-4 transition duration-300  rounded-md font-[500] ml-3 hover:bg-gray-100 text-gray-800 focus:bg-gray-100 outline-none cursor-pointer"
                defaultValue={name}
                key={name}
                onKeyDown={(e) => {
@@ -106,7 +106,7 @@ export const Dancer: React.FC<{
                </svg>
             </button>
          </div>
-         <hr />
+         {/* <hr /> */}
       </>
    );
 };

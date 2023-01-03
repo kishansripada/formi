@@ -50,12 +50,10 @@ export const DancerAlias: React.FC<{
       return (
          <>
             <div
-               className={` ${
-                  dancer.color === "#FFFFFF" || !dancer.color ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" : ""
-               } rounded-full w-[38px] h-[38px] flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default  `}
+               className={`  rounded-full w-[38px] h-[38px] flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default  `}
                style={{
                   // transform: `translate(-50%, -50%) translate(${left}px, ${top}px)`,
-                  backgroundColor: dancer.color || "",
+                  backgroundColor: dancer.color || "#db2777",
                   left,
                   top,
                   transform: "translate(-50%, -50%)",
@@ -99,23 +97,15 @@ export const DancerAlias: React.FC<{
             style={{
                left,
                top,
-               transform: "translate(-50%, -50%)",
                pointerEvents: idSelectingMe ? "none" : "auto",
-               // boxShadow: selectedDancers.includes(dancer.id) ? `0 0 8px ${color}, inset 0 0 8px ${color}` : "",
-               // transform: `translate(-50%, -50%) translate(${left}px, ${top}px)`,
-               backgroundColor: color || "",
+               backgroundColor: color || "#db2777",
                transition: !draggingDancerId ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",
+               width: selectedDancers.includes(dancer.id) ? 41 : 38,
+               height: selectedDancers.includes(dancer.id) ? 41 : 38,
             }}
             id={dancer.id}
             data-type={"dancer"}
-            className={` 
-              rounded-full flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default  ${
-                 selectedDancers.includes(dancer.id)
-                    ? "w-[41px] h-[41px]"
-                    : ` w-[38px] h-[38px] ${
-                         dancer.color === "#FFFFFF" || !dancer.color ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" : ""
-                      }`
-              } `}
+            className={`rounded-full flex -translate-y-1/2 -translate-x-1/2  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
          >
             {/* <span className="animate-ping absolute  inline-flex w-[30px] h-[30px] rounded-full bg-sky-400 opacity-75"></span> */}
 
@@ -143,9 +133,6 @@ export const DancerAlias: React.FC<{
                <div
                   id={dancer.id}
                   data-type={"dancer"}
-                  // style={{
-                  //    backgroundColor: selectedDancers.includes(dancer.id) ? "black" : color || "",
-                  // }}
                   className="bg-white  rounded-full w-[32px] h-[32px] grid place-items-center select-none cursor-default "
                >
                   <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
@@ -275,7 +262,7 @@ const animate = (
    function easeOutQuart(x: number): number {
       return 1 - Math.pow(1 - x, 4);
    }
-   percentThroughTransition = easeInOutElastic(percentThroughTransition);
+   percentThroughTransition = easeInOutQuad(percentThroughTransition);
 
    if (inThisFormation?.transitionType === "cubic" && inThisFormation?.controlPointStart?.y && inThisFormation?.controlPointStart?.x) {
       return coordsToPosition({

@@ -21,7 +21,14 @@ export type formation = {
    };
    id: string;
    name: string | null;
-   notes?: string | null | undefined;
+   comments?: comment[];
+};
+
+export type comment = {
+   name: string;
+   id: string;
+   content: string;
+   position: { x: number; y: number };
 };
 
 export type dragBoxCoords = { start: { x: number | null; y: number | null }; end: { x: number | null; y: number | null } };

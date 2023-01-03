@@ -62,7 +62,7 @@ export const Settings: React.FC<{
                   </svg>
                </button>
                <div className="flex flex-col justify-center items-center">
-                  <p className="mx-6 text-2xl text-gray-500">{stageDimensions.width}</p>
+                  <p className="mx-6 text-2xl text-gray-700">{stageDimensions.width}</p>
                   <p className="text-gray-400 text-xs">squares</p>
                </div>
                <button
@@ -122,7 +122,7 @@ export const Settings: React.FC<{
                   </svg>
                </button>
                <div className="flex flex-col justify-center items-center">
-                  <p className="mx-6 text-2xl text-gray-500">{stageDimensions.height}</p>
+                  <p className="mx-6 text-2xl text-gray-700">{stageDimensions.height}</p>
                   <p className="text-gray-400 text-xs">squares</p>
                </div>
                <button
@@ -142,8 +142,8 @@ export const Settings: React.FC<{
             <div className="border border-gray-200 rounded-xl w-full text-sm shadow-sm cursor-pointer select-none ">
                <div className="p-4 flex flex-row items-center" onClick={() => setPreviousFormationView("none")}>
                   {previousFormationView === "none" ? (
-                     <div className="rounded-full h-4 w-4 border-blue-400 border mr-3 grid place-items-center">
-                        <div className="rounded-full h-2 w-2 bg-blue-400"></div>
+                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
                      </div>
                   ) : (
                      <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
@@ -153,8 +153,8 @@ export const Settings: React.FC<{
                <hr />
                <div className="p-4 flex flex-row items-center" onClick={() => setPreviousFormationView("ghostDancers")}>
                   {previousFormationView === "ghostDancers" ? (
-                     <div className="rounded-full h-4 w-4 border-blue-400 border mr-3 grid place-items-center">
-                        <div className="rounded-full h-2 w-2 bg-blue-400"></div>
+                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
                      </div>
                   ) : (
                      <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
@@ -181,8 +181,8 @@ export const Settings: React.FC<{
                   ) : (
                      <>
                         {previousFormationView === "ghostDancersAndPaths" ? (
-                           <div className="rounded-full h-4 w-4 border-blue-400 border mr-3 grid place-items-center">
-                              <div className="rounded-full h-2 w-2 bg-blue-400"></div>
+                           <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                              <div className="rounded-full h-2 w-2 bg-pink-400"></div>
                            </div>
                         ) : (
                            <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>

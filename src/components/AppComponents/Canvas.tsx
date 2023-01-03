@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef, PointerEvent, PointerEventHandler, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 import { GridLines } from "./GridLines";
 import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE } from "../../types/types";
-import { CurrentFormation } from "./SidebarComponents/CurrentFormation";
 
 export const Canvas: React.FC<{
    children: React.ReactNode;
@@ -270,10 +269,12 @@ export const Canvas: React.FC<{
 
    const pointerDown = (e: any) => {
       if (e.target.dataset.type === "controlPointStart") {
+         addToStack();
          setChangingControlId(e.target.id);
          setChangingControlType("start");
       }
       if (e.target.dataset.type === "controlPointEnd") {
+         addToStack();
          setChangingControlId(e.target.id);
          setChangingControlType("end");
       }
@@ -311,6 +312,9 @@ export const Canvas: React.FC<{
    };
 
    const pointerUp = (e: any) => {
+      if (changingControlId) {
+         pushChange();
+      }
       setChangingControlId(null);
       setChangingControlType(null);
       setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
@@ -406,13 +410,13 @@ export const Canvas: React.FC<{
                style={{
                   width: PIXELS_PER_SQUARE * 2.5,
                }}
-               className="absolute h-full bg-black opacity-30 z-[100] pointer-events-none border-r-red-700 border-r-4 "
+               className="absolute h-full bg-black opacity-30 z-[100] pointer-events-none border-r-pink-700  "
             ></div>
             <div
                style={{
                   width: PIXELS_PER_SQUARE * 2.5,
                }}
-               className="absolute h-full bg-black opacity-40 z-[100] right-0 pointer-events-none flex flex-col justify-center border-l-red-700 border-l-4"
+               className="absolute h-full bg-black opacity-30 z-[100] right-0 pointer-events-none flex flex-col justify-center border-l-pink-700 "
             >
                {/* <p className="text-white z-50  text-3xl  ">text</p> */}
             </div>

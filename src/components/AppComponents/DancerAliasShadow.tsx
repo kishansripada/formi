@@ -26,21 +26,20 @@ export const DancerAliasShadow: React.FC<{
    return (
       <>
          <div
-            style={{ left, top, transform: "translate(-50%, -50%)" }}
+            style={{
+               left,
+               top,
+               backgroundColor: dancer.color || "#db2777",
+            }}
             id={dancer.id}
-            className={`w-[38px] h-[38px] opacity-30 pointer-events-none  rounded-full flex flex-row justify-center items-center absolute z-[20] mr-auto ml-auto bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-700 `}
+            data-type={"dancer"}
+            className={`rounded-full -translate-y-1/2 -translate-x-1/2	 flex pointer-events-none  flex-row justify-center opacity-30 items-center absolute z-[30] mr-auto ml-auto cursor-default  w-[38px] h-[38px]`}
          >
             {dancer.instagramUsername ? (
-               <img
-                  id={dancer.id}
-                  draggable={false}
-                  className="w-[34px] h-[34px] rounded-full select-none   "
-                  src={dancer.instagramUsername}
-                  alt=""
-               />
+               <img draggable={false} className="w-[32px] h-[32px] rounded-full select-none" src={dancer.instagramUsername} alt={dancer.name} />
             ) : (
-               <div id={dancer.id} className="bg-white rounded-full  w-[34px] h-[34px] grid place-items-center select-none">
-                  <p id={dancer.id} className="select-none ">
+               <div className="bg-white  rounded-full w-[32px] h-[32px] grid place-items-center select-none cursor-default ">
+                  <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
                      {initials}
                   </p>
                </div>

@@ -88,7 +88,7 @@ export const NewDancer: React.FC<{ setDancers: Function; stageDimensions: stageD
                onBlur={createNewDancer}
             />
          </div>
-         <hr />
+         {/* <hr /> */}
       </>
    );
 };

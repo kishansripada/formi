@@ -118,7 +118,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [channelGlobal, setChannelGlobal] = useState();
    const [userPositions, setUserPositions] = useState({});
 
-   const coordsToPosition = (coords: { x: number; y: number }) => {
+   const coordsToPosition = (coords: { x: number; y: number } | null | undefined) => {
+      if (!coords) return null;
       let { x, y } = coords;
       return {
          left: (PIXELS_PER_SQUARE * stageDimensions.width) / 2 + PIXELS_PER_SQUARE * x,
@@ -420,7 +421,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
             />
          ) : null}
 
-         <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none  ">
+         <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none text-gray-900  ">
             <div className="flex flex-row  overflow-hidden w-screen">
                {!viewOnly ? (
                   <>
@@ -506,6 +507,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   >
                      {selectedFormation !== null ? (
                         <PathEditor
+                           dancers={dancers}
                            currentFormationIndex={currentFormationIndex}
                            formations={formations}
                            selectedFormation={selectedFormation}
