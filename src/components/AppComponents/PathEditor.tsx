@@ -106,29 +106,54 @@ export const PathEditor: React.FC<{
                                  <path
                                     d={`M ${startCoords.left} ${startCoords.top} L ${controlPointStartCoords.left} ${controlPointStartCoords.top}`}
                                     fill="transparent"
-                                    className="z-[60] stroke-red-500"
+                                    className="z-[60] stroke-black"
                                  />
                                  <path
                                     d={`M ${endCoords.left} ${endCoords.top} L ${controlPointEndCoords.left} ${controlPointEndCoords.top}`}
                                     fill="transparent"
-                                    className="z-[60] stroke-red-500"
+                                    className="z-[60] stroke-black"
                                  />
-                                 <circle
-                                    id={dancerPosition.id}
-                                    data-type={"controlPointStart"}
-                                    cx={controlPointStartCoords.left}
-                                    cy={controlPointStartCoords.top}
-                                    r="7"
-                                    className="hover:fill-blue-500 pointer-events-auto z-[60]"
-                                 />
-                                 <circle
-                                    id={dancerPosition.id}
-                                    data-type={"controlPointEnd"}
-                                    cx={controlPointEndCoords.left}
-                                    cy={controlPointEndCoords.top}
-                                    r="7"
-                                    className="hover:fill-blue-500 pointer-events-auto z-[60]"
-                                 />
+
+                                 <svg className="rotate-90">
+                                    <rect
+                                       id={dancerPosition.id}
+                                       data-type={"controlPointStart"}
+                                       x={controlPointStartCoords.left}
+                                       y={controlPointStartCoords.top}
+                                       width="16"
+                                       height="16"
+                                       className="pointer-events-auto z-[60] fill-pink-700 -translate-x-[8px] -translate-y-[8px] "
+                                    />
+                                    <rect
+                                       id={dancerPosition.id}
+                                       data-type={"controlPointStart"}
+                                       x={controlPointStartCoords.left}
+                                       y={controlPointStartCoords.top}
+                                       width="10"
+                                       height="10"
+                                       className="pointer-events-auto z-[60] fill-white  -translate-x-[5px] -translate-y-[5px]"
+                                    />
+                                 </svg>
+                                 <svg className="rotate-90">
+                                    <rect
+                                       id={dancerPosition.id}
+                                       data-type={"controlPointEnd"}
+                                       x={controlPointEndCoords.left}
+                                       y={controlPointEndCoords.top}
+                                       width="16"
+                                       height="16"
+                                       className="pointer-events-auto z-[60] fill-pink-700 -translate-x-[8px] -translate-y-[8px] "
+                                    />
+                                    <rect
+                                       id={dancerPosition.id}
+                                       data-type={"controlPointEnd"}
+                                       x={controlPointEndCoords.left}
+                                       y={controlPointEndCoords.top}
+                                       width="10"
+                                       height="10"
+                                       className="pointer-events-auto z-[60] fill-white  -translate-x-[5px] -translate-y-[5px]"
+                                    />
+                                 </svg>
                               </>
                            ) : null}
                         </>

@@ -264,9 +264,9 @@ export const CurrentFormation: React.FC<{
                               })
                               .map((dancer) => dancer.position.x > -(stageDimensions.width / 2 - 2))
                               .every((value) => value) ? (
-                              <p className="font-semibold text-xs text-green-700 bg-green-200 px-2 py-1 rounded-full">on stage</p>
+                              <p className="font-semibold text-xs text-green-800 bg-green-200 px-2 py-1 rounded-full">on stage</p>
                            ) : (
-                              <p className="font-semibold text-xs text-red-700 bg-red-200 px-2 py-1 rounded-full">off stage</p>
+                              <p className="font-semibold text-xs text-red-800 bg-red-200 px-2 py-1 rounded-full">off stage</p>
                            )
                         ) : null}
                      </div>
