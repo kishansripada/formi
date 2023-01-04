@@ -10,7 +10,19 @@ export const Settings: React.FC<{
    setFormations: Function;
    pricingTier: string;
    formations: formation[];
-}> = ({ stageDimensions, setStageDimensions, setPreviousFormationView, previousFormationView, setFormations, pricingTier, formations }) => {
+   gridSnap: number;
+   setGridSnap: Function;
+}> = ({
+   stageDimensions,
+   setStageDimensions,
+   setPreviousFormationView,
+   previousFormationView,
+   setFormations,
+   pricingTier,
+   formations,
+   gridSnap,
+   setGridSnap,
+}) => {
    return (
       <>
          <Toaster></Toaster>
@@ -19,7 +31,7 @@ export const Settings: React.FC<{
 
             <p className="font-medium h-10">stage dimensions</p>
 
-            <p className="text-gray-500">width</p>
+            <p className="text-gray-500 font-medium text-sm">width</p>
             <div className="my-6 flex flex-row justify-center items-center">
                <button
                   className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
@@ -95,7 +107,7 @@ export const Settings: React.FC<{
                </button>
             </div>
 
-            <p className="text-gray-500">height</p>
+            <p className="text-gray-500 font-medium text-sm">height</p>
             <div className="my-6 flex flex-row justify-center items-center">
                <button
                   className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
@@ -138,7 +150,8 @@ export const Settings: React.FC<{
                   </svg>
                </button>
             </div>
-            <p className="font-medium h-10">previous formation</p>
+            <p className="text-gray-500 font-medium mb-3 mt-10 text-sm">previous formation</p>
+
             <div className="border border-gray-200 rounded-xl w-full text-sm shadow-sm cursor-pointer select-none ">
                <div className="p-4 flex flex-row items-center" onClick={() => setPreviousFormationView("none")}>
                   {previousFormationView === "none" ? (
@@ -191,6 +204,43 @@ export const Settings: React.FC<{
                   )}
 
                   <p className={`${pricingTier === "basic" ? "opacity-40" : ""}`}>view ghost dancers and paths</p>
+               </div>
+            </div>
+
+            <p className="text-gray-500 text-sm font-medium mt-10 mb-3">grid snap</p>
+
+            <div className="border border-gray-200 rounded-xl w-full text-sm shadow-sm cursor-pointer select-none ">
+               <div className="p-4 flex flex-row items-center" onClick={() => setGridSnap(100)}>
+                  {gridSnap === 100 ? (
+                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
+                     </div>
+                  ) : (
+                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                  )}
+                  <p>none</p>
+               </div>
+               <hr />
+               <div className="p-4 flex flex-row items-center" onClick={() => setGridSnap(2)}>
+                  {gridSnap === 2 ? (
+                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
+                     </div>
+                  ) : (
+                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                  )}
+                  <p>nearest half square</p>
+               </div>
+               <hr />
+               <div className={`p-4 flex flex-row items-center `} onClick={() => setGridSnap(1)}>
+                  {gridSnap === 1 ? (
+                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
+                     </div>
+                  ) : (
+                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                  )}
+                  <p>nearest whole square</p>
                </div>
             </div>
          </div>

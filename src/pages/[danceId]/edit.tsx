@@ -88,6 +88,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [stageDimensions, setStageDimensions] = useState(initialData.settings.stageDimensions);
    const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
+   const [gridSnap, setGridSnap] = useState<number>(initialData.settings.gridSnap || 1);
 
    const [songDuration, setSongDuration] = useState<number | null>(null);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -112,7 +113,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
 
    const [saved, setSaved] = useState<boolean>(true);
    const [shareIsOpen, setShareIsOpen] = useState(false);
-   const [menuOpen, setMenuOpen] = useState<string>(initialData.soundCloudId ? "dancers" : "audio");
+   const [menuOpen, setMenuOpen] = useState<string>("formations");
    const [player, setPlayer] = useState(null);
 
    // const [channelGlobal, setChannelGlobal] = useState();
@@ -294,7 +295,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          console.log("uploading settings");
          const { data, error } = await supabase
             .from("dances")
-            .update({ settings: { previousFormationView: previousFormationView, stageDimensions: stageDimensions }, last_edited: new Date() })
+            .update({ settings: { previousFormationView, stageDimensions, gridSnap }, last_edited: new Date() })
             .eq("id", router.query.danceId);
 
          console.log({ data });
@@ -469,6 +470,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                         ></ChooseAudioSource>
                      ) : menuOpen === "settings" ? (
                         <Settings
+                           gridSnap={gridSnap}
+                           setGridSnap={setGridSnap}
                            formations={formations}
                            pricingTier={pricingTier}
                            previousFormationView={previousFormationView}
@@ -508,6 +511,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   />
 
                   <Canvas
+                     gridSnap={gridSnap}
                      pushChange={pushChange}
                      undo={undo}
                      addToStack={addToStack}

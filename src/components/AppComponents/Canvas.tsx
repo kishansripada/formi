@@ -23,6 +23,7 @@ export const Canvas: React.FC<{
    undo: Function;
    addToStack: Function;
    pushChange: Function;
+   gridSnap: number;
 }> = ({
    player,
    children,
@@ -43,6 +44,7 @@ export const Canvas: React.FC<{
    undo,
    addToStack,
    pushChange,
+   gridSnap,
 }) => {
    const [shiftHeld, setShiftHeld] = useState(false);
    const [commandHeld, setCommandHeld] = useState(false);
@@ -328,7 +330,13 @@ export const Canvas: React.FC<{
                return {
                   ...formation,
                   positions: formation.positions.map((position) => {
-                     return { ...position, position: { x: Math.round(position.position.x), y: Math.round(position.position.y) } };
+                     return {
+                        ...position,
+                        position: {
+                           x: Math.round(position.position.x * gridSnap) / gridSnap,
+                           y: Math.round(position.position.y * gridSnap) / gridSnap,
+                        },
+                     };
                   }),
                };
             });

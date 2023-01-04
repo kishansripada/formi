@@ -208,7 +208,7 @@ export const ChooseAudioSource: React.FC<{
                      })
                   ) : (
                      <>
-                        <p className="text-gray-600">no uploaded files :(</p>
+                        <p className="text-gray-600 text-sm">no uploaded files :(</p>
                      </>
                   )}
                </div>
