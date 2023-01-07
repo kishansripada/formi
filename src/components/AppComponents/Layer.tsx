@@ -2,7 +2,6 @@ import { ReactEventHandler } from "react";
 import { Formation } from "./Formation";
 import { useCallback, useEffect, useState } from "react";
 import { dancer, dancerPosition, formation } from "../../types/types";
-import { v4 as uuidv4 } from "uuid";
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay } from "@dnd-kit/core";
 import { SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 

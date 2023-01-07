@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
 import { formation } from "../../types/types";
-import { v4 as uuidv4 } from "uuid";
 
 export const FileAudioPlayer: React.FC<{
    setPosition: Function;

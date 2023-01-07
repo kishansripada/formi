@@ -112,7 +112,7 @@ const home = () => {
 
                <div className=" flex flex-row items-center justify-center lg:justify-between text-center lg:text-left">
                   <div className="lg:w-[70%]">
-                     <h1 className=" text-black text-4xl md:text-[42px] lg:text-[42px] font-semibold lg:leading-[51px] relative  mt-28 z-10">
+                     <h1 className=" text-black text-5xl md:text-[42px] lg:text-[42px] font-semibold lg:leading-[51px] relative  mt-28 z-10">
                         collaborative performance planning for the web.
                      </h1>
                      <p className="text-gray-500 lg:w-[85%] mt-5">
@@ -121,7 +121,7 @@ const home = () => {
 
                      <Link href={"/207/edit"} className="">
                         <button className="border-4  flex-row items-center  border-pink-600  px-8 py-4  hidden lg:flex rounded-full mt-12 text-xl group">
-                           <span className="mr-2 ">create your first performance </span>{" "}
+                           <span className="mr-2 ">view demo</span>{" "}
                            <span className="relative left-0 group-hover:left-3 transition-all duration-300">
                               <svg
                                  xmlns="http://www.w3.org/2000/svg"
@@ -221,10 +221,10 @@ const home = () => {
             <hr />
             <div className="bg-white flex flex-col font-proxima items-center relative overflow-hidden ">
                <p className="tracking-widest text-pink-600 mt-24 px-10 text-center">VISUALIZE DANCE FORMATIONS RIGHT IN YOUR BROWSER</p>
-               <h1 className=" text-5xl lg:text-7xl text-center mt-12">full-featured. not complicated</h1>
+               <h1 className=" text-5xl lg:text-6xl text-center mt-12">full-featured. not complicated</h1>
 
                <img
-                  className="w-[95%] lg:w-3/4 rounded-xl shadow-2xl mt-16 relative z-50 mb-16 pointer-events-none select-none"
+                  className="w-[95%] lg:w-[60%] rounded-xl shadow-2xl mt-16 relative z-50 mb-0 pointer-events-none select-none"
                   src="/curveDemo.png"
                   alt=""
                />
@@ -249,7 +249,7 @@ const home = () => {
                ></div>
             </div>
             <hr />
-            <div className="bg-[#fafafa]  flex flex-col items-center justify-center  px-[20%] pt-24 pb-24 font-proxima ">
+            <div className="bg-[#fafafa]  flex flex-col items-center justify-center  px-[20%] py-16 font-proxima ">
                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

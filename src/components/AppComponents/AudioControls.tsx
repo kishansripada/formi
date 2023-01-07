@@ -1,7 +1,6 @@
 import { dancer, dancerPosition, formation } from "../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 export const AudioControls: React.FC<{
    soundCloudTrackId: string | null;
@@ -164,7 +163,7 @@ export const AudioControls: React.FC<{
                      <button
                         onClick={() => {
                            addToStack();
-                           let id = uuidv4();
+                           let id = crypto.randomUUID();
                            setFormations((formations: formation[]) => {
                               return [
                                  ...formations,

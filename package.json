@@ -20,8 +20,7 @@
     "react": "18.2.0",
     "react-color": "^2.19.3",
     "react-dom": "18.2.0",
-    "react-hot-toast": "^2.3.0",
-    "uuid": "^8.3.2"
+    "react-hot-toast": "^2.3.0"
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.7",

@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation } from "../../../types/types";
+import { dancer, dancerPosition, formation, initials } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 
@@ -14,6 +14,8 @@ export const CurrentFormation: React.FC<{
    pricingTier: string;
    addToStack: Function;
    pushChange: Function;
+   isCommenting: boolean;
+   setIsCommenting: Function;
 }> = ({
    formations,
    selectedFormation,
@@ -26,6 +28,8 @@ export const CurrentFormation: React.FC<{
    pricingTier,
    addToStack,
    pushChange,
+   isCommenting,
+   setIsCommenting,
 }) => {
    useEffect(() => {
       if (selectedDancers.length === 1) {
@@ -36,12 +40,26 @@ export const CurrentFormation: React.FC<{
       }
    }, [selectedDancers]);
 
+   const deleteComment = (id: string) => {
+      setFormations((formations: formation[]) => {
+         return formations.map((formation, i) => {
+            if (i === selectedFormation) {
+               return {
+                  ...formation,
+                  comments: formation.comments?.filter((comment) => comment.id !== id),
+               };
+            }
+            return formation;
+         });
+      });
+   };
+
    return (
       <>
          <div className=" lg:flex hidden  min-w-[350px] w-[23%] flex-col h-full  bg-white border-r border-r-gray-300 ">
             {selectedFormation !== null && formations[selectedFormation]?.name !== null ? (
-               <div className="h-full  flex flex-col ">
-                  <div className="flex flex-row items-center mb-3 px-6 pt-10 ">
+               <>
+                  <div className="flex flex-row items-center mb-3 px-6 pt-5 ">
                      <input
                         className="font-medium w-full px-2 rounded-md  h-6 text-2xl  py-4 transition duration-300 hover:bg-gray-100 text-gray-800 focus:bg-gray-100 outline-none cursor-pointer "
                         onKeyDown={(e) =>
@@ -80,7 +98,7 @@ export const CurrentFormation: React.FC<{
                      />
                   </div>
 
-                  <div className="flex flex-row items-center justify-between w-full px-6 ">
+                  <div className="flex flex-row items-center justify-between w-full px-6  ">
                      <p className="text-lg text-gray-500">
                         {Math.round(
                            (formations[selectedFormation]?.durationSeconds + formations[selectedFormation]?.transition.durationSeconds) * 10
@@ -112,348 +130,259 @@ export const CurrentFormation: React.FC<{
                      </div>
                   </div>
                   <hr className="mt-3 " />
-                  {/* <div className="px-4 py-3 flex flex-row items-center">
-                     <input
-                        className=" w-full px-2 rounded-md  h-6 text-sm  py-4 transition duration-300 bg-gray-100 text-gray-600  outline-none  "
-                        type="text"
-                        placeholder="leave a comment..."
-                        key={formations[selectedFormation]?.name}
-                        defaultValue={formations[selectedFormation]?.name || ""}
-                     />
-                     <button className="bg-gray-700 text-white px-2 py-1 rounded-md ml-3 text-sm h-full">send</button>
-                  </div>
-                  <hr /> */}
-                  {/* <div className="overflow-scroll">
-                     <div className=" py-3 px-6">
-                        <p className="font-bold">Sasha Shrestha</p>
-                        <p>Yeah i really like this part of the formation but I think we could space the top row a little bit out more</p>
-                     </div>
-                     <hr />
-                     <div className=" py-3 px-6">
-                        <p className="font-bold">Sasha Shrestha</p>
-                        <p>Yeah i really like this part of the formation but I think we could space the top row a little bit out more</p>
-                     </div>
-                     <hr />{" "}
-                     <div className=" py-3 px-6">
-                        <p className="font-bold">Sasha Shrestha</p>
-                        <p>Yeah i really like this part of the formation but I think we could space the top row a little bit out more</p>
-                     </div>
-                     <hr />{" "}
-                     <div className=" py-3 px-6">
-                        <p className="font-bold">Sasha Shrestha</p>
-                        <p>Yeah i really like this part of the formation but I think we could space the top row a little bit out more</p>
-                     </div>
-                     <hr />{" "}
-                     <div className=" py-3 px-6">
-                        <p className="font-bold">Sasha Shrestha</p>
-                        <p>Yeah i really like this part of the formation but I think we could space the top row a little bit out more</p>
-                     </div>
-                     <hr />
-                  </div> */}
 
-                  {/* <div className="p-4">
-                     <textarea
-                        onKeyDown={(e) =>
-                           e.key === "Enter"
-                              ? setFormations((formations: formation[]) => {
-                                   return formations.map((formation, i) => {
-                                      if (i === selectedFormation) {
-                                         return {
-                                            ...formation,
-                                            notes: e.target.value,
-                                         };
-                                      }
+                  <div className="px-6 flex flex-col ">
+                     <div className=" mt-6 mb-4 min-h-[130px]">
+                        <div className="flex flex-row  justify-between items-start  ">
+                           <div className="flex flex-col ">
+                              <p
+                                 className="font-medium text-xl mr-auto z-10"
+                                 // style={{
+                                 //    textDecoration: selectedDancers.length === 1 ? "underline" : "none",
+                                 //    textDecorationColor: dancers.find((dancer) => dancer.id === selectedDancers[0])?.color,
+                                 //    textDecorationWidth: 100,
+                                 //    textDecorationThickness: 4,
+                                 // }}
+                              >
+                                 {selectedDancers.length === 0
+                                    ? "no dancers selected"
+                                    : selectedDancers.length === 1
+                                    ? dancers.find((dancer) => dancer.id === selectedDancers[0])?.name
+                                    : "multiple dancers selected"}
+                              </p>
 
-                                      return formation;
-                                   });
-                                })
-                              : null
-                        }
-                        onBlur={(e) => {
-                           setFormations((formations: formation[]) => {
-                              return formations.map((formation, i) => {
-                                 if (i === selectedFormation) {
-                                    return {
-                                       ...formation,
-                                       notes: e.target.value,
-                                    };
-                                 }
+                              <div
+                                 className="w-full h-2 relative "
+                                 style={{
+                                    backgroundColor: dancers.find((dancer) => dancer.id === selectedDancers[0])?.color,
+                                    opacity: 0.7,
+                                    bottom: 5,
+                                 }}
+                              ></div>
+                           </div>
 
-                                 return formation;
-                              });
-                           });
-                        }}
-                        key={formations[selectedFormation]?.notes}
-                        defaultValue={formations[selectedFormation]?.notes || ""}
-                        placeholder="formation notes..."
-                        className="resize-none w-full p-2 text-gray-800 h-full border border-gray-400 focus:outline-none rounded-md"
-                        rows={10}
-                     ></textarea>
-                  </div> */}
-                  {/* <div className=" px-4 overflow-y-scroll removeScrollBar pt-4 ">
-                     <div className="rounded-md border border-gray-300  text-sm flex flex-col items-center justify-center ,t-3">
-                        <div className="bg-blue-200 h-6 w-full text-black rounded-t-md px-3 flex flex-col justify-center">
-                           <p>Kishan Sripada</p>
+                           {selectedDancers.length === 1 ? (
+                              formations[selectedFormation]?.positions
+                                 .filter((dancer) => {
+                                    return selectedDancers.includes(dancer.id);
+                                 })
+                                 .map((dancer) => dancer.position.x > -(stageDimensions.width / 2 - 2))
+                                 .every((value) => value) ? (
+                                 <p className="font-semibold text-xs text-green-800 bg-green-200 px-2 py-1 rounded-full">on stage</p>
+                              ) : (
+                                 <p className="font-semibold text-xs text-red-800 bg-red-200 px-2 py-1 rounded-full">off stage</p>
+                              )
+                           ) : null}
                         </div>
-                        <p className="p-3 w-full">
-                           Lorem ipsum dolor sit amet, consectetur adipiscing elit,{" "}
-                           <span className="text-blue-700 font-semibold cursor-pointer">@Kishan Sripada</span> sed do eiusmod tempor incididunt ut
-                           labore et dolore magna aliqua.
-                        </p>
-                     </div>
-                     <div className="rounded-md border border-gray-300  text-sm flex flex-col items-center justify-center mt-3">
-                        <div className="bg-red-200 h-6 w-full text-black rounded-t-md px-3 flex flex-col justify-center">
-                           <p>Nandan Sripada</p>
-                        </div>
-                        <p className="p-3 w-full">Lorem ipsum dolor sit amet</p>
-                     </div>
-                     <div className="rounded-md border border-gray-300  text-sm flex flex-col items-center justify-center mt-3">
-                        <div className="bg-green-200 h-6 w-full text-black rounded-t-md px-3 flex flex-col justify-center">
-                           <p>Sasha Shrestha</p>
-                        </div>
-                        <p className="p-3 w-full">
-                           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </p>
-                     </div>
-                     <div className="rounded-md border border-gray-300  text-sm flex flex-col items-center justify-center mt-3">
-                        <div className="bg-orange-200 h-6 w-full text-black rounded-t-md px-3 flex flex-row justify-between">
-                           <p>Kishan Sripada</p>
-                           <div>{new Date().toDateString()}</div>
-                        </div>
-                        <p className="p-3 w-full">
-                           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </p>
-                     </div>
-                  </div> */}
+                        <p className=" mt-7 mb-2 font-medium text-gray-700">path</p>
+                        <div
+                           style={{
+                              opacity: selectedDancers.length && selectedFormation !== 0 ? 1 : 0.4,
+                              pointerEvents: selectedDancers.length && selectedFormation !== 0 ? "auto" : "none",
+                           }}
+                           className="border select-none  border-gray-200 flex flex-row justify-around rounded-xl w-full text-sm shadow-sm cursor-pointer "
+                        >
+                           <div
+                              className="p-4 flex flex-row items-center"
+                              onClick={() => {
+                                 addToStack();
+                                 selectedDancers.forEach((selectedDancer) => {
+                                    setFormations((formations: formation[]) => {
+                                       return formations.map((formation, index: number) => {
+                                          if (index === selectedFormation - 1) {
+                                             return {
+                                                ...formation,
 
-                  <div className="px-6 mt-6 mb-4 min-h-[130px]">
-                     <div className="flex flex-row  justify-between items-start  ">
-                        <div className="flex flex-col ">
-                           <p
-                              className="font-medium text-xl mr-auto z-10"
-                              // style={{
-                              //    textDecoration: selectedDancers.length === 1 ? "underline" : "none",
-                              //    textDecorationColor: dancers.find((dancer) => dancer.id === selectedDancers[0])?.color,
-                              //    textDecorationWidth: 100,
-                              //    textDecorationThickness: 4,
-                              // }}
+                                                positions: formation.positions.map((dancerPosition) => {
+                                                   if (dancerPosition.id === selectedDancer) {
+                                                      return {
+                                                         ...dancerPosition,
+                                                         transitionType: "linear",
+                                                      };
+                                                   }
+                                                   return dancerPosition;
+                                                }),
+                                             };
+                                          }
+                                          return formation;
+                                       });
+                                    });
+                                 });
+                                 pushChange();
+                              }}
                            >
-                              {selectedDancers.length === 0
-                                 ? "no dancers selected"
-                                 : selectedDancers.length === 1
-                                 ? dancers.find((dancer) => dancer.id === selectedDancers[0])?.name
-                                 : "multiple dancers selected"}
-                           </p>
+                              {selectedDancers.length &&
+                              formations[selectedFormation - 1]?.positions
+                                 .filter((dancer) => {
+                                    return selectedDancers.includes(dancer.id);
+                                 })
+                                 .map((dancer) => dancer.transitionType)
+                                 .every((item) => item === "linear" || !item) ? (
+                                 <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                                    <div className="rounded-full h-2 w-2 bg-pink-400"></div>
+                                 </div>
+                              ) : (
+                                 <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                              )}
+
+                              <p>straight</p>
+                           </div>
 
                            <div
-                              className="w-full h-2 relative "
-                              style={{
-                                 backgroundColor: dancers.find((dancer) => dancer.id === selectedDancers[0])?.color,
-                                 opacity: 0.7,
-                                 bottom: 5,
+                              className={`p-4 flex flex-row items-center `}
+                              onClick={() => {
+                                 if (pricingTier === "basic") {
+                                    toast("that's a premium feature", {
+                                       icon: "😛",
+                                    });
+                                    return;
+                                 }
+                                 addToStack();
+                                 selectedDancers.forEach((selectedDancer) => {
+                                    setFormations((formations: formation[]) => {
+                                       let start = formations[selectedFormation - 1]?.positions.find(
+                                          (dancerPosition) => dancerPosition.id === selectedDancer
+                                       )?.position;
+
+                                       let end = formations[selectedFormation]?.positions.find(
+                                          (dancerPosition) => dancerPosition.id === selectedDancer
+                                       )?.position;
+                                       if (!start || !end) return;
+
+                                       const getMidpoint = (x1, y1, x2, y2) => ({ x: (x1 + x2) / 2, y: (y1 + y2) / 2 });
+                                       const getSlope = (x1, y1, x2, y2) => {
+                                          if (x2 === x1) {
+                                             return undefined;
+                                          }
+                                          if (y2 === y1) {
+                                             return 0;
+                                          }
+                                          return (y2 - y1) / (x2 - x1);
+                                       };
+
+                                       let midpoint = getMidpoint(start.x, start.y, end.x, end.y);
+                                       let slope = getSlope(start.x, start.y, end.x, end.y);
+                                       let controlPointStart = (() => {
+                                          if (slope === undefined) {
+                                             return { x: midpoint.x + 0.25, y: midpoint.y };
+                                          }
+                                          if (slope === 0) {
+                                             return { x: midpoint.x, y: midpoint.y + 0.25 };
+                                          }
+                                          return { x: midpoint.x + slope / 4, y: midpoint.y + 1 / slope / 4 };
+                                       })();
+                                       let controlPointEnd = (() => {
+                                          if (slope === undefined) {
+                                             return { x: midpoint.x - 0.25, y: midpoint.y };
+                                          }
+                                          if (slope === 0) {
+                                             return { x: midpoint.x, y: midpoint.y - 0.25 };
+                                          }
+                                          return { x: midpoint.x - slope / 4, y: midpoint.y - 1 / slope / 4 };
+                                       })();
+
+                                       return formations.map((formation, index: number) => {
+                                          if (index === selectedFormation - 1) {
+                                             return {
+                                                ...formation,
+
+                                                positions: formation.positions.map((dancerPosition) => {
+                                                   if (dancerPosition.id === selectedDancer) {
+                                                      return {
+                                                         ...dancerPosition,
+                                                         transitionType: "cubic",
+                                                         controlPointStart,
+                                                         controlPointEnd,
+                                                      };
+                                                   }
+                                                   return dancerPosition;
+                                                }),
+                                             };
+                                          }
+                                          return formation;
+                                       });
+                                    });
+                                 });
+                                 pushChange();
                               }}
-                           ></div>
-                        </div>
+                           >
+                              {pricingTier === "basic" ? (
+                                 <p className="mr-3 text-[18px]">⚡️</p>
+                              ) : (
+                                 <>
+                                    {selectedDancers.length &&
+                                    formations[selectedFormation - 1]?.positions
+                                       .filter((dancer) => {
+                                          return selectedDancers.includes(dancer.id);
+                                       })
+                                       .map((dancer) => dancer.transitionType)
+                                       .every((item) => item === "cubic") ? (
+                                       <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                                          <div className="rounded-full h-2 w-2 bg-pink-400"></div>
+                                       </div>
+                                    ) : (
+                                       <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                                    )}
+                                 </>
+                              )}
 
-                        {selectedDancers.length === 1 ? (
-                           formations[selectedFormation]?.positions
-                              .filter((dancer) => {
-                                 return selectedDancers.includes(dancer.id);
-                              })
-                              .map((dancer) => dancer.position.x > -(stageDimensions.width / 2 - 2))
-                              .every((value) => value) ? (
-                              <p className="font-semibold text-xs text-green-800 bg-green-200 px-2 py-1 rounded-full">on stage</p>
-                           ) : (
-                              <p className="font-semibold text-xs text-red-800 bg-red-200 px-2 py-1 rounded-full">off stage</p>
-                           )
-                        ) : null}
-                     </div>
-                     <p className=" mt-7 mb-2 font-medium text-gray-700">path</p>
-                     <div
-                        style={{
-                           opacity: selectedDancers.length && selectedFormation !== 0 ? 1 : 0.4,
-                           pointerEvents: selectedDancers.length && selectedFormation !== 0 ? "auto" : "none",
-                        }}
-                        className="border select-none  border-gray-200 flex flex-row justify-around rounded-xl w-full text-sm shadow-sm cursor-pointer "
-                     >
-                        <div
-                           className="p-4 flex flex-row items-center"
-                           onClick={() => {
-                              addToStack();
-                              selectedDancers.forEach((selectedDancer) => {
-                                 setFormations((formations: formation[]) => {
-                                    return formations.map((formation, index: number) => {
-                                       if (index === selectedFormation - 1) {
-                                          return {
-                                             ...formation,
-
-                                             positions: formation.positions.map((dancerPosition) => {
-                                                if (dancerPosition.id === selectedDancer) {
-                                                   return {
-                                                      ...dancerPosition,
-                                                      transitionType: "linear",
-                                                   };
-                                                }
-                                                return dancerPosition;
-                                             }),
-                                          };
-                                       }
-                                       return formation;
-                                    });
-                                 });
-                              });
-                              pushChange();
-                           }}
-                        >
-                           {selectedDancers.length &&
-                           formations[selectedFormation - 1]?.positions
-                              .filter((dancer) => {
-                                 return selectedDancers.includes(dancer.id);
-                              })
-                              .map((dancer) => dancer.transitionType)
-                              .every((item) => item === "linear" || !item) ? (
-                              <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
-                                 <div className="rounded-full h-2 w-2 bg-pink-400"></div>
-                              </div>
-                           ) : (
-                              <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
-                           )}
-
-                           <p>straight</p>
-                        </div>
-
-                        <div
-                           className={`p-4 flex flex-row items-center `}
-                           onClick={() => {
-                              if (pricingTier === "basic") {
-                                 toast("that's a premium feature", {
-                                    icon: "😛",
-                                 });
-                                 return;
-                              }
-                              addToStack();
-                              selectedDancers.forEach((selectedDancer) => {
-                                 setFormations((formations: formation[]) => {
-                                    let start = formations[selectedFormation - 1]?.positions.find(
-                                       (dancerPosition) => dancerPosition.id === selectedDancer
-                                    )?.position;
-
-                                    let end = formations[selectedFormation]?.positions.find(
-                                       (dancerPosition) => dancerPosition.id === selectedDancer
-                                    )?.position;
-                                    if (!start || !end) return;
-
-                                    const getMidpoint = (x1, y1, x2, y2) => ({ x: (x1 + x2) / 2, y: (y1 + y2) / 2 });
-                                    const getSlope = (x1, y1, x2, y2) => {
-                                       if (x2 === x1) {
-                                          return undefined;
-                                       }
-                                       if (y2 === y1) {
-                                          return 0;
-                                       }
-                                       return (y2 - y1) / (x2 - x1);
-                                    };
-
-                                    let midpoint = getMidpoint(start.x, start.y, end.x, end.y);
-                                    let slope = getSlope(start.x, start.y, end.x, end.y);
-                                    let controlPointStart = (() => {
-                                       if (slope === undefined) {
-                                          return { x: midpoint.x + 0.25, y: midpoint.y };
-                                       }
-                                       if (slope === 0) {
-                                          return { x: midpoint.x, y: midpoint.y + 0.25 };
-                                       }
-                                       return { x: midpoint.x + slope / 4, y: midpoint.y + 1 / slope / 4 };
-                                    })();
-                                    let controlPointEnd = (() => {
-                                       if (slope === undefined) {
-                                          return { x: midpoint.x - 0.25, y: midpoint.y };
-                                       }
-                                       if (slope === 0) {
-                                          return { x: midpoint.x, y: midpoint.y - 0.25 };
-                                       }
-                                       return { x: midpoint.x - slope / 4, y: midpoint.y - 1 / slope / 4 };
-                                    })();
-
-                                    return formations.map((formation, index: number) => {
-                                       if (index === selectedFormation - 1) {
-                                          return {
-                                             ...formation,
-
-                                             positions: formation.positions.map((dancerPosition) => {
-                                                if (dancerPosition.id === selectedDancer) {
-                                                   return {
-                                                      ...dancerPosition,
-                                                      transitionType: "cubic",
-                                                      controlPointStart,
-                                                      controlPointEnd,
-                                                   };
-                                                }
-                                                return dancerPosition;
-                                             }),
-                                          };
-                                       }
-                                       return formation;
-                                    });
-                                 });
-                              });
-                              pushChange();
-                           }}
-                        >
-                           {pricingTier === "basic" ? (
-                              <p className="mr-3 text-[18px]">⚡️</p>
-                           ) : (
-                              <>
-                                 {selectedDancers.length &&
-                                 formations[selectedFormation - 1]?.positions
-                                    .filter((dancer) => {
-                                       return selectedDancers.includes(dancer.id);
-                                    })
-                                    .map((dancer) => dancer.transitionType)
-                                    .every((item) => item === "cubic") ? (
-                                    <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
-                                       <div className="rounded-full h-2 w-2 bg-pink-400"></div>
-                                    </div>
-                                 ) : (
-                                    <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
-                                 )}
-                              </>
-                           )}
-
-                           <p className={`${pricingTier === "basic" ? "opacity-40" : ""}`}>curved</p>
+                              <p className={`${pricingTier === "basic" ? "opacity-40" : ""}`}>curved</p>
+                           </div>
                         </div>
                      </div>
                   </div>
 
-                  {/* <div className="flex flex-row mt-auto pb-3  pt-3 justify-center items-center ">
-                     <button
-                        className="btn btn-error btn-sm  mx-2 w-1/2 "
-                        onClick={() => {
-                           if (selectedFormation === formations.length - 1) {
-                              setSelectedFormation((selectedFormation: number) => selectedFormation - 1);
-                           }
+                  <div className="overflow-scroll h-full px-6 mt-3">
+                     {formations[selectedFormation]?.comments?.map((comment) => {
+                        return (
+                           <>
+                              <div key={comment.id} className="flex flex-row items-start   mb-6">
+                                 {comment.user.avatar_url ? (
+                                    <img
+                                       //   id={dancer.id}
+                                       //   data-type={"dancer"}
+                                       className="w-[32px] h-[32px] rounded-full select-none pointer-events-none mr-3"
+                                       src={comment.user.avatar_url}
+                                    />
+                                 ) : (
+                                    <div className="bg-purple-500 text-white mr-3  rounded-full  min-w-[32px] font-semibold min-h-[32px] grid place-items-center select-none cursor-default pointer-events-none  ">
+                                       {initials(comment.user.name)}
+                                    </div>
+                                 )}
+                                 <div>
+                                    <p className=" text-gray-500 text-xs font-medium">{comment.user.name}</p>
+                                    <p className="mr-2 mt-2">{comment.content}</p>
+                                 </div>
+                                 <button
+                                    onClick={() => deleteComment(comment.id)}
+                                    className="ml-auto mt-auto mb-auto p-2 hover:bg-gray-100 transition duration-300 rounded-xl"
+                                 >
+                                    <svg
+                                       xmlns="http://www.w3.org/2000/svg"
+                                       fill="none"
+                                       viewBox="0 0 24 24"
+                                       strokeWidth={1.5}
+                                       stroke="currentColor"
+                                       className="w-5 h-5 stroke-gray-600 shrink-0  "
+                                    >
+                                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                    </svg>
+                                 </button>
+                              </div>
+                           </>
+                        );
+                     })}
+                  </div>
 
-                           setFormations((formations: formation[]) => {
-                              return formations.filter((_, index) => {
-                                 return index !== selectedFormation;
-                              });
-                           });
-                           toast.success("formation deleted");
-                        }}
+                  <div className="px-6 pb-6 pt-3">
+                     <div
+                        onClick={() => setIsCommenting((isCommenting: boolean) => !isCommenting)}
+                        className="border border-gray-200  rounded-xl w-full text-sm shadow-sm cursor-pointer select-none  mt-auto grid place-items-center text-gray-700 py-4  "
                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" className=" w-5 h-5 mr-2">
-                           <path
-                              fillRule="evenodd"
-                              d="M16.5 4.478v.227a48.816 48.816 0 013.878.512.75.75 0 11-.256 1.478l-.209-.035-1.005 13.07a3 3 0 01-2.991 2.77H8.084a3 3 0 01-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 01-.256-1.478A48.567 48.567 0 017.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 013.369 0c1.603.051 2.815 1.387 2.815 2.951zm-6.136-1.452a51.196 51.196 0 013.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 00-6 0v-.113c0-.794.609-1.428 1.364-1.452zm-.355 5.945a.75.75 0 10-1.5.058l.347 9a.75.75 0 101.499-.058l-.346-9zm5.48.058a.75.75 0 10-1.498-.058l-.347 9a.75.75 0 001.5.058l.345-9z"
-                              clipRule="evenodd"
-                           />
-                        </svg>
-                        <p className=""> delete</p>
-                     </button>
-                  </div> */}
-               </div>
+                        {isCommenting ? "cancel" : "add comment"}
+                     </div>
+                  </div>
+               </>
             ) : (
                <>
                   <p className="text-center mt-16">no formation selected </p>

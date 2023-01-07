@@ -25,8 +25,12 @@ export type formation = {
 };
 
 export type comment = {
-   name: string;
    id: string;
+   user: {
+      id: string;
+      name: string;
+      avatar_url: string;
+   };
    content: string;
    position: { x: number; y: number };
 };
@@ -39,3 +43,11 @@ export const PIXELS_PER_SECOND = 15;
 export const PIXELS_PER_SQUARE = 40;
 export const GRID_WIDTH = 26;
 export const GRID_HEIGHT = 20;
+
+export const initials = (name: string) =>
+   name
+      .split(" ")
+      .map((name) => name[0])
+      .slice(0, 3)
+      .join("")
+      .toUpperCase();

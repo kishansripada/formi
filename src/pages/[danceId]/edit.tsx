@@ -8,11 +8,11 @@ import toast, { Toaster } from "react-hot-toast";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
-import { dancer, dancerPosition, formation, PIXELS_PER_SQUARE } from "../../types/types";
-
+import { comment, dancer, dancerPosition, formation, PIXELS_PER_SQUARE } from "../../types/types";
 import { AudioControls } from "../../components/AppComponents/AudioControls";
 import { Header } from "../../components/AppComponents/Header";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
+import { Comment } from "../../components/AppComponents/Comment";
 import { DancerAliasShadow } from "../../components/AppComponents/DancerAliasShadow";
 import { Canvas } from "../../components/AppComponents/Canvas";
 import { Settings } from "../../components/AppComponents/SidebarComponents/Settings";
@@ -59,6 +59,7 @@ const FileAudioPlayer = dynamic<{
 });
 
 const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
+   viewOnly = false;
    let pricingTier = "premium";
    const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
 
@@ -91,7 +92,9 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [gridSnap, setGridSnap] = useState<number>(initialData.settings.gridSnap || 1);
 
    const [songDuration, setSongDuration] = useState<number | null>(null);
+
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
+   const [isCommenting, setIsCommenting] = useState<boolean>(false);
    const [position, setPosition] = useState<number | null>(null);
    const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(15);
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
@@ -482,6 +485,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                         ></Settings>
                      ) : (
                         <CurrentFormation
+                           isCommenting={isCommenting}
+                           setIsCommenting={setIsCommenting}
                            addToStack={addToStack}
                            pushChange={pushChange}
                            pricingTier={pricingTier}
@@ -511,6 +516,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   />
 
                   <Canvas
+                     isCommenting={isCommenting}
+                     setIsCommenting={setIsCommenting}
                      gridSnap={gridSnap}
                      pushChange={pushChange}
                      undo={undo}
@@ -566,22 +573,35 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            percentThroughTransition={percentThroughTransition}
                         />
                      ))}
-                     {previousFormationView !== "none"
-                        ? dancers.map((dancer, index) => (
-                             <DancerAliasShadow
-                                coordsToPosition={coordsToPosition}
-                                currentFormationIndex={currentFormationIndex}
-                                isPlaying={isPlaying}
-                                selectedFormation={selectedFormation}
-                                key={dancer.id}
-                                dancer={dancer}
-                                formations={formations}
-                             />
-                          ))
-                        : dancers
-                             .filter((dancer) => selectedDancers.includes(dancer.id))
-                             .map((dancer, index) => {
-                                return (
+
+                     {selectedFormation !== null && !isPlaying ? (
+                        <>
+                           {(formations[selectedFormation].comments || []).map((comment: comment) => {
+                              return (
+                                 <>
+                                    <Comment
+                                       stageDimensions={stageDimensions}
+                                       coordsToPosition={coordsToPosition}
+                                       selectedDancers={selectedDancers}
+                                       isPlaying={isPlaying}
+                                       position={position}
+                                       selectedFormation={selectedFormation}
+                                       setDancers={setDancers}
+                                       key={comment.id}
+                                       comment={comment}
+                                       formations={formations}
+                                       setFormations={setFormations}
+                                       draggingDancerId={draggingDancerId}
+                                       userPositions={userPositions}
+                                       onlineUsers={onlineUsers}
+                                       currentFormationIndex={currentFormationIndex}
+                                       percentThroughTransition={percentThroughTransition}
+                                    />
+                                 </>
+                              );
+                           })}
+                           {previousFormationView !== "none"
+                              ? dancers.map((dancer, index) => (
                                    <DancerAliasShadow
                                       coordsToPosition={coordsToPosition}
                                       currentFormationIndex={currentFormationIndex}
@@ -591,8 +611,24 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                                       dancer={dancer}
                                       formations={formations}
                                    />
-                                );
-                             })}
+                                ))
+                              : dancers
+                                   .filter((dancer) => selectedDancers.includes(dancer.id))
+                                   .map((dancer, index) => {
+                                      return (
+                                         <DancerAliasShadow
+                                            coordsToPosition={coordsToPosition}
+                                            currentFormationIndex={currentFormationIndex}
+                                            isPlaying={isPlaying}
+                                            selectedFormation={selectedFormation}
+                                            key={dancer.id}
+                                            dancer={dancer}
+                                            formations={formations}
+                                         />
+                                      );
+                                   })}
+                        </>
+                     ) : null}
                   </Canvas>
                </div>
             </div>

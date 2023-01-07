@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-
+import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { GridLines } from "./GridLines";
-import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE } from "../../types/types";
+import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment } from "../../types/types";
 
 export const Canvas: React.FC<{
    children: React.ReactNode;
@@ -24,6 +24,8 @@ export const Canvas: React.FC<{
    addToStack: Function;
    pushChange: Function;
    gridSnap: number;
+   isCommenting: boolean;
+   setIsCommenting: Function;
 }> = ({
    player,
    children,
@@ -45,8 +47,11 @@ export const Canvas: React.FC<{
    addToStack,
    pushChange,
    gridSnap,
+   isCommenting,
+   setIsCommenting,
 }) => {
    const [shiftHeld, setShiftHeld] = useState(false);
+   const [draggingCommentId, setDraggingCommentId] = useState<string | null>();
    const [commandHeld, setCommandHeld] = useState(false);
    const [changingControlId, setChangingControlId] = useState<null | string>(null);
    const [changingControlType, setChangingControlType] = useState<"start" | "end" | null>(null);
@@ -58,6 +63,9 @@ export const Canvas: React.FC<{
 
    const container = useRef();
    const stage = useRef();
+
+   const session = useSession();
+
    useEffect(() => {
       window.addEventListener("keydown", downHandler);
       window.addEventListener("keyup", upHandler);
@@ -192,16 +200,17 @@ export const Canvas: React.FC<{
       if (e.target.dataset.type === "dancer" && !dragBoxCoords.start.x) {
          setIsDragging(true);
       }
-      const target = e.currentTarget;
-
-      // Get the bounding rectangle of target
-      const rect = target.getBoundingClientRect();
-
-      // Mouse position
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
 
       if (dragBoxCoords.start.x && dragBoxCoords.start.y) {
+         const target = e.currentTarget;
+
+         // Get the bounding rectangle of target
+         const rect = target.getBoundingClientRect();
+
+         // Mouse position
+         const x = e.clientX - rect.left;
+         const y = e.clientY - rect.top;
+
          setDragBoxCoords((dragBoxCoords) => {
             return { ...dragBoxCoords, end: { x: x / zoom, y: y / zoom } };
          });
@@ -267,19 +276,120 @@ export const Canvas: React.FC<{
             });
          });
       }
+
+      if (draggingCommentId) {
+         setFormations((formations: formation[]) => {
+            return formations.map((formation, index: number) => {
+               if (index === selectedFormation) {
+                  return {
+                     ...formation,
+                     comments: formation.comments.map((comment: comment) => {
+                        console.log(comment.id);
+                        console.log({ draggingCommentId });
+                        if (comment.id === draggingCommentId) {
+                           return {
+                              ...comment,
+                              position: {
+                                 x: comment.position.x + e.movementX / PIXELS_PER_SQUARE / zoom,
+                                 y: comment.position.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                              },
+                           };
+                        }
+                        return comment;
+                     }),
+                  };
+               }
+
+               return formation;
+            });
+         });
+      }
    };
 
    const pointerDown = (e: any) => {
+      if (isCommenting) {
+         const target = e.currentTarget;
+
+         // Get the bounding rectangle of target
+         const rect = target.getBoundingClientRect();
+
+         // Mouse position
+         const left = (e.clientX - rect.left) / zoom;
+         const top = (e.clientY - rect.top) / zoom;
+
+         const positionToCoords = (position: { left: number; top: number } | null | undefined) => {
+            if (!position) return null;
+            let { left, top } = position;
+
+            return {
+               x: Math.round(((left - (PIXELS_PER_SQUARE * stageDimensions.width) / 2) / PIXELS_PER_SQUARE) * 100) / 100,
+               y: Math.round((-(top - (PIXELS_PER_SQUARE * stageDimensions.height) / 2) / PIXELS_PER_SQUARE) * 100) / 100,
+            };
+         };
+
+         let newCommentCoords = positionToCoords({ left, top });
+
+         setFormations((formations: formation[]) => {
+            return formations.map((formation, i) => {
+               if (i === selectedFormation) {
+                  if (formation?.comments?.length) {
+                     return {
+                        ...formation,
+                        comments: [
+                           ...formation?.comments,
+                           {
+                              id: crypto.randomUUID(),
+                              user: {
+                                 name: session?.user.user_metadata.full_name,
+                                 avatar_url: session?.user.user_metadata.avatar_url,
+                                 id: session?.user.id,
+                              },
+                              content: "New comment...",
+                              position: newCommentCoords,
+                           },
+                        ],
+                     };
+                  } else {
+                     return {
+                        ...formation,
+                        comments: [
+                           {
+                              id: crypto.randomUUID(),
+                              user: {
+                                 name: session?.user.user_metadata.full_name,
+                                 avatar_url: session?.user.user_metadata.avatar_url,
+                                 id: session?.user.id,
+                              },
+                              content: "New comment...",
+                              position: newCommentCoords,
+                           },
+                        ],
+                     };
+                  }
+               }
+               return formation;
+            });
+         });
+         setIsCommenting(false);
+      }
+
+      if (e.target.dataset.type === "comment") {
+         addToStack();
+         setDraggingCommentId(e.target.id);
+      }
+
       if (e.target.dataset.type === "controlPointStart") {
          addToStack();
          setChangingControlId(e.target.id);
          setChangingControlType("start");
       }
+
       if (e.target.dataset.type === "controlPointEnd") {
          addToStack();
          setChangingControlId(e.target.id);
          setChangingControlType("end");
       }
+
       if (!e.target.id) {
          setSelectedDancers([]);
          // Get the target
@@ -317,8 +427,12 @@ export const Canvas: React.FC<{
       if (changingControlId) {
          pushChange();
       }
+      if (draggingCommentId) {
+         pushChange();
+      }
       setChangingControlId(null);
       setChangingControlType(null);
+      setDraggingCommentId(null);
       setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
       if (e.target.dataset.type === "dancer" && !shiftHeld && !isDragging) {
          setSelectedDancers([e.target.id]);
