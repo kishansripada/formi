@@ -1,4 +1,5 @@
 import { dancer, dancerPosition, formation, stageDimensions, comment } from "../../types/types";
+import { useRef, useEffect, useState } from "react";
 
 export const Comment: React.FC<{
    comment: comment;
@@ -39,6 +40,8 @@ export const Comment: React.FC<{
    // if the dancer does not have any coordinates right now, return nothing since it shouln't be displayed
    let { left, top } = coordsToPosition(comment.position);
    if (!left || !top) return <></>;
+
+   let textAreaRef = useRef<HTMLTextAreaElement>(null);
 
    let initials = comment.user.name
       .split(" ")
@@ -82,6 +85,7 @@ export const Comment: React.FC<{
                   //   data-type={"dancer"}
                   className="w-[32px] h-[32px] rounded-full select-none pointer-events-none"
                   src={comment.user.avatar_url}
+                  referrerPolicy="no-referrer"
                />
             ) : (
                <div className="bg-purple-500 text-white  rounded-full  min-w-[32px] font-semibold min-h-[32px] grid place-items-center select-none cursor-default pointer-events-none  ">
@@ -95,7 +99,7 @@ export const Comment: React.FC<{
 
                <textarea
                   onChange={(e) => {
-                     e.target.style.height = "inherit";
+                     e.target.style.height = "auto";
                      e.target.style.height = `${e.target.scrollHeight}px`;
                      setFormations((formations: formation[]) => {
                         return formations.map((formation, i) => {
@@ -114,10 +118,8 @@ export const Comment: React.FC<{
                         });
                      });
                   }}
-                  className="bg-gray-800 focus:outline-none resize-none pointer-events-auto w-full text-sm font-normal  mt-1"
+                  className="bg-gray-800 focus:outline-none resize-none pointer-events-auto w-full text-sm font-normal  mt-1 selection:bg-pink-900"
                   value={comment.content}
-                  name=""
-                  id=""
                ></textarea>
             </div>
          </div>

@@ -26,6 +26,8 @@ export const Canvas: React.FC<{
    gridSnap: number;
    isCommenting: boolean;
    setIsCommenting: Function;
+   zoom: number;
+   setZoom: Function;
 }> = ({
    player,
    children,
@@ -49,6 +51,8 @@ export const Canvas: React.FC<{
    gridSnap,
    isCommenting,
    setIsCommenting,
+   zoom,
+   setZoom,
 }) => {
    const [shiftHeld, setShiftHeld] = useState(false);
    const [draggingCommentId, setDraggingCommentId] = useState<string | null>();
@@ -56,10 +60,11 @@ export const Canvas: React.FC<{
    const [changingControlId, setChangingControlId] = useState<null | string>(null);
    const [changingControlType, setChangingControlType] = useState<"start" | "end" | null>(null);
    const [scrollOffset, setScrollOffset] = useState({ x: -442, y: -310 });
-   const [zoom, setZoom] = useState(1);
+
    const [copiedPositions, setCopiedPositions] = useState([]);
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
    const [isDragging, setIsDragging] = useState(false);
+   const [cursorPosition, setCursorPoisition] = useState<{ x: number; y: number }>();
 
    const container = useRef();
    const stage = useRef();
@@ -82,7 +87,7 @@ export const Canvas: React.FC<{
    }, [container?.current?.clientHeight, stage?.current?.clientHeight, stageDimensions]);
 
    const downHandler = (e: any) => {
-      if (e?.path?.[0]?.tagName === "INPUT" || e?.path?.[0]?.tagName === "TEXTAREA") return;
+      if (e?.path?.[0]?.tagName === "INPUT" || e?.path?.[0]?.tagName === "TEXTAREA" || e.target.id === "input") return;
       // console.log(e.key);
       if (e.key === " ") {
          e.preventDefault();
@@ -111,6 +116,7 @@ export const Canvas: React.FC<{
       if (e.key === "Escape") {
          setSelectedDancers([]);
          setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
+         setIsCommenting(false);
       }
       if (selectedFormation === null) return;
 
@@ -163,6 +169,17 @@ export const Canvas: React.FC<{
 
    const handleDragMove = (e: any) => {
       if (selectedFormation === null) return;
+      // if (isCommenting) {
+      //    const target = e.currentTarget;
+      //    // console.log(target);
+      //    // Get the bounding rectangle of target
+      //    const rect = target.getBoundingClientRect();
+
+      //    // Mouse position
+      //    const x = e.clientX - rect.left;
+      //    const y = e.clientY - rect.top;
+      //    setCursorPoisition({ x, y });
+      // }
       if (changingControlId) {
          setFormations((formations: formation[]) => {
             return formations.map((formation, index: number) => {
@@ -284,8 +301,8 @@ export const Canvas: React.FC<{
                   return {
                      ...formation,
                      comments: formation.comments.map((comment: comment) => {
-                        console.log(comment.id);
-                        console.log({ draggingCommentId });
+                        // console.log(comment.id);
+                        // console.log({ draggingCommentId });
                         if (comment.id === draggingCommentId) {
                            return {
                               ...comment,
@@ -434,6 +451,7 @@ export const Canvas: React.FC<{
       setChangingControlType(null);
       setDraggingCommentId(null);
       setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
+
       if (e.target.dataset.type === "dancer" && !shiftHeld && !isDragging) {
          setSelectedDancers([e.target.id]);
       }
@@ -513,6 +531,27 @@ export const Canvas: React.FC<{
             }}
          >
             {children}
+
+            {/* {isCommenting ? (
+               <svg
+                  style={{
+                     left: cursorPosition?.x / zoom - 20,
+                     top: cursorPosition?.y / zoom - 20,
+                     // left: 0,
+                     // top: 0,
+                  }}
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-6 h-6 absolute z-[99999]"
+               >
+                  <path
+                     fillRule="evenodd"
+                     d="M5.337 21.718a6.707 6.707 0 01-.533-.074.75.75 0 01-.44-1.223 3.73 3.73 0 00.814-1.686c.023-.115-.022-.317-.254-.543C3.274 16.587 2.25 14.41 2.25 12c0-5.03 4.428-9 9.75-9s9.75 3.97 9.75 9c0 5.03-4.428 9-9.75 9-.833 0-1.643-.097-2.417-.279a6.721 6.721 0 01-4.246.997z"
+                     clipRule="evenodd"
+                  />
+               </svg>
+            ) : null} */}
 
             {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y ? (
                <div

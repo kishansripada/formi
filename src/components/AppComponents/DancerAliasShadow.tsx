@@ -36,7 +36,13 @@ export const DancerAliasShadow: React.FC<{
             className={`rounded-full -translate-y-1/2 -translate-x-1/2	 flex pointer-events-none  flex-row justify-center opacity-30 items-center absolute z-[30] mr-auto ml-auto cursor-default  w-[38px] h-[38px]`}
          >
             {dancer.instagramUsername ? (
-               <img draggable={false} className="w-[32px] h-[32px] rounded-full select-none" src={dancer.instagramUsername} alt={dancer.name} />
+               <img
+                  referrerPolicy="no-referrer"
+                  draggable={false}
+                  className="w-[32px] h-[32px] rounded-full select-none"
+                  src={dancer.instagramUsername}
+                  alt={dancer.name}
+               />
             ) : (
                <div className="bg-white  rounded-full w-[32px] h-[32px] grid place-items-center select-none cursor-default ">
                   <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">

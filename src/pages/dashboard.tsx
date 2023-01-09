@@ -102,7 +102,7 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                         className=" outline outline-2 rounded px-2 mt-6"
                      />
                      <div className="flex flex-row items-center justify-center">
-                        <img src="https://i.imgur.com/mBCNO7A.png" className="w-48 rounded-xl mt-10" alt="" />
+                        <img referrerPolicy="no-referrer" src="https://i.imgur.com/mBCNO7A.png" className="w-48 rounded-xl mt-10" alt="" />
                         <p className="w-48 ml-10">make sure the dance is uploaded before pasting the url</p>
                      </div>
                      <button onClick={importFromDanceApp} className="ml-auto bg-blue-600 text-white px-3 mt-5 py-1 rounded-md">
@@ -124,7 +124,12 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                   </div>
 
                   <div className="flex flex-row mt-3  ">
-                     <img className="rounded-md w-16 pointer-events-none select-none mr-3" src={session?.user.user_metadata.avatar_url} alt="" />
+                     <img
+                        referrerPolicy="no-referrer"
+                        className="rounded-md w-16 pointer-events-none select-none mr-3"
+                        src={session?.user.user_metadata.avatar_url}
+                        alt=""
+                     />
                      <div className="flex flex-col items-start justify-center">
                         <p className="font-semibold">{session?.user.user_metadata?.full_name}</p>
                         <p className="text-gray-500 text-sm">basic plan</p>
@@ -157,14 +162,14 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                   >
                      <p>home</p>
                   </button>
-                  <button
+                  {/* <button
                      className={`flex flex-row justify-between items-center ${
                         menuOpen === "rosters" ? "bg-gray-200" : ""
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                      onClick={() => setMenuOpen("rosters")}
                   >
                      <p>rosters</p>
-                  </button>
+                  </button> */}
                   <button
                      onClick={() => setMenuOpen("audio")}
                      className={`flex flex-row justify-between items-center ${

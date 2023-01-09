@@ -69,7 +69,7 @@ export const Dancer: React.FC<{
                >
                   {instagramUsername ? (
                      <div className="w-[41px] h-[41px] bg-white rounded-full grid place-items-center">
-                        <img className="w-[41px] h-[41px] rounded-full " src={instagramUsername} alt="" />
+                        <img referrerPolicy="no-referrer" className="w-[41px] h-[41px] rounded-full " src={instagramUsername} alt="" />
                      </div>
                   ) : (
                      <div className="bg-white rounded-full w-[41px] h-[41px] grid place-items-center text-gray-700" data-type={"newDancer"}>

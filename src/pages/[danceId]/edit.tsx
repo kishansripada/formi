@@ -59,12 +59,12 @@ const FileAudioPlayer = dynamic<{
 });
 
 const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
-   viewOnly = false;
    let pricingTier = "premium";
    const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
 
    const supabase = useSupabaseClient();
    let session = useSession();
+   console.log(session);
    const router = useRouter();
 
    // const supabase = createClient(
@@ -92,7 +92,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [gridSnap, setGridSnap] = useState<number>(initialData.settings.gridSnap || 1);
 
    const [songDuration, setSongDuration] = useState<number | null>(null);
-
+   const [zoom, setZoom] = useState(1);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [isCommenting, setIsCommenting] = useState<boolean>(false);
    const [position, setPosition] = useState<number | null>(null);
@@ -192,10 +192,12 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    };
 
    const addToStack = () => {
+      console.log("add to stack");
       setPreviousFormation(formations);
    };
 
    const pushChange = () => {
+      console.log("push change");
       setPreviousFormation((previousFormations: formation[]) => {
          setFormations((formations) => {
             var delta = jsondiffpatch.diff(previousFormations, formations);
@@ -309,6 +311,9 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    );
 
    useDidMountEffect(() => {
+      if (!session) {
+         router.push("/login");
+      }
       if (router.isReady) {
          setSaved(false);
          uploadSettings(previousFormationView, stageDimensions);
@@ -328,6 +333,9 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    );
 
    useDidMountEffect(() => {
+      if (!session) {
+         router.push("/login");
+      }
       if (router.isReady) {
          setSaved(false);
          uploadDancers(dancers);
@@ -343,12 +351,16 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
             .eq("id", router.query.danceId);
          console.log({ data });
          console.log({ error });
+
          setSaved(true);
       }, 10000),
       [router.query.danceId]
    );
 
    useDidMountEffect(() => {
+      if (!session) {
+         router.push("/login");
+      }
       if (router.isReady) {
          setSaved(false);
          uploadFormations(formations);
@@ -371,6 +383,9 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    );
 
    useDidMountEffect(() => {
+      if (!session) {
+         router.push("/login");
+      }
       if (router.isReady) {
          setSaved(false);
          uploadSoundCloudId(soundCloudTrackId);
@@ -390,6 +405,9 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    );
 
    useDidMountEffect(() => {
+      if (!session) {
+         router.push("/login");
+      }
       if (router.isReady) {
          setSaved(false);
          uploadName(danceName);
@@ -516,6 +534,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   />
 
                   <Canvas
+                     zoom={zoom}
+                     setZoom={setZoom}
                      isCommenting={isCommenting}
                      setIsCommenting={setIsCommenting}
                      gridSnap={gridSnap}
@@ -555,6 +575,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
 
                      {dancers.map((dancer, index) => (
                         <DancerAlias
+                           zoom={zoom}
+                           setZoom={setZoom}
                            stageDimensions={stageDimensions}
                            coordsToPosition={coordsToPosition}
                            selectedDancers={selectedDancers}

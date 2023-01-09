@@ -16,6 +16,8 @@ export const DancerAlias: React.FC<{
    stageDimensions: any;
    userPositions: any;
    onlineUsers: any;
+   zoom: number;
+   setZoom: Function;
 }> = ({
    dancer,
    currentFormationIndex,
@@ -32,6 +34,8 @@ export const DancerAlias: React.FC<{
    stageDimensions,
    userPositions,
    onlineUsers,
+   zoom,
+   setZoom,
 }) => {
    let initials = dancer.name
       .split(" ")
@@ -60,7 +64,7 @@ export const DancerAlias: React.FC<{
                }}
             >
                {dancer.instagramUsername ? (
-                  <img className="w-[32px] h-[32px] rounded-full select-none " src={dancer.instagramUsername} alt="" />
+                  <img referrerPolicy="no-referrer" className="w-[32px] h-[32px] rounded-full select-none " src={dancer.instagramUsername} alt="" />
                ) : (
                   <div className="bg-white rounded-full w-[32px] h-[32px] grid place-items-center cursor-default  font-semibold  ">
                      <p className="cursor-default ">{initials}</p>
@@ -122,6 +126,7 @@ export const DancerAlias: React.FC<{
 
             {dancer.instagramUsername ? (
                <img
+                  referrerPolicy="no-referrer"
                   id={dancer.id}
                   data-type={"dancer"}
                   draggable={false}

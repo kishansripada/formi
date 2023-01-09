@@ -151,14 +151,14 @@ export const CurrentFormation: React.FC<{
                                     : "multiple dancers selected"}
                               </p>
 
-                              <div
+                              {/* <div
                                  className="w-full h-2 relative "
                                  style={{
                                     backgroundColor: dancers.find((dancer) => dancer.id === selectedDancers[0])?.color,
                                     opacity: 0.7,
                                     bottom: 5,
                                  }}
-                              ></div>
+                              ></div> */}
                            </div>
 
                            {selectedDancers.length === 1 ? (
@@ -174,7 +174,7 @@ export const CurrentFormation: React.FC<{
                               )
                            ) : null}
                         </div>
-                        <p className=" mt-7 mb-2 font-medium text-gray-700">path</p>
+                        <p className=" mt-5 mb-2 font-medium text-gray-700">path</p>
                         <div
                            style={{
                               opacity: selectedDancers.length && selectedFormation !== 0 ? 1 : 0.4,
@@ -332,13 +332,14 @@ export const CurrentFormation: React.FC<{
                      </div>
                   </div>
 
-                  <div className="overflow-scroll h-full px-6 mt-3">
+                  <div className="overflow-y-scroll overflow-x-hidden h-full px-6 mt-5">
                      {formations[selectedFormation]?.comments?.map((comment) => {
                         return (
                            <>
-                              <div key={comment.id} className="flex flex-row items-start   mb-6">
+                              <div key={comment.id} className="flex flex-row items-start w-full  mb-6">
                                  {comment.user.avatar_url ? (
                                     <img
+                                       referrerPolicy="no-referrer"
                                        //   id={dancer.id}
                                        //   data-type={"dancer"}
                                        className="w-[32px] h-[32px] rounded-full select-none pointer-events-none mr-3"
@@ -349,9 +350,9 @@ export const CurrentFormation: React.FC<{
                                        {initials(comment.user.name)}
                                     </div>
                                  )}
-                                 <div>
+                                 <div className=" overflow-hidden">
                                     <p className=" text-gray-500 text-xs font-medium">{comment.user.name}</p>
-                                    <p className="mr-2 mt-2">{comment.content}</p>
+                                    <p className="mr-2 mt-2 w-full ">{comment.content}</p>
                                  </div>
                                  <button
                                     onClick={() => deleteComment(comment.id)}
@@ -376,7 +377,16 @@ export const CurrentFormation: React.FC<{
 
                   <div className="px-6 pb-6 pt-3">
                      <div
-                        onClick={() => setIsCommenting((isCommenting: boolean) => !isCommenting)}
+                        onClick={() =>
+                           setIsCommenting((isCommenting: boolean) => {
+                              if (!isCommenting) {
+                                 toast("click anywhere on stage to leave a comment", {
+                                    icon: "💬",
+                                 });
+                              }
+                              return !isCommenting;
+                           })
+                        }
                         className="border border-gray-200  rounded-xl w-full text-sm shadow-sm cursor-pointer select-none  mt-auto grid place-items-center text-gray-700 py-4  "
                      >
                         {isCommenting ? "cancel" : "add comment"}
