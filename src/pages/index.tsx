@@ -272,8 +272,18 @@ const home = () => {
                <div></div>
             </div>
 
+            <div className="flex flex-row items-center py-16 bg-white font-proxima">
+               <img src="/commentDemo.png" className="w-1/2 rounded-xl relative right-24" alt="" />
+               <div className="w-1/2">
+                  <p className="text-3xl">Leave notes directly on the stage.</p>
+                  <p className="text-md mt-6 w-[70%]">
+                     collaborate with your dancers and choreographers by leaving notes, comments or corrections directly on the stage
+                  </p>
+               </div>
+            </div>
+
             {/* FOOTER */}
-            <div className="bg-[#fafafa]">
+            {/* <div className="bg-[#fafafa]">
                <div className="pt-6 pb-6 px-12 flex flex-row bg-[#fafafa] ">
                   <svg className="ml-auto opacity-40" fill="none" xmlns="http://www.w3.org/2000/svg" width={200} viewBox="0 0 1004 135">
                      <path
@@ -282,7 +292,7 @@ const home = () => {
                      />
                   </svg>
                </div>
-            </div>
+            </div> */}
          </div>
       </>
    );
