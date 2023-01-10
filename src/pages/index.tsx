@@ -272,11 +272,11 @@ const home = () => {
                <div></div>
             </div>
 
-            <div className="flex flex-row items-center py-16 bg-white font-proxima">
-               <img src="/commentDemo.png" className="w-1/2 rounded-xl relative right-24" alt="" />
-               <div className="w-1/2">
+            <div className="flex flex-col lg:flex-row items-center py-16 bg-white font-proxima">
+               <img src="/commentDemo.png" className="lg:w-1/2 w-[90%] rounded-xl relative lg:right-24" alt="" />
+               <div className="lg:w-1/2 w-[90%] mt-9 lg:mt-0">
                   <p className="text-3xl">Leave notes directly on the stage.</p>
-                  <p className="text-md mt-6 w-[70%]">
+                  <p className="text-md mt-6 lg:w-[70%]">
                      collaborate with your dancers and choreographers by leaving notes, comments or corrections directly on the stage
                   </p>
                </div>
