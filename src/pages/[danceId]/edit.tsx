@@ -64,7 +64,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
 
    const supabase = useSupabaseClient();
    let session = useSession();
-   console.log(session);
+
    const router = useRouter();
 
    // const supabase = createClient(
@@ -602,6 +602,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                               return (
                                  <>
                                     <Comment
+                                       zoom={zoom}
                                        stageDimensions={stageDimensions}
                                        coordsToPosition={coordsToPosition}
                                        selectedDancers={selectedDancers}

@@ -17,6 +17,7 @@ export const Comment: React.FC<{
    stageDimensions: any;
    userPositions: any;
    onlineUsers: any;
+   zoom: number;
 }> = ({
    comment,
    currentFormationIndex,
@@ -33,6 +34,7 @@ export const Comment: React.FC<{
    stageDimensions,
    userPositions,
    onlineUsers,
+   zoom,
 }) => {
    // if there is no formation selected and the track is not playing, then just return nothing
    if (selectedFormation === null) return <></>;
@@ -73,6 +75,7 @@ export const Comment: React.FC<{
             style={{
                left,
                top,
+               // transform: `scale(${1 / zoom})`,
                //    transition: "width 0.15s ease-in-out,  height 0.15s ease-in-out, backgroundColor ease-in-out",
             }}
             id={comment.id}
