@@ -379,11 +379,6 @@ export const CurrentFormation: React.FC<{
                      <div
                         onClick={() =>
                            setIsCommenting((isCommenting: boolean) => {
-                              if (!isCommenting) {
-                                 toast("click anywhere on stage to leave a comment", {
-                                    icon: "💬",
-                                 });
-                              }
                               return !isCommenting;
                            })
                         }

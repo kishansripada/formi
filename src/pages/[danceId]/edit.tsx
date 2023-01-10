@@ -461,6 +461,19 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                setShareIsOpen={setShareIsOpen}
             />
          ) : null}
+         {isCommenting ? (
+            <>
+               <div
+                  style={{
+                     left: "50%",
+                     transform: "translate(-50%, 0)",
+                  }}
+                  className="fixed w-60 h-12 rounded-full top-6 bg-black z-[9999] opacity-70 grid place-items-center"
+               >
+                  <p className="text-white text-sm pointer-events-none"> click on the stage to comment</p>
+               </div>
+            </>
+         ) : null}
 
          <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none text-gray-900  ">
             <div className="flex flex-row  overflow-hidden w-screen h-full">
