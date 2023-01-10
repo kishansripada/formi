@@ -83,6 +83,10 @@ export const Header: React.FC<{
                     })
                   : null} */}
 
+               <a href="https://forms.gle/qTo1MAenHpguvsXW7" target={"_blank"} className="text-sm mr-5 text-blue-700">
+                  report bug or request feature
+               </a>
+
                {!viewOnly ? (
                   <>
                      <button className="mr-3 hidden lg:block" onClick={undo}>
