@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation, stageDimensions, comment } from "../../types/types";
+import { dancer, dancerPosition, formation, stageDimensions, comment, initials } from "../../types/types";
 import { useRef, useEffect, useState } from "react";
 
 export const Comment: React.FC<{
@@ -45,13 +45,6 @@ export const Comment: React.FC<{
 
    let textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-   let initials = comment.user.name
-      .split(" ")
-      .map((word) => word[0])
-      .slice(0, 3)
-      .join("")
-      .toUpperCase();
-
    return (
       <>
          <style jsx>{`
@@ -92,7 +85,7 @@ export const Comment: React.FC<{
                />
             ) : (
                <div className="bg-purple-500 text-white  rounded-full  min-w-[32px] font-semibold min-h-[32px] grid place-items-center select-none cursor-default pointer-events-none  ">
-                  {initials}
+                  {initials(comment?.user?.name)}
                </div>
             )}
             <div className=" flex-col h-full justify-center ml-4 text-white font-medium  delayed w-full	delayPerm pointer-events-none   ">

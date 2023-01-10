@@ -44,10 +44,12 @@ export const PIXELS_PER_SQUARE = 40;
 export const GRID_WIDTH = 26;
 export const GRID_HEIGHT = 20;
 
-export const initials = (name: string) =>
-   name
+export const initials = (name: string) => {
+   if (!name) return "";
+   return name
       .split(" ")
       .map((name) => name[0])
       .slice(0, 3)
       .join("")
       .toUpperCase();
+};

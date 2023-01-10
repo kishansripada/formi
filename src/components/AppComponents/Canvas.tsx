@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { GridLines } from "./GridLines";
 import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment } from "../../types/types";
+import { toast, Toaster } from "react-hot-toast";
 
 export const Canvas: React.FC<{
    children: React.ReactNode;
@@ -325,27 +326,27 @@ export const Canvas: React.FC<{
 
    const pointerDown = (e: any) => {
       if (isCommenting) {
+         console.log(session);
+         console.log(session);
+         if (!session) {
+            toast.error("sign in to comment");
+            return;
+         }
          const target = e.currentTarget;
-
          // Get the bounding rectangle of target
          const rect = target.getBoundingClientRect();
-
          // Mouse position
          const left = (e.clientX - rect.left) / zoom;
          const top = (e.clientY - rect.top) / zoom;
-
          const positionToCoords = (position: { left: number; top: number } | null | undefined) => {
             if (!position) return null;
             let { left, top } = position;
-
             return {
                x: Math.round(((left - (PIXELS_PER_SQUARE * stageDimensions.width) / 2) / PIXELS_PER_SQUARE) * 100) / 100,
                y: Math.round((-(top - (PIXELS_PER_SQUARE * stageDimensions.height) / 2) / PIXELS_PER_SQUARE) * 100) / 100,
             };
          };
-
          let newCommentCoords = positionToCoords({ left, top });
-
          setFormations((formations: formation[]) => {
             return formations.map((formation, i) => {
                if (i === selectedFormation) {
@@ -515,6 +516,7 @@ export const Canvas: React.FC<{
          ref={container}
          onPointerUp={!viewOnly ? pointerUp : null}
       >
+         <Toaster />
          <div
             ref={stage}
             className="relative bg-white rounded-xl"
