@@ -311,7 +311,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    );
 
    useDidMountEffect(() => {
-      if (!session) {
+      if (!session && router.query.danceId !== "207") {
          router.push("/login");
       }
       if (router.isReady) {
@@ -333,7 +333,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    );
 
    useDidMountEffect(() => {
-      if (!session) {
+      if (!session && router.query.danceId !== "207") {
          router.push("/login");
       }
       if (router.isReady) {
@@ -358,7 +358,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    );
 
    useDidMountEffect(() => {
-      if (!session) {
+      if (!session && router.query.danceId !== "207") {
          router.push("/login");
       }
       if (router.isReady) {
@@ -383,7 +383,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    );
 
    useDidMountEffect(() => {
-      if (!session) {
+      if (!session && router.query.danceId !== "207") {
          router.push("/login");
       }
       if (router.isReady) {
@@ -405,7 +405,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    );
 
    useDidMountEffect(() => {
-      if (!session) {
+      if (!session && router.query.danceId !== "207") {
          router.push("/login");
       }
       if (router.isReady) {
