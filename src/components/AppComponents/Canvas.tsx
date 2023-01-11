@@ -29,6 +29,9 @@ export const Canvas: React.FC<{
    setIsCommenting: Function;
    zoom: number;
    setZoom: Function;
+   videoCoordinates: { left: number; top: number };
+   setVideoCoordinates: Function;
+   stageBackground: string;
 }> = ({
    player,
    children,
@@ -54,6 +57,9 @@ export const Canvas: React.FC<{
    setIsCommenting,
    zoom,
    setZoom,
+   videoCoordinates,
+   setVideoCoordinates,
+   stageBackground,
 }) => {
    const [shiftHeld, setShiftHeld] = useState(false);
    const [draggingCommentId, setDraggingCommentId] = useState<string | null>();
@@ -65,6 +71,7 @@ export const Canvas: React.FC<{
    const [copiedPositions, setCopiedPositions] = useState([]);
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
    const [isDragging, setIsDragging] = useState(false);
+   const [isDraggingVideo, setIsDraggingVideo] = useState(false);
    const [cursorPosition, setCursorPoisition] = useState<{ x: number; y: number }>();
 
    const container = useRef();
@@ -170,17 +177,14 @@ export const Canvas: React.FC<{
 
    const handleDragMove = (e: any) => {
       if (selectedFormation === null) return;
-      // if (isCommenting) {
-      //    const target = e.currentTarget;
-      //    // console.log(target);
-      //    // Get the bounding rectangle of target
-      //    const rect = target.getBoundingClientRect();
 
-      //    // Mouse position
-      //    const x = e.clientX - rect.left;
-      //    const y = e.clientY - rect.top;
-      //    setCursorPoisition({ x, y });
-      // }
+      if (isDraggingVideo) {
+         console.log(isDraggingVideo);
+         setVideoCoordinates((videoCoordinates) => {
+            return { left: videoCoordinates.left + e.movementX, top: videoCoordinates.top + e.movementY };
+         });
+      }
+
       if (changingControlId) {
          setFormations((formations: formation[]) => {
             return formations.map((formation, index: number) => {
@@ -325,9 +329,11 @@ export const Canvas: React.FC<{
    };
 
    const pointerDown = (e: any) => {
+      if (e.target.id === "video") {
+         setIsDraggingVideo(true);
+      }
+
       if (isCommenting) {
-         console.log(session);
-         console.log(session);
          if (!session) {
             toast.error("sign in to comment");
             return;
@@ -442,6 +448,8 @@ export const Canvas: React.FC<{
    };
 
    const pointerUp = (e: any) => {
+      setIsDraggingVideo(false);
+
       if (changingControlId) {
          pushChange();
       }
@@ -514,14 +522,26 @@ export const Canvas: React.FC<{
          className="flex flex-row relative justify-center  h-full cursor-default w-full overflow-hidden  overscroll-contain items-center "
          id="stage"
          ref={container}
-         onPointerUp={!viewOnly ? pointerUp : null}
+         onPointerUp={!viewOnly ? pointerUp : () => null}
+         onPointerDown={!viewOnly ? pointerDown : () => null}
+         onPointerMove={handleDragMove}
       >
+         {/* <div style={{ ...videoCoordinates }} className=" absolute z-[9999] pointer-events-none">
+            <div className="relative w-10 h-4 bg-red-600 cursor-pointer select-none pointer-events-auto" id="video"></div>
+            <iframe
+               className="rounded-xl pointer-events-auto"
+               src="https://www.youtube.com/embed/EuX1v3HfVZs"
+               title="YouTube video player"
+               frameborder="0"
+               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+               allowfullscreen
+            ></iframe>
+         </div> */}
+
          <Toaster />
          <div
             ref={stage}
             className="relative bg-white rounded-xl"
-            onPointerDown={!viewOnly ? pointerDown : null}
-            onPointerMove={handleDragMove}
             style={{
                // top: scrollOffset.y,
                // left: scrollOffset.x,
@@ -532,6 +552,13 @@ export const Canvas: React.FC<{
                width: stageDimensions.width * PIXELS_PER_SQUARE,
             }}
          >
+            {stageBackground === "basketballCourt" ? (
+               <img
+                  src="/basketball.svg"
+                  className="absolute top-0 left-0 right-0 bottom-0 m-auto opacity-40 pointer-events-none select-none"
+                  alt=""
+               />
+            ) : null}
             {children}
 
             {/* {isCommenting ? (

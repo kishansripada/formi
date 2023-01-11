@@ -15,16 +15,18 @@ import { DancerAlias } from "../../components/AppComponents/DancerAlias";
 import { Comment } from "../../components/AppComponents/Comment";
 import { DancerAliasShadow } from "../../components/AppComponents/DancerAliasShadow";
 import { Canvas } from "../../components/AppComponents/Canvas";
-import { Settings } from "../../components/AppComponents/SidebarComponents/Settings";
 import { EditDancer } from "../../components/AppComponents/EditDancer";
 import { Layers } from "../../components/AppComponents/Layers";
 import { PathEditor } from "../../components/AppComponents/PathEditor";
 import { Share } from "../../components/AppComponents/Share";
 
+import { Sidebar } from "../../components/AppComponents/Sidebar";
+
+import { Settings } from "../../components/AppComponents/SidebarComponents/Settings";
 import { ChooseAudioSource } from "../../components/AppComponents/SidebarComponents/ChooseAudioSource";
 import { Roster } from "../../components/AppComponents/SidebarComponents/Roster";
-import { Sidebar } from "../../components/AppComponents/Sidebar";
 import { CurrentFormation } from "../../components/AppComponents/SidebarComponents/CurrentFormation";
+import { StageSettings } from "../../components/AppComponents/SidebarComponents/StageSettings";
 
 var jsondiffpatch = require("jsondiffpatch").create({
    objectHash: function (obj) {
@@ -90,8 +92,10 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
    const [gridSnap, setGridSnap] = useState<number>(initialData.settings.gridSnap || 1);
+   const [stageBackground, setStageBackground] = useState<"none" | "basketballCourt">(initialData.settings.stageBackground || "none");
 
    const [songDuration, setSongDuration] = useState<number | null>(null);
+   const [videoCoordinates, setVideoCoordinates] = useState<{ left: number; top: number }>({ left: 40, top: 40 });
    const [zoom, setZoom] = useState(1);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [isCommenting, setIsCommenting] = useState<boolean>(false);
@@ -296,7 +300,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    }, [router.query.danceId, session]);
 
    let uploadSettings = useCallback(
-      debounce(async (previousFormationView, stageDimensions) => {
+      debounce(async (previousFormationView, stageDimensions, gridSnap) => {
          console.log("uploading settings");
          const { data, error } = await supabase
             .from("dances")
@@ -316,9 +320,9 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       }
       if (router.isReady) {
          setSaved(false);
-         uploadSettings(previousFormationView, stageDimensions);
+         uploadSettings(previousFormationView, stageDimensions, gridSnap);
       }
-   }, [previousFormationView, stageDimensions]);
+   }, [previousFormationView, stageDimensions, gridSnap]);
 
    let uploadDancers = useCallback(
       debounce(async (dancers) => {
@@ -514,6 +518,20 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            setStageDimensions={setStageDimensions}
                            setFormations={setFormations}
                         ></Settings>
+                     ) : menuOpen === "stageSettings" ? (
+                        <StageSettings
+                           stageBackground={stageBackground}
+                           setStageBackground={setStageBackground}
+                           gridSnap={gridSnap}
+                           setGridSnap={setGridSnap}
+                           formations={formations}
+                           pricingTier={pricingTier}
+                           previousFormationView={previousFormationView}
+                           setPreviousFormationView={setPreviousFormationView}
+                           stageDimensions={stageDimensions}
+                           setStageDimensions={setStageDimensions}
+                           setFormations={setFormations}
+                        ></StageSettings>
                      ) : (
                         <CurrentFormation
                            isCommenting={isCommenting}
@@ -547,6 +565,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   />
 
                   <Canvas
+                     stageBackground={stageBackground}
                      zoom={zoom}
                      setZoom={setZoom}
                      isCommenting={isCommenting}
@@ -570,6 +589,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                      setPixelsPerSecond={setPixelsPerSecond}
                      stageDimensions={stageDimensions}
                      coordsToPosition={coordsToPosition}
+                     videoCoordinates={videoCoordinates}
+                     setVideoCoordinates={setVideoCoordinates}
                   >
                      {selectedFormation !== null ? (
                         <PathEditor
