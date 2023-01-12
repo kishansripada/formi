@@ -28,10 +28,17 @@ export const StageSettings: React.FC<{
    setStageBackground,
 }) => {
    const [backgroundDropdownIsOpen, setBackgroundDropdownIsOpen] = useState<boolean>();
+
+   const closeWindow = (e) => {
+      console.log(e.target.id);
+      if (e.target.id === "menu-item") return;
+      setBackgroundDropdownIsOpen(false);
+   };
+
    useEffect(() => {
-      window.addEventListener("mousedown", (e) => setBackgroundDropdownIsOpen(false));
+      window.addEventListener("mousedown", closeWindow);
       return () => {
-         window.removeEventListener("mousedown", (e) => setBackgroundDropdownIsOpen(false));
+         window.removeEventListener("mousedown", closeWindow);
       };
    }, [backgroundDropdownIsOpen]);
 
@@ -192,7 +199,7 @@ export const StageSettings: React.FC<{
 
                <div
                   className={`absolute ${
-                     backgroundDropdownIsOpen ? " opacity-100 scale-100" : "transform opacity-0 scale-95"
+                     backgroundDropdownIsOpen ? " opacity-100 scale-100" : "transform opacity-0 scale-95 "
                   } right-0 z-10 mt-2 w-full transform transition ease-out duration-100 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
                   role="menu"
                   aria-orientation="vertical"
