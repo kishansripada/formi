@@ -214,7 +214,7 @@ export const ChooseAudioSource: React.FC<{
                </div>
             </div>
 
-            <p className=" font-medium mb-2 mt-6 text-gray-600">sample audio files</p>
+            {/* <p className=" font-medium mb-2 mt-6 text-gray-600">sample audio files</p>
             <div className=" flex flex-col overflow-scroll removeScrollBar h-full ">
                {sampleAudioFiles.data.length ? (
                   [...sampleAudioFiles.data]
@@ -253,7 +253,7 @@ export const ChooseAudioSource: React.FC<{
                      <p className="text-gray-600">no uploaded files :(</p>
                   </>
                )}
-            </div>
+            </div> */}
          </div>
 
          <Toaster />

@@ -45,13 +45,12 @@ export const Comment: React.FC<{
 
    let textAreaRef = useRef<HTMLTextAreaElement>(null);
 
+   const [isOpen, setIsOpen] = useState(false);
+   const [isEditing, setIsEditing] = useState(false);
    return (
       <>
          <style jsx>{`
             .hoverRound:hover {
-               border-bottom-right-radius: 1rem;
-               border-top-left-radius: 1rem;
-               border-top-right-radius: 1rem;
             }
 
             .delayPerm {
@@ -65,15 +64,34 @@ export const Comment: React.FC<{
             }
          `}</style>
          <div
+            onMouseEnter={() => setIsOpen(true)}
+            onMouseLeave={() => {
+               if (isEditing) return;
+               setIsOpen(false);
+            }}
+            onFocus={() => setIsEditing(true)}
+            onBlur={() => {
+               setIsEditing(false);
+               setIsOpen(false);
+            }}
             style={{
                left,
                top,
-               // transform: `scale(${1 / zoom})`,
-               //    transition: "width 0.15s ease-in-out,  height 0.15s ease-in-out, backgroundColor ease-in-out",
+               transform: `scale(${0.8 / zoom})`,
+               transformOrigin: "bottom left",
+               borderBottomRightRadius: isOpen ? "1rem" : "",
+               borderTopLeftRadius: isOpen ? "1rem" : "",
+               borderTopRightRadius: isOpen ? "1rem" : "",
+               // width: isOpen ? 288 : "",
+               // height: isOpen ? "auto" : "",
+
+               // transition: "width 0.15s ease-in-out,  height 0.15s ease-in-out, backgroundColor ease-in-out",
             }}
             id={comment.id}
             data-type={"comment"}
-            className={`hover:w-72  hoverRound hover:rounded-t-xl bg-gray-800 group select-none  hover:h-auto hover:py-2 transition ease-in-out duration-300 w-[50px] h-[50px] rounded-br-full rounded-t-full lg:pointer-events-auto pointer-events-none flex -translate-y-full   flex-row justify-center hover:justify-start hover:px-3 items-center absolute z-[300]  cursor-default `}
+            className={`${
+               isOpen ? "w-72 rounded-t-xl h-auto py-2 justify-start px-3" : "w-[50px] h-[50px] rounded-br-full rounded-t-full justify-center"
+            }    bg-gray-800 group select-none   transition ease-in-out duration-300  lg:pointer-events-auto pointer-events-none flex -translate-y-full   flex-row   items-center absolute z-[300]  cursor-default `}
          >
             {comment.user.avatar_url ? (
                <img
@@ -88,7 +106,10 @@ export const Comment: React.FC<{
                   {initials(comment?.user?.name)}
                </div>
             )}
-            <div className=" flex-col h-full justify-center ml-4 text-white font-medium  delayed w-full	delayPerm pointer-events-none   ">
+
+            <div
+               className={` flex-col h-full justify-center ml-4 text-white font-medium  w-full	 pointer-events-none ${isOpen ? "flex" : "hidden"}  `}
+            >
                <div className="flex flex-row items-center text-xs text-gray-200 ">
                   <p>{comment.user.name}</p>
                </div>
