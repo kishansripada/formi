@@ -707,7 +707,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   setFormations={setFormations}
                ></AudioControls>
 
-               <div className="overflow-x-scroll  bg-[#fafafa] overscroll-contain removeScrollBar ">
+               <div className="overflow-x-scroll  bg-[#fafafa] overscroll-contain pb-3 ">
                   {soundCloudTrackId ? (
                      <div
                         className="relative"

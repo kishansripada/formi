@@ -51,7 +51,7 @@ export const ChooseAudioSource: React.FC<{
       <>
          <div className="lg:flex hidden overflow-y-scroll  min-w-[350px] w-[23%]  flex-col   bg-white border-r border-r-gray-300   px-6 py-6 overflow-hidden">
             <div className="flex flex-col ">
-               <p className="text-xl font-medium text-[#1A1B25] h-12"> add audio</p>
+               <p className="text-xl font-medium text-[#1A1B25] h-12">Add Audio</p>
 
                <button className="relative border border-dashed border-gray-300 h-24 w-full rounded-xl bg-gray-50 ">
                   <input

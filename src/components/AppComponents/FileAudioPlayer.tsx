@@ -108,6 +108,7 @@ export const FileAudioPlayer: React.FC<{
                style={{
                   display: ready ? "flex" : "none",
                }}
+               id="layers"
                className={` h-[60px]  flex-col justify-end w-full`}
             >
                <div

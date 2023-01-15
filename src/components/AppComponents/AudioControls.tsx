@@ -34,26 +34,85 @@ export const AudioControls: React.FC<{
    return (
       <>
          <div className="min-h-[60px] bg-[#fafafa] w-full border-t border-gray-300 flex flex-row items-center justify-between select-none">
-            <div className="w-[45%] pl-10 flex flex-row justify-center items-center ">
-               <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6 mr-2 lg:block hidden"
-               >
-                  <path
-                     strokeLinecap="round"
-                     strokeLinejoin="round"
-                     d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
-                  />
-               </svg>
+            <div className="w-[45%] flex flex-row items-center justify-center pl-4">
+               {!viewOnly ? (
+                  <>
+                     <button
+                        onClick={() => {
+                           addToStack();
+                           let id = crypto.randomUUID();
+                           setFormations((formations: formation[]) => {
+                              return [
+                                 ...formations,
+                                 {
+                                    ...formations[formations.length - 1],
+                                    id,
+                                    name: `Untitled ${formations.length + 1}`,
+                                    transition: {
+                                       durationSeconds: 5,
+                                    },
+                                    durationSeconds: 10,
+                                 },
+                              ];
+                              //   }
+                           });
+                           setSelectedFormation(formations.length);
+                           pushChange();
+                        }}
+                        className=" rounded-md  hidden transition duration-300  text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer  "
+                     >
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
+                           stroke="currentColor"
+                           className="w-5 h-5 mr-2"
+                        >
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
 
-               <p className="mr-auto font-medium whitespace-nowrap overflow-hidden lg:block hidden ">
-                  {soundCloudTrackId ? soundCloudTrackId?.split("/").slice(-1)[0] : "no audio file selected"}
-               </p>
+                        <p className="text-sm">New Formation</p>
+                     </button>
+                     <button
+                        onClick={() => {
+                           if (selectedFormation === null) return;
+
+                           if (formations.length === 1) {
+                              toast.error("you must have at least one formation");
+                              return;
+                           }
+                           addToStack();
+                           if (selectedFormation === formations.length - 1) {
+                              setSelectedFormation(selectedFormation - 1);
+                           }
+
+                           setFormations((formations: formation[]) => {
+                              return formations.filter((formation, index) => {
+                                 return index !== selectedFormation;
+                              });
+                           });
+                           toast.success("formation deleted");
+                           pushChange();
+                        }}
+                        className="rounded-md  hidden transition duration-300 mr-auto  text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
+                     >
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
+                           stroke="currentColor"
+                           className="w-5 h-5 mr-2"
+                        >
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p className="text-sm"> Delete Formation</p>
+                     </button>
+                  </>
+               ) : null}
             </div>
+
             <div className={`flex flex-row items-center justify-center w-[10%] `}>
                <button
                   onClick={() =>
@@ -119,86 +178,28 @@ export const AudioControls: React.FC<{
                </button>
             </div>
 
-            <div className="w-[45%] flex flex-row items-center justify-center pr-10">
-               <p className=" ml-auto lg:mr-auto text-gray-600 ">
+            <div className="w-[45%] pr-10 flex flex-row justify-center items-center ">
+               <p className=" mr-auto lg:mr-auto text-gray-600 ">
                   {msToTime((position || 0) * 1000)}:<span className="text-gray-500">{Math.round(((position || 0) * 10) % 10)}</span>
                </p>
-               {!viewOnly ? (
-                  <>
-                     <button
-                        onClick={() => {
-                           if (selectedFormation === null) return;
+               <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-6 h-6 mr-2 ml-auto lg:block hidden"
+               >
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
+                  />
+               </svg>
 
-                           if (formations.length === 1) {
-                              toast.error("you must have at least one formation");
-                              return;
-                           }
-                           addToStack();
-                           if (selectedFormation === formations.length - 1) {
-                              setSelectedFormation(selectedFormation - 1);
-                           }
-
-                           setFormations((formations: formation[]) => {
-                              return formations.filter((formation, index) => {
-                                 return index !== selectedFormation;
-                              });
-                           });
-                           toast.success("formation deleted");
-                           pushChange();
-                        }}
-                        className="rounded-md  hidden transition duration-300 ml-auto  text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-3 py-2 mx-1 cursor-pointer "
-                     >
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-6 h-6 mr-2"
-                        >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Delete Formation
-                     </button>
-                     <button
-                        onClick={() => {
-                           addToStack();
-                           let id = crypto.randomUUID();
-                           setFormations((formations: formation[]) => {
-                              return [
-                                 ...formations,
-                                 {
-                                    ...formations[formations.length - 1],
-                                    id,
-                                    name: `Untitled ${formations.length + 1}`,
-                                    transition: {
-                                       durationSeconds: 5,
-                                    },
-                                    durationSeconds: 10,
-                                 },
-                              ];
-                              //   }
-                           });
-                           setSelectedFormation(formations.length);
-                           pushChange();
-                        }}
-                        className=" rounded-md  hidden transition duration-300  text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-3 py-2 mx-1 cursor-pointer  "
-                     >
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-5 h-5 mr-2"
-                        >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-
-                        <p>New Formation</p>
-                     </button>
-                  </>
-               ) : null}
+               <p className=" font-medium whitespace-nowrap overflow-hidden lg:block hidden ">
+                  {soundCloudTrackId ? soundCloudTrackId?.split("/").slice(-1)[0] : "no audio file selected"}
+               </p>
             </div>
          </div>
       </>

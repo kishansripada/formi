@@ -106,7 +106,10 @@ const home = () => {
                         <button className=" border-pink-600 border-2 mr-3 px-4 py-1 hidden lg:block  rounded-md ">pricing</button>
                      </Link> */}
                      <Link href={"/login"} className="z-50">
-                        <button className="border-black border px-4 py-1 hidden lg:block  rounded-md ">Sign In</button>
+                        <button className="border-black border px-4 py-1 hidden lg:block  rounded-md ">Sign Up</button>
+                     </Link>
+                     <Link href={"/login"} className="z-50">
+                        <button className="border-black border px-4 py-1 hidden lg:block  rounded-md ml-3 ">Sign In</button>
                      </Link>
                   </div>
                </nav>

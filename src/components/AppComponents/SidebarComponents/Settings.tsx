@@ -27,9 +27,9 @@ export const Settings: React.FC<{
       <>
          <Toaster></Toaster>
          <div className=" w-[23%]  min-w-[350px] hidden lg:block bg-white border-r border-r-gray-300 px-6 py-6 overflow-y-scroll">
-            <h1 className="h-12 font-medium text-xl"> settings</h1>
+            <h1 className="h-12 font-medium text-xl">Settings</h1>
 
-            <p className="text-gray-500 font-medium mb-3 mt-10 text-sm">previous formation</p>
+            <p className="text-gray-500 font-medium mb-3 mt-10 text-sm">Previous Formation</p>
 
             <div className="border border-gray-200 rounded-xl w-full text-sm shadow-sm cursor-pointer select-none ">
                <div className="p-4 flex flex-row items-center" onClick={() => setPreviousFormationView("none")}>
@@ -40,7 +40,7 @@ export const Settings: React.FC<{
                   ) : (
                      <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
                   )}
-                  <p>none</p>
+                  <p>None</p>
                </div>
                <hr />
                <div className="p-4 flex flex-row items-center" onClick={() => setPreviousFormationView("ghostDancers")}>
@@ -51,7 +51,7 @@ export const Settings: React.FC<{
                   ) : (
                      <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
                   )}
-                  <p>view ghost dancers</p>
+                  <p>View Ghost Dancers</p>
                </div>
                <hr />
                <div
@@ -82,11 +82,11 @@ export const Settings: React.FC<{
                      </>
                   )}
 
-                  <p className={`${pricingTier === "basic" ? "opacity-40" : ""}`}>view ghost dancers and paths</p>
+                  <p className={`${pricingTier === "basic" ? "opacity-40" : ""}`}>View Ghost Dancers and Paths</p>
                </div>
             </div>
 
-            <p className="text-gray-500 text-sm font-medium mt-10 mb-3">grid snap</p>
+            <p className="text-gray-500 text-sm font-medium mt-10 mb-3">Grid Snap</p>
 
             <div className="border border-gray-200 rounded-xl w-full text-sm shadow-sm cursor-pointer select-none ">
                <div className="p-4 flex flex-row items-center" onClick={() => setGridSnap(100)}>
@@ -97,7 +97,7 @@ export const Settings: React.FC<{
                   ) : (
                      <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
                   )}
-                  <p>none</p>
+                  <p>None</p>
                </div>
                <hr />
                <div className="p-4 flex flex-row items-center" onClick={() => setGridSnap(2)}>
@@ -108,7 +108,7 @@ export const Settings: React.FC<{
                   ) : (
                      <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
                   )}
-                  <p>nearest half square</p>
+                  <p>Nearest Half Square</p>
                </div>
                <hr />
                <div className={`p-4 flex flex-row items-center `} onClick={() => setGridSnap(1)}>
@@ -119,7 +119,7 @@ export const Settings: React.FC<{
                   ) : (
                      <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
                   )}
-                  <p>nearest whole square</p>
+                  <p>Nearest Whole Square</p>
                </div>
             </div>
          </div>

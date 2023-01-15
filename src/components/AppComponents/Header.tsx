@@ -84,7 +84,7 @@ export const Header: React.FC<{
                   : null} */}
 
                <a href="https://forms.gle/qTo1MAenHpguvsXW7" target={"_blank"} className="text-sm mr-5 text-blue-700">
-                  report bug or request feature
+                  Report Bug or Request Feature
                </a>
 
                {!viewOnly ? (
@@ -151,7 +151,7 @@ export const Header: React.FC<{
                ) : (
                   <Link href="/login">
                      <button className="bg-slate-800  text-white text-sm rounded-md px-3 py-3 ml-4 mr-4 ">
-                        <p className=" text-gray-100">log in</p>
+                        <p className=" text-gray-100">Log In</p>
                      </button>
                   </Link>
                )}

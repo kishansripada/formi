@@ -46,11 +46,11 @@ export const StageSettings: React.FC<{
       <>
          <Toaster></Toaster>
          <div className=" w-[23%]  min-w-[350px] hidden lg:block bg-white border-r border-r-gray-300 px-6 py-6 overflow-y-scroll">
-            <h1 className="h-12 font-medium text-xl">stage settings</h1>
+            <h1 className="h-12 font-medium text-xl">Stage Settings</h1>
 
-            <p className="font-medium h-10">stage dimensions</p>
+            <p className="font-medium h-10">Stage Dimensions</p>
 
-            <p className="text-gray-500 font-medium text-sm">width</p>
+            <p className="text-gray-500 font-medium text-sm">Width</p>
             <div className="my-6 flex flex-row justify-center items-center">
                <button
                   className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
@@ -94,7 +94,7 @@ export const StageSettings: React.FC<{
                </button>
                <div className="flex flex-col justify-center items-center">
                   <p className="mx-6 text-2xl text-gray-700">{stageDimensions.width}</p>
-                  <p className="text-gray-400 text-xs">squares</p>
+                  <p className="text-gray-400 text-xs">Squares</p>
                </div>
                <button
                   className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
@@ -126,7 +126,7 @@ export const StageSettings: React.FC<{
                </button>
             </div>
 
-            <p className="text-gray-500 font-medium text-sm">height</p>
+            <p className="text-gray-500 font-medium text-sm">Height</p>
             <div className="my-6 flex flex-row justify-center items-center">
                <button
                   className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
@@ -154,7 +154,7 @@ export const StageSettings: React.FC<{
                </button>
                <div className="flex flex-col justify-center items-center">
                   <p className="mx-6 text-2xl text-gray-700">{stageDimensions.height}</p>
-                  <p className="text-gray-400 text-xs">squares</p>
+                  <p className="text-gray-400 text-xs">Squares</p>
                </div>
                <button
                   className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
@@ -179,7 +179,7 @@ export const StageSettings: React.FC<{
                      aria-expanded="true"
                      aria-haspopup="true"
                   >
-                     stage background
+                     Stage Background
                      {/* Heroicon name: mini/chevron-down */}
                      <svg
                         className="-mr-1 ml-2 h-5 w-5"
@@ -218,7 +218,7 @@ export const StageSettings: React.FC<{
                         tabIndex={-1}
                         id="menu-item"
                      >
-                        none
+                        None
                      </a>
                      <a
                         onClick={() => setStageBackground("basketballCourt")}
@@ -230,7 +230,7 @@ export const StageSettings: React.FC<{
                         tabIndex={-1}
                         id="menu-item"
                      >
-                        basketball court
+                        Basketball Court
                      </a>
                      {/* <a
                         href="#"
