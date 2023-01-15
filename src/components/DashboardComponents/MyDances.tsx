@@ -28,10 +28,10 @@ export const MyDances: React.FC<{ myDances: any; invalidateDances: Function }> =
    return (
       <>
          <h1 className="mt-16 text-2xl">
-            let's create some <span className="font-bold">performances</span>!
+            Let's create some <span className="font-bold">Performances</span>!
          </h1>
-         <p className="mt-9 font-medium">recent performances</p>
-         <p className=" font-medium lg:hidden">create dances on your laptop and view them here</p>
+         <p className="mt-9 font-medium">Recent Performances</p>
+         <p className=" font-medium lg:hidden">Create dances on your laptop and view them here</p>
          <div className="w-full flex flex-col lg:items-start lg:flex-row overflow-x-scroll mt-7 removeScrollBar h-full overscroll-contain items-center">
             {myDances.length ? (
                myDances

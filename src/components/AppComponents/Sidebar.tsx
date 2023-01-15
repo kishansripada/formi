@@ -62,7 +62,7 @@ export const Sidebar: React.FC<{
                      </linearGradient>
                   </defs>
                </svg>
-               <p className="text-xs text-gray-500"> formation</p>
+               <p className="text-xs text-gray-500">Formation</p>
             </button>
 
             <button onClick={() => setMenuOpen("dancers")}>
@@ -73,7 +73,7 @@ export const Sidebar: React.FC<{
                >
                   <path d="M1.9 40v-4.7q0-1.75.9-3.175Q3.7 30.7 5.3 30q3.65-1.6 6.575-2.3Q14.8 27 17.9 27q3.1 0 6 .7t6.55 2.3q1.6.7 2.525 2.125.925 1.425.925 3.175V40Zm35 0v-4.7q0-3.15-1.6-5.175t-4.2-3.275q3.45.4 6.5 1.175t4.95 1.775q1.65.95 2.6 2.35.95 1.4.95 3.15V40Zm-19-16.05q-3.3 0-5.4-2.1-2.1-2.1-2.1-5.4 0-3.3 2.1-5.4 2.1-2.1 5.4-2.1 3.3 0 5.4 2.1 2.1 2.1 2.1 5.4 0 3.3-2.1 5.4-2.1 2.1-5.4 2.1Zm18-7.5q0 3.3-2.1 5.4-2.1 2.1-5.4 2.1-.55 0-1.225-.075T25.95 23.6q1.2-1.25 1.825-3.075.625-1.825.625-4.075t-.625-3.975Q27.15 10.75 25.95 9.3q.55-.15 1.225-.25t1.225-.1q3.3 0 5.4 2.1 2.1 2.1 2.1 5.4ZM4.9 37h26v-1.7q0-.8-.475-1.55T29.25 32.7q-3.6-1.6-6.05-2.15-2.45-.55-5.3-.55-2.85 0-5.325.55T6.5 32.7q-.7.3-1.15 1.05-.45.75-.45 1.55Zm13-16.05q1.95 0 3.225-1.275Q22.4 18.4 22.4 16.45q0-1.95-1.275-3.225Q19.85 11.95 17.9 11.95q-1.95 0-3.225 1.275Q13.4 14.5 13.4 16.45q0 1.95 1.275 3.225Q15.95 20.95 17.9 20.95Zm0 16.05Zm0-20.55Z" />
                </svg>
-               <p className="text-xs text-gray-500">roster</p>
+               <p className="text-xs text-gray-500">Roster</p>
             </button>
             <button onClick={() => setMenuOpen("audio")}>
                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -150,7 +150,7 @@ export const Sidebar: React.FC<{
                      </linearGradient>
                   </defs>
                </svg>
-               <p className="text-xs text-gray-500">audio</p>
+               <p className="text-xs text-gray-500">Audio</p>
             </button>
 
             <button onClick={() => setMenuOpen("stageSettings")} className="mt-auto mb-2">
@@ -170,7 +170,7 @@ export const Sidebar: React.FC<{
                      d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"
                   />
                </svg>
-               <p className="text-xs text-gray-500">stage</p>
+               <p className="text-xs text-gray-500">Stage</p>
             </button>
             <button onClick={() => setMenuOpen("settings")} className="">
                <svg
@@ -188,7 +188,7 @@ export const Sidebar: React.FC<{
                   />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                </svg>
-               <p className="text-xs text-gray-500">settings</p>
+               <p className="text-xs text-gray-500">Settings</p>
             </button>
          </div>
       </>

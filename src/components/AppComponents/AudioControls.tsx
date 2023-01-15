@@ -158,7 +158,7 @@ export const AudioControls: React.FC<{
                         >
                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        delete formation
+                        Delete Formation
                      </button>
                      <button
                         onClick={() => {
@@ -195,7 +195,7 @@ export const AudioControls: React.FC<{
                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
 
-                        <p>new formation</p>
+                        <p>New Formation</p>
                      </button>
                   </>
                ) : null}

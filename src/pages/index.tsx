@@ -94,6 +94,7 @@ const home = () => {
                      {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
                      <h1 className="text-6xl font-bold z-10 relative">FORMI</h1>
+
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[100%]"></div>
                   </div>
                   {/* <div>
@@ -105,7 +106,7 @@ const home = () => {
                         <button className=" border-pink-600 border-2 mr-3 px-4 py-1 hidden lg:block  rounded-md ">pricing</button>
                      </Link> */}
                      <Link href={"/login"} className="z-50">
-                        <button className="border-black border px-4 py-1 hidden lg:block  rounded-md ">sign in</button>
+                        <button className="border-black border px-4 py-1 hidden lg:block  rounded-md ">Sign In</button>
                      </Link>
                   </div>
                </nav>
@@ -113,15 +114,15 @@ const home = () => {
                <div className=" flex flex-row items-center justify-center lg:justify-between text-center lg:text-left">
                   <div className="lg:w-[70%]">
                      <h1 className=" text-black text-5xl md:text-[42px] lg:text-[42px] font-semibold lg:leading-[51px] relative  mt-28 z-10">
-                        collaborative performance planning for the web.
+                        Collaborative performance planning for the web.
                      </h1>
                      <p className="text-gray-500 lg:w-[85%] mt-5">
-                        plan out your dance and cheer formations, visualizing the transitions synced to music.
+                        Plan out your dance and cheer formations, visualizing the transitions synced to music.
                      </p>
 
                      <Link href={"/207/edit"} className="">
                         <button className="border-4  flex-row items-center  border-pink-600  px-8 py-4  hidden lg:flex rounded-full mt-12 text-xl group">
-                           <span className="mr-2 ">view demo</span>{" "}
+                           <span className="mr-2 ">View Demo</span>{" "}
                            <span className="relative left-0 group-hover:left-3 transition-all duration-300">
                               <svg
                                  xmlns="http://www.w3.org/2000/svg"
@@ -221,7 +222,7 @@ const home = () => {
             <hr />
             <div className="bg-white flex flex-col font-proxima items-center relative overflow-hidden ">
                <p className="tracking-widest text-pink-600 mt-24 px-10 text-center">VISUALIZE DANCE FORMATIONS RIGHT IN YOUR BROWSER</p>
-               <h1 className=" text-5xl lg:text-6xl text-center mt-12">full-featured. not complicated</h1>
+               <h1 className=" text-5xl lg:text-6xl text-center mt-12">Full-featured. Not complicated</h1>
 
                <img
                   className="w-[95%] lg:w-[60%] rounded-xl shadow-2xl mt-16 relative z-50 mb-0 pointer-events-none select-none"
@@ -265,9 +266,9 @@ const home = () => {
                   />
                </svg>
 
-               <p className="text-4xl text-center lg:w-1/2 mt-8">edit and share polished plans with your performers.</p>
+               <p className="text-4xl text-center lg:w-1/2 mt-8">Edit and share polished plans with your performers.</p>
                <p className="mt-5 lg:w-1/2 text-center">
-                  with a few clicks share a view only experience of your polished choreography, making rehersal more efficient
+                  Eith a few clicks share a view only experience of your polished choreography, making rehersal more efficient
                </p>
                <div></div>
             </div>
@@ -277,7 +278,7 @@ const home = () => {
                <div className="lg:w-1/2 w-[90%] mt-9 lg:mt-0">
                   <p className="text-3xl">Leave notes directly on the stage.</p>
                   <p className="text-md mt-6 lg:w-[70%]">
-                     collaborate with your dancers and choreographers by leaving notes, comments or corrections directly on the stage
+                     Collaborate with your dancers and choreographers by leaving notes, comments or corrections directly on the stage
                   </p>
                </div>
             </div>

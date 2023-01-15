@@ -145,10 +145,10 @@ export const CurrentFormation: React.FC<{
                                  // }}
                               >
                                  {selectedDancers.length === 0
-                                    ? "no dancers selected"
+                                    ? "No Dancers Selected"
                                     : selectedDancers.length === 1
                                     ? dancers.find((dancer) => dancer.id === selectedDancers[0])?.name
-                                    : "multiple dancers selected"}
+                                    : "Multiple Dancers Selected"}
                               </p>
 
                               {/* <div
@@ -174,7 +174,7 @@ export const CurrentFormation: React.FC<{
                               )
                            ) : null}
                         </div>
-                        <p className=" mt-5 mb-2 font-medium text-gray-700">path</p>
+                        <p className=" mt-5 mb-2 font-medium text-gray-700">Path</p>
                         <div
                            style={{
                               opacity: selectedDancers.length && selectedFormation !== 0 ? 1 : 0.4,
@@ -225,7 +225,7 @@ export const CurrentFormation: React.FC<{
                                  <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
                               )}
 
-                              <p>straight</p>
+                              <p>Straight</p>
                            </div>
 
                            <div
@@ -326,7 +326,7 @@ export const CurrentFormation: React.FC<{
                                  </>
                               )}
 
-                              <p className={`${pricingTier === "basic" ? "opacity-40" : ""}`}>curved</p>
+                              <p className={`${pricingTier === "basic" ? "opacity-40" : ""}`}>Curved</p>
                            </div>
                         </div>
                      </div>
@@ -384,7 +384,7 @@ export const CurrentFormation: React.FC<{
                         }
                         className="border border-gray-200  rounded-xl w-full text-sm shadow-sm cursor-pointer select-none  mt-auto grid place-items-center text-gray-700 py-4  "
                      >
-                        {isCommenting ? "cancel" : "add comment"}
+                        {isCommenting ? "cancel" : "Add Comment"}
                      </div>
                   </div>
                </>

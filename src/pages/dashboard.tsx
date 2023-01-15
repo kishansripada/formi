@@ -132,7 +132,7 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                      />
                      <div className="flex flex-col items-start justify-center">
                         <p className="font-semibold">{session?.user.user_metadata?.full_name}</p>
-                        <p className="text-gray-500 text-sm">basic plan</p>
+                        <p className="text-gray-500 text-sm">Basic Plan</p>
                      </div>
                   </div>
 
@@ -140,7 +140,7 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                      className="flex flex-row justify-between items-center bg-pink-600 text-white text-sm w-full py-3 px-3 rounded-lg mt-5    font-medium"
                      onClick={createNewDance}
                   >
-                     <p>new performance</p>
+                     <p>New Performance</p>
 
                      <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -160,7 +160,7 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                      onClick={() => setMenuOpen("mydances")}
                   >
-                     <p>home</p>
+                     <p>Home</p>
                   </button>
                   {/* <button
                      className={`flex flex-row justify-between items-center ${
@@ -176,7 +176,7 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                         menuOpen === "audio" ? "bg-gray-200" : ""
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                   >
-                     <p>uploaded audio</p>
+                     <p>Uploaded Audio</p>
                   </button>
                   <button
                      className={`flex flex-row justify-between items-center mt-auto ${
@@ -184,7 +184,7 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                      onClick={() => setMenuOpen("trash")}
                   >
-                     <p>trash</p>
+                     <p>Trash</p>
                   </button>
                </div>
 
@@ -199,7 +199,7 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                         }}
                         className="mr-5"
                      >
-                        sign out
+                        Sign Out
                      </button>
                   </div>
                   {menuOpen === "mydances" ? (

@@ -69,11 +69,6 @@ export const Comment: React.FC<{
                if (isEditing) return;
                setIsOpen(false);
             }}
-            onFocus={() => setIsEditing(true)}
-            onBlur={() => {
-               setIsEditing(false);
-               setIsOpen(false);
-            }}
             style={{
                left,
                top,
@@ -115,6 +110,15 @@ export const Comment: React.FC<{
                </div>
 
                <textarea
+                  onFocus={(e) => {
+                     e.target.style.height = "auto";
+                     e.target.style.height = `${e.target.scrollHeight}px`;
+                     setIsEditing(true);
+                  }}
+                  onBlur={() => {
+                     setIsEditing(false);
+                     setIsOpen(false);
+                  }}
                   onChange={(e) => {
                      e.target.style.height = "auto";
                      e.target.style.height = `${e.target.scrollHeight}px`;
