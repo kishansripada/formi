@@ -160,23 +160,22 @@ const animate = (
 ): { left: number; top: number } | null => {
    // if the position is beyond all the formation, return off stage
    if (currentFormationIndex === null) return null;
+   let inPreviousFormation = formations[currentFormationIndex - 1]
+      ? formations[currentFormationIndex - 1].positions.find((dancerPosition) => dancerPosition.id === id)
+      : false;
 
    const inThisFormation = formations?.[currentFormationIndex]?.positions.find((dancer) => dancer.id === id);
-
-   let inNextFormation = formations[currentFormationIndex + 1]
-      ? formations[currentFormationIndex + 1].positions.find((dancerPosition) => dancerPosition.id === id)
-      : false;
 
    let from;
    let to;
 
    if (percentThroughTransition != undefined) {
       if (inThisFormation) {
-         if (inNextFormation) {
+         if (inPreviousFormation) {
             // transition between current and next
             // requires animation don't return yet
-            from = inThisFormation.position;
-            to = inNextFormation.position;
+            from = inPreviousFormation.position;
+            to = inThisFormation.position;
          } else {
             // transition between current and exit strategy specified in current
             // requires animation don't return yet
@@ -195,30 +194,32 @@ const animate = (
             //    // }
             // })();
          }
-      } else {
-         if (inNextFormation) {
-            // transition between enter strategy specified in next and position in next
-            // requires animation don't return yet
-            to = inNextFormation.position;
-
-            from = (() => {
-               return { x: stageDimensions.width / 2 + 1, y: to.y };
-               // if (inNextFormation.enterStrategy === "closest") {
-               //    if (to.x >= 0) return { x: stageDimensions.width / 2 + 1, y: to.y };
-               //    if (to.x < 0) return { x: -(stageDimensions.width / 2 + 1), y: to.y };
-               // }
-               // if (inNextFormation.enterStrategy === "right") {
-               //    return { x: stageDimensions.width / 2 + 1, y: to.y };
-               // }
-               // if (inNextFormation.enterStrategy === "left") {
-               //    return { x: -(stageDimensions.width / 2 + 1), y: to.y };
-               // }
-            })();
-         } else {
-            // return off stage
-            return null;
-         }
       }
+
+      // else {
+      //    if (inNextFormation) {
+      //       // transition between enter strategy specified in next and position in next
+      //       // requires animation don't return yet
+      //       to = inNextFormation.position;
+
+      //       from = (() => {
+      //          return { x: stageDimensions.width / 2 + 1, y: to.y };
+      //          // if (inNextFormation.enterStrategy === "closest") {
+      //          //    if (to.x >= 0) return { x: stageDimensions.width / 2 + 1, y: to.y };
+      //          //    if (to.x < 0) return { x: -(stageDimensions.width / 2 + 1), y: to.y };
+      //          // }
+      //          // if (inNextFormation.enterStrategy === "right") {
+      //          //    return { x: stageDimensions.width / 2 + 1, y: to.y };
+      //          // }
+      //          // if (inNextFormation.enterStrategy === "left") {
+      //          //    return { x: -(stageDimensions.width / 2 + 1), y: to.y };
+      //          // }
+      //       })();
+      //    } else {
+      //       // return off stage
+      //       return null;
+      //    }
+      // }
    } else {
       if (inThisFormation) {
          // return position from this formation
@@ -267,6 +268,7 @@ const animate = (
    function easeOutQuart(x: number): number {
       return 1 - Math.pow(1 - x, 4);
    }
+
    percentThroughTransition = easeInOutQuad(percentThroughTransition);
 
    if (inThisFormation?.transitionType === "cubic" && inThisFormation?.controlPointStart?.y && inThisFormation?.controlPointStart?.x) {

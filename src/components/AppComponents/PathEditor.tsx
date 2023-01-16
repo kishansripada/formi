@@ -16,7 +16,7 @@ export const PathEditor: React.FC<{
    return (
       <>
          <svg className="absolute pointer-events-none w-full h-full z-10" xmlns="http://www.w3.org/2000/svg">
-            {formations?.[selectedFormation - 1]?.positions
+            {formations?.[selectedFormation]?.positions
                .filter((position) => {
                   if (previousFormationView === "ghostDancersAndPaths") {
                      return true;
@@ -27,9 +27,9 @@ export const PathEditor: React.FC<{
                .map((dancerPosition) => {
                   let dancer = dancers.find((dancer) => dancer.id === dancerPosition.id);
                   // global start and end coords
-                  let startCoords = coordsToPosition(dancerPosition.position);
-                  let endCoords = coordsToPosition(
-                     formations?.[selectedFormation]?.positions?.find((dancerPosition2) => dancerPosition2.id === dancerPosition.id)?.position
+                  let endCoords = coordsToPosition(dancerPosition.position);
+                  let startCoords = coordsToPosition(
+                     formations?.[selectedFormation - 1]?.positions?.find((dancerPosition2) => dancerPosition2.id === dancerPosition.id)?.position
                   );
                   if (!endCoords || !startCoords) return;
 

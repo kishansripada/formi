@@ -188,7 +188,7 @@ export const Canvas: React.FC<{
       if (changingControlId) {
          setFormations((formations: formation[]) => {
             return formations.map((formation, index: number) => {
-               if (index === selectedFormation - 1) {
+               if (index === selectedFormation) {
                   return {
                      ...formation,
                      positions: formation.positions.map((dancerPosition) => {
@@ -264,7 +264,23 @@ export const Canvas: React.FC<{
                   return {
                      ...formation,
                      positions: formation.positions.map((dancerPosition) => {
-                        if (selectedDancers.includes(dancerPosition.id)) {
+                        if (selectedDancers.includes(dancerPosition.id) && dancerPosition.transitionType === "cubic") {
+                           return {
+                              ...dancerPosition,
+                              position: {
+                                 x: dancerPosition.position.x + e.movementX / PIXELS_PER_SQUARE / zoom,
+                                 y: dancerPosition.position.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                              },
+                              controlPointEnd: {
+                                 x: dancerPosition.controlPointEnd.x + e.movementX / PIXELS_PER_SQUARE / zoom,
+                                 y: dancerPosition.controlPointEnd.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                              },
+                           };
+                        }
+                        if (
+                           selectedDancers.includes(dancerPosition.id) &&
+                           (dancerPosition.transitionType === "linear" || !dancerPosition.transitionType)
+                        ) {
                            return {
                               ...dancerPosition,
                               position: {
@@ -277,23 +293,23 @@ export const Canvas: React.FC<{
                      }),
                   };
                }
-               if (index === selectedFormation - 1) {
-                  return {
-                     ...formation,
-                     positions: formation.positions.map((dancerPosition) => {
-                        if (selectedDancers.includes(dancerPosition.id) && dancerPosition.transitionType === "cubic") {
-                           return {
-                              ...dancerPosition,
-                              controlPointEnd: {
-                                 x: dancerPosition.controlPointEnd.x + e.movementX / PIXELS_PER_SQUARE / zoom,
-                                 y: dancerPosition.controlPointEnd.y - e.movementY / PIXELS_PER_SQUARE / zoom,
-                              },
-                           };
-                        }
-                        return dancerPosition;
-                     }),
-                  };
-               }
+               // if (index === selectedFormation) {
+               //    return {
+               //       ...formation,
+               //       positions: formation.positions.map((dancerPosition) => {
+               //          if (selectedDancers.includes(dancerPosition.id)) {
+               //             return {
+               //                ...dancerPosition,
+               //                controlPointEnd: {
+               //                   x: dancerPosition.controlPointEnd.x + e.movementX / PIXELS_PER_SQUARE / zoom,
+               //                   y: dancerPosition.controlPointEnd.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+               //                },
+               //             };
+               //          }
+               //          return dancerPosition;
+               //       }),
+               //    };
+               // }
                return formation;
             });
          });
@@ -523,8 +539,6 @@ export const Canvas: React.FC<{
          id="stage"
          ref={container}
          onPointerUp={!viewOnly ? pointerUp : () => null}
-         onPointerDown={!viewOnly ? pointerDown : () => null}
-         onPointerMove={handleDragMove}
       >
          {/* <div style={{ ...videoCoordinates }} className=" absolute z-[9999] pointer-events-none">
             <div className="relative w-10 h-4 bg-red-600 cursor-pointer select-none pointer-events-auto" id="video"></div>
@@ -540,6 +554,8 @@ export const Canvas: React.FC<{
 
          <Toaster />
          <div
+            onPointerDown={!viewOnly ? pointerDown : () => null}
+            onPointerMove={handleDragMove}
             ref={stage}
             className="relative bg-white rounded-xl"
             style={{

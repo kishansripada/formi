@@ -67,7 +67,7 @@ export const Layer: React.FC<{
             return arrayMove(formations, oldIndex, newIndex);
          });
       }
-      pushChange({ isSwap: true });
+      pushChange();
       setActiveId(null);
    }
 

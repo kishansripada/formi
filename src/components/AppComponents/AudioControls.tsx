@@ -198,7 +198,7 @@ export const AudioControls: React.FC<{
                </svg>
 
                <p className=" font-medium whitespace-nowrap overflow-hidden lg:block hidden ">
-                  {soundCloudTrackId ? soundCloudTrackId?.split("/").slice(-1)[0] : "no audio file selected"}
+                  {soundCloudTrackId ? soundCloudTrackId?.split("/").slice(-1)[0] : "No Audio Selected"}
                </p>
             </div>
          </div>

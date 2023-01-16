@@ -189,7 +189,7 @@ export const CurrentFormation: React.FC<{
                                  selectedDancers.forEach((selectedDancer) => {
                                     setFormations((formations: formation[]) => {
                                        return formations.map((formation, index: number) => {
-                                          if (index === selectedFormation - 1) {
+                                          if (index === selectedFormation) {
                                              return {
                                                 ...formation,
 
@@ -212,7 +212,7 @@ export const CurrentFormation: React.FC<{
                               }}
                            >
                               {selectedDancers.length &&
-                              formations[selectedFormation - 1]?.positions
+                              formations[selectedFormation]?.positions
                                  .filter((dancer) => {
                                     return selectedDancers.includes(dancer.id);
                                  })
@@ -282,7 +282,7 @@ export const CurrentFormation: React.FC<{
                                        })();
 
                                        return formations.map((formation, index: number) => {
-                                          if (index === selectedFormation - 1) {
+                                          if (index === selectedFormation) {
                                              return {
                                                 ...formation,
 
@@ -311,7 +311,7 @@ export const CurrentFormation: React.FC<{
                               ) : (
                                  <>
                                     {selectedDancers.length &&
-                                    formations[selectedFormation - 1]?.positions
+                                    formations[selectedFormation]?.positions
                                        .filter((dancer) => {
                                           return selectedDancers.includes(dancer.id);
                                        })

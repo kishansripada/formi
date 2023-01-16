@@ -51,9 +51,9 @@ export const Share: React.FC<{
             <div className="flex  w-[700px] flex-col rounded-xl bg-white">
                <div className="flex flex-col rounded-xl px-10 pt-10 pb-6 h-full">
                   <div className="flex flex-row">
-                     <h1 className="text-2xl  mr-auto">sharing settings</h1>
+                     <h1 className="text-2xl  mr-auto">Sharing Settings</h1>
                      <div className="flex flex-col items-end justify-center mx-5">
-                        <p className="text-sm  text-gray-700  mb-3">anyone with the link can view</p>
+                        <p className="text-sm  text-gray-700  mb-3">Anyone With The Link Can View</p>
 
                         <label className="inline-flex relative items-center cursor-pointer">
                            <input
@@ -105,7 +105,7 @@ export const Share: React.FC<{
                         }}
                         className="focus:border-pink-700 focus:border-2 rounded-md w-full mr-10 h-8 py-4 border-gray-300 border text-sm shadow-sm px-2 focus:outline-none"
                         type="text"
-                        placeholder="enter an email"
+                        placeholder="Enter an Email"
                      />
                      <button
                         onClick={(e) => {
@@ -125,7 +125,7 @@ export const Share: React.FC<{
                         }}
                         className="text-gray-700 text-sm border border-gray-300 rounded-md px-2 py-1 ml-auto"
                      >
-                        add
+                        Add
                      </button>
                   </div>
 
@@ -156,20 +156,20 @@ export const Share: React.FC<{
                                  }}
                                  className="text-gray-700 text-sm border border-gray-300 rounded-md px-2 py-1 ml-auto"
                               >
-                                 remove
+                                 Remove
                               </button>
                            </div>
                         );
                      })}
                   </div>
-                  {Object.entries(shareSettings).length ? <p className="text-gray-400 text-xs mt-4 ">collaborative editing is coming soon</p> : null}
+                  {Object.entries(shareSettings).length ? <p className="text-gray-400 text-xs mt-4 ">Collaborative Editing is Coming Soon</p> : null}
                </div>
                <div className="flex flex-row justify-between items-center w-full bg-gray-100 h-16 rounded-b-xl px-5">
                   <button onClick={() => setShareIsOpen(false)} className=" border border-gray-300 bg-white hover:bg-gray-100 px-4  py-2 rounded-md">
-                     cancel
+                     Cancel
                   </button>
                   <button className="ml-auto bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md" onClick={updateShareSettings}>
-                     save
+                     Save
                   </button>
                </div>
             </div>

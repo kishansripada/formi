@@ -61,6 +61,22 @@ const FileAudioPlayer = dynamic<{
 });
 
 const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
+   // let forms = initialData.formations;
+
+   // let newForms = forms.map((formation: formation, i) => {
+   //    if (i === 0) return formation;
+   //    return {
+   //       ...formation,
+   //       positions: forms[i - 1].positions.map((position) => {
+   //          return { ...position, position: formation.positions.find((positionx) => positionx.id === position.id).position };
+   //       }),
+   //       transition: { durationSeconds: forms[i - 1].transition.durationSeconds },
+   //    };
+   // });
+
+   // console.log({ forms });
+   // console.log({ newForms });
+
    let pricingTier = "premium";
    const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
 
@@ -767,12 +783,13 @@ const whereInFormation = (formations: formation[], position: number) => {
 
    let percentThroughTransition;
    for (let i = 0; i < formations.length; i++) {
-      sum = sum + formations[i].durationSeconds + formations[i]?.transition.durationSeconds;
+      sum = sum + formations[i].durationSeconds + (i === 0 ? 0 : formations[i]?.transition.durationSeconds);
       if (position < sum) {
          currentFormationIndex = i;
-         let durationThroughTransition = position - (sum - formations[i]?.transition?.durationSeconds);
+         if (currentFormationIndex === 0) break;
+         let durationThroughTransition = position - (sum - formations[i]?.transition?.durationSeconds - formations[i].durationSeconds);
 
-         if (durationThroughTransition > 0) {
+         if (durationThroughTransition < formations[i]?.transition?.durationSeconds) {
             percentThroughTransition = durationThroughTransition / formations[i]?.transition?.durationSeconds;
          }
          break;

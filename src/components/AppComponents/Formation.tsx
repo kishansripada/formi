@@ -33,6 +33,7 @@ export const Formation: React.FC<{
       transform: CSS.Translate.toString(transform),
       transition,
    };
+
    let idsOnThisFormation = Object.keys(userPositions).filter((id) => userPositions[id].selectedFormation === index);
 
    let colorsOnThisFormation = idsOnThisFormation.map((id) => onlineUsers[id][0].color);
@@ -56,7 +57,7 @@ export const Formation: React.FC<{
             style={{
                zIndex: activeId === formation.id ? 2 : 0,
                ...style,
-               width: (formation.transition.durationSeconds + formation.durationSeconds) * pixelsPerSecond - 4,
+               width: ((index === 0 ? 0 : formation.transition.durationSeconds) + formation.durationSeconds) * pixelsPerSecond - 4,
                borderColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#18191B",
                // top: index === 5 ? 100 : null,
                // subtract 4 to account for the mx-[2px]
@@ -94,37 +95,41 @@ export const Formation: React.FC<{
             <div className={`bg-white h-[17px]  px-2 overflow-clip border-b border-gray-300`}>
                <p className={`text-[12px] pointer-events-none select-none text-black font-medium`}>{formation.name}</p>
             </div>
+
             <div className={` flex flex-row  box-border`}>
+               {index !== 0 ? (
+                  <div
+                     style={{
+                        width: formation.transition.durationSeconds * pixelsPerSecond - 2,
+                     }}
+                     className="  "
+                  >
+                     <div className="flex flex-row  pointer-events-none h-[26px] mr-[5px]">
+                        <svg className="w-1/2" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
+                           <polygon className="fill-gray-300" strokeWidth={0} points="0,0 0,20 10,10" />
+                        </svg>
+                        <svg className="w-1/2 " width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
+                           <polygon className="fill-gray-300" strokeWidth={0} points="0,10 10,0 10,20" />
+                        </svg>
+                     </div>
+                  </div>
+               ) : null}
                <div
                   style={{
                      width: formation.durationSeconds * pixelsPerSecond - 2,
                   }}
                   className="relative  h-[23px]"
                >
-                  <div
-                     id={formation.id}
-                     data-type="transition-resize"
-                     className=" h-[26px]  w-[4px] lg:pointer-events-auto pointer-events-none cursor-col-resize	 absolute right-[-5px] z-50 flex flex-row justify-between"
-                  >
-                     <div className="h-full w-[1px] bg-black pointer-events-none"></div>
-                     <div className="h-full w-[1px] bg-black pointer-events-none"></div>
-                  </div>
-               </div>
-
-               <div
-                  style={{
-                     width: formation.transition.durationSeconds * pixelsPerSecond - 2,
-                  }}
-                  className="  "
-               >
-                  <div className="flex flex-row  pointer-events-none h-[26px] ml-[5px]">
-                     <svg className="w-1/2" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
-                        <polygon className="fill-gray-300" strokeWidth={0} points="0,0 0,20 10,10" />
-                     </svg>
-                     <svg className="w-1/2 " width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
-                        <polygon className="fill-gray-300" strokeWidth={0} points="0,10 10,0 10,20" />
-                     </svg>
-                  </div>
+                  {index !== 0 ? (
+                     <div
+                        id={formation.id}
+                        data-type="transition-resize"
+                        className=" h-[26px]  w-[4px] lg:pointer-events-auto pointer-events-none cursor-col-resize	 absolute left-[-5px] z-50 flex flex-row justify-between"
+                     >
+                        <div className="h-full w-[1px] bg-black pointer-events-none"></div>
+                        <div className="h-full w-[1px] bg-black pointer-events-none"></div>
+                     </div>
+                  ) : null}
                </div>
             </div>
          </div>
