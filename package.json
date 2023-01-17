@@ -10,17 +10,21 @@
   },
   "dependencies": {
     "@dnd-kit/sortable": "^7.0.1",
+    "@react-three/drei": "^9.53.0",
+    "@react-three/fiber": "^8.10.0",
     "@supabase/auth-helpers-nextjs": "^0.5.2",
     "@supabase/auth-helpers-react": "^0.3.1",
     "@supabase/auth-ui-react": "^0.2.2",
     "@supabase/supabase-js": "^2.2.2",
+    "@types/three": "^0.148.0",
     "jsondiffpatch": "^0.4.1",
     "lodash": "^4.17.21",
     "next": "12.2.5",
     "react": "18.2.0",
     "react-color": "^2.19.3",
     "react-dom": "18.2.0",
-    "react-hot-toast": "^2.3.0"
+    "react-hot-toast": "^2.3.0",
+    "three": "^0.148.0"
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.7",
