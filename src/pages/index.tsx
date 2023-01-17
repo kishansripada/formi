@@ -105,11 +105,16 @@ const home = () => {
                      {/* <Link href={"/upgrade"} className="z-50">
                         <button className=" border-pink-600 border-2 mr-3 px-4 py-1 hidden lg:block  rounded-md ">pricing</button>
                      </Link> */}
+
                      <Link href={"/login"} className="z-50">
-                        <button className="border-black border px-4 py-1 hidden lg:block  rounded-md ">Sign Up</button>
+                        <button className="border-pink-600 border-2 hover:bg-pink-600 hover:text-white  px-7 py-3 transition text-pink-600 hidden lg:block  rounded-xl mr-3 ">
+                           SIGN IN
+                        </button>
                      </Link>
                      <Link href={"/login"} className="z-50">
-                        <button className="border-black border px-4 py-1 hidden lg:block  rounded-md ml-3 ">Sign In</button>
+                        <button className="bg-pink-600 text-white border-pink-600 border-2 px-7 py-3 hidden lg:block  rounded-xl ">
+                           GET STARTED
+                        </button>
                      </Link>
                   </div>
                </nav>
@@ -162,7 +167,7 @@ const home = () => {
                   muted={true}
                   autoPlay
                   loop
-                  className="rounded-xl shadow-2xl z-50 relative pointer-events-none select-none"
+                  className="rounded-xl shadow-2xl z-50 relative pointer-events-none select-none mb-6"
                >
                   <source src="/videoScroll.mp4" type="video/mp4"></source>
                </video>
@@ -185,8 +190,8 @@ const home = () => {
                   }}
                ></div>
             </div>
-            <hr />
-            <div className=" bg-[#efefef]  flex-wrap flex flex-row items-center justify-center child:mx-8 child:my-8  select-none   ">
+
+            {/* <div className=" bg-[#efefef]  flex-wrap flex flex-row items-center justify-center child:mx-8 child:my-8  select-none   ">
                <img
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cornell_University_logo.svg/1280px-Cornell_University_logo.svg.png"
                   className="grayscale w-48 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
@@ -197,12 +202,12 @@ const home = () => {
                   className="grayscale w-48 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
                   alt=""
                />
-               {/* <img
+               <img
                   src=" https://images.givelively.org/nonprofits/460ef676-33fe-4637-8b80-d9a31f11d415/logos/desi-dance-network-incorporated_processed_a5bf047c897ca650200a7cc0d546411966e88bb5e6240b4b4ac74b83266fcead_logo.png
                "
                   className="grayscale w-24 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
                   alt=""
-               /> */}
+               />
                <img
                   src=" https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/University_of_California%2C_Berkeley_logo.svg/2560px-University_of_California%2C_Berkeley_logo.svg.png
                "
@@ -221,9 +226,9 @@ const home = () => {
                   className="grayscale w-12 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
                   alt=""
                />
-            </div>
+            </div> */}
             <hr />
-            <div className="bg-white flex flex-col font-proxima items-center relative overflow-hidden ">
+            {/* <div className="bg-white flex flex-col font-proxima items-center relative overflow-hidden ">
                <p className="tracking-widest text-pink-600 mt-24 px-10 text-center">VISUALIZE DANCE FORMATIONS RIGHT IN YOUR BROWSER</p>
                <h1 className=" text-5xl lg:text-6xl text-center mt-12">Full-featured. Not complicated</h1>
 
@@ -251,9 +256,41 @@ const home = () => {
                      opacity: 0.5,
                   }}
                ></div>
+            </div> */}
+            <div className="bg-white flex flex-col font-proxima items-center relative overflow-hidden px-[10%] text-gray-900 py-20">
+               <p className="mb-32 text-5xl">It's easy to use, fast to prepare and free</p>
+               <div className="flex flex-col lg:flex-row">
+                  <div className="flex flex-col lg:w-1/2">
+                     <p className="font-bold text-xl">1- Add your music</p>
+                     <p className="text-gray-500 lg:w-[80%] mb-16">
+                        FORMI allows you to add your own custom audio file enabling transitions that are syned to your music perfectly.
+                     </p>
+                     <p className="font-bold text-xl ">2- Build your roster and formations</p>
+                     <p className="text-gray-500 lg:w-[80%] mb-16">
+                        Add an unlimited number of dancers and place them anywhere on the stage. FORMI allows you to visualize dancer paths to quickly
+                        check for potential collisions.
+                     </p>
+                     <p className="font-bold text-xl ">3- Share with your dancers</p>
+                     <p className="text-gray-500 lg:w-[80%]">
+                        Once you are done building your formations, share them with your dancers in a view only mode so that dancers will be prepared
+                        before practices, saving rehearsal time.
+                     </p>
+                  </div>
+                  <img
+                     className="lg:w-1/2 rounded-xl mt-16 lg:mt-0  shadow-2xl  relative z-50 pointer-events-none select-none"
+                     src="/curveDemo.png"
+                     alt=""
+                  />
+               </div>
+
+               <Link href={"/login"} className="z-50">
+                  <button className="bg-pink-600 text-white border-pink-600 border-2 px-7 py-3 hidden lg:block  rounded-2xl mt-16">
+                     Create Your First Performance
+                  </button>
+               </Link>
             </div>
-            <hr />
-            <div className="bg-[#fafafa]  flex flex-col items-center justify-center  px-[20%] py-16 font-proxima ">
+
+            {/* <div className="bg-[#fafafa]  flex flex-col items-center justify-center  px-[20%] py-16 font-proxima ">
                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -274,9 +311,9 @@ const home = () => {
                   Eith a few clicks share a view only experience of your polished choreography, making rehersal more efficient
                </p>
                <div></div>
-            </div>
+            </div> */}
 
-            <div className="flex flex-col lg:flex-row items-center py-16 bg-white font-proxima">
+            <div className="flex flex-col lg:flex-row items-center py-16 bg-pink-50 font-proxima">
                <img src="/commentDemo.png" className="lg:w-1/2 w-[90%] rounded-xl relative lg:right-24" alt="" />
                <div className="lg:w-1/2 w-[90%] mt-9 lg:mt-0">
                   <p className="text-3xl">Leave notes directly on the stage.</p>
