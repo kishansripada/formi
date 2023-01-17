@@ -34,81 +34,115 @@ export const AudioControls: React.FC<{
    return (
       <>
          <div className="min-h-[60px] bg-[#fafafa] w-full border-t border-gray-300 flex flex-row items-center justify-between select-none">
-            <div className="w-[45%] flex flex-row items-center justify-center pl-4">
+            <div className="w-[45%] flex flex-col items-center justify-center   pl-4">
                {!viewOnly ? (
                   <>
-                     <button
-                        onClick={() => {
-                           addToStack();
-                           let id = crypto.randomUUID();
-                           setFormations((formations: formation[]) => {
-                              return [
-                                 ...formations,
-                                 {
-                                    ...formations[formations.length - 1],
-                                    id,
-                                    name: `Untitled ${formations.length + 1}`,
-                                    transition: {
-                                       durationSeconds: 5,
+                     <div className="flex flex-row items-center justify-center mr-auto">
+                        <button
+                           onClick={() => {
+                              addToStack();
+                              let id = crypto.randomUUID();
+                              setFormations((formations: formation[]) => {
+                                 return [
+                                    ...formations,
+                                    {
+                                       ...formations[formations.length - 1],
+                                       id,
+                                       name: `Untitled ${formations.length + 1}`,
+                                       transition: {
+                                          durationSeconds: 5,
+                                       },
+                                       durationSeconds: 10,
                                     },
-                                    durationSeconds: 10,
-                                 },
-                              ];
-                              //   }
-                           });
-                           setSelectedFormation(formations.length);
-                           pushChange();
-                        }}
-                        className=" rounded-md  hidden transition duration-300  text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer  "
-                     >
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-5 h-5 mr-2"
-                        >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-
-                        <p className="text-sm">New Formation</p>
-                     </button>
-                     <button
-                        onClick={() => {
-                           if (selectedFormation === null) return;
-
-                           if (formations.length === 1) {
-                              toast.error("you must have at least one formation");
-                              return;
-                           }
-                           addToStack();
-                           if (selectedFormation === formations.length - 1) {
-                              setSelectedFormation(selectedFormation - 1);
-                           }
-
-                           setFormations((formations: formation[]) => {
-                              return formations.filter((formation, index) => {
-                                 return index !== selectedFormation;
+                                 ];
+                                 //   }
                               });
-                           });
-                           toast.success("formation deleted");
-                           pushChange();
-                        }}
-                        className="rounded-md  hidden transition duration-300 mr-auto  text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
-                     >
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-5 h-5 mr-2"
+                              setSelectedFormation(formations.length);
+                              pushChange();
+                           }}
+                           className=" rounded-md  hidden transition duration-300  text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer  "
                         >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <p className="text-sm"> Delete Formation</p>
-                     </button>
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-5 h-5 mr-1"
+                           >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                           </svg>
+
+                           <p className="text-sm">Add</p>
+                        </button>
+                        <button
+                           onClick={() => {
+                              if (selectedFormation === null) return;
+
+                              if (formations.length === 1) {
+                                 toast.error("you must have at least one formation");
+                                 return;
+                              }
+                              addToStack();
+                              if (selectedFormation === formations.length - 1) {
+                                 setSelectedFormation(selectedFormation - 1);
+                              }
+
+                              setFormations((formations: formation[]) => {
+                                 return formations.filter((formation, index) => {
+                                    return index !== selectedFormation;
+                                 });
+                              });
+                              toast.success("formation deleted");
+                              pushChange();
+                           }}
+                           className="rounded-md  hidden transition duration-300   text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
+                        >
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-5 h-5 mr-1"
+                           >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                           </svg>
+                           <p className="text-sm"> Delete </p>
+                        </button>
+                        <button
+                           onClick={() => {
+                              if (selectedFormation === null) return;
+
+                              addToStack();
+
+                              setFormations((formations: formation[]) => {
+                                 formations.splice(selectedFormation + 1, 0, { ...formations[selectedFormation], id: crypto.randomUUID() });
+                                 return formations;
+                              });
+                              toast.success("formation duplicated");
+                              pushChange();
+                           }}
+                           className="rounded-md  hidden transition duration-300 mr-auto  text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
+                        >
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-5 h-5 mr-1"
+                           >
+                              <path
+                                 strokeLinecap="round"
+                                 strokeLinejoin="round"
+                                 d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
+                              />
+                           </svg>
+
+                           <p className="text-sm"> Duplicate</p>
+                        </button>
+                     </div>
                   </>
                ) : null}
             </div>
