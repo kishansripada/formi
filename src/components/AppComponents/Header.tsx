@@ -126,31 +126,30 @@ export const Header: React.FC<{
                            <p className="ml-1">Invite</p>
                         </div>
                      </button>
-                     <button
-                        onClick={() => setIsPreviewingThree((isPreviewingThree: boolean) => !isPreviewingThree)}
-                        className="border hidden lg:block border-black text-sm rounded-md px-3 py-3 ml-4"
-                     >
-                        <div className="flex flex-row items-center ">
-                           <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-5 h-5"
-                           >
-                              <path
-                                 strokeLinecap="round"
-                                 strokeLinejoin="round"
-                                 d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
-                              />
-                           </svg>
-                           {!isPreviewingThree ? <p className="ml-1">Enter 3D Preview</p> : <p className="ml-1">Exit 3D Preview</p>}
-                        </div>
-                     </button>
                   </>
                ) : null}
-
+               <button
+                  onClick={() => setIsPreviewingThree((isPreviewingThree: boolean) => !isPreviewingThree)}
+                  className="border hidden lg:block border-black text-sm rounded-md px-3 py-3 ml-4"
+               >
+                  <div className="flex flex-row items-center ">
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-5 h-5"
+                     >
+                        <path
+                           strokeLinecap="round"
+                           strokeLinejoin="round"
+                           d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
+                        />
+                     </svg>
+                     {!isPreviewingThree ? <p className="ml-1">Enter 3D Preview</p> : <p className="ml-1">Exit 3D Preview</p>}
+                  </div>
+               </button>
                {session ? (
                   <Link href="/dashboard">
                      <button className="bg-slate-800  text-white text-sm rounded-md px-3 py-3 ml-4 mr-4 ">

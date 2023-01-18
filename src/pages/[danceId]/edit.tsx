@@ -711,6 +711,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                      </Canvas>
                   ) : (
                      <ThreeCanvas
+                        position={position}
                         stageBackground={stageBackground}
                         zoom={zoom}
                         setZoom={setZoom}
@@ -737,6 +738,10 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                         coordsToPosition={coordsToPosition}
                         videoCoordinates={videoCoordinates}
                         setVideoCoordinates={setVideoCoordinates}
+                        dancers={dancers}
+                        currentFormationIndex={currentFormationIndex}
+                        percentThroughTransition={percentThroughTransition}
+                        isPlaying={isPlaying}
                      ></ThreeCanvas>
                   )}
                </div>

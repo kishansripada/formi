@@ -313,7 +313,15 @@ const home = () => {
                <div></div>
             </div> */}
 
-            <div className="flex flex-col lg:flex-row items-center py-16 bg-pink-50 font-proxima">
+            <div className="flex flex-col lg:flex-row items-center py-16 bg-pink-50 font-proxima overflow-hidden">
+               <div className="lg:w-1/2 w-[90%] ml-[10%] mt-9 lg:mt-0">
+                  <p className="text-3xl">View formations in 3D</p>
+                  <p className="text-md mt-6 lg:w-[70%]">Easily switch to a 3D preview for a judge or audience perspective of your formations.</p>
+               </div>
+               <img src="/threePreview.png" className="lg:w-1/2 w-[90%] rounded-xl relative lg:left-24" alt="" />
+            </div>
+
+            <div className="flex flex-col lg:flex-row items-center py-16 font-proxima">
                <img src="/commentDemo.png" className="lg:w-1/2 w-[90%] rounded-xl relative lg:right-24" alt="" />
                <div className="lg:w-1/2 w-[90%] mt-9 lg:mt-0">
                   <p className="text-3xl">Leave notes directly on the stage.</p>
