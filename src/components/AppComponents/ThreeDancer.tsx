@@ -43,13 +43,29 @@ export function ThreeDancer({
          >
             {dancer?.name}
          </Text>
-         <group
+         {/* <group
             scale={[0.01, 0.01, 0.01]}
             position={[isPlaying ? x / 2 : dancerPosition.position.x / 2, 0, isPlaying ? -y / 2 : -dancerPosition.position.y / 2]}
             dispose={null}
          >
             <mesh geometry={nodes.Beta_Surface.geometry} material={materials.Beta_HighLimbsGeoSG3} />
             <mesh geometry={nodes.Beta_Joints.geometry} material={materials.Beta_Joints_MAT1} />
+         </group> */}
+
+         <group
+            scale={[1, 1, 1]}
+            position={[isPlaying ? x / 2 : dancerPosition.position.x / 2, 1.3, isPlaying ? -y / 2 : -dancerPosition.position.y / 2]}
+            dispose={null}
+         >
+            <group rotation={[-Math.PI / 2, 0, 0]} scale={0.07}>
+               <group rotation={[Math.PI / 2, 0, 0]}>
+                  <group position={[0, -1.35, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={100}>
+                     <group position={[0, 0, -0.03]} scale={0.01}>
+                        <mesh castShadow receiveShadow geometry={nodes.defaultMaterial.geometry} material={materials.Wood} />
+                     </group>
+                  </group>
+               </group>
+            </group>
          </group>
       </>
    );

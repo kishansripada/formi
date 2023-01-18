@@ -376,7 +376,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          console.log({ error });
 
          setSaved(true);
-      }, 10000),
+      }, 5000),
       [router.query.danceId]
    );
 
@@ -586,129 +586,131 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   />
 
                   {!isPreviewingThree ? (
-                     <Canvas
-                        stageBackground={stageBackground}
-                        zoom={zoom}
-                        setZoom={setZoom}
-                        isCommenting={isCommenting}
-                        setIsCommenting={setIsCommenting}
-                        gridSnap={gridSnap}
-                        pushChange={pushChange}
-                        undo={undo}
-                        addToStack={addToStack}
-                        player={player}
-                        draggingDancerId={draggingDancerId}
-                        setDraggingDancerId={setDraggingDancerId}
-                        songDuration={songDuration}
-                        viewOnly={viewOnly}
-                        setSelectedFormation={setSelectedFormation}
-                        formations={formations}
-                        selectedFormation={selectedFormation}
-                        setFormations={setFormations}
-                        selectedDancers={selectedDancers}
-                        setSelectedDancers={setSelectedDancers}
-                        setIsPlaying={setIsPlaying}
-                        setPixelsPerSecond={setPixelsPerSecond}
-                        stageDimensions={stageDimensions}
-                        coordsToPosition={coordsToPosition}
-                        videoCoordinates={videoCoordinates}
-                        setVideoCoordinates={setVideoCoordinates}
-                     >
-                        {selectedFormation !== null ? (
-                           <PathEditor
-                              dancers={dancers}
-                              currentFormationIndex={currentFormationIndex}
-                              formations={formations}
-                              selectedFormation={selectedFormation}
-                              selectedDancers={selectedDancers}
-                              previousFormationView={previousFormationView}
-                              isPlaying={isPlaying}
-                              coordsToPosition={coordsToPosition}
-                           />
-                        ) : (
-                           <></>
-                        )}
+                     <>
+                        <Canvas
+                           stageBackground={stageBackground}
+                           zoom={zoom}
+                           setZoom={setZoom}
+                           isCommenting={isCommenting}
+                           setIsCommenting={setIsCommenting}
+                           gridSnap={gridSnap}
+                           pushChange={pushChange}
+                           undo={undo}
+                           addToStack={addToStack}
+                           player={player}
+                           draggingDancerId={draggingDancerId}
+                           setDraggingDancerId={setDraggingDancerId}
+                           songDuration={songDuration}
+                           viewOnly={viewOnly}
+                           setSelectedFormation={setSelectedFormation}
+                           formations={formations}
+                           selectedFormation={selectedFormation}
+                           setFormations={setFormations}
+                           selectedDancers={selectedDancers}
+                           setSelectedDancers={setSelectedDancers}
+                           setIsPlaying={setIsPlaying}
+                           setPixelsPerSecond={setPixelsPerSecond}
+                           stageDimensions={stageDimensions}
+                           coordsToPosition={coordsToPosition}
+                           videoCoordinates={videoCoordinates}
+                           setVideoCoordinates={setVideoCoordinates}
+                        >
+                           {selectedFormation !== null ? (
+                              <PathEditor
+                                 dancers={dancers}
+                                 currentFormationIndex={currentFormationIndex}
+                                 formations={formations}
+                                 selectedFormation={selectedFormation}
+                                 selectedDancers={selectedDancers}
+                                 previousFormationView={previousFormationView}
+                                 isPlaying={isPlaying}
+                                 coordsToPosition={coordsToPosition}
+                              />
+                           ) : (
+                              <></>
+                           )}
 
-                        {dancers.map((dancer, index) => (
-                           <DancerAlias
-                              zoom={zoom}
-                              setZoom={setZoom}
-                              stageDimensions={stageDimensions}
-                              coordsToPosition={coordsToPosition}
-                              selectedDancers={selectedDancers}
-                              isPlaying={isPlaying}
-                              position={position}
-                              selectedFormation={selectedFormation}
-                              setDancers={setDancers}
-                              key={dancer.id}
-                              dancer={dancer}
-                              formations={formations}
-                              setFormations={setFormations}
-                              draggingDancerId={draggingDancerId}
-                              userPositions={userPositions}
-                              onlineUsers={onlineUsers}
-                              currentFormationIndex={currentFormationIndex}
-                              percentThroughTransition={percentThroughTransition}
-                           />
-                        ))}
+                           {dancers.map((dancer, index) => (
+                              <DancerAlias
+                                 zoom={zoom}
+                                 setZoom={setZoom}
+                                 stageDimensions={stageDimensions}
+                                 coordsToPosition={coordsToPosition}
+                                 selectedDancers={selectedDancers}
+                                 isPlaying={isPlaying}
+                                 position={position}
+                                 selectedFormation={selectedFormation}
+                                 setDancers={setDancers}
+                                 key={dancer.id}
+                                 dancer={dancer}
+                                 formations={formations}
+                                 setFormations={setFormations}
+                                 draggingDancerId={draggingDancerId}
+                                 userPositions={userPositions}
+                                 onlineUsers={onlineUsers}
+                                 currentFormationIndex={currentFormationIndex}
+                                 percentThroughTransition={percentThroughTransition}
+                              />
+                           ))}
 
-                        {selectedFormation !== null && !isPlaying ? (
-                           <>
-                              {(formations[selectedFormation].comments || []).map((comment: comment) => {
-                                 return (
-                                    <>
-                                       <Comment
-                                          zoom={zoom}
-                                          stageDimensions={stageDimensions}
-                                          coordsToPosition={coordsToPosition}
-                                          selectedDancers={selectedDancers}
-                                          isPlaying={isPlaying}
-                                          position={position}
-                                          selectedFormation={selectedFormation}
-                                          setDancers={setDancers}
-                                          key={comment.id}
-                                          comment={comment}
-                                          formations={formations}
-                                          setFormations={setFormations}
-                                          draggingDancerId={draggingDancerId}
-                                          userPositions={userPositions}
-                                          onlineUsers={onlineUsers}
-                                          currentFormationIndex={currentFormationIndex}
-                                          percentThroughTransition={percentThroughTransition}
-                                       />
-                                    </>
-                                 );
-                              })}
-                              {previousFormationView !== "none"
-                                 ? dancers.map((dancer, index) => (
-                                      <DancerAliasShadow
-                                         coordsToPosition={coordsToPosition}
-                                         currentFormationIndex={currentFormationIndex}
-                                         isPlaying={isPlaying}
-                                         selectedFormation={selectedFormation}
-                                         key={dancer.id}
-                                         dancer={dancer}
-                                         formations={formations}
-                                      />
-                                   ))
-                                 : dancers
-                                      .filter((dancer) => selectedDancers.includes(dancer.id))
-                                      .map((dancer, index) => {
-                                         return (
-                                            <DancerAliasShadow
-                                               coordsToPosition={coordsToPosition}
-                                               currentFormationIndex={currentFormationIndex}
-                                               isPlaying={isPlaying}
-                                               selectedFormation={selectedFormation}
-                                               key={dancer.id}
-                                               dancer={dancer}
-                                               formations={formations}
-                                            />
-                                         );
-                                      })}
-                           </>
-                        ) : null}
-                     </Canvas>
+                           {selectedFormation !== null && !isPlaying ? (
+                              <>
+                                 {(formations[selectedFormation].comments || []).map((comment: comment) => {
+                                    return (
+                                       <>
+                                          <Comment
+                                             zoom={zoom}
+                                             stageDimensions={stageDimensions}
+                                             coordsToPosition={coordsToPosition}
+                                             selectedDancers={selectedDancers}
+                                             isPlaying={isPlaying}
+                                             position={position}
+                                             selectedFormation={selectedFormation}
+                                             setDancers={setDancers}
+                                             key={comment.id}
+                                             comment={comment}
+                                             formations={formations}
+                                             setFormations={setFormations}
+                                             draggingDancerId={draggingDancerId}
+                                             userPositions={userPositions}
+                                             onlineUsers={onlineUsers}
+                                             currentFormationIndex={currentFormationIndex}
+                                             percentThroughTransition={percentThroughTransition}
+                                          />
+                                       </>
+                                    );
+                                 })}
+                                 {previousFormationView !== "none"
+                                    ? dancers.map((dancer, index) => (
+                                         <DancerAliasShadow
+                                            coordsToPosition={coordsToPosition}
+                                            currentFormationIndex={currentFormationIndex}
+                                            isPlaying={isPlaying}
+                                            selectedFormation={selectedFormation}
+                                            key={dancer.id}
+                                            dancer={dancer}
+                                            formations={formations}
+                                         />
+                                      ))
+                                    : dancers
+                                         .filter((dancer) => selectedDancers.includes(dancer.id))
+                                         .map((dancer, index) => {
+                                            return (
+                                               <DancerAliasShadow
+                                                  coordsToPosition={coordsToPosition}
+                                                  currentFormationIndex={currentFormationIndex}
+                                                  isPlaying={isPlaying}
+                                                  selectedFormation={selectedFormation}
+                                                  key={dancer.id}
+                                                  dancer={dancer}
+                                                  formations={formations}
+                                               />
+                                            );
+                                         })}
+                              </>
+                           ) : null}
+                        </Canvas>
+                     </>
                   ) : (
                      <ThreeCanvas
                         position={position}

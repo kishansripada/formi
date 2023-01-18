@@ -129,10 +129,10 @@ export const Header: React.FC<{
                   </>
                ) : null}
                <button
-                  onClick={() => setIsPreviewingThree((isPreviewingThree: boolean) => !isPreviewingThree)}
-                  className="border hidden lg:block border-black text-sm rounded-md px-3 py-3 ml-4"
+                  onClick={() => setIsPreviewingThree((isPreviewingThree: boolean) => false)}
+                  className="border group hidden lg:block border-black border-r-0 text-sm rounded-l-md px-3 py-3 ml-4"
                >
-                  <div className="flex flex-row items-center ">
+                  <div className="flex flex-row items-center  ">
                      <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -144,10 +144,33 @@ export const Header: React.FC<{
                         <path
                            strokeLinecap="round"
                            strokeLinejoin="round"
+                           d="M16.5 8.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v8.25A2.25 2.25 0 006 16.5h2.25m8.25-8.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-7.5A2.25 2.25 0 018.25 18v-1.5m8.25-8.25h-6a2.25 2.25 0 00-2.25 2.25v6"
+                        />
+                     </svg>
+
+                     <p className="ml-2">2D </p>
+                  </div>
+               </button>
+               <button
+                  onClick={() => setIsPreviewingThree((isPreviewingThree: boolean) => true)}
+                  className="border group hidden lg:block border-black text-sm rounded-r-md px-3 py-3 "
+               >
+                  <div className="flex flex-row items-center  ">
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-5 h-5 group-hover:animate-spin group-hover:scale-110 transition"
+                     >
+                        <path
+                           strokeLinecap="round"
+                           strokeLinejoin="round"
                            d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
                         />
                      </svg>
-                     {!isPreviewingThree ? <p className="ml-1">Enter 3D Preview</p> : <p className="ml-1">Exit 3D Preview</p>}
+                     <p className="ml-2">3D </p>
                   </div>
                </button>
                {session ? (
