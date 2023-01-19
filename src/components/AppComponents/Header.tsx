@@ -130,7 +130,9 @@ export const Header: React.FC<{
                ) : null}
                <button
                   onClick={() => setIsPreviewingThree((isPreviewingThree: boolean) => false)}
-                  className="border group hidden lg:block border-black border-r-0 text-sm rounded-l-md px-3 py-3 ml-4"
+                  className={`border group hidden lg:block border-black border-r-0 text-sm rounded-l-md px-3 py-3 ml-4 ${
+                     !isPreviewingThree ? "bg-slate-800 text-white" : ""
+                  }`}
                >
                   <div className="flex flex-row items-center  ">
                      <svg
@@ -153,7 +155,9 @@ export const Header: React.FC<{
                </button>
                <button
                   onClick={() => setIsPreviewingThree((isPreviewingThree: boolean) => true)}
-                  className="border group hidden lg:block border-black text-sm rounded-r-md px-3 py-3 "
+                  className={`border group hidden lg:block border-black text-sm rounded-r-md px-3 py-3 ${
+                     isPreviewingThree ? "bg-slate-800 text-white" : ""
+                  } `}
                >
                   <div className="flex flex-row items-center  ">
                      <svg

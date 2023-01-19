@@ -3,9 +3,10 @@ import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { GridLines } from "./GridLines";
 import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment } from "../../types/types";
 import { toast, Toaster } from "react-hot-toast";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { useGLTF, Stage, Grid, OrbitControls, Environment, useFBX } from "@react-three/drei";
 import { ThreeDancer } from "./ThreeDancer";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 export const ThreeCanvas: React.FC<{
    children: React.ReactNode;

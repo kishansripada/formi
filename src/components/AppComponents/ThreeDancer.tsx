@@ -61,7 +61,11 @@ export function ThreeDancer({
                <group rotation={[Math.PI / 2, 0, 0]}>
                   <group position={[0, -1.35, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={100}>
                      <group position={[0, 0, -0.03]} scale={0.01}>
-                        <mesh castShadow receiveShadow geometry={nodes.defaultMaterial.geometry} material={materials.Wood} />
+                        <meshBasicMaterial color="rgb(10, 20, 30)" />
+
+                        <mesh castShadow receiveShadow geometry={nodes.defaultMaterial.geometry}>
+                           <meshStandardMaterial attach="material" color={dancer?.color || "#db2777"} transparent />
+                        </mesh>
                      </group>
                   </group>
                </group>
@@ -90,59 +94,16 @@ const animate = (
    let from;
    let to;
 
-   //    console.log(percentThroughTransition);
-
    if (percentThroughTransition != undefined) {
       if (inThisFormation) {
          if (inPreviousFormation) {
-            // transition between current and next
-            // requires animation don't return yet
             from = inPreviousFormation.position;
             to = inThisFormation.position;
          } else {
-            // transition between current and exit strategy specified in current
-            // requires animation don't return yet
             from = inThisFormation.position;
             to = inThisFormation.position;
-            // to = (() => {
-            //    // if (inThisFormation.exitStrategy === "closest") {
-            //    if (from.x >= 0) return { x: stageDimensions.width / 2 + 1, y: from.y };
-            //    if (from.x < 0) return { x: -(stageDimensions.width / 2 + 1), y: from.y };
-            //    // }
-            //    // if (inThisFormation.exitStrategy === "right") {
-            //    //    return { x: stageDimensions.width / 2 + 1, y: from.y };
-            //    // }
-            //    // if (inThisFormation.exitStrategy === "left") {
-            //    //    return { x: -(stageDimensions.width / 2 + 1), y: from.y };
-            //    // }
-            // })();
          }
       }
-
-      // else {
-      //    if (inNextFormation) {
-      //       // transition between enter strategy specified in next and position in next
-      //       // requires animation don't return yet
-      //       to = inNextFormation.position;
-
-      //       from = (() => {
-      //          return { x: stageDimensions.width / 2 + 1, y: to.y };
-      //          // if (inNextFormation.enterStrategy === "closest") {
-      //          //    if (to.x >= 0) return { x: stageDimensions.width / 2 + 1, y: to.y };
-      //          //    if (to.x < 0) return { x: -(stageDimensions.width / 2 + 1), y: to.y };
-      //          // }
-      //          // if (inNextFormation.enterStrategy === "right") {
-      //          //    return { x: stageDimensions.width / 2 + 1, y: to.y };
-      //          // }
-      //          // if (inNextFormation.enterStrategy === "left") {
-      //          //    return { x: -(stageDimensions.width / 2 + 1), y: to.y };
-      //          // }
-      //       })();
-      //    } else {
-      //       // return off stage
-      //       return null;
-      //    }
-      // }
    } else {
       if (inThisFormation) {
          // return position from this formation
