@@ -545,7 +545,7 @@ export const ThreeCanvas: React.FC<{
             <Stage
                position={[10, 0, 0]}
                intensity={0.5}
-               environment="studio"
+               environment="dawn"
                //    shadows={{ type: "accumulative", bias: -0.001 }}
                adjustCamera={false}
             ></Stage>

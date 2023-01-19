@@ -95,7 +95,8 @@ export const Canvas: React.FC<{
    }, [container?.current?.clientHeight, stage?.current?.clientHeight, stageDimensions]);
 
    const downHandler = (e: any) => {
-      if (e?.path?.[0]?.tagName === "INPUT" || e?.path?.[0]?.tagName === "TEXTAREA" || e.target.id === "input") return;
+      if (e?.composedPath()?.[0]?.tagName === "INPUT" || e?.composedPath()?.[0]?.tagName === "TEXTAREA" || e.target.id === "input") return;
+
       // console.log(e.key);
       if (e.key === " ") {
          e.preventDefault();
