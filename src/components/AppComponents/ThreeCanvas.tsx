@@ -561,6 +561,10 @@ export const ThreeCanvas: React.FC<{
                sectionColor={[0.5, 0.5, 10]}
                //    fadeDistance={30}
             />
+            {/* <mesh>
+               <boxGeometry args={[20, 0.03, 20]} />
+               <meshStandardMaterial color={"#e5e5e5"} />
+            </mesh> */}
             {selectedFormation !== null
                ? formations[selectedFormation].positions.map((dancerPosition: dancerPosition) => {
                     return (
@@ -577,8 +581,38 @@ export const ThreeCanvas: React.FC<{
                  })
                : null}
 
+            {/* {selectedFormation !== null && selectedFormation !== 0 && !isPlaying
+               ? formations[selectedFormation - 1].positions.map((dancerPosition: dancerPosition) => {
+                    return (
+                       <ThreeDancer
+                          opacity={0.3}
+                          isPlaying={isPlaying}
+                          currentFormationIndex={currentFormationIndex}
+                          percentThroughTransition={percentThroughTransition}
+                          dancers={dancers}
+                          position={position}
+                          dancerPosition={dancerPosition}
+                          formations={formations}
+                       ></ThreeDancer>
+                    );
+                 })
+               : null} */}
+
+            {/* {selectedFormation !== null && selectedFormation !== 0 && !isPlaying
+               ? formations[selectedFormation - 1].positions.map((dancerPosition: dancerPosition) => {
+                    let dancer = dancers?.find((dancer) => dancer.id === dancerPosition.id);
+
+                    return (
+                       <mesh scale={[3, 3, 3]} position={[dancerPosition.position.x / 2, 0, -dancerPosition.position.y / 2]} rotation-x={Math.PI}>
+                          <cylinderBufferGeometry attach="geometry" args={[0.07, 0.07, 0.005]} />
+                          <meshStandardMaterial attach="material" color={dancer?.color || "#db2777"} transparent />
+                       </mesh>
+                    );
+                 })
+               : null} */}
+
             <OrbitControls autoRotate autoRotateSpeed={0} enableZoom={true} makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
-            <Environment background preset="city" blur={0.8} />
+            {/* <Environment background preset="city" blur={0.8} /> */}
          </Canvas>
       </div>
    );

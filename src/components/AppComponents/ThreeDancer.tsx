@@ -11,6 +11,7 @@ export function ThreeDancer({
    percentThroughTransition,
    isPlaying,
    formations,
+   opacity,
 }: {
    dancerPosition: dancerPosition;
    dancers: dancer[];
@@ -19,6 +20,7 @@ export function ThreeDancer({
    percentThroughTransition: number;
    isPlaying: boolean;
    formations: formation[];
+   opacity: number;
 }) {
    const { nodes, materials } = useGLTF("/dancer.gltf");
    let dancer = dancers?.find((dancer) => dancer.id === dancerPosition.id);
@@ -37,7 +39,7 @@ export function ThreeDancer({
          <Text
             scale={[0.2, 0.2, 0.2]}
             position={[isPlaying ? x / 2 : dancerPosition.position.x / 2, 2, isPlaying ? -y / 2 : -dancerPosition.position.y / 2]}
-            color="white"
+            color="black"
             anchorX="center"
             anchorY="middle"
          >
@@ -61,10 +63,10 @@ export function ThreeDancer({
                <group rotation={[Math.PI / 2, 0, 0]}>
                   <group position={[0, -1.35, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={100}>
                      <group position={[0, 0, -0.03]} scale={0.01}>
-                        <meshBasicMaterial color="rgb(10, 20, 30)" />
+                        <meshBasicMaterial opacity={0.1} color="rgb(10, 20, 30)" />
 
-                        <mesh castShadow receiveShadow geometry={nodes.defaultMaterial.geometry}>
-                           <meshStandardMaterial attach="material" color={dancer?.color || "#db2777"} transparent />
+                        <mesh castShadow receiveShadow geometry={nodes.defaultMaterial.geometry} material={materials.wood}>
+                           <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
                         </mesh>
                      </group>
                   </group>
