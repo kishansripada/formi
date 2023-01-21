@@ -1,7 +1,8 @@
 import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { dancerPosition, dancer, formation } from "../../types/types";
-import { OrbitControls, Stats, Text } from "@react-three/drei";
+import { Text } from "@react-three/drei";
+import { useSpring, animated } from "@react-spring/three";
 
 export function ThreeDancer({
    dancerPosition,
@@ -25,26 +26,30 @@ export function ThreeDancer({
    const { nodes, materials } = useGLTF("/dancer.gltf");
    let dancer = dancers?.find((dancer) => dancer.id === dancerPosition.id);
 
-   let x;
-   let y;
+   let maxHeight = Math.max(...dancers.map((dancer) => dancer?.height || 0));
+   let dancerPos;
+   let textPos;
    if (isPlaying && position !== null && currentFormationIndex !== null) {
       let myPosition = animate(formations, dancer?.id, currentFormationIndex, percentThroughTransition);
       // if the animation function returns null, the dancer is not on the stage
       if (myPosition === null) return <></>;
-      x = myPosition.x;
-      y = myPosition.y;
+      let x = myPosition.x / 2;
+      let y = -myPosition.y / 2;
+      dancerPos = { position: [x, 1.3, y] };
+      textPos = { position: [x, 2, y] };
+   } else {
+      dancerPos = useSpring({ position: [dancerPosition.position.x / 2, 1.3, -dancerPosition.position.y / 2] });
+      textPos = useSpring({ position: [dancerPosition.position.x / 2, 2, -dancerPosition.position.y / 2] });
    }
+
    return (
       <>
-         <Text
-            scale={[0.2, 0.2, 0.2]}
-            position={[isPlaying ? x / 2 : dancerPosition.position.x / 2, 2, isPlaying ? -y / 2 : -dancerPosition.position.y / 2]}
-            color="black"
-            anchorX="center"
-            anchorY="middle"
-         >
-            {dancer?.name}
-         </Text>
+         <animated.mesh position={textPos.position}>
+            <Text scale={[0.2, 0.2, 0.2]} color="black" anchorX="center" anchorY="middle">
+               {dancer?.name}
+            </Text>
+         </animated.mesh>
+
          {/* <group
             scale={[0.01, 0.01, 0.01]}
             position={[isPlaying ? x / 2 : dancerPosition.position.x / 2, 0, isPlaying ? -y / 2 : -dancerPosition.position.y / 2]}
@@ -53,26 +58,22 @@ export function ThreeDancer({
             <mesh geometry={nodes.Beta_Surface.geometry} material={materials.Beta_HighLimbsGeoSG3} />
             <mesh geometry={nodes.Beta_Joints.geometry} material={materials.Beta_Joints_MAT1} />
          </group> */}
-
-         <group
-            scale={[1, 1, 1]}
-            position={[isPlaying ? x / 2 : dancerPosition.position.x / 2, 1.3, isPlaying ? -y / 2 : -dancerPosition.position.y / 2]}
-            dispose={null}
-         >
+         {/* (dancer.height || 182.88) / maxHeight */}
+         <animated.mesh scale={[1, 1, 1]} position={dancerPos.position} dispose={null}>
             <group rotation={[-Math.PI / 2, 0, 0]} scale={0.07}>
                <group rotation={[Math.PI / 2, 0, 0]}>
                   <group position={[0, -1.35, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={100}>
                      <group position={[0, 0, -0.03]} scale={0.01}>
                         <meshBasicMaterial opacity={0.1} color="rgb(10, 20, 30)" />
 
-                        <mesh castShadow receiveShadow geometry={nodes.defaultMaterial.geometry} material={materials.wood}>
+                        <mesh geometry={nodes.defaultMaterial.geometry} material={materials.wood}>
                            <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
                         </mesh>
                      </group>
                   </group>
                </group>
             </group>
-         </group>
+         </animated.mesh>
       </>
    );
 }

@@ -1,6 +1,7 @@
 import toast, { Toaster } from "react-hot-toast";
 import { dancer, dancerPosition, formation } from "../../types/types";
 import { CirclePicker } from "react-color";
+import { useState } from "react";
 
 export const EditDancer: React.FC<{
    setEditingDancer: Function;
@@ -9,6 +10,9 @@ export const EditDancer: React.FC<{
    setDancers: Function;
    removeDancer: Function;
 }> = ({ setEditingDancer, editingDancer, dancers, setDancers, removeDancer }) => {
+   let height = convertToFeetAndInches(dancers.find((dancer) => dancer.id === editingDancer)?.height || null);
+   const [heightFeet, setHeightFeet] = useState<number>(height.feet);
+   const [heightIn, setHeightIn] = useState<number>(height.inches);
    return (
       <div
          id="outside"
@@ -44,7 +48,59 @@ export const EditDancer: React.FC<{
                      <p className="text-xs text-gray-500  mt-2">for profile picture</p>
                   </div>
 
-                  <p className="mt-10 text-gray-500 text-medium mb-3">color</p>
+                  {/* <div className="mt-10 text-gray-700 text-medium mb-3 flex flex-col items-center  w-full">
+                     <div className="flex flex-row justify-between w-full">
+                        <p>Height</p>
+                        <select className="" name="" id="">
+                           <option value="cm">cm</option>
+                           <option value="in">in</option>
+                        </select>
+                     </div>
+                     <div className="flex flex-row items-center justify-around w-full mt-5">
+                        <div className="flex flex-row items-center">
+                           <input
+                              value={heightFeet}
+                              onChange={(e) => {
+                                 setHeightFeet(parseInt(e.target.value));
+                                 if (!heightIn) return;
+                                 setDancers((dancers: dancer[]) => {
+                                    return dancers.map((dancer) => {
+                                       if (dancer.id === editingDancer) {
+                                          return { ...dancer, height: convertToCentimeters(parseInt(e.target.value), heightIn) };
+                                       }
+                                       return dancer;
+                                    });
+                                 });
+                              }}
+                              type="number"
+                              className="w-[45px] p-1  border border-gray-200 rounded-md"
+                           />
+                           <p className="ml-2">ft</p>
+                        </div>
+                        <div className="flex flex-row items-center">
+                           <input
+                              value={heightIn}
+                              onChange={(e) => {
+                                 setHeightIn(parseInt(e.target.value));
+                                 if (!heightFeet) return;
+                                 setDancers((dancers: dancer[]) => {
+                                    return dancers.map((dancer) => {
+                                       if (dancer.id === editingDancer) {
+                                          return { ...dancer, height: convertToCentimeters(heightFeet, parseInt(e.target.value)) };
+                                       }
+                                       return dancer;
+                                    });
+                                 });
+                              }}
+                              type="number"
+                              className="w-[45px] p-1  border border-gray-200 rounded-md"
+                           />
+                           <p className="ml-2">in</p>
+                        </div>
+                     </div>
+                  </div> */}
+
+                  <p className="mt-10 text-gray-700 text-medium mb-3">Color</p>
                   <div className=" grid place-items-center">
                      <CirclePicker
                         color={dancers.find((dancer) => dancer.id === editingDancer)?.color}
@@ -87,3 +143,18 @@ export const EditDancer: React.FC<{
       </div>
    );
 };
+
+function convertToCentimeters(feet: number, inches: number): number {
+   const inchesToCentimeters = inches * 2.54;
+   const feetToCentimeters = feet * 12 * 2.54;
+   const totalCentimeters = inchesToCentimeters + feetToCentimeters;
+   return Math.round(totalCentimeters * 10) / 10;
+}
+
+function convertToFeetAndInches(centimeters: number): { feet: number; inches: number } {
+   if (centimeters === null) return { feet: "", inches: "" };
+   const inchesToCentimeters = 2.54;
+   const inches = Math.round(centimeters / inchesToCentimeters);
+   const feet = Math.floor(inches / 12);
+   return { feet, inches: inches % 12 };
+}

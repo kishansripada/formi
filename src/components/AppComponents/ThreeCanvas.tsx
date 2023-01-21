@@ -540,7 +540,7 @@ export const ThreeCanvas: React.FC<{
 
    return (
       <div className="flex flex-row relative justify-center  h-full w-full overflow-hidden  overscroll-contain ">
-         <p className="absolute bottom-1 left-2 z-50 text-white text-xs">The 3D preview is currently limited to view only.</p>
+         {/* <p className="absolute bottom-1 left-2 z-50 text-white text-xs">The 3D preview is currently limited to view only.</p> */}
          <Canvas gl={{ logarithmicDepthBuffer: true }} shadows camera={{ position: [-15, 0, 10], fov: 25 }}>
             {/* <fog attach="fog" args={["black", 15, 21.5]} /> */}
             <Stage
