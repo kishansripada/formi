@@ -31,15 +31,6 @@ export const CurrentFormation: React.FC<{
    isCommenting,
    setIsCommenting,
 }) => {
-   useEffect(() => {
-      if (selectedDancers.length === 1) {
-         const element = document.getElementById(`scroll-${selectedDancers[0]}`);
-
-         if (!element) return;
-         element.scrollIntoView({ behavior: "smooth" });
-      }
-   }, [selectedDancers]);
-
    const deleteComment = (id: string) => {
       setFormations((formations: formation[]) => {
          return formations.map((formation, i) => {

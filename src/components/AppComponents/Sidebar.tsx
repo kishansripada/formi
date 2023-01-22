@@ -153,6 +153,25 @@ export const Sidebar: React.FC<{
                <p className="text-xs text-gray-500">Audio</p>
             </button>
 
+            <button onClick={() => setMenuOpen("presets")} className="">
+               <svg
+                  className={`w-8 h-8 transition duration-300  ml-auto mr-auto ${menuOpen === "presets" ? "stroke-[#db2777]" : "stroke-[#C5C7D0]"}`}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+               >
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                  />
+               </svg>
+
+               <p className="text-xs text-gray-500">Presets</p>
+            </button>
+
             <button onClick={() => setMenuOpen("stageSettings")} className="mt-auto mb-2">
                <svg
                   className={`w-8 h-8 transition duration-300  ml-auto mr-auto ${

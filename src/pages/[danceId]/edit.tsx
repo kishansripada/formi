@@ -24,6 +24,7 @@ import { Share } from "../../components/AppComponents/Share";
 import { Sidebar } from "../../components/AppComponents/Sidebar";
 
 import { Settings } from "../../components/AppComponents/SidebarComponents/Settings";
+import { Presets } from "../../components/AppComponents/SidebarComponents/Presets";
 import { ChooseAudioSource } from "../../components/AppComponents/SidebarComponents/ChooseAudioSource";
 import { Roster } from "../../components/AppComponents/SidebarComponents/Roster";
 import { CurrentFormation } from "../../components/AppComponents/SidebarComponents/CurrentFormation";
@@ -519,6 +520,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                         ></Roster>
                      ) : menuOpen === "audio" ? (
                         <ChooseAudioSource
+                           player={player}
+                           setIsPlaying={setIsPlaying}
                            soundCloudTrackId={soundCloudTrackId}
                            setSoundCloudTrackId={setSoundCloudTrackId}
                            audioFiles={audioFiles}
@@ -551,6 +554,22 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            setStageDimensions={setStageDimensions}
                            setFormations={setFormations}
                         ></StageSettings>
+                     ) : menuOpen === "presets" ? (
+                        <Presets
+                           isCommenting={isCommenting}
+                           setIsCommenting={setIsCommenting}
+                           addToStack={addToStack}
+                           pushChange={pushChange}
+                           pricingTier={pricingTier}
+                           stageDimensions={stageDimensions}
+                           selectedDancers={selectedDancers}
+                           setSelectedDancers={setSelectedDancers}
+                           setSelectedFormation={setSelectedFormation}
+                           dancers={dancers}
+                           setFormations={setFormations}
+                           formations={formations}
+                           selectedFormation={selectedFormation}
+                        ></Presets>
                      ) : (
                         <CurrentFormation
                            isCommenting={isCommenting}

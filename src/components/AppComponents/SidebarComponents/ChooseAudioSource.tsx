@@ -11,7 +11,9 @@ export const ChooseAudioSource: React.FC<{
    setSoundCloudTrackId: Function;
    setAudiofiles: Function;
    sampleAudioFiles: any;
-}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, setAudiofiles, sampleAudioFiles }) => {
+   player: any;
+   setIsPlaying: Function;
+}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, setAudiofiles, sampleAudioFiles, setIsPlaying, player }) => {
    console.log(audioFiles);
    const [file, setFile] = useState<File>();
    const router = useRouter();
@@ -145,11 +147,13 @@ export const ChooseAudioSource: React.FC<{
                      [...audioFiles.data].reverse().map((audiofile) => {
                         return (
                            <div
-                              onClick={() =>
+                              onClick={() => {
+                                 player ? player.playPause() : null;
+                                 setIsPlaying((isPlaying: boolean) => !isPlaying);
                                  setSoundCloudTrackId(
                                     `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/audiofiles/${session?.user.id}/${audiofile.name}`
-                                 )
-                              }
+                                 );
+                              }}
                               className={`p-3 ${
                                  audiofile.name === soundCloudTrackId?.split("/").slice(-1)[0] ? "opacity-50 pointer-events-none" : ""
                               }   rounded-md my-1 cursor-pointer w-full min-h-[48px] flex flex-row items-center justify-center whitespace-nowrap border-gray-300 border `}
