@@ -516,6 +516,9 @@ export const Canvas: React.FC<{
    }, [songDuration]);
 
    const handleScroll = (e) => {
+      let MAX_PIXELS_PER_SECOND = 45;
+      let minPixelsPerSecond = ((window.screen.width - 10) * 1000) / songDuration;
+
       if (
          e
             .composedPath()
@@ -524,12 +527,14 @@ export const Canvas: React.FC<{
          e.ctrlKey === true
       ) {
          e.preventDefault();
-         setPixelsPerSecond((pixelsPerSecond) => {
-            if ((songDuration * (pixelsPerSecond - e.deltaY / 25)) / 1000 < window.screen.width - 20) return pixelsPerSecond;
-            if (pixelsPerSecond - e.deltaY / 25 > 38) {
+         setPixelsPerSecond((pixelsPerSecond: number) => {
+            let newPixelsPerSecond = pixelsPerSecond - e.deltaY / 25;
+
+            if (newPixelsPerSecond < minPixelsPerSecond) return pixelsPerSecond;
+            if (newPixelsPerSecond > MAX_PIXELS_PER_SECOND) {
                return pixelsPerSecond;
             }
-            return pixelsPerSecond - e.deltaY / 25;
+            return newPixelsPerSecond;
          });
       }
    };

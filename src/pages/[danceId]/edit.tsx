@@ -118,7 +118,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [isCommenting, setIsCommenting] = useState<boolean>(false);
    const [position, setPosition] = useState<number | null>(null);
-   const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(15);
+   const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(25);
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
    const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
    const [editingDancer, setEditingDancer] = useState<string | null>(null);
@@ -173,7 +173,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    useEffect(() => {
       if (!songDuration) return;
 
-      setPixelsPerSecond(15);
+      setPixelsPerSecond(25);
       if (pixelsPerSecond * (songDuration / 1000) < window.screen.width - 20) {
          setPixelsPerSecond((window.screen.width - 20) / (songDuration / 1000));
       }
@@ -763,6 +763,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                         currentFormationIndex={currentFormationIndex}
                         percentThroughTransition={percentThroughTransition}
                         isPlaying={isPlaying}
+                        soundCloudTrackId={soundCloudTrackId}
                      ></ThreeCanvas>
                   )}
                </div>

@@ -53,7 +53,7 @@ export const Formation: React.FC<{
       <>
          <div
             ref={setNodeRef}
-            className={`rounded-md  mx-[2px] box-border cursor-pointer bg-white  border-4 border-t-[12px] relative group `}
+            className={`rounded-md  mx-[2px] box-border cursor-pointer bg-white  border-4 border-t-[12px] relative group  `}
             style={{
                zIndex: activeId === formation.id ? 2 : 0,
                ...style,

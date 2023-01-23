@@ -25,7 +25,6 @@ export function ThreeDancer({
 }) {
    const { nodes, materials } = useGLTF("/dancer.gltf");
    let dancer = dancers?.find((dancer) => dancer.id === dancerPosition.id);
-
    let maxHeight = Math.max(...dancers.map((dancer) => dancer?.height || 0));
    let dancerPos;
    let textPos;

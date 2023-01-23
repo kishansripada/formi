@@ -41,6 +41,7 @@ export const ThreeCanvas: React.FC<{
    currentFormationIndex: number | null;
    percentThroughTransition: number;
    isPlaying: boolean;
+   soundCloudTrackId: string | null;
 }> = ({
    player,
    children,
@@ -74,6 +75,7 @@ export const ThreeCanvas: React.FC<{
    currentFormationIndex,
    percentThroughTransition,
    isPlaying,
+   soundCloudTrackId,
 }) => {
    const [shiftHeld, setShiftHeld] = useState(false);
    const [draggingCommentId, setDraggingCommentId] = useState<string | null>();
@@ -540,48 +542,56 @@ export const ThreeCanvas: React.FC<{
 
    return (
       <div className="flex flex-row relative justify-center  h-full w-full overflow-hidden  overscroll-contain ">
+         <video className="h-48 rounded-xl absolute z-50 left-4 top-4" src={soundCloudTrackId}></video>
          {/* <p className="absolute bottom-1 left-2 z-50 text-white text-xs">The 3D preview is currently limited to view only.</p> */}
-         <Canvas gl={{ logarithmicDepthBuffer: true }} camera={{ position: [-15, 0, 10], fov: 40 }}>
-            {/* <fog attach="fog" args={["black", 15, 21.5]} /> */}
-            <Stage
-               position={[10, 0, 0]}
-               //    intensity={0.5}
-               environment="apartment"
-               //    shadows={{ type: "accumulative", bias: -0.001 }}
-               adjustCamera={false}
-            ></Stage>
-            <Grid
-               renderOrder={-1}
-               position={[0, 0, 0]}
-               args={[stageDimensions.width / 2, stageDimensions.height / 2]}
-               cellSize={0.5}
-               cellThickness={0.5}
-               sectionSize={2.5}
-               sectionThickness={1.5}
-               sectionColor={[0.5, 0.5, 10]}
-               //    fadeDistance={30}
-            />
-            {/* <mesh>
+         <Suspense
+            fallback={
+               <div className="flex justify-center items-center">
+                  <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status"></div>
+               </div>
+            }
+         >
+            <Canvas gl={{ logarithmicDepthBuffer: true }} camera={{ position: [-15, 0, 10], fov: 40 }}>
+               {/* <fog attach="fog" args={["black", 15, 21.5]} /> */}
+               <Stage
+                  position={[10, 0, 0]}
+                  //    intensity={0.5}
+                  environment="apartment"
+                  //    shadows={{ type: "accumulative", bias: -0.001 }}
+                  adjustCamera={false}
+               ></Stage>
+               <Grid
+                  renderOrder={-1}
+                  position={[0, 0, 0]}
+                  args={[stageDimensions.width / 2, stageDimensions.height / 2]}
+                  cellSize={0.5}
+                  cellThickness={0.5}
+                  sectionSize={2.5}
+                  sectionThickness={1.5}
+                  sectionColor={[0.5, 0.5, 10]}
+                  //    fadeDistance={30}
+               />
+               {/* <mesh>
                <boxGeometry args={[20, 0.03, 20]} />
                <meshStandardMaterial color={"#e5e5e5"} />
             </mesh> */}
-            {selectedFormation !== null
-               ? formations[selectedFormation].positions.map((dancerPosition: dancerPosition) => {
-                    return (
-                       <ThreeDancer
-                          isPlaying={isPlaying}
-                          currentFormationIndex={currentFormationIndex}
-                          percentThroughTransition={percentThroughTransition}
-                          dancers={dancers}
-                          position={position}
-                          dancerPosition={dancerPosition}
-                          formations={formations}
-                       ></ThreeDancer>
-                    );
-                 })
-               : null}
+               {selectedFormation !== null
+                  ? formations[selectedFormation].positions.map((dancerPosition: dancerPosition) => {
+                       return (
+                          <ThreeDancer
+                             isPlaying={isPlaying}
+                             currentFormationIndex={currentFormationIndex}
+                             percentThroughTransition={percentThroughTransition}
+                             dancers={dancers}
+                             position={position}
+                             dancerPosition={dancerPosition}
+                             formations={formations}
+                          ></ThreeDancer>
+                       );
+                    })
+                  : null}
 
-            {/* {selectedFormation !== null && selectedFormation !== 0 && !isPlaying
+               {/* {selectedFormation !== null && selectedFormation !== 0 && !isPlaying
                ? formations[selectedFormation - 1].positions.map((dancerPosition: dancerPosition) => {
                     return (
                        <ThreeDancer
@@ -598,7 +608,7 @@ export const ThreeCanvas: React.FC<{
                  })
                : null} */}
 
-            {/* {selectedFormation !== null && selectedFormation !== 0 && !isPlaying
+               {/* {selectedFormation !== null && selectedFormation !== 0 && !isPlaying
                ? formations[selectedFormation - 1].positions.map((dancerPosition: dancerPosition) => {
                     let dancer = dancers?.find((dancer) => dancer.id === dancerPosition.id);
 
@@ -611,9 +621,10 @@ export const ThreeCanvas: React.FC<{
                  })
                : null} */}
 
-            <OrbitControls autoRotate autoRotateSpeed={0} enableZoom={true} makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
-            {/* <Environment background preset="city" blur={0.8} /> */}
-         </Canvas>
+               <OrbitControls autoRotate autoRotateSpeed={0} enableZoom={true} makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
+               {/* <Environment background preset="city" blur={0.8} /> */}
+            </Canvas>
+         </Suspense>
       </div>
    );
 };
