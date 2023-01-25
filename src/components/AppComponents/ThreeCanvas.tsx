@@ -541,8 +541,26 @@ export const ThreeCanvas: React.FC<{
    };
 
    return (
-      <div className="flex flex-row relative justify-center  h-full w-full overflow-hidden  overscroll-contain ">
-         <video className="h-48 rounded-xl absolute z-50 left-4 top-4" src={soundCloudTrackId}></video>
+      <div className="flex flex-row relative justify-center  h-full w-full overflow-hidden  overscroll-contain  ">
+         {/* <video className="h-48 rounded-xl absolute z-50 left-4 top-4" src={soundCloudTrackId}></video> */}
+         <div
+            className="pointer-events-none absolute  h-[1000px] w-[1000px] "
+            style={{
+               backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #FFCB05 0%, rgba(239, 255, 250, 0) 100%)",
+               top: 0,
+               right: -300,
+               opacity: 0.3,
+            }}
+         ></div>
+         <div
+            className="pointer-events-none absolute  h-[1000px] w-[1000px] "
+            style={{
+               backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #00274C 0%, rgba(239, 255, 250, 0) 100%)",
+               top: 0,
+               left: -300,
+               opacity: 0.3,
+            }}
+         ></div>
          {/* <p className="absolute bottom-1 left-2 z-50 text-white text-xs">The 3D preview is currently limited to view only.</p> */}
          <Suspense
             fallback={
@@ -551,7 +569,7 @@ export const ThreeCanvas: React.FC<{
                </div>
             }
          >
-            <Canvas gl={{ logarithmicDepthBuffer: true }} camera={{ position: [-15, 0, 10], fov: 40 }}>
+            <Canvas gl={{ logarithmicDepthBuffer: true }} camera={{ position: [10, 10, 10], fov: 40 }}>
                {/* <fog attach="fog" args={["black", 15, 21.5]} /> */}
                <Stage
                   position={[10, 0, 0]}

@@ -7,6 +7,7 @@ import { debounce } from "lodash";
 import toast, { Toaster } from "react-hot-toast";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import Script from "next/script";
 
 import { comment, dancer, dancerPosition, formation, PIXELS_PER_SQUARE } from "../../types/types";
 import { AudioControls } from "../../components/AppComponents/AudioControls";
@@ -35,6 +36,14 @@ var jsondiffpatch = require("jsondiffpatch").create({
       return obj.id;
    },
 });
+
+// import jsondiffpatch from "jsondiffpatch";
+
+// let jsondiffpatch = patcher.create({
+//    objectHash: function (obj) {
+//       return obj.id;
+//    },
+// });
 
 // use effect, but not on initial render
 const useDidMountEffect = (func, deps) => {
@@ -76,9 +85,6 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    //    };
    // });
 
-   // console.log({ forms });
-   // console.log({ newForms });
-
    let pricingTier = "premium";
    const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
 
@@ -102,6 +108,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [formations, setFormations] = useState<formation[]>(initialData.formations);
    const [deltas, setDeltas] = useState([]);
    const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
+
+   const [upgradeIsOpen, setUpgradeIsOpen] = useState<boolean>(false);
 
    const [danceName, setDanceName] = useState<string>(initialData.name);
    const [shareSettings, setShareSettings] = useState(initialData.sharesettings);
@@ -350,6 +358,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
 
          console.log({ data });
+
          console.log({ error });
          setSaved(true);
       }, 2000),
@@ -438,12 +447,11 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       }
    }, [danceName]);
    //////////////////////////
-
    return (
       <>
          <Toaster></Toaster>
          <Head>
-            <title>FORMI: Online performance planning software.</title>
+            <title>FORMI: {initialData.name}</title>
 
             <meta
                name="description"
@@ -475,6 +483,43 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          ) : (
             <></>
          )}
+
+         {/* {upgradeIsOpen ? (
+            <div
+               className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
+               id="outside"
+               onClick={(e) => {
+                  if (e.target.id === "outside") {
+                     setUpgradeIsOpen(false);
+                  }
+               }}
+            >
+               <div className="flex  w-3/4 scale-[0.95]  flex-col rounded-xl font-proxima  bg-white overflow-hidden">
+                  <div className="flex flex-col items-center">
+                     <div className="w-[250px] pointer-events-none select-none mt-16">
+                        <h1 className="text-6xl font-bold z-10 relative">FORMI</h1>
+                        <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[100%]"></div>
+                     </div>
+                     <p className="tracking-widest text-gray-500 font-semibold">UPGRADE PLAN</p>
+                     <p className="text-3xl mt-8 font-bold">The Most Intuitive Stage Planning Software</p>
+                     <p className="text-2xl mt-2 font-thin">
+                        Join thousands of dancers and choreographers that use FORMI to perfect their performances.
+                     </p>
+                  </div>
+
+                  <Script strategy="lazyOnload" src="https://js.stripe.com/v3/pricing-table.js" />
+
+                  <div className="flex flex-col justify-center mt-12 mb-12 ">
+                     <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+                     <stripe-pricing-table
+                        customer-email={session?.user.email}
+                        pricing-table-id="prctbl_1MTeLNHvC3w6e8fcVDDjDqQE"
+                        publishable-key="pk_live_51Laj5tHvC3w6e8fcTNgLYosshdlXBG9tELw1GacJuZQwzb7DwGSCRv8jx1pbJtf6jOR16cSb5it0Jk7Js2TSd03y00uKhclRcz"
+                     ></stripe-pricing-table>
+                  </div>
+               </div>
+            </div>
+         ) : null} */}
 
          {shareIsOpen ? (
             <Share
@@ -569,6 +614,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            setFormations={setFormations}
                            formations={formations}
                            selectedFormation={selectedFormation}
+                           setUpgradeIsOpen={setUpgradeIsOpen}
                         ></Presets>
                      ) : (
                         <CurrentFormation
@@ -585,6 +631,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            setFormations={setFormations}
                            formations={formations}
                            selectedFormation={selectedFormation}
+                           setUpgradeIsOpen={setUpgradeIsOpen}
                         />
                      )}
                   </>
@@ -592,6 +639,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
 
                <div className={`flex flex-col min-w-0 flex-grow items-center `}>
                   <Header
+                     pricingTier={pricingTier}
                      onlineUsers={onlineUsers}
                      setFormations={setFormations}
                      undo={undo}
@@ -602,6 +650,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                      viewOnly={viewOnly}
                      isPreviewingThree={isPreviewingThree}
                      setIsPreviewingThree={setIsPreviewingThree}
+                     setUpgradeIsOpen={setUpgradeIsOpen}
                   />
 
                   {!isPreviewingThree ? (
@@ -784,6 +833,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   formations={formations}
                   position={position}
                   setFormations={setFormations}
+                  setPixelsPerSecond={setPixelsPerSecond}
+                  pixelsPerSecond={pixelsPerSecond}
                ></AudioControls>
 
                <div className="overflow-x-scroll  bg-[#fafafa] overscroll-contain pb-3 ">

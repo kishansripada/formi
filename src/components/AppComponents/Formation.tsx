@@ -106,8 +106,8 @@ export const Formation: React.FC<{
                className="h-full absolute right-[-4px] lg:pointer-events-auto pointer-events-none w-[4px] cursor-col-resize	z-[99999]"
             ></div>
 
-            <div className={`bg-white h-[17px]  px-2 overflow-clip overflow-hidden border-b border-gray-300`}>
-               <p className={`text-[12px] pointer-events-none select-none text-black font-medium`}>{formation.name}</p>
+            <div className={`bg-white h-[17px]  px-2  overflow-hidden text-ellipsis whitespace-nowrap  border-b border-gray-300`}>
+               <p className={`text-[12px] pointer-events-none select-none text-black font-medium text-ellipsis`}>{formation.name}</p>
             </div>
 
             <div className={` flex flex-row  box-border`}>

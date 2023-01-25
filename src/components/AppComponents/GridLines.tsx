@@ -4,7 +4,7 @@ export const GridLines: React.FC<{ stageDimensions: { width: number; height: num
    return (
       <>
          <div
-            className="flex flex-row h-full justify-between rounded-xl "
+            className="flex flex-row h-full justify-between rounded-xl  "
             style={{
                width: PIXELS_PER_SQUARE * stageDimensions.width,
             }}
@@ -22,7 +22,7 @@ export const GridLines: React.FC<{ stageDimensions: { width: number; height: num
             ))}
          </div>
          <div
-            className="flex flex-col justify-between relative rounded-xl"
+            className="flex flex-col justify-between relative rounded-xl "
             style={{
                height: PIXELS_PER_SQUARE * stageDimensions.height,
                top: -PIXELS_PER_SQUARE * stageDimensions.height,

@@ -19,7 +19,22 @@ export const Header: React.FC<{
    onlineUsers: any;
    isPreviewingThree: boolean;
    setIsPreviewingThree: Function;
-}> = ({ saved, danceName, setDanceName, setShareIsOpen, viewOnly, setFormations, onlineUsers, undo, isPreviewingThree, setIsPreviewingThree }) => {
+   pricingTier: string;
+   setUpgradeIsOpen: Function;
+}> = ({
+   saved,
+   danceName,
+   setDanceName,
+   setShareIsOpen,
+   viewOnly,
+   setFormations,
+   onlineUsers,
+   undo,
+   isPreviewingThree,
+   setIsPreviewingThree,
+   pricingTier,
+   setUpgradeIsOpen,
+}) => {
    const router = useRouter();
    let session = useSession();
    const supabase = useSupabaseClient();
@@ -154,32 +169,50 @@ export const Header: React.FC<{
                   </div>
                </button>
                <button
-                  onClick={() => setIsPreviewingThree((isPreviewingThree: boolean) => true)}
+                  onClick={() =>
+                     setIsPreviewingThree((isPreviewingThree: boolean) => {
+                        if (pricingTier === "basic") {
+                           setUpgradeIsOpen(true);
+                           return isPreviewingThree;
+                        }
+                        return true;
+                     })
+                  }
                   className={`border group hidden lg:block border-black text-sm rounded-r-md px-3 py-3 ${
                      isPreviewingThree ? "bg-slate-800 text-white" : ""
                   } `}
                >
                   <div className="flex flex-row items-center  ">
-                     <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-5 h-5 group-hover:animate-spin group-hover:scale-110 transition"
-                     >
-                        <path
-                           strokeLinecap="round"
-                           strokeLinejoin="round"
-                           d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
-                        />
-                     </svg>
-                     <p className="ml-2">3D (beta)</p>
+                     {pricingTier === "basic" ? (
+                        "⚡️"
+                     ) : (
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
+                           stroke="currentColor"
+                           className="w-5 h-5 group-hover:animate-spin group-hover:scale-110 transition"
+                        >
+                           <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
+                           />
+                        </svg>
+                     )}
+
+                     <p className="ml-2">3D</p>
                   </div>
                </button>
                {session ? (
                   <Link href="/dashboard">
-                     <button className="bg-slate-800  text-white text-sm rounded-md px-3 py-3 ml-4 mr-4 ">
+                     <button>
+                        <div className="bg-white border-2 border-gray-400 w-14 h-14 grid place-items-center mx-6 rounded-full">
+                           <img className="w-12 rounded-full h-12 " referrerPolicy="no-referrer" src={session.user.user_metadata.avatar_url} alt="" />
+                        </div>
+                     </button>
+                     {/* <button className="bg-slate-800  text-white text-sm rounded-md px-3 py-3 ml-4 mr-4 ">
                         <div className="flex flex-row items-center">
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -196,7 +229,7 @@ export const Header: React.FC<{
                            </svg>
                            <p className="ml-2 text-gray-100">Dashboard</p>
                         </div>
-                     </button>
+                     </button> */}
                   </Link>
                ) : (
                   <Link href="/login">

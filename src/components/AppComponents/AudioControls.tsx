@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation } from "../../types/types";
+import { dancer, dancerPosition, formation, PIXELS_PER_SECOND } from "../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 
@@ -16,6 +16,8 @@ export const AudioControls: React.FC<{
    viewOnly: boolean;
    addToStack: Function;
    pushChange: Function;
+   setPixelsPerSecond: Function;
+   pixelsPerSecond: number;
 }> = ({
    soundCloudTrackId,
    setSelectedFormation,
@@ -30,7 +32,42 @@ export const AudioControls: React.FC<{
    viewOnly,
    addToStack,
    pushChange,
+   setPixelsPerSecond,
+   pixelsPerSecond,
 }) => {
+   const [isChangingZoom, setIsChangingZoom] = useState(false);
+
+   let MAX_PIXELS_PER_SECOND = 45;
+   let minPixelsPerSecond = songDuration ? ((window.screen.width - 10) * 1000) / songDuration : 10;
+   let percentZoom = (pixelsPerSecond - minPixelsPerSecond) / (MAX_PIXELS_PER_SECOND - minPixelsPerSecond);
+
+   const handleMouseMove = (e) => {
+      if (isChangingZoom) {
+         // console.log(pixelsPerSecond + (e.movementX / 96) * (MAX_PIXELS_PER_SECOND - minPixelsPerSecond));
+         let newPixelsPerSecond = pixelsPerSecond + (e.movementX / 96) * (MAX_PIXELS_PER_SECOND - minPixelsPerSecond);
+         if (newPixelsPerSecond > minPixelsPerSecond && newPixelsPerSecond < MAX_PIXELS_PER_SECOND) {
+            setPixelsPerSecond(newPixelsPerSecond);
+         }
+      }
+   };
+
+   useEffect(() => {
+      window.addEventListener("mousemove", handleMouseMove);
+
+      return () => window.removeEventListener("mousemove", handleMouseMove);
+   }, [isChangingZoom, pixelsPerSecond]);
+
+   const handleDocumentMouseUp = () => {
+      setIsChangingZoom(false);
+   };
+
+   useEffect(() => {
+      document.addEventListener("mouseup", handleDocumentMouseUp);
+      return () => {
+         document.removeEventListener("mouseup", handleDocumentMouseUp);
+      };
+   }, []);
+
    return (
       <>
          <div className="min-h-[60px] bg-[#fafafa] w-full border-t border-gray-300 flex flex-row items-center justify-between select-none">
@@ -140,7 +177,7 @@ export const AudioControls: React.FC<{
                               />
                            </svg>
 
-                           <p className="text-sm"> Duplicate</p>
+                           <p className="text-sm">Duplicate</p>
                         </button>
                      </div>
                   </>
@@ -216,7 +253,7 @@ export const AudioControls: React.FC<{
                <p className=" mr-auto lg:mr-auto text-gray-600 ">
                   {msToTime((position || 0) * 1000)}:<span className="text-gray-500">{Math.round(((position || 0) * 10) % 10)}</span>
                </p>
-               <svg
+               {/* <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -233,7 +270,46 @@ export const AudioControls: React.FC<{
 
                <p className=" font-medium whitespace-nowrap overflow-hidden lg:block hidden ">
                   {soundCloudTrackId ? soundCloudTrackId?.split("/").slice(-1)[0] : "No Audio Selected"}
-               </p>
+               </p> */}
+
+               {/* <div className="flex flex-row items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                     <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM13.5 10.5h-6"
+                     />
+                  </svg>
+
+                  <div className="w-24 rounded-full h-1 bg-gray-200 mx-2 relative">
+                     <div
+                        onMouseDown={() => {
+                           setIsChangingZoom(true);
+                        }}
+                        // onMouseMove={(e) => {
+                        //    if (isChangingZoom) {
+                        //       // console.log(pixelsPerSecond + (e.movementX / 96) * (MAX_PIXELS_PER_SECOND - minPixelsPerSecond));
+                        //       let newPixelsPerSecond = pixelsPerSecond + (e.movementX / 96) * (MAX_PIXELS_PER_SECOND - minPixelsPerSecond);
+                        //       if (newPixelsPerSecond > minPixelsPerSecond && newPixelsPerSecond < MAX_PIXELS_PER_SECOND) {
+                        //          setPixelsPerSecond(newPixelsPerSecond);
+                        //       }
+                        //    }
+                        // }}
+                        style={{
+                           left: `${Math.round(percentZoom * 100)}%`,
+                        }}
+                        className="h-4  w-4 border-[3px] border-pink-600 rounded-full hover:shadow absolute box-border -translate-y-1/2 -translate-x-1/2 bg-white cursor-pointer top-[2px]"
+                     ></div>
+                  </div>
+
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                     <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6"
+                     />
+                  </svg>
+               </div> */}
             </div>
          </div>
       </>

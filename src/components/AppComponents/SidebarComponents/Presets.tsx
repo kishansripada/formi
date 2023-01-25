@@ -21,6 +21,7 @@ export const Presets: React.FC<{
    pushChange: Function;
    isCommenting: boolean;
    setIsCommenting: Function;
+   setUpgradeIsOpen: Function;
 }> = ({
    formations,
    selectedFormation,
@@ -35,16 +36,21 @@ export const Presets: React.FC<{
    pushChange,
    isCommenting,
    setIsCommenting,
+   setUpgradeIsOpen,
 }) => {
    return (
       <>
          <div className="flex flex-col p-6 min-w-[350px] w-[23%] bg-white border-r border-r-gray-300 ">
-            <p className="h-12 font-medium text-xl">Formation Presets</p>
+            <p className="  font-medium text-xl">Formation Templates</p>
+            <p className="text-gray-500 text-xs mt-2">Quickly arrange all your dancers into prebuilt formations (more templates on the way)</p>
 
             <div className=" lg:grid hidden  flex-col mt-6  grid-cols-2  gap-2 ">
                <button
                   className=" w-full h-24 border border-gray-200 shadow-sm ml-auto mr-auto rounded-xl grid place-items-center"
                   onClick={() => {
+                     if (pricingTier === "basic") {
+                        setUpgradeIsOpen(true);
+                     }
                      addToStack();
                      setFormations(horizontalLineFormation(formations, selectedFormation));
                      pushChange();
@@ -68,6 +74,9 @@ export const Presets: React.FC<{
                <button
                   className=" w-full h-24 border border-gray-200 shadow-sm ml-auto mr-auto rounded-xl grid place-items-center"
                   onClick={() => {
+                     if (pricingTier === "basic") {
+                        setUpgradeIsOpen(true);
+                     }
                      addToStack();
                      setFormations(verticalLineFormation(formations, selectedFormation));
                      pushChange();

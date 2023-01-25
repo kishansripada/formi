@@ -169,7 +169,7 @@ export const Sidebar: React.FC<{
                   />
                </svg>
 
-               <p className="text-xs text-gray-500">Presets</p>
+               <p className="text-xs text-gray-500">Templates</p>
             </button>
 
             <button onClick={() => setMenuOpen("stageSettings")} className="mt-auto mb-2">

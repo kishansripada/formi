@@ -16,6 +16,7 @@ export const CurrentFormation: React.FC<{
    pushChange: Function;
    isCommenting: boolean;
    setIsCommenting: Function;
+   setUpgradeIsOpen: Function;
 }> = ({
    formations,
    selectedFormation,
@@ -30,6 +31,7 @@ export const CurrentFormation: React.FC<{
    pushChange,
    isCommenting,
    setIsCommenting,
+   setUpgradeIsOpen,
 }) => {
    const deleteComment = (id: string) => {
       setFormations((formations: formation[]) => {
@@ -223,9 +225,7 @@ export const CurrentFormation: React.FC<{
                               className={`p-4 flex flex-row items-center `}
                               onClick={() => {
                                  if (pricingTier === "basic") {
-                                    toast("that's a premium feature", {
-                                       icon: "😛",
-                                    });
+                                    setUpgradeIsOpen(true);
                                     return;
                                  }
                                  addToStack();

@@ -130,9 +130,17 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                         src={session?.user.user_metadata.avatar_url}
                         alt=""
                      />
-                     <div className="flex flex-col items-start justify-center">
+                     <div className="flex flex-col items-start justify-center w-full">
                         <p className="font-semibold">{session?.user.user_metadata?.full_name}</p>
-                        <p className="text-gray-500 text-sm">Basic Plan</p>
+                        <div className="text-gray-500 text-sm flex flex-row items-center justify-between w-full">
+                           <p>Basic Plan </p>
+                           {/* <a
+                              href={`https://billing.stripe.com/p/login/28o4ki3Rwgm0132144?prefilled_email=${session?.user.email}`}
+                              className="text-xs text-blue-500"
+                           >
+                              Manage
+                           </a> */}
+                        </div>
                      </div>
                   </div>
 

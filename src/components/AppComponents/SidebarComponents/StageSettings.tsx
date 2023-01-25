@@ -220,7 +220,7 @@ export const StageSettings: React.FC<{
                      >
                         None
                      </a>
-                     <a
+                     {/* <a
                         onClick={() => setStageBackground("basketballCourt")}
                         href="#"
                         className={`${
@@ -231,16 +231,22 @@ export const StageSettings: React.FC<{
                         id="menu-item"
                      >
                         Basketball Court
-                     </a>
-                     {/* <a
+                     </a> */}
+                     <a
+                        onClick={() => {
+                           setStageDimensions({ width: 36, height: 28 });
+                           setStageBackground("cheer9");
+                        }}
                         href="#"
-                        className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900"
+                        className={`${
+                           stageBackground === "cheer9" ? "text-gray-900 bg-gray-100 " : ""
+                        } text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900`}
                         role="menuitem"
                         tabIndex={-1}
-                        id="menu-item-2"
+                        id="menu-item"
                      >
-                        football field
-                     </a> */}
+                        Cheer Floor (9 Rolls)
+                     </a>
                   </div>
                </div>
             </div>

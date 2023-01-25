@@ -56,7 +56,7 @@ let dancers = [
       color: "#9c27b0",
    },
    {
-      name: "Jaylee Dejesus",
+      name: "N I H A R",
       id: "71234b06-db99-477f-9d89-c8b65d4e39bd",
       instagramUsername: null,
       color: "#795548",
