@@ -328,11 +328,11 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    }, [router.query.danceId, session]);
 
    let uploadSettings = useCallback(
-      debounce(async (previousFormationView, stageDimensions, gridSnap) => {
+      debounce(async (previousFormationView, stageDimensions, gridSnap, stageBackground) => {
          console.log("uploading settings");
          const { data, error } = await supabase
             .from("dances")
-            .update({ settings: { previousFormationView, stageDimensions, gridSnap }, last_edited: new Date() })
+            .update({ settings: { previousFormationView, stageDimensions, gridSnap, stageBackground }, last_edited: new Date() })
             .eq("id", router.query.danceId);
 
          console.log({ data });
@@ -348,9 +348,9 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       }
       if (router.isReady) {
          setSaved(false);
-         uploadSettings(previousFormationView, stageDimensions, gridSnap);
+         uploadSettings(previousFormationView, stageDimensions, gridSnap, stageBackground);
       }
-   }, [previousFormationView, stageDimensions, gridSnap]);
+   }, [previousFormationView, stageDimensions, gridSnap, stageBackground]);
 
    let uploadDancers = useCallback(
       debounce(async (dancers) => {
