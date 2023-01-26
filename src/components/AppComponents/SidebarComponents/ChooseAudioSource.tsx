@@ -148,8 +148,8 @@ export const ChooseAudioSource: React.FC<{
                         return (
                            <div
                               onClick={() => {
-                                 player ? player.playPause() : null;
-                                 setIsPlaying((isPlaying: boolean) => !isPlaying);
+                                 player ? player.pause() : null;
+                                 setIsPlaying(false);
                                  setSoundCloudTrackId(
                                     `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/audiofiles/${session?.user.id}/${audiofile.name}`
                                  );
