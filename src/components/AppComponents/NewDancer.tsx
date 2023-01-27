@@ -91,7 +91,6 @@ export const NewDancer: React.FC<{
                onBlur={createNewDancer}
             />
          </div>
-         {/* <hr /> */}
       </>
    );
 };

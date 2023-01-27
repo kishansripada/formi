@@ -155,43 +155,6 @@ export const Layers: React.FC<{
             addToStack={addToStack}
             pushChange={pushChange}
          />
-
-         {/* <svg
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="547 0 2635 27672.5"
-            style={{
-               // left: position !== null ? position * pixelsPerSecond : 0,
-               transform: `translateX(${position !== null ? position * pixelsPerSecond : 0}px)`,
-               top: -30,
-            }}
-         >
-            <path d="m1873 2248-7.96 25195" stroke="#fff" strokeWidth={459} />
-            <rect x={547} width={2635} height={2635} rx={400} fill="#000" />
-            <path
-               d="M2200.22 3874.07c-157.77 242.35-512.67 242.35-670.44 0L652.332 2526.23C479.11 2260.14 670.054 1908 987.557 1908H2742.44c317.51 0 508.45 352.15 335.23 618.23l-877.45 1347.84Z"
-               fill="#000"
-            />
-         </svg> */}
-
-         {/* <svg
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="547 0 2635 27672.5"
-            style={{
-               // left: position !== null ? position * pixelsPerSecond : 0,
-               transform: `translateX(${position !== null ? position * pixelsPerSecond : 0}px)`,
-               top: -30,
-            }}
-            className="h-[100px] w-4"
-         >
-            <path d="m1873 2248-7.96 25195" stroke="#fff" stroke-width="459"></path>
-            <rect x="547" width="2635" height="2635" rx="400" fill="#000"></rect>
-            <path
-               d="M2200.22 3874.07c-157.77 242.35-512.67 242.35-670.44 0L652.332 2526.23C479.11 2260.14 670.054 1908 987.557 1908H2742.44c317.51 0 508.45 352.15 335.23 618.23l-877.45 1347.84Z"
-               fill="#000"
-            ></path>
-         </svg> */}
       </div>
    );
 };

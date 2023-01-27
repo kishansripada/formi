@@ -7559,7 +7559,7 @@ const home = () => {
                <div className=" flex flex-row items-center justify-center lg:justify-between text-center lg:text-left">
                   <div className="lg:w-[70%]">
                      <h1 className=" text-black text-5xl md:text-[42px] lg:text-[42px] font-semibold lg:leading-[51px] relative  mt-28 z-10">
-                        Collaborative stage planning for the web.
+                        Master your stage presence.
                      </h1>
                      <p className="text-gray-500 lg:w-[85%] mt-5">
                         Plan out your dance and cheer formations, visualizing the transitions synced to music.
@@ -7725,7 +7725,7 @@ const home = () => {
                ></div>
             </div> */}
             <div className="bg-white flex flex-col font-proxima items-center relative overflow-hidden px-[10%] text-gray-900 py-20">
-               <p className="lg:mb-32 text-5xl mb-10">It's easy to use, fast to prepare and free</p>
+               <p className="lg:mb-32 text-5xl mb-10">Transform your performance preparation</p>
                <div className="flex flex-col lg:flex-row">
                   <div className="flex flex-col lg:w-1/2">
                      <p className="font-bold text-xl">1- Add your music</p>

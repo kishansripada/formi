@@ -13,23 +13,36 @@ export const ChooseAudioSource: React.FC<{
    sampleAudioFiles: any;
    player: any;
    setIsPlaying: Function;
-}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, setAudiofiles, sampleAudioFiles, setIsPlaying, player }) => {
-   console.log(audioFiles);
+   setLocalSource: Function;
+}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, setAudiofiles, sampleAudioFiles, setIsPlaying, player, setLocalSource }) => {
    const [file, setFile] = useState<File>();
    const router = useRouter();
    let session = useSession();
+
    const supabase = useSupabaseClient();
 
    useEffect(() => {
       if (!file?.name) return;
+      if (!isValidKey(file.name)) {
+         toast.error("remove special characters from file name");
+         return;
+      }
       const body = new FormData();
+
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+         setLocalSource(reader.result);
+      };
+      reader.readAsDataURL(file);
+
       body.append("file", file);
 
       let userId = session?.user?.id;
-
+      // ?q=${Math.floor(Math.random() * 10000)}
       toast
          .promise(
-            supabase.storage.from("audiofiles").upload(`${userId}/${file.name}?q=${Math.floor(Math.random() * 10000)}`, body, {
+            supabase.storage.from("audiofiles").upload(`${userId}/${file.name}`, body, {
                cacheControl: "no-cache",
                upsert: true,
             }),
@@ -39,12 +52,13 @@ export const ChooseAudioSource: React.FC<{
                error: <b>Could not upload file.</b>,
             }
          )
-         .then((r) => {
+         .then((data) => {
             supabase.storage
                .from("audiofiles")
                .list(session?.user.id, {})
                .then((r) => {
                   setAudiofiles(r);
+                  setSoundCloudTrackId(`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/audiofiles/${data.data.path}`);
                });
          });
    }, [file]);
@@ -65,7 +79,7 @@ export const ChooseAudioSource: React.FC<{
                      onChange={(event) => {
                         if (event.target.files && event.target.files[0]) {
                            const i = event.target.files[0];
-                           // console.log(i);
+
                            setFile(i);
                         }
                      }}
@@ -113,7 +127,8 @@ export const ChooseAudioSource: React.FC<{
                            onClick={async (e) => {
                               e.stopPropagation();
                               setSoundCloudTrackId(null);
-                              toast.success("removed track");
+                              setLocalSource(null);
+                              toast.success("deselected track");
                            }}
                         >
                            <svg
@@ -147,12 +162,14 @@ export const ChooseAudioSource: React.FC<{
                      [...audioFiles.data].reverse().map((audiofile) => {
                         return (
                            <div
+                              key={audiofile.name}
                               onClick={() => {
-                                 player ? player.playPause() : null;
-                                 setIsPlaying((isPlaying: boolean) => !isPlaying);
+                                 player ? player.pause() : null;
+                                 setIsPlaying(false);
                                  setSoundCloudTrackId(
                                     `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/audiofiles/${session?.user.id}/${audiofile.name}`
                                  );
+                                 setLocalSource(null);
                               }}
                               className={`p-3 ${
                                  audiofile.name === soundCloudTrackId?.split("/").slice(-1)[0] ? "opacity-50 pointer-events-none" : ""
@@ -259,8 +276,13 @@ export const ChooseAudioSource: React.FC<{
                )}
             </div> */}
          </div>
-
          <Toaster />
       </>
    );
 };
+
+function isValidKey(key: string): boolean {
+   // only allow s3 safe characters and characters which require special handling for now
+   // https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html
+   return /^(\w|\/|!|-|\.|\*|'|\(|\)| |&|\$|@|=|;|:|\+|,|\?)*$/.test(key);
+}

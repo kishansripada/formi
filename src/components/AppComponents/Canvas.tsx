@@ -90,10 +90,12 @@ export const Canvas: React.FC<{
    }, [selectedFormation, commandHeld, selectedDancers, formations, copiedPositions]);
 
    useEffect(() => {
-      let heightPercentage = (container.current.clientHeight - 50) / stage.current.clientHeight;
-      let widthPercentage = (container.current.clientWidth - 50) / stage.current.clientWidth;
+      // let heightPercentage = (container.current.clientHeight - 50) / stage.current.clientHeight;
+      // let widthPercentage = (container.current.clientWidth - 50) / stage.current.clientWidth;
+      let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
+      let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
       setZoom(Math.min(heightPercentage, widthPercentage));
-   }, [container?.current?.clientHeight, stage?.current?.clientHeight, stageDimensions]);
+   }, [container?.current?.clientHeight, stage?.current?.clientHeight, stageDimensions, children]);
 
    const downHandler = (e: any) => {
       if (e?.composedPath()?.[0]?.tagName === "INPUT" || e?.composedPath()?.[0]?.tagName === "TEXTAREA" || e.target.id === "input") return;
@@ -101,10 +103,10 @@ export const Canvas: React.FC<{
       // console.log(e.key);
       if (e.key === " ") {
          e.preventDefault();
-         console.log(player);
          setIsPlaying((isPlaying: boolean) => {
             if (player) {
-               player.playPause();
+               if (!player?.isReady) return isPlaying;
+               player?.playPause();
                return !isPlaying;
             }
          });
@@ -564,12 +566,12 @@ export const Canvas: React.FC<{
             onPointerDown={!viewOnly ? pointerDown : () => null}
             onPointerMove={handleDragMove}
             ref={stage}
-            className="relative bg-white  border border-gray-500"
+            className="relative bg-white border border-gray-500"
             style={{
                // top: scrollOffset.y,
                // left: scrollOffset.x,
                // transformOrigin: `${scrollOffset.x}px ${scrollOffset.y}px`,
-               transform: `scale(${zoom}) `,
+               transform: `scale(${zoom})  `,
                // translate(${scrollOffset.x}px, ${scrollOffset.y}px)
                height: stageDimensions.height * PIXELS_PER_SQUARE,
                width: stageDimensions.width * PIXELS_PER_SQUARE,

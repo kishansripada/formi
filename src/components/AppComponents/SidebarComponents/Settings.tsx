@@ -55,34 +55,20 @@ export const Settings: React.FC<{
                </div>
                <hr />
                <div
-                  className={`p-4 flex flex-row items-center ${pricingTier === "basic" ? "" : ""}`}
+                  className={`p-4 flex flex-row items-center `}
                   onClick={() => {
-                     if (pricingTier === "basic") {
-                        toast("that's a premium feature", {
-                           icon: "😛",
-                        });
-                        return;
-                     }
                      setPreviousFormationView("ghostDancersAndPaths");
                   }}
                >
-                  {pricingTier === "basic" ? (
-                     <>
-                        <p className="mr-3 opacity-100">⚡️</p>
-                     </>
+                  {previousFormationView === "ghostDancersAndPaths" ? (
+                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
+                     </div>
                   ) : (
-                     <>
-                        {previousFormationView === "ghostDancersAndPaths" ? (
-                           <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
-                              <div className="rounded-full h-2 w-2 bg-pink-400"></div>
-                           </div>
-                        ) : (
-                           <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
-                        )}
-                     </>
+                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
                   )}
 
-                  <p className={`${pricingTier === "basic" ? "opacity-40" : ""}`}>View Ghost Dancers and Paths</p>
+                  <p>View Ghost Dancers and Paths</p>
                </div>
             </div>
 

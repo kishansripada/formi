@@ -18,6 +18,7 @@ export const AudioControls: React.FC<{
    pushChange: Function;
    setPixelsPerSecond: Function;
    pixelsPerSecond: number;
+   localSource: string | null;
 }> = ({
    soundCloudTrackId,
    setSelectedFormation,
@@ -34,6 +35,7 @@ export const AudioControls: React.FC<{
    pushChange,
    setPixelsPerSecond,
    pixelsPerSecond,
+   localSource,
 }) => {
    const [isChangingZoom, setIsChangingZoom] = useState(false);
 
@@ -51,22 +53,22 @@ export const AudioControls: React.FC<{
       }
    };
 
-   useEffect(() => {
-      window.addEventListener("mousemove", handleMouseMove);
+   // useEffect(() => {
+   //    window.addEventListener("mousemove", handleMouseMove);
 
-      return () => window.removeEventListener("mousemove", handleMouseMove);
-   }, [isChangingZoom, pixelsPerSecond]);
+   //    return () => window.removeEventListener("mousemove", handleMouseMove);
+   // }, [isChangingZoom, pixelsPerSecond]);
 
-   const handleDocumentMouseUp = () => {
-      setIsChangingZoom(false);
-   };
+   // const handleDocumentMouseUp = () => {
+   //    setIsChangingZoom(false);
+   // };
 
-   useEffect(() => {
-      document.addEventListener("mouseup", handleDocumentMouseUp);
-      return () => {
-         document.removeEventListener("mouseup", handleDocumentMouseUp);
-      };
-   }, []);
+   // useEffect(() => {
+   //    document.addEventListener("mouseup", handleDocumentMouseUp);
+   //    return () => {
+   //       document.removeEventListener("mouseup", handleDocumentMouseUp);
+   //    };
+   // }, []);
 
    return (
       <>
@@ -92,7 +94,6 @@ export const AudioControls: React.FC<{
                                        durationSeconds: 10,
                                     },
                                  ];
-                                 //   }
                               });
                               setSelectedFormation(formations.length);
                               pushChange();
@@ -204,10 +205,12 @@ export const AudioControls: React.FC<{
                {isPlaying ? (
                   <div
                      className={`hover:bg-gray-100 transition duration-300 cursor-pointer p-1 rounded-2xl mx-3 select-none ${
-                        !soundCloudTrackId ? "opacity-40 pointer-events-none" : ""
+                        !soundCloudTrackId && !localSource ? "opacity-40 pointer-events-none" : ""
                      }`}
                      onClick={() => {
-                        player ? player.playPause() : null;
+                        if (!player) return;
+                        if (!player.isReady) return;
+                        player.playPause();
                         setIsPlaying(!isPlaying);
                      }}
                   >
@@ -222,10 +225,12 @@ export const AudioControls: React.FC<{
                ) : (
                   <div
                      className={`hover:bg-gray-100 transition duration-300 p-1 rounded-2xl mx-3 select-none cursor-pointer ${
-                        !soundCloudTrackId ? "opacity-40 pointer-events-none" : ""
+                        !soundCloudTrackId && !localSource ? "opacity-40 pointer-events-none" : ""
                      }`}
                      onClick={() => {
-                        player ? player.playPause() : null;
+                        if (!player) return;
+                        if (!player.isReady) return;
+                        player.playPause();
                         setIsPlaying(!isPlaying);
                      }}
                   >

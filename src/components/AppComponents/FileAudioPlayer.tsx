@@ -16,6 +16,8 @@ export const FileAudioPlayer: React.FC<{
    pixelsPerSecond: number;
    player: any;
    setPlayer: Function;
+
+   videoPlayer: any;
 }> = memo(
    ({
       setPosition,
@@ -29,6 +31,7 @@ export const FileAudioPlayer: React.FC<{
       pixelsPerSecond,
       player,
       setPlayer,
+      videoPlayer,
    }) => {
       const [ready, setReady] = useState(false);
 
@@ -44,14 +47,15 @@ export const FileAudioPlayer: React.FC<{
          } catch {
             console.log("zoom error");
          }
-      }, [pixelsPerSecond, player]);
+      }, [pixelsPerSecond, player, soundCloudTrackId]);
 
-      useEffect(() => {
-         return () => {
-            if (!player) return;
-            player.destroy();
-         };
-      }, [soundCloudTrackId, player]);
+      // useEffect(() => {
+      //    return () => {
+      //       if (!player) return;
+
+      //       player.destroy();
+      //    };
+      // }, [localSource, player, soundCloudTrackId]);
 
       function handleLoad() {
          if (document.getElementById("waveform")?.innerHTML) return;
@@ -64,10 +68,14 @@ export const FileAudioPlayer: React.FC<{
             barWidth: 4,
             barRadius: 5,
             cursorWidth: 2,
-            height: 60,
+            height: 30,
             barGap: 2,
+            backend: "MediaElement",
          });
-         wavesurfer.load(soundCloudTrackId);
+         // wavesurfer.load(soundCloudTrackId);
+         // wavesurfer.load(localSource || soundCloudTrackId);
+         wavesurfer.load(videoPlayer.current);
+
          wavesurfer.on("audioprocess", function (e) {
             setPosition(Math.ceil(e / 0.01) * 0.01); // 100fps
          });
@@ -99,8 +107,8 @@ export const FileAudioPlayer: React.FC<{
             <Script onReady={handleLoad} strategy="lazyOnload" src="https://unpkg.com/wavesurfer.js" />
 
             {!ready ? (
-               <div className="h-[60px] flex flex-row items-center justify-center bg-[#fafafa] w-screen">
-                  <p className="font-semibold text-xl animate-bounce">loading audio...</p>
+               <div className="h-[30px] flex flex-row items-center justify-center bg-[#fafafa] w-screen">
+                  <p className="font-semibold text-lg animate-bounce">loading audio...</p>
                </div>
             ) : null}
 
@@ -109,7 +117,7 @@ export const FileAudioPlayer: React.FC<{
                   display: ready ? "flex" : "none",
                }}
                id="layers"
-               className={` h-[60px]  flex-col justify-end w-full`}
+               className={` h-[30px]  flex-col justify-end w-full`}
             >
                <div
                   id="waveform"

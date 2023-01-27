@@ -80,7 +80,7 @@ export const Dancer: React.FC<{
             </>
 
             <input
-               className="h-6  px-3 py-4 transition duration-300  rounded-md font-[500] ml-3 hover:bg-gray-100 text-gray-800 focus:bg-gray-100 outline-none cursor-pointer"
+               className="h-6 w-full  px-3 py-4 transition duration-300  rounded-md font-[500] ml-3 hover:bg-gray-100 text-gray-800 focus:bg-gray-100 outline-none cursor-pointer"
                defaultValue={name}
                key={name}
                onKeyDown={(e) => {

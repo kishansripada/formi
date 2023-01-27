@@ -42,6 +42,7 @@ export const ThreeCanvas: React.FC<{
    percentThroughTransition: number;
    isPlaying: boolean;
    soundCloudTrackId: string | null;
+   localSource: string | null;
 }> = ({
    player,
    children,
@@ -76,6 +77,7 @@ export const ThreeCanvas: React.FC<{
    percentThroughTransition,
    isPlaying,
    soundCloudTrackId,
+   localSource,
 }) => {
    const [shiftHeld, setShiftHeld] = useState(false);
    const [draggingCommentId, setDraggingCommentId] = useState<string | null>();
@@ -542,7 +544,6 @@ export const ThreeCanvas: React.FC<{
 
    return (
       <div className="flex flex-row relative justify-center  h-full w-full overflow-hidden  overscroll-contain  ">
-         {/* <video className="h-48 rounded-xl absolute z-50 left-4 top-4" src={soundCloudTrackId}></video> */}
          <div
             className="pointer-events-none absolute  h-[1000px] w-[1000px] "
             style={{
@@ -587,7 +588,14 @@ export const ThreeCanvas: React.FC<{
                   sectionSize={2.5}
                   sectionThickness={1.5}
                   sectionColor={[0.5, 0.5, 10]}
-                  //    fadeDistance={30}
+                  // renderOrder={-1}
+                  // position={[0, 0, 0]}
+                  // args={[stageDimensions.width / 2, stageDimensions.height / 2]}
+                  // cellSize={6}
+                  // cellThickness={1}
+                  // sectionSize={}
+                  // sectionThickness={1.5}
+                  // sectionColor={[0.5, 0.5, 10]}
                />
                {/* <mesh>
                <boxGeometry args={[20, 0.03, 20]} />

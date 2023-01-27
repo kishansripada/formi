@@ -119,6 +119,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
    const [gridSnap, setGridSnap] = useState<number>(initialData.settings.gridSnap || 1);
    const [stageBackground, setStageBackground] = useState<"none" | "basketballCourt">(initialData.settings.stageBackground || "none");
+   const [localSource, setLocalSource] = useState(null);
 
    const [songDuration, setSongDuration] = useState<number | null>(null);
    const [videoCoordinates, setVideoCoordinates] = useState<{ left: number; top: number }>({ left: 40, top: 40 });
@@ -150,7 +151,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [shareIsOpen, setShareIsOpen] = useState(false);
    const [menuOpen, setMenuOpen] = useState<string>("formations");
    const [player, setPlayer] = useState(null);
-
+   // const [videoPlayer, setVideoPlayer] = useState(null);
+   const videoPlayer = useRef();
    // const [channelGlobal, setChannelGlobal] = useState();
    const [userPositions, setUserPositions] = useState({});
 
@@ -164,6 +166,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    };
 
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
+   let actualVideoUrl = localSource || soundCloudTrackId;
 
    // useEffect(() => {
    //    setFormations((formations: formation[]) => {
@@ -447,6 +450,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       }
    }, [danceName]);
    //////////////////////////
+
    return (
       <>
          <Toaster></Toaster>
@@ -484,7 +488,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
             <></>
          )}
 
-         {/* {upgradeIsOpen ? (
+         {upgradeIsOpen ? (
             <div
                className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
                id="outside"
@@ -519,7 +523,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   </div>
                </div>
             </div>
-         ) : null} */}
+         ) : null}
 
          {shareIsOpen ? (
             <Share
@@ -572,6 +576,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            audioFiles={audioFiles}
                            sampleAudioFiles={initialData.sampleAudioFiles}
                            setAudiofiles={setAudiofiles}
+                           setLocalSource={setLocalSource}
                         ></ChooseAudioSource>
                      ) : menuOpen === "settings" ? (
                         <Settings
@@ -652,6 +657,15 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                      setIsPreviewingThree={setIsPreviewingThree}
                      setUpgradeIsOpen={setUpgradeIsOpen}
                   />
+
+                  {/* <div className="flex flex-row items-center w-full h-full"> */}
+                  <video
+                     ref={videoPlayer}
+                     style={{
+                        height: localSource?.startsWith("data:video") || soundCloudTrackId?.endsWith(".mp4") ? "33%" : 0,
+                     }}
+                     src={localSource || soundCloudTrackId}
+                  ></video>
 
                   {!isPreviewingThree ? (
                      <>
@@ -781,6 +795,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                      </>
                   ) : (
                      <ThreeCanvas
+                        localSource={localSource}
                         position={position}
                         stageBackground={stageBackground}
                         zoom={zoom}
@@ -815,6 +830,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                         soundCloudTrackId={soundCloudTrackId}
                      ></ThreeCanvas>
                   )}
+                  {/* </div> */}
                </div>
             </div>
 
@@ -835,10 +851,11 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   setFormations={setFormations}
                   setPixelsPerSecond={setPixelsPerSecond}
                   pixelsPerSecond={pixelsPerSecond}
+                  localSource={localSource}
                ></AudioControls>
 
                <div className="overflow-x-scroll  bg-[#fafafa] overscroll-contain pb-3 ">
-                  {soundCloudTrackId ? (
+                  {soundCloudTrackId || localSource ? (
                      <div
                         className="relative"
                         style={{
@@ -849,16 +866,17 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                         <FileAudioPlayer
                            player={player}
                            setPlayer={setPlayer}
-                           key={soundCloudTrackId}
+                           key={localSource || soundCloudTrackId}
                            setSelectedFormation={setSelectedFormation}
                            setFormations={setFormations}
-                           soundCloudTrackId={soundCloudTrackId}
+                           soundCloudTrackId={localSource || soundCloudTrackId}
                            setSongDuration={setSongDuration}
                            songDuration={songDuration}
                            setIsPlaying={setIsPlaying}
                            setPosition={setPosition}
                            viewOnly={viewOnly}
                            pixelsPerSecond={pixelsPerSecond}
+                           videoPlayer={videoPlayer}
                         ></FileAudioPlayer>
                      </div>
                   ) : (
