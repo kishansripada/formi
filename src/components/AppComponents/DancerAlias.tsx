@@ -72,9 +72,12 @@ export const DancerAlias: React.FC<{
                   <img referrerPolicy="no-referrer" className="w-[32px] h-[32px] rounded-full select-none " src={dancer.instagramUsername} alt="" />
                ) : (
                   <div className="bg-white rounded-full w-[32px] h-[32px] grid place-items-center cursor-default  font-semibold  ">
-                     <p className="cursor-default ">{initials}</p>
+                     {dancerStyle === "numbered" ? <>{index + 1}</> : <> {initials}</>}
                   </div>
                )}
+               {dancerStyle === "numbered" ? (
+                  <p className="absolute -bottom-6 text-center select-none pointer-events-none">{dancer.name.split(" ")[0]}</p>
+               ) : null}
             </div>
          </>
       );

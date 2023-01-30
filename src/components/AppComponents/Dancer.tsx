@@ -60,8 +60,6 @@ export const Dancer: React.FC<{
             }}
             className={`flex flex-row items-center px-3  select-none  mb-1 min-h-[55px] bg-white`}
          >
-            <p className="font-semibold mr-1 ml-2 text-md"> {index + 1}</p>
-
             <>
                <div
                   style={{
@@ -81,9 +79,9 @@ export const Dancer: React.FC<{
                   )}
                </div>
             </>
-
+            <p className="font-semibold mr-0  text-md ml-3"> {index + 1}</p>
             <input
-               className="h-6 w-full  px-3 py-4 transition duration-300  rounded-md font-[500] ml-3 hover:bg-gray-100 text-gray-800 focus:bg-gray-100 outline-none cursor-pointer"
+               className="h-6 w-full  px-3 py-4 transition duration-300  rounded-md font-[500] ml-1 hover:bg-gray-100 text-gray-800 focus:bg-gray-100 outline-none cursor-pointer"
                defaultValue={name}
                key={name}
                onKeyDown={(e) => {
