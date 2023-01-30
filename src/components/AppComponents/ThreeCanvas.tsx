@@ -28,7 +28,7 @@ export const ThreeCanvas: React.FC<{
    undo: Function;
    addToStack: Function;
    pushChange: Function;
-   gridSnap: number;
+
    isCommenting: boolean;
    setIsCommenting: Function;
    zoom: number;

@@ -14,8 +14,21 @@ export const ChooseAudioSource: React.FC<{
    player: any;
    setIsPlaying: Function;
    setLocalSource: Function;
-}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, setAudiofiles, sampleAudioFiles, setIsPlaying, player, setLocalSource }) => {
-   const [file, setFile] = useState<File>();
+   setUpgradeIsOpen: Function;
+   pricingTier: string;
+}> = ({
+   audioFiles,
+   setSoundCloudTrackId,
+   soundCloudTrackId,
+   setAudiofiles,
+   sampleAudioFiles,
+   setIsPlaying,
+   player,
+   setLocalSource,
+   setUpgradeIsOpen,
+   pricingTier,
+}) => {
+   const [file, setFile] = useState<File | null>();
    const router = useRouter();
    let session = useSession();
 
@@ -25,6 +38,13 @@ export const ChooseAudioSource: React.FC<{
       if (!file?.name) return;
       if (!isValidKey(file.name)) {
          toast.error("remove special characters from file name");
+         setFile(null);
+         return;
+      }
+      if (isVideo(file.name) && pricingTier === "basic") {
+         toast("uploading videos is a premium feature");
+         setFile(null);
+         setUpgradeIsOpen(true);
          return;
       }
       const body = new FormData();
@@ -67,7 +87,7 @@ export const ChooseAudioSource: React.FC<{
       <>
          <div className="lg:flex hidden overflow-y-scroll  min-w-[350px] w-[23%]  flex-col   bg-white border-r border-r-gray-300   px-6 py-6 overflow-hidden">
             <div className="flex flex-col ">
-               <p className="text-xl font-medium text-[#1A1B25] h-12">Add Audio</p>
+               <p className="text-xl font-medium text-[#1A1B25] h-12">Add Media</p>
 
                <button className="relative border border-dashed border-gray-300 h-24 w-full rounded-xl bg-gray-50 ">
                   <input
@@ -95,7 +115,7 @@ export const ChooseAudioSource: React.FC<{
                         ></path>
                         <path d="M16 16l-4-4-4 4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
                      </svg>
-                     <p className="text-sm">Upload a File</p>
+                     <p className="text-sm">Upload Audio or Video</p>
                   </div>
                </button>
             </div>
@@ -285,4 +305,22 @@ function isValidKey(key: string): boolean {
    // only allow s3 safe characters and characters which require special handling for now
    // https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html
    return /^(\w|\/|!|-|\.|\*|'|\(|\)| |&|\$|@|=|;|:|\+|,|\?)*$/.test(key);
+}
+
+function getExtension(filename: string) {
+   var parts = filename.split(".");
+   return parts[parts.length - 1];
+}
+
+function isVideo(filename: string) {
+   var ext = getExtension(filename);
+   switch (ext.toLowerCase()) {
+      case "m4v":
+      case "avi":
+      case "mpg":
+      case "mp4":
+         // etc
+         return true;
+   }
+   return false;
 }

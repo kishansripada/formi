@@ -150,7 +150,7 @@ export const Sidebar: React.FC<{
                      </linearGradient>
                   </defs>
                </svg>
-               <p className="text-xs text-gray-500">Audio</p>
+               <p className="text-xs text-gray-500">Media</p>
             </button>
 
             <button onClick={() => setMenuOpen("presets")} className="">

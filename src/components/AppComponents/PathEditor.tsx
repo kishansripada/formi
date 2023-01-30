@@ -4,14 +4,14 @@ export const PathEditor: React.FC<{
    selectedFormation: number | null;
    formations: formation[];
    selectedDancers: string[];
-   previousFormationView: "none" | "ghostDancers" | "ghostDancersAndPaths";
    isPlaying: boolean;
    currentFormationIndex: number | null;
    dancers: dancer[];
+   localSettings: any;
    coordsToPosition: (coords: { x: number; y: number } | null | undefined) => { left: number; top: number } | null;
-}> = ({ selectedFormation, formations, selectedDancers, previousFormationView, isPlaying, currentFormationIndex, coordsToPosition, dancers }) => {
+}> = ({ selectedFormation, formations, selectedDancers, isPlaying, currentFormationIndex, coordsToPosition, dancers, localSettings }) => {
    if (isPlaying || selectedFormation === null) return;
-
+   let { previousFormationView } = localSettings;
    // let dancersToRender = previousFormationView === "ghostDancersAndPaths" ? formations?.[selectedFormation - 1]?.positions
    return (
       <>

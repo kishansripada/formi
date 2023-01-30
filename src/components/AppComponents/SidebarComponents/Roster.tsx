@@ -62,22 +62,20 @@ export const Roster: React.FC<{
                   setDancers={setDancers}
                />
 
-               {dancers
-                  .slice()
-                  .reverse()
-                  .map((dancer, index) => (
-                     <Dancer
-                        selectedDancers={selectedDancers}
-                        setFormations={setFormations}
-                        formations={formations}
-                        selectedFormation={selectedFormation}
-                        setDancers={setDancers}
-                        dancer={dancer}
-                        key={dancer.id}
-                        dancers={dancers}
-                        setEditingDancer={setEditingDancer}
-                     />
-                  ))}
+               {dancers.slice().map((dancer, index) => (
+                  <Dancer
+                     selectedDancers={selectedDancers}
+                     setFormations={setFormations}
+                     formations={formations}
+                     selectedFormation={selectedFormation}
+                     setDancers={setDancers}
+                     dancer={dancer}
+                     key={dancer.id}
+                     dancers={dancers}
+                     setEditingDancer={setEditingDancer}
+                     index={index}
+                  />
+               ))}
             </div>
          </div>
       </>

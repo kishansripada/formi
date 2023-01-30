@@ -5,28 +5,12 @@ import { useEffect, useState } from "react";
 export const StageSettings: React.FC<{
    stageDimensions: any;
    setStageDimensions: Function;
-   previousFormationView: "none" | "ghostDancers" | "ghostDancersAndPaths";
-   setPreviousFormationView: Function;
    setFormations: Function;
    pricingTier: string;
    formations: formation[];
-   gridSnap: number;
-   setGridSnap: Function;
    stageBackground: "none" | "basketballCourt";
    setStageBackground: Function;
-}> = ({
-   stageDimensions,
-   setStageDimensions,
-   setPreviousFormationView,
-   previousFormationView,
-   setFormations,
-   pricingTier,
-   formations,
-   gridSnap,
-   setGridSnap,
-   stageBackground,
-   setStageBackground,
-}) => {
+}> = ({ stageDimensions, setStageDimensions, setFormations, pricingTier, formations, stageBackground, setStageBackground }) => {
    const [backgroundDropdownIsOpen, setBackgroundDropdownIsOpen] = useState<boolean>();
 
    const closeWindow = (e) => {
@@ -180,7 +164,6 @@ export const StageSettings: React.FC<{
                      aria-haspopup="true"
                   >
                      Stage Background
-                     {/* Heroicon name: mini/chevron-down */}
                      <svg
                         className="-mr-1 ml-2 h-5 w-5"
                         xmlns="http://www.w3.org/2000/svg"
@@ -232,6 +215,18 @@ export const StageSettings: React.FC<{
                      >
                         Basketball Court
                      </a> */}
+                     <a
+                        onClick={() => setStageBackground("grid")}
+                        href="#"
+                        className={`${
+                           stageBackground === "grid" ? "text-gray-900 bg-gray-100 " : ""
+                        } text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900`}
+                        role="menuitem"
+                        tabIndex={-1}
+                        id="menu-item"
+                     >
+                        Grid
+                     </a>
                      <a
                         onClick={() => {
                            setStageDimensions({ width: 36, height: 28 });

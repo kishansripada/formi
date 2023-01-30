@@ -25,7 +25,7 @@ export const Canvas: React.FC<{
    undo: Function;
    addToStack: Function;
    pushChange: Function;
-   gridSnap: number;
+   localSettings: any;
    isCommenting: boolean;
    setIsCommenting: Function;
    zoom: number;
@@ -53,7 +53,7 @@ export const Canvas: React.FC<{
    undo,
    addToStack,
    pushChange,
-   gridSnap,
+   localSettings,
    isCommenting,
    setIsCommenting,
    zoom,
@@ -74,7 +74,7 @@ export const Canvas: React.FC<{
    const [isDragging, setIsDragging] = useState(false);
    const [isDraggingVideo, setIsDraggingVideo] = useState(false);
    const [cursorPosition, setCursorPoisition] = useState<{ x: number; y: number }>();
-
+   let { gridSnap } = localSettings;
    const container = useRef();
    const stage = useRef();
 
@@ -623,13 +623,13 @@ export const Canvas: React.FC<{
                }}
             ></div>
 
-            {stageBackground !== "cheer9" && stageBackground !== "cheer7" ? (
-               <GridLines stageDimensions={stageDimensions} />
-            ) : (
+            {stageBackground === "grid" ? <GridLines stageDimensions={stageDimensions} /> : null}
+
+            {stageBackground === "cheer9" ? (
                <div className="absolute top-0 left-0 right-0 bottom-0 m-auto pointer-events-none select-none">
                   <CheerLines stageDimensions={stageDimensions}></CheerLines>
                </div>
-            )}
+            ) : null}
          </div>
       </div>
    );

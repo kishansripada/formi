@@ -9,7 +9,8 @@ export const Dancer: React.FC<{
    setEditingDancer: Function;
    setFormations: Function;
    selectedDancers: string[];
-}> = ({ setDancers, dancers, selectedFormation, formations, setEditingDancer, dancer, setFormations, selectedDancers }) => {
+   index: number;
+}> = ({ setDancers, dancers, selectedFormation, formations, setEditingDancer, dancer, setFormations, selectedDancers, index }) => {
    let { name, id, instagramUsername, color } = dancer;
 
    let amSelected = selectedDancers.includes(id);
@@ -59,6 +60,8 @@ export const Dancer: React.FC<{
             }}
             className={`flex flex-row items-center px-3  select-none  mb-1 min-h-[55px] bg-white`}
          >
+            <p className="font-semibold mr-1 ml-2 text-md"> {index + 1}</p>
+
             <>
                <div
                   style={{

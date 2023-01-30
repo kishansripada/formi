@@ -72,7 +72,7 @@ export const AudioControls: React.FC<{
 
    return (
       <>
-         <div className="min-h-[60px] bg-[#fafafa] w-full border-t border-gray-300 flex flex-row items-center justify-between select-none">
+         <div className="min-h-[50px] bg-[#fafafa] w-full border-t border-gray-300 flex flex-row items-center justify-between select-none">
             <div className="w-[45%] flex flex-col items-center justify-center   pl-4">
                {!viewOnly ? (
                   <>

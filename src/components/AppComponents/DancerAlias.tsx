@@ -18,6 +18,8 @@ export const DancerAlias: React.FC<{
    onlineUsers: any;
    zoom: number;
    setZoom: Function;
+   localSettings: any;
+   index: number;
 }> = ({
    dancer,
    currentFormationIndex,
@@ -36,7 +38,10 @@ export const DancerAlias: React.FC<{
    onlineUsers,
    zoom,
    setZoom,
+   localSettings,
+   index,
 }) => {
+   let { dancerStyle } = localSettings;
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])
@@ -141,10 +146,13 @@ export const DancerAlias: React.FC<{
                   className="bg-white  rounded-full w-[32px] h-[32px] grid place-items-center select-none cursor-default "
                >
                   <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
-                     {initials}
+                     {dancerStyle === "numbered" ? <>{index + 1}</> : <> {initials}</>}
                   </p>
                </div>
             )}
+            {dancerStyle === "numbered" ? (
+               <p className="absolute -bottom-6 text-center select-none pointer-events-none">{dancer.name.split(" ")[0]}</p>
+            ) : null}
          </div>
       </>
    );

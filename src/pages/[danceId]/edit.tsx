@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import { useLocalStorage } from "../../hooks";
 
 import { debounce } from "lodash";
 import toast, { Toaster } from "react-hot-toast";
@@ -114,12 +115,20 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [danceName, setDanceName] = useState<string>(initialData.name);
    const [shareSettings, setShareSettings] = useState(initialData.sharesettings);
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(initialData.soundCloudId);
-   const [stageDimensions, setStageDimensions] = useState(initialData.settings.stageDimensions);
-   const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
-   const [gridSnap, setGridSnap] = useState<number>(initialData.settings.gridSnap || 1);
-   const [stageBackground, setStageBackground] = useState<"none" | "basketballCourt">(initialData.settings.stageBackground || "none");
    const [localSource, setLocalSource] = useState(null);
+
+   // cloud
+   const [stageDimensions, setStageDimensions] = useState(initialData.settings.stageDimensions);
+   const [stageBackground, setStageBackground] = useState<"none" | "grid" | "cheer9">(initialData.settings.stageBackground || "grid");
+   const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
+
+   // local
+   const [localSettings, setLocalSettings] = useLocalStorage<{
+      gridSnap: number;
+      previousFormationView: "none" | "ghostDancers" | "ghostDancersAndPaths";
+      dancerStyle: "initials";
+   }>("localSettings", { gridSnap: 1, previousFormationView: "ghostDancersAndPaths", dancerStyle: "initials" });
 
    const [songDuration, setSongDuration] = useState<number | null>(null);
    const [videoCoordinates, setVideoCoordinates] = useState<{ left: number; top: number }>({ left: 40, top: 40 });
@@ -131,9 +140,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
    const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
    const [editingDancer, setEditingDancer] = useState<string | null>(null);
-   const [previousFormationView, setPreviousFormationView] = useState<"none" | "ghostDancers" | "ghostDancersAndPaths">(
-      initialData.settings.previousFormationView
-   );
+
    const [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
    const [onlineUsers, setOnlineUsers] = useState({
       "f30197ba-cf06-4234-bcdb-5d40d83c7999": [{ name: "Kishan Sripada", color: "#e6194B" }],
@@ -151,7 +158,6 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [shareIsOpen, setShareIsOpen] = useState(false);
    const [menuOpen, setMenuOpen] = useState<string>("formations");
    const [player, setPlayer] = useState(null);
-   // const [videoPlayer, setVideoPlayer] = useState(null);
    const videoPlayer = useRef();
    // const [channelGlobal, setChannelGlobal] = useState();
    const [userPositions, setUserPositions] = useState({});
@@ -331,11 +337,11 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    }, [router.query.danceId, session]);
 
    let uploadSettings = useCallback(
-      debounce(async (previousFormationView, stageDimensions, gridSnap, stageBackground) => {
+      debounce(async (stageDimensions, stageBackground) => {
          console.log("uploading settings");
          const { data, error } = await supabase
             .from("dances")
-            .update({ settings: { previousFormationView, stageDimensions, gridSnap, stageBackground }, last_edited: new Date() })
+            .update({ settings: { stageDimensions, stageBackground }, last_edited: new Date() })
             .eq("id", router.query.danceId);
 
          console.log({ data });
@@ -351,9 +357,9 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       }
       if (router.isReady) {
          setSaved(false);
-         uploadSettings(previousFormationView, stageDimensions, gridSnap, stageBackground);
+         uploadSettings(stageDimensions, stageBackground);
       }
-   }, [previousFormationView, stageDimensions, gridSnap, stageBackground]);
+   }, [stageDimensions, stageBackground]);
 
    let uploadDancers = useCallback(
       debounce(async (dancers) => {
@@ -569,6 +575,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                         ></Roster>
                      ) : menuOpen === "audio" ? (
                         <ChooseAudioSource
+                           pricingTier={pricingTier}
+                           setUpgradeIsOpen={setUpgradeIsOpen}
                            player={player}
                            setIsPlaying={setIsPlaying}
                            soundCloudTrackId={soundCloudTrackId}
@@ -579,27 +587,13 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            setLocalSource={setLocalSource}
                         ></ChooseAudioSource>
                      ) : menuOpen === "settings" ? (
-                        <Settings
-                           gridSnap={gridSnap}
-                           setGridSnap={setGridSnap}
-                           formations={formations}
-                           pricingTier={pricingTier}
-                           previousFormationView={previousFormationView}
-                           setPreviousFormationView={setPreviousFormationView}
-                           stageDimensions={stageDimensions}
-                           setStageDimensions={setStageDimensions}
-                           setFormations={setFormations}
-                        ></Settings>
+                        <Settings setLocalSettings={setLocalSettings} localSettings={localSettings}></Settings>
                      ) : menuOpen === "stageSettings" ? (
                         <StageSettings
                            stageBackground={stageBackground}
                            setStageBackground={setStageBackground}
-                           gridSnap={gridSnap}
-                           setGridSnap={setGridSnap}
                            formations={formations}
                            pricingTier={pricingTier}
-                           previousFormationView={previousFormationView}
-                           setPreviousFormationView={setPreviousFormationView}
                            stageDimensions={stageDimensions}
                            setStageDimensions={setStageDimensions}
                            setFormations={setFormations}
@@ -675,7 +669,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            setZoom={setZoom}
                            isCommenting={isCommenting}
                            setIsCommenting={setIsCommenting}
-                           gridSnap={gridSnap}
+                           localSettings={localSettings}
                            pushChange={pushChange}
                            undo={undo}
                            addToStack={addToStack}
@@ -704,9 +698,10 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                                  formations={formations}
                                  selectedFormation={selectedFormation}
                                  selectedDancers={selectedDancers}
-                                 previousFormationView={previousFormationView}
+                                 localSettings={localSettings}
                                  isPlaying={isPlaying}
                                  coordsToPosition={coordsToPosition}
+                                 localSettings={localSettings}
                               />
                            ) : (
                               <></>
@@ -732,6 +727,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                                  onlineUsers={onlineUsers}
                                  currentFormationIndex={currentFormationIndex}
                                  percentThroughTransition={percentThroughTransition}
+                                 localSettings={localSettings}
+                                 index={index}
                               />
                            ))}
 
@@ -762,7 +759,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                                        </>
                                     );
                                  })}
-                                 {previousFormationView !== "none"
+                                 {localSettings.previousFormationView !== "none"
                                     ? dancers.map((dancer, index) => (
                                          <DancerAliasShadow
                                             coordsToPosition={coordsToPosition}
@@ -802,7 +799,6 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                         setZoom={setZoom}
                         isCommenting={isCommenting}
                         setIsCommenting={setIsCommenting}
-                        gridSnap={gridSnap}
                         pushChange={pushChange}
                         undo={undo}
                         addToStack={addToStack}
