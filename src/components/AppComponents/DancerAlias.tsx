@@ -154,7 +154,9 @@ export const DancerAlias: React.FC<{
                </div>
             )}
             {dancerStyle === "numbered" ? (
-               <p className="absolute -bottom-6 text-center select-none pointer-events-none">{dancer.name.split(" ")[0]}</p>
+               <p className="absolute -bottom-6 text-center select-none pointer-events-none bg-white rounded-full px-1">
+                  {dancer.name.split(" ")[0]}
+               </p>
             ) : null}
          </div>
       </>

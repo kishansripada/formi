@@ -7595,7 +7595,6 @@ const home = () => {
                </div>
             </div>
             <div className=" mt-24 relative  h-[400px]  overflow-hidden ">
-               {/* <img src="/editDemo.png" className="rounded-xl shadow-2xl z-50 relative pointer-events-none select-none " alt="" /> */}
                <Canvas
                   className="h-[700px] relative bottom-0 w-full z-50"
                   gl={{ logarithmicDepthBuffer: true }}
