@@ -13,7 +13,7 @@ export const DancerAlias: React.FC<{
    selectedDancers: string[];
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
    draggingDancerId: string | null;
-   stageDimensions: any;
+   cloudSettings: any;
    userPositions: any;
    onlineUsers: any;
    zoom: number;
@@ -33,7 +33,7 @@ export const DancerAlias: React.FC<{
    selectedDancers,
    coordsToPosition,
    draggingDancerId,
-   stageDimensions,
+   cloudSettings,
    userPositions,
    onlineUsers,
    zoom,
@@ -41,6 +41,7 @@ export const DancerAlias: React.FC<{
    localSettings,
    index,
 }) => {
+   let { stageDimensions } = cloudSettings;
    let { dancerStyle } = localSettings;
    let initials = dancer.name
       .split(" ")
@@ -154,9 +155,7 @@ export const DancerAlias: React.FC<{
                </div>
             )}
             {dancerStyle === "numbered" ? (
-               <p className="absolute -bottom-6 text-center select-none pointer-events-none bg-white rounded-full px-1">
-                  {dancer.name.split(" ")[0]}
-               </p>
+               <p className="absolute -bottom-6 text-center select-none pointer-events-none  rounded-full px-1">{dancer.name.split(" ")[0]}</p>
             ) : null}
          </div>
       </>

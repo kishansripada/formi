@@ -7525,7 +7525,7 @@ const home = () => {
             <></>
          )} */}
          <div className="bg-[#fafafa]">
-            <div className="font-proxima pt-16 px-[10%] lg:px-[20%] bg-[#fafafa] ">
+            <div className="font-proxima pt-16 px-[10%] lg:px-[20%] bg-[#fafafa]  ">
                <nav className="flex flex-row lg:justify-between text-black items-center justify-center ">
                   <div className="w-[250px]">
                      {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
@@ -7594,56 +7594,24 @@ const home = () => {
                   </div>
                </div>
             </div>
-            <div className=" mt-24 relative  h-[400px]  overflow-hidden ">
-               <Canvas
-                  className="h-[700px] relative bottom-0 w-full z-50"
-                  gl={{ logarithmicDepthBuffer: true }}
-                  camera={{ position: [10, 10, 10], fov: 40 }}
-               >
-                  {/* <fog attach="fog" args={["black", 15, 21.5]} /> */}
-                  <Stage
-                     position={[10, 0, 0]}
-                     //    intensity={0.5}
-                     environment="apartment"
-                     //    shadows={{ type: "accumulative", bias: -0.001 }}
-                     adjustCamera={false}
-                  ></Stage>
-                  <Grid
-                     renderOrder={-1}
-                     position={[0, 0, 0]}
-                     args={[40 / 2, 30 / 2]}
-                     cellSize={0.5}
-                     cellThickness={0.5}
-                     sectionSize={2.5}
-                     sectionThickness={1.5}
-                     sectionColor={[0.5, 0.5, 10]}
-                     //    fadeDistance={30}
-                  />
+            <div className=" mt-24 relative  h-[600px]  overflow-hidden ">
+               <Image
+                  className="object-contain w-full relative rounded-xl shadow-md "
+                  layout="fill"
+                  src="/threePreview.png"
+                  width={1000}
+                  height={800}
+                  alt=""
+               />
+               {/* <img src="/threePreview.png" className="lg:w-1/2 w-[90%] rounded-xl relative lg:left-24 mx-auto" alt="" /> */}
 
-                  {formations[0].positions.map((dancerPosition) => {
-                     return (
-                        <ThreeDancer
-                           isPlaying={true}
-                           currentFormationIndex={currentFormationIndex}
-                           percentThroughTransition={percentThroughTransition}
-                           dancers={dancers}
-                           position={position}
-                           dancerPosition={dancerPosition}
-                           formations={formations}
-                        ></ThreeDancer>
-                     );
-                  })}
-
-                  <OrbitControls autoRotate autoRotateSpeed={1} enableZoom={false} makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
-                  {/* <Environment background preset="city" blur={0.8} /> */}
-               </Canvas>
                <div
                   className="pointer-events-none absolute  h-[1000px] w-[1000px] "
                   style={{
                      backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
                      top: 0,
                      right: -300,
-                     opacity: 0.5,
+                     opacity: 0.2,
                   }}
                ></div>
                <div
@@ -7652,7 +7620,7 @@ const home = () => {
                      backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #9333ea 0%, rgba(239, 255, 250, 0) 100%)",
                      top: 0,
                      left: -300,
-                     opacity: 0.5,
+                     opacity: 0.2,
                   }}
                ></div>
             </div>
@@ -7777,14 +7745,58 @@ const home = () => {
                <div></div>
             </div> */}
 
-            <div className="flex flex-col lg:flex-row items-center py-16  font-proxima overflow-hidden">
+            <div className="flex flex-col lg:flex-row items-center py-16  font-proxima overflow-hidden h-[700px]">
                <div className="lg:w-1/2 w-[90%] ml-[10%] lg:mt-9 lg:mt-0">
-                  <p className="text-3xl">Custom Curved Paths</p>
+                  <p className="text-3xl">3D View</p>
                   <p className="text-md mt-6 lg:w-[70%] mb-10 lg:mb-0">
                      Easily send dancers along non-linear paths that are more accurate to the performance
                   </p>
                </div>
-               <img src="/threePreview.png" className="lg:w-1/2 w-[90%] rounded-xl relative lg:left-24" alt="" />
+
+               <Canvas
+                  className="h-[700px] relative bottom-0 w-full z-50"
+                  gl={{ logarithmicDepthBuffer: true }}
+                  camera={{ position: [10, 10, 10], fov: 40 }}
+               >
+                  {/* <fog attach="fog" args={["black", 15, 21.5]} /> */}
+                  <Stage
+                     position={[10, 0, 0]}
+                     //    intensity={0.5}
+                     environment="apartment"
+                     //    shadows={{ type: "accumulative", bias: -0.001 }}
+                     adjustCamera={false}
+                  ></Stage>
+                  <Grid
+                     renderOrder={-1}
+                     position={[0, 0, 0]}
+                     args={[40 / 2, 30 / 2]}
+                     cellSize={0.5}
+                     cellThickness={0.5}
+                     sectionSize={2.5}
+                     sectionThickness={1.5}
+                     sectionColor={[0.5, 0.5, 10]}
+                     //    fadeDistance={30}
+                  />
+
+                  {formations[0].positions.map((dancerPosition) => {
+                     return (
+                        <ThreeDancer
+                           isPlaying={true}
+                           currentFormationIndex={currentFormationIndex}
+                           percentThroughTransition={percentThroughTransition}
+                           dancers={dancers}
+                           position={position}
+                           dancerPosition={dancerPosition}
+                           formations={formations}
+                        ></ThreeDancer>
+                     );
+                  })}
+
+                  <OrbitControls autoRotate autoRotateSpeed={1} enableZoom={false} makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
+                  {/* <Environment background preset="city" blur={0.8} /> */}
+               </Canvas>
+
+               {/* <img src="/threePreview.png" className="lg:w-1/2 w-[90%] rounded-xl relative lg:left-24" alt="" /> */}
             </div>
 
             <div className="flex flex-col lg:flex-row items-center py-16 bg-white font-proxima">

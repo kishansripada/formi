@@ -3,16 +3,14 @@ import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 
 export const StageSettings: React.FC<{
-   stageDimensions: any;
-   setStageDimensions: Function;
    setFormations: Function;
    pricingTier: string;
    formations: formation[];
-   stageBackground: "none" | "basketballCourt";
-   setStageBackground: Function;
-}> = ({ stageDimensions, setStageDimensions, setFormations, pricingTier, formations, stageBackground, setStageBackground }) => {
+   cloudSettings: any;
+   setCloudSettings: Function;
+}> = ({ setFormations, pricingTier, formations, setCloudSettings, cloudSettings }) => {
    const [backgroundDropdownIsOpen, setBackgroundDropdownIsOpen] = useState<boolean>();
-
+   let { stageBackground, stageDimensions } = cloudSettings;
    const closeWindow = (e) => {
       console.log(e.target.id);
       if (e.target.id === "menu-item") return;
@@ -67,8 +65,8 @@ export const StageSettings: React.FC<{
                            };
                         });
                      });
-                     setStageDimensions((stageDimensions: stageDimensions) => {
-                        return { ...stageDimensions, width: stageDimensions.width - 2 };
+                     setCloudSettings((cloudSettings) => {
+                        return { ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width - 2 } };
                      });
                   }}
                >
@@ -99,8 +97,8 @@ export const StageSettings: React.FC<{
                            };
                         });
                      });
-                     setStageDimensions((stageDimensions: stageDimensions) => {
-                        return { ...stageDimensions, width: stageDimensions.width + 2 };
+                     setCloudSettings((cloudSettings) => {
+                        return { ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width + 2 } };
                      });
                   }}
                >
@@ -127,8 +125,8 @@ export const StageSettings: React.FC<{
                         }
                      }
 
-                     setStageDimensions((stageDimensions: stageDimensions) => {
-                        return { ...stageDimensions, height: stageDimensions.height - 2 };
+                     setCloudSettings((cloudSettings) => {
+                        return { ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height - 2 } };
                      });
                   }}
                >
@@ -143,8 +141,8 @@ export const StageSettings: React.FC<{
                <button
                   className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
                   onClick={() =>
-                     setStageDimensions((stageDimensions: stageDimensions) => {
-                        return { ...stageDimensions, height: stageDimensions.height + 2 };
+                     setCloudSettings((cloudSettings) => {
+                        return { ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height + 2 } };
                      })
                   }
                >
@@ -192,7 +190,11 @@ export const StageSettings: React.FC<{
                   <div className="py-1" role="none">
                      {/* Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" */}
                      <a
-                        onClick={() => setStageBackground("none")}
+                        onClick={() =>
+                           setCloudSettings((s) => {
+                              return { ...s, stageBackground: "none" };
+                           })
+                        }
                         href="#"
                         className={`${
                            stageBackground === "none" ? "text-gray-900 bg-gray-100 " : ""
@@ -216,7 +218,11 @@ export const StageSettings: React.FC<{
                         Basketball Court
                      </a> */}
                      <a
-                        onClick={() => setStageBackground("grid")}
+                        onClick={() =>
+                           setCloudSettings((s) => {
+                              return { ...s, stageBackground: "grid" };
+                           })
+                        }
                         href="#"
                         className={`${
                            stageBackground === "grid" ? "text-gray-900 bg-gray-100 " : ""
@@ -229,8 +235,12 @@ export const StageSettings: React.FC<{
                      </a>
                      <a
                         onClick={() => {
-                           setStageDimensions({ width: 36, height: 28 });
-                           setStageBackground("cheer9");
+                           setCloudSettings((s) => {
+                              return { ...s, stageDimensions: { width: 36, height: 28 } };
+                           });
+                           setCloudSettings((s) => {
+                              return { ...s, stageBackground: "cheer9" };
+                           });
                         }}
                         href="#"
                         className={`${

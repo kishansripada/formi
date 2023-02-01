@@ -1,23 +1,27 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, lazy } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useLocalStorage } from "../../hooks";
-
+import { ThreeDancer } from "../../components/AppComponents/ThreeDancer";
 import { debounce } from "lodash";
 import toast, { Toaster } from "react-hot-toast";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import Script from "next/script";
 
-import { comment, dancer, dancerPosition, formation, PIXELS_PER_SQUARE } from "../../types/types";
+import { comment, dancer, dancerPosition, formation, PIXELS_PER_SQUARE, localSettings, cloudSettings } from "../../types/types";
 import { AudioControls } from "../../components/AppComponents/AudioControls";
 import { Header } from "../../components/AppComponents/Header";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
 import { Comment } from "../../components/AppComponents/Comment";
 import { DancerAliasShadow } from "../../components/AppComponents/DancerAliasShadow";
 import { Canvas } from "../../components/AppComponents/Canvas";
-import { ThreeCanvas } from "../../components/AppComponents/ThreeCanvas";
+// import { ThreeCanvas } from "../../components/AppComponents/ThreeCanvas";
+// const ThreeCanvas = lazy(() => import("../../components/AppComponents/ThreeCanvas"));
+
+// const ThreeCanvas = dynamic(() => import("../../components/AppComponents/ThreeCanvas").then((mod) => mod.ThreeCanvas));
+
 import { EditDancer } from "../../components/AppComponents/EditDancer";
 import { Layers } from "../../components/AppComponents/Layers";
 import { PathEditor } from "../../components/AppComponents/PathEditor";
@@ -91,9 +95,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
 
    const supabase = useSupabaseClient();
    let session = useSession();
-
    const router = useRouter();
-
+   const videoPlayer = useRef();
    // const supabase = createClient(
    //    "https://dxtxbxkkvoslcrsxbfai.supabase.co",
    //    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4dHhieGtrdm9zbGNyc3hiZmFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjE0NjM3NDYsImV4cCI6MTk3NzAzOTc0Nn0.caFbFV4Ck7MrTSwsPXyIifjeKWYJWXisKR9-zFA33Ng",
@@ -105,31 +108,26 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    //       },
    //    }
 
-   const [previousFormation, setPreviousFormation] = useState<formation[]>();
+   // cloud
+   const [cloudSettings, setCloudSettings] = useState<cloudSettings>(initialData.settings);
+   const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
    const [formations, setFormations] = useState<formation[]>(initialData.formations);
-   const [deltas, setDeltas] = useState([]);
-   const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
-
-   const [upgradeIsOpen, setUpgradeIsOpen] = useState<boolean>(false);
-
-   const [danceName, setDanceName] = useState<string>(initialData.name);
    const [shareSettings, setShareSettings] = useState(initialData.sharesettings);
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(initialData.soundCloudId);
+   const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
-   const [localSource, setLocalSource] = useState(null);
-
-   // cloud
-   const [stageDimensions, setStageDimensions] = useState(initialData.settings.stageDimensions);
-   const [stageBackground, setStageBackground] = useState<"none" | "grid" | "cheer9">(initialData.settings.stageBackground || "grid");
-   const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
+   const [danceName, setDanceName] = useState<string>(initialData.name);
 
    // local
-   const [localSettings, setLocalSettings] = useLocalStorage<{
-      gridSnap: number;
-      previousFormationView: "none" | "ghostDancers" | "ghostDancersAndPaths";
-      dancerStyle: "initials";
-   }>("localSettings", { gridSnap: 1, previousFormationView: "ghostDancersAndPaths", dancerStyle: "initials" });
+   const [localSettings, setLocalSettings] = useLocalStorage<localSettings>("localSettings", {
+      gridSnap: 1,
+      previousFormationView: "ghostDancersAndPaths",
+      dancerStyle: "initials",
+   });
 
+   const [upgradeIsOpen, setUpgradeIsOpen] = useState<boolean>(false);
+   const [deltas, setDeltas] = useState([]);
+   const [localSource, setLocalSource] = useState(null);
    const [songDuration, setSongDuration] = useState<number | null>(null);
    const [videoCoordinates, setVideoCoordinates] = useState<{ left: number; top: number }>({ left: 40, top: 40 });
    const [zoom, setZoom] = useState(1);
@@ -140,8 +138,15 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
    const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
    const [editingDancer, setEditingDancer] = useState<string | null>(null);
-
+   const [previousFormation, setPreviousFormation] = useState<formation[]>();
    const [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
+   const [menuOpen, setMenuOpen] = useState<string>("formations");
+   const [isPreviewingThree, setIsPreviewingThree] = useState<boolean>(false);
+   const [player, setPlayer] = useState(null);
+   const [saved, setSaved] = useState<boolean>(true);
+   const [shareIsOpen, setShareIsOpen] = useState(false);
+
+   // not in use
    const [onlineUsers, setOnlineUsers] = useState({
       "f30197ba-cf06-4234-bcdb-5d40d83c7999": [{ name: "Kishan Sripada", color: "#e6194B" }],
       "0e5f35d1-3989-401c-9693-f6a632954d0b": [
@@ -151,28 +156,17 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          },
       ],
    });
-
-   const [saved, setSaved] = useState<boolean>(true);
-   const [isPreviewingThree, setIsPreviewingThree] = useState<boolean>(false);
-
-   const [shareIsOpen, setShareIsOpen] = useState(false);
-   const [menuOpen, setMenuOpen] = useState<string>("formations");
-   const [player, setPlayer] = useState(null);
-   const videoPlayer = useRef();
-   // const [channelGlobal, setChannelGlobal] = useState();
    const [userPositions, setUserPositions] = useState({});
 
+   let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
    const coordsToPosition = (coords: { x: number; y: number } | null | undefined) => {
       if (!coords) return null;
       let { x, y } = coords;
       return {
-         left: (PIXELS_PER_SQUARE * stageDimensions.width) / 2 + PIXELS_PER_SQUARE * x,
-         top: (PIXELS_PER_SQUARE * stageDimensions.height) / 2 + PIXELS_PER_SQUARE * -y,
+         left: (PIXELS_PER_SQUARE * cloudSettings.stageDimensions.width) / 2 + PIXELS_PER_SQUARE * x,
+         top: (PIXELS_PER_SQUARE * cloudSettings.stageDimensions.height) / 2 + PIXELS_PER_SQUARE * -y,
       };
    };
-
-   let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
-   let actualVideoUrl = localSource || soundCloudTrackId;
 
    // useEffect(() => {
    //    setFormations((formations: formation[]) => {
@@ -281,67 +275,67 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    //    });
    // }, [selectedFormation, selectedDancers, channelGlobal]);
 
-   useEffect(() => {
-      // if (!session) return;
-      // let channel = supabase.channel("207", {
-      //    config: {
-      //       presence: {
-      //          key: session?.user.id,
-      //       },
-      //    },
-      // });
+   // useEffect(() => {
+   // if (!session) return;
+   // let channel = supabase.channel("207", {
+   //    config: {
+   //       presence: {
+   //          key: session?.user.id,
+   //       },
+   //    },
+   // });
 
-      // setChannelGlobal(channel);
-      // const usersChannel = channel.on("presence", { event: "sync" }, () => {
-      //    // console.log("Online users: ", channel.presenceState());
-      //    // let users = channel.presenceState();
-      //    // Object.keys(users).forEach((id, index) => {
-      //    //    users[id][0].color = colors[index];
-      //    // });
-      //    // setOnlineUsers({ ...users });
-      //    // // setOnlineUsers({ ...channel.presenceState() });
-      // });
+   // setChannelGlobal(channel);
+   // const usersChannel = channel.on("presence", { event: "sync" }, () => {
+   //    // console.log("Online users: ", channel.presenceState());
+   //    // let users = channel.presenceState();
+   //    // Object.keys(users).forEach((id, index) => {
+   //    //    users[id][0].color = colors[index];
+   //    // });
+   //    // setOnlineUsers({ ...users });
+   //    // // setOnlineUsers({ ...channel.presenceState() });
+   // });
 
-      // channel.on("presence", { event: "join" }, ({ newPresences }) => {
-      //    console.log("New users have joined: ", newPresences);
-      // });
+   // channel.on("presence", { event: "join" }, ({ newPresences }) => {
+   //    console.log("New users have joined: ", newPresences);
+   // });
 
-      // const formsChannel = channel
-      //    .on("broadcast", { event: "user-position-update" }, ({ payload }) => {
-      //       console.log(payload);
-      //       setUserPositions((userPositions) => {
-      //          return { ...userPositions, ...payload };
-      //       });
-      //    })
-      //    .on("broadcast", { event: "formation-update" }, ({ payload }) => {
-      //       console.log(payload);
-      //       setDeltas((deltas) => [...deltas, ...payload]);
-      //       // setFormations((formations: formation[]) => {
-      //       //    let newFormations = { formations: [...formations] };
-      //       //    applyChangeset(newFormations, unflattenChanges(payload));
-      //       //    return [...newFormations.formations];
-      //       // });
-      //    })
-      //    .subscribe(async (status) => {
-      //       if (status === "SUBSCRIBED") {
-      //          console.log("subbedd");
-      //          // const status = await channel.track({ name: session?.user.user_metadata.full_name }); //online_at: new Date().toISOString(), //user: session?.user
-      //          console.log({ status });
-      //       }
-      //    });
+   // const formsChannel = channel
+   //    .on("broadcast", { event: "user-position-update" }, ({ payload }) => {
+   //       console.log(payload);
+   //       setUserPositions((userPositions) => {
+   //          return { ...userPositions, ...payload };
+   //       });
+   //    })
+   //    .on("broadcast", { event: "formation-update" }, ({ payload }) => {
+   //       console.log(payload);
+   //       setDeltas((deltas) => [...deltas, ...payload]);
+   //       // setFormations((formations: formation[]) => {
+   //       //    let newFormations = { formations: [...formations] };
+   //       //    applyChangeset(newFormations, unflattenChanges(payload));
+   //       //    return [...newFormations.formations];
+   //       // });
+   //    })
+   //    .subscribe(async (status) => {
+   //       if (status === "SUBSCRIBED") {
+   //          console.log("subbedd");
+   //          // const status = await channel.track({ name: session?.user.user_metadata.full_name }); //online_at: new Date().toISOString(), //user: session?.user
+   //          console.log({ status });
+   //       }
+   //    });
 
-      return () => {
-         // usersChannel.unsubscribe();
-         // formsChannel.unsubscribe();
-      };
-   }, [router.query.danceId, session]);
+   // return () => {
+   // usersChannel.unsubscribe();
+   // formsChannel.unsubscribe();
+   // };
+   // }, [router.query.danceId, session]);
 
    let uploadSettings = useCallback(
-      debounce(async (stageDimensions, stageBackground) => {
+      debounce(async (cloudSettings) => {
          console.log("uploading settings");
          const { data, error } = await supabase
             .from("dances")
-            .update({ settings: { stageDimensions, stageBackground }, last_edited: new Date() })
+            .update({ settings: cloudSettings, last_edited: new Date() })
             .eq("id", router.query.danceId);
 
          console.log({ data });
@@ -357,9 +351,9 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       }
       if (router.isReady) {
          setSaved(false);
-         uploadSettings(stageDimensions, stageBackground);
+         uploadSettings(cloudSettings);
       }
-   }, [stageDimensions, stageBackground]);
+   }, [cloudSettings]);
 
    let uploadDancers = useCallback(
       debounce(async (dancers) => {
@@ -420,7 +414,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 100),
+      }, 0),
       [router.query.danceId]
    );
 
@@ -442,7 +436,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 100),
+      }, 1000),
       [router.query.danceId]
    );
 
@@ -569,7 +563,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            formations={formations}
                            selectedFormation={selectedFormation}
                            setEditingDancer={setEditingDancer}
-                           stageDimensions={stageDimensions}
+                           cloudSettings={cloudSettings}
                            setFormations={setFormations}
                            selectedDancers={selectedDancers}
                         ></Roster>
@@ -582,7 +576,6 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            soundCloudTrackId={soundCloudTrackId}
                            setSoundCloudTrackId={setSoundCloudTrackId}
                            audioFiles={audioFiles}
-                           sampleAudioFiles={initialData.sampleAudioFiles}
                            setAudiofiles={setAudiofiles}
                            setLocalSource={setLocalSource}
                         ></ChooseAudioSource>
@@ -590,12 +583,10 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                         <Settings setLocalSettings={setLocalSettings} localSettings={localSettings}></Settings>
                      ) : menuOpen === "stageSettings" ? (
                         <StageSettings
-                           stageBackground={stageBackground}
-                           setStageBackground={setStageBackground}
                            formations={formations}
                            pricingTier={pricingTier}
-                           stageDimensions={stageDimensions}
-                           setStageDimensions={setStageDimensions}
+                           cloudSettings={cloudSettings}
+                           setCloudSettings={setCloudSettings}
                            setFormations={setFormations}
                         ></StageSettings>
                      ) : menuOpen === "presets" ? (
@@ -605,7 +596,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            addToStack={addToStack}
                            pushChange={pushChange}
                            pricingTier={pricingTier}
-                           stageDimensions={stageDimensions}
+                           cloudSettings={cloudSettings}
                            selectedDancers={selectedDancers}
                            setSelectedDancers={setSelectedDancers}
                            setSelectedFormation={setSelectedFormation}
@@ -622,7 +613,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            addToStack={addToStack}
                            pushChange={pushChange}
                            pricingTier={pricingTier}
-                           stageDimensions={stageDimensions}
+                           cloudSettings={cloudSettings}
                            selectedDancers={selectedDancers}
                            setSelectedDancers={setSelectedDancers}
                            setSelectedFormation={setSelectedFormation}
@@ -651,7 +642,6 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                      setIsPreviewingThree={setIsPreviewingThree}
                      setUpgradeIsOpen={setUpgradeIsOpen}
                   />
-
                   {/* <div className="flex flex-row items-center w-full h-full"> */}
                   <video
                      ref={videoPlayer}
@@ -660,107 +650,112 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                      }}
                      src={localSource || soundCloudTrackId}
                   ></video>
-
-                  {!isPreviewingThree ? (
-                     <>
-                        <Canvas
-                           stageBackground={stageBackground}
-                           zoom={zoom}
-                           setZoom={setZoom}
-                           isCommenting={isCommenting}
-                           setIsCommenting={setIsCommenting}
-                           localSettings={localSettings}
-                           pushChange={pushChange}
-                           undo={undo}
-                           addToStack={addToStack}
-                           player={player}
-                           draggingDancerId={draggingDancerId}
-                           setDraggingDancerId={setDraggingDancerId}
-                           songDuration={songDuration}
-                           viewOnly={viewOnly}
-                           setSelectedFormation={setSelectedFormation}
+                  <Canvas
+                     zoom={zoom}
+                     setZoom={setZoom}
+                     isCommenting={isCommenting}
+                     setIsCommenting={setIsCommenting}
+                     localSettings={localSettings}
+                     pushChange={pushChange}
+                     undo={undo}
+                     addToStack={addToStack}
+                     player={player}
+                     draggingDancerId={draggingDancerId}
+                     setDraggingDancerId={setDraggingDancerId}
+                     songDuration={songDuration}
+                     viewOnly={viewOnly}
+                     setSelectedFormation={setSelectedFormation}
+                     formations={formations}
+                     selectedFormation={selectedFormation}
+                     setFormations={setFormations}
+                     selectedDancers={selectedDancers}
+                     setSelectedDancers={setSelectedDancers}
+                     setIsPlaying={setIsPlaying}
+                     setPixelsPerSecond={setPixelsPerSecond}
+                     cloudSettings={cloudSettings}
+                     coordsToPosition={coordsToPosition}
+                     isPreviewingThree={isPreviewingThree}
+                     currentFormationIndex={currentFormationIndex}
+                     percentThroughTransition={percentThroughTransition}
+                     dancers={dancers}
+                  >
+                     {selectedFormation !== null && !isPreviewingThree ? (
+                        <PathEditor
+                           dancers={dancers}
+                           currentFormationIndex={currentFormationIndex}
                            formations={formations}
                            selectedFormation={selectedFormation}
-                           setFormations={setFormations}
                            selectedDancers={selectedDancers}
-                           setSelectedDancers={setSelectedDancers}
-                           setIsPlaying={setIsPlaying}
-                           setPixelsPerSecond={setPixelsPerSecond}
-                           stageDimensions={stageDimensions}
+                           localSettings={localSettings}
+                           isPlaying={isPlaying}
                            coordsToPosition={coordsToPosition}
-                           videoCoordinates={videoCoordinates}
-                           setVideoCoordinates={setVideoCoordinates}
-                        >
-                           {selectedFormation !== null ? (
-                              <PathEditor
-                                 dancers={dancers}
-                                 currentFormationIndex={currentFormationIndex}
-                                 formations={formations}
-                                 selectedFormation={selectedFormation}
-                                 selectedDancers={selectedDancers}
-                                 localSettings={localSettings}
-                                 isPlaying={isPlaying}
-                                 coordsToPosition={coordsToPosition}
-                                 localSettings={localSettings}
-                              />
-                           ) : (
-                              <></>
-                           )}
+                           localSettings={localSettings}
+                        />
+                     ) : (
+                        <></>
+                     )}
 
-                           {dancers.map((dancer, index) => (
-                              <DancerAlias
-                                 zoom={zoom}
-                                 setZoom={setZoom}
-                                 stageDimensions={stageDimensions}
-                                 coordsToPosition={coordsToPosition}
-                                 selectedDancers={selectedDancers}
-                                 isPlaying={isPlaying}
-                                 position={position}
-                                 selectedFormation={selectedFormation}
-                                 setDancers={setDancers}
-                                 key={dancer.id}
-                                 dancer={dancer}
-                                 formations={formations}
-                                 setFormations={setFormations}
-                                 draggingDancerId={draggingDancerId}
-                                 userPositions={userPositions}
-                                 onlineUsers={onlineUsers}
-                                 currentFormationIndex={currentFormationIndex}
-                                 percentThroughTransition={percentThroughTransition}
-                                 localSettings={localSettings}
-                                 index={index}
-                              />
-                           ))}
+                     {!isPreviewingThree
+                        ? dancers.map((dancer, index) => (
+                             <DancerAlias
+                                zoom={zoom}
+                                setZoom={setZoom}
+                                cloudSettings={cloudSettings}
+                                coordsToPosition={coordsToPosition}
+                                selectedDancers={selectedDancers}
+                                isPlaying={isPlaying}
+                                position={position}
+                                selectedFormation={selectedFormation}
+                                setDancers={setDancers}
+                                key={dancer.id}
+                                dancer={dancer}
+                                formations={formations}
+                                setFormations={setFormations}
+                                draggingDancerId={draggingDancerId}
+                                userPositions={userPositions}
+                                onlineUsers={onlineUsers}
+                                currentFormationIndex={currentFormationIndex}
+                                percentThroughTransition={percentThroughTransition}
+                                localSettings={localSettings}
+                                index={index}
+                                isPlaying={isPlaying}
+                             />
+                          ))
+                        : null}
 
-                           {selectedFormation !== null && !isPlaying ? (
-                              <>
-                                 {(formations[selectedFormation].comments || []).map((comment: comment) => {
-                                    return (
-                                       <>
-                                          <Comment
-                                             zoom={zoom}
-                                             stageDimensions={stageDimensions}
-                                             coordsToPosition={coordsToPosition}
-                                             selectedDancers={selectedDancers}
-                                             isPlaying={isPlaying}
-                                             position={position}
-                                             selectedFormation={selectedFormation}
-                                             setDancers={setDancers}
-                                             key={comment.id}
-                                             comment={comment}
-                                             formations={formations}
-                                             setFormations={setFormations}
-                                             draggingDancerId={draggingDancerId}
-                                             userPositions={userPositions}
-                                             onlineUsers={onlineUsers}
-                                             currentFormationIndex={currentFormationIndex}
-                                             percentThroughTransition={percentThroughTransition}
-                                          />
-                                       </>
-                                    );
-                                 })}
-                                 {localSettings.previousFormationView !== "none"
-                                    ? dancers.map((dancer, index) => (
+                     {selectedFormation !== null && !isPlaying && !isPreviewingThree ? (
+                        <>
+                           {(formations[selectedFormation].comments || []).map((comment: comment) => {
+                              return (
+                                 <>
+                                    <Comment
+                                       zoom={zoom}
+                                       coordsToPosition={coordsToPosition}
+                                       setFormations={setFormations}
+                                       selectedFormation={selectedFormation}
+                                       key={comment.id}
+                                       comment={comment}
+                                    />
+                                 </>
+                              );
+                           })}
+
+                           {localSettings.previousFormationView !== "none" && !isPreviewingThree
+                              ? dancers.map((dancer, index) => (
+                                   <DancerAliasShadow
+                                      coordsToPosition={coordsToPosition}
+                                      currentFormationIndex={currentFormationIndex}
+                                      isPlaying={isPlaying}
+                                      selectedFormation={selectedFormation}
+                                      key={dancer.id}
+                                      dancer={dancer}
+                                      formations={formations}
+                                   />
+                                ))
+                              : dancers
+                                   .filter((dancer) => selectedDancers.includes(dancer.id))
+                                   .map((dancer, index) => {
+                                      return (
                                          <DancerAliasShadow
                                             coordsToPosition={coordsToPosition}
                                             currentFormationIndex={currentFormationIndex}
@@ -770,63 +765,27 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                                             dancer={dancer}
                                             formations={formations}
                                          />
-                                      ))
-                                    : dancers
-                                         .filter((dancer) => selectedDancers.includes(dancer.id))
-                                         .map((dancer, index) => {
-                                            return (
-                                               <DancerAliasShadow
-                                                  coordsToPosition={coordsToPosition}
-                                                  currentFormationIndex={currentFormationIndex}
-                                                  isPlaying={isPlaying}
-                                                  selectedFormation={selectedFormation}
-                                                  key={dancer.id}
-                                                  dancer={dancer}
-                                                  formations={formations}
-                                               />
-                                            );
-                                         })}
-                              </>
-                           ) : null}
-                        </Canvas>
-                     </>
-                  ) : (
-                     <ThreeCanvas
-                        localSource={localSource}
-                        position={position}
-                        stageBackground={stageBackground}
-                        zoom={zoom}
-                        setZoom={setZoom}
-                        isCommenting={isCommenting}
-                        setIsCommenting={setIsCommenting}
-                        pushChange={pushChange}
-                        undo={undo}
-                        addToStack={addToStack}
-                        player={player}
-                        draggingDancerId={draggingDancerId}
-                        setDraggingDancerId={setDraggingDancerId}
-                        songDuration={songDuration}
-                        viewOnly={viewOnly}
-                        setSelectedFormation={setSelectedFormation}
-                        formations={formations}
-                        selectedFormation={selectedFormation}
-                        setFormations={setFormations}
-                        selectedDancers={selectedDancers}
-                        setSelectedDancers={setSelectedDancers}
-                        setIsPlaying={setIsPlaying}
-                        setPixelsPerSecond={setPixelsPerSecond}
-                        stageDimensions={stageDimensions}
-                        coordsToPosition={coordsToPosition}
-                        videoCoordinates={videoCoordinates}
-                        setVideoCoordinates={setVideoCoordinates}
-                        dancers={dancers}
-                        currentFormationIndex={currentFormationIndex}
-                        percentThroughTransition={percentThroughTransition}
-                        isPlaying={isPlaying}
-                        soundCloudTrackId={soundCloudTrackId}
-                     ></ThreeCanvas>
-                  )}
-                  {/* </div> */}
+                                      );
+                                   })}
+                        </>
+                     ) : null}
+
+                     {selectedFormation !== null && isPreviewingThree
+                        ? formations[selectedFormation].positions.map((dancerPosition: dancerPosition) => {
+                             return (
+                                <ThreeDancer
+                                   isPlaying={isPlaying}
+                                   currentFormationIndex={currentFormationIndex}
+                                   percentThroughTransition={percentThroughTransition}
+                                   dancers={dancers}
+                                   position={position}
+                                   dancerPosition={dancerPosition}
+                                   formations={formations}
+                                ></ThreeDancer>
+                             );
+                          })
+                        : null}
+                  </Canvas>
                </div>
             </div>
 
@@ -952,10 +911,9 @@ export const getServerSideProps = async (ctx) => {
    //    supabase.storage.from("audiofiles").list("sample", {}),
    // ]);
 
-   let [{ data: dance }, audioFiles, sampleAudioFiles] = await Promise.all([
+   let [{ data: dance }, audioFiles] = await Promise.all([
       supabase.from("dances").select("*").eq("id", ctx.query.danceId).single(),
       supabase.storage.from("audiofiles").list(session?.user.id, {}),
-      supabase.storage.from("audiofiles").list("sample", {}),
    ]);
 
    // let sortedDeltas = deltas?.sort((a, b) => a.timestamp - b.timestamp);
@@ -982,7 +940,7 @@ export const getServerSideProps = async (ctx) => {
    if (dance.id === 207 || dance?.user === session?.user?.id) {
       viewOnly = false;
    }
-   dance = { ...{ ...dance, formations: dance.formations }, audioFiles, sampleAudioFiles };
+   dance = { ...{ ...dance, formations: dance.formations }, audioFiles };
 
    return {
       props: {

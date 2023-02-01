@@ -2,8 +2,10 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { GridLines } from "./GridLines";
 import { CheerLines } from "./CheerLines";
-import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment } from "../../types/types";
+import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings } from "../../types/types";
 import { toast, Toaster } from "react-hot-toast";
+import { Canvas as Canva, useFrame, useLoader } from "@react-three/fiber";
+import { useGLTF, Stage, Grid, OrbitControls, Environment, useFBX } from "@react-three/drei";
 
 export const Canvas: React.FC<{
    children: React.ReactNode;
@@ -17,7 +19,6 @@ export const Canvas: React.FC<{
    viewOnly: boolean;
    setPixelsPerSecond: Function;
    songDuration: number | null;
-   stageDimensions: { width: number; height: number };
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
    draggingDancerId: string | null;
    setDraggingDancerId: Function;
@@ -30,9 +31,9 @@ export const Canvas: React.FC<{
    setIsCommenting: Function;
    zoom: number;
    setZoom: Function;
-   videoCoordinates: { left: number; top: number };
-   setVideoCoordinates: Function;
-   stageBackground: string;
+
+   cloudSettings: cloudSettings;
+   isPreviewingThree: boolean;
 }> = ({
    player,
    children,
@@ -46,7 +47,7 @@ export const Canvas: React.FC<{
    viewOnly,
    setPixelsPerSecond,
    songDuration,
-   stageDimensions,
+   cloudSettings,
    coordsToPosition,
    draggingDancerId,
    setDraggingDancerId,
@@ -58,22 +59,19 @@ export const Canvas: React.FC<{
    setIsCommenting,
    zoom,
    setZoom,
-   videoCoordinates,
-   setVideoCoordinates,
-   stageBackground,
+   isPreviewingThree,
 }) => {
+   let { stageDimensions, stageBackground } = cloudSettings;
    const [shiftHeld, setShiftHeld] = useState(false);
    const [draggingCommentId, setDraggingCommentId] = useState<string | null>();
    const [commandHeld, setCommandHeld] = useState(false);
    const [changingControlId, setChangingControlId] = useState<null | string>(null);
    const [changingControlType, setChangingControlType] = useState<"start" | "end" | null>(null);
-   const [scrollOffset, setScrollOffset] = useState({ x: -442, y: -310 });
 
    const [copiedPositions, setCopiedPositions] = useState([]);
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
    const [isDragging, setIsDragging] = useState(false);
-   const [isDraggingVideo, setIsDraggingVideo] = useState(false);
-   const [cursorPosition, setCursorPoisition] = useState<{ x: number; y: number }>();
+
    let { gridSnap } = localSettings;
    const container = useRef();
    const stage = useRef();
@@ -90,6 +88,8 @@ export const Canvas: React.FC<{
    }, [selectedFormation, commandHeld, selectedDancers, formations, copiedPositions]);
 
    useEffect(() => {
+      if (!container.current) return;
+      if (!stage.current) return;
       // let heightPercentage = (container.current.clientHeight - 50) / stage.current.clientHeight;
       // let widthPercentage = (container.current.clientWidth - 50) / stage.current.clientWidth;
       let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
@@ -181,13 +181,6 @@ export const Canvas: React.FC<{
 
    const handleDragMove = (e: any) => {
       if (selectedFormation === null) return;
-
-      if (isDraggingVideo) {
-         console.log(isDraggingVideo);
-         setVideoCoordinates((videoCoordinates) => {
-            return { left: videoCoordinates.left + e.movementX, top: videoCoordinates.top + e.movementY };
-         });
-      }
 
       if (changingControlId) {
          setFormations((formations: formation[]) => {
@@ -349,10 +342,6 @@ export const Canvas: React.FC<{
    };
 
    const pointerDown = (e: any) => {
-      if (e.target.id === "video") {
-         setIsDraggingVideo(true);
-      }
-
       if (isCommenting) {
          if (!session) {
             toast.error("sign in to comment");
@@ -468,8 +457,6 @@ export const Canvas: React.FC<{
    };
 
    const pointerUp = (e: any) => {
-      setIsDraggingVideo(false);
-
       if (changingControlId) {
          pushChange();
       }
@@ -549,88 +536,89 @@ export const Canvas: React.FC<{
          ref={container}
          onPointerUp={!viewOnly ? pointerUp : () => null}
       >
-         {/* <div style={{ ...videoCoordinates }} className=" absolute z-[9999] pointer-events-none">
-            <div className="relative w-10 h-4 bg-red-600 cursor-pointer select-none pointer-events-auto" id="video"></div>
-            <iframe
-               className="rounded-xl pointer-events-auto"
-               src="https://www.youtube.com/embed/EuX1v3HfVZs"
-               title="YouTube video player"
-               frameborder="0"
-               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-               allowfullscreen
-            ></iframe>
-         </div> */}
-
          <Toaster />
-         <div
-            onPointerDown={!viewOnly ? pointerDown : () => null}
-            onPointerMove={handleDragMove}
-            ref={stage}
-            className="relative bg-white border border-gray-500"
-            style={{
-               // top: scrollOffset.y,
-               // left: scrollOffset.x,
-               // transformOrigin: `${scrollOffset.x}px ${scrollOffset.y}px`,
-               transform: `scale(${zoom})  `,
-               // translate(${scrollOffset.x}px, ${scrollOffset.y}px)
-               height: stageDimensions.height * PIXELS_PER_SQUARE,
-               width: stageDimensions.width * PIXELS_PER_SQUARE,
-            }}
-         >
-            {/* {stageBackground === "basketballCourt" ? (
-               <img
-                  src="/basketball.svg"
-                  className="absolute top-0 left-0 right-0 bottom-0 m-auto opacity-40 pointer-events-none select-none"
-                  alt=""
+
+         {isPreviewingThree ? (
+            <Canva gl={{ logarithmicDepthBuffer: true }} camera={{ position: [10, 10, 10], fov: 40 }}>
+               <Stage position={[10, 0, 0]} environment="apartment" adjustCamera={false}></Stage>
+               <Grid
+                  renderOrder={-1}
+                  position={[0, 0, 0]}
+                  args={[stageDimensions.width / 2, stageDimensions.height / 2]}
+                  cellSize={0.5}
+                  cellThickness={0.5}
+                  sectionSize={2.5}
+                  sectionThickness={1.5}
+                  sectionColor={[0.5, 0.5, 10]}
                />
-            ) : null} */}
-            {children}
 
-            {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y ? (
-               <div
-                  className="absolute bg-blue-200/50 z-10 cursor-default "
-                  style={{
-                     width: Math.abs(dragBoxCoords.end.x - dragBoxCoords.start.x),
-                     height: Math.abs(dragBoxCoords.end.y - dragBoxCoords.start.y),
-                     left: dragBoxCoords.end.x - dragBoxCoords.start.x < 0 ? dragBoxCoords.end.x : dragBoxCoords.start.x,
-                     top: dragBoxCoords.end.y - dragBoxCoords.start.y < 0 ? dragBoxCoords.end.y : dragBoxCoords.start.y,
-                  }}
-               ></div>
-            ) : (
-               <></>
-            )}
-
-            {stageBackground !== "cheer9" && stageBackground !== "cheer7" ? (
-               <>
-                  <div
-                     style={{
-                        width: PIXELS_PER_SQUARE * 2.5,
-                     }}
-                     className="absolute h-full bg-black opacity-30 z-[100] pointer-events-none border-r-pink-700  "
-                  ></div>
-                  <div
-                     style={{
-                        width: PIXELS_PER_SQUARE * 2.5,
-                     }}
-                     className="absolute h-full bg-black opacity-30 z-[100] right-0 pointer-events-none flex flex-col justify-center border-l-pink-700 "
-                  ></div>
-               </>
-            ) : null}
-
+               {children}
+               <OrbitControls autoRotate autoRotateSpeed={0} enableZoom={true} makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
+            </Canva>
+         ) : (
             <div
+               onPointerDown={!viewOnly ? pointerDown : () => null}
+               onPointerMove={handleDragMove}
+               ref={stage}
+               className="relative bg-white border border-gray-500"
                style={{
+                  // top: scrollOffset.y,
+                  // left: scrollOffset.x,
+                  // transformOrigin: `${scrollOffset.x}px ${scrollOffset.y}px`,
+                  transform: `scale(${zoom})  `,
+                  // translate(${scrollOffset.x}px, ${scrollOffset.y}px)
+                  height: stageDimensions.height * PIXELS_PER_SQUARE,
                   width: stageDimensions.width * PIXELS_PER_SQUARE,
                }}
-            ></div>
+            >
+               {children}
 
-            {stageBackground === "grid" ? <GridLines stageDimensions={stageDimensions} /> : null}
+               {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y ? (
+                  <div
+                     className="absolute bg-blue-200/50 z-10 cursor-default "
+                     style={{
+                        width: Math.abs(dragBoxCoords.end.x - dragBoxCoords.start.x),
+                        height: Math.abs(dragBoxCoords.end.y - dragBoxCoords.start.y),
+                        left: dragBoxCoords.end.x - dragBoxCoords.start.x < 0 ? dragBoxCoords.end.x : dragBoxCoords.start.x,
+                        top: dragBoxCoords.end.y - dragBoxCoords.start.y < 0 ? dragBoxCoords.end.y : dragBoxCoords.start.y,
+                     }}
+                  ></div>
+               ) : (
+                  <></>
+               )}
 
-            {stageBackground === "cheer9" ? (
-               <div className="absolute top-0 left-0 right-0 bottom-0 m-auto pointer-events-none select-none">
-                  <CheerLines stageDimensions={stageDimensions}></CheerLines>
-               </div>
-            ) : null}
-         </div>
+               {stageBackground !== "cheer9" && stageBackground !== "cheer7" ? (
+                  <>
+                     <div
+                        style={{
+                           width: PIXELS_PER_SQUARE * 2.5,
+                        }}
+                        className="absolute h-full bg-black opacity-30 z-[100] pointer-events-none border-r-pink-700  "
+                     ></div>
+                     <div
+                        style={{
+                           width: PIXELS_PER_SQUARE * 2.5,
+                        }}
+                        className="absolute h-full bg-black opacity-30 z-[100] right-0 pointer-events-none flex flex-col justify-center border-l-pink-700 "
+                     ></div>
+                  </>
+               ) : null}
+
+               <div
+                  style={{
+                     width: stageDimensions.width * PIXELS_PER_SQUARE,
+                  }}
+               ></div>
+
+               {stageBackground === "grid" ? <GridLines stageDimensions={stageDimensions} /> : null}
+
+               {stageBackground === "cheer9" ? (
+                  <div className="absolute top-0 left-0 right-0 bottom-0 m-auto pointer-events-none select-none">
+                     <CheerLines stageDimensions={stageDimensions}></CheerLines>
+                  </div>
+               ) : null}
+            </div>
+         )}
       </div>
    );
 };

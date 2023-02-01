@@ -15,13 +15,14 @@ export const Presets: React.FC<{
    setSelectedFormation: Function;
    selectedDancers: string[];
    setSelectedDancers: Function;
-   stageDimensions: any;
+
    pricingTier: string;
    addToStack: Function;
    pushChange: Function;
    isCommenting: boolean;
    setIsCommenting: Function;
    setUpgradeIsOpen: Function;
+   cloudSettings: any;
 }> = ({
    formations,
    selectedFormation,
@@ -30,14 +31,16 @@ export const Presets: React.FC<{
    setSelectedFormation,
    selectedDancers,
    setSelectedDancers,
-   stageDimensions,
+
    pricingTier,
    addToStack,
    pushChange,
    isCommenting,
    setIsCommenting,
    setUpgradeIsOpen,
+   cloudSettings,
 }) => {
+   let { stageDimensions } = cloudSettings;
    return (
       <>
          <div className="lg:flex hidden flex-col p-6 min-w-[350px] w-[23%] bg-white border-r border-r-gray-300 ">

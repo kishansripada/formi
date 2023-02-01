@@ -24,6 +24,17 @@ export type formation = {
    comments?: comment[];
 };
 
+export type localSettings = {
+   gridSnap: 1 | 2 | 100;
+   previousFormationView: "none" | "ghostDancers" | "ghostDancersAndPaths";
+   dancerStyle: "initials" | "numbered";
+};
+
+export type cloudSettings = {
+   stageBackground: "none" | "grid" | "cheer9";
+   stageDimensions: { width: number; height: number };
+};
+
 export type comment = {
    id: string;
    user: {

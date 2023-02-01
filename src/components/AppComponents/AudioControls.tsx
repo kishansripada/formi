@@ -38,6 +38,8 @@ export const AudioControls: React.FC<{
    localSource,
 }) => {
    const [isChangingZoom, setIsChangingZoom] = useState(false);
+   const [playbackRateIndex, setPlaybackRateIndex] = useState(2);
+   const playbackRates = [0.25, 0.5, 1, 1.5, 2];
 
    let MAX_PIXELS_PER_SECOND = 45;
    let minPixelsPerSecond = songDuration ? ((window.screen.width - 10) * 1000) / songDuration : 10;
@@ -258,6 +260,17 @@ export const AudioControls: React.FC<{
                <p className=" mr-auto lg:mr-auto text-gray-600 ">
                   {msToTime((position || 0) * 1000)}:<span className="text-gray-500">{Math.round(((position || 0) * 10) % 10)}</span>
                </p>
+
+               <button
+                  className=""
+                  onClick={() => {
+                     setPlaybackRateIndex((i) => i + 1);
+                     player.setPlaybackRate(playbackRates[(playbackRateIndex + 1) % 5]);
+                  }}
+               >
+                  <p>{JSON.stringify(playbackRates[(playbackRateIndex + 1) % 5])}x</p>
+               </button>
+
                {/* <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

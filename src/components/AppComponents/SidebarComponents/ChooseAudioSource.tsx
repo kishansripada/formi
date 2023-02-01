@@ -10,7 +10,7 @@ export const ChooseAudioSource: React.FC<{
    soundCloudTrackId: string | null;
    setSoundCloudTrackId: Function;
    setAudiofiles: Function;
-   sampleAudioFiles: any;
+
    player: any;
    setIsPlaying: Function;
    setLocalSource: Function;
@@ -21,7 +21,7 @@ export const ChooseAudioSource: React.FC<{
    setSoundCloudTrackId,
    soundCloudTrackId,
    setAudiofiles,
-   sampleAudioFiles,
+
    setIsPlaying,
    player,
    setLocalSource,

@@ -10,7 +10,7 @@ export const Roster: React.FC<{
    formations: formation[];
    selectedFormation: number | null;
    setEditingDancer: Function;
-   stageDimensions: stageDimensions;
+   cloudSettings: any;
    setFormations: Function;
    addToStack: Function;
    pushChange: Function;
@@ -21,12 +21,13 @@ export const Roster: React.FC<{
    setEditingDancer,
    formations,
    selectedFormation,
-   stageDimensions,
+   cloudSettings,
    setFormations,
    pushChange,
    addToStack,
    selectedDancers,
 }) => {
+   let { stageDimensions } = cloudSettings;
    return (
       <>
          <div className="lg:flex hidden  min-w-[350px] flex-col w-[23%]  bg-white border-r border-r-gray-300">

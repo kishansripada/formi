@@ -10,7 +10,7 @@ export const CurrentFormation: React.FC<{
    setSelectedFormation: Function;
    selectedDancers: string[];
    setSelectedDancers: Function;
-   stageDimensions: any;
+   cloudSettings: any;
    pricingTier: string;
    addToStack: Function;
    pushChange: Function;
@@ -25,7 +25,7 @@ export const CurrentFormation: React.FC<{
    setSelectedFormation,
    selectedDancers,
    setSelectedDancers,
-   stageDimensions,
+   cloudSettings,
    pricingTier,
    addToStack,
    pushChange,
@@ -33,6 +33,7 @@ export const CurrentFormation: React.FC<{
    setIsCommenting,
    setUpgradeIsOpen,
 }) => {
+   let { stageDimensions } = cloudSettings;
    const deleteComment = (id: string) => {
       setFormations((formations: formation[]) => {
          return formations.map((formation, i) => {

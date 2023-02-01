@@ -3,39 +3,11 @@ import { useRef, useEffect, useState } from "react";
 
 export const Comment: React.FC<{
    comment: comment;
-   currentFormationIndex: number | null;
-   percentThroughTransition: number;
-   setDancers: Function;
    selectedFormation: number | null;
-   formations: formation[];
-   isPlaying: boolean;
-   position: number | null;
    setFormations: Function;
-   selectedDancers: string[];
-   coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
-   draggingDancerId: string | null;
-   stageDimensions: any;
-   userPositions: any;
-   onlineUsers: any;
    zoom: number;
-}> = ({
-   comment,
-   currentFormationIndex,
-   percentThroughTransition,
-   formations,
-   setDancers,
-   selectedFormation,
-   isPlaying,
-   position,
-   setFormations,
-   selectedDancers,
-   coordsToPosition,
-   draggingDancerId,
-   stageDimensions,
-   userPositions,
-   onlineUsers,
-   zoom,
-}) => {
+   coordsToPosition: Function;
+}> = ({ comment, selectedFormation, setFormations, coordsToPosition, zoom }) => {
    // if there is no formation selected and the track is not playing, then just return nothing
    if (selectedFormation === null) return <></>;
 
