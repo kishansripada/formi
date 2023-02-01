@@ -2,9 +2,9 @@ import Link from "next/link";
 import Head from "next/head";
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useGLTF, Stage, Grid, OrbitControls, Environment, useFBX } from "@react-three/drei";
+import { Stage, Grid, OrbitControls } from "@react-three/drei";
 import { ThreeDancer } from "../components/AppComponents/ThreeDancer";
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import Image from "next/image";
 let dancers = [
    {
@@ -7524,50 +7524,53 @@ const home = () => {
          ) : (
             <></>
          )} */}
-         <div className="bg-[#fafafa]">
-            <div className="font-proxima pt-12 px-[10%] lg:px-[20%] bg-[#fafafa]  ">
-               <nav className="flex flex-row lg:justify-between text-black items-center justify-center ">
-                  <div className="w-[250px]">
-                     {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
+         <div className="bg-[#fafafa] ">
+            <nav className="flex flex-row py-3 lg:justify-between text-black items-center justify-center px-[10%] sticky top-0 bg-[#fafafa] z-50 ">
+               <div className="w-[150px]">
+                  {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
-                     <h1 className="text-6xl font-bold z-10 relative">FORMI</h1>
+                  <h1 className="text-4xl font-bold z-10 relative">FORMI</h1>
 
-                     <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[100%]"></div>
-                  </div>
-                  {/* <div>
+                  <div className="bg-pink-600 relative h-2 opacity-40 top-[-10px] mr-auto w-[100%]"></div>
+               </div>
+               {/* <div>
                      <h1 className="text-7xl font-bold z-10 relative">n</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-full"></div>
                   </div> */}
-                  <div className="flex flex-row items-center justify-center">
-                     {/* <Link href={"/upgrade"} className="z-50">
+               <div className="flex flex-row items-center justify-center">
+                  {/* <Link href={"/upgrade"} className="z-50">
                         <button className=" border-pink-600 border-2 mr-3 px-4 py-1 hidden lg:block  rounded-md ">pricing</button>
                      </Link> */}
 
-                     <Link href={"/login"} className="z-50">
-                        <button className="border-pink-600 border-2 hover:bg-pink-600 hover:text-white  px-7 py-3 transition text-pink-600 hidden lg:block  rounded-xl mr-3 ">
-                           SIGN IN
-                        </button>
-                     </Link>
-                     <Link href={"/login"} className="z-50">
-                        <button className="bg-pink-600 text-white border-pink-600 border-2 px-7 py-3 hidden lg:block  rounded-xl ">
-                           GET STARTED
-                        </button>
-                     </Link>
-                  </div>
-               </nav>
-
-               <div className=" flex flex-row items-center justify-center lg:justify-between text-center lg:text-left">
-                  <div className="lg:w-[70%]">
-                     <h1 className=" text-black text-5xl md:text-[42px] lg:text-[42px] font-semibold lg:leading-[51px] relative  mt-24 z-10">
+                  <Link href={"/login"} className="z-50">
+                     <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white  px-4 py-1 hidden lg:block  rounded-full">
+                        Get Started
+                     </button>
+                  </Link>
+               </div>
+            </nav>
+            <hr></hr>
+            <div className=" pt-12 px-[10%] lg:px-[20%] bg-[#fafafa]  ">
+               <div className=" flex flex-row items-center justify-center w-full  text-center ">
+                  <div className="w-full  ">
+                     {/* <h1 className=" text-black text-5xl md:text-[42px] lg:text-[42px] font-semibold lg:leading-[51px] relative  mt-24 z-10">
                         Master your stage presence.
+                     </h1> */}
+                     {/* <div className="w-[200px] mx-auto text-left  mb-0">
+                      
+                        <h1 className="text-5xl font-bold z-10 relative text-gray-900 ">FORMI</h1>
+
+                        <div className="bg-pink-600 relative h-2 opacity-40 top-[-10px] mr-auto w-[100%]"></div>
+                     </div> */}
+                     <h1 className=" text-5xl lg:text-6xl  leading-tight  font-bold text-gray-900 ">
+                        Visualize your stage formations <span className="italic">before</span> performing
                      </h1>
-                     <p className="text-gray-500 lg:w-[85%] mt-5">
-                        Plan out your dance and cheer formations, visualizing the transitions synced to music.
-                     </p>
+                     <h1 className="font-bold  text-2xl text-gray-600  mt-4 ">Three dimensional. Synced to Audio.</h1>
+                     {/* <p className="text-gray-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
 
                      <Link href={"/207/edit"} className="">
-                        <button className="border-4  flex-row items-center  border-pink-600  px-8 py-4  hidden lg:flex rounded-full mt-12 text-xl group">
-                           <span className="mr-2 ">View Demo</span>
+                        <button className=" bg-gradient-to-r from-purple-500 to-pink-500 flex-row items-center   text-white px-4 py-2  mx-auto hidden lg:flex rounded-full mt-8 text-xl group">
+                           <span className="mr-2  ">View Demo</span>
                            <span className="relative left-0 group-hover:left-3 transition-all duration-300">
                               <svg
                                  xmlns="http://www.w3.org/2000/svg"
@@ -7583,18 +7586,9 @@ const home = () => {
                         </button>
                      </Link>
                   </div>
-
-                  <div className="w-[30%] hidden lg:block ">
-                     {/* <img
-                        className="w-[400px]  absolute right-[250px] top-[60px] pointer-events-none select-none"
-                        src="
-                        https://purepng.com/public/uploads/large/dancer-8yz.png"
-                        alt=""
-                     /> */}
-                  </div>
                </div>
             </div>
-            <div className=" mt-24 relative  h-[600px]  overflow-hidden ">
+            <div className=" mt-12 relative     ">
                {/* <Image
                      className="object-contain  relative rounded-xl z-10 "
                      layout="fill"
@@ -7604,20 +7598,20 @@ const home = () => {
                      alt=""
                   /> */}
                <img
-                  className=" max-w-[1000px]  w-full mx-auto relative rounded-xl border border-gray-200 shadow-xl z-10"
+                  className=" max-w-[1000px]  w-full mx-auto relative -bottom-11 rounded-xl border border-gray-200 shadow-xl z-10"
                   src="/threePreview.png"
                ></img>
 
                {/* <img src="/threePreview.png" className="lg:w-1/2 w-[90%] rounded-xl relative lg:left-24 mx-auto" alt="" /> */}
 
                <div
-                  className="pointer-events-none absolute  h-[4000px] w-[4000px]  "
+                  className="pointer-events-none absolute  h-[2000px] overflow-hidden w-[2000px]  "
                   style={{
                      backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
                      top: -200,
                      left: "50%",
                      transform: "translate(-50%, 0)",
-                     opacity: 1,
+                     opacity: 0.8,
                   }}
                ></div>
                {/* <div
@@ -7752,12 +7746,12 @@ const home = () => {
             </div> */}
 
             <div className="flex flex-col lg:flex-row items-center py-16  font-proxima overflow-hidden h-[700px]">
-               <div className="lg:w-1/2 w-[90%] ml-[10%] lg:mt-9 lg:mt-0">
+               {/* <div className="lg:w-1/2 w-[90%] ml-[10%] lg:mt-9 lg:mt-0">
                   <p className="text-3xl">3D View</p>
                   <p className="text-md mt-6 lg:w-[70%] mb-10 lg:mb-0">
                      Easily send dancers along non-linear paths that are more accurate to the performance
                   </p>
-               </div>
+               </div> */}
 
                <Canvas
                   className="h-[700px] relative bottom-0 w-full z-50"
