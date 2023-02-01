@@ -7524,7 +7524,7 @@ const home = () => {
          ) : (
             <></>
          )} */}
-         <div className="bg-[#fafafa] ">
+         <div className="bg-[#fafafa] overflow-hidden ">
             <nav className="flex flex-row py-3 lg:justify-between text-black items-center justify-center px-[10%] sticky top-0 bg-[#fafafa] z-50 ">
                <div className="w-[150px]">
                   {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
@@ -7543,7 +7543,7 @@ const home = () => {
                      </Link> */}
 
                   <Link href={"/login"} className="z-50">
-                     <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white  px-4 py-1 hidden lg:block  rounded-full">
+                     <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white  px-4 py-2 hidden lg:block  rounded-full">
                         Get Started
                      </button>
                   </Link>
