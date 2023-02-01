@@ -7525,7 +7525,7 @@ const home = () => {
             <></>
          )} */}
          <div className="bg-[#fafafa]">
-            <div className="font-proxima pt-16 px-[10%] lg:px-[20%] bg-[#fafafa]  ">
+            <div className="font-proxima pt-12 px-[10%] lg:px-[20%] bg-[#fafafa]  ">
                <nav className="flex flex-row lg:justify-between text-black items-center justify-center ">
                   <div className="w-[250px]">
                      {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
@@ -7558,7 +7558,7 @@ const home = () => {
 
                <div className=" flex flex-row items-center justify-center lg:justify-between text-center lg:text-left">
                   <div className="lg:w-[70%]">
-                     <h1 className=" text-black text-5xl md:text-[42px] lg:text-[42px] font-semibold lg:leading-[51px] relative  mt-28 z-10">
+                     <h1 className=" text-black text-5xl md:text-[42px] lg:text-[42px] font-semibold lg:leading-[51px] relative  mt-24 z-10">
                         Master your stage presence.
                      </h1>
                      <p className="text-gray-500 lg:w-[85%] mt-5">
@@ -7595,26 +7595,32 @@ const home = () => {
                </div>
             </div>
             <div className=" mt-24 relative  h-[600px]  overflow-hidden ">
-               <Image
-                  className="object-contain w-full relative rounded-xl shadow-md "
-                  layout="fill"
+               {/* <Image
+                     className="object-contain  relative rounded-xl z-10 "
+                     layout="fill"
+                     src="/threePreview.png"
+                     width={700}
+                     height={800}
+                     alt=""
+                  /> */}
+               <img
+                  className=" max-w-[1000px]  w-full mx-auto relative rounded-xl border border-gray-200 shadow-xl z-10"
                   src="/threePreview.png"
-                  width={1000}
-                  height={800}
-                  alt=""
-               />
+               ></img>
+
                {/* <img src="/threePreview.png" className="lg:w-1/2 w-[90%] rounded-xl relative lg:left-24 mx-auto" alt="" /> */}
 
                <div
-                  className="pointer-events-none absolute  h-[1000px] w-[1000px] "
+                  className="pointer-events-none absolute  h-[4000px] w-[4000px]  "
                   style={{
                      backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
-                     top: 0,
-                     right: -300,
-                     opacity: 0.2,
+                     top: -200,
+                     left: "50%",
+                     transform: "translate(-50%, 0)",
+                     opacity: 1,
                   }}
                ></div>
-               <div
+               {/* <div
                   className="pointer-events-none absolute  h-[1000px] w-[1000px] "
                   style={{
                      backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #9333ea 0%, rgba(239, 255, 250, 0) 100%)",
@@ -7622,7 +7628,7 @@ const home = () => {
                      left: -300,
                      opacity: 0.2,
                   }}
-               ></div>
+               ></div> */}
             </div>
 
             {/* <div className=" bg-[#efefef]  flex-wrap flex flex-row items-center justify-center child:mx-8 child:my-8  select-none   ">
