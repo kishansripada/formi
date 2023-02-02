@@ -7556,10 +7556,10 @@ const home = () => {
             <div className="overflow-hidden">
                <div className=" flex flex-row items-center justify-center w-full  text-center pt-12 px-[10%] lg:px-[20%] bg-[#fafafa]  ">
                   <div className="w-full  ">
-                     <h1 className=" text-5xl lg:text-6xl  leading-10  font-bold text-gray-900 ">
+                     <h1 className=" text-4xl lg:text-6xl  leading-10  font-bold text-gray-900 ">
                         Visualize your stage formations <span className="italic">before</span> performing
                      </h1>
-                     <h1 className="font-bold  text-2xl text-gray-600  mt-4 ">Three dimensional. Synced to Audio.</h1>
+                     <h1 className="font-bold  text-2xl text-gray-600  mt-4 ">Three dimensional. Synced to music.</h1>
                      {/* <p className="text-gray-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
 
                      <Link href={"/207/edit"} className="">
@@ -7602,8 +7602,8 @@ const home = () => {
             </div>
 
             <div className="flex flex-col lg:flex-row items-center bg-white  font-proxima overflow-hidden relative h-[500px]  ">
-               <div className="absolute top-12 -translate-x-1/2 left-1/2">
-                  <p className="font-bold text-3xl">Bring your dancers to life.</p>
+               <div className="absolute top-12 w-full px-4 -translate-x-1/2 left-1/2">
+                  <p className="font-bold w-full text-3xl">Bring your dancers to life.</p>
                </div>
                {/* <div
                   className="pointer-events-none absolute  h-[2000px]  w-[2000px]  "
@@ -7672,8 +7672,8 @@ const home = () => {
             </div>
             <hr />
             <div className="bg-white  font-proxima">
-               <div className="flex flex-row items-center mx-auto max-w-[1000px] py-8 w-full ">
-                  <div className="w-1/2 ">
+               <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-8 w-full ">
+                  <div className="lg:w-1/2 w-[90%]">
                      <p className="text-3xl font-bold">Collaborate, communicate</p>
                      <p className="text-lg mt-6 lg:w-[80%] text-gray-500">
                         Directly add comments and annotations on the stage, collaboration among team members easier and more efficient. Make FORMI a
@@ -7681,18 +7681,24 @@ const home = () => {
                      </p>
                   </div>
 
-                  <div className="w-1/2">
-                     <video autoPlay muted src="/commentdemo.mp4" loop className=" ml-auto w-[90%] border border-gray-200 rounded-xl relative" />
+                  <div className="lg:w-1/2 w-[90%]">
+                     <video
+                        autoPlay
+                        muted
+                        src="/commentdemo.mp4"
+                        loop
+                        className=" lg:ml-auto lg:w-[90%] border border-gray-200 rounded-xl relative"
+                     />
                   </div>
                </div>
             </div>
 
             <div className="bg-white  font-proxima">
-               <div className="flex flex-row items-center mx-auto max-w-[1000px] py-8 w-full ">
-                  <div className="w-1/2">
-                     <video autoPlay muted src="/curveDemo.mp4" loop className=" mr-auto w-[90%] border border-gray-200 rounded-xl relative" />
+               <div className="flex lg:flex-row flex-col-reverse items-center mx-auto max-w-[1000px] py-8 w-full ">
+                  <div className="lg:w-1/2 w-[90%]">
+                     <video autoPlay muted src="/curveDemo.mp4" loop className=" lg:mr-auto lg:w-[90%] border border-gray-200 rounded-xl relative" />
                   </div>
-                  <div className="w-1/2 ">
+                  <div className="lg:w-1/2 w-[90%] ">
                      <div className="lg:w-[90%] mx-auto">
                         <p className="text-3xl font-bold">Complex dancer paths</p>
                         <p className="text-lg mt-6  text-gray-500">
