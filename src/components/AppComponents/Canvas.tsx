@@ -528,7 +528,49 @@ export const Canvas: React.FC<{
          });
       }
    };
+   // let canvasRef = useRef();
+   // let columns = 20;
+   // let rows = 20;
+   // let cellSize = 60;
 
+   // const [scale, setScale] = useState(1);
+   // const [pan, setPan] = useState({ x: 0, y: 0 });
+
+   // useEffect(() => {
+   //    const canvas = canvasRef.current;
+   //    const ctx = canvas.getContext("2d");
+
+   //    ctx.save();
+
+   //    // Use the identity matrix while clearing the canvas
+   //    ctx.setTransform(1, 0, 0, 1, 0, 0);
+   //    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+   //    // Restore the transform
+   //    ctx.restore();
+   //    ctx.setTransform(scale, 0, 0, scale, pan.x, pan.y);
+
+   //    for (let i = 0; i < rows; i++) {
+   //       for (let j = 0; j < columns; j++) {
+   //          ctx.strokeRect(j * cellSize, i * cellSize, cellSize, cellSize);
+   //       }
+   //    }
+   // }, [rows, columns, cellSize, scale, pan]);
+
+   // const handleWheel = (event) => {
+   //    event.preventDefault();
+   //    event.stopPropagation();
+   //    event.nativeEvent.stopImmediatePropagation();
+   //    if (event.ctrlKey) {
+   //       const delta = event.deltaY > 0 ? 0.95 : 1.05;
+   //       setScale(scale * delta);
+   //    } else {
+   //       const deltaX = event.deltaX;
+   //       const deltaY = event.deltaY;
+   //       setPan({ x: pan.x + deltaX, y: pan.y + deltaY });
+   //    }
+   //    return false;
+   // };
    return (
       <div
          className="flex flex-row relative justify-center  h-full cursor-default w-full overflow-hidden  overscroll-contain items-center "
@@ -536,6 +578,8 @@ export const Canvas: React.FC<{
          ref={container}
          onPointerUp={!viewOnly ? pointerUp : () => null}
       >
+         {/* <canvas className="overscroll-contain" ref={canvasRef} width={columns * cellSize} height={rows * cellSize} onWheel={handleWheel} /> */}
+
          <Toaster />
 
          {isPreviewingThree ? (
