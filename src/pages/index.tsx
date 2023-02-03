@@ -2,10 +2,10 @@ import Link from "next/link";
 import Head from "next/head";
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Stage, Grid, OrbitControls } from "@react-three/drei";
-import { ThreeDancer } from "../components/AppComponents/ThreeDancer";
-import { Canvas } from "@react-three/fiber";
-import Image from "next/image";
+// import { Stage, Grid, OrbitControls } from "@react-three/drei";
+// import { ThreeDancer } from "../components/AppComponents/ThreeDancer";
+// import { Canvas } from "@react-three/fiber";
+// import Image from "next/image";
 let dancers = [
    {
       name: "Michael Hunt",
@@ -7601,9 +7601,9 @@ const home = () => {
                </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row items-center bg-white  font-proxima overflow-hidden relative h-[500px]  ">
+            <div className=" bg-white  font-proxima overflow-hidden relative ">
                <div className="absolute top-12 w-full px-4 -translate-x-1/2 left-1/2">
-                  <p className="font-bold w-full text-3xl">Bring your dancers to life.</p>
+                  {/* <p className="font-bold w-full text-3xl">Bring your dancers to life.</p> */}
                </div>
                {/* <div
                   className="pointer-events-none absolute  h-[2000px]  w-[2000px]  "
@@ -7625,17 +7625,19 @@ const home = () => {
                      opacity: 0.2,
                   }}
                ></div> */}
-               <Canvas
+
+               <video className="rounded-xl w-full mx-auto max-w-[1000px] my-5 border border-gray-300" autoPlay loop src="/threeD.mp4"></video>
+               {/* <Canvas
                   className="h-[700px] relative bottom-0 w-full "
                   gl={{ logarithmicDepthBuffer: true }}
                   camera={{ position: [15, 15, 15], fov: 40 }}
                >
-                  {/* <fog attach="fog" args={["black", 15, 21.5]} /> */}
+                 
                   <Stage
                      position={[10, 0, 0]}
-                     //    intensity={0.5}
+                    
                      environment="apartment"
-                     //    shadows={{ type: "accumulative", bias: -0.001 }}
+                   
                      adjustCamera={false}
                   ></Stage>
                   <Grid
@@ -7647,7 +7649,7 @@ const home = () => {
                      sectionSize={2.5}
                      sectionThickness={1.5}
                      sectionColor={[0.5, 0.5, 10]}
-                     //    fadeDistance={30}
+                    
                   />
 
                   {formations[0].positions.map((dancerPosition) => {
@@ -7665,10 +7667,8 @@ const home = () => {
                   })}
 
                   <OrbitControls autoRotate autoRotateSpeed={1} enableZoom={false} makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
-                  {/* <Environment background preset="city" blur={0.8} /> */}
-               </Canvas>
-
-               {/* <img src="/threePreview.png" className="lg:w-1/2 w-[90%] rounded-xl relative lg:left-24" alt="" /> */}
+                  
+               </Canvas> */}
             </div>
             <hr />
             <div className="bg-white  font-proxima">
