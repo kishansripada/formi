@@ -33,6 +33,7 @@ export type localSettings = {
 export type cloudSettings = {
    stageBackground: "none" | "grid" | "cheer9";
    stageDimensions: { width: number; height: number };
+   gridSubdivisions: number;
 };
 
 export type comment = {

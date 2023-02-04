@@ -112,6 +112,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [cloudSettings, setCloudSettings] = useState<cloudSettings>({
       ...initialData.settings,
       stageBackground: initialData.settings.stageBackground || "grid",
+      gridSubdivisions: initialData.settings.gridSubdivisions || 5,
    });
    const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
    const [formations, setFormations] = useState<formation[]>(initialData.formations);

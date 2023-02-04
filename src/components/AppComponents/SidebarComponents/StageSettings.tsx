@@ -188,7 +188,6 @@ export const StageSettings: React.FC<{
                   tabIndex={-1}
                >
                   <div className="py-1" role="none">
-                     {/* Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" */}
                      <a
                         onClick={() =>
                            setCloudSettings((s) => {
@@ -205,18 +204,7 @@ export const StageSettings: React.FC<{
                      >
                         None
                      </a>
-                     {/* <a
-                        onClick={() => setStageBackground("basketballCourt")}
-                        href="#"
-                        className={`${
-                           stageBackground === "basketballCourt" ? "text-gray-900 bg-gray-100 " : ""
-                        } text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900`}
-                        role="menuitem"
-                        tabIndex={-1}
-                        id="menu-item"
-                     >
-                        Basketball Court
-                     </a> */}
+
                      <a
                         onClick={() =>
                            setCloudSettings((s) => {
@@ -254,6 +242,60 @@ export const StageSettings: React.FC<{
                      </a>
                   </div>
                </div>
+
+               {stageBackground === "grid" ? (
+                  <>
+                     {/* <grid subdivisions> */}
+                     <p className="text-gray-500 font-medium text-sm mt-6">Grid Subdivisions</p>
+                     <div className="my-6 flex flex-row justify-center items-center">
+                        <button
+                           className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
+                           onClick={() => {
+                              if (cloudSettings.gridSubdivisions === 1) return;
+                              setCloudSettings((cloudSettings) => {
+                                 return { ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions - 1 };
+                              });
+                           }}
+                        >
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-6 h-6"
+                           >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
+                           </svg>
+                        </button>
+                        <div className="flex flex-col justify-center items-center">
+                           <p className="mx-6 text-2xl text-gray-700">{cloudSettings.gridSubdivisions}</p>
+                           <p className="text-gray-400 text-xs">Squares</p>
+                        </div>
+                        <button
+                           className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
+                           onClick={() => {
+                              if (cloudSettings.gridSubdivisions === 15) return;
+                              setCloudSettings((cloudSettings) => {
+                                 return { ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions + 1 };
+                              });
+                           }}
+                        >
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-6 h-6"
+                           >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                           </svg>
+                        </button>
+                     </div>
+                     {/* <grid subdivisions> */}
+                  </>
+               ) : null}
             </div>
          </div>
       </>

@@ -1,6 +1,9 @@
-import { PIXELS_PER_SQUARE } from "../../types/types";
+import { cloudSettings, PIXELS_PER_SQUARE } from "../../types/types";
 
-export const GridLines: React.FC<{ stageDimensions: { width: number; height: number } }> = ({ stageDimensions }) => {
+export const GridLines: React.FC<{ stageDimensions: { width: number; height: number }; cloudSettings: cloudSettings }> = ({
+   stageDimensions,
+   cloudSettings,
+}) => {
    return (
       <>
          <div
@@ -14,7 +17,12 @@ export const GridLines: React.FC<{ stageDimensions: { width: number; height: num
                   key={i}
                   className={`h-full ${i === stageDimensions.width / 2 ? "bg-gray-600" : "bg-gray-300"} `}
                   style={{
-                     width: i === stageDimensions.width || i === 0 ? 0 : (i - stageDimensions.width / 2) % 5 === 0 ? 2.5 : 0.5,
+                     width:
+                        i === stageDimensions.width || i === 0
+                           ? 0
+                           : (i - stageDimensions.width / 2) % cloudSettings.gridSubdivisions === 0
+                           ? 2.5
+                           : 0.5,
                      // backgroundColor: i === stageDimensions.width / 2 ? "black" : "rgb(209 213 219)",
                      zIndex: i === stageDimensions.width / 2 ? 1 : 0,
                   }}
@@ -33,7 +41,12 @@ export const GridLines: React.FC<{ stageDimensions: { width: number; height: num
                   key={i}
                   className={`w-full ${i === stageDimensions.height / 2 ? "bg-gray-600" : "bg-gray-300"} `}
                   style={{
-                     height: i === stageDimensions.height || i === 0 ? 0 : (i - stageDimensions.height / 2) % 5 === 0 ? (1 / 1) * 2.5 : 0.5,
+                     height:
+                        i === stageDimensions.height || i === 0
+                           ? 0
+                           : (i - stageDimensions.height / 2) % cloudSettings.gridSubdivisions === 0
+                           ? (1 / 1) * 2.5
+                           : 0.5,
                      // backgroundColor: i === stageDimensions.height / 2 ? "black" : "rgb(209 213 219)",
                      zIndex: i === stageDimensions.height / 2 ? 1 : 0,
                   }}

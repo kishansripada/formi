@@ -4,7 +4,7 @@ import { GridLines } from "./GridLines";
 import { CheerLines } from "./CheerLines";
 import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings } from "../../types/types";
 import { toast, Toaster } from "react-hot-toast";
-import { Canvas as Canva, useFrame, useLoader } from "@react-three/fiber";
+import { Canvas as Canva, events, useFrame, useLoader } from "@react-three/fiber";
 import { useGLTF, Stage, Grid, OrbitControls, Environment, useFBX } from "@react-three/drei";
 
 export const Canvas: React.FC<{
@@ -558,28 +558,41 @@ export const Canvas: React.FC<{
    // }, [rows, columns, cellSize, scale, pan]);
 
    // const handleWheel = (event) => {
+   //    if (event?.composedPath()?.[0]?.tagName !== "CANVAS") return;
    //    event.preventDefault();
    //    event.stopPropagation();
-   //    event.nativeEvent.stopImmediatePropagation();
    //    if (event.ctrlKey) {
+   //       // console.log(event.deltaY);
    //       const delta = event.deltaY > 0 ? 0.95 : 1.05;
+   //       console.log(delta);
+   //       // setPan({ x: pan.x * (1 / 1.05), y: pan.y * (1 / 0.95) });
    //       setScale(scale * delta);
    //    } else {
-   //       const deltaX = event.deltaX;
-   //       const deltaY = event.deltaY;
+   //       const deltaX = -event.deltaX;
+   //       const deltaY = -event.deltaY;
    //       setPan({ x: pan.x + deltaX, y: pan.y + deltaY });
    //    }
    //    return false;
    // };
+
+   // useEffect(() => {
+   //    window.addEventListener("wheel", handleWheel, { passive: false });
+
+   //    return () => {
+   //       window.removeEventListener("wheel", handleWheel);
+   //    };
+   // }, [scale, pan]);
+
    return (
+      // <div className="overflow-hidden w-full h-full">
+      //    <canvas className="cursor-default overscroll-contain " ref={canvasRef} width={columns * cellSize} height={rows * cellSize} />
+      // </div>
       <div
          className="flex flex-row relative justify-center  h-full cursor-default w-full overflow-hidden  overscroll-contain items-center "
          id="stage"
          ref={container}
          onPointerUp={!viewOnly ? pointerUp : () => null}
       >
-         {/* <canvas className="overscroll-contain" ref={canvasRef} width={columns * cellSize} height={rows * cellSize} onWheel={handleWheel} /> */}
-
          <Toaster />
 
          {isPreviewingThree ? (
@@ -654,7 +667,7 @@ export const Canvas: React.FC<{
                   }}
                ></div>
 
-               {stageBackground === "grid" ? <GridLines stageDimensions={stageDimensions} /> : null}
+               {stageBackground === "grid" ? <GridLines cloudSettings={cloudSettings} stageDimensions={stageDimensions} /> : null}
 
                {stageBackground === "cheer9" ? (
                   <div className="absolute top-0 left-0 right-0 bottom-0 m-auto pointer-events-none select-none">
