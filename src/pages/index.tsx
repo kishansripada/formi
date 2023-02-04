@@ -7524,15 +7524,26 @@ const home = () => {
          ) : (
             <></>
          )} */}
-         <div className="sticky top-0 z-50 relative">
+         <div className="sticky top-0 z-50 ">
             <nav className="flex flex-row py-3 lg:justify-between text-black items-center justify-center px-[10%]  bg-[#fafafa]  ">
-               <div className="w-[150px]">
-                  {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
+               <div className="flex flex-row items-center">
+                  <div className="w-[150px]">
+                     {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
-                  <h1 className="text-4xl font-bold z-10 relative">FORMI</h1>
+                     <h1 className="text-4xl font-bold z-10 relative">FORMI</h1>
 
-                  <div className="bg-pink-600 relative h-2 opacity-40 top-[-10px] mr-auto w-[100%]"></div>
+                     <div className="bg-pink-600 relative h-2 opacity-40 top-[-10px] mr-auto w-[100%]"></div>
+                  </div>
+                  <div className="flex flex-row items-center ml-9 ">
+                     <Link href={"/login"} className="z-50">
+                        <button className="text-gray-500 hover:text-black text-medium">Pricing</button>
+                     </Link>
+                     <Link href={"/login"} className=" ">
+                        <button className="text-gray-500 hover:text-black text-medium ml-7">Features</button>
+                     </Link>
+                  </div>
                </div>
+
                {/* <div>
                      <h1 className="text-7xl font-bold z-10 relative">n</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-full"></div>
@@ -7626,7 +7637,7 @@ const home = () => {
                   }}
                ></div> */}
 
-               <video className="rounded-xl w-full mx-auto max-w-[1000px] my-5 border border-gray-300" autoPlay loop src="/threeD.mp4"></video>
+               <video className="rounded-xl w-full mx-auto max-w-[1000px] my-5 border border-gray-300" autoPlay muted loop src="/threeD.mp4"></video>
                {/* <Canvas
                   className="h-[700px] relative bottom-0 w-full "
                   gl={{ logarithmicDepthBuffer: true }}
@@ -7676,8 +7687,8 @@ const home = () => {
                   <div className="lg:w-1/2 w-[90%]">
                      <p className="text-3xl font-bold">Collaborate, communicate</p>
                      <p className="text-lg mt-6 lg:w-[80%] text-gray-500">
-                        Directly add comments and annotations on the stage, collaboration among team members easier and more efficient. Make FORMI a
-                        central platform for discussion and feedback, streamlining the choreography process.
+                        Directly add comments and annotations on the stage, making collaboration among team members easier and more efficient. Make
+                        FORMI a central platform for discussion and feedback, streamlining the choreography process.
                      </p>
                   </div>
 

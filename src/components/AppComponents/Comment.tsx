@@ -43,8 +43,8 @@ export const Comment: React.FC<{
             }}
             style={{
                left,
-               top: top,
-               transform: `scale(${0.8 / zoom}) translate(0%, -100%)`,
+               top,
+               transform: `scale(${(1 / zoom) * 0.8}) translate(0%, -${100 * zoom * (1 / 0.8)}%)`,
                transformOrigin: "bottom left",
                borderBottomRightRadius: isOpen ? "1rem" : "",
                borderTopLeftRadius: isOpen ? "1rem" : "",
@@ -57,7 +57,7 @@ export const Comment: React.FC<{
             id={comment.id}
             data-type={"comment"}
             className={`${
-               isOpen ? "w-72 rounded-t-xl h-auto py-2 justify-start px-3" : "w-[50px] h-[50px] rounded-br-full rounded-t-full justify-center"
+               isOpen ? "w-72 rounded-t-xl h-auto py-3 justify-start px-3" : "w-[50px] h-[50px] rounded-br-full rounded-t-full justify-center"
             }    bg-gray-800 group select-none   transition ease-in-out duration-300  lg:pointer-events-auto pointer-events-none flex    flex-row   items-center absolute z-[300]  cursor-default `}
          >
             {comment.user.avatar_url ? (
