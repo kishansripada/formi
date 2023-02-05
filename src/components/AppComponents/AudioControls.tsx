@@ -269,7 +269,7 @@ export const AudioControls: React.FC<{
                      player.setPlaybackRate(playbackRates[(playbackRateIndex + 1) % 5]);
                   }}
                >
-                  <p>{JSON.stringify(playbackRates[(playbackRateIndex + 1) % 5])}x</p>
+                  <p>{JSON.stringify(playbackRates[playbackRateIndex % 5])}x</p>
                </button>
 
                {/* <svg
