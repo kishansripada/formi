@@ -90,10 +90,6 @@ export const AudioControls: React.FC<{
                                        ...formations[formations.length - 1],
                                        id,
                                        name: `Untitled ${formations.length + 1}`,
-                                       transition: {
-                                          durationSeconds: 5,
-                                       },
-                                       durationSeconds: 10,
                                     },
                                  ];
                               });
@@ -157,9 +153,14 @@ export const AudioControls: React.FC<{
                               addToStack();
 
                               setFormations((formations: formation[]) => {
-                                 formations.splice(selectedFormation + 1, 0, { ...formations[selectedFormation], id: crypto.randomUUID() });
+                                 formations.splice(selectedFormation + 1, 0, {
+                                    ...formations[selectedFormation],
+                                    id: crypto.randomUUID(),
+                                    name: formations[selectedFormation].name + " copy",
+                                 });
                                  return formations;
                               });
+                              setSelectedFormation((i) => i + 1);
                               toast.success("formation duplicated");
                               pushChange();
                            }}
