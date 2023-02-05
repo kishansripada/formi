@@ -347,6 +347,7 @@ export const Canvas: React.FC<{
             toast.error("sign in to comment");
             return;
          }
+         addToStack();
          const target = e.currentTarget;
          // Get the bounding rectangle of target
          const rect = target.getBoundingClientRect();
@@ -403,6 +404,7 @@ export const Canvas: React.FC<{
                return formation;
             });
          });
+         pushChange();
          setIsCommenting(false);
       }
 
@@ -463,6 +465,9 @@ export const Canvas: React.FC<{
       if (draggingCommentId) {
          pushChange();
       }
+      if (changingControlId) {
+         pushChange();
+      }
       setChangingControlId(null);
       setChangingControlType(null);
       setDraggingCommentId(null);
@@ -491,8 +496,6 @@ export const Canvas: React.FC<{
          });
          pushChange();
       }
-      // console.log(formations);
-
       setDraggingDancerId(null);
       setIsDragging(false);
    };

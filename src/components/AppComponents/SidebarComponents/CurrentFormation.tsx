@@ -347,7 +347,11 @@ export const CurrentFormation: React.FC<{
                                     <p className="mr-2 mt-2 w-full ">{comment.content}</p>
                                  </div>
                                  <button
-                                    onClick={() => deleteComment(comment.id)}
+                                    onClick={() => {
+                                       addToStack();
+                                       deleteComment(comment.id);
+                                       pushChange();
+                                    }}
                                     className="ml-auto mt-auto mb-auto p-2 hover:bg-gray-100 transition duration-300 rounded-xl"
                                  >
                                     <svg

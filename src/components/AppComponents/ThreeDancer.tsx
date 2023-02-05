@@ -23,7 +23,7 @@ export function ThreeDancer({
    formations: formation[];
    opacity: number;
 }) {
-   const { nodes, materials } = useGLTF("/dancer.gltf");
+   const { nodes, materials } = useGLTF("/roblox.glb");
    let dancer = dancers?.find((dancer) => dancer.id === dancerPosition.id);
    let maxHeight = Math.max(...dancers.map((dancer) => dancer?.height || 0));
    let dancerPos;
@@ -34,10 +34,10 @@ export function ThreeDancer({
       if (myPosition === null) return <></>;
       let x = myPosition.x / 2;
       let y = -myPosition.y / 2;
-      dancerPos = { position: [x, 1.3, y] };
+      dancerPos = { position: [x, 0, y] };
       textPos = { position: [x, 2, y] };
    } else {
-      dancerPos = useSpring({ position: [dancerPosition.position.x / 2, 1.3, -dancerPosition.position.y / 2] });
+      dancerPos = useSpring({ position: [dancerPosition.position.x / 2, 0, -dancerPosition.position.y / 2] });
       textPos = useSpring({ position: [dancerPosition.position.x / 2, 2, -dancerPosition.position.y / 2] });
    }
 
@@ -58,7 +58,65 @@ export function ThreeDancer({
             <mesh geometry={nodes.Beta_Joints.geometry} material={materials.Beta_Joints_MAT1} />
          </group> */}
          {/* (dancer.height || 182.88) / maxHeight */}
-         <animated.mesh scale={[1, 1, 1]} position={dancerPos.position} dispose={null}>
+         {/* <animated.mesh scale={[1, 1, 1]} position={dancerPos.position} dispose={null}>
+            <group dispose={null}>
+               <group rotation={[-Math.PI / 2, 0, 0]}>
+                  <mesh castShadow receiveShadow geometry={nodes.Object_2.geometry} material={materials.Player1Mtl}>
+                     <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
+                  </mesh>
+               </group>
+            </group>
+         </animated.mesh> */}
+         <animated.mesh scale={[0.3, 0.35, 0.3]} position={dancerPos.position} dispose={null}>
+            <group dispose={null}>
+               <group name="Sketchfab_Scene">
+                  <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>
+                     <group name="robloxfbx" rotation={[Math.PI / 2, 0, 0]}>
+                        <group name="Object_2">
+                           <group name="RootNode">
+                              <group name="vecto">
+                                 <group name="Model9">
+                                    <mesh name="Model9_b0b0b0_0" geometry={nodes.Model9_b0b0b0_0.geometry} material={materials.b0b0b0}>
+                                       <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
+                                    </mesh>
+                                 </group>
+                                 <group scale={[0.7, 1, 1]}>
+                                    <group name="Model5">
+                                       <mesh name="Model5_b0b0b0_0" geometry={nodes.Model5_b0b0b0_0.geometry} material={materials.b0b0b0}>
+                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
+                                       </mesh>
+                                    </group>
+                                    <group name="Model7">
+                                       <mesh name="Model7_b0b0b0_0" geometry={nodes.Model7_b0b0b0_0.geometry} material={materials.b0b0b0}>
+                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
+                                       </mesh>
+                                    </group>
+                                    <group name="Model6">
+                                       <mesh name="Model6_b0b0b0_0" geometry={nodes.Model6_b0b0b0_0.geometry} material={materials.b0b0b0}>
+                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
+                                       </mesh>
+                                    </group>
+                                    <group name="Model4">
+                                       <mesh name="Model4_b0b0b0_0" geometry={nodes.Model4_b0b0b0_0.geometry} material={materials.b0b0b0}>
+                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
+                                       </mesh>
+                                    </group>
+                                    <group name="Model8">
+                                       <mesh name="Model8_b0b0b0_0" geometry={nodes.Model8_b0b0b0_0.geometry} material={materials.b0b0b0}>
+                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
+                                       </mesh>
+                                    </group>
+                                 </group>
+                              </group>
+                           </group>
+                        </group>
+                     </group>
+                  </group>
+               </group>
+            </group>
+         </animated.mesh>
+
+         {/* <animated.mesh scale={[1, 1, 1]} position={dancerPos.position} dispose={null}>
             <group rotation={[-Math.PI / 2, 0, 0]} scale={0.07}>
                <group rotation={[Math.PI / 2, 0, 0]}>
                   <group position={[0, -1.35, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={100}>
@@ -72,12 +130,12 @@ export function ThreeDancer({
                   </group>
                </group>
             </group>
-         </animated.mesh>
+         </animated.mesh> */}
       </>
    );
 }
 
-useGLTF.preload("/dancer.gltf");
+useGLTF.preload("/roblox.glb");
 
 const animate = (
    formations: formation[],
