@@ -90,10 +90,10 @@ export const Canvas: React.FC<{
    useEffect(() => {
       if (!container.current) return;
       if (!stage.current) return;
-      // let heightPercentage = (container.current.clientHeight - 50) / stage.current.clientHeight;
-      // let widthPercentage = (container.current.clientWidth - 50) / stage.current.clientWidth;
-      let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
-      let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
+      let heightPercentage = (container.current.clientHeight - 50) / stage.current.clientHeight;
+      let widthPercentage = (container.current.clientWidth - 50) / stage.current.clientWidth;
+      // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
+      // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
       setZoom(Math.min(heightPercentage, widthPercentage));
    }, [container?.current?.clientHeight, stage?.current?.clientHeight, stageDimensions, children]);
 
@@ -620,8 +620,14 @@ export const Canvas: React.FC<{
                onPointerDown={!viewOnly ? pointerDown : () => null}
                onPointerMove={handleDragMove}
                ref={stage}
-               className="relative bg-white border border-gray-500"
+               className="relative bg-white border-4 border-pink-600 rounded-3xl"
                style={{
+                  border: "double 4px transparent",
+                  // borderImage: "linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%)",
+                  backgroundImage: "linear-gradient(white, white), radial-gradient(circle at top left, #8e24aa,#db2777)",
+
+                  backgroundOrigin: "border-box",
+                  backgroundClip: "padding-box, border-box",
                   // top: scrollOffset.y,
                   // left: scrollOffset.x,
                   // transformOrigin: `${scrollOffset.x}px ${scrollOffset.y}px`,
@@ -647,7 +653,7 @@ export const Canvas: React.FC<{
                   <></>
                )}
 
-               {stageBackground !== "cheer9" && stageBackground !== "cheer7" ? (
+               {/* {stageBackground !== "cheer9" && stageBackground !== "cheer7" ? (
                   <>
                      <div
                         style={{
@@ -662,13 +668,14 @@ export const Canvas: React.FC<{
                         className="absolute h-full bg-black opacity-30 z-[100] right-0 pointer-events-none flex flex-col justify-center border-l-pink-700 "
                      ></div>
                   </>
-               ) : null}
+               ) : null} */}
 
                <div
                   style={{
                      width: stageDimensions.width * PIXELS_PER_SQUARE,
                   }}
                ></div>
+
                {cloudSettings.backgroundUrl && cloudSettings.stageBackground === "custom" ? (
                   <img className="w-full h-full object-contain pointer-events-none select-none opacity-40" src={cloudSettings.backgroundUrl} alt="" />
                ) : null}
