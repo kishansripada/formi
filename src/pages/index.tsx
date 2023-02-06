@@ -7568,7 +7568,8 @@ const home = () => {
                <div className=" flex flex-row items-center justify-center w-full  text-center pt-12 px-[10%] lg:px-[20%] bg-[#fafafa]  ">
                   <div className="w-full  ">
                      <h1 className=" text-4xl lg:text-6xl  leading-10  font-bold text-gray-900 ">
-                        Visualize your stage formations <span className="italic">before</span> performing
+                        Create stunning performances that impress your audience.
+                        {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
                      <h1 className="font-bold  text-2xl text-gray-600  mt-4 ">Three dimensional. Synced to music.</h1>
                      {/* <p className="text-gray-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
