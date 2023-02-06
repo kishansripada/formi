@@ -31,9 +31,10 @@ export type localSettings = {
 };
 
 export type cloudSettings = {
-   stageBackground: "none" | "grid" | "cheer9";
+   stageBackground: "none" | "grid" | "cheer9" | "custom";
    stageDimensions: { width: number; height: number };
    gridSubdivisions: number;
+   backgroundUrl: string;
 };
 
 export type comment = {

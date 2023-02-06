@@ -10,7 +10,6 @@ export const ChooseAudioSource: React.FC<{
    soundCloudTrackId: string | null;
    setSoundCloudTrackId: Function;
    setAudiofiles: Function;
-
    player: any;
    setIsPlaying: Function;
    setLocalSource: Function;
@@ -21,7 +20,6 @@ export const ChooseAudioSource: React.FC<{
    setSoundCloudTrackId,
    soundCloudTrackId,
    setAudiofiles,
-
    setIsPlaying,
    player,
    setLocalSource,
@@ -254,47 +252,6 @@ export const ChooseAudioSource: React.FC<{
                   )}
                </div>
             </div>
-
-            {/* <p className=" font-medium mb-2 mt-6 text-gray-600">sample audio files</p>
-            <div className=" flex flex-col overflow-scroll removeScrollBar h-full ">
-               {sampleAudioFiles.data.length ? (
-                  [...sampleAudioFiles.data]
-                     .filter((file) => file.name !== soundCloudTrackId?.split("/").slice(-1)[0])
-                     .reverse()
-                     .map((audiofile) => {
-                        return (
-                           <div
-                              onClick={() =>
-                                 setSoundCloudTrackId(
-                                    `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/audiofiles/sample/${audiofile.name}`
-                                 )
-                              }
-                              className={`p-3   rounded-md my-1 cursor-pointer w-full min-h-[48px] flex flex-row items-center justify-start whitespace-nowrap border-gray-300 border `}
-                           >
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth="1.5"
-                                 stroke="currentColor"
-                                 className="w-6 h-6 mr-2 shrink-0"
-                              >
-                                 <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
-                                 />
-                              </svg>
-                              <p className="text-gray-700 text-sm font-medium w-[200px] text-ellipsis overflow-hidden">{audiofile.name}</p>
-                           </div>
-                        );
-                     })
-               ) : (
-                  <>
-                     <p className="text-gray-600">no uploaded files :(</p>
-                  </>
-               )}
-            </div> */}
          </div>
          <Toaster />
       </>
