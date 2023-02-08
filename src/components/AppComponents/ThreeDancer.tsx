@@ -1,8 +1,10 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useGLTF } from "@react-three/drei";
 import { dancerPosition, dancer, formation } from "../../types/types";
 import { Text } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
+import { useGesture, useDrag } from "react-use-gesture";
+import THREE, { useThree } from "@react-three/fiber";
 
 export function ThreeDancer({
    dancerPosition,
@@ -23,11 +25,48 @@ export function ThreeDancer({
    formations: formation[];
    opacity: number;
 }) {
+   const { camera, mouse } = useThree();
+   console.log(camera);
+   // const { size, viewport } = useThree();
+   // const aspect = size.width / viewport.width;
+   // const [isDragging, setIsDragging] = useState(false);
+   // const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+   // let planeIntersectPoint = new THREE.Vector3();
+
+   // const [spring, api] = useSpring(() => ({
+   //    position: [dancerPosition.position.x / 2, 0, -dancerPosition.position.y / 2],
+   //    scale: 1,
+   //    rotation: [0, 0, 0],
+   //    config: { friction: 10 },
+   // }));
+
+   // const bind = useDrag(
+   //    ({ active, movement: [x, y], timeStamp, event }) => {
+   //       if (active) {
+   //          event.ray.intersectPlane(floorPlane, planeIntersectPoint);
+
+   //          console.log([planeIntersectPoint.x, 1.5, planeIntersectPoint.z]);
+   //       }
+
+   //       setIsDragging(active);
+
+   //       api.start({
+   //          // position: active ? [x / aspect, -y / aspect, 0] : [0, 0, 0],
+   //          position: [dancerPosition.position.x / 2, 0, -dancerPosition.position.y / 2],
+   //          scale: active ? 1.2 : 1,
+   //          rotation: [y / aspect, x / aspect, 0],
+   //       });
+   //       return timeStamp;
+   //    },
+   //    { delay: true }
+   // );
+
    const { nodes, materials } = useGLTF("/roblox.glb");
    let dancer = dancers?.find((dancer) => dancer.id === dancerPosition.id);
-   let maxHeight = Math.max(...dancers.map((dancer) => dancer?.height || 0));
+   let maxHeight = Math.max(...dancers.map((dancer) => dancer?.height || 0)) || 182.88;
    let dancerPos;
    let textPos;
+   // let dancerRot;
    if (isPlaying && position !== null && currentFormationIndex !== null) {
       let myPosition = animate(formations, dancer?.id, currentFormationIndex, percentThroughTransition);
       // if the animation function returns null, the dancer is not on the stage
@@ -36,9 +75,11 @@ export function ThreeDancer({
       let y = -myPosition.y / 2;
       dancerPos = { position: [x, 0, y] };
       textPos = { position: [x, 2, y] };
+      // dancerRot = { rotation: [0, dancerPosition.position.x, 0] };
    } else {
       dancerPos = useSpring({ position: [dancerPosition.position.x / 2, 0, -dancerPosition.position.y / 2] });
       textPos = useSpring({ position: [dancerPosition.position.x / 2, 2, -dancerPosition.position.y / 2] });
+      // dancerRot = useSpring({ rotation: [0, dancerPosition.position.x, 0] });
    }
 
    return (
@@ -49,25 +90,13 @@ export function ThreeDancer({
             </Text>
          </animated.mesh>
 
-         {/* <group
-            scale={[0.01, 0.01, 0.01]}
-            position={[isPlaying ? x / 2 : dancerPosition.position.x / 2, 0, isPlaying ? -y / 2 : -dancerPosition.position.y / 2]}
+         <animated.mesh
+            scale={[0.25, ((dancer?.height || 182.88) / maxHeight) * 0.35, 0.3]}
+            // scale={[0.25, ((dancer.height || 182.88) / maxHeight) * 0.35, 0.3]}
+            // rotation={dancerRot.rotation}
+            position={dancerPos.position}
             dispose={null}
          >
-            <mesh geometry={nodes.Beta_Surface.geometry} material={materials.Beta_HighLimbsGeoSG3} />
-            <mesh geometry={nodes.Beta_Joints.geometry} material={materials.Beta_Joints_MAT1} />
-         </group> */}
-         {/* (dancer.height || 182.88) / maxHeight */}
-         {/* <animated.mesh scale={[1, 1, 1]} position={dancerPos.position} dispose={null}>
-            <group dispose={null}>
-               <group rotation={[-Math.PI / 2, 0, 0]}>
-                  <mesh castShadow receiveShadow geometry={nodes.Object_2.geometry} material={materials.Player1Mtl}>
-                     <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
-                  </mesh>
-               </group>
-            </group>
-         </animated.mesh> */}
-         <animated.mesh scale={[0.3, 0.35, 0.3]} position={dancerPos.position} dispose={null}>
             <group dispose={null}>
                <group name="Sketchfab_Scene">
                   <group name="Sketchfab_model" rotation={[-Math.PI / 2, 0, 0]}>

@@ -48,21 +48,21 @@ export const EditDancer: React.FC<{
                      <p className="text-xs text-gray-500  mt-2">for profile picture</p>
                   </div>
 
-                  {/* <div className="mt-10 text-gray-700 text-medium mb-3 flex flex-col items-center  w-full">
-                     <div className="flex flex-row justify-between w-full">
+                  <div className="mt-10 text-gray-700 text-medium mb-3 flex flex-col items-center  w-full">
+                     {/* <div className="flex flex-row justify-between w-full">
                         <p>Height</p>
                         <select className="" name="" id="">
                            <option value="cm">cm</option>
                            <option value="in">in</option>
                         </select>
-                     </div>
+                     </div> */}
                      <div className="flex flex-row items-center justify-around w-full mt-5">
                         <div className="flex flex-row items-center">
                            <input
                               value={heightFeet}
                               onChange={(e) => {
                                  setHeightFeet(parseInt(e.target.value));
-                                 if (!heightIn) return;
+                                 if (heightFeet === null || heightFeet === undefined) return;
                                  setDancers((dancers: dancer[]) => {
                                     return dancers.map((dancer) => {
                                        if (dancer.id === editingDancer) {
@@ -82,7 +82,7 @@ export const EditDancer: React.FC<{
                               value={heightIn}
                               onChange={(e) => {
                                  setHeightIn(parseInt(e.target.value));
-                                 if (!heightFeet) return;
+                                 if (heightFeet === null || heightFeet === undefined) return;
                                  setDancers((dancers: dancer[]) => {
                                     return dancers.map((dancer) => {
                                        if (dancer.id === editingDancer) {
@@ -98,7 +98,7 @@ export const EditDancer: React.FC<{
                            <p className="ml-2">in</p>
                         </div>
                      </div>
-                  </div> */}
+                  </div>
 
                   <p className="mt-10 text-gray-700 text-medium mb-3">Color</p>
                   <div className=" grid place-items-center">
