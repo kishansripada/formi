@@ -67,7 +67,7 @@ export const NewDancer: React.FC<{
                }}
                className={`min-w-[48px] min-h-[48px] ml-2 rounded-full grid place-items-center cursor-pointer bg-black  `}
             >
-               <div className="bg-white rounded-full w-[41px] h-[41px] grid place-items-center" data-type={"newDancer"}>
+               <div className="bg-white rounded-full w-[41px] h-[41px] grid place-items-center" onClick={createNewDancer} data-type={"newDancer"}>
                   <p className="font-bold" data-type={"newDancer"}>
                      <svg
                         xmlns="http://www.w3.org/2000/svg"
