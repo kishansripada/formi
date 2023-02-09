@@ -891,7 +891,11 @@ const whereInFormation = (formations: formation[], position: number) => {
 
 export const getServerSideProps = async (ctx) => {
    // Create authenticated Supabase Client
-   const supabase = createServerSupabaseClient(ctx);
+   const supabase = createServerSupabaseClient(ctx, {
+      supabaseKey:
+         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4dHhieGtrdm9zbGNyc3hiZmFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjE0NjM3NDYsImV4cCI6MTk3NzAzOTc0Nn0.caFbFV4Ck7MrTSwsPXyIifjeKWYJWXisKR9-zFA33Ng",
+      supabaseUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co",
+   });
    // Check if we have a session
    const {
       data: { session },
