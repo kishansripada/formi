@@ -189,7 +189,7 @@ export const Canvas: React.FC<{
                   return {
                      ...formation,
                      positions: formation.positions.map((dancerPosition) => {
-                        if (changingControlId === dancerPosition.id && changingControlType === "start") {
+                        if (selectedDancers.includes(dancerPosition.id) && changingControlType === "start") {
                            return {
                               ...dancerPosition,
                               controlPointStart: {
@@ -198,7 +198,7 @@ export const Canvas: React.FC<{
                               },
                            };
                         }
-                        if (changingControlId === dancerPosition.id && changingControlType === "end") {
+                        if (selectedDancers.includes(dancerPosition.id) && changingControlType === "end") {
                            return {
                               ...dancerPosition,
                               controlPointEnd: {
@@ -465,9 +465,7 @@ export const Canvas: React.FC<{
       if (draggingCommentId) {
          pushChange();
       }
-      if (changingControlId) {
-         pushChange();
-      }
+
       setChangingControlId(null);
       setChangingControlType(null);
       setDraggingCommentId(null);

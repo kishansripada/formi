@@ -101,7 +101,7 @@ export const PathEditor: React.FC<{
                               fill="transparent"
                               strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
                            />
-                           {selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? (
+                           {selectedDancers[0] === dancerPosition.id ? (
                               <>
                                  <path
                                     d={`M ${startCoords.left} ${startCoords.top} L ${controlPointStartCoords.left} ${controlPointStartCoords.top}`}
