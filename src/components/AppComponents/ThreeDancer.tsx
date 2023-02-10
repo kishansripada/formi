@@ -1,10 +1,10 @@
-import React, { useRef, useState } from "react";
-import { useGLTF } from "@react-three/drei";
+import React, { useRef, useEffect } from "react";
+import { useGLTF, Text, useFBX } from "@react-three/drei";
 import { dancerPosition, dancer, formation } from "../../types/types";
-import { Text } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 import { useGesture, useDrag } from "react-use-gesture";
-import THREE, { useThree } from "@react-three/fiber";
+import { useThree, useFrame } from "@react-three/fiber";
+import { useAnimations } from "@react-three/drei/";
 
 export function ThreeDancer({
    dancerPosition,
@@ -25,8 +25,6 @@ export function ThreeDancer({
    formations: formation[];
    opacity: number;
 }) {
-   const { camera, mouse } = useThree();
-   console.log(camera);
    // const { size, viewport } = useThree();
    // const aspect = size.width / viewport.width;
    // const [isDragging, setIsDragging] = useState(false);
