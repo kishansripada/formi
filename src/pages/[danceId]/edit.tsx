@@ -650,7 +650,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   <video
                      ref={videoPlayer}
                      style={{
-                        height: localSource?.startsWith("data:video") || soundCloudTrackId?.endsWith(".mp4") ? "33%" : 0,
+                        height: localSource?.startsWith("data:video") || isVideo(soundCloudTrackId) ? "33%" : 0,
                      }}
                      src={localSource || soundCloudTrackId}
                   ></video>
@@ -975,3 +975,22 @@ export const getServerSideProps = async (ctx) => {
    //    };
    // }
 };
+
+function isVideo(filename: string) {
+   if (!filename) return false;
+   var ext = getExtension(filename);
+   switch (ext.toLowerCase()) {
+      case "m4v":
+      case "avi":
+      case "mpg":
+      case "mp4":
+         // etc
+         return true;
+   }
+   return false;
+}
+
+function getExtension(filename: string) {
+   var parts = filename.split(".");
+   return parts[parts.length - 1];
+}
