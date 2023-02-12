@@ -268,8 +268,8 @@ function getExtension(filename: string) {
    var parts = filename.split(".");
    return parts[parts.length - 1];
 }
-
 function isVideo(filename: string) {
+   if (!filename) return false;
    var ext = getExtension(filename);
    switch (ext.toLowerCase()) {
       case "m4v":
