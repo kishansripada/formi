@@ -42,7 +42,7 @@ export const MyDances: React.FC<{ myDances: any; invalidateDances: Function }> =
                            <div key={dance.id} className="flex flex-col items-center text-gray-700 mr-5 relative cursor-pointer  ">
                               <Link key={dance.id} href={`/${dance.id}/edit`}>
                                  <div className="">
-                                    <div className="bg-white rounded-xl h-[200px] w-[300px] relative border-gray-500 border  ">
+                                    <div className="bg-white rounded-xl h-[200px] w-[300px] relative border-gray-300 border  ">
                                        {dance.formations[0].positions.map((position) => {
                                           return (
                                              <>
