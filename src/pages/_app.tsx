@@ -1,8 +1,9 @@
 import "../styles/globals.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { AppProps } from "next/app";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
+import Router from "next/router";
 
 function MyApp({
    Component,
@@ -25,9 +26,37 @@ function MyApp({
       })
    );
 
+   const [loading, setLoading] = useState(false);
+   useEffect(() => {
+      const start = () => {
+         console.log("start");
+         setLoading(true);
+      };
+      const end = () => {
+         console.log("finished");
+         setLoading(false);
+      };
+      Router.events.on("routeChangeStart", start);
+      Router.events.on("routeChangeComplete", end);
+      Router.events.on("routeChangeError", end);
+      return () => {
+         Router.events.off("routeChangeStart", start);
+         Router.events.off("routeChangeComplete", end);
+         Router.events.off("routeChangeError", end);
+      };
+   }, []);
+
    return (
       <SessionContextProvider supabaseClient={supabaseClient} initialSession={pageProps.initialSession}>
-         <Component {...pageProps} />
+         {loading ? (
+            <>
+               <div className="flex items-center justify-center h-screen ">
+                  <div className="w-16 h-16 border-b-2 border-pink-600 rounded-full animate-spin"></div>
+               </div>
+            </>
+         ) : (
+            <Component {...pageProps} />
+         )}
       </SessionContextProvider>
    );
 }
