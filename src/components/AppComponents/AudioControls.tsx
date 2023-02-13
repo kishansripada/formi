@@ -258,12 +258,12 @@ export const AudioControls: React.FC<{
             </div>
 
             <div className="w-[45%] pr-10 flex flex-row justify-center items-center ">
-               <p className=" mr-auto lg:mr-auto text-gray-600 ">
+               <p className=" ml-auto lg:mr-auto text-gray-600 ">
                   {msToTime((position || 0) * 1000)}:<span className="text-gray-500">{Math.round(((position || 0) * 10) % 10)}</span>
                </p>
 
                <button
-                  className=""
+                  className="hidden lg:block"
                   onClick={() => {
                      setPlaybackRateIndex((i) => i + 1);
                      player.setPlaybackRate(playbackRates[(playbackRateIndex + 1) % 5]);
