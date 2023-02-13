@@ -38,15 +38,15 @@ export function ThreeDancer({
     * Text always looks at the camera
     */
    const textRef = useRef();
-   const isDancerDragging = useDancerDragging((state) => state.isDancerDragging);
+
+   const changeStateDancerDragging = useDancerDragging((state) => state.changeStateDancerDragging);
    useFrame((state, dt) => {
       if (textRef?.current != null) {
          textRef.current.lookAt(state.camera.position);
       }
    });
    let dancer = dancers?.find((dancer) => dancer.id === dancerPosition.id);
-   const changeStateDancerDragging = useDancerDragging((state) => state.changeStateDancerDragging);
-
+   const isDancerDragging = useDancerDragging((state) => state.isDancerDragging);
    let planeIntersectPoint = new THREE.Vector3();
    const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
@@ -107,7 +107,7 @@ export function ThreeDancer({
          // });
          return timeStamp;
       },
-      { delay: false }
+      { delay: true }
    );
 
    const { nodes, materials } = useGLTF("/roblox.glb");
@@ -115,11 +115,14 @@ export function ThreeDancer({
    let maxHeight = Math.max(...dancers.map((dancer) => dancer?.height || 0)) || 182.88;
    let dancerPos;
    let textPos;
+   dancerPos = useSpring({ position: [dancerPosition.position.x / 2, 0, -dancerPosition.position.y / 2] });
+   textPos = useSpring({ position: [dancerPosition.position.x / 2, 2, -dancerPosition.position.y / 2] });
+   // if (isDancerDragging && position !== null && currentFormationIndex !== null) {
+   //    dancerPos = { position: [dancerPosition.position.x, 0, dancerPosition.position.y] };
+   //    textPos = { position: [dancerPosition.position.x, 2, dancerPosition.position.y] };
+   // } else
 
-   if (isDancerDragging && position !== null && currentFormationIndex !== null) {
-      dancerPos = { position: [dancerPosition.position.x, 0, dancerPosition.position.y] };
-      textPos = { position: [dancerPosition.position.x, 2, dancerPosition.position.y] };
-   } else if (isPlaying && position !== null && currentFormationIndex !== null) {
+   if (isPlaying && position !== null && currentFormationIndex !== null) {
       let myPosition = animate(formations, dancer?.id, currentFormationIndex, percentThroughTransition);
       // if the animation function returns null, the dancer is not on the stage
       if (myPosition === null) return <></>;
@@ -127,9 +130,6 @@ export function ThreeDancer({
       let y = -myPosition.y / 2;
       dancerPos = { position: [x, 0, y] };
       textPos = { position: [x, 2, y] };
-   } else {
-      dancerPos = useSpring({ position: [dancerPosition.position.x / 2, 0, -dancerPosition.position.y / 2] });
-      textPos = useSpring({ position: [dancerPosition.position.x / 2, 2, -dancerPosition.position.y / 2] });
    }
 
    return (
