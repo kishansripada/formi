@@ -94,7 +94,11 @@ const home = () => {
                      </h1>
                      <h1 className="font-bold  text-2xl text-gray-600  mt-4 ">Three dimensional. Synced to music.</h1>
                      {/* <p className="text-gray-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
-
+                     <Link href={"/login"} className="z-50">
+                        <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white  px-4 py-2 block lg:hidden mx-auto mt-5  rounded-full">
+                           Get Started
+                        </button>
+                     </Link>
                      <Link href={"/207/edit"} className="">
                         <button className=" bg-gradient-to-r from-purple-500 to-pink-500 flex-row items-center   text-white px-4 py-2  mx-auto hidden lg:flex rounded-full mt-8 text-xl group">
                            <span className="mr-2  ">View Demo</span>

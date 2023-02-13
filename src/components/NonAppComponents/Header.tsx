@@ -21,11 +21,11 @@ export const Header = () => {
 
                      <div className="bg-pink-600 relative h-2 opacity-40 top-[-10px] mr-auto w-[100%]"></div>
                   </div>
-                  <div className="flex flex-row items-center ml-9 ">
+                  {/* <div className="flex flex-row items-center ml-9 ">
                      <Link href={"/login"} className="z-50">
                         <button className="text-gray-500 hover:text-black text-medium">Pricing</button>
                      </Link>
-                  </div>
+                  </div> */}
                </div>
 
                {/* <div>
