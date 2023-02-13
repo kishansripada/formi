@@ -655,6 +655,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                      src={localSource || soundCloudTrackId}
                   ></video>
                   <Canvas
+                     soundCloudTrackId={soundCloudTrackId}
                      zoom={zoom}
                      setZoom={setZoom}
                      isCommenting={isCommenting}
@@ -785,6 +786,9 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                                    position={position}
                                    dancerPosition={dancerPosition}
                                    formations={formations}
+                                   setFormations={setFormations}
+                                   selectedFormation={selectedFormation}
+                                   localSettings={localSettings}
                                 ></ThreeDancer>
                              );
                           })

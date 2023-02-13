@@ -5,7 +5,13 @@ import { CheerLines } from "./CheerLines";
 import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings } from "../../types/types";
 import { toast, Toaster } from "react-hot-toast";
 import { Canvas as Canva, events, useFrame, useLoader } from "@react-three/fiber";
-import { useGLTF, Stage, Grid, OrbitControls, Environment, useFBX } from "@react-three/drei";
+import { useGLTF, Stage, Grid, OrbitControls, Environment, useFBX, useVideoTexture } from "@react-three/drei";
+import { create } from "zustand";
+
+export const useDancerDragging = create((set) => ({
+   isDancerDragging: false,
+   changeStateDancerDragging: (status) => set((state) => ({ isDancerDragging: !status })),
+}));
 
 export const Canvas: React.FC<{
    children: React.ReactNode;
@@ -31,7 +37,7 @@ export const Canvas: React.FC<{
    setIsCommenting: Function;
    zoom: number;
    setZoom: Function;
-
+   soundCloudTrackId: string | null;
    cloudSettings: cloudSettings;
    isPreviewingThree: boolean;
 }> = ({
@@ -60,6 +66,7 @@ export const Canvas: React.FC<{
    zoom,
    setZoom,
    isPreviewingThree,
+   soundCloudTrackId,
 }) => {
    let { stageDimensions, stageBackground } = cloudSettings;
    const [shiftHeld, setShiftHeld] = useState(false);
@@ -77,7 +84,7 @@ export const Canvas: React.FC<{
    const stage = useRef();
 
    const session = useSession();
-
+   const isDancerDragging = useDancerDragging((state) => state.isDancerDragging);
    useEffect(() => {
       window.addEventListener("keydown", downHandler);
       window.addEventListener("keyup", upHandler);
@@ -90,8 +97,9 @@ export const Canvas: React.FC<{
    useEffect(() => {
       if (!container.current) return;
       if (!stage.current) return;
-      let heightPercentage = (container.current.clientHeight - 50) / stage.current.clientHeight;
-      let widthPercentage = (container.current.clientWidth - 50) / stage.current.clientWidth;
+
+      let heightPercentage = (container.current.clientHeight - (isVideo(soundCloudTrackId) ? 5 : 50)) / stage.current.clientHeight;
+      let widthPercentage = (container.current.clientWidth - (isVideo(soundCloudTrackId) ? 5 : 50)) / stage.current.clientWidth;
       // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
       // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
       setZoom(Math.min(heightPercentage, widthPercentage));
@@ -290,23 +298,7 @@ export const Canvas: React.FC<{
                      }),
                   };
                }
-               // if (index === selectedFormation) {
-               //    return {
-               //       ...formation,
-               //       positions: formation.positions.map((dancerPosition) => {
-               //          if (selectedDancers.includes(dancerPosition.id)) {
-               //             return {
-               //                ...dancerPosition,
-               //                controlPointEnd: {
-               //                   x: dancerPosition.controlPointEnd.x + e.movementX / PIXELS_PER_SQUARE / zoom,
-               //                   y: dancerPosition.controlPointEnd.y - e.movementY / PIXELS_PER_SQUARE / zoom,
-               //                },
-               //             };
-               //          }
-               //          return dancerPosition;
-               //       }),
-               //    };
-               // }
+
                return formation;
             });
          });
@@ -529,67 +521,10 @@ export const Canvas: React.FC<{
          });
       }
    };
-   // let canvasRef = useRef();
-   // let columns = 20;
-   // let rows = 20;
-   // let cellSize = 60;
-
-   // const [scale, setScale] = useState(1);
-   // const [pan, setPan] = useState({ x: 0, y: 0 });
-
-   // useEffect(() => {
-   //    const canvas = canvasRef.current;
-   //    const ctx = canvas.getContext("2d");
-
-   //    ctx.save();
-
-   //    // Use the identity matrix while clearing the canvas
-   //    ctx.setTransform(1, 0, 0, 1, 0, 0);
-   //    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-   //    // Restore the transform
-   //    ctx.restore();
-   //    ctx.setTransform(scale, 0, 0, scale, pan.x, pan.y);
-
-   //    for (let i = 0; i < rows; i++) {
-   //       for (let j = 0; j < columns; j++) {
-   //          ctx.strokeRect(j * cellSize, i * cellSize, cellSize, cellSize);
-   //       }
-   //    }
-   // }, [rows, columns, cellSize, scale, pan]);
-
-   // const handleWheel = (event) => {
-   //    if (event?.composedPath()?.[0]?.tagName !== "CANVAS") return;
-   //    event.preventDefault();
-   //    event.stopPropagation();
-   //    if (event.ctrlKey) {
-   //       // console.log(event.deltaY);
-   //       const delta = event.deltaY > 0 ? 0.95 : 1.05;
-   //       console.log(delta);
-   //       // setPan({ x: pan.x * (1 / 1.05), y: pan.y * (1 / 0.95) });
-   //       setScale(scale * delta);
-   //    } else {
-   //       const deltaX = -event.deltaX;
-   //       const deltaY = -event.deltaY;
-   //       setPan({ x: pan.x + deltaX, y: pan.y + deltaY });
-   //    }
-   //    return false;
-   // };
-
-   // useEffect(() => {
-   //    window.addEventListener("wheel", handleWheel, { passive: false });
-
-   //    return () => {
-   //       window.removeEventListener("wheel", handleWheel);
-   //    };
-   // }, [scale, pan]);
 
    return (
-      // <div className="overflow-hidden w-full h-full">
-      //    <canvas className="cursor-default overscroll-contain " ref={canvasRef} width={columns * cellSize} height={rows * cellSize} />
-      // </div>
       <div
-         className="flex flex-row relative justify-center  h-full cursor-default w-full overflow-hidden  overscroll-contain items-center "
+         className="flex flex-row relative justify-center  h-full  w-full overflow-hidden  overscroll-contain items-center "
          id="stage"
          ref={container}
          onPointerUp={!viewOnly ? pointerUp : () => null}
@@ -611,7 +546,15 @@ export const Canvas: React.FC<{
                />
 
                {children}
-               <OrbitControls autoRotate autoRotateSpeed={0} enableZoom={true} makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
+               <OrbitControls
+                  autoRotate
+                  autoRotateSpeed={0}
+                  enableZoom={true}
+                  makeDefault
+                  minPolarAngle={0}
+                  maxPolarAngle={Math.PI / 2}
+                  enabled={!isDancerDragging}
+               />
             </Canva>
          ) : (
             <div
@@ -692,3 +635,21 @@ export const Canvas: React.FC<{
       </div>
    );
 };
+function getExtension(filename: string) {
+   var parts = filename.split(".");
+   return parts[parts.length - 1];
+}
+
+function isVideo(filename: string) {
+   if (!filename) return false;
+   var ext = getExtension(filename);
+   switch (ext.toLowerCase()) {
+      case "m4v":
+      case "avi":
+      case "mpg":
+      case "mp4":
+         // etc
+         return true;
+   }
+   return false;
+}
