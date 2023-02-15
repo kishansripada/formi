@@ -50,7 +50,7 @@ export const Dropdown: React.FC<{ dance: any; invalidateDances: Function; setOpe
    return (
       <div
          id="dropdown"
-         className="bg-white w-[250px] absolute rounded-xl right-[-170px] p-1 top-[250px] z-50  border-gray-200 border shadow-md flex flex-col font-semibold py-2"
+         className="bg-white w-[250px] absolute rounded-xl right-[0px] p-1 top-[250px] z-50  border-gray-200 border shadow-md flex flex-col  py-2"
       >
          <Toaster></Toaster>
          <button

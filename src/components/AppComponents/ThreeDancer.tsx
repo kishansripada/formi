@@ -20,6 +20,7 @@ export function ThreeDancer({
    setFormations,
    selectedFormation,
    localSettings,
+   viewOnly,
 }: {
    dancerPosition: dancerPosition;
    dancers: dancer[];
@@ -32,6 +33,7 @@ export function ThreeDancer({
    setFormations: Function;
    selectedFormation: number | null;
    localSettings: localSettings;
+   viewOnly: boolean;
 }) {
    let { gridSnap } = localSettings;
    /**
@@ -52,6 +54,7 @@ export function ThreeDancer({
 
    const bind = useDrag(
       ({ active, movement: [x, y], timeStamp, event }) => {
+         if (viewOnly) return;
          event.stopPropagation();
 
          if (active) {
@@ -157,9 +160,11 @@ export function ThreeDancer({
                            <group
                               name="RootNode"
                               onPointerEnter={() => {
+                                 if (viewOnly) return;
                                  document.body.style.cursor = "grab";
                               }}
                               onPointerLeave={() => {
+                                 if (viewOnly) return;
                                  document.body.style.cursor = "default";
                               }}
                            >
