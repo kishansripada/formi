@@ -53,9 +53,12 @@ const home = () => {
             <title>FORMI: Online stage performance planning software.</title>
             <meta
                name="description"
-               content="Easily build, create and visualize your dance and cheer formations synced to music. Formi is the ultimate choreographer formation tool. Dance formation builder. Cheer formation builder."
+               content="Dance formation app. Easily build, create and visualize your dance and cheer formations synced to music. Formi is the ultimate choreographer formation tool. Dance formation builder. Cheer formation builder."
             />
-            <meta name="keywords" content="dance, choreography, desi, formations, cheer, cheerleading, formation building tool" />
+            <meta
+               name="keywords"
+               content="dance, choreography, desi, formations, cheer, cheerleading, formation building tool, dance formation app"
+            />
             <meta name="twitter:card" content="summary" />
             <meta name="twitter:title" content="FORMI: Online stage performance planning software." />
             <meta name="twitter:image" content="https://i.imgur.com/83VsfSG.png" />

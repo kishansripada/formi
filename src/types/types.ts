@@ -28,6 +28,7 @@ export type localSettings = {
    gridSnap: 1 | 2 | 100;
    previousFormationView: "none" | "ghostDancers" | "ghostDancersAndPaths";
    dancerStyle: "initials" | "numbered";
+   viewCollisions: boolean;
 };
 
 export type cloudSettings = {

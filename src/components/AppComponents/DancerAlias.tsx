@@ -20,6 +20,7 @@ export const DancerAlias: React.FC<{
    setZoom: Function;
    localSettings: any;
    index: number;
+   collisions: any;
 }> = ({
    dancer,
    currentFormationIndex,
@@ -39,6 +40,7 @@ export const DancerAlias: React.FC<{
    zoom,
    setZoom,
    localSettings,
+   collisions,
    index,
 }) => {
    let { stageDimensions } = cloudSettings;
@@ -49,6 +51,11 @@ export const DancerAlias: React.FC<{
       .slice(0, 3)
       .join("")
       .toUpperCase();
+
+   let isInCollision = collisions[formations[selectedFormation].id]
+      ?.map((collision) => collision.dancers)
+      .flat(Infinity)
+      .includes(dancer.id);
 
    // if the track is playing then  return with the animation function
    if (isPlaying && position !== null) {
@@ -64,6 +71,7 @@ export const DancerAlias: React.FC<{
                style={{
                   // transform: `translate(-50%, -50%) translate(${left}px, ${top}px)`,
                   backgroundColor: dancer.color || "#db2777",
+
                   left,
                   top,
                   transform: "translate(-50%, -50%)",
@@ -120,7 +128,7 @@ export const DancerAlias: React.FC<{
             }}
             id={dancer.id}
             data-type={"dancer"}
-            className={`rounded-full lg:pointer-events-auto pointer-events-none flex  -translate-y-1/2 -translate-x-1/2 flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
+            className={`rounded-full   lg:pointer-events-auto pointer-events-none flex  -translate-y-1/2 -translate-x-1/2 flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
          >
             {/* <span className="animate-ping absolute  inline-flex w-[30px] h-[30px] rounded-full bg-sky-400 opacity-75"></span> */}
 
@@ -149,7 +157,9 @@ export const DancerAlias: React.FC<{
                <div
                   id={dancer.id}
                   data-type={"dancer"}
-                  className="bg-white  rounded-full w-[32px] h-[32px] grid place-items-center select-none cursor-default "
+                  className={`${
+                     isInCollision ? "bg-red-500 text-white" : "bg-white"
+                  } rounded-full w-[32px] h-[32px] grid place-items-center select-none cursor-default `}
                >
                   <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
                      {dancerStyle === "numbered" ? <>{index + 1}</> : <> {initials}</>}
@@ -195,45 +205,8 @@ const animate = (
             // requires animation don't return yet
             from = inThisFormation.position;
             to = inThisFormation.position;
-            // to = (() => {
-            //    // if (inThisFormation.exitStrategy === "closest") {
-            //    if (from.x >= 0) return { x: stageDimensions.width / 2 + 1, y: from.y };
-            //    if (from.x < 0) return { x: -(stageDimensions.width / 2 + 1), y: from.y };
-            //    // }
-            //    // if (inThisFormation.exitStrategy === "right") {
-            //    //    return { x: stageDimensions.width / 2 + 1, y: from.y };
-            //    // }
-            //    // if (inThisFormation.exitStrategy === "left") {
-            //    //    return { x: -(stageDimensions.width / 2 + 1), y: from.y };
-            //    // }
-            // })();
          }
       }
-
-      // else {
-      //    if (inNextFormation) {
-      //       // transition between enter strategy specified in next and position in next
-      //       // requires animation don't return yet
-      //       to = inNextFormation.position;
-
-      //       from = (() => {
-      //          return { x: stageDimensions.width / 2 + 1, y: to.y };
-      //          // if (inNextFormation.enterStrategy === "closest") {
-      //          //    if (to.x >= 0) return { x: stageDimensions.width / 2 + 1, y: to.y };
-      //          //    if (to.x < 0) return { x: -(stageDimensions.width / 2 + 1), y: to.y };
-      //          // }
-      //          // if (inNextFormation.enterStrategy === "right") {
-      //          //    return { x: stageDimensions.width / 2 + 1, y: to.y };
-      //          // }
-      //          // if (inNextFormation.enterStrategy === "left") {
-      //          //    return { x: -(stageDimensions.width / 2 + 1), y: to.y };
-      //          // }
-      //       })();
-      //    } else {
-      //       // return off stage
-      //       return null;
-      //    }
-      // }
    } else {
       if (inThisFormation) {
          // return position from this formation

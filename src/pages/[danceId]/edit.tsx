@@ -1,3 +1,4 @@
+import { detectCollisions } from "../../types/collisionDetector";
 import { useState, useEffect, useRef, useCallback, lazy } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
@@ -35,7 +36,7 @@ import { ChooseAudioSource } from "../../components/AppComponents/SidebarCompone
 import { Roster } from "../../components/AppComponents/SidebarComponents/Roster";
 import { CurrentFormation } from "../../components/AppComponents/SidebarComponents/CurrentFormation";
 import { StageSettings } from "../../components/AppComponents/SidebarComponents/StageSettings";
-
+import { Collisions } from "../../components/AppComponents/SidebarComponents/Collisions";
 var jsondiffpatch = require("jsondiffpatch").create({
    objectHash: function (obj) {
       return obj.id;
@@ -127,6 +128,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       gridSnap: 1,
       previousFormationView: "ghostDancersAndPaths",
       dancerStyle: "initials",
+      viewCollisions: false,
    });
 
    const [upgradeIsOpen, setUpgradeIsOpen] = useState<boolean>(false);
@@ -454,7 +456,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       }
    }, [danceName]);
    //////////////////////////
-
+   const collisions = localSettings.viewCollisions ? detectCollisions(formations) : [];
    return (
       <>
          <Toaster></Toaster>
@@ -610,6 +612,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            selectedFormation={selectedFormation}
                            setUpgradeIsOpen={setUpgradeIsOpen}
                         ></Presets>
+                     ) : menuOpen === "collisions" ? (
+                        <Collisions setLocalSettings={setLocalSettings} localSettings={localSettings}></Collisions>
                      ) : (
                         <CurrentFormation
                            isCommenting={isCommenting}
@@ -724,6 +728,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                                 localSettings={localSettings}
                                 index={index}
                                 isPlaying={isPlaying}
+                                collisions={collisions}
                              />
                           ))
                         : null}

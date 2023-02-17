@@ -153,7 +153,7 @@ export const Sidebar: React.FC<{
                <p className="text-xs text-gray-500">Media</p>
             </button>
 
-            <button onClick={() => setMenuOpen("presets")} className="">
+            <button onClick={() => setMenuOpen("presets")} className="mb-2 ">
                <svg
                   className={`w-8 h-8 transition duration-300  ml-auto mr-auto ${menuOpen === "presets" ? "stroke-[#db2777]" : "stroke-[#C5C7D0]"}`}
                   xmlns="http://www.w3.org/2000/svg"
@@ -170,6 +170,26 @@ export const Sidebar: React.FC<{
                </svg>
 
                <p className="text-xs text-gray-500">Templates</p>
+            </button>
+            <button onClick={() => setMenuOpen("collisions")} className=" mb-2">
+               <svg
+                  className={`w-8 h-8 transition duration-300  ml-auto mr-auto ${
+                     menuOpen === "collisions" ? "stroke-[#db2777]" : "stroke-[#C5C7D0]"
+                  }`}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+               >
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                  />
+               </svg>
+
+               <p className="text-xs text-gray-500">Collisions</p>
             </button>
 
             <button onClick={() => setMenuOpen("stageSettings")} className="mt-auto mb-2">
