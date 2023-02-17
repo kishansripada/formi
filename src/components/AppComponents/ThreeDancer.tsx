@@ -21,6 +21,8 @@ export function ThreeDancer({
    selectedFormation,
    localSettings,
    viewOnly,
+   pushChange,
+   addToStack,
 }: {
    dancerPosition: dancerPosition;
    dancers: dancer[];
@@ -34,6 +36,8 @@ export function ThreeDancer({
    selectedFormation: number | null;
    localSettings: localSettings;
    viewOnly: boolean;
+   pushChange: Function;
+   addToStack: Function;
 }) {
    let { gridSnap } = localSettings;
    /**
@@ -159,6 +163,10 @@ export function ThreeDancer({
                         <group name="Object_2">
                            <group
                               name="RootNode"
+                              onPointerDown={() => {
+                                 if (viewOnly) return;
+                                 addToStack();
+                              }}
                               onPointerEnter={() => {
                                  if (viewOnly) return;
                                  document.body.style.cursor = "grab";

@@ -784,6 +784,9 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                         ? formations[selectedFormation].positions.map((dancerPosition: dancerPosition) => {
                              return (
                                 <ThreeDancer
+                                   addToStack={addToStack}
+                                   pushChange={pushChange}
+                                   viewOnly={viewOnly}
                                    isPlaying={isPlaying}
                                    currentFormationIndex={currentFormationIndex}
                                    percentThroughTransition={percentThroughTransition}
