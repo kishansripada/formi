@@ -27,7 +27,7 @@ import { EditDancer } from "../../components/AppComponents/EditDancer";
 import { Layers } from "../../components/AppComponents/Layers";
 import { PathEditor } from "../../components/AppComponents/PathEditor";
 import { Share } from "../../components/AppComponents/Share";
-
+import { Collision } from "../../components/AppComponents/Collision";
 import { Sidebar } from "../../components/AppComponents/Sidebar";
 
 import { Settings } from "../../components/AppComponents/SidebarComponents/Settings";
@@ -456,7 +456,9 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       }
    }, [danceName]);
    //////////////////////////
-   const collisions = localSettings.viewCollisions ? detectCollisions(formations) : [];
+   const collisions = localSettings.viewCollisions ? detectCollisions(formations, selectedFormation) : [];
+   // console.log(collisions);
+   // console.log(collisions);
    return (
       <>
          <Toaster></Toaster>
@@ -731,6 +733,12 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                                 collisions={collisions}
                              />
                           ))
+                        : null}
+
+                     {localSettings.viewCollisions && selectedFormation !== null
+                        ? collisions.map((collision) => {
+                             return <Collision coordsToPosition={coordsToPosition} collision={collision}></Collision>;
+                          })
                         : null}
 
                      {selectedFormation !== null && !isPlaying && !isPreviewingThree ? (

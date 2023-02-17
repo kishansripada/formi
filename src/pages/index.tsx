@@ -24,31 +24,6 @@ const home = () => {
 
    return (
       <>
-         <style jsx>{`
-            @keyframes sidetoside {
-               0% {
-                  left: 0%;
-               }
-               50% {
-                  left: 100%;
-               }
-               100% {
-                  left: 0%;
-               }
-            }
-
-            @keyframes upanddown {
-               0% {
-                  top: -100px;
-               }
-               50% {
-                  top: 100px;
-               }
-               100% {
-                  top: -100px;
-               }
-            }
-         `}</style>
          <Head>
             <title>FORMI: Online stage performance planning software.</title>
             <meta

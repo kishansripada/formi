@@ -25,27 +25,23 @@ interface Collision {
    dancer2Id: string;
 }
 
-export function detectCollisions(formations: Formation[]): Record<string, Collision[]> {
-   const collisionMap: Record<string, Collision[]> = {};
+export function detectCollisions(formations: Formation[], selectedFormation): Record<string, Collision[]> {
+   const collisionMap = [];
+   if (selectedFormation === null || selectedFormation === 0) return [];
 
-   for (let i = 0; i < formations.length - 1; i++) {
-      const currFormation = formations[i];
-      const nextFormation = formations[i + 1];
+   const currFormation = formations[selectedFormation - 1];
+   const nextFormation = formations[selectedFormation];
 
-      const currPositions = currFormation.positions;
-      const nextPositions = nextFormation.positions;
+   const currPositions = currFormation.positions;
+   const nextPositions = nextFormation.positions;
 
-      const snapshots = 10;
-      for (let j = 0; j < snapshots; j++) {
-         const currSnapshotPositions = getCurrSnapshotPositions(j, snapshots, currPositions, nextPositions);
-         const collisions = detectCollisionsInSnapshot(currFormation.id || "", currSnapshotPositions);
+   const snapshots = 10;
+   for (let j = 0; j < snapshots; j++) {
+      const currSnapshotPositions = getCurrSnapshotPositions(j, snapshots, currPositions, nextPositions);
+      const collisions = detectCollisionsInSnapshot(currFormation.id || "", currSnapshotPositions);
 
-         if (collisions.length > 0) {
-            if (!collisionMap[nextFormation.id || ""]) {
-               collisionMap[nextFormation.id || ""] = [];
-            }
-            collisionMap[nextFormation.id || ""] = [...collisionMap[nextFormation.id || ""], ...collisions];
-         }
+      if (collisions.length > 0) {
+         collisionMap.push(...collisions);
       }
    }
 
@@ -104,10 +100,17 @@ function detectCollisionsInSnapshot(formationId: string, snapshotPositions: Danc
          if (distanceBetweenDancers < currDancer.radius + nextDancer.radius) {
             collisions.push({
                dancers: [currDancer.id, nextDancer.id],
+               collisionPoint: midpoint(nextDancer.position, currDancer.position),
             });
          }
       }
    }
 
    return collisions;
+}
+
+function midpoint(p1: { x: number; y: number }, p2: { x: number; y: number }): { x: number; y: number } {
+   const x = (p1.x + p2.x) / 2;
+   const y = (p1.y + p2.y) / 2;
+   return { x, y };
 }

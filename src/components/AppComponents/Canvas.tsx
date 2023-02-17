@@ -532,7 +532,14 @@ export const Canvas: React.FC<{
          <Toaster />
 
          {isPreviewingThree ? (
-            <Canva gl={{ logarithmicDepthBuffer: true }} camera={{ position: [10, 10, 10], fov: 40 }}>
+            <Canva
+               onPointerUp={() => {
+                  if (viewOnly) return;
+                  pushChange();
+               }}
+               gl={{ logarithmicDepthBuffer: true }}
+               camera={{ position: [10, 10, 10], fov: 40 }}
+            >
                <Stage position={[10, 0, 0]} environment="apartment" adjustCamera={false}></Stage>
                <Grid
                   renderOrder={-1}

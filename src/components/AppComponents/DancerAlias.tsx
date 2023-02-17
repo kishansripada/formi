@@ -53,7 +53,7 @@ export const DancerAlias: React.FC<{
       .toUpperCase();
 
    let isInCollision = selectedFormation
-      ? collisions[formations[selectedFormation].id]
+      ? collisions
            ?.map((collision) => collision.dancers)
            .flat(Infinity)
            .includes(dancer.id)
