@@ -52,10 +52,12 @@ export const DancerAlias: React.FC<{
       .join("")
       .toUpperCase();
 
-   let isInCollision = collisions[formations[selectedFormation].id]
-      ?.map((collision) => collision.dancers)
-      .flat(Infinity)
-      .includes(dancer.id);
+   let isInCollision = selectedFormation
+      ? collisions[formations[selectedFormation].id]
+           ?.map((collision) => collision.dancers)
+           .flat(Infinity)
+           .includes(dancer.id)
+      : false;
 
    // if the track is playing then  return with the animation function
    if (isPlaying && position !== null) {
