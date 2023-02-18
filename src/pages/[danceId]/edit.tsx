@@ -735,7 +735,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                           ))
                         : null}
 
-                     {localSettings.viewCollisions && selectedFormation !== null
+                     {localSettings.viewCollisions && selectedFormation !== null && !isPreviewingThree
                         ? collisions.map((collision) => {
                              return <Collision coordsToPosition={coordsToPosition} collision={collision}></Collision>;
                           })
