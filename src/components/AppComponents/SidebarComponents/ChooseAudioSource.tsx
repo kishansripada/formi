@@ -176,7 +176,7 @@ export const ChooseAudioSource: React.FC<{
             <p className=" font-medium mb-2 mt-6 text-gray-600">My Uploaded Files</p>
             <div className="h-[300px]">
                <div className=" flex flex-col overflow-scroll removeScrollBar ">
-                  {audioFiles.data.length ? (
+                  {audioFiles?.data?.length ? (
                      [...audioFiles.data].reverse().map((audiofile) => {
                         return (
                            <div

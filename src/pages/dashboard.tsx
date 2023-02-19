@@ -178,14 +178,14 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                   >
                      <p>rosters</p>
                   </button> */}
-                  <button
+                  {/* <button
                      onClick={() => setMenuOpen("audio")}
                      className={`flex flex-row justify-between items-center ${
                         menuOpen === "audio" ? "bg-gray-200" : ""
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                   >
                      <p>Uploaded Audio</p>
-                  </button>
+                  </button> */}
                   <button
                      className={`flex flex-row justify-between items-center mt-auto ${
                         menuOpen === "trash" ? "bg-gray-200" : ""
@@ -214,8 +214,6 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
                      <MyDances invalidateDances={invalidateDances} myDances={myDances.filter((dance) => !dance.isInTrash)}></MyDances>
                   ) : menuOpen === "rosters" ? (
                      <Rosters></Rosters>
-                  ) : menuOpen === "audio" ? (
-                     <AudioFiles audioFiles={audioFiles}></AudioFiles>
                   ) : menuOpen === "trash" ? (
                      <Trash removeFromTrash={removeFromTrash} deleteDance={deleteDance} trash={myDances.filter((dance) => dance.isInTrash)}></Trash>
                   ) : null}
@@ -242,10 +240,10 @@ export const getServerSideProps = withPageAuth({
          return { props: {} };
       }
       const { user } = session;
-      const audioFiles = await supabase.storage.from("audiofiles").list(session?.user.id, {});
+      // const audioFiles = await supabase.storage.from("audiofiles").list(session?.user.id, {});
 
       const { data } = await supabase.from("dances").select("*").eq("user", user.id);
 
-      return { props: { dances: data, audioFiles } };
+      return { props: { dances: data } };
    },
 });

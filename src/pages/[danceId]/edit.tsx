@@ -459,6 +459,17 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const collisions = localSettings.viewCollisions ? detectCollisions(formations, selectedFormation) : [];
    // console.log(collisions);
    // console.log(collisions);
+
+   useEffect(() => {
+      if (!session) return;
+      supabase.storage
+         .from("audiofiles")
+         .list(session?.user.id, {})
+         .then((r) => {
+            if (!r.data) return;
+            setAudiofiles(r);
+         });
+   }, [session]);
    return (
       <>
          <Toaster></Toaster>
@@ -939,10 +950,7 @@ export const getServerSideProps = async (ctx) => {
    //    supabase.storage.from("audiofiles").list("sample", {}),
    // ]);
 
-   let [{ data: dance }, audioFiles] = await Promise.all([
-      supabase.from("dances").select("*").eq("id", ctx.query.danceId).single(),
-      supabase.storage.from("audiofiles").list(session?.user.id, {}),
-   ]);
+   let { data: dance } = await supabase.from("dances").select("*").eq("id", ctx.query.danceId).single();
 
    // let sortedDeltas = deltas?.sort((a, b) => a.timestamp - b.timestamp);
 
@@ -968,7 +976,7 @@ export const getServerSideProps = async (ctx) => {
    if (dance.id === 207 || dance?.user === session?.user?.id) {
       viewOnly = false;
    }
-   dance = { ...{ ...dance, formations: dance.formations }, audioFiles };
+   dance = { ...{ ...dance, formations: dance.formations } };
 
    return {
       props: {
