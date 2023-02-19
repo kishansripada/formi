@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation, stageDimensions } from "../../types/types";
+import { cloudSettings, dancer, dancerPosition, formation, stageDimensions, PIXELS_PER_SQUARE } from "../../types/types";
 
 export const DancerAlias: React.FC<{
    dancer: dancer;
@@ -13,7 +13,7 @@ export const DancerAlias: React.FC<{
    selectedDancers: string[];
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
    draggingDancerId: string | null;
-   cloudSettings: any;
+   cloudSettings: cloudSettings;
    userPositions: any;
    onlineUsers: any;
    zoom: number;
@@ -21,6 +21,7 @@ export const DancerAlias: React.FC<{
    localSettings: any;
    index: number;
    collisions: any;
+   isChangingCollisionRadius: boolean;
 }> = ({
    dancer,
    currentFormationIndex,
@@ -42,8 +43,9 @@ export const DancerAlias: React.FC<{
    localSettings,
    collisions,
    index,
+   isChangingCollisionRadius,
 }) => {
-   let { stageDimensions } = cloudSettings;
+   let { stageDimensions, collisionRadius } = cloudSettings;
    let { dancerStyle } = localSettings;
    let initials = dancer.name
       .split(" ")
@@ -144,6 +146,16 @@ export const DancerAlias: React.FC<{
                   <p className="text-center">{name}</p>
                </div>
             ) : null} */}
+
+            {isChangingCollisionRadius ? (
+               <div
+                  style={{
+                     width: PIXELS_PER_SQUARE * collisionRadius * 2,
+                     height: PIXELS_PER_SQUARE * collisionRadius * 2,
+                  }}
+                  className=" border-red-600 border-2 rounded-full absolute"
+               ></div>
+            ) : null}
 
             {dancer.instagramUsername ? (
                <img

@@ -1,13 +1,41 @@
-import { dancer, dancerPosition, formation, localSettings, stageDimensions } from "../../../types/types";
+import { cloudSettings, dancer, dancerPosition, formation, localSettings, stageDimensions } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 
 export const Collisions: React.FC<{
    setLocalSettings: Function;
    localSettings: localSettings;
-}> = ({ setLocalSettings, localSettings }) => {
+   setCloudSettings: Function;
+   cloudSettings: cloudSettings;
+   setIsChangingCollisionRadius: Function;
+   isChangingCollisionRadius: boolean;
+}> = ({ setLocalSettings, localSettings, cloudSettings, setCloudSettings, setIsChangingCollisionRadius, isChangingCollisionRadius }) => {
    let { previousFormationView, viewCollisions } = localSettings;
+   const handleMouseMove = (e) => {
+      if (!isChangingCollisionRadius) return;
 
+      let newRadius = cloudSettings.collisionRadius + (e.movementX / 250) * 0.9;
+      if (newRadius > 1 || newRadius < 0.1) return;
+
+      setCloudSettings((cloudSettings: cloudSettings) => {
+         return { ...cloudSettings, collisionRadius: newRadius };
+      });
+   };
+   const handleDocumentMouseUp = () => {
+      setIsChangingCollisionRadius(false);
+   };
+   useEffect(() => {
+      document.addEventListener("mouseup", handleDocumentMouseUp);
+      return () => {
+         document.removeEventListener("mouseup", handleDocumentMouseUp);
+      };
+   }, [isChangingCollisionRadius]);
+
+   useEffect(() => {
+      window.addEventListener("mousemove", handleMouseMove);
+
+      return () => window.removeEventListener("mousemove", handleMouseMove);
+   }, [cloudSettings.collisionRadius, isChangingCollisionRadius]);
    return (
       <>
          <Toaster></Toaster>
@@ -51,6 +79,23 @@ export const Collisions: React.FC<{
                      <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
                   )}
                   <p>On</p>
+               </div>
+            </div>
+
+            <div className="mt-10">
+               <p className="mb-5 text-2xl text-gray-700 pointer-events-none select-none">
+                  {Math.round(cloudSettings.collisionRadius * 10) / 10} <span className="text-gray-700 text-sm">squares</span>
+               </p>
+               <div className="w-[250px] h-1 bg-gray-200 rounded-full relative">
+                  <div
+                     onPointerDown={() => {
+                        setIsChangingCollisionRadius(true);
+                     }}
+                     style={{
+                        left: ((cloudSettings.collisionRadius - 0.1) / 0.9) * 100 + "%",
+                     }}
+                     className="w-4 h-4 bg-white  border-pink-600 border-2 rounded-full -translate-y-[7px] -translate-x-1/2  absolute cursor-pointer"
+                  ></div>
                </div>
             </div>
          </div>

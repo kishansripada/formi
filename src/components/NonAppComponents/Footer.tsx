@@ -5,10 +5,6 @@ import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import logo from "../../../public/logo.svg";
 import Image from "next/image";
 export const Footer = () => {
-   const router = useRouter();
-   let session = useSession();
-   const supabase = useSupabaseClient();
-
    return (
       <>
          <div className="bg-[#fafafa]  pt-6 pb-6 px-12 ">

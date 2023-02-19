@@ -25,7 +25,7 @@ interface Collision {
    dancer2Id: string;
 }
 
-export function detectCollisions(formations: Formation[], selectedFormation): Record<string, Collision[]> {
+export function detectCollisions(formations: Formation[], selectedFormation, collisionRadius): Record<string, Collision[]> {
    const collisionMap = [];
    if (selectedFormation === null || selectedFormation === 0) return [];
 
@@ -37,7 +37,7 @@ export function detectCollisions(formations: Formation[], selectedFormation): Re
 
    const snapshots = 10;
    for (let j = 0; j < snapshots; j++) {
-      const currSnapshotPositions = getCurrSnapshotPositions(j, snapshots, currPositions, nextPositions);
+      const currSnapshotPositions = getCurrSnapshotPositions(j, snapshots, currPositions, nextPositions, collisionRadius);
       const collisions = detectCollisionsInSnapshot(currFormation.id || "", currSnapshotPositions);
 
       if (collisions.length > 0) {
@@ -48,7 +48,13 @@ export function detectCollisions(formations: Formation[], selectedFormation): Re
    return collisionMap;
 }
 
-function getCurrSnapshotPositions(snapshot: number, snapshots: number, currPositions: Dancer[], nextPositions: Dancer[]): Dancer[] {
+function getCurrSnapshotPositions(
+   snapshot: number,
+   snapshots: number,
+   currPositions: Dancer[],
+   nextPositions: Dancer[],
+   collisionRadius: number
+): Dancer[] {
    const snapshotPositions = [];
 
    for (let k = 0; k < currPositions.length; k++) {
@@ -77,7 +83,7 @@ function getCurrSnapshotPositions(snapshot: number, snapshots: number, currPosit
       snapshotPositions.push({
          id: currDancer.id,
          position: { x, y },
-         radius: 0.5,
+         radius: collisionRadius,
       });
    }
 

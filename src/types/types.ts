@@ -36,6 +36,7 @@ export type cloudSettings = {
    stageDimensions: { width: number; height: number };
    gridSubdivisions: number;
    backgroundUrl: string;
+   collisionRadius: number;
 };
 
 export type comment = {

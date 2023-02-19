@@ -114,7 +114,9 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       ...initialData.settings,
       stageBackground: initialData.settings.stageBackground || "grid",
       gridSubdivisions: initialData.settings.gridSubdivisions || 5,
+      collisionRadius: initialData.settings.collisionRadius || 0.5,
    });
+
    const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
    const [formations, setFormations] = useState<formation[]>(initialData.formations);
    const [shareSettings, setShareSettings] = useState(initialData.sharesettings);
@@ -151,6 +153,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [player, setPlayer] = useState(null);
    const [saved, setSaved] = useState<boolean>(true);
    const [shareIsOpen, setShareIsOpen] = useState(false);
+   const [isChangingCollisionRadius, setIsChangingCollisionRadius] = useState(false);
 
    // not in use
    const [onlineUsers, setOnlineUsers] = useState({
@@ -456,7 +459,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       }
    }, [danceName]);
    //////////////////////////
-   const collisions = localSettings.viewCollisions ? detectCollisions(formations, selectedFormation) : [];
+   const collisions = localSettings.viewCollisions ? detectCollisions(formations, selectedFormation, cloudSettings.collisionRadius) : [];
    // console.log(collisions);
    // console.log(collisions);
 
@@ -626,7 +629,14 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            setUpgradeIsOpen={setUpgradeIsOpen}
                         ></Presets>
                      ) : menuOpen === "collisions" ? (
-                        <Collisions setLocalSettings={setLocalSettings} localSettings={localSettings}></Collisions>
+                        <Collisions
+                           isChangingCollisionRadius={isChangingCollisionRadius}
+                           setIsChangingCollisionRadius={setIsChangingCollisionRadius}
+                           setCloudSettings={setCloudSettings}
+                           cloudSettings={cloudSettings}
+                           setLocalSettings={setLocalSettings}
+                           localSettings={localSettings}
+                        ></Collisions>
                      ) : (
                         <CurrentFormation
                            isCommenting={isCommenting}
@@ -742,6 +752,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                                 index={index}
                                 isPlaying={isPlaying}
                                 collisions={collisions}
+                                isChangingCollisionRadius={isChangingCollisionRadius}
                              />
                           ))
                         : null}
@@ -782,7 +793,16 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                                    />
                                 ))
                               : dancers
-                                   .filter((dancer) => selectedDancers.includes(dancer.id))
+                                   .filter(
+                                      (dancer) =>
+                                         selectedDancers.includes(dancer.id) ||
+                                         (selectedFormation
+                                            ? collisions
+                                                 ?.map((collision) => collision.dancers)
+                                                 .flat(Infinity)
+                                                 .includes(dancer.id)
+                                            : false)
+                                   )
                                    .map((dancer, index) => {
                                       return (
                                          <DancerAliasShadow

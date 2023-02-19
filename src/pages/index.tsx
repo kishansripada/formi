@@ -4,24 +4,8 @@ import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Header } from "../components/NonAppComponents/Header";
 import { Footer } from "../components/NonAppComponents/Footer";
-// import { Stage, Grid, OrbitControls } from "@react-three/drei";
-// import { ThreeDancer } from "../components/AppComponents/ThreeDancer";
-// import { Canvas } from "@react-three/fiber";
-// import Image from "next/image";
 
 const home = () => {
-   const videoRef = useRef();
-   let router = useRouter();
-
-   const [position, setPosition] = useState(0);
-   useEffect(() => {
-      const intervalId = setInterval(() => {
-         setPosition((position) => position + 0.06);
-      }, 16);
-
-      return () => clearInterval(intervalId);
-   }, []);
-
    return (
       <>
          <Head>
