@@ -48,7 +48,7 @@ export const Share: React.FC<{
                }
             }}
          >
-            <div className="flex  w-[700px] flex-col rounded-xl bg-white">
+            <div className="flex  w-[700px] flex-col rounded-xl bg-white ">
                <div className="flex flex-col rounded-xl px-10 pt-10 pb-6 h-full">
                   <div className="flex flex-row">
                      <h1 className="text-2xl  mr-auto">Sharing Settings</h1>
@@ -165,10 +165,10 @@ export const Share: React.FC<{
                   {Object.entries(shareSettings).length ? <p className="text-gray-400 text-xs mt-4 ">Collaborative Editing is Coming Soon</p> : null}
                </div>
                <div className="flex flex-row justify-between items-center w-full bg-gray-100 h-16 rounded-b-xl px-5">
-                  <button onClick={() => setShareIsOpen(false)} className=" border border-gray-300 bg-white hover:bg-gray-100 px-4  py-2 rounded-md">
+                  <button onClick={() => setShareIsOpen(false)} className=" border border-gray-300 bg-white hover:bg-gray-100 px-4  py-1 rounded-md">
                      Cancel
                   </button>
-                  <button className="ml-auto bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md" onClick={updateShareSettings}>
+                  <button className="ml-auto bg-pink-600 hover:bg-pink-700 text-white px-5 py-1 rounded-md" onClick={updateShareSettings}>
                      Save
                   </button>
                </div>

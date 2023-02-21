@@ -713,6 +713,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   >
                      {selectedFormation !== null && !isPreviewingThree ? (
                         <PathEditor
+                           collisions={collisions}
                            dancers={dancers}
                            currentFormationIndex={currentFormationIndex}
                            formations={formations}

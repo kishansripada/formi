@@ -8,8 +8,9 @@ export const PathEditor: React.FC<{
    currentFormationIndex: number | null;
    dancers: dancer[];
    localSettings: any;
+   collisions: any;
    coordsToPosition: (coords: { x: number; y: number } | null | undefined) => { left: number; top: number } | null;
-}> = ({ selectedFormation, formations, selectedDancers, isPlaying, currentFormationIndex, coordsToPosition, dancers, localSettings }) => {
+}> = ({ selectedFormation, formations, selectedDancers, isPlaying, currentFormationIndex, coordsToPosition, dancers, localSettings, collisions }) => {
    if (isPlaying || selectedFormation === null) return;
    let { previousFormationView } = localSettings;
    // let dancersToRender = previousFormationView === "ghostDancersAndPaths" ? formations?.[selectedFormation - 1]?.positions
@@ -21,7 +22,13 @@ export const PathEditor: React.FC<{
                   if (previousFormationView === "ghostDancersAndPaths") {
                      return true;
                   } else {
-                     return selectedDancers.includes(position.id);
+                     return (
+                        selectedDancers.includes(position.id) ||
+                        collisions
+                           ?.map((collision) => collision.dancers)
+                           .flat(Infinity)
+                           .includes(position.id)
+                     );
                   }
                })
                .map((dancerPosition) => {
