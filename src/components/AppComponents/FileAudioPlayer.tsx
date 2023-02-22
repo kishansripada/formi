@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
 import { formation } from "../../types/types";
+import TimelinePlugin from "../../timeline-plugin";
 
 export const FileAudioPlayer: React.FC<{
    setPosition: Function;
@@ -68,9 +69,16 @@ export const FileAudioPlayer: React.FC<{
             barWidth: 4,
             barRadius: 5,
             cursorWidth: 2,
-            height: 30,
+            height: 25,
             barGap: 2,
             backend: "MediaElement",
+            plugins: [
+               TimelinePlugin.create({
+                  container: "#wave-timeline",
+                  notchPercentHeight: 40,
+                  height: 15,
+               }),
+            ],
          });
          // wavesurfer.load(soundCloudTrackId);
          // wavesurfer.load(localSource || soundCloudTrackId);
@@ -117,7 +125,7 @@ export const FileAudioPlayer: React.FC<{
                   display: ready ? "flex" : "none",
                }}
                id="layers"
-               className={` h-[30px]  flex-col justify-end w-full`}
+               className={` h-[50px]  flex-col justify-end w-full`}
             >
                <div
                   id="waveform"
@@ -126,6 +134,7 @@ export const FileAudioPlayer: React.FC<{
                   }}
                   // className="w-full"
                ></div>
+               <div className="mt-[5px]" id="wave-timeline"></div>
             </div>
          </>
       );
