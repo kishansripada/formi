@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation } from "../../types/types";
+import { dancer, dancerPosition, formation, formationGroup } from "../../types/types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useRef } from "react";
@@ -14,6 +14,7 @@ export const Formation: React.FC<{
    onlineUsers: any;
    addToStack: Function;
    activeId: string | null;
+   formationGroups: formationGroup[];
 }> = ({
    formation,
    amSelected,
@@ -26,6 +27,7 @@ export const Formation: React.FC<{
    onlineUsers,
    addToStack,
    activeId,
+   formationGroups,
 }) => {
    // console.log(onlineUsers);
    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: formation.id });
@@ -36,8 +38,9 @@ export const Formation: React.FC<{
 
    let idsOnThisFormation = Object.keys(userPositions).filter((id) => userPositions[id].selectedFormation === index);
 
-   let colorsOnThisFormation = idsOnThisFormation.map((id) => onlineUsers[id][0].color);
-   let firstNamesOnThisFormation = idsOnThisFormation.map((id) => onlineUsers[id][0].name).map((name) => name.split(" ")[0]);
+   let colorsOnThisFormation = idsOnThisFormation.map((id) => onlineUsers?.[id]?.[0]?.color);
+   colorsOnThisFormation = colorsOnThisFormation.filter((color) => color);
+   let firstNamesOnThisFormation = idsOnThisFormation.map((id) => onlineUsers?.[id]?.[0]?.name).map((name) => name?.split(" ")[0]);
    let listOfNames = ((list) => {
       if (!list.length) return null;
       if (list.length === 1) return list[0];
@@ -53,13 +56,14 @@ export const Formation: React.FC<{
       <>
          <div
             ref={setNodeRef}
-            className={`rounded-md  mx-[2px] box-border cursor-pointer bg-white  border-4 border-t-[12px] relative group  `}
+            className={`rounded-md  mx-[2px]  cursor-pointer bg-white  border-[3px] border-t-[12px] relative group  `}
             style={{
                zIndex: activeId === formation.id ? 2 : 0,
                ...style,
                width: ((index === 0 ? 0 : formation.transition.durationSeconds) + formation.durationSeconds) * pixelsPerSecond - 4,
                borderColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#18191B",
-               // top: index === 5 ? 100 : null,
+               // borderTopColor: formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color || "#18191B",
+
                // subtract 4 to account for the mx-[2px]
             }}
          >
@@ -110,6 +114,12 @@ export const Formation: React.FC<{
                <p className={`text-[12px] pointer-events-none select-none text-black font-medium text-ellipsis`}>{formation.name}</p>
             </div>
 
+            <div
+               style={{
+                  backgroundColor: formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color,
+               }}
+               className="absolute w-full h-[4px] bottom-[-9px] rounded-full"
+            ></div>
             <div className={` flex flex-row  box-border`}>
                {index !== 0 ? (
                   <div

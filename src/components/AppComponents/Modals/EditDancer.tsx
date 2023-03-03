@@ -1,5 +1,5 @@
 import toast, { Toaster } from "react-hot-toast";
-import { dancer, dancerPosition, formation } from "../../types/types";
+import { dancer, dancerPosition, formation } from "../../../types/types";
 import { CirclePicker } from "react-color";
 import { useState } from "react";
 

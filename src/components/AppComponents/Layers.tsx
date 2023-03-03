@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { dancer, dancerPosition, formation } from "../../types/types";
+import { dancer, dancerPosition, formation, formationGroup } from "../../types/types";
 import { Layer } from "./Layer";
 
 export const Layers: React.FC<{
@@ -18,6 +18,7 @@ export const Layers: React.FC<{
    pushChange: Function;
    userPositions: any;
    onlineUsers: any;
+   formationGroups: formationGroup[];
 }> = ({
    formations,
    selectedFormation,
@@ -34,6 +35,7 @@ export const Layers: React.FC<{
    addToStack,
    userPositions,
    onlineUsers,
+   formationGroups,
 }) => {
    const [resizingTransition, setResizingTransition] = useState<string | null>(null);
    const [resizingFormation, setResizingFormation] = useState<string | null>(null);
@@ -154,6 +156,7 @@ export const Layers: React.FC<{
             pixelsPerSecond={pixelsPerSecond}
             addToStack={addToStack}
             pushChange={pushChange}
+            formationGroups={formationGroups}
          />
       </div>
    );

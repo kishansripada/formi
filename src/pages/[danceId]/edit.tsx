@@ -7,11 +7,10 @@ import { useLocalStorage } from "../../hooks";
 import { ThreeDancer } from "../../components/AppComponents/ThreeDancer";
 import { debounce } from "lodash";
 import toast, { Toaster } from "react-hot-toast";
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import Script from "next/script";
-
-import { comment, dancer, dancerPosition, formation, PIXELS_PER_SQUARE, localSettings, cloudSettings } from "../../types/types";
+import { comment, dancer, dancerPosition, formation, PIXELS_PER_SQUARE, localSettings, cloudSettings, formationGroup } from "../../types/types";
 import { AudioControls } from "../../components/AppComponents/AudioControls";
 import { Header } from "../../components/AppComponents/Header";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
@@ -23,10 +22,11 @@ import { Canvas } from "../../components/AppComponents/Canvas";
 
 // const ThreeCanvas = dynamic(() => import("../../components/AppComponents/ThreeCanvas").then((mod) => mod.ThreeCanvas));
 
-import { EditDancer } from "../../components/AppComponents/EditDancer";
+import { EditDancer } from "../../components/AppComponents/Modals/EditDancer";
+import { EditFormationGroup } from "../../components/AppComponents/Modals/EditFormationGroup";
 import { Layers } from "../../components/AppComponents/Layers";
 import { PathEditor } from "../../components/AppComponents/PathEditor";
-import { Share } from "../../components/AppComponents/Share";
+import { Share } from "../../components/AppComponents/Modals/Share";
 import { Collision } from "../../components/AppComponents/Collision";
 import { Sidebar } from "../../components/AppComponents/Sidebar";
 
@@ -124,6 +124,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
    const [danceName, setDanceName] = useState<string>(initialData.name);
+   const [formationGroups, setFormationGroups] = useState<formationGroup[]>(initialData.formation_groups);
 
    // local
    const [localSettings, setLocalSettings] = useLocalStorage<localSettings>("localSettings", {
@@ -154,6 +155,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [saved, setSaved] = useState<boolean>(true);
    const [shareIsOpen, setShareIsOpen] = useState(false);
    const [isChangingCollisionRadius, setIsChangingCollisionRadius] = useState(false);
+   const [isEditingFormationGroup, setIsEditingFormationGroup] = useState(false);
 
    // not in use
    const [onlineUsers, setOnlineUsers] = useState({
@@ -386,6 +388,34 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          uploadDancers(dancers);
       }
    }, [dancers]);
+
+   ////////////////////////////////////////
+   let uploadGroups = useCallback(
+      debounce(async (formationGroups) => {
+         console.log("uploading dancers");
+         const { data, error } = await supabase
+            .from("dances")
+            .update({ formation_groups: formationGroups, last_edited: new Date() })
+            .eq("id", router.query.danceId);
+
+         console.log({ data });
+
+         console.log({ error });
+         setSaved(true);
+      }, 5000),
+      [router.query.danceId]
+   );
+
+   useDidMountEffect(() => {
+      if (!session && router.query.danceId !== "207") {
+         router.push("/login");
+      }
+      if (router.isReady) {
+         setSaved(false);
+         uploadGroups(formationGroups);
+      }
+   }, [formationGroups]);
+
    // // ///////////
    let uploadFormations = useCallback(
       debounce(async (formations) => {
@@ -509,6 +539,14 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
          ) : (
             <></>
          )}
+         {isEditingFormationGroup ? (
+            <EditFormationGroup
+               formationGroups={formationGroups}
+               setFormationGroups={setFormationGroups}
+               setIsEditingFormationGroup={setIsEditingFormationGroup}
+               isEditingFormationGroup={isEditingFormationGroup}
+            ></EditFormationGroup>
+         ) : null}
 
          {upgradeIsOpen ? (
             <div
@@ -565,7 +603,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   }}
                   className="fixed w-60 h-12 rounded-full top-6 bg-black z-[9999] opacity-70 grid place-items-center"
                >
-                  <p className="text-white text-sm pointer-events-none"> click on the stage to comment</p>
+                  <p className="text-white text-sm pointer-events-none">Click on the stage to comment</p>
                </div>
             </>
          ) : null}
@@ -639,6 +677,9 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                         ></Collisions>
                      ) : (
                         <CurrentFormation
+                           setIsEditingFormationGroup={setIsEditingFormationGroup}
+                           formationGroups={formationGroups}
+                           setFormationGroups={setFormationGroups}
                            isCommenting={isCommenting}
                            setIsCommenting={setIsCommenting}
                            addToStack={addToStack}
@@ -842,6 +883,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                           })
                         : null}
                   </Canvas>
+                  {!isPreviewingThree ? <p className="text-gray-600 font-semibold text-sm mb-2">AUDIENCE</p> : null}
                </div>
             </div>
 
@@ -895,6 +937,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   )}
 
                   <Layers
+                     formationGroups={formationGroups}
                      userPositions={userPositions}
                      onlineUsers={onlineUsers}
                      addToStack={addToStack}

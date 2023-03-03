@@ -22,6 +22,13 @@ export type formation = {
    id: string;
    name: string | null;
    comments?: comment[];
+   group?: string;
+};
+
+export type formationGroup = {
+   name: string;
+   color: string;
+   id: string;
 };
 
 export type localSettings = {

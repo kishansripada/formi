@@ -1,6 +1,6 @@
-import { dancer, dancerPosition, formation, initials } from "../../../types/types";
+import { dancer, dancerPosition, formation, formationGroup, initials } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const CurrentFormation: React.FC<{
    selectedFormation: number | null;
@@ -17,6 +17,9 @@ export const CurrentFormation: React.FC<{
    isCommenting: boolean;
    setIsCommenting: Function;
    setUpgradeIsOpen: Function;
+   formationGroups: formationGroup[];
+   setIsEditingFormationGroup: Function;
+   setFormationGroups: Function;
 }> = ({
    formations,
    selectedFormation,
@@ -32,8 +35,12 @@ export const CurrentFormation: React.FC<{
    isCommenting,
    setIsCommenting,
    setUpgradeIsOpen,
+   formationGroups,
+   setIsEditingFormationGroup,
+   setFormationGroups,
 }) => {
-   let { stageDimensions } = cloudSettings;
+   let { stageDimensions, stageBackground } = cloudSettings;
+   const [backgroundDropdownIsOpen, setBackgroundDropdownIsOpen] = useState<boolean>();
    const deleteComment = (id: string) => {
       setFormations((formations: formation[]) => {
          return formations.map((formation, i) => {
@@ -48,6 +55,19 @@ export const CurrentFormation: React.FC<{
       });
    };
 
+   const closeWindow = (e) => {
+      console.log(e.target.id);
+      if (e.target.id === "menu-item") return;
+      setBackgroundDropdownIsOpen(false);
+   };
+
+   useEffect(() => {
+      window.addEventListener("mousedown", closeWindow);
+      return () => {
+         window.removeEventListener("mousedown", closeWindow);
+      };
+   }, [backgroundDropdownIsOpen]);
+
    return (
       <>
          <div className=" lg:flex hidden  min-w-[350px] w-[23%] flex-col h-full  bg-white border-r border-r-gray-300 ">
@@ -55,7 +75,7 @@ export const CurrentFormation: React.FC<{
                <>
                   <div className="flex flex-row items-center mb-3 px-6 pt-5 ">
                      <input
-                        className="font-medium w-full px-2 rounded-md  h-6 text-2xl  py-4 transition duration-300 hover:bg-gray-100 text-gray-800 focus:bg-gray-100 outline-none cursor-pointer "
+                        className="font-medium w-full focus:px-2 hover:px-2 transition-[padding] rounded-md  h-6 text-2xl  py-4 transition duration-100 hover:bg-gray-100 text-gray-800 focus:bg-gray-100 outline-none cursor-pointer "
                         onKeyDown={(e) =>
                            e.key === "Enter"
                               ? setFormations((formations: formation[]) => {
@@ -100,27 +120,142 @@ export const CurrentFormation: React.FC<{
                         s
                      </p>
                      <div className="flex flex-row items-center justify-center">
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-4 h-4 mr-1 stroke-gray-500"
-                        >
-                           <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                           />
-                        </svg>
-                        <p className="text-lg text-gray-500 ">
-                           {
-                              formations[selectedFormation]?.positions.filter((dancer) => {
-                                 return dancer.position.x > -(stageDimensions.width / 2 - 2) && dancer.position.x < stageDimensions.width / 2 - 2;
-                              }).length
-                           }
-                        </p>
+                        <div className="relative  text-left  ">
+                           <div onClick={() => setBackgroundDropdownIsOpen((x) => !x)}>
+                              <button
+                                 className="inline-flex w-full justify-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+                                 id="menu-button"
+                              >
+                                 {formationGroups.find((group) => group.id === formations[selectedFormation]?.group) ? (
+                                    <>
+                                       <div
+                                          style={{
+                                             backgroundColor: formationGroups.find((group) => group.id === formations[selectedFormation]?.group)
+                                                ?.color,
+                                          }}
+                                          className="w-5 h-5 rounded-full mr-2 "
+                                       ></div>
+                                       <p> {formationGroups.find((group) => group.id === formations[selectedFormation]?.group)?.name}</p>
+                                    </>
+                                 ) : (
+                                    "Category"
+                                 )}
+                                 <svg
+                                    className="-mr-1 ml-2 h-5 w-5"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                    aria-hidden="true"
+                                 >
+                                    <path
+                                       fillRule="evenodd"
+                                       d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                                       clipRule="evenodd"
+                                    />
+                                 </svg>
+                              </button>
+                           </div>
+
+                           <div
+                              className={`absolute ${
+                                 backgroundDropdownIsOpen
+                                    ? " opacity-100 scale-100 pointer-events-auto"
+                                    : "transform opacity-0 scale-95 pointer-events-none "
+                              } right-0 z-20 mt-2 w-[200px] transform transition ease-out  duration-100 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
+                           >
+                              <div className="py-1" role="none">
+                                 {formationGroups.map((formationGroup) => {
+                                    return (
+                                       <>
+                                          <a
+                                             onClick={() => {
+                                                setFormations((formations: formation[]) => {
+                                                   return formations.map((formation, i) => {
+                                                      if (i === selectedFormation) {
+                                                         return { ...formation, group: formationGroup.id };
+                                                      }
+                                                      return formation;
+                                                   });
+                                                });
+                                             }}
+                                             className={`${
+                                                formationGroup.id === formations[selectedFormation]?.group ? "text-gray-900 bg-gray-100 " : ""
+                                             } text-gray-700  block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900`}
+                                             id="menu-item"
+                                          >
+                                             <div id="menu-item" className="flex flex-row items-center  w-full">
+                                                <div
+                                                   id="menu-item"
+                                                   style={{
+                                                      backgroundColor: formationGroup.color,
+                                                   }}
+                                                   className="min-w-[20px] min-h-[20px] rounded-full mr-2 "
+                                                ></div>
+                                                <p id="menu-item"> {formationGroup.name}</p>
+                                                <button
+                                                   id="menu-item"
+                                                   onClick={(e) => {
+                                                      e.stopPropagation();
+                                                      setIsEditingFormationGroup(formationGroup.id);
+                                                   }}
+                                                   className="text-sm ml-auto "
+                                                >
+                                                   Edit
+                                                </button>
+                                             </div>
+                                          </a>
+                                       </>
+                                    );
+                                 })}
+
+                                 <a
+                                    id="menu-item"
+                                    onClick={() => {
+                                       setFormations((formations: formation[]) => {
+                                          return formations.map((formation, i) => {
+                                             if (i === selectedFormation) {
+                                                return { ...formation, group: null };
+                                             }
+                                             return formation;
+                                          });
+                                       });
+                                    }}
+                                    className={`${
+                                       !formations[selectedFormation].group ? "text-gray-900 bg-gray-100 " : ""
+                                    } text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900`}
+                                 >
+                                    None
+                                 </a>
+                                 <a
+                                    id="menu-item"
+                                    onClick={(e) => {
+                                       e.stopPropagation();
+                                       let id = crypto.randomUUID();
+                                       setFormationGroups((formationGroups: formationGroup[]) => {
+                                          return [...formationGroups, { id, name: "New Group", color: "#db2777" }];
+                                       });
+                                       setIsEditingFormationGroup(id);
+                                    }}
+                                    className={` text-gray-700 block px-4 py-2 text-sm  hover:bg-gray-100 hover:text-gray-900`}
+                                 >
+                                    <div id="menu-item" className="flex flex-row items-center">
+                                       <svg
+                                          id="menu-item"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          strokeWidth={1.5}
+                                          stroke="currentColor"
+                                          className="w-5 h-5 mr-1"
+                                       >
+                                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                       </svg>
+                                       <p id="menu-item">New</p>
+                                    </div>
+                                 </a>
+                              </div>
+                           </div>
+                        </div>
                      </div>
                   </div>
                   <hr className="mt-3 " />
@@ -129,30 +264,13 @@ export const CurrentFormation: React.FC<{
                      <div className=" mt-6 mb-4 min-h-[130px]">
                         <div className="flex flex-row  justify-between items-start  ">
                            <div className="flex flex-col ">
-                              <p
-                                 className="font-medium text-xl mr-auto z-10"
-                                 // style={{
-                                 //    textDecoration: selectedDancers.length === 1 ? "underline" : "none",
-                                 //    textDecorationColor: dancers.find((dancer) => dancer.id === selectedDancers[0])?.color,
-                                 //    textDecorationWidth: 100,
-                                 //    textDecorationThickness: 4,
-                                 // }}
-                              >
+                              <p className="font-medium text-xl mr-auto z-10">
                                  {selectedDancers.length === 0
                                     ? "No Dancers Selected"
                                     : selectedDancers.length === 1
                                     ? dancers.find((dancer) => dancer.id === selectedDancers[0])?.name
                                     : "Multiple Dancers Selected"}
                               </p>
-
-                              {/* <div
-                                 className="w-full h-2 relative "
-                                 style={{
-                                    backgroundColor: dancers.find((dancer) => dancer.id === selectedDancers[0])?.color,
-                                    opacity: 0.7,
-                                    bottom: 5,
-                                 }}
-                              ></div> */}
                            </div>
 
                            {selectedDancers.length === 1 ? (
@@ -323,6 +441,123 @@ export const CurrentFormation: React.FC<{
                         </div>
                      </div>
                   </div>
+
+                  {/* <div className="px-6">
+                     <p className=" mt-5 mb-2 font-medium text-gray-700">Rotation</p>
+                     <p>
+                        from:{" "}
+                        {selectedDancers.length && selectedFormation
+                           ? formations[selectedFormation - 1]?.positions.find((position) => position.id === selectedDancers[0]).rotation.angle
+                           : null}
+                     </p>
+                     <p>
+                        to:{" "}
+                        {selectedDancers.length && selectedFormation
+                           ? formations[selectedFormation]?.positions.find((position) => position.id === selectedDancers[0]).rotation.angle
+                           : null}
+                     </p>
+                     <div
+                        style={{
+                           opacity: selectedDancers.length && selectedFormation !== 0 ? 1 : 0.4,
+                           pointerEvents: selectedDancers.length && selectedFormation !== 0 ? "auto" : "none",
+                        }}
+                        className="border select-none  border-gray-200 flex flex-row justify-around rounded-xl w-full text-sm shadow-sm cursor-pointer "
+                     >
+                        <div
+                           className="p-4 flex flex-row items-center"
+                           onClick={() => {
+                              addToStack();
+                              selectedDancers.forEach((selectedDancer) => {
+                                 setFormations((formations: formation[]) => {
+                                    return formations.map((formation, index: number) => {
+                                       if (index === selectedFormation) {
+                                          return {
+                                             ...formation,
+
+                                             positions: formation.positions.map((dancerPosition) => {
+                                                if (dancerPosition.id === selectedDancer) {
+                                                   return {
+                                                      ...dancerPosition,
+                                                      rotation: { ...dancerPosition.rotation, direction: "clockwise" },
+                                                   };
+                                                }
+                                                return dancerPosition;
+                                             }),
+                                          };
+                                       }
+                                       return formation;
+                                    });
+                                 });
+                              });
+                              pushChange();
+                           }}
+                        >
+                           {selectedDancers.length &&
+                           formations[selectedFormation]?.positions
+                              .filter((dancer) => {
+                                 return selectedDancers.includes(dancer.id);
+                              })
+                              .map((dancer) => dancer?.rotation?.direction || null)
+                              .every((item) => item === "clockwise") ? (
+                              <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                                 <div className="rounded-full h-2 w-2 bg-pink-400"></div>
+                              </div>
+                           ) : (
+                              <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                           )}
+
+                           <p>Clockwise</p>
+                        </div>
+
+                        <div
+                           className={`p-4 flex flex-row items-center `}
+                           onClick={() => {
+                              addToStack();
+                              selectedDancers.forEach((selectedDancer) => {
+                                 setFormations((formations: formation[]) => {
+                                    return formations.map((formation, index: number) => {
+                                       if (index === selectedFormation) {
+                                          return {
+                                             ...formation,
+
+                                             positions: formation.positions.map((dancerPosition) => {
+                                                if (dancerPosition.id === selectedDancer) {
+                                                   return {
+                                                      ...dancerPosition,
+                                                      rotation: { ...dancerPosition.rotation, direction: "Counterclockwise" },
+                                                   };
+                                                }
+                                                return dancerPosition;
+                                             }),
+                                          };
+                                       }
+                                       return formation;
+                                    });
+                                 });
+                              });
+                              pushChange();
+                           }}
+                        >
+                           <>
+                              {selectedDancers.length &&
+                              formations[selectedFormation]?.positions
+                                 .filter((dancer) => {
+                                    return selectedDancers.includes(dancer.id);
+                                 })
+                                 .map((dancer) => dancer?.rotation?.direction || null)
+                                 .every((item) => item === "Counterclockwise") ? (
+                                 <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                                    <div className="rounded-full h-2 w-2 bg-pink-400"></div>
+                                 </div>
+                              ) : (
+                                 <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                              )}
+                           </>
+
+                           <p>Counterclockwise</p>
+                        </div>
+                     </div>
+                  </div> */}
 
                   <div className="overflow-y-scroll overflow-x-hidden h-full px-6 mt-5">
                      {formations[selectedFormation]?.comments?.map((comment) => {

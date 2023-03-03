@@ -85,7 +85,7 @@ export const NewDancer: React.FC<{
             <input
                className="h-6  px-3 py-4 transition duration-300  rounded-md  ml-3 hover:bg-gray-100 text-gray-500 focus:bg-gray-100 outline-none cursor-pointer"
                onKeyDown={(event) => (event.key === "Enter" ? createNewDancer() : null)}
-               placeholder="new dancer"
+               placeholder="New Dancer"
                value={newName}
                onChange={(e) => setNewName(e.target.value)}
                onBlur={createNewDancer}
