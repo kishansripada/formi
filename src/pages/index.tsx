@@ -50,11 +50,16 @@ const home = () => {
             <div className="overflow-hidden">
                <div className=" flex flex-row items-center justify-center w-full  text-center pt-12 px-[10%] lg:px-[20%] bg-[#fafafa]  ">
                   <div className="w-full  ">
-                     <h1 className=" text-4xl lg:text-6xl  leading-10  font-bold text-gray-900 ">
-                        Create stunning performances that impress your audience.
+                     <h1
+                        style={{
+                           lineHeight: 1.15,
+                        }}
+                        className=" text-4xl lg:text-6xl   font-bold text-gray-900 "
+                     >
+                        Build stage formations that impress your audience.
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
-                     <h1 className="font-bold  text-2xl text-gray-600  mt-4 ">Three dimensional. Synced to music.</h1>
+                     <h1 className="font-bold  text-2xl text-gray-700  mt-4 ">Three dimensional & synced to music.</h1>
                      {/* <p className="text-gray-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
                      <Link href={"/login"} className="z-50">
                         <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white  px-4 py-2 block lg:hidden mx-auto mt-5  rounded-full">
@@ -99,7 +104,37 @@ const home = () => {
                   ></div>
                </div>
             </div>
+            <div className="  flex-wrap flex flex-row items-center justify-center child:mx-8 child:my-8  select-none   ">
+               <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cornell_University_logo.svg/1280px-Cornell_University_logo.svg.png"
+                  className="grayscale w-48 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                  alt=""
+               />
+               <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/University_of_Michigan_logo.svg/2560px-University_of_Michigan_logo.svg.png"
+                  className="grayscale w-48 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                  alt=""
+               />
 
+               <img
+                  src=" https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/University_of_California%2C_Berkeley_logo.svg/2560px-University_of_California%2C_Berkeley_logo.svg.png
+               "
+                  className="grayscale w-32 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                  alt=""
+               />
+               <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/University_of_Texas_at_Austin_logo.svg/1280px-University_of_Texas_at_Austin_logo.svg.png
+               "
+                  className="grayscale w-32 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                  alt=""
+               />
+               <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Stanford_Cardinal_logo.svg/1341px-Stanford_Cardinal_logo.svg.png
+               "
+                  className="grayscale w-12 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                  alt=""
+               />
+            </div>
             <div className=" bg-white  font-proxima overflow-hidden relative ">
                <div className="absolute top-12 w-full px-4 -translate-x-1/2 left-1/2">
                   {/* <p className="font-bold w-full text-3xl">Bring your dancers to life.</p> */}
