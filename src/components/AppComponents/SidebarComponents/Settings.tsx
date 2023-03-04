@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation, stageDimensions } from "../../../types/types";
+import { dancer, dancerPosition, formation, localSettings, stageDimensions } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 
@@ -20,7 +20,7 @@ export const Settings: React.FC<{
                <div
                   className="p-4 flex flex-row items-center"
                   onClick={() =>
-                     setLocalSettings((settings) => {
+                     setLocalSettings((settings: localSettings) => {
                         return { ...settings, previousFormationView: "none" };
                      })
                   }
@@ -38,7 +38,7 @@ export const Settings: React.FC<{
                <div
                   className="p-4 flex flex-row items-center"
                   onClick={() =>
-                     setLocalSettings((settings) => {
+                     setLocalSettings((settings: localSettings) => {
                         return { ...settings, previousFormationView: "ghostDancers" };
                      })
                   }
@@ -56,7 +56,7 @@ export const Settings: React.FC<{
                <div
                   className={`p-4 flex flex-row items-center `}
                   onClick={() =>
-                     setLocalSettings((settings) => {
+                     setLocalSettings((settings: localSettings) => {
                         return { ...settings, previousFormationView: "ghostDancersAndPaths" };
                      })
                   }
@@ -79,7 +79,7 @@ export const Settings: React.FC<{
                <div
                   className="p-4 flex flex-row items-center"
                   onClick={() =>
-                     setLocalSettings((settings) => {
+                     setLocalSettings((settings: localSettings) => {
                         return { ...settings, gridSnap: 100 };
                      })
                   }
@@ -97,7 +97,7 @@ export const Settings: React.FC<{
                <div
                   className="p-4 flex flex-row items-center"
                   onClick={() =>
-                     setLocalSettings((settings) => {
+                     setLocalSettings((settings: localSettings) => {
                         return { ...settings, gridSnap: 2 };
                      })
                   }
@@ -115,7 +115,7 @@ export const Settings: React.FC<{
                <div
                   className={`p-4 flex flex-row items-center `}
                   onClick={() =>
-                     setLocalSettings((settings) => {
+                     setLocalSettings((settings: localSettings) => {
                         return { ...settings, gridSnap: 1 };
                      })
                   }
@@ -136,7 +136,7 @@ export const Settings: React.FC<{
                <div
                   className="p-4 flex flex-row items-center"
                   onClick={() =>
-                     setLocalSettings((settings) => {
+                     setLocalSettings((settings: localSettings) => {
                         return { ...settings, dancerStyle: "initials" };
                      })
                   }
@@ -154,7 +154,7 @@ export const Settings: React.FC<{
                <div
                   className="p-4 flex flex-row items-center"
                   onClick={() =>
-                     setLocalSettings((settings) => {
+                     setLocalSettings((settings: localSettings) => {
                         return { ...settings, dancerStyle: "numbered" };
                      })
                   }

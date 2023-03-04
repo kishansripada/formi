@@ -134,18 +134,7 @@ export const Share: React.FC<{
                         return (
                            <div className="flex flex-row py-2 rounded-md px-2 hover:bg-gray-100" key={user[0]}>
                               <p className="text-gray-700">{user[0]}</p>
-                              {/* <select
-                                 className="ml-auto"
-                                 name=""
-                                 id=""
-                                 onChange={(e) => {
-                                    setShareSettings((users) => {
-                                       return { ...users, [user[0]]: e.target.value };
-                                    });
-                                 }}
-                              >
-                                 <option value="view">view</option>
-                              </select> */}
+
                               <button
                                  onClick={() => {
                                     setShareSettings((users) => {

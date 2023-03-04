@@ -31,19 +31,7 @@ const home = () => {
 
             <meta property="og:site_name" content="FORMI: Online stage performance planning software." />
          </Head>
-         {/* {router.query.ref === "naach" ? (
-            <>
-               <div className="fixed top-0 left-0 z-[100] flex h-screen w-screen items-center justify-center font-proxima ">
-                  <div className="flex  w-[700px] flex-col rounded-xl bg-white border border-black">
-                     <div className="flex flex-col rounded-xl px-10 py-10 h-full text-center">
-                        <div className="flex flex-col mt-auto text-5xl">naach is now FORMI!</div>
-                     </div>
-                  </div>
-               </div>
-            </>
-         ) : (
-            <></>
-         )} */}
+
          <Header></Header>
 
          <div className="bg-[#fafafa] overflow-hidden ">
@@ -104,36 +92,40 @@ const home = () => {
                   ></div>
                </div>
             </div>
-            <div className="  flex-wrap flex flex-row items-center justify-center child:mx-8 child:my-8  select-none   ">
-               <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cornell_University_logo.svg/1280px-Cornell_University_logo.svg.png"
-                  className="grayscale w-48 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
-                  alt=""
-               />
-               <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/University_of_Michigan_logo.svg/2560px-University_of_Michigan_logo.svg.png"
-                  className="grayscale w-48 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
-                  alt=""
-               />
+            <div className="  flex-wrap flex flex-col items-center justify-center   ">
+               <p className=" text-2xl font-proxima font-semibold mt-10">Trusted by thousands of dance teams.</p>
 
-               <img
-                  src=" https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/University_of_California%2C_Berkeley_logo.svg/2560px-University_of_California%2C_Berkeley_logo.svg.png
+               <div className=" flex-wrap flex flex-row items-center justify-center child:mx-8 child:my-8  select-none ">
+                  <img
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cornell_University_logo.svg/1280px-Cornell_University_logo.svg.png"
+                     className="grayscale w-48 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                     alt=""
+                  />
+                  <img
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/University_of_Michigan_logo.svg/2560px-University_of_Michigan_logo.svg.png"
+                     className="grayscale w-48 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                     alt=""
+                  />
+
+                  <img
+                     src=" https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/University_of_California%2C_Berkeley_logo.svg/2560px-University_of_California%2C_Berkeley_logo.svg.png
                "
-                  className="grayscale w-32 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
-                  alt=""
-               />
-               <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/University_of_Texas_at_Austin_logo.svg/1280px-University_of_Texas_at_Austin_logo.svg.png
+                     className="grayscale w-32 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                     alt=""
+                  />
+                  <img
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/University_of_Texas_at_Austin_logo.svg/1280px-University_of_Texas_at_Austin_logo.svg.png
                "
-                  className="grayscale w-32 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
-                  alt=""
-               />
-               <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Stanford_Cardinal_logo.svg/1341px-Stanford_Cardinal_logo.svg.png
+                     className="grayscale w-32 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                     alt=""
+                  />
+                  <img
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Stanford_Cardinal_logo.svg/1341px-Stanford_Cardinal_logo.svg.png
                "
-                  className="grayscale w-12 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
-                  alt=""
-               />
+                     className="grayscale w-12 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                     alt=""
+                  />
+               </div>
             </div>
             <div className=" bg-white  font-proxima overflow-hidden relative ">
                <div className="absolute top-12 w-full px-4 -translate-x-1/2 left-1/2">

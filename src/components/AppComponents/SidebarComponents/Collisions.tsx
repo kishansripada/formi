@@ -11,7 +11,7 @@ export const Collisions: React.FC<{
    isChangingCollisionRadius: boolean;
 }> = ({ setLocalSettings, localSettings, cloudSettings, setCloudSettings, setIsChangingCollisionRadius, isChangingCollisionRadius }) => {
    let { previousFormationView, viewCollisions } = localSettings;
-   const handleMouseMove = (e) => {
+   const handleMouseMove = (e: MouseEvent) => {
       if (!isChangingCollisionRadius) return;
 
       let newRadius = cloudSettings.collisionRadius + (e.movementX / 250) * 0.9;

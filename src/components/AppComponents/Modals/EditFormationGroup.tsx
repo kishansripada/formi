@@ -21,8 +21,8 @@ export const EditFormationGroup: React.FC<{
       >
          <div className="flex  flex-col rounded-xl bg-white pt-10 pb-10 px-10 ">
             <input
-               className="h-6 w-full   px-3 py-4 transition duration-300  rounded-md bg-gray-100 text-gray-800 bg-gray-100 outline-none"
-               value={formationGroups.find((formationGroup) => formationGroup.id === isEditingFormationGroup).name}
+               className="h-6 w-full   px-3 py-4 transition duration-300  rounded-md bg-gray-100 text-gray-800 outline-none"
+               value={formationGroups.find((formationGroup) => formationGroup.id === isEditingFormationGroup)?.name}
                onChange={(e) => {
                   setFormationGroups((formationGroups: formationGroup[]) => {
                      return formationGroups.map((formationGroup) => {
@@ -38,7 +38,7 @@ export const EditFormationGroup: React.FC<{
             <p className="mt-10 text-gray-700 text-medium mb-3">Color</p>
             <div className=" grid place-items-center">
                <CirclePicker
-                  color={formationGroups.find((formationGroup) => formationGroup.id === isEditingFormationGroup).color}
+                  color={formationGroups.find((formationGroup) => formationGroup.id === isEditingFormationGroup)?.color}
                   onChangeComplete={(color) => {
                      setFormationGroups((formationGroups: formationGroup[]) => {
                         return formationGroups.map((group) => {
@@ -64,31 +64,8 @@ export const EditFormationGroup: React.FC<{
                >
                   Delete Category
                </button>
-               {/* <button
-                     className="bg-pink-700 flex flex-row mt-6 text-white px-2 py-1 rounded-md"
-                     onClick={() => {
-                        setEditingDancer(null);
-                     }}
-                  >
-                     save
-                  </button> */}
             </div>
          </div>
       </div>
    );
 };
-
-function convertToCentimeters(feet: number, inches: number): number {
-   const inchesToCentimeters = inches * 2.54;
-   const feetToCentimeters = feet * 12 * 2.54;
-   const totalCentimeters = inchesToCentimeters + feetToCentimeters;
-   return Math.round(totalCentimeters * 10) / 10;
-}
-
-function convertToFeetAndInches(centimeters: number): { feet: number; inches: number } {
-   if (centimeters === null) return { feet: "", inches: "" };
-   const inchesToCentimeters = 2.54;
-   const inches = Math.round(centimeters / inchesToCentimeters);
-   const feet = Math.floor(inches / 12);
-   return { feet, inches: inches % 12 };
-}

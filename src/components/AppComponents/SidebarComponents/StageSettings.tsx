@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation, stageDimensions } from "../../../types/types";
+import { cloudSettings, dancer, dancerPosition, formation, stageDimensions } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -64,7 +64,7 @@ export const StageSettings: React.FC<{
          )
          .then((data) => {
             // setAudiofiles(r);
-            setCloudSettings((cloudSettings) => {
+            setCloudSettings((cloudSettings: cloudSettings) => {
                return {
                   ...cloudSettings,
                   backgroundUrl: `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/stagebackgrounds/${data.data.path}`,
@@ -114,7 +114,7 @@ export const StageSettings: React.FC<{
                            };
                         });
                      });
-                     setCloudSettings((cloudSettings) => {
+                     setCloudSettings((cloudSettings: cloudSettings) => {
                         return { ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width - 2 } };
                      });
                   }}
@@ -146,7 +146,7 @@ export const StageSettings: React.FC<{
                            };
                         });
                      });
-                     setCloudSettings((cloudSettings) => {
+                     setCloudSettings((cloudSettings: cloudSettings) => {
                         return { ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width + 2 } };
                      });
                   }}

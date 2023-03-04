@@ -41,21 +41,14 @@ export const EditDancer: React.FC<{
                               });
                            });
                         }}
-                        placeholder="image url"
+                        placeholder="Image URL"
                         className=" border-gray-300 border rounded-md focus:outline-none px-2 h-8  grow text-sm "
                         type="text"
                      />
-                     <p className="text-xs text-gray-500  mt-2">for profile picture</p>
+                     <p className="text-xs text-gray-500  mt-2">For profile picture</p>
                   </div>
 
                   <div className="mt-10 text-gray-700 text-medium mb-3 flex flex-col items-center  w-full">
-                     {/* <div className="flex flex-row justify-between w-full">
-                        <p>Height</p>
-                        <select className="" name="" id="">
-                           <option value="cm">cm</option>
-                           <option value="in">in</option>
-                        </select>
-                     </div> */}
                      <div className="flex flex-row items-center justify-around w-full mt-5">
                         <div className="flex flex-row items-center">
                            <input
@@ -113,7 +106,6 @@ export const EditDancer: React.FC<{
                                  return dancer;
                               });
                            });
-                           console.log(color);
                         }}
                      />
                   </div>
@@ -121,22 +113,14 @@ export const EditDancer: React.FC<{
 
                <div className="flex flex-row justify-between mt-6">
                   <button
-                     className="bg-red-600  flex flex-row mt-6 text-white px-3 py-2 rounded-md "
+                     className="bg-red-600  flex flex-row mt-6 text-white px-3 py-1 rounded-md "
                      onClick={() => {
                         setEditingDancer(null);
                         removeDancer(editingDancer);
                      }}
                   >
-                     delete dancer
+                     Delete Dancer
                   </button>
-                  {/* <button
-                     className="bg-pink-700 flex flex-row mt-6 text-white px-2 py-1 rounded-md"
-                     onClick={() => {
-                        setEditingDancer(null);
-                     }}
-                  >
-                     save
-                  </button> */}
                </div>
             </div>
          </div>

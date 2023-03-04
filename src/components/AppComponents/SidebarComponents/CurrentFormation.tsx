@@ -1,6 +1,6 @@
 import { dancer, dancerPosition, formation, formationGroup, initials } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 
 export const CurrentFormation: React.FC<{
    selectedFormation: number | null;
@@ -55,9 +55,8 @@ export const CurrentFormation: React.FC<{
       });
    };
 
-   const closeWindow = (e) => {
-      console.log(e.target.id);
-      if (e.target.id === "menu-item") return;
+   const closeWindow = (e: MouseEvent) => {
+      if (e?.target?.id === "menu-item") return;
       setBackgroundDropdownIsOpen(false);
    };
 
@@ -71,7 +70,7 @@ export const CurrentFormation: React.FC<{
    return (
       <>
          <div className=" lg:flex hidden  min-w-[350px] w-[23%] flex-col h-full  bg-white border-r border-r-gray-300 ">
-            {selectedFormation !== null && formations[selectedFormation]?.name !== null ? (
+            {selectedFormation !== null && formations[selectedFormation] ? (
                <>
                   <div className="flex flex-row items-center mb-3 px-6 pt-5 ">
                      <input
@@ -115,7 +114,9 @@ export const CurrentFormation: React.FC<{
                   <div className="flex flex-row items-center justify-between w-full px-6  ">
                      <p className="text-lg text-gray-500">
                         {Math.round(
-                           (formations[selectedFormation]?.durationSeconds + formations[selectedFormation]?.transition.durationSeconds) * 10
+                           ((formations[selectedFormation]?.durationSeconds || 0) +
+                              (formations[selectedFormation]?.transition.durationSeconds || 0)) *
+                              10
                         ) / 10}
                         s
                      </p>
@@ -166,45 +167,44 @@ export const CurrentFormation: React.FC<{
                               <div className="py-1" role="none">
                                  {formationGroups.map((formationGroup) => {
                                     return (
-                                       <>
-                                          <a
-                                             onClick={() => {
-                                                setFormations((formations: formation[]) => {
-                                                   return formations.map((formation, i) => {
-                                                      if (i === selectedFormation) {
-                                                         return { ...formation, group: formationGroup.id };
-                                                      }
-                                                      return formation;
-                                                   });
+                                       <a
+                                          key={formationGroup.id}
+                                          onClick={() => {
+                                             setFormations((formations: formation[]) => {
+                                                return formations.map((formation, i) => {
+                                                   if (i === selectedFormation) {
+                                                      return { ...formation, group: formationGroup.id };
+                                                   }
+                                                   return formation;
                                                 });
-                                             }}
-                                             className={`${
-                                                formationGroup.id === formations[selectedFormation]?.group ? "text-gray-900 bg-gray-100 " : ""
-                                             } text-gray-700  block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900`}
-                                             id="menu-item"
-                                          >
-                                             <div id="menu-item" className="flex flex-row items-center  w-full">
-                                                <div
-                                                   id="menu-item"
-                                                   style={{
-                                                      backgroundColor: formationGroup.color,
-                                                   }}
-                                                   className="min-w-[20px] min-h-[20px] rounded-full mr-2 "
-                                                ></div>
-                                                <p id="menu-item"> {formationGroup.name}</p>
-                                                <button
-                                                   id="menu-item"
-                                                   onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      setIsEditingFormationGroup(formationGroup.id);
-                                                   }}
-                                                   className="text-sm ml-auto "
-                                                >
-                                                   Edit
-                                                </button>
-                                             </div>
-                                          </a>
-                                       </>
+                                             });
+                                          }}
+                                          className={`${
+                                             formationGroup.id === formations[selectedFormation]?.group ? "text-gray-900 bg-gray-100 " : ""
+                                          } text-gray-700  block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900`}
+                                          id="menu-item"
+                                       >
+                                          <div id="menu-item" className="flex flex-row items-center  w-full">
+                                             <div
+                                                id="menu-item"
+                                                style={{
+                                                   backgroundColor: formationGroup.color,
+                                                }}
+                                                className="min-w-[20px] min-h-[20px] rounded-full mr-2 "
+                                             ></div>
+                                             <p id="menu-item"> {formationGroup.name}</p>
+                                             <button
+                                                id="menu-item"
+                                                onClick={(e) => {
+                                                   e.stopPropagation();
+                                                   setIsEditingFormationGroup(formationGroup.id);
+                                                }}
+                                                className="text-sm ml-auto "
+                                             >
+                                                Edit
+                                             </button>
+                                          </div>
+                                       </a>
                                     );
                                  })}
 
@@ -221,7 +221,7 @@ export const CurrentFormation: React.FC<{
                                        });
                                     }}
                                     className={`${
-                                       !formations[selectedFormation].group ? "text-gray-900 bg-gray-100 " : ""
+                                       !formations[selectedFormation]?.group ? "text-gray-900 bg-gray-100 " : ""
                                     } text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900`}
                                  >
                                     None
@@ -304,7 +304,6 @@ export const CurrentFormation: React.FC<{
                                           if (index === selectedFormation) {
                                              return {
                                                 ...formation,
-
                                                 positions: formation.positions.map((dancerPosition) => {
                                                    if (dancerPosition.id === selectedDancer) {
                                                       return {
@@ -359,8 +358,11 @@ export const CurrentFormation: React.FC<{
                                        )?.position;
                                        if (!start || !end) return;
 
-                                       const getMidpoint = (x1, y1, x2, y2) => ({ x: (x1 + x2) / 2, y: (y1 + y2) / 2 });
-                                       const getSlope = (x1, y1, x2, y2) => {
+                                       const getMidpoint = (x1: number, y1: number, x2: number, y2: number) => ({
+                                          x: (x1 + x2) / 2,
+                                          y: (y1 + y2) / 2,
+                                       });
+                                       const getSlope = (x1: number, y1: number, x2: number, y2: number) => {
                                           if (x2 === x1) {
                                              return undefined;
                                           }
