@@ -230,6 +230,10 @@ export const CurrentFormation: React.FC<{
                                     id="menu-item"
                                     onClick={(e) => {
                                        e.stopPropagation();
+                                       if (pricingTier === "basic") {
+                                          setUpgradeIsOpen(true);
+                                          return;
+                                       }
                                        let id = crypto.randomUUID();
                                        setFormationGroups((formationGroups: formationGroup[]) => {
                                           return [...formationGroups, { id, name: "New Group", color: "#db2777" }];

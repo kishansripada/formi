@@ -10,7 +10,8 @@ export const StageSettings: React.FC<{
    formations: formation[];
    cloudSettings: any;
    setCloudSettings: Function;
-}> = ({ setFormations, pricingTier, formations, setCloudSettings, cloudSettings }) => {
+   setUpgradeIsOpen: Function;
+}> = ({ setFormations, pricingTier, formations, setCloudSettings, cloudSettings, setUpgradeIsOpen }) => {
    const [backgroundDropdownIsOpen, setBackgroundDropdownIsOpen] = useState<boolean>();
    let { stageBackground, stageDimensions } = cloudSettings;
    const closeWindow = (e) => {
@@ -238,11 +239,15 @@ export const StageSettings: React.FC<{
                >
                   <div className="py-1" role="none">
                      <a
-                        onClick={() =>
+                        onClick={() => {
+                           if (pricingTier === "basic") {
+                              setUpgradeIsOpen(true);
+                              return;
+                           }
                            setCloudSettings((s) => {
                               return { ...s, stageBackground: "none" };
-                           })
-                        }
+                           });
+                        }}
                         href="#"
                         className={`${
                            stageBackground === "none" ? "text-gray-900 bg-gray-100 " : ""
@@ -255,11 +260,11 @@ export const StageSettings: React.FC<{
                      </a>
 
                      <a
-                        onClick={() =>
+                        onClick={() => {
                            setCloudSettings((s) => {
                               return { ...s, stageBackground: "grid" };
-                           })
-                        }
+                           });
+                        }}
                         href="#"
                         className={`${
                            stageBackground === "grid" ? "text-gray-900 bg-gray-100 " : ""
@@ -272,6 +277,10 @@ export const StageSettings: React.FC<{
                      </a>
                      <a
                         onClick={() => {
+                           if (pricingTier === "basic") {
+                              setUpgradeIsOpen(true);
+                              return;
+                           }
                            setCloudSettings((s) => {
                               return { ...s, stageDimensions: { width: 36, height: 28 } };
                            });
@@ -291,6 +300,10 @@ export const StageSettings: React.FC<{
                      </a>
                      <a
                         onClick={() => {
+                           if (pricingTier === "basic") {
+                              setUpgradeIsOpen(true);
+                              return;
+                           }
                            setCloudSettings((s) => {
                               return { ...s, stageBackground: "custom" };
                            });
@@ -316,6 +329,10 @@ export const StageSettings: React.FC<{
                         <button
                            className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
                            onClick={() => {
+                              if (pricingTier === "basic") {
+                                 setUpgradeIsOpen(true);
+                                 return;
+                              }
                               if (cloudSettings.gridSubdivisions === 1) return;
                               setCloudSettings((cloudSettings) => {
                                  return { ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions - 1 };
@@ -340,6 +357,10 @@ export const StageSettings: React.FC<{
                         <button
                            className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
                            onClick={() => {
+                              if (pricingTier === "basic") {
+                                 setUpgradeIsOpen(true);
+                                 return;
+                              }
                               if (cloudSettings.gridSubdivisions === 15) return;
                               setCloudSettings((cloudSettings) => {
                                  return { ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions + 1 };

@@ -10,7 +10,7 @@ import { Rosters } from "../components/DashboardComponents/Rosters";
 import { AudioFiles } from "../components/DashboardComponents/AudioFiles";
 import { Trash } from "../components/DashboardComponents/Trash";
 
-const Dashboard = ({ dances, audioFiles }: {}) => {
+const Dashboard = ({ dances, audioFiles, pricingTier }: {}) => {
    let session = useSession();
    const supabase = useSupabaseClient();
    const [importIsOpen, setImportIsOpen] = useState(false);
@@ -146,7 +146,13 @@ const Dashboard = ({ dances, audioFiles }: {}) => {
 
                   <button
                      className="flex flex-row justify-between items-center bg-pink-600 text-white text-sm w-full py-3 px-3 rounded-lg mt-5    font-medium"
-                     onClick={createNewDance}
+                     onClick={() => {
+                        if (pricingTier === "basic" && myDances.length > 1) {
+                           router.push("/pricing");
+                           return;
+                        }
+                        createNewDance();
+                     }}
                   >
                      <p>New Performance</p>
 
@@ -244,6 +250,6 @@ export const getServerSideProps = withPageAuth({
 
       const { data } = await supabase.from("dances").select("*").eq("user", user.id);
 
-      return { props: { dances: data } };
+      return { props: { dances: data, pricingTier: "premium" } };
    },
 });

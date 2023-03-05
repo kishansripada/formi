@@ -9,7 +9,18 @@ export const Collisions: React.FC<{
    cloudSettings: cloudSettings;
    setIsChangingCollisionRadius: Function;
    isChangingCollisionRadius: boolean;
-}> = ({ setLocalSettings, localSettings, cloudSettings, setCloudSettings, setIsChangingCollisionRadius, isChangingCollisionRadius }) => {
+   setUpgradeIsOpen: Function;
+   pricingTier: string;
+}> = ({
+   setLocalSettings,
+   localSettings,
+   cloudSettings,
+   setCloudSettings,
+   setIsChangingCollisionRadius,
+   isChangingCollisionRadius,
+   pricingTier,
+   setUpgradeIsOpen,
+}) => {
    let { previousFormationView, viewCollisions } = localSettings;
    const handleMouseMove = (e: MouseEvent) => {
       if (!isChangingCollisionRadius) return;
@@ -67,17 +78,28 @@ export const Collisions: React.FC<{
                   className="p-4 flex flex-row items-center"
                   onClick={() =>
                      setLocalSettings((settings: localSettings) => {
+                        if (pricingTier === "basic") {
+                           setUpgradeIsOpen(true);
+                           return { ...settings, viewCollisions: false };
+                        }
                         return { ...settings, viewCollisions: true };
                      })
                   }
                >
-                  {viewCollisions ? (
-                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
-                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
-                     </div>
+                  {pricingTier === "basic" ? (
+                     <p className="mr-3">⚡️</p>
                   ) : (
-                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                     <>
+                        {viewCollisions ? (
+                           <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                              <div className="rounded-full h-2 w-2 bg-pink-400"></div>
+                           </div>
+                        ) : (
+                           <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                        )}
+                     </>
                   )}
+
                   <p>On</p>
                </div>
             </div>
@@ -93,6 +115,9 @@ export const Collisions: React.FC<{
                   <div
                      onPointerDown={() => {
                         setLocalSettings((settings: localSettings) => {
+                           if (pricingTier === "basic") {
+                              return { ...settings, viewCollisions: false };
+                           }
                            return { ...settings, viewCollisions: true };
                         });
                         setIsChangingCollisionRadius(true);

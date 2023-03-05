@@ -9,7 +9,9 @@ export const EditDancer: React.FC<{
    dancers: dancer[];
    setDancers: Function;
    removeDancer: Function;
-}> = ({ setEditingDancer, editingDancer, dancers, setDancers, removeDancer }) => {
+   pricingTier: string;
+   setUpgradeIsOpen: Function;
+}> = ({ setEditingDancer, editingDancer, dancers, setDancers, removeDancer, pricingTier, setUpgradeIsOpen }) => {
    let height = convertToFeetAndInches(dancers.find((dancer) => dancer.id === editingDancer)?.height || null);
    const [heightFeet, setHeightFeet] = useState<number>(height.feet);
    const [heightIn, setHeightIn] = useState<number>(height.inches);
@@ -54,6 +56,10 @@ export const EditDancer: React.FC<{
                            <input
                               value={heightFeet}
                               onChange={(e) => {
+                                 if (pricingTier === "basic") {
+                                    setUpgradeIsOpen(true);
+                                    return;
+                                 }
                                  setHeightFeet(parseInt(e.target.value));
                                  if (heightFeet === null || heightFeet === undefined) return;
                                  setDancers((dancers: dancer[]) => {
@@ -74,6 +80,10 @@ export const EditDancer: React.FC<{
                            <input
                               value={heightIn}
                               onChange={(e) => {
+                                 if (pricingTier === "basic") {
+                                    setUpgradeIsOpen(true);
+                                    return;
+                                 }
                                  setHeightIn(parseInt(e.target.value));
                                  if (heightFeet === null || heightFeet === undefined) return;
                                  setDancers((dancers: dancer[]) => {

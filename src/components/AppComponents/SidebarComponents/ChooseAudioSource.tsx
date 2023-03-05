@@ -35,12 +35,12 @@ export const ChooseAudioSource: React.FC<{
    useEffect(() => {
       if (!file?.name) return;
       if (!isValidKey(file.name)) {
-         toast.error("remove special characters from file name");
+         toast.error("Remove special characters from file name");
          setFile(null);
          return;
       }
       if (isVideo(file.name) && pricingTier === "basic") {
-         toast("uploading videos is a premium feature");
+         toast("Uploading videos is a premium feature");
          setFile(null);
          setUpgradeIsOpen(true);
          return;
@@ -87,7 +87,17 @@ export const ChooseAudioSource: React.FC<{
             <div className="flex flex-col ">
                <p className="text-xl font-medium text-[#1A1B25] h-12">Add Media</p>
 
-               <button className="relative border border-dashed border-gray-300 h-24 w-full rounded-xl bg-gray-50 ">
+               <button
+                  onClick={(e) => {
+                     if (pricingTier === "basic" && audioFiles?.data?.length) {
+                        e.preventDefault();
+                        toast("Upgrade to upload more than one audio file");
+                        setUpgradeIsOpen(true);
+                        return;
+                     }
+                  }}
+                  className="relative border border-dashed border-gray-300 h-24 w-full rounded-xl bg-gray-50 "
+               >
                   <input
                      accept="audio/mp4,audio/mpeg,.aac,.wav,.m4a,audio/*"
                      type="file"

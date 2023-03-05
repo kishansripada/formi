@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { formation } from "../../types/types";
-import { supabase } from "../../utils/supabase";
+import { formation, localSettings } from "../../types/types";
 import { useRouter } from "next/router";
 import logo from "../../../public/logo.svg";
 import Image from "next/image";
@@ -21,6 +20,8 @@ export const Header: React.FC<{
    setIsPreviewingThree: Function;
    pricingTier: string;
    setUpgradeIsOpen: Function;
+   localSettings: localSettings;
+   setLocalSettings: Function;
 }> = ({
    saved,
    danceName,
@@ -34,6 +35,8 @@ export const Header: React.FC<{
    setIsPreviewingThree,
    pricingTier,
    setUpgradeIsOpen,
+   localSettings,
+   setLocalSettings,
 }) => {
    const router = useRouter();
    let session = useSession();
@@ -169,38 +172,26 @@ export const Header: React.FC<{
                   </div>
                </button>
                <button
-                  onClick={() =>
-                     setIsPreviewingThree((isPreviewingThree: boolean) => {
-                        if (pricingTier === "basic") {
-                           setUpgradeIsOpen(true);
-                           return isPreviewingThree;
-                        }
-                        return true;
-                     })
-                  }
+                  onClick={() => setIsPreviewingThree(true)}
                   className={`border group hidden lg:block border-black text-sm rounded-r-md px-3 py-3 ${
                      isPreviewingThree ? "bg-slate-800 text-white" : ""
                   } `}
                >
                   <div className="flex flex-row items-center  ">
-                     {pricingTier === "basic" ? (
-                        "⚡️"
-                     ) : (
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-5 h-5 group-hover:animate-spin group-hover:scale-110 transition"
-                        >
-                           <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
-                           />
-                        </svg>
-                     )}
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-5 h-5 group-hover:animate-spin group-hover:scale-110 transition"
+                     >
+                        <path
+                           strokeLinecap="round"
+                           strokeLinejoin="round"
+                           d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
+                        />
+                     </svg>
 
                      <p className="ml-2">3D</p>
                   </div>

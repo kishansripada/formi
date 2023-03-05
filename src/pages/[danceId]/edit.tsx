@@ -9,7 +9,6 @@ import { debounce } from "lodash";
 import toast, { Toaster } from "react-hot-toast";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import Script from "next/script";
 import { comment, dancer, dancerPosition, formation, PIXELS_PER_SQUARE, localSettings, cloudSettings, formationGroup } from "../../types/types";
 import { AudioControls } from "../../components/AppComponents/AudioControls";
 import { Header } from "../../components/AppComponents/Header";
@@ -17,11 +16,6 @@ import { DancerAlias } from "../../components/AppComponents/DancerAlias";
 import { Comment } from "../../components/AppComponents/Comment";
 import { DancerAliasShadow } from "../../components/AppComponents/DancerAliasShadow";
 import { Canvas } from "../../components/AppComponents/Canvas";
-// import { ThreeCanvas } from "../../components/AppComponents/ThreeCanvas";
-// const ThreeCanvas = lazy(() => import("../../components/AppComponents/ThreeCanvas"));
-
-// const ThreeCanvas = dynamic(() => import("../../components/AppComponents/ThreeCanvas").then((mod) => mod.ThreeCanvas));
-
 import { EditDancer } from "../../components/AppComponents/Modals/EditDancer";
 import { EditFormationGroup } from "../../components/AppComponents/Modals/EditFormationGroup";
 import { Layers } from "../../components/AppComponents/Layers";
@@ -29,7 +23,6 @@ import { PathEditor } from "../../components/AppComponents/PathEditor";
 import { Share } from "../../components/AppComponents/Modals/Share";
 import { Collision } from "../../components/AppComponents/Collision";
 import { Sidebar } from "../../components/AppComponents/Sidebar";
-
 import { Settings } from "../../components/AppComponents/SidebarComponents/Settings";
 import { Presets } from "../../components/AppComponents/SidebarComponents/Presets";
 import { ChooseAudioSource } from "../../components/AppComponents/SidebarComponents/ChooseAudioSource";
@@ -37,6 +30,18 @@ import { Roster } from "../../components/AppComponents/SidebarComponents/Roster"
 import { CurrentFormation } from "../../components/AppComponents/SidebarComponents/CurrentFormation";
 import { StageSettings } from "../../components/AppComponents/SidebarComponents/StageSettings";
 import { Collisions } from "../../components/AppComponents/SidebarComponents/Collisions";
+import { RealtimeChannel } from "@supabase/supabase-js";
+import { PricingTable } from "../../components/NonAppComponents/PricingTable";
+
+import {
+   PostgrestResponse,
+   REALTIME_LISTEN_TYPES,
+   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
+   REALTIME_PRESENCE_LISTEN_EVENTS,
+   REALTIME_SUBSCRIBE_STATES,
+   RealtimeChannelSendResponse,
+   RealtimePostgresInsertPayload,
+} from "@supabase/supabase-js";
 var jsondiffpatch = require("jsondiffpatch").create({
    objectHash: function (obj) {
       return obj.id;
@@ -77,37 +82,14 @@ const FileAudioPlayer = dynamic<{
    ssr: false,
 });
 
-const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
-   // let forms = initialData.formations;
-
-   // let newForms = forms.map((formation: formation, i) => {
-   //    if (i === 0) return formation;
-   //    return {
-   //       ...formation,
-   //       positions: forms[i - 1].positions.map((position) => {
-   //          return { ...position, position: formation.positions.find((positionx) => positionx.id === position.id).position };
-   //       }),
-   //       transition: { durationSeconds: forms[i - 1].transition.durationSeconds },
-   //    };
-   // });
-
-   let pricingTier = "premium";
+const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => {
    const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
 
    const supabase = useSupabaseClient();
+
    let session = useSession();
    const router = useRouter();
    const videoPlayer = useRef();
-   // const supabase = createClient(
-   //    "https://dxtxbxkkvoslcrsxbfai.supabase.co",
-   //    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4dHhieGtrdm9zbGNyc3hiZmFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjE0NjM3NDYsImV4cCI6MTk3NzAzOTc0Nn0.caFbFV4Ck7MrTSwsPXyIifjeKWYJWXisKR9-zFA33Ng",
-   //    {
-   //       realtime: {
-   //          params: {
-   //             eventsPerSecond: 1,
-   //          },
-   //       },
-   //    }
 
    // cloud
    const [cloudSettings, setCloudSettings] = useState<cloudSettings>({
@@ -122,7 +104,6 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [shareSettings, setShareSettings] = useState(initialData.sharesettings);
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(initialData.soundCloudId);
    const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
-   const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
    const [danceName, setDanceName] = useState<string>(initialData.name);
    const [formationGroups, setFormationGroups] = useState<formationGroup[]>(initialData.formation_groups);
 
@@ -134,11 +115,11 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       viewCollisions: false,
    });
 
+   const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
    const [upgradeIsOpen, setUpgradeIsOpen] = useState<boolean>(false);
    const [deltas, setDeltas] = useState([]);
    const [localSource, setLocalSource] = useState(null);
    const [songDuration, setSongDuration] = useState<number | null>(null);
-   const [videoCoordinates, setVideoCoordinates] = useState<{ left: number; top: number }>({ left: 40, top: 40 });
    const [zoom, setZoom] = useState(1);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [isCommenting, setIsCommenting] = useState<boolean>(false);
@@ -158,16 +139,18 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    const [isEditingFormationGroup, setIsEditingFormationGroup] = useState(false);
 
    // not in use
-   const [onlineUsers, setOnlineUsers] = useState({
-      "f30197ba-cf06-4234-bcdb-5d40d83c7999": [{ name: "Kishan Sripada", color: "#e6194B" }],
-      "0e5f35d1-3989-401c-9693-f6a632954d0b": [
-         {
-            name: "Sasha Shrestha",
-            color: "#4363d8",
-         },
-      ],
-   });
+   // {
+   //    "f30197ba-cf06-4234-bcdb-5d40d83c7999": [{ name: "Kishan Sripada", color: "#e6194B" }],
+   //    "0e5f35d1-3989-401c-9693-f6a632954d0b": [
+   //       {
+   //          name: "Sasha Shrestha",
+   //          color: "#4363d8",
+   //       },
+   //    ],
+   // }
+   const [onlineUsers, setOnlineUsers] = useState({});
    const [userPositions, setUserPositions] = useState({});
+   const [channelGlobal, setChannelGlobal] = useState<RealtimeChannel>();
 
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
    const coordsToPosition = (coords: { x: number; y: number } | null | undefined) => {
@@ -181,9 +164,11 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
 
    // useEffect(() => {
    //    setFormations((formations: formation[]) => {
-   //       let newFormations = { formations: [...initialData.formations] };
-   //       applyChangeset({ ...newFormations }, unflattenChanges([...deltas]));
-   //       return [...newFormations.formations];
+   //       let newForms = initialData.formations;
+   //       for (let i = 0; i < deltas.length; i++) {
+   //          jsondiffpatch.patch(newForms, deltas[i]);
+   //       }
+   //       return [...newForms];
    //    });
    // }, [deltas]);
 
@@ -246,7 +231,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       console.log("push change");
       setPreviousFormation((previousFormations: formation[]) => {
          setFormations((formations) => {
-            var delta = jsondiffpatch.diff(previousFormations, formations);
+            var delta = jsondiffpatch.diff(previousFormations, JSON.parse(JSON.stringify(formations)));
             // console.log(delta);
             if (delta) {
                setDeltas((deltas) => [...deltas, delta]);
@@ -287,58 +272,71 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    // }, [selectedFormation, selectedDancers, channelGlobal]);
 
    // useEffect(() => {
-   // if (!session) return;
-   // let channel = supabase.channel("207", {
-   //    config: {
-   //       presence: {
-   //          key: session?.user.id,
+   //    if (!session) return;
+
+   //    let channel = supabase.channel("1", {
+   //       config: {
+   //          presence: {
+   //             key: session?.user.id,
+   //          },
    //       },
-   //    },
-   // });
+   //    });
 
-   // setChannelGlobal(channel);
-   // const usersChannel = channel.on("presence", { event: "sync" }, () => {
-   //    // console.log("Online users: ", channel.presenceState());
-   //    // let users = channel.presenceState();
-   //    // Object.keys(users).forEach((id, index) => {
-   //    //    users[id][0].color = colors[index];
-   //    // });
-   //    // setOnlineUsers({ ...users });
-   //    // // setOnlineUsers({ ...channel.presenceState() });
-   // });
+   //    setChannelGlobal(channel);
 
-   // channel.on("presence", { event: "join" }, ({ newPresences }) => {
-   //    console.log("New users have joined: ", newPresences);
-   // });
+   //    channel.on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.SYNC }, () => {
+   //       let state = channel.presenceState();
+   //       console.log(state);
+   //       console.log({ state });
+   //       setOnlineUsers({ ...state });
 
-   // const formsChannel = channel
-   //    .on("broadcast", { event: "user-position-update" }, ({ payload }) => {
-   //       console.log(payload);
-   //       setUserPositions((userPositions) => {
-   //          return { ...userPositions, ...payload };
+   //       Object.keys(state).forEach((id, index) => {
+   //          state[id][0].color = colors[index];
    //       });
-   //    })
-   //    .on("broadcast", { event: "formation-update" }, ({ payload }) => {
-   //       console.log(payload);
-   //       setDeltas((deltas) => [...deltas, ...payload]);
-   //       // setFormations((formations: formation[]) => {
-   //       //    let newFormations = { formations: [...formations] };
-   //       //    applyChangeset(newFormations, unflattenChanges(payload));
-   //       //    return [...newFormations.formations];
-   //       // });
-   //    })
-   //    .subscribe(async (status) => {
-   //       if (status === "SUBSCRIBED") {
-   //          console.log("subbedd");
-   //          // const status = await channel.track({ name: session?.user.user_metadata.full_name }); //online_at: new Date().toISOString(), //user: session?.user
-   //          console.log({ status });
+   //       // setOnlineUsers({ ...state });
+   //       // state = {Object.keys(state)}
+   //       // User attempting to navigate directly to an existing room with users
+
+   //       // User will be assigned an existing room with the fewest users
+
+   //       // Generate an id if no existing rooms are available
+   //    });
+
+   //    channel.subscribe(async (status: `${REALTIME_SUBSCRIBE_STATES}`) => {
+   //       if (status === REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
+   //          // const resp: RealtimeChannelSendResponse = await channel.track({ name: session?.user.user_metadata.full_name, formations });
+   //          // const resp: RealtimeChannelSendResponse = await channel.track(formations);
+   //          // console.log(resp);
+   //          //   if (resp === 'ok') {
+   //          //     router.push(`/${roomId}`)
+   //          //   } else {
+   //          //     router.push(`/`)
+   //          //   }
    //       }
    //    });
 
-   // return () => {
-   // usersChannel.unsubscribe();
-   // formsChannel.unsubscribe();
-   // };
+   //    const formsChannel = channel
+   //       .on("broadcast", { event: "user-position-update" }, ({ payload }) => {
+   //          console.log(payload);
+   //          setUserPositions((userPositions) => {
+   //             return { ...userPositions, ...payload };
+   //          });
+   //       })
+   //       .on("broadcast", { event: "formation-update" }, ({ payload }) => {
+   //          console.log(payload);
+   //          setDeltas((deltas) => [...deltas, payload]);
+   //          // setFormations((formations: formation[]) => {
+   //          //    let newFormations = { formations: [...formations] };
+   //          //    applyChangeset(newFormations, unflattenChanges(payload));
+   //          //    return [...newFormations.formations];
+   //          // });
+   //       });
+
+   //    return () => {
+   //       // usersChannel.unsubscribe();
+   //       supabase.removeChannel(formsChannel);
+   //       supabase.removeChannel(channel);
+   //    };
    // }, [router.query.danceId, session]);
 
    let uploadSettings = useCallback(
@@ -366,6 +364,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
       }
    }, [cloudSettings]);
 
+   ////////////////////////////////////////
    let uploadDancers = useCallback(
       debounce(async (dancers) => {
          console.log("uploading dancers");
@@ -490,8 +489,6 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
    }, [danceName]);
    //////////////////////////
    const collisions = localSettings.viewCollisions ? detectCollisions(formations, selectedFormation, cloudSettings.collisionRadius) : [];
-   // console.log(collisions);
-   // console.log(collisions);
 
    useEffect(() => {
       if (!session) return;
@@ -503,11 +500,12 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
             setAudiofiles(r);
          });
    }, [session]);
+
    return (
       <>
          <Toaster></Toaster>
          <Head>
-            <title>FORMI: {initialData.name}</title>
+            <title>Edit | FORMI</title>
 
             <meta
                name="description"
@@ -524,12 +522,10 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
             <meta property="og:site_name" content="FORMI — Online performance planning software." />
          </Head>
 
-         <Head>
-            <title>Edit | FORMI</title>
-         </Head>
-
          {editingDancer !== null ? (
             <EditDancer
+               setUpgradeIsOpen={setUpgradeIsOpen}
+               pricingTier={pricingTier}
                removeDancer={removeDancer}
                setDancers={setDancers}
                dancers={dancers}
@@ -558,29 +554,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                   }
                }}
             >
-               <div className="flex  w-3/4 scale-[0.95]  flex-col rounded-xl font-proxima  bg-white overflow-hidden">
-                  <div className="flex flex-col items-center">
-                     <div className="w-[250px] pointer-events-none select-none mt-16">
-                        <h1 className="text-6xl font-bold z-10 relative">FORMI</h1>
-                        <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[100%]"></div>
-                     </div>
-                     <p className="tracking-widest text-gray-500 font-semibold">UPGRADE PLAN</p>
-                     <p className="text-3xl mt-8 font-bold">The Most Intuitive Stage Planning Software</p>
-                     <p className="text-2xl mt-2 font-thin">
-                        Join thousands of dancers and choreographers that use FORMI to perfect their performances.
-                     </p>
-                  </div>
-
-                  <Script strategy="lazyOnload" src="https://js.stripe.com/v3/pricing-table.js" />
-
-                  <div className="flex flex-col justify-center mt-12 mb-12 ">
-                     <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
-                     <stripe-pricing-table
-                        customer-email={session?.user.email}
-                        pricing-table-id="prctbl_1MTeLNHvC3w6e8fcVDDjDqQE"
-                        publishable-key="pk_live_51Laj5tHvC3w6e8fcTNgLYosshdlXBG9tELw1GacJuZQwzb7DwGSCRv8jx1pbJtf6jOR16cSb5it0Jk7Js2TSd03y00uKhclRcz"
-                     ></stripe-pricing-table>
-                  </div>
+               <div className="flex  w-[80%] h-[90%] overflow-y-scroll   flex-col rounded-xl font-proxima  bg-white overflow-hidden">
+                  <PricingTable></PricingTable>
                </div>
             </div>
          ) : null}
@@ -594,6 +569,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                setShareIsOpen={setShareIsOpen}
             />
          ) : null}
+
          {isCommenting ? (
             <>
                <div
@@ -648,6 +624,7 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            cloudSettings={cloudSettings}
                            setCloudSettings={setCloudSettings}
                            setFormations={setFormations}
+                           setUpgradeIsOpen={setUpgradeIsOpen}
                         ></StageSettings>
                      ) : menuOpen === "presets" ? (
                         <Presets
@@ -674,6 +651,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                            cloudSettings={cloudSettings}
                            setLocalSettings={setLocalSettings}
                            localSettings={localSettings}
+                           setUpgradeIsOpen={setUpgradeIsOpen}
+                           pricingTier={pricingTier}
                         ></Collisions>
                      ) : (
                         <CurrentFormation
@@ -704,6 +683,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                      pricingTier={pricingTier}
                      onlineUsers={onlineUsers}
                      setFormations={setFormations}
+                     localSettings={localSettings}
+                     setLocalSettings={setLocalSettings}
                      undo={undo}
                      saved={saved}
                      danceName={danceName}
@@ -817,6 +798,8 @@ const Edit = ({ initialData, viewOnly }: { viewOnly: boolean }) => {
                                        selectedFormation={selectedFormation}
                                        key={comment.id}
                                        comment={comment}
+                                       addToStack={addToStack}
+                                       pushChange={pushChange}
                                     />
                                  </>
                               );
@@ -1036,7 +1019,7 @@ export const getServerSideProps = async (ctx) => {
       };
    }
    let viewOnly = true;
-
+   let pricingTier = "premium";
    if (dance.id === 207 || dance?.user === session?.user?.id) {
       viewOnly = false;
    }
@@ -1046,6 +1029,7 @@ export const getServerSideProps = async (ctx) => {
       props: {
          initialData: dance,
          viewOnly,
+         pricingTier,
       },
    };
 

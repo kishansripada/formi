@@ -146,6 +146,27 @@ export const DancerAlias: React.FC<{
                   <p className="text-center">{name}</p>
                </div>
             ) : null} */}
+            {/* 
+            <div
+               className="flex flex-col pointer-events-none"
+               style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  width: 30,
+                  height: 100,
+                  transition: "transform 0.33s ease-in-out",
+                  transform: `translate(-50%, -50%) rotate(${
+                     formations[selectedFormation]?.positions.find((position) => position.id === dancer.id)?.rotation?.angle || 0
+                  }deg)`,
+               }}
+            >
+               <div id={dancer.id} data-type={"rotater"} className="rotate-180 mt-auto opacity-70 pointer-events-auto cursor-pointer">
+                  <svg id={dancer.id} data-type={"rotater"} className=" " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60.7 60.7">
+                     <path id={dancer.id} data-type={"rotater"} d="M30 0 1 30h17v31h25V30h17z" />
+                  </svg>
+               </div>
+            </div> */}
 
             {isChangingCollisionRadius ? (
                <div

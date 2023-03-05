@@ -15,7 +15,6 @@ export const Presets: React.FC<{
    setSelectedFormation: Function;
    selectedDancers: string[];
    setSelectedDancers: Function;
-
    pricingTier: string;
    addToStack: Function;
    pushChange: Function;

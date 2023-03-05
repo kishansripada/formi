@@ -7,7 +7,9 @@ export const Comment: React.FC<{
    setFormations: Function;
    zoom: number;
    coordsToPosition: Function;
-}> = ({ comment, selectedFormation, setFormations, coordsToPosition, zoom }) => {
+   pushChange: Function;
+   addToStack: Function;
+}> = ({ comment, selectedFormation, setFormations, coordsToPosition, zoom, addToStack, pushChange }) => {
    // if there is no formation selected and the track is not playing, then just return nothing
    if (selectedFormation === null) return <></>;
 
@@ -17,7 +19,13 @@ export const Comment: React.FC<{
 
    let textAreaRef = useRef<HTMLTextAreaElement>(null);
 
+   // useEffect(() => {
+   //    console.log(textAreaRef.current?.scrollHeight);
+   //    setHeight(textAreaRef.current?.scrollHeight);
+   // }, [textAreaRef.current?.scrollHeight]);
+
    const [isOpen, setIsOpen] = useState(false);
+   const [height, setHeight] = useState(false);
    const [isEditing, setIsEditing] = useState(false);
    return (
       <>
@@ -36,7 +44,19 @@ export const Comment: React.FC<{
             }
          `}</style>
          <div
-            onMouseEnter={() => setIsOpen(true)}
+            onMouseEnter={(e) => {
+               setIsOpen(true);
+               // let target = e.target.querySelector("textarea");
+
+               // // function calculateTextareaHeight(text, width, fontSize) {
+               // //    let lines = (text.length * fontSize) / width;
+               // //    return Math.ceil(lines * fontSize * 1.1);
+               // // }
+               // // let height = calculateTextareaHeight(comment.content, 172.8, 14);
+               // console.log(target);
+               // target.style.height = "auto";
+               // target.style.height = `${target.scrollHeight}px`;
+            }}
             onMouseLeave={() => {
                if (isEditing) return;
                setIsOpen(false);
@@ -86,14 +106,17 @@ export const Comment: React.FC<{
                      e.target.style.height = "auto";
                      e.target.style.height = `${e.target.scrollHeight}px`;
                      setIsEditing(true);
+                     addToStack();
                   }}
                   onBlur={() => {
                      setIsEditing(false);
                      setIsOpen(false);
+                     pushChange();
                   }}
                   onChange={(e) => {
                      e.target.style.height = "auto";
                      e.target.style.height = `${e.target.scrollHeight}px`;
+
                      setFormations((formations: formation[]) => {
                         return formations.map((formation, i) => {
                            if (i === selectedFormation) {
@@ -113,6 +136,12 @@ export const Comment: React.FC<{
                   }}
                   className="bg-gray-800 focus:outline-none resize-none pointer-events-auto w-full text-sm font-normal  mt-1 selection:bg-pink-900"
                   value={comment.content}
+                  ref={textAreaRef}
+                  style={
+                     {
+                        // height: height ? height : "height",
+                     }
+                  }
                ></textarea>
             </div>
          </div>

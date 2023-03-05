@@ -79,6 +79,8 @@ export const Canvas: React.FC<{
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
    const [isDragging, setIsDragging] = useState(false);
 
+   const [rotatingDancerId, setRotatingDancerId] = useState(null);
+
    let { gridSnap } = localSettings;
    const container = useRef();
    const stage = useRef();
@@ -98,8 +100,8 @@ export const Canvas: React.FC<{
       if (!container.current) return;
       if (!stage.current) return;
 
-      let heightPercentage = (container.current.clientHeight - (isVideo(soundCloudTrackId) ? 5 : 50)) / stage.current.clientHeight;
-      let widthPercentage = (container.current.clientWidth - (isVideo(soundCloudTrackId) ? 5 : 50)) / stage.current.clientWidth;
+      let heightPercentage = (container.current.clientHeight - (isVideo(soundCloudTrackId) ? 5 : 40)) / stage.current.clientHeight;
+      let widthPercentage = (container.current.clientWidth - (isVideo(soundCloudTrackId) ? 5 : 40)) / stage.current.clientWidth;
       // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
       // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
       setZoom(Math.min(heightPercentage, widthPercentage));
@@ -226,6 +228,50 @@ export const Canvas: React.FC<{
 
       if (e.target.dataset.type === "dancer" && !dragBoxCoords.start.x) {
          setIsDragging(true);
+      }
+
+      if (rotatingDancerId) {
+         const target = e.currentTarget;
+
+         // Get the bounding rectangle of target
+         const rect = target.getBoundingClientRect();
+
+         // Mouse position
+         const left = e.clientX - rect.left;
+         const top = e.clientY - rect.top;
+
+         let dancerPos = coordsToPosition(formations[selectedFormation]?.positions.find((position) => position.id === rotatingDancerId)?.position);
+         dancerPos = { left: dancerPos.left * zoom, top: dancerPos.top * zoom };
+         function getAngle(pointA, pointB): number {
+            const angleRad = Math.atan2(pointB.top - pointA.top, pointB.left - pointA.left);
+            let angleDeg = (angleRad * 180) / Math.PI - 90;
+            angleDeg = angleDeg >= 0 ? angleDeg : 360 + angleDeg;
+            return angleDeg;
+         }
+
+         let angle = getAngle(dancerPos, { left, top });
+
+         setFormations((formations: formation[]) => {
+            return formations.map((formation, index: number) => {
+               if (index === selectedFormation) {
+                  return {
+                     ...formation,
+                     positions: formation.positions.map((dancerPosition) => {
+                        if (selectedDancers.length ? selectedDancers.includes(dancerPosition.id) : dancerPosition.id === rotatingDancerId) {
+                           return {
+                              ...dancerPosition,
+                              rotation: {
+                                 angle: Math.round(angle / 45) * 45 === 360 ? 0 : Math.round(angle / 45) * 45,
+                              },
+                           };
+                        }
+                        return dancerPosition;
+                     }),
+                  };
+               }
+               return formation;
+            });
+         });
       }
 
       if (dragBoxCoords.start.x && dragBoxCoords.start.y) {
@@ -417,6 +463,11 @@ export const Canvas: React.FC<{
          setChangingControlType("end");
       }
 
+      if (e.target.dataset.type === "rotater") {
+         addToStack();
+         setRotatingDancerId(e.target.id);
+      }
+
       if (!e.target.id) {
          setSelectedDancers([]);
          // Get the target
@@ -457,10 +508,14 @@ export const Canvas: React.FC<{
       if (draggingCommentId) {
          pushChange();
       }
+      if (rotatingDancerId) {
+         pushChange();
+      }
 
       setChangingControlId(null);
       setChangingControlType(null);
       setDraggingCommentId(null);
+      setRotatingDancerId(null);
       setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
 
       if (e.target.dataset.type === "dancer" && !shiftHeld && !isDragging) {
@@ -554,6 +609,8 @@ export const Canvas: React.FC<{
 
                {children}
                <OrbitControls
+                  enableDamping={false}
+                  // dampingFactor={0.5}
                   autoRotate
                   autoRotateSpeed={0}
                   enableZoom={true}

@@ -152,7 +152,9 @@ export function ThreeDancer({
             {...bind()}
             scale={[0.25, ((dancer?.height || 182.88) / maxHeight) * 0.35, 0.3]}
             // scale={[0.25, ((dancer.height || 182.88) / maxHeight) * 0.35, 0.3]}
-            // rotation={dancerRot.rotation}
+            // rotation={[Math.PI / 2, 0, 0]}
+            // rotation={[0, Math.PI / 2, 0]}
+            // rotation={[0, dancerPosition?.rotation?.angle ? dancerPosition?.rotation?.angle * (Math.PI / 180) : 0, 0]}
             position={dancerPos.position}
             dispose={null}
          >
