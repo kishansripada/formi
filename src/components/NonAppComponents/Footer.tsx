@@ -16,9 +16,11 @@ export const Footer = () => {
                <div className="bg-pink-600 relative h-2 opacity-40 top-[-10px] mr-auto w-[100%]"></div>
             </div>
             <p className="text-sm text-gray-500">© 2023 The Sripada Company, LLC. All Rights Reserved</p>
+            <p className="text-gray-500 max-w-[300px] text-sm mt-2">Contact us at: kishansripada@formistudio.app</p>
             <p className="text-gray-400 max-w-[300px] text-sm mt-2">
                All trademarks, logos, and brand names are the property of their respective owners.
             </p>
+
             <div className=" flex flex-row bg-[#fafafa] mt-12 ">
                <svg className="ml-auto opacity-40" fill="none" xmlns="http://www.w3.org/2000/svg" width={200} viewBox="0 0 1004 135">
                   <path
