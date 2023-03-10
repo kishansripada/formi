@@ -277,7 +277,7 @@ export const CurrentFormation: React.FC<{
                               </p>
                            </div>
 
-                           {selectedDancers.length === 1 ? (
+                           {/* {selectedDancers.length === 1 ? (
                               formations[selectedFormation]?.positions
                                  .filter((dancer) => {
                                     return selectedDancers.includes(dancer.id);
@@ -288,7 +288,7 @@ export const CurrentFormation: React.FC<{
                               ) : (
                                  <p className="font-semibold text-xs text-red-800 bg-red-200 px-2 py-1 rounded-full">off stage</p>
                               )
-                           ) : null}
+                           ) : null} */}
                         </div>
                         <p className=" mt-5 mb-2 font-medium text-gray-700">Path</p>
                         <div
@@ -442,7 +442,7 @@ export const CurrentFormation: React.FC<{
                                  </>
                               )}
 
-                              <p className={`${pricingTier === "basic" ? "opacity-40" : ""}`}>Curved</p>
+                              <p>Curved</p>
                            </div>
                         </div>
                      </div>
@@ -614,20 +614,24 @@ export const CurrentFormation: React.FC<{
 
                   <div className="px-6 pb-6 pt-3">
                      <div
-                        onClick={() =>
+                        onClick={() => {
+                           if (pricingTier === "basic") {
+                              setUpgradeIsOpen(true);
+                              return;
+                           }
                            setIsCommenting((isCommenting: boolean) => {
                               return !isCommenting;
-                           })
-                        }
+                           });
+                        }}
                         className="border border-gray-200  rounded-xl w-full text-sm shadow-sm cursor-pointer select-none  mt-auto grid place-items-center text-gray-700 py-4  "
                      >
-                        {isCommenting ? "cancel" : "Add Comment"}
+                        {isCommenting ? "Cancel" : pricingTier === "basic" ? "⚡️ Add Comment" : "Add Comment"}
                      </div>
                   </div>
                </>
             ) : (
                <>
-                  <p className="text-center mt-16">no formation selected </p>
+                  <p className="text-center mt-16">No Formation Selected </p>
                </>
             )}
          </div>

@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import Script from "next/script";

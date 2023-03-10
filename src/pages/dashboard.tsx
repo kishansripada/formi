@@ -4,13 +4,14 @@ import Link from "next/link";
 import { Header } from "../components/NonAppComponents/Header";
 import toast, { Toaster } from "react-hot-toast";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
+import { useSupabaseClient, useSession, Session } from "@supabase/auth-helpers-react";
 import { MyDances } from "../components/DashboardComponents/MyDances";
 import { Rosters } from "../components/DashboardComponents/Rosters";
 import { AudioFiles } from "../components/DashboardComponents/AudioFiles";
 import { Trash } from "../components/DashboardComponents/Trash";
-
-const Dashboard = ({ dances, audioFiles, pricingTier }: {}) => {
+import { grandfatheredEmails } from "../../public/grandfathered";
+const Dashboard = ({ dances, audioFiles, subscription }: {}) => {
+   console.log({ subscription });
    let session = useSession();
    const supabase = useSupabaseClient();
    const [importIsOpen, setImportIsOpen] = useState(false);
@@ -133,7 +134,14 @@ const Dashboard = ({ dances, audioFiles, pricingTier }: {}) => {
                      <div className="flex flex-col items-start justify-center w-full">
                         <p className="font-semibold">{session?.user.user_metadata?.full_name}</p>
                         <div className="text-gray-500 text-sm flex flex-row items-center justify-between w-full">
-                           <p>Basic Plan </p>
+                           {subscription.plan.product === "legacy" ? (
+                              <p>Early Adopter</p>
+                           ) : subscription.plan.product ? (
+                              <p>FORMI Pro </p>
+                           ) : (
+                              <p>Free Plan </p>
+                           )}
+
                            {/* <a
                               href={`https://billing.stripe.com/p/login/28o4ki3Rwgm0132144?prefilled_email=${session?.user.email}`}
                               className="text-xs text-blue-500"
@@ -147,7 +155,7 @@ const Dashboard = ({ dances, audioFiles, pricingTier }: {}) => {
                   <button
                      className="flex flex-row justify-between items-center bg-pink-600 text-white text-sm w-full py-3 px-3 rounded-lg mt-5    font-medium"
                      onClick={() => {
-                        if (pricingTier === "basic" && myDances.length > 1) {
+                        if (!subscription.plan.product && myDances.length > 1) {
                            router.push("/pricing");
                            return;
                         }
@@ -176,6 +184,7 @@ const Dashboard = ({ dances, audioFiles, pricingTier }: {}) => {
                   >
                      <p>Home</p>
                   </button>
+
                   {/* <button
                      className={`flex flex-row justify-between items-center ${
                         menuOpen === "rosters" ? "bg-gray-200" : ""
@@ -204,7 +213,34 @@ const Dashboard = ({ dances, audioFiles, pricingTier }: {}) => {
 
                <div className="flex flex-col bg-gray-100  lg:pl-10 font-proxima w-full justify-center items-center lg:items-start  lg:w-[80%]">
                   <div className="flex flex-row items-center justify-end p-6 text-gray-500 ml-auto">
-                     {/* <button className="mr-5">upgrade ⚡️</button> */}
+                     <div className="flex flex-row items-center text-gray-900">
+                        {subscription.plan.product && subscription.plan.product !== "legacy" ? (
+                           <>
+                              {subscription.cancel_at ? (
+                                 <p className="mr-4 text-gray-600 text-sm">{daysLeft(subscription.cancel_at)} days remaining </p>
+                              ) : null}
+
+                              <button
+                                 onClick={() => {
+                                    router.push("/api/customerportal");
+                                 }}
+                                 className="mr-5 "
+                              >
+                                 Manage Subscription
+                              </button>
+                           </>
+                        ) : (
+                           <button
+                              onClick={() => {
+                                 router.push("/pricing");
+                              }}
+                              className="mr-5"
+                           >
+                              Upgrade
+                           </button>
+                        )}
+                     </div>
+
                      <button
                         onClick={() => {
                            supabase.auth.signOut().then((r) => {
@@ -239,17 +275,53 @@ export const getServerSideProps = withPageAuth({
          data: { session },
          error,
       } = await supabase.auth.getSession();
+
       if (error) {
          throw error;
       }
       if (!session) {
          return { props: {} };
       }
-      const { user } = session;
-      // const audioFiles = await supabase.storage.from("audiofiles").list(session?.user.id, {});
 
-      const { data } = await supabase.from("dances").select("*").eq("user", user.id);
+      async function getSubscriptionPlan(session: Session) {
+         if (!session?.user?.email) {
+            return { plan: { product: null } };
+         }
+         if (grandfatheredEmails.includes(session.user.email)) {
+            return { plan: { product: "legacy" } };
+         }
 
-      return { props: { dances: data, pricingTier: "premium" } };
+         return await fetch(
+            `https://api.stripe.com/v1/customers/search?query=metadata['supabase_id']:'${session?.user?.id}'&expand[]=data.subscriptions.data`,
+            {
+               cache: "no-cache",
+               headers: {
+                  Authorization:
+                     "Basic cmtfbGl2ZV81MUxhajV0SHZDM3c2ZThmY21zVklCRjlKMjRLUWFFYlgwVUs0SHE0b245QTVXMUNIaWlHaHAwVzlrbHg5dDU3OW9WcWVibFJGOHh3cE8xc3FlUmFMOHBzYjAwMmhLNFl0NEU6",
+               },
+            }
+         )
+            .then((r) => r.json())
+            .then((r) => {
+               // customerExists = Boolean(r.data.length);
+
+               let plan = r?.data?.[0]?.subscriptions.data?.[0] || null;
+
+               return plan || { plan: { product: null } };
+            });
+      }
+
+      let [dances, subscription] = await Promise.all([supabase.from("dances").select("*").eq("user", session.user.id), getSubscriptionPlan(session)]);
+
+      // const { data } = await supabase.from("dances").select("*").eq("user", user.id);
+
+      return { props: { dances: dances.data, subscription: subscription } };
    },
 });
+
+function daysLeft(timestamp: number): number {
+   const now = Date.now();
+   const diffMs = timestamp * 1000 - now;
+   const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+   return diffDays;
+}

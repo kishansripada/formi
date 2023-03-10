@@ -24,23 +24,9 @@ const ProtectedRoute: NextApiHandler = async (req, res) => {
       .then((r) => r.json())
       .then((r) => {
          customerExists = Boolean(r.data.length);
-         if (customerExists) {
-            let planId = r?.data?.[0]?.subscriptions?.data?.[0]?.plan?.product;
-            return res.json({ planId: planId || false });
-         } else {
-            fetch("https://api.stripe.com/v1/customers", {
-               body: `name=${session.user.user_metadata.full_name};\nmetadata[supabase_id]=${session.user.id};\nemail=${session.user.email}`,
-               headers: {
-                  Authorization:
-                     "Basic c2tfbGl2ZV81MUxhajV0SHZDM3c2ZThmY1llbTBoUGdQVFdKb29Sd3owMmpucW5iYlRpVXk2NkJTRE5UMjN6U1JQRDV3Tjg1QktRcVRBWFY5UENaTGNud2Joc2F5ZDdTVTAwVnNEVHZLWVI6",
-                  "Content-Type": "application/x-www-form-urlencoded",
-               },
-               method: "POST",
-            }).then((r) => {
-               console.log(r);
-               return res.json({ r });
-            });
-         }
+
+         let plan = r?.data?.[0]?.subscriptions.data[0];
+         return res.json(plan);
       });
 };
 

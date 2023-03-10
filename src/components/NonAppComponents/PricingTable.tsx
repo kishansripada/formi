@@ -155,6 +155,7 @@ export const PricingTable = () => {
                                  "Unlimited audio file uploads",
                                  "Collision detection",
                                  "Video sync",
+                                 "Stage commenting",
                                  "Curved dancer paths",
                                  "Upload custom stage background",
                                  "Formation templates",

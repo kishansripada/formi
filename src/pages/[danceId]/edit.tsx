@@ -32,7 +32,7 @@ import { StageSettings } from "../../components/AppComponents/SidebarComponents/
 import { Collisions } from "../../components/AppComponents/SidebarComponents/Collisions";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { PricingTable } from "../../components/NonAppComponents/PricingTable";
-
+import { grandfatheredEmails } from "../../../public/grandfathered";
 import {
    PostgrestResponse,
    REALTIME_LISTEN_TYPES,
@@ -990,14 +990,33 @@ export const getServerSideProps = async (ctx) => {
    //    };
    // }
 
-   // let [{ data: dance }, { data: deltas }, audioFiles, sampleAudioFiles] = await Promise.all([
-   //    supabase.from("dances").select("*").eq("id", ctx.query.danceId).single(),
-   //    supabase.from("deltas").select("*").eq("danceid", ctx.query.danceId),
-   //    supabase.storage.from("audiofiles").list(session?.user.id, {}),
-   //    supabase.storage.from("audiofiles").list("sample", {}),
-   // ]);
+   async function getSubscriptionPlan(supabase_id: string) {
+      return await fetch(
+         `https://api.stripe.com/v1/customers/search?query=metadata['supabase_id']:'${supabase_id}'&expand[]=data.subscriptions.data`,
+         {
+            headers: {
+               Authorization:
+                  "Basic cmtfbGl2ZV81MUxhajV0SHZDM3c2ZThmY21zVklCRjlKMjRLUWFFYlgwVUs0SHE0b245QTVXMUNIaWlHaHAwVzlrbHg5dDU3OW9WcWVibFJGOHh3cE8xc3FlUmFMOHBzYjAwMmhLNFl0NEU6",
+            },
+         }
+      )
+         .then((r) => r.json())
+         .then((r) => {
+            // customerExists = Boolean(r.data.length);
 
-   let { data: dance } = await supabase.from("dances").select("*").eq("id", ctx.query.danceId).single();
+            let plan = r?.data?.[0]?.subscriptions.data?.[0] || null;
+            return plan || { plan: { product: null } };
+         });
+   }
+
+   let [{ data: dance }, subscription] = await Promise.all([
+      supabase.from("dances").select("*").eq("id", ctx.query.danceId).single(),
+      !session ? null : grandfatheredEmails.includes(session?.user?.email) ? { plan: { product: "legacy" } } : getSubscriptionPlan(session?.user.id),
+   ]);
+
+   let pricingTier = subscription.plan.product;
+
+   // let { data: dance } = await supabase.from("dances").select("*").eq("id", ctx.query.danceId).single();
 
    // let sortedDeltas = deltas?.sort((a, b) => a.timestamp - b.timestamp);
 
@@ -1019,7 +1038,15 @@ export const getServerSideProps = async (ctx) => {
       };
    }
    let viewOnly = true;
-   let pricingTier = "premium";
+   // let pricingTier = "premium";
+
+   if (dance.id === 207) {
+      pricingTier = "legacy";
+   }
+
+   if (!pricingTier) {
+      pricingTier = "basic";
+   }
    if (dance.id === 207 || dance?.user === session?.user?.id) {
       viewOnly = false;
    }
