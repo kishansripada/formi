@@ -1011,7 +1011,11 @@ export const getServerSideProps = async (ctx) => {
 
    let [{ data: dance }, subscription] = await Promise.all([
       supabase.from("dances").select("*").eq("id", ctx.query.danceId).single(),
-      !session ? null : grandfatheredEmails.includes(session?.user?.email) ? { plan: { product: "legacy" } } : getSubscriptionPlan(session?.user.id),
+      !session
+         ? { plan: { product: null } }
+         : grandfatheredEmails.includes(session?.user?.email)
+         ? { plan: { product: "legacy" } }
+         : getSubscriptionPlan(session?.user.id),
    ]);
 
    let pricingTier = subscription.plan.product;
