@@ -113,6 +113,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
       previousFormationView: "ghostDancersAndPaths",
       dancerStyle: "initials",
       viewCollisions: false,
+      stageFlipped: false,
    });
 
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
@@ -137,7 +138,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
    const [shareIsOpen, setShareIsOpen] = useState(false);
    const [isChangingCollisionRadius, setIsChangingCollisionRadius] = useState(false);
    const [isEditingFormationGroup, setIsEditingFormationGroup] = useState(false);
-
+   // const [stageFlipped, setStageFlipped] = useState(true);
    // not in use
    // {
    //    "f30197ba-cf06-4234-bcdb-5d40d83c7999": [{ name: "Kishan Sripada", color: "#e6194B" }],
@@ -487,8 +488,35 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
          uploadName(danceName);
       }
    }, [danceName]);
+   let flippedFormations = formations.map((formation: formation) => {
+      let flippedPositions = formation.positions.map((position) => {
+         if (position.controlPointEnd && position.controlPointStart) {
+            return {
+               ...position,
+               position: { x: -position.position.x, y: -position.position.y },
+               controlPointEnd: { x: -position.controlPointEnd.x, y: -position.controlPointEnd.y },
+               controlPointStart: { x: -position.controlPointStart.x, y: -position.controlPointStart.y },
+            };
+         } else {
+            return {
+               ...position,
+               position: { x: -position.position.x, y: -position.position.y },
+            };
+         }
+      });
+
+      let flippedComments = formation.comments
+         ? formation.comments.map((comment: comment) => {
+              return { ...comment, position: { x: -comment.position.x, y: -comment.position.y } };
+           })
+         : [];
+
+      return { ...formation, positions: flippedPositions, comments: flippedComments };
+   });
    //////////////////////////
-   const collisions = localSettings.viewCollisions ? detectCollisions(formations, selectedFormation, cloudSettings.collisionRadius) : [];
+   const collisions = localSettings.viewCollisions
+      ? detectCollisions(localSettings.stageFlipped ? flippedFormations : formations, selectedFormation, cloudSettings.collisionRadius)
+      : [];
 
    useEffect(() => {
       if (!session) return;
@@ -703,7 +731,10 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                      }}
                      src={localSource || soundCloudTrackId}
                   ></video>
+                  {!isPreviewingThree && localSettings.stageFlipped ? <p className="text-gray-600 font-semibold text-sm mt-2">AUDIENCE</p> : null}
+
                   <Canvas
+                     stageFlipped={localSettings.stageFlipped}
                      soundCloudTrackId={soundCloudTrackId}
                      zoom={zoom}
                      setZoom={setZoom}
@@ -738,7 +769,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                            collisions={collisions}
                            dancers={dancers}
                            currentFormationIndex={currentFormationIndex}
-                           formations={formations}
+                           formations={localSettings.stageFlipped ? flippedFormations : formations}
                            selectedFormation={selectedFormation}
                            selectedDancers={selectedDancers}
                            localSettings={localSettings}
@@ -754,6 +785,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                         ? dancers.map((dancer, index) => (
                              <DancerAlias
                                 zoom={zoom}
+                                //   stageFlipped={stageFlipped}
                                 setZoom={setZoom}
                                 cloudSettings={cloudSettings}
                                 coordsToPosition={coordsToPosition}
@@ -764,7 +796,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                                 setDancers={setDancers}
                                 key={dancer.id}
                                 dancer={dancer}
-                                formations={formations}
+                                formations={localSettings.stageFlipped ? flippedFormations : formations}
                                 setFormations={setFormations}
                                 draggingDancerId={draggingDancerId}
                                 userPositions={userPositions}
@@ -788,22 +820,24 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
 
                      {selectedFormation !== null && !isPlaying && !isPreviewingThree ? (
                         <>
-                           {(formations[selectedFormation].comments || []).map((comment: comment) => {
-                              return (
-                                 <>
-                                    <Comment
-                                       zoom={zoom}
-                                       coordsToPosition={coordsToPosition}
-                                       setFormations={setFormations}
-                                       selectedFormation={selectedFormation}
-                                       key={comment.id}
-                                       comment={comment}
-                                       addToStack={addToStack}
-                                       pushChange={pushChange}
-                                    />
-                                 </>
-                              );
-                           })}
+                           {((localSettings.stageFlipped ? flippedFormations : formations)[selectedFormation].comments || []).map(
+                              (comment: comment) => {
+                                 return (
+                                    <>
+                                       <Comment
+                                          zoom={zoom}
+                                          coordsToPosition={coordsToPosition}
+                                          setFormations={setFormations}
+                                          selectedFormation={selectedFormation}
+                                          key={comment.id}
+                                          comment={comment}
+                                          addToStack={addToStack}
+                                          pushChange={pushChange}
+                                       />
+                                    </>
+                                 );
+                              }
+                           )}
 
                            {localSettings.previousFormationView !== "none" && !isPreviewingThree
                               ? dancers.map((dancer, index) => (
@@ -814,7 +848,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                                       selectedFormation={selectedFormation}
                                       key={dancer.id}
                                       dancer={dancer}
-                                      formations={formations}
+                                      formations={localSettings.stageFlipped ? flippedFormations : formations}
                                    />
                                 ))
                               : dancers
@@ -837,7 +871,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                                             selectedFormation={selectedFormation}
                                             key={dancer.id}
                                             dancer={dancer}
-                                            formations={formations}
+                                            formations={localSettings.stageFlipped ? flippedFormations : formations}
                                          />
                                       );
                                    })}
@@ -866,7 +900,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                           })
                         : null}
                   </Canvas>
-                  {!isPreviewingThree ? <p className="text-gray-600 font-semibold text-sm mb-2">AUDIENCE</p> : null}
+                  {!isPreviewingThree && !localSettings.stageFlipped ? <p className="text-gray-600 font-semibold text-sm mb-2">AUDIENCE</p> : null}
                </div>
             </div>
 

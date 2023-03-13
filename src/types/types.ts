@@ -36,6 +36,7 @@ export type localSettings = {
    previousFormationView: "none" | "ghostDancers" | "ghostDancersAndPaths";
    dancerStyle: "initials" | "numbered";
    viewCollisions: boolean;
+   stageFlipped: boolean;
 };
 
 export type cloudSettings = {

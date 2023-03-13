@@ -1,31 +1,16 @@
+import { formation, dancerPosition } from "./types";
 interface Position {
    x: number;
    y: number;
 }
 
-interface Dancer {
-   id: string;
-   position: Position;
-   radius: number;
-}
-
-interface Formation {
-   id?: string;
-   durationSeconds: number;
-   positions: Dancer[];
-   transition: {
-      durationSeconds: number;
-   };
-   name?: string;
-}
-
-interface Collision {
+type Collision = {
    formationId: string;
    dancer1Id: string;
    dancer2Id: string;
-}
+};
 
-export function detectCollisions(formations: Formation[], selectedFormation, collisionRadius): Record<string, Collision[]> {
+export function detectCollisions(formations: formation[], selectedFormation, collisionRadius): Record<string, Collision[]> {
    const collisionMap = [];
    if (selectedFormation === null || selectedFormation === 0) return [];
 
@@ -51,10 +36,10 @@ export function detectCollisions(formations: Formation[], selectedFormation, col
 function getCurrSnapshotPositions(
    snapshot: number,
    snapshots: number,
-   currPositions: Dancer[],
-   nextPositions: Dancer[],
+   currPositions: dancerPosition[],
+   nextPositions: dancerPosition[],
    collisionRadius: number
-): Dancer[] {
+): dancerPosition[] {
    const snapshotPositions = [];
 
    for (let k = 0; k < currPositions.length; k++) {
@@ -90,7 +75,7 @@ function getCurrSnapshotPositions(
    return snapshotPositions;
 }
 
-function detectCollisionsInSnapshot(formationId: string, snapshotPositions: Dancer[]): Collision[] {
+function detectCollisionsInSnapshot(formationId: string, snapshotPositions: dancerPosition[]): Collision[] {
    const collisions: Collision[] = [];
 
    for (let j = 0; j < snapshotPositions.length; j++) {

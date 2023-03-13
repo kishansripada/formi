@@ -7,7 +7,7 @@ import { toast, Toaster } from "react-hot-toast";
 import { Canvas as Canva, events, useFrame, useLoader } from "@react-three/fiber";
 import { useGLTF, Stage, Grid, OrbitControls, Environment, useFBX, useVideoTexture } from "@react-three/drei";
 import { create } from "zustand";
-
+import { Text } from "@react-three/drei";
 export const useDancerDragging = create((set) => ({
    isDancerDragging: false,
    changeStateDancerDragging: (status) => set((state) => ({ isDancerDragging: !status })),
@@ -40,6 +40,7 @@ export const Canvas: React.FC<{
    soundCloudTrackId: string | null;
    cloudSettings: cloudSettings;
    isPreviewingThree: boolean;
+   stageFlipped: boolean;
 }> = ({
    player,
    children,
@@ -67,8 +68,10 @@ export const Canvas: React.FC<{
    setZoom,
    isPreviewingThree,
    soundCloudTrackId,
+   stageFlipped,
 }) => {
    let { stageDimensions, stageBackground } = cloudSettings;
+   const stageFlippedFactor = stageFlipped ? -1 : 1;
    const [shiftHeld, setShiftHeld] = useState(false);
    const [draggingCommentId, setDraggingCommentId] = useState<string | null>();
    const [commandHeld, setCommandHeld] = useState(false);
@@ -199,21 +202,21 @@ export const Canvas: React.FC<{
                   return {
                      ...formation,
                      positions: formation.positions.map((dancerPosition) => {
-                        if (selectedDancers.includes(dancerPosition.id) && changingControlType === "start") {
+                        if (selectedDancers.includes(dancerPosition.id) && changingControlType === "start" && dancerPosition.controlPointStart) {
                            return {
                               ...dancerPosition,
                               controlPointStart: {
-                                 x: dancerPosition.controlPointStart.x + e.movementX / PIXELS_PER_SQUARE / zoom,
-                                 y: dancerPosition.controlPointStart.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                                 x: dancerPosition.controlPointStart.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
+                                 y: dancerPosition.controlPointStart.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
                               },
                            };
                         }
-                        if (selectedDancers.includes(dancerPosition.id) && changingControlType === "end") {
+                        if (selectedDancers.includes(dancerPosition.id) && changingControlType === "end" && dancerPosition.controlPointEnd) {
                            return {
                               ...dancerPosition,
                               controlPointEnd: {
-                                 x: dancerPosition.controlPointEnd.x + e.movementX / PIXELS_PER_SQUARE / zoom,
-                                 y: dancerPosition.controlPointEnd.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                                 x: dancerPosition.controlPointEnd.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
+                                 y: dancerPosition.controlPointEnd.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
                               },
                            };
                         }
@@ -315,16 +318,23 @@ export const Canvas: React.FC<{
                   return {
                      ...formation,
                      positions: formation.positions.map((dancerPosition) => {
-                        if (selectedDancers.includes(dancerPosition.id) && dancerPosition.transitionType === "cubic") {
+                        if (
+                           selectedDancers.includes(dancerPosition.id) &&
+                           dancerPosition.transitionType === "cubic" &&
+                           dancerPosition.controlPointEnd &&
+                           dancerPosition.controlPointStart
+                        ) {
+                           // console.log();
+                           // console.log(dancerPosition.controlPointEnd.y);
                            return {
                               ...dancerPosition,
                               position: {
-                                 x: dancerPosition.position.x + e.movementX / PIXELS_PER_SQUARE / zoom,
-                                 y: dancerPosition.position.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                                 x: dancerPosition.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
+                                 y: dancerPosition.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
                               },
                               controlPointEnd: {
-                                 x: dancerPosition.controlPointEnd.x + e.movementX / PIXELS_PER_SQUARE / zoom,
-                                 y: dancerPosition.controlPointEnd.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                                 x: dancerPosition.controlPointEnd.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
+                                 y: dancerPosition.controlPointEnd.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
                               },
                            };
                         }
@@ -335,8 +345,8 @@ export const Canvas: React.FC<{
                            return {
                               ...dancerPosition,
                               position: {
-                                 x: dancerPosition.position.x + e.movementX / PIXELS_PER_SQUARE / zoom,
-                                 y: dancerPosition.position.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                                 x: dancerPosition.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
+                                 y: dancerPosition.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
                               },
                            };
                         }
@@ -363,8 +373,8 @@ export const Canvas: React.FC<{
                            return {
                               ...comment,
                               position: {
-                                 x: comment.position.x + e.movementX / PIXELS_PER_SQUARE / zoom,
-                                 y: comment.position.y - e.movementY / PIXELS_PER_SQUARE / zoom,
+                                 x: comment.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
+                                 y: comment.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
                               },
                            };
                         }
@@ -382,7 +392,7 @@ export const Canvas: React.FC<{
    const pointerDown = (e: any) => {
       if (isCommenting) {
          if (!session) {
-            toast.error("sign in to comment");
+            toast.error("Sign In to Comment");
             return;
          }
          addToStack();
@@ -401,6 +411,9 @@ export const Canvas: React.FC<{
             };
          };
          let newCommentCoords = positionToCoords({ left, top });
+         if (stageFlipped) {
+            newCommentCoords = { x: -newCommentCoords?.x, y: -newCommentCoords?.y };
+         }
          setFormations((formations: formation[]) => {
             return formations.map((formation, i) => {
                if (i === selectedFormation) {
@@ -579,7 +592,7 @@ export const Canvas: React.FC<{
 
    return (
       <div
-         className="flex flex-row relative justify-center  h-full  w-full overflow-hidden  overscroll-contain items-center "
+         className="flex flex-row relative justify-center  h-full  w-full overflow-hidden  overscroll-contain items-center  "
          id="stage"
          ref={container}
          onPointerUp={!viewOnly ? pointerUp : () => null}
@@ -593,9 +606,9 @@ export const Canvas: React.FC<{
                   pushChange();
                }}
                gl={{ logarithmicDepthBuffer: true }}
-               camera={{ position: [10, 10, 10], fov: 40 }}
+               camera={{ position: [0, 10, stageFlippedFactor * 14], fov: 40 }}
             >
-               <Stage position={[10, 0, 0]} environment="apartment" adjustCamera={false}></Stage>
+               <Stage position={[0, 0, 0]} environment="apartment" adjustCamera={false}></Stage>
                <Grid
                   renderOrder={-1}
                   position={[0, 0, 0]}
@@ -619,13 +632,23 @@ export const Canvas: React.FC<{
                   maxPolarAngle={Math.PI / 2}
                   enabled={!isDancerDragging}
                />
+               <Text
+                  scale={[0.5, 0.5, 0.5]}
+                  position={[0, 0, stageDimensions.height / 4 + 1]}
+                  rotation={[Math.PI * 1.5, 0, 0]}
+                  color="black"
+                  anchorX="center"
+                  // anchorY="middle"
+               >
+                  AUDIENCE
+               </Text>
             </Canva>
          ) : (
             <div
                onPointerDown={!viewOnly ? pointerDown : () => null}
                onPointerMove={handleDragMove}
                ref={stage}
-               className="relative bg-white rounded-3xl box-content"
+               className="relative bg-white rounded-3xl box-content "
                // border-pink-600 border-4 box-border
                style={{
                   // boxShadow: "inset 0px 0px 0px 4px #db2777",

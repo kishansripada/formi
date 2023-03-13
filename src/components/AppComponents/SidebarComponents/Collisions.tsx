@@ -108,7 +108,7 @@ export const Collisions: React.FC<{
                <p className="mb-5 text-2xl text-gray-700 pointer-events-none flex flex-row justify-between items-end ">
                   <p className="text-sm">Collision Radius</p>
                   <p>
-                     {Math.round(cloudSettings.collisionRadius * 10) / 10} <span className="text-gray-700 text-sm">squares</span>
+                     {Math.round(cloudSettings.collisionRadius * 100) / 100} <span className="text-gray-700 text-sm">squares</span>
                   </p>
                </p>
                <div className="w-[250px] h-1 bg-gray-200 rounded-full relative mx-auto">
