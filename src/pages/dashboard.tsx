@@ -14,7 +14,7 @@ const Dashboard = ({ dances, audioFiles, subscription }: {}) => {
    console.log({ subscription });
    let session = useSession();
    const supabase = useSupabaseClient();
-   const [importIsOpen, setImportIsOpen] = useState(false);
+   const [importIsOpen, setImportIsOpen] = useState(!dances.length);
    const [danceAppLink, setDanceAppLink] = useState("");
    const router = useRouter();
    const [myDances, setMyDances] = useState(dances);
@@ -90,9 +90,22 @@ const Dashboard = ({ dances, audioFiles, subscription }: {}) => {
                }}
             >
                <div className="flex  w-[700px] flex-col rounded-xl bg-white">
-                  <div className="flex flex-col rounded-xl px-10 pt-10 pb-6 h-full">
-                     <h1 className="text-2xl font-bold"> Import from danceapp.us</h1>
+                  <div className="flex flex-col rounded-xl px-10 pt-10 pb-10 h-full">
+                     <h1 className="text-2xl font-bold">Welcome to FORMI</h1>
+                     <p className="mt-2">Before you create your first performance, consider watching this short tutorial</p>
+                     <div className="w-full flex flex-row items-center justify-center rounded-xl  mt-10">
+                        <iframe
+                           width="560"
+                           height="315"
+                           src="https://www.youtube.com/embed/w-OgtsMom0o"
+                           title="YouTube video player"
+                           frameborder="0"
+                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                           allowfullscreen
+                        ></iframe>
+                     </div>
 
+                     {/* 
                      <input
                         value={danceAppLink}
                         onChange={(e) => {
@@ -108,7 +121,7 @@ const Dashboard = ({ dances, audioFiles, subscription }: {}) => {
                      </div>
                      <button onClick={importFromDanceApp} className="ml-auto bg-blue-600 text-white px-3 mt-5 py-1 rounded-md">
                         import
-                     </button>
+                     </button> */}
                   </div>
                </div>
             </div>
