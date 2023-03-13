@@ -4,12 +4,13 @@ import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Header } from "../components/NonAppComponents/Header";
 import { Footer } from "../components/NonAppComponents/Footer";
+import Image from "next/image";
 
 const home = () => {
    return (
       <>
          <Head>
-            <title>FORMI: Online stage performance planning software.</title>
+            <title>FORMI: Dance and cheer formation planning software.</title>
             <meta
                name="description"
                content="Dance formation app. Easily build, create and visualize your dance and cheer formations synced to music. Formi is the ultimate choreographer formation tool. Dance formation builder. Cheer formation builder."
@@ -152,7 +153,21 @@ const home = () => {
                   }}
                ></div> */}
 
-               <video className="rounded-xl w-full mx-auto max-w-[1000px] my-5 border border-gray-300" autoPlay muted loop src="/threeD.mp4"></video>
+               <div className="flex  flex-col items-center mx-auto max-w-[1000px] py-8 w-full ">
+                  <div className="text-center w-full">
+                     <p className="text-3xl font-bold">Bring your dancers to life in 3D</p>
+                     <p className="text-lg mt-6  text-gray-500">
+                        FORMI let's you visualize your dancers in three dimenstions allowing you to better understand what your performance will look
+                        like from different audience perspectives.
+                     </p>
+                  </div>
+
+                  <div className="w-[85%] ">
+                     <img className=" rounded-xl mt-10" src="/threeD.png" alt="" />
+                  </div>
+               </div>
+
+               {/* <video className="rounded-xl w-full mx-auto max-w-[1000px] my-5 border border-gray-300" autoPlay muted loop src="/threeD.mp4"></video> */}
                {/* <Canvas
                   className="h-[700px] relative bottom-0 w-full "
                   gl={{ logarithmicDepthBuffer: true }}
@@ -231,6 +246,33 @@ const home = () => {
                            Our non-linear path feature lets you plan complex formations with ease, making your choreography process smoother and more
                            efficient. Say goodbye to old-fashioned, complicated methods and hello to modern, streamlined choreography.
                         </p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <hr />
+            <div className="bg-white  font-proxima">
+               <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-16 w-full ">
+                  <div className="lg:w-1/2 w-[90%]">
+                     <p className="text-3xl font-bold">Start a Free Trial</p>
+                     <p className="text-lg mt-6 lg:w-[80%] text-gray-500">
+                        Start free today without a credit card. Create all of your dance formations, view in 3D and upload your own audio completely
+                        free.
+                     </p>
+                     <Link href={"/login"} className="z-50">
+                        <button className="bg-gradient-to-r mt-8 from-purple-500 to-pink-500 text-white  px-4 py-2 hidden lg:block  rounded-full">
+                           Try for Free
+                        </button>
+                     </Link>
+                  </div>
+
+                  <div className="lg:w-1/2 w-[90%] flex flex-row justify-center items-center ">
+                     <div className="w-[150px] cursor-pointer">
+                        {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
+                     <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
+                        <h1 className="text-4xl font-bold z-10 relative">FORMI</h1>
+
+                        <div className="bg-pink-600 relative h-2 opacity-40 top-[-10px] mr-auto w-[100%]"></div>
                      </div>
                   </div>
                </div>
