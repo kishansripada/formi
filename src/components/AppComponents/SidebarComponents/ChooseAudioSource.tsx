@@ -156,6 +156,7 @@ export const ChooseAudioSource: React.FC<{
                               e.stopPropagation();
                               setSoundCloudTrackId(null);
                               setLocalSource(null);
+
                               toast.success("deselected track");
                            }}
                         >

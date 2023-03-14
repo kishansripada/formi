@@ -129,7 +129,7 @@ export const AudioControls: React.FC<{
                                     return index !== selectedFormation;
                                  });
                               });
-                              toast.success("formation deleted");
+                              toast.success("Formation Deleted");
                               pushChange();
                            }}
                            className="rounded-md  hidden transition duration-300   text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
@@ -161,7 +161,7 @@ export const AudioControls: React.FC<{
                                  return formations;
                               });
                               setSelectedFormation((i) => i + 1);
-                              toast.success("formation duplicated");
+                              toast.success("Formation Duplicated");
                               pushChange();
                            }}
                            className="rounded-md  hidden transition duration-300 mr-auto  text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
@@ -207,14 +207,14 @@ export const AudioControls: React.FC<{
                </button>
                {isPlaying ? (
                   <div
-                     className={`hover:bg-gray-100 transition duration-300 cursor-pointer p-1 rounded-2xl mx-3 select-none ${
-                        !soundCloudTrackId && !localSource ? "opacity-40 pointer-events-none" : ""
-                     }`}
+                     className={`hover:bg-gray-100 transition duration-300 cursor-pointer p-1 rounded-2xl mx-3 select-none`}
                      onClick={() => {
-                        if (!player) return;
-                        if (!player.isReady) return;
-                        player.playPause();
-                        setIsPlaying(!isPlaying);
+                        if (player && player.isReady) {
+                           player.playPause();
+                           setIsPlaying(!isPlaying);
+                        } else {
+                           setIsPlaying(!isPlaying);
+                        }
                      }}
                   >
                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 fill-gray-600">
@@ -227,14 +227,14 @@ export const AudioControls: React.FC<{
                   </div>
                ) : (
                   <div
-                     className={`hover:bg-gray-100 transition duration-300 p-1 rounded-2xl mx-3 select-none cursor-pointer ${
-                        !soundCloudTrackId && !localSource ? "opacity-40 pointer-events-none" : ""
-                     }`}
+                     className={`hover:bg-gray-100 transition duration-300 p-1 rounded-2xl mx-3 select-none cursor-pointer `}
                      onClick={() => {
-                        if (!player) return;
-                        if (!player.isReady) return;
-                        player.playPause();
-                        setIsPlaying(!isPlaying);
+                        if (player && player.isReady) {
+                           player.playPause();
+                           setIsPlaying(!isPlaying);
+                        } else {
+                           setIsPlaying(!isPlaying);
+                        }
                      }}
                   >
                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 fill-gray-600">

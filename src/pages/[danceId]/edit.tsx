@@ -42,6 +42,7 @@ import {
    RealtimeChannelSendResponse,
    RealtimePostgresInsertPayload,
 } from "@supabase/supabase-js";
+import { NoFilePlayer } from "../../components/AppComponents/NoFilePlayer";
 var jsondiffpatch = require("jsondiffpatch").create({
    objectHash: function (obj) {
       return obj.id;
@@ -950,7 +951,26 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                         ></FileAudioPlayer>
                      </div>
                   ) : (
-                     <></>
+                     <>
+                        <NoFilePlayer
+                           player={player}
+                           isPlaying={isPlaying}
+                           setPlayer={setPlayer}
+                           key={localSource || soundCloudTrackId}
+                           setSelectedFormation={setSelectedFormation}
+                           setFormations={setFormations}
+                           soundCloudTrackId={localSource || soundCloudTrackId}
+                           setSongDuration={setSongDuration}
+                           songDuration={songDuration}
+                           setIsPlaying={setIsPlaying}
+                           setPosition={setPosition}
+                           viewOnly={viewOnly}
+                           pixelsPerSecond={pixelsPerSecond}
+                           videoPlayer={videoPlayer}
+                           formations={formations}
+                           position={position}
+                        ></NoFilePlayer>
+                     </>
                   )}
 
                   <Layers
