@@ -93,8 +93,8 @@ const home = () => {
                   ></div>
                </div>
             </div>
-            <div className="  flex-wrap flex flex-col items-center justify-center   ">
-               <p className=" text-2xl font-proxima font-semibold mt-10">Trusted by thousands of dance teams.</p>
+            <div className="  flex-wrap flex flex-col items-center justify-center lg:block hidden  ">
+               <p className=" text-2xl font-proxima font-semibold mt-10 ">Trusted by thousands of dance teams.</p>
 
                <div className=" flex-wrap flex flex-row items-center justify-center child:mx-8 child:my-8  select-none ">
                   <img
@@ -128,7 +128,7 @@ const home = () => {
                   />
                </div>
             </div>
-            <div className=" bg-white  font-proxima overflow-hidden relative ">
+            <div className=" bg-white  font-proxima overflow-hidden relative lg:px-0 px-7 ">
                <div className="absolute top-12 w-full px-4 -translate-x-1/2 left-1/2">
                   {/* <p className="font-bold w-full text-3xl">Bring your dancers to life.</p> */}
                </div>
@@ -153,7 +153,7 @@ const home = () => {
                   }}
                ></div> */}
 
-               <div className="flex  flex-col items-center mx-auto max-w-[1000px] py-8 w-full ">
+               <div className="flex  flex-col items-center mx-auto max-w-[1000px] py-8 w-full  ">
                   <div className="text-center w-full">
                      <p className="text-3xl font-bold">Bring your dancers to life in 3D</p>
                      <p className="text-lg mt-6  text-gray-500">
@@ -212,7 +212,7 @@ const home = () => {
                </Canvas> */}
             </div>
             <hr />
-            <div className="bg-white  font-proxima">
+            <div className="bg-white lg:px-0 px-7  font-proxima">
                <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-8 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
                      <p className="text-3xl font-bold">Collaborate, communicate</p>
@@ -234,7 +234,7 @@ const home = () => {
                </div>
             </div>
 
-            <div className="bg-white  font-proxima">
+            <div className="bg-white  font-proxima lg:px-0 px-7">
                <div className="flex lg:flex-row flex-col-reverse items-center mx-auto max-w-[1000px] py-8 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
                      <video autoPlay muted src="/curveDemo.mp4" loop className=" lg:mr-auto lg:w-[90%] border border-gray-200 rounded-xl relative" />
@@ -251,7 +251,7 @@ const home = () => {
                </div>
             </div>
             <hr />
-            <div className="bg-white  font-proxima">
+            <div className="bg-white  font-proxima lg:px-0 px-7">
                <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-16 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
                      <p className="text-3xl font-bold">No Credit Card Required</p>
@@ -261,7 +261,7 @@ const home = () => {
                      </p>
                      <Link href={"/login"} className="z-50">
                         <button className="bg-gradient-to-r mt-8 from-purple-500 to-pink-500 text-white  px-4 py-2 hidden lg:block  rounded-full">
-                           Try for Free
+                           Build Your First Performance Free
                         </button>
                      </Link>
                   </div>
