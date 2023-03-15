@@ -104,7 +104,7 @@ export const Header: React.FC<{
                   : null} */}
 
                <a href="https://forms.gle/qTo1MAenHpguvsXW7" target={"_blank"} className="text-sm mr-5 text-blue-700 hidden lg:block">
-                  Report Bug or Request Feature
+                  Report Bug
                </a>
 
                {!viewOnly ? (

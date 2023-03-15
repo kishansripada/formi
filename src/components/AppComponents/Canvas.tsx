@@ -116,14 +116,14 @@ export const Canvas: React.FC<{
       // console.log(e.key);
       if (e.key === " ") {
          e.preventDefault();
-         setIsPlaying((isPlaying: boolean) => {
-            if (player) {
-               if (!player?.isReady) return isPlaying;
-               player?.playPause();
-               return !isPlaying;
-            }
-         });
+         if (player && player.isReady) {
+            player.playPause();
+            setIsPlaying((isPlaying: boolean) => !isPlaying);
+         } else {
+            setIsPlaying((isPlaying: boolean) => !isPlaying);
+         }
       }
+
       if (e.key === "ArrowRight") {
          e.preventDefault();
          setSelectedFormation((i) => (i === formations.length - 1 ? i : i + 1));

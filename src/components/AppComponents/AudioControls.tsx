@@ -259,7 +259,8 @@ export const AudioControls: React.FC<{
 
             <div className="w-[45%] pr-10 flex flex-row justify-center items-center ">
                <p className=" ml-auto lg:mr-auto text-gray-600 ">
-                  {msToTime((position || 0) * 1000)}:<span className="text-gray-500">{Math.round(((position || 0) * 10) % 10)}</span>
+                  <span>{formatTime(position || 0)}</span>
+                  {/* {msToTime((position || 0) * 1000)}:<span className="text-gray-500">{Math.round(((position || 0) * 10) % 10)}</span> */}
                </p>
 
                <button
@@ -335,12 +336,16 @@ export const AudioControls: React.FC<{
    );
 };
 
-function msToTime(duration) {
-   var seconds = parseInt((duration / 1000) % 60),
-      minutes = parseInt((duration / (1000 * 60)) % 60),
-      hours = hours < 10 ? "0" + hours : hours;
-   minutes = minutes < 10 ? "0" + minutes : minutes;
-   seconds = seconds < 10 ? "0" + seconds : seconds;
+function formatTime(seconds: number): string {
+   const totalMilliseconds = Math.round(seconds * 1000);
+   const totalSeconds = Math.round(totalMilliseconds / 1000);
+   const minutes = Math.floor(totalSeconds / 60);
+   const remainingSeconds = totalSeconds % 60;
+   const deciseconds = Math.floor(totalMilliseconds / 100) % 10;
 
-   return minutes + ":" + seconds;
+   const formattedMinutes = minutes.toString().padStart(2, "0");
+   const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
+   const formattedDeciseconds = deciseconds.toString();
+
+   return `${formattedMinutes}:${formattedSeconds}:${formattedDeciseconds}`;
 }

@@ -254,7 +254,7 @@ const home = () => {
             <div className="bg-white  font-proxima">
                <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-16 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
-                     <p className="text-3xl font-bold">Start a Free Trial</p>
+                     <p className="text-3xl font-bold">No Credit Card Required</p>
                      <p className="text-lg mt-6 lg:w-[80%] text-gray-500">
                         Start free today without a credit card. Create all of your dance formations, view in 3D and upload your own audio completely
                         free.
