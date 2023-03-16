@@ -45,7 +45,7 @@ const home = () => {
                         }}
                         className=" text-4xl lg:text-6xl   font-bold text-gray-900 "
                      >
-                        Build stage formations that impress your audience.
+                        Design stage formations that impress your audience.
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
                      <h1 className="font-bold  text-2xl text-gray-700  mt-4 ">Three dimensional & synced to music.</h1>
