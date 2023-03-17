@@ -96,7 +96,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
    const [cloudSettings, setCloudSettings] = useState<cloudSettings>({
       ...initialData.settings,
       stageBackground: initialData.settings.stageBackground || "grid",
-      gridSubdivisions: initialData.settings.gridSubdivisions || 5,
+      gridSubdivisions: initialData.settings.gridSubdivisions || 7,
       collisionRadius: initialData.settings.collisionRadius || 0.5,
    });
 
@@ -112,7 +112,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
    const [localSettings, setLocalSettings] = useLocalStorage<localSettings>("localSettings", {
       gridSnap: 1,
       previousFormationView: "ghostDancersAndPaths",
-      dancerStyle: "initials",
+      dancerStyle: "numbered",
       viewCollisions: false,
       stageFlipped: false,
    });
