@@ -94,7 +94,7 @@ const home = () => {
                </div>
             </div>
             <div className="  flex-wrap flex flex-col items-center justify-center lg:block hidden  ">
-               <p className=" text-2xl font-proxima font-semibold mt-10 ">Trusted by thousands of dance teams.</p>
+               <p className=" text-2xl mx-auto text-center font-proxima font-semibold mt-10 ">Trusted by thousands of dance teams.</p>
 
                <div className=" flex-wrap flex flex-row items-center justify-center child:mx-8 child:my-8  select-none ">
                   <img
