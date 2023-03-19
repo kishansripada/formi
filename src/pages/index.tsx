@@ -45,10 +45,10 @@ const home = () => {
                         }}
                         className=" text-4xl lg:text-6xl   font-bold text-gray-900 "
                      >
-                        Design stage formations that impress your audience.
+                        Never forget where your dancers are supposed to be.
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
-                     <h1 className="font-bold  text-2xl text-gray-700  mt-4 ">Three dimensional & synced to music.</h1>
+                     <h1 className="font-bold  text-2xl text-gray-700  mt-4 ">Plan and stage dance formations synced to music</h1>
                      {/* <p className="text-gray-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
                      <Link href={"/login"} className="z-50">
                         <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white  px-4 py-2 block lg:hidden mx-auto mt-5  rounded-full">
@@ -157,8 +157,7 @@ const home = () => {
                   <div className="text-center w-full">
                      <p className="text-3xl font-bold">Bring your dancers to life in 3D</p>
                      <p className="text-lg mt-6  text-gray-500">
-                        FORMI let's you visualize your dancers in three dimenstions allowing you to better understand what your performance will look
-                        like from different audience perspectives.
+                        Save precious time in practices by designing stage formation in advance so you are ready to go during rehearsals.
                      </p>
                   </div>
 
