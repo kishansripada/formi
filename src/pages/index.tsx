@@ -37,8 +37,11 @@ const home = () => {
 
          <div className="bg-[#fafafa] overflow-hidden ">
             <div className="overflow-hidden">
-               <div className=" flex flex-row items-center justify-center w-full  text-center pt-12 px-[10%] lg:px-[20%] bg-[#fafafa]  ">
+               <div className=" flex flex-row items-center justify-center w-full  text-center pt-8 px-[10%] lg:px-[20%] bg-[#fafafa]  ">
                   <div className="w-full  ">
+                     <div className="w-full mb-8 bg-pink-100 text-lg text-gray-600 rounded-xl h-12 flex flex-row items-center justify-center">
+                        FORMI is used by&nbsp;<span className=" text-purple-600 font-bold">5000+ dancers&nbsp;</span> and coaches like you
+                     </div>
                      <h1
                         style={{
                            lineHeight: 1.15,
@@ -48,7 +51,9 @@ const home = () => {
                         Never forget where your dancers are supposed to be.
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
-                     <h1 className="font-bold  text-2xl text-gray-700  mt-4 ">Plan and stage dance formations synced to music</h1>
+                     <h1 className=" text-xl  text-gray-500 px-[20%]  mt-4 ">
+                        Create and plan stunning dance formations that will impress your audience in minutes, saving time in rehearsals
+                     </h1>
                      {/* <p className="text-gray-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
                      <Link href={"/login"} className="z-50">
                         <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white  px-4 py-2 block lg:hidden mx-auto mt-5  rounded-full">
