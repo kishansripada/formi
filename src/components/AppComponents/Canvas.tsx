@@ -300,11 +300,15 @@ export const Canvas: React.FC<{
             setSelectedDancers(
                formations?.[selectedFormation]?.positions
                   .filter((dancerPosition: dancerPosition) => {
+                     let localDancerPosition = {
+                        x: stageFlippedFactor * dancerPosition.position.x,
+                        y: stageFlippedFactor * dancerPosition.position.y,
+                     };
                      return (
-                        coordsToPosition(dancerPosition.position).left > Math.min(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
-                        coordsToPosition(dancerPosition.position).left < Math.max(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
-                        coordsToPosition(dancerPosition.position).top > Math.min(dragBoxCoords.start.y, dragBoxCoords.end.y) &&
-                        coordsToPosition(dancerPosition.position).top < Math.max(dragBoxCoords.start.y, dragBoxCoords.end.y)
+                        coordsToPosition(localDancerPosition).left > Math.min(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
+                        coordsToPosition(localDancerPosition).left < Math.max(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
+                        coordsToPosition(localDancerPosition).top > Math.min(dragBoxCoords.start.y, dragBoxCoords.end.y) &&
+                        coordsToPosition(localDancerPosition).top < Math.max(dragBoxCoords.start.y, dragBoxCoords.end.y)
                      );
                   })
                   .map((dancerPosition: dancerPosition) => dancerPosition.id)
