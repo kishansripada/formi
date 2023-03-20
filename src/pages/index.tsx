@@ -35,9 +35,13 @@ const home = () => {
 
          <Header></Header>
 
-         <div className="bg-[#fafafa] overflow-hidden ">
+         <div className="overflow-hidden  ">
+            <div className="absolute -z-10 left-[-150px] top-[200px] opacity-10">
+               <img className="w-[800px] right-[-200px]  -rotate-[30deg]" src="/background.png" alt="" />
+            </div>
+
             <div className="overflow-hidden">
-               <div className=" flex flex-row items-center justify-center w-full  text-center pt-8 px-[10%] lg:px-[20%] bg-[#fafafa]  ">
+               <div className=" flex flex-row items-center justify-center w-full  text-center pt-8 px-[10%] lg:px-[20%]   ">
                   <div className="w-full  ">
                      <div className="w-full mb-8 bg-pink-100 text-lg text-gray-600 rounded-xl h-12 flex flex-row items-center justify-center">
                         FORMI is used by&nbsp;<span className=" text-purple-600 font-bold">5000+ dancers&nbsp;</span> and coaches like you
@@ -52,7 +56,7 @@ const home = () => {
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
                      <h1 className=" text-xl  text-gray-500 px-[20%]  mt-4 ">
-                        Create and plan stunning dance formations that will impress your audience in minutes, saving time in rehearsals
+                        Create and plan stunning 3D dance formations in minutes, saving time in rehearsals
                      </h1>
                      {/* <p className="text-gray-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
                      <Link href={"/login"} className="z-50">

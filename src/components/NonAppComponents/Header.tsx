@@ -7,8 +7,8 @@ import Image from "next/image";
 export const Header = () => {
    return (
       <>
-         <div className="sticky top-0 z-50 ">
-            <div className="h-12 bg-pink-600 w-full text-white flex flex-row items-center justify-center">
+         <div className="sticky top-0 z-50  ">
+            <div className="h-12 bg-pink-600 text-sm w-full text-white flex flex-row items-center justify-center">
                👨‍🎓 Get 80% off with a registered .edu email address for a limited time
             </div>
             <nav className="flex flex-row py-3 lg:justify-between text-black items-center justify-center px-[10%]  bg-[#fafafa]  ">
@@ -23,11 +23,11 @@ export const Header = () => {
                      </div>
                   </Link>
                   <div className="flex flex-row items-center ml-9 ">
-                     {/* <Link href={"/pricing"} className="z-50">
-                        <button className="text-gray-600 hover:text-black text-medium hidden lg:block mr-5">Features</button>
-                     </Link> */}
                      <Link href={"/pricing"} className="z-50">
-                        <button className="text-gray-600 hover:text-black text-medium hidden lg:block ">Pricing</button>
+                        <button className="text-gray-600 hover:text-black text-medium hidden lg:block mr-10">Pricing</button>
+                     </Link>
+                     <Link href={"/blog"} className="z-50">
+                        <button className="text-gray-600 hover:text-black text-medium hidden lg:block ">Blog</button>
                      </Link>
                   </div>
                </div>

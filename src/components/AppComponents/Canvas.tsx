@@ -711,7 +711,11 @@ export const Canvas: React.FC<{
                ></div>
 
                {cloudSettings.backgroundUrl && cloudSettings.stageBackground === "custom" ? (
-                  <img className="w-full h-full object-contain pointer-events-none select-none opacity-40" src={cloudSettings.backgroundUrl} alt="" />
+                  <img
+                     className="w-full h-full object-contain pointer-events-none select-none opacity-40 "
+                     src={cloudSettings.backgroundUrl}
+                     alt=""
+                  />
                ) : null}
 
                {stageBackground === "grid" ? <GridLines cloudSettings={cloudSettings} stageDimensions={stageDimensions} /> : null}
