@@ -8,9 +8,12 @@ export const Header = () => {
    return (
       <>
          <div className="sticky top-0 z-50  ">
-            <div className="h-12 bg-pink-600 text-sm w-full text-white flex flex-row items-center justify-center hidden lg:flex">
-               👨‍🎓 Get 80% off with a registered .edu email address for a limited time
-            </div>
+            <Link href={"/pricing"}>
+               <div className="h-12 bg-pink-600 cursor-pointer text-sm w-full text-white flex flex-row items-center justify-center hidden lg:flex">
+                  👨‍🎓 Get 80% off with a registered .edu email address for a limited time
+               </div>
+            </Link>
+
             <nav className="flex flex-row py-3 lg:justify-between text-black items-center justify-center px-[10%]  bg-[#fafafa]  ">
                <div className="flex flex-row items-center">
                   <Link href={"/"}>
@@ -23,11 +26,14 @@ export const Header = () => {
                      </div>
                   </Link>
                   <div className="flex flex-row items-center ml-9 ">
-                     <Link href={"/pricing"} className="z-50">
-                        <button className="text-gray-700 hover:text-black text-medium hidden lg:block mr-10">Pricing</button>
+                     <Link href={"/features"} className="z-50">
+                        <button className="text-gray-700 hover:text-black text-medium hidden lg:block mr-8">Features</button>
                      </Link>
                      <Link href={"/blog"} className="z-50">
-                        <button className="text-gray-700 hover:text-black text-medium hidden lg:block ">Blog</button>
+                        <button className="text-gray-700 hover:text-black text-medium hidden lg:block mr-8 ">Blog</button>
+                     </Link>
+                     <Link href={"/pricing"} className="z-50">
+                        <button className="text-gray-700 hover:text-black text-medium hidden lg:block mr-8">Pricing</button>
                      </Link>
                   </div>
                </div>

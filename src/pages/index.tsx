@@ -37,7 +37,7 @@ const home = () => {
 
          <div className="overflow-hidden  ">
             <div className="absolute -z-10 left-[-150px] top-[200px] opacity-10">
-               <img className="w-[800px] right-[-200px]  -rotate-[30deg]" src="/background.png" alt="" />
+               {/* <img className="w-[800px] right-[-200px]  -rotate-[30deg]" src="/background.png" alt="" /> */}
             </div>
 
             <div className="overflow-hidden">
@@ -56,7 +56,7 @@ const home = () => {
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
                      <h1 className=" text-xl  text-gray-500 lg:px-[20%]  mt-4 ">
-                        Create and plan stunning 3D dance formations in minutes, saving time in rehearsals
+                        Create and plan stunning 3D dance & cheer formations in minutes, saving time in rehearsals
                      </h1>
                      {/* <p className="text-gray-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
                      <Link href={"/login"} className="z-50">
