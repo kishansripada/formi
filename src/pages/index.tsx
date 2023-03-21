@@ -17,7 +17,7 @@ const home = () => {
             />
             <meta
                name="keywords"
-               content="dance, choreography, desi, formations, cheer, cheerleading, formation building tool, dance formation app"
+               content="dance, choreography, desi, formations, cheer, cheerleading, formation building tool, dance formation app, color guard, color guard app, dance formation maker, app for dance formations, formation app for dance"
             />
             <meta name="twitter:card" content="summary" />
             <meta name="twitter:title" content="FORMI: Online stage performance planning software." />
@@ -43,7 +43,7 @@ const home = () => {
             <div className="overflow-hidden">
                <div className=" flex flex-row items-center justify-center w-full  text-center pt-8 px-[10%] lg:px-[20%]   ">
                   <div className="w-full  ">
-                     <div className="w-full mb-8 bg-pink-100 text-lg text-gray-600 rounded-xl h-12 lg:flex hidden flex-row items-center justify-center ">
+                     <div className="w-full bg-opacity-50 mb-8 bg-pink-100 text-lg text-gray-600 rounded-xl h-12 lg:flex hidden flex-row items-center justify-center ">
                         FORMI is used by&nbsp;<span className=" text-purple-600 font-bold">5000+ dancers&nbsp;</span> and coaches like you
                      </div>
                      <h1
@@ -86,8 +86,8 @@ const home = () => {
 
                <div className=" mt-12 relative">
                   <img
-                     className=" max-w-[1000px] lg:block hidden  w-full mx-auto relative -bottom-11 rounded-xl border border-gray-200 shadow-xl z-10"
-                     src="/threePreview.png"
+                     className=" max-w-[1000px] lg:block hidden  w-full mx-auto relative -bottom-5 rounded-xl border border-gray-200 shadow-2xl z-10"
+                     src="/threeDPreview.png"
                   ></img>
 
                   <div
@@ -102,37 +102,56 @@ const home = () => {
                   ></div>
                </div>
             </div>
-            <div className="  flex-wrap flex flex-col items-center justify-center lg:block hidden  ">
-               <p className=" text-2xl mx-auto text-center font-proxima font-semibold mt-10 ">Trusted by thousands of dance teams.</p>
+            <hr />
+            <div className="   lg:flex flex-col items-center justify-center  hidden py-10  ">
+               {/* <p className=" text-2xl mx-auto text-center font-proxima font-semibold mt-10 ">Trusted by 5000+ dance teams</p> */}
 
-               <div className=" flex-wrap flex flex-row items-center justify-center child:mx-8 child:my-8  select-none ">
+               <div className=" grid grid-cols-4 place-items-center child:mx-8 child:my-8  select-none opacity-60 ">
                   <img
                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cornell_University_logo.svg/1280px-Cornell_University_logo.svg.png"
-                     className="grayscale w-48 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                     className=" w-48  transition duration-500"
                      alt=""
                   />
                   <img
                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/University_of_Michigan_logo.svg/2560px-University_of_Michigan_logo.svg.png"
-                     className="grayscale w-48 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                     className=" w-44  transition duration-500"
                      alt=""
                   />
 
                   <img
                      src=" https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/University_of_California%2C_Berkeley_logo.svg/2560px-University_of_California%2C_Berkeley_logo.svg.png
                "
-                     className="grayscale w-32 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                     className=" w-32 transition duration-500"
                      alt=""
                   />
                   <img
                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/University_of_Texas_at_Austin_logo.svg/1280px-University_of_Texas_at_Austin_logo.svg.png
                "
-                     className="grayscale w-32 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                     className=" w-32  transition duration-500"
                      alt=""
                   />
                   <img
-                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Stanford_Cardinal_logo.svg/1341px-Stanford_Cardinal_logo.svg.png
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Virginia_Tech_logo.svg/400px-Virginia_Tech_logo.svg.png
                "
-                     className="grayscale w-12 opacity-40 hover:grayscale-0 hover:opacity-100 transition duration-500"
+                     className=" w-36  transition duration-500"
+                     alt=""
+                  />
+                  <img
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/UT_Knoxville_logo_left.svg/440px-UT_Knoxville_logo_left.svg.png
+               "
+                     className=" w-40  transition duration-500"
+                     alt=""
+                  />
+                  <img
+                     src="https://upload.wikimedia.org/wikipedia/en/thumb/5/58/NYU_logo.svg/440px-NYU_logo.svg.png
+               "
+                     className=" w-48  transition duration-500"
+                     alt=""
+                  />
+                  <img
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/North_Carolina_State_University_logo.svg/480px-North_Carolina_State_University_logo.svg.png
+               "
+                     className=" w-48 transition duration-500"
                      alt=""
                   />
                </div>
@@ -162,7 +181,7 @@ const home = () => {
                   }}
                ></div> */}
 
-               <div className="flex  flex-col items-center mx-auto max-w-[1000px] py-8 w-full  ">
+               {/* <div className="flex  flex-col items-center mx-auto max-w-[1000px] py-8 w-full  ">
                   <div className="text-center w-full">
                      <p className="text-3xl font-bold">Bring your dancers to life in 3D</p>
                      <p className="text-lg mt-6  text-gray-500">
@@ -173,7 +192,7 @@ const home = () => {
                   <div className="w-[85%] ">
                      <img className=" rounded-xl mt-10" src="/threeD.png" alt="" />
                   </div>
-               </div>
+               </div> */}
 
                {/* <video className="rounded-xl w-full mx-auto max-w-[1000px] my-5 border border-gray-300" autoPlay muted loop src="/threeD.mp4"></video> */}
                {/* <Canvas
