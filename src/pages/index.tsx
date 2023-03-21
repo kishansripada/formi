@@ -43,7 +43,7 @@ const home = () => {
             <div className="overflow-hidden">
                <div className=" flex flex-row items-center justify-center w-full  text-center pt-8 px-[10%] lg:px-[20%]   ">
                   <div className="w-full  ">
-                     <div className="w-full mb-8 bg-pink-100 text-lg text-gray-600 rounded-xl h-12 flex flex-row items-center justify-center">
+                     <div className="w-full mb-8 bg-pink-100 text-lg text-gray-600 rounded-xl h-12 lg:flex hidden flex-row items-center justify-center ">
                         FORMI is used by&nbsp;<span className=" text-purple-600 font-bold">5000+ dancers&nbsp;</span> and coaches like you
                      </div>
                      <h1
@@ -52,10 +52,10 @@ const home = () => {
                         }}
                         className=" text-4xl lg:text-6xl   font-bold text-gray-900 "
                      >
-                        Never forget where your dancers are supposed to be.
+                        Never forget where your dancers are supposed to be
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
-                     <h1 className=" text-xl  text-gray-500 px-[20%]  mt-4 ">
+                     <h1 className=" text-xl  text-gray-500 lg:px-[20%]  mt-4 ">
                         Create and plan stunning 3D dance formations in minutes, saving time in rehearsals
                      </h1>
                      {/* <p className="text-gray-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
@@ -65,7 +65,7 @@ const home = () => {
                         </button>
                      </Link>
                      <Link href={"/207/edit"} className="">
-                        <button className=" bg-gradient-to-r from-purple-500 to-pink-500 flex-row items-center   text-white px-4 py-2  mx-auto hidden lg:flex rounded-full mt-8 text-xl group">
+                        <button className=" bg-pink-600 flex-row items-center   text-white px-4 py-2  mx-auto hidden lg:flex rounded-full mt-8 text-xl group">
                            <span className="mr-2  ">View Demo</span>
                            <span className="relative left-0 group-hover:left-3 transition-all duration-300">
                               <svg
@@ -86,7 +86,7 @@ const home = () => {
 
                <div className=" mt-12 relative">
                   <img
-                     className=" max-w-[1000px]  w-full mx-auto relative -bottom-11 rounded-xl border border-gray-200 shadow-xl z-10"
+                     className=" max-w-[1000px] lg:block hidden  w-full mx-auto relative -bottom-11 rounded-xl border border-gray-200 shadow-xl z-10"
                      src="/threePreview.png"
                   ></img>
 
