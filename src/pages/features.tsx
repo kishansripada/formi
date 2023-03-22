@@ -7,13 +7,26 @@ import { Footer } from "../components/NonAppComponents/Footer";
 import Image from "next/image";
 
 const features = () => {
+   const [scrollPosition, setScrollPosition] = useState(0);
+   const handleScroll = () => {
+      const position = window.pageYOffset;
+      setScrollPosition(position);
+   };
+
+   useEffect(() => {
+      window.addEventListener("scroll", handleScroll, { passive: true });
+
+      return () => {
+         window.removeEventListener("scroll", handleScroll);
+      };
+   }, []);
    return (
       <>
          <Head>
-            <title>FORMI: Dance and cheer formation planning software.</title>
+            <title>FORMI: Features</title>
             <meta
                name="description"
-               content="Dance formation app. Easily build, create and visualize your dance and cheer formations synced to music. Formi is the ultimate choreographer formation tool. Dance formation builder. Cheer formation builder."
+               content="We have a variety of features to help you plan your stage performances. From formations to transitions, we have you covered."
             />
             <meta
                name="keywords"
@@ -32,6 +45,49 @@ const features = () => {
 
             <meta property="og:site_name" content="FORMI: Online stage performance planning software." />
          </Head>
+
+         <div className="absolute w-[1000px] opacity-60  h-[500px] left-1/2 -translate-x-1/2 -z-[100] top-[100px]">
+            <div
+               style={{
+                  backgroundImage:
+                     "radial-gradient(ellipse 1000px 500px at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%)",
+               }}
+               className="absolute w-[1000px] h-[500px] top-0 left-0 bottom-0 right-0"
+            ></div>
+            <div
+               className="flex flex-row h-full justify-between rounded-xl -z-[100] relative  "
+               style={{
+                  width: 1000,
+               }}
+            >
+               {new Array(25).fill(0).map((_, i) => (
+                  <div
+                     key={i}
+                     className={`h-full bg-gray-300 `}
+                     style={{
+                        width: 1,
+                     }}
+                  ></div>
+               ))}
+            </div>
+            <div
+               className="flex flex-col justify-between  rounded-xl relative -z-[100]  "
+               style={{
+                  height: 500,
+                  top: -500,
+               }}
+            >
+               {new Array(12).fill(0).map((_, i) => (
+                  <div
+                     key={i}
+                     className={`w-full bg-gray-300 `}
+                     style={{
+                        height: 1,
+                     }}
+                  ></div>
+               ))}
+            </div>
+         </div>
 
          <Header></Header>
 
@@ -61,16 +117,53 @@ const features = () => {
                   </div>
                </div>
             </div>
-            <div className="w-full h-[4000px] flex flex-row mt-[200px]">
+            <div className="w-full  flex flex-row mt-[200px]">
                <div className="w-[20%] hidden lg:flex flex-col justify-center  items-center relative">
-                  {/* <div className="fixed child:mt-3  z-50 top-1/2 -translate-y-1/2 -translate-x-1/2">
-                     <p className="font-bold">View only</p>
-                     <p>Commenting</p>
-                     <p>3D View</p>
-                  </div> */}
+                  <div
+                     style={{
+                        opacity: (scrollPosition - 300) / 300,
+                     }}
+                     className="fixed child:mt-3  z-50 top-1/2 -translate-y-1/2 left-22"
+                  >
+                     <p
+                        style={{
+                           fontWeight: scrollPosition > 300 && scrollPosition < 900 ? 700 : 400,
+                        }}
+                     >
+                        View only
+                     </p>
+                     <p
+                        style={{
+                           fontWeight: scrollPosition > 900 && scrollPosition < 1700 ? 700 : 400,
+                        }}
+                     >
+                        Commenting
+                     </p>
+                     <p
+                        style={{
+                           fontWeight: scrollPosition > 1700 && scrollPosition < 2500 ? 700 : 400,
+                        }}
+                     >
+                        3D View
+                     </p>
+                     <p
+                        style={{
+                           fontWeight: scrollPosition > 2500 && scrollPosition < 3300 ? 700 : 400,
+                        }}
+                     >
+                        Collision detection
+                     </p>
+                     <p
+                        style={{
+                           fontWeight: scrollPosition > 3300 && scrollPosition < 5000 ? 700 : 400,
+                        }}
+                     >
+                        Curved paths
+                     </p>
+                  </div>
                </div>
-               <div className="lg:w-[80%] w-full  h-full flex flex-col items-center justify center px-[6%]">
-                  <div className=" rounded-2xl  w-full shadow-2xl flex flex-col px-[6%] py-[6%]">
+               <div className="lg:w-[80%] w-full  h-full flex flex-col items-center justify center px-[6%] relative z-10">
+                  <div className=" rounded-2xl   w-full shadow-2xl flex flex-col px-[6%] py-[6%]">
                      <img className=" rounded-xl border border-gray-300" src="/viewOnly.png" alt="" />
                      <div className="rounded-full mt-8  bg-gray-100 text-pink-600 w-fit flex flex-row items-center px-3 justify-center py-1">
                         <p className=" text-sm">COMMUNICATION & COLLABORATION</p>
@@ -103,8 +196,31 @@ const features = () => {
                         perspective. FORMI enables you to view formations from any angle, even a judges perspective.
                      </p>
                   </div>
+                  <div className=" mt-14 rounded-2xl  w-full shadow-2xl flex flex-col px-[6%] py-[6%]">
+                     <img className="rounded-xl border border-gray-300" src="/collisions.png" alt="" />
+                     <div className="rounded-full mt-8  bg-gray-100 text-pink-600 w-fit flex flex-row items-center px-3 justify-center py-1">
+                        <p className=" text-sm">PROFESSIONAL FEATURES</p>
+                     </div>
+                     <p className="text-gray-800 mt-4  text-3xl">Determine if dancers will collide BEFORE you perform</p>
+                     <p className="text-gray-700 font-light mt-2">
+                        With adjustable sensitivity, FORMI will alert you if dancers will collide during a performance. This allows you to be
+                        proactive in preventing collisions, and avoid potential injuries.
+                     </p>
+                  </div>
+                  <div className=" mt-14 rounded-2xl  w-full shadow-2xl flex flex-col px-[6%] py-[6%]">
+                     <img className="rounded-xl border border-gray-300" src="/nonlinear.png" alt="" />
+                     <div className="rounded-full mt-8  bg-gray-100 text-pink-600 w-fit flex flex-row items-center px-3 justify-center py-1">
+                        <p className=" text-sm">PROFESSIONAL FEATURES</p>
+                     </div>
+                     <p className="text-gray-800 mt-4  text-3xl">Create non-linear, curved dancer paths to avoid collisions</p>
+                     <p className="text-gray-700 font-light mt-2">
+                        FORMI goes beyond simple linear dancer paths, which are so often not the case in real life. Move your dancers in the path that
+                        they will actually follow to avoid collisions with other dancers.
+                     </p>
+                  </div>
                </div>
             </div>
+            <hr className="mt-24" />
             <Footer></Footer>
          </div>
       </>

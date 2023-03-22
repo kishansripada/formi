@@ -35,7 +35,91 @@ const home = () => {
 
          <Header></Header>
 
-         <div className="overflow-hidden  ">
+         <div className="overflow-hidden relative ">
+            <div className="absolute w-[1000px] opacity-50  h-[500px] left-0 -translate-x-1/2 -z-[100] top-[100px] ">
+               <div
+                  style={{
+                     backgroundImage:
+                        "radial-gradient(ellipse 1000px 500px at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%)",
+                  }}
+                  className="absolute w-[1000px] h-[500px] top-0 left-0 bottom-0 right-0"
+               ></div>
+               <div
+                  className="flex flex-row h-full justify-between rounded-xl -z-[100] relative  "
+                  style={{
+                     width: 1000,
+                  }}
+               >
+                  {new Array(25).fill(0).map((_, i) => (
+                     <div
+                        key={i}
+                        className={`h-full bg-gray-300 `}
+                        style={{
+                           width: 1,
+                        }}
+                     ></div>
+                  ))}
+               </div>
+               <div
+                  className="flex flex-col justify-between  rounded-xl relative -z-[100]  "
+                  style={{
+                     height: 500,
+                     top: -500,
+                  }}
+               >
+                  {new Array(12).fill(0).map((_, i) => (
+                     <div
+                        key={i}
+                        className={`w-full bg-gray-300 `}
+                        style={{
+                           height: 1,
+                        }}
+                     ></div>
+                  ))}
+               </div>
+            </div>
+            <div className="absolute w-[1000px] opacity-50  h-[500px] right-0  translate-x-1/2  -z-[100] top-[100px]">
+               <div
+                  style={{
+                     backgroundImage:
+                        "radial-gradient(ellipse 1000px 500px at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%)",
+                  }}
+                  className="absolute w-[1000px] h-[500px] top-0 left-0 bottom-0 right-0"
+               ></div>
+               <div
+                  className="flex flex-row h-full justify-between rounded-xl -z-[100] relative  "
+                  style={{
+                     width: 1000,
+                  }}
+               >
+                  {new Array(25).fill(0).map((_, i) => (
+                     <div
+                        key={i}
+                        className={`h-full bg-gray-300 `}
+                        style={{
+                           width: 1,
+                        }}
+                     ></div>
+                  ))}
+               </div>
+               <div
+                  className="flex flex-col justify-between  rounded-xl relative -z-[100]  "
+                  style={{
+                     height: 500,
+                     top: -500,
+                  }}
+               >
+                  {new Array(12).fill(0).map((_, i) => (
+                     <div
+                        key={i}
+                        className={`w-full bg-gray-300 `}
+                        style={{
+                           height: 1,
+                        }}
+                     ></div>
+                  ))}
+               </div>
+            </div>
             <div className="absolute -z-10 left-[-150px] top-[200px] opacity-10">
                {/* <img className="w-[800px] right-[-200px]  -rotate-[30deg]" src="/background.png" alt="" /> */}
             </div>
@@ -306,6 +390,7 @@ const home = () => {
             </div>
 
             {/* FOOTER */}
+            <hr />
             <Footer></Footer>
          </div>
       </>
