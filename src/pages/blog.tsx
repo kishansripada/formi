@@ -34,7 +34,48 @@ const home = () => {
          </Head>
 
          <Header></Header>
-
+         <div className="absolute w-[1000px] opacity-60  h-[500px] left-1/2 -translate-x-1/2 -z-[100] top-[300px]">
+            <div
+               style={{
+                  backgroundImage:
+                     "radial-gradient(ellipse 1000px 500px at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%)",
+               }}
+               className="absolute w-[1000px] h-[500px] top-0 left-0 bottom-0 right-0"
+            ></div>
+            <div
+               className="flex flex-row h-full justify-between rounded-xl -z-[100] relative  "
+               style={{
+                  width: 1000,
+               }}
+            >
+               {new Array(25).fill(0).map((_, i) => (
+                  <div
+                     key={i}
+                     className={`h-full bg-gray-300 `}
+                     style={{
+                        width: 1,
+                     }}
+                  ></div>
+               ))}
+            </div>
+            <div
+               className="flex flex-col justify-between  rounded-xl relative -z-[100]  "
+               style={{
+                  height: 500,
+                  top: -500,
+               }}
+            >
+               {new Array(12).fill(0).map((_, i) => (
+                  <div
+                     key={i}
+                     className={`w-full bg-gray-300 `}
+                     style={{
+                        height: 1,
+                     }}
+                  ></div>
+               ))}
+            </div>
+         </div>
          <div className="overflow-hidden  ">
             <div className="absolute -z-10 left-[-150px] top-[200px] opacity-10">
                <img className="w-[800px] right-[-200px]  -rotate-[30deg]" src="/background.png" alt="" />
@@ -62,23 +103,47 @@ const home = () => {
                   </div>
                </div>
                <div className="w-full  mt-[200px] h-[1000px] px-[10%]  flex flex-row ">
-                  <Link href={"/blog/artofdanceformations"}>
-                     <div className="w-1/2 flex flex-col cursor-pointer">
-                        <>
-                           <img src="/blogOne.jpeg" className="rounded-xl" alt="" />
-                           <p className="text-pink-600 mt-6 ">Why FORMI?</p>
-                           <p className="text-3xl mt-2 hover:text-pink-600 transition">
-                              Why Are Formations So Important? How Can I Use FORMI to Perfect Them?
-                           </p>
-                           <p className="mt-4 text-xl text-gray-600 ">
-                              Dance formations are an essential part of any dance performance, whether it's a ballet, jazz, contemporary, or hip hop
-                              routine. They not only enhance the visual appeal of the performance but also help to convey the mood and message of the
-                              dance.
-                           </p>
-                        </>
-                     </div>
-                  </Link>
-                  <div className="w-1/2"></div>
+                  <div className="w-1/2 mr-4">
+                     <Link href={"/blog/1"}>
+                        <div className=" flex flex-col cursor-pointer">
+                           <>
+                              <img src="/blogOne.jpeg" className="rounded-xl" alt="" />
+                              <p className="text-pink-600 mt-6 ">Why FORMI?</p>
+                              <p className="text-3xl mt-2 hover:text-pink-600 transition">
+                                 Why Are Formations So Important? How Can I Use FORMI to Perfect Them?
+                              </p>
+                              <p className="mt-4  text-gray-600 ">
+                                 Dance formations are an essential part of any dance performance, whether it's a ballet, jazz, contemporary, or hip
+                                 hop routine. They not only enhance the visual appeal of the performance but also help to convey the mood and message
+                                 of the dance.
+                              </p>
+                           </>
+                        </div>
+                     </Link>
+                  </div>
+
+                  <div className="w-1/2 ml-4">
+                     <Link href={"/blog/2"}>
+                        <div className=" flex flex-row cursor-pointer">
+                           <img
+                              src="https://images.unsplash.com/photo-1621976498727-9e5d56476276?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2970&q=80"
+                              className="rounded-xl w-32 h-32"
+                              alt=""
+                           />
+                           <div className="flex flex-col ml-3">
+                              <p className="text-pink-600 text-sm ">Why FORMI?</p>
+                              <p className="text-xl mt-1 hover:text-pink-600 transition">
+                                 Mastering the Art of Dance Formations: Tips for Creating Stunning Visuals with FORMI
+                              </p>
+                              <p className="mt-2 text-sm text-gray-600 ">
+                                 Dance is a beautiful form of expression, and one of the key elements that makes a performance truly captivating is
+                                 the choreography. The ability to create intricate and stunning dance formations can make all the difference when it
+                                 comes to captivating your audience.
+                              </p>
+                           </div>
+                        </div>
+                     </Link>
+                  </div>
                </div>
             </div>
 

@@ -14,15 +14,16 @@ const home = () => {
             <title>The Art of Creating Mesmerizing Dance Formations</title>
 
             <Header></Header>
-            <article id="af288aee-81ff-4b94-8f8c-2a2c6651765b" className="page sans px-[20%]">
+            <article className=" px-[20%]">
+               <p className=" text-center leading-loose mt-32  text-gray-500  "> Aug 10, 2022</p>
+               <p className="text-pink-600 text-center leading-loose  font-semibold ">TIPS & TRICKS</p>
+
                <header>
-                  <div className="page-header-icon undefined"></div>
-                  <h1 className="page-title  font-bold text-5xl mt-32">
-                     {" "}
-                     <span className="icon">🕺</span>The Art of Creating Mesmerizing Dance Formations
+                  <h1 className="page-title  font-bold text-5xl text-center mt-5">
+                     Why Are Formations So Important? How Can I Use FORMI to Perfect Them?
                   </h1>
                </header>
-               <div className="page-body  text-xl text-gray-800 child:pt-6 mt-32">
+               <div className="page-body   text-gray-700 child:pt-6 mt-32">
                   <p>
                      Dance formations are an essential part of any dance performance, whether it's a ballet, jazz, contemporary, or hip hop routine.
                      They not only enhance the visual appeal of the performance but also help to convey the mood and message of the dance. However,
@@ -76,6 +77,7 @@ const home = () => {
                </div>
             </article>
          </div>
+         <hr className="mt-32" />
          <Footer></Footer>
       </>
    );
