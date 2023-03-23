@@ -136,10 +136,10 @@ const home = () => {
                         }}
                         className=" text-4xl lg:text-6xl   font-bold text-gray-900 "
                      >
-                        Never forget where your dancers are supposed to be
+                        Manage the movement in your performance
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
-                     <h1 className=" text-xl  text-gray-500 lg:px-[20%]  mt-4 ">
+                     <h1 className="   text-gray-500 lg:px-[20%]    mt-4 ">
                         Create and plan stunning 3D dance & cheer formations in minutes, saving time in rehearsals
                      </h1>
                      {/* <p className="text-gray-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
