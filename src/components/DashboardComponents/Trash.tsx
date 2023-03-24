@@ -7,7 +7,7 @@ import { Dropdown } from "./Dropdown";
 export const Trash: React.FC<{ trash: any; deleteDance: Function; removeFromTrash: Function }> = ({ trash, deleteDance, removeFromTrash }) => {
    return (
       <>
-         <h1 className="mt-16 text-2xl">performance trash</h1>
+         <h1 className="mt-16 text-2xl">Performance Trash</h1>
          <div className="w-full flex flex-row overflow-x-scroll mt-7 removeScrollBar h-full overscroll-contain">
             {trash.length ? (
                trash
@@ -95,7 +95,7 @@ export const Trash: React.FC<{ trash: any; deleteDance: Function; removeFromTras
                      );
                   })
             ) : (
-               <p>nothing here 🤷🏽‍♂️</p>
+               <p>Nothing Here 🤷🏽‍♂️</p>
             )}
          </div>
       </>

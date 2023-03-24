@@ -1114,7 +1114,7 @@ export const getServerSideProps = async (ctx) => {
       props: {
          initialData: dance,
          viewOnly,
-         pricingTier,
+         pricingTier: "legacy",
       },
    };
 

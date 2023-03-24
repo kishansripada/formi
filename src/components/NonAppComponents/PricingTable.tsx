@@ -82,7 +82,7 @@ export const PricingTable = () => {
                                  </svg>
                                  <span>
                                     {" "}
-                                    <span className="font-bold">2</span> performances
+                                    <span className="font-bold">1</span> performance
                                  </span>
                               </li>
                               <li className="flex items-center space-x-3">

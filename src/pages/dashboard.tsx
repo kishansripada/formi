@@ -168,7 +168,7 @@ const Dashboard = ({ dances, audioFiles, subscription }: {}) => {
                   <button
                      className="flex flex-row justify-between items-center bg-pink-600 text-white text-sm w-full py-3 px-3 rounded-lg mt-5    font-medium"
                      onClick={() => {
-                        if (!subscription.plan.product && myDances.length > 1) {
+                        if (!subscription.plan.product && myDances.length > 0) {
                            router.push("/pricing");
                            return;
                         }
