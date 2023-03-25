@@ -12,7 +12,7 @@ export const EditDancer: React.FC<{
    pricingTier: string;
    setUpgradeIsOpen: Function;
 }> = ({ setEditingDancer, editingDancer, dancers, setDancers, removeDancer, pricingTier, setUpgradeIsOpen }) => {
-   let height = convertToFeetAndInches(dancers.find((dancer) => dancer.id === editingDancer)?.height || null);
+   let height = convertToFeetAndInches(dancers.find((dancer) => dancer.id === editingDancer)?.height || 182.88);
    const [heightFeet, setHeightFeet] = useState<number>(height.feet);
    const [heightIn, setHeightIn] = useState<number>(height.inches);
    return (
@@ -146,7 +146,6 @@ function convertToCentimeters(feet: number, inches: number): number {
 }
 
 function convertToFeetAndInches(centimeters: number): { feet: number; inches: number } {
-   if (centimeters === null) return { feet: "", inches: "" };
    const inchesToCentimeters = 2.54;
    const inches = Math.round(centimeters / inchesToCentimeters);
    const feet = Math.floor(inches / 12);

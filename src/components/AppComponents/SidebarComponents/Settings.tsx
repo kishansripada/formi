@@ -168,6 +168,24 @@ export const Settings: React.FC<{
                   )}
                   <p>Numbered</p>
                </div>
+               <hr />
+               <div
+                  className="p-4 flex flex-row items-center"
+                  onClick={() =>
+                     setLocalSettings((settings: localSettings) => {
+                        return { ...settings, dancerStyle: "solid" };
+                     })
+                  }
+               >
+                  {dancerStyle === "solid" ? (
+                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
+                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
+                     </div>
+                  ) : (
+                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
+                  )}
+                  <p>Solid</p>
+               </div>
             </div>
          </div>
       </>

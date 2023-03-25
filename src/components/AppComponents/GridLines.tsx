@@ -15,7 +15,7 @@ export const GridLines: React.FC<{ stageDimensions: { width: number; height: num
             {new Array(stageDimensions.width + 1).fill(0).map((_, i) => (
                <div
                   key={i}
-                  className={`h-full ${i === stageDimensions.width / 2 ? "bg-gray-600" : "bg-gray-300"} `}
+                  className={`w-full bg-neutral-300   `}
                   style={{
                      width:
                         i === stageDimensions.width || i === 0
@@ -39,7 +39,9 @@ export const GridLines: React.FC<{ stageDimensions: { width: number; height: num
             {new Array(stageDimensions.height + 1).fill(0).map((_, i) => (
                <div
                   key={i}
-                  className={`w-full ${i === stageDimensions.height / 2 ? "bg-gray-600" : "bg-gray-300"} `}
+                  // ${i === stageDimensions.height / 2 ? "bg-neutral-600 dark:bg-neutral-400" : "bg-neutral-300 dark:bg-neutral-600"}
+
+                  className={`w-full bg-neutral-300   `}
                   style={{
                      height:
                         i === stageDimensions.height || i === 0

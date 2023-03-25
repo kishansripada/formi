@@ -1,4 +1,4 @@
-import { cloudSettings, dancer, dancerPosition, formation, stageDimensions, PIXELS_PER_SQUARE } from "../../types/types";
+import { cloudSettings, dancer, dancerPosition, formation, stageDimensions, PIXELS_PER_SQUARE, localSettings } from "../../types/types";
 
 export const DancerAlias: React.FC<{
    dancer: dancer;
@@ -61,49 +61,19 @@ export const DancerAlias: React.FC<{
            .includes(dancer.id)
       : false;
 
+   let myPosition;
    // if the track is playing then  return with the animation function
    if (isPlaying && position !== null) {
-      let myPosition = animate(formations, dancer.id, currentFormationIndex, percentThroughTransition, coordsToPosition, stageDimensions);
-
-      // if the animation function returns null, the dancer is not on the stage
-      if (myPosition === null) return <></>;
-      let { left, top } = myPosition;
-      return (
-         <>
-            <div
-               className={`  rounded-full w-[38px] h-[38px] flex flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default  `}
-               style={{
-                  // transform: `translate(-50%, -50%) translate(${left}px, ${top}px)`,
-                  backgroundColor: dancer.color || "#db2777",
-
-                  left,
-                  top,
-                  transform: "translate(-50%, -50%)",
-               }}
-            >
-               {dancer.instagramUsername ? (
-                  <img referrerPolicy="no-referrer" className="w-[32px] h-[32px] rounded-full select-none " src={dancer.instagramUsername} alt="" />
-               ) : (
-                  <div className="bg-white rounded-full w-[32px] h-[32px] grid place-items-center cursor-default  font-semibold  ">
-                     {dancerStyle === "numbered" ? <>{index + 1}</> : <> {initials}</>}
-                  </div>
-               )}
-               {dancerStyle === "numbered" ? (
-                  <p className="absolute -bottom-6 text-center select-none pointer-events-none">{dancer.name.split(" ")[0]}</p>
-               ) : null}
-            </div>
-         </>
-      );
+      myPosition = animate(formations, dancer.id, currentFormationIndex, percentThroughTransition, coordsToPosition, stageDimensions);
+   } else {
+      myPosition = formations[selectedFormation]?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id)?.position;
    }
    // if there is no formation selected and the track is not playing, then just return nothing
    if (selectedFormation === null) return <></>;
-
-   let currentCoords = formations[selectedFormation]?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id)?.position;
-
    // if the dancer does not have any coordinates right now, return nothing since it shouln't be displayed
-   if (!currentCoords) return <></>;
+   if (!myPosition) return <></>;
 
-   let { left, top } = coordsToPosition(currentCoords);
+   let { left, top } = coordsToPosition(myPosition);
 
    // // since only one person should be selecting a single dancer, we just choose the first person that's selecting that dancer
    // let idSelectingMe = Object.keys(userPositions).filter(
@@ -122,13 +92,15 @@ export const DancerAlias: React.FC<{
             style={{
                left: left,
                top: top,
+
                // pointerEvents: idSelectingMe ? "none" : "auto",
                // transform: `scale(${(1 / zoom) * 0.66}) translate(-${50 * zoom * (1 / 0.6)}%, -${50 * zoom * (1 / 0.66)}%)`,
                // transformOrigin: "center",
-               backgroundColor: dancer?.color || "#db2777",
-               transition: !draggingDancerId ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",
-               width: selectedDancers.includes(dancer.id) ? 41 : 38,
-               height: selectedDancers.includes(dancer.id) ? 41 : 38,
+               pointerEvents: isPlaying ? "none" : "auto",
+               backgroundColor: selectedDancers.includes(dancer.id) && !isPlaying ? "black" : hexToRGBA(dancer?.color || "#db2777", 0.5),
+               transition: !draggingDancerId && !isPlaying ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",
+               width: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
+               height: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
             }}
             id={dancer.id}
             data-type={"dancer"}
@@ -192,17 +164,20 @@ export const DancerAlias: React.FC<{
                <div
                   id={dancer.id}
                   data-type={"dancer"}
-                  className={`${
-                     isInCollision ? "bg-red-500 text-white" : "bg-white"
-                  } rounded-full w-[32px] h-[32px] grid place-items-center select-none cursor-default `}
+                  style={{
+                     //  dancerStyle === "solid" ? : "white",
+                     backgroundColor: dancer.color || "#db2777",
+                  }}
+                  className={` rounded-full w-[32px] h-[32px] grid place-items-center select-none text-white cursor-default `}
                >
                   <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
-                     {dancerStyle === "numbered" ? <>{index + 1}</> : <> {initials}</>}
+                     {dancerStyle === "numbered" ? <>{index + 1}</> : dancerStyle === "initials" ? <> {initials}</> : <></>}
                   </p>
                </div>
+               // ${  isInCollision ? "bg-red-500 text-white" : "bg-white"}
             )}
-            {dancerStyle === "numbered" ? (
-               <p className="absolute -bottom-6 text-center select-none pointer-events-none  rounded-full px-1">{dancer.name.split(" ")[0]}</p>
+            {dancerStyle !== "initials" ? (
+               <p className="absolute -bottom-6 text-center select-none pointer-events-none   rounded-full px-1">{dancer.name.split(" ")[0]}</p>
             ) : null}
          </div>
       </>
@@ -216,7 +191,7 @@ const animate = (
    percentThroughTransition: number | undefined,
    coordsToPosition: Function,
    stageDimensions: stageDimensions
-): { left: number; top: number } | null => {
+): { x: number; y: number } | null => {
    // if the position is beyond all the formation, return off stage
    if (currentFormationIndex === null) return null;
    let inPreviousFormation = formations[currentFormationIndex - 1]
@@ -245,7 +220,7 @@ const animate = (
    } else {
       if (inThisFormation) {
          // return position from this formation
-         return coordsToPosition(inThisFormation.position);
+         return inThisFormation.position;
       } else {
          // return off stage
          return null;
@@ -294,7 +269,7 @@ const animate = (
    percentThroughTransition = easeInOutQuad(percentThroughTransition);
 
    if (inThisFormation?.transitionType === "cubic" && inThisFormation?.controlPointStart?.y && inThisFormation?.controlPointStart?.x) {
-      return coordsToPosition({
+      return {
          x:
             (1 - percentThroughTransition) ** 3 * from.x +
             3 * (1 - percentThroughTransition) ** 2 * percentThroughTransition * inThisFormation.controlPointStart.x +
@@ -305,7 +280,15 @@ const animate = (
             3 * (1 - percentThroughTransition) ** 2 * percentThroughTransition * inThisFormation.controlPointStart.y +
             3 * (1 - percentThroughTransition) * percentThroughTransition ** 2 * inThisFormation.controlPointEnd.y +
             percentThroughTransition ** 3 * to.y,
-      });
+      };
    }
-   return coordsToPosition({ x: from.x + (to.x - from.x) * percentThroughTransition, y: from.y + (to.y - from.y) * percentThroughTransition });
+   return { x: from.x + (to.x - from.x) * percentThroughTransition, y: from.y + (to.y - from.y) * percentThroughTransition };
 };
+
+function hexToRGBA(hex: string, alpha: number) {
+   const r = parseInt(hex.slice(1, 3), 16);
+   const g = parseInt(hex.slice(3, 5), 16);
+   const b = parseInt(hex.slice(5, 7), 16);
+
+   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}

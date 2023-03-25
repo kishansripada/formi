@@ -682,16 +682,16 @@ export const Canvas: React.FC<{
                onPointerDown={!viewOnly ? pointerDown : () => null}
                onPointerMove={handleDragMove}
                ref={stage}
-               className="relative bg-white rounded-3xl box-content "
+               className="relative  border-2 border-gray-300 bg-white rounded-3xl box-content "
                // border-pink-600 border-4 box-border
                style={{
                   // boxShadow: "inset 0px 0px 0px 4px #db2777",
-                  border: "solid 4px transparent",
-                  borderImage: "linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%)",
-                  backgroundImage: "linear-gradient(white, white), radial-gradient(circle at top left, #8e24aa,#db2777)",
+                  // border: "solid 4px transparent",
+                  // borderImage: "linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%)",
+                  // backgroundImage: "linear-gradient(white, white), radial-gradient(circle at top left, #8e24aa,#db2777)",
 
                   // backgroundOrigin: "border-box",
-                  backgroundClip: "padding-box, border-box",
+                  // backgroundClip: "padding-box, border-box",
                   // top: scrollOffset.y,
                   // left: scrollOffset.x,
                   // transformOrigin: `${scrollOffset.x}px ${scrollOffset.y}px`,
