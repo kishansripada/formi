@@ -646,6 +646,36 @@ export const Canvas: React.FC<{
                >
                   AUDIENCE
                </Text>
+               <Text
+                  scale={[0.5, 0.5, 0.5]}
+                  position={[0, 0, -(stageDimensions.height / 4 + 1)]}
+                  rotation={[Math.PI * 1.5, 0, Math.PI * 1]}
+                  color="black"
+                  anchorX="center"
+                  // anchorY="middle"
+               >
+                  BACKSTAGE
+               </Text>
+               <Text
+                  scale={[0.5, 0.5, 0.5]}
+                  position={[stageDimensions.width / 4 + 1, 0, 0]}
+                  rotation={[Math.PI * 1.5, 0, Math.PI * 2.5]}
+                  color="black"
+                  anchorX="center"
+                  // anchorY="middle"
+               >
+                  STAGE LEFT
+               </Text>
+               <Text
+                  scale={[0.5, 0.5, 0.5]}
+                  position={[-(stageDimensions.width / 4 + 1), 0, 0]}
+                  rotation={[Math.PI * 1.5, 0, Math.PI * 1.5]}
+                  color="black"
+                  anchorX="center"
+                  // anchorY="middle"
+               >
+                  STAGE RIGHT
+               </Text>
             </Canva>
          ) : (
             <div

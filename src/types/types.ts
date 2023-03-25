@@ -3,6 +3,7 @@ export type dancer = {
    id: string;
    instagramUsername?: string | null;
    color?: string | null;
+   height: number;
 };
 
 export type dancerPosition = {
@@ -34,7 +35,7 @@ export type formationGroup = {
 export type localSettings = {
    gridSnap: 1 | 2 | 100;
    previousFormationView: "none" | "ghostDancers" | "ghostDancersAndPaths";
-   dancerStyle: "initials" | "numbered";
+   dancerStyle: "initials" | "numbered" | "solid";
    viewCollisions: boolean;
    stageFlipped: boolean;
 };

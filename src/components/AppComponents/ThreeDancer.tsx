@@ -123,7 +123,7 @@ export function ThreeDancer({
    let dancerPos;
    let textPos;
    dancerPos = useSpring({ position: [dancerPosition.position.x / 2, 0, -dancerPosition.position.y / 2] });
-   textPos = useSpring({ position: [dancerPosition.position.x / 2, ((dancer?.height || 182.88) / maxHeight) * 1.9, -dancerPosition.position.y / 2] });
+   textPos = useSpring({ position: [dancerPosition.position.x / 2, ((dancer?.height || 182.88) / maxHeight) * 2, -dancerPosition.position.y / 2] });
    // if (isDancerDragging && position !== null && currentFormationIndex !== null) {
    //    dancerPos = { position: [dancerPosition.position.x, 0, dancerPosition.position.y] };
    //    textPos = { position: [dancerPosition.position.x, 2, dancerPosition.position.y] };
@@ -136,7 +136,7 @@ export function ThreeDancer({
       let x = myPosition.x / 2;
       let y = -myPosition.y / 2;
       dancerPos = { position: [x, 0, y] };
-      textPos = { position: [x, ((dancer?.height || 182.88) / maxHeight) * 1.9, y] };
+      textPos = { position: [x, ((dancer?.height || 182.88) / maxHeight) * 2, y] };
    }
 
    return (
