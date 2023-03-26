@@ -55,42 +55,62 @@ export const Formation: React.FC<{
    return (
       <>
          <div
-            ref={setNodeRef}
-            className={`rounded-md  mx-[2px]  cursor-pointer bg-white  border-[3px] border-t-[12px] relative group  `}
             style={{
-               zIndex: activeId === formation.id ? 2 : 0,
                ...style,
-               width: ((index === 0 ? 0 : formation.transition.durationSeconds) + formation.durationSeconds) * pixelsPerSecond - 4,
-               borderColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#18191B",
-               // borderTopColor: formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color || "#18191B",
-
-               // subtract 4 to account for the mx-[2px]
+               zIndex: activeId === formation.id ? 999 : 0,
             }}
+            className="relative"
+            ref={setNodeRef}
          >
-            {listOfNames ? (
+            <div
+               style={{
+                  backgroundColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#d4d4d4",
+               }}
+               className="h-[9px] w-full flex flex-col  border-x-[0.5px] border-neutral-400 justify-center items-center  "
+            >
+               <div className="h-[1px] rounded-full bg-neutral-800 w-[12px] mb-[1px]"></div>
+               <div className="h-[1px] rounded-full bg-neutral-800 w-[12px] mt-[1px]"></div>
+            </div>
+            <div
+               className={`    cursor-pointer  bg-white     border-neutral-400  border-x-[0.5px]  relative group  `}
+               style={{
+                  width: ((index === 0 ? 0 : formation.transition.durationSeconds) + formation.durationSeconds) * pixelsPerSecond,
+                  borderTopColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#404040",
+                  // borderBottomColor: "#18191B",
+                  // borderRightColor: "#db2777",
+                  // borderLeftColor: "#db2777",
+                  // borderTopColor: formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color || "#18191B",
+
+                  // subtract 4 to account for the mx-[2px]
+               }}
+            >
+               {/* {listOfNames ? (
                <div
                   className="absolute h-5 right-[-4px] top-[-20px] z-10 w-fit px-2 text-xs text-white opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out pointer-events-none "
                   style={{ backgroundColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "black" }}
                >
                   <p>{listOfNames}</p>
                </div>
-            ) : null}
+            ) : null} */}
 
-            <div
-               data-type="drag-handle"
-               // onClick={() => {
-               //    addToStack();
-               // }}
-               style={{
-                  pointerEvents: viewOnly ? "none" : "auto",
-               }}
-               id={formation.id}
-               {...attributes}
-               {...listeners}
-               className="w-full opacity-0 absolute top-[-12px] h-[12px]  cursor-move lg:pointer-events-auto pointer-events-none	z-[99999]"
-            ></div>
+               {/* drag handle */}
 
-            <div className=" absolute top-[-18px] -translate-x-1/2 left-1/2 h-[8px] select-none   cursor-move lg:pointer-events-auto pointer-events-none	z-[99999]">
+               <div
+                  data-type="drag-handle"
+                  // onClick={() => {
+                  //    addToStack();
+                  // }}
+                  style={{
+                     pointerEvents: viewOnly ? "none" : "auto",
+                  }}
+                  id={formation.id}
+                  {...attributes}
+                  {...listeners}
+                  className="w-full opacity-0 absolute top-[-12px] h-[12px]  cursor-move lg:pointer-events-auto pointer-events-none	z-[99999]"
+               ></div>
+
+               {/* 6 dots on drag handle */}
+               {/* <div className=" absolute top-[-18px] -translate-x-1/2 left-1/2 h-[8px] select-none   cursor-move lg:pointer-events-auto pointer-events-none	z-[99999]">
                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -101,59 +121,61 @@ export const Formation: React.FC<{
                   <path fill="none" d="M0 0h24v24H0V0z" />
                   <path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
                </svg>
-               {/* <img className="rotate-90 scale-75 select-none pointer-events-none fill-white" src="/drag.svg" alt="" /> */}
-            </div>
+            </div> */}
 
-            <div
-               data-type="formation-resize"
-               id={formation.id}
-               className="h-full absolute right-[-4px] lg:pointer-events-auto pointer-events-none w-[4px] cursor-col-resize	z-[99999]"
-            ></div>
+               <div
+                  data-type="formation-resize"
+                  id={formation.id}
+                  className="h-full absolute right-[0px] flex flex-row items-center justify-between  lg:pointer-events-auto pointer-events-none w-[5px] cursor-col-resize	z-[99]"
+               ></div>
 
-            <div className={`bg-white h-[17px]  px-2  overflow-hidden text-ellipsis whitespace-nowrap  border-b border-gray-300`}>
-               <p className={`text-[12px] pointer-events-none select-none text-black font-medium text-ellipsis`}>{formation.name}</p>
-            </div>
+               <div className={` h-[17px]  px-1  overflow-hidden text-ellipsis whitespace-nowrap   border-b border-neutral-200`}>
+                  <p className={`text-[11px] pointer-events-none select-none  font-medium text-ellipsis text-center`}>{formation.name}</p>
+               </div>
 
-            <div
-               style={{
-                  backgroundColor: formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color,
-               }}
-               className="absolute w-full h-[4px] bottom-[-9px] rounded-full"
-            ></div>
-            <div className={` flex flex-row  box-border`}>
-               {index !== 0 ? (
-                  <div
-                     style={{
-                        width: formation.transition.durationSeconds * pixelsPerSecond - 2,
-                     }}
-                     className="  "
-                  >
-                     <div className="flex flex-row  pointer-events-none h-[26px] mr-[5px]">
-                        <svg className="w-1/2" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
-                           <polygon className="fill-gray-300" strokeWidth={0} points="0,0 0,20 10,10" />
-                        </svg>
-                        <svg className="w-1/2 " width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
-                           <polygon className="fill-gray-300" strokeWidth={0} points="0,10 10,0 10,20" />
-                        </svg>
-                     </div>
-                  </div>
-               ) : null}
+               {/* formation group color bar */}
                <div
                   style={{
-                     width: formation.durationSeconds * pixelsPerSecond - 2,
+                     backgroundColor: formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color,
                   }}
-                  className="relative  h-[23px]"
-               >
+                  className="absolute w-full h-[4px] bottom-[-9px] rounded-full"
+               ></div>
+
+               <div className={` flex flex-row  box-border`}>
                   {index !== 0 ? (
                      <div
-                        id={formation.id}
-                        data-type="transition-resize"
-                        className=" h-[26px]  w-[4px] lg:pointer-events-auto pointer-events-none cursor-col-resize	 absolute left-[-5px] z-50 flex flex-row justify-between"
+                        style={{
+                           width: formation.transition.durationSeconds * pixelsPerSecond,
+                        }}
+                        className="  "
                      >
-                        <div className="h-full w-[1px] bg-black pointer-events-none"></div>
-                        <div className="h-full w-[1px] bg-black pointer-events-none"></div>
+                        <div className="flex flex-row bg-white pointer-events-none h-[26px] mr-[5px]">
+                           <svg className="w-1/2 relative" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
+                              <polygon className="fill-neutral-300" strokeWidth={0} points="0,0 0,20 10,10" />
+                           </svg>
+                           <svg className="w-1/2 " width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
+                              <polygon className="fill-neutral-300" strokeWidth={0} points="0,10 10,0 10,20" />
+                           </svg>
+                        </div>
                      </div>
                   ) : null}
+                  <div
+                     style={{
+                        width: formation.durationSeconds * pixelsPerSecond,
+                     }}
+                     className="relative  h-[26px]"
+                  >
+                     {index !== 0 ? (
+                        <div
+                           id={formation.id}
+                           data-type="transition-resize"
+                           className=" h-[26px]  w-[4px] lg:pointer-events-auto pointer-events-none cursor-col-resize	 absolute left-[-5px] z-50 flex flex-row justify-between"
+                        >
+                           <div className="h-full w-[1px] bg-black pointer-events-none"></div>
+                           <div className="h-full w-[1px] bg-black pointer-events-none"></div>
+                        </div>
+                     ) : null}
+                  </div>
                </div>
             </div>
          </div>

@@ -48,6 +48,9 @@ export const NoFilePlayer: React.FC<{
                   if (prevTime < songDuration) {
                      //  console.log("adding 0.5 sec");
                      return prevTime + 0.02;
+                  } else {
+                     setIsPlaying(false);
+                     return 0;
                   }
                });
             }, 20);
@@ -59,7 +62,7 @@ export const NoFilePlayer: React.FC<{
             <div
                className="relative"
                style={{
-                  left: 10,
+                  left: 39,
                   width:
                      formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0) *
                      pixelsPerSecond,
@@ -79,12 +82,12 @@ export const NoFilePlayer: React.FC<{
                      }}
                      // className="w-full"
                   ></div> */}
-                  <div
+                  {/* <div
                      style={{
                         left: position * pixelsPerSecond,
                      }}
                      className="bg-pink-600 absolute w-[2px] h-full"
-                  ></div>
+                  ></div> */}
                </div>
             </div>
          </>

@@ -62,20 +62,21 @@ export const FileAudioPlayer: React.FC<{
          if (document.getElementById("waveform")?.innerHTML) return;
          var wavesurfer = WaveSurfer.create({
             container: "#waveform",
-            waveColor: "#9ca3af",
-            progressColor: "#6b7280",
+            waveColor: "#a3a3a3",
+            progressColor: "#db2777",
             cursorColor: "#db2777",
             backgroundColor: "#fafafa",
             barWidth: 4,
             barRadius: 5,
             cursorWidth: 2,
-            height: 25,
+            height: 15,
             barGap: 2,
             backend: "MediaElement",
             plugins: [
                TimelinePlugin.create({
                   container: "#wave-timeline",
-                  notchPercentHeight: 40,
+                  notchPercentHeight: 0,
+
                   height: 10,
                }),
             ],
@@ -125,16 +126,23 @@ export const FileAudioPlayer: React.FC<{
                   display: ready ? "flex" : "none",
                }}
                id="layers"
-               className={` h-[50px]  flex-col justify-end w-full`}
+               className={`   flex-col justify-end w-full`}
             >
+               {/* <div className="  " id="wave-timeline"></div> */}
                <div
+                  onClick={(e) => {
+                     e.preventDefault();
+                     var rect = e.target.getBoundingClientRect();
+                     var x = e.clientX - rect.left; //x position within the element.
+                     setPosition(x / pixelsPerSecond);
+                  }}
                   id="waveform"
+                  className="py-[10px]"
                   style={{
                      overflowX: "hidden",
                   }}
                   // className="w-full"
                ></div>
-               <div className="mt-[5px]" id="wave-timeline"></div>
             </div>
          </>
       );

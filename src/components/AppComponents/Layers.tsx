@@ -117,7 +117,7 @@ export const Layers: React.FC<{
 
    return (
       <div
-         className="flex flex-col  bg-[#fafafa]  select-none mt-2"
+         className="flex flex-col  bg-[#fafafa]  select-none"
          style={{
             width: songDuration
                ? Math.max(
@@ -134,7 +134,7 @@ export const Layers: React.FC<{
             //         (songDuration / 1000) * pixelsPerSecond
             //      )
             //    : "100%",
-            marginLeft: 10,
+            marginLeft: 40,
          }}
          onPointerUp={pointerUp}
          onPointerDown={pointerDown}

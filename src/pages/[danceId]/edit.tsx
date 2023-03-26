@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback, lazy } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useLocalStorage } from "../../hooks";
+import { useLocalStorage, useHorizontalScrollInfo } from "../../hooks";
 import { ThreeDancer } from "../../components/AppComponents/ThreeDancer";
 import { debounce } from "lodash";
 import toast, { Toaster } from "react-hot-toast";
@@ -112,7 +112,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
    const [localSettings, setLocalSettings] = useLocalStorage<localSettings>("localSettings", {
       gridSnap: 1,
       previousFormationView: "ghostDancersAndPaths",
-      dancerStyle: "numbered",
+      dancerStyle: "solid",
       viewCollisions: false,
       stageFlipped: false,
    });
@@ -530,6 +530,8 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
          });
    }, [session]);
 
+   const [scrollRef, scrollInfo] = useHorizontalScrollInfo(pixelsPerSecond);
+
    return (
       <>
          <Toaster></Toaster>
@@ -606,7 +608,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                      left: "50%",
                      transform: "translate(-50%, 0)",
                   }}
-                  className="fixed w-60 h-12 rounded-full top-6 bg-black z-[9999] opacity-70 grid place-items-center"
+                  className="fixed w-60 h-12 rounded-full shadow-xl top-6 bg-black z-[9999] opacity-70 grid place-items-center"
                >
                   <p className="text-white text-sm pointer-events-none">Click on the stage to comment</p>
                </div>
@@ -905,7 +907,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                </div>
             </div>
 
-            <div className="pb-2">
+            <div className="">
                <AudioControls
                   addToStack={addToStack}
                   pushChange={pushChange}
@@ -925,12 +927,121 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                   localSource={localSource}
                ></AudioControls>
 
-               <div className="overflow-x-scroll  bg-[#fafafa] overscroll-contain pb-3 ">
+               <div className="w-full h-[10px] bg-neutral-300 ">
+                  <div
+                     id="scrollbar"
+                     style={{
+                        width: (scrollInfo.clientWidth / scrollInfo.scrollWidth) * scrollInfo.clientWidth + pixelsPerSecond * 0,
+                        left: (scrollInfo.scrollLeft / scrollInfo.scrollWidth) * scrollInfo.clientWidth,
+                     }}
+                     className="h-[10px] cursor-pointer rounded-full bg-neutral-400 flex flex-row items-center  relative "
+                  >
+                     <div className="rounded-l-full  bg-pink-600 w-[10px] mr-auto h-[10px]"></div>
+                     <div className="rounded-r-full bg-pink-600 w-[10px] ml-auto h-[10px]"></div>
+                  </div>
+               </div>
+
+               <div ref={scrollRef} className="overflow-x-scroll removeScrollBar  bg-[#fafafa] overscroll-contain ">
+                  <div
+                     style={{
+                        width: songDuration
+                           ? Math.max(
+                                formations
+                                   .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
+                                   .reduce((a, b) => a + b, 0) * pixelsPerSecond,
+                                (songDuration / 1000) * pixelsPerSecond
+                             )
+                           : "100%",
+                     }}
+                     className=" relative  "
+                     // id="wave-timeline"
+                  >
+                     <div
+                        onClick={(e) => {
+                           var rect = e.currentTarget.getBoundingClientRect();
+                           var x = e.clientX - rect.left; //x position within the element.
+                           setPosition(x / pixelsPerSecond);
+
+                           if (!(songDuration && player)) return;
+
+                           player.seekTo(x / pixelsPerSecond / (songDuration / 1000));
+                        }}
+                        style={{
+                           width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
+                        }}
+                        className={` relative left-[40px] py-1 ${!soundCloudTrackId ? "h-[15px]" : ""} `}
+                        id="wave-timeline"
+                     ></div>
+                     <div
+                        style={{
+                           // add 40 but subract 8 to account for the width of the svg
+                           left: (position || 0) * pixelsPerSecond + 32,
+                        }}
+                        className="absolute z-[999] top-[0px]   left-0"
+                     >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 180 157">
+                           <path fill="#DB2777" d="M96 154c-3 4-9 4-12 0L2 11C-1 6 2 1 8 1h164c6 0 9 5 6 10L96 154Z" />
+                        </svg>
+                        <div className="h-[90px] ml-[7px] w-[2px] bg-pink-600  absolute"></div>
+                     </div>
+                  </div>
+
+                  <div
+                     style={{
+                        width: songDuration
+                           ? Math.max(
+                                formations
+                                   .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
+                                   .reduce((a, b) => a + b, 0) * pixelsPerSecond,
+                                (songDuration / 1000) * pixelsPerSecond
+                             )
+                           : formations
+                                .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
+                                .reduce((a, b) => a + b, 0) * pixelsPerSecond,
+                     }}
+                     className="bg-neutral-400 h-[1px] "
+                  />
+
+                  <Layers
+                     formationGroups={formationGroups}
+                     userPositions={userPositions}
+                     onlineUsers={onlineUsers}
+                     addToStack={addToStack}
+                     pushChange={pushChange}
+                     setSelectedDancers={setSelectedDancers}
+                     viewOnly={viewOnly}
+                     songDuration={songDuration}
+                     setFormations={setFormations}
+                     formations={formations}
+                     selectedFormation={selectedFormation}
+                     setSelectedFormation={setSelectedFormation}
+                     isPlaying={isPlaying}
+                     position={position}
+                     soundCloudTrackId={soundCloudTrackId}
+                     pixelsPerSecond={pixelsPerSecond}
+                  />
+                  <div
+                     style={{
+                        width: songDuration
+                           ? Math.max(
+                                formations
+                                   .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
+                                   .reduce((a, b) => a + b, 0) * pixelsPerSecond,
+                                (songDuration / 1000) * pixelsPerSecond
+                             )
+                           : formations
+                                .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
+                                .reduce((a, b) => a + b, 0) * pixelsPerSecond,
+                     }}
+                     className="bg-neutral-400 h-[1px] "
+                  />
+
                   {soundCloudTrackId || localSource ? (
                      <div
-                        className="relative"
+                        className="relative "
                         style={{
-                           left: 10,
+                           left: 40,
+                           borderColor: "#404040",
                            width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
                         }}
                      >
@@ -972,26 +1083,13 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                         ></NoFilePlayer>
                      </>
                   )}
-
-                  <Layers
-                     formationGroups={formationGroups}
-                     userPositions={userPositions}
-                     onlineUsers={onlineUsers}
-                     addToStack={addToStack}
-                     pushChange={pushChange}
-                     setSelectedDancers={setSelectedDancers}
-                     viewOnly={viewOnly}
-                     songDuration={songDuration}
-                     setFormations={setFormations}
-                     formations={formations}
-                     selectedFormation={selectedFormation}
-                     setSelectedFormation={setSelectedFormation}
-                     isPlaying={isPlaying}
-                     position={position}
-                     soundCloudTrackId={soundCloudTrackId}
-                     pixelsPerSecond={pixelsPerSecond}
-                  />
                </div>
+               <div
+                  style={{
+                     width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
+                  }}
+                  className="w-full h-[10px] bg-neutral-500 "
+               ></div>
             </div>
          </div>
       </>
