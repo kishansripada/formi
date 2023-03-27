@@ -76,7 +76,9 @@ export const Formation: React.FC<{
                style={{
                   width: ((index === 0 ? 0 : formation.transition.durationSeconds) + formation.durationSeconds) * pixelsPerSecond,
                   // borderTopColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#404040",
-                  borderBottomColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#d4d4d4",
+                  borderBottomColor:
+                     formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color ||
+                     (colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#d4d4d4"),
                   // borderBottomColor: "#18191B",
                   // borderRightColor: "#db2777",
                   // borderLeftColor: "#db2777",
