@@ -75,23 +75,7 @@ export const CurrentFormation: React.FC<{
                   <div className="flex flex-row items-center mb-3 px-6 pt-5 ">
                      <input
                         className="font-medium w-full focus:px-2 hover:px-2 transition-[padding] rounded-md  h-6 text-2xl  py-4 transition duration-100 hover:bg-gray-100 text-gray-800 focus:bg-gray-100 outline-none cursor-pointer "
-                        onKeyDown={(e) =>
-                           e.key === "Enter"
-                              ? setFormations((formations: formation[]) => {
-                                   return formations.map((formation, i) => {
-                                      if (i === selectedFormation) {
-                                         return {
-                                            ...formation,
-                                            name: e.target.value,
-                                         };
-                                      }
-
-                                      return formation;
-                                   });
-                                })
-                              : null
-                        }
-                        onBlur={(e) => {
+                        onChange={(e) =>
                            setFormations((formations: formation[]) => {
                               return formations.map((formation, i) => {
                                  if (i === selectedFormation) {
@@ -103,11 +87,9 @@ export const CurrentFormation: React.FC<{
 
                                  return formation;
                               });
-                           });
-                        }}
-                        type="text"
-                        key={formations[selectedFormation]?.name}
-                        defaultValue={formations[selectedFormation]?.name || ""}
+                           })
+                        }
+                        value={formations[selectedFormation]?.name || ""}
                      />
                   </div>
 

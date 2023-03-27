@@ -72,10 +72,11 @@ export const Formation: React.FC<{
                <div className="h-[1px] rounded-full bg-neutral-800 w-[12px] mt-[1px]"></div>
             </div>
             <div
-               className={`    cursor-pointer  bg-white     border-neutral-400  border-x-[0.5px]  relative group  `}
+               className={`    cursor-pointer  bg-white  border-b-[4px]    border-neutral-400  border-x-[1px]  relative group  `}
                style={{
                   width: ((index === 0 ? 0 : formation.transition.durationSeconds) + formation.durationSeconds) * pixelsPerSecond,
-                  borderTopColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#404040",
+                  // borderTopColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#404040",
+                  borderBottomColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#d4d4d4",
                   // borderBottomColor: "#18191B",
                   // borderRightColor: "#db2777",
                   // borderLeftColor: "#db2777",
@@ -127,19 +128,24 @@ export const Formation: React.FC<{
                   data-type="formation-resize"
                   id={formation.id}
                   className="h-full absolute right-[0px] flex flex-row items-center justify-between  lg:pointer-events-auto pointer-events-none w-[5px] cursor-col-resize	z-[99]"
-               ></div>
+               >
+                  <div className="relative flex flex-row item justify-between w-[5px] right-[2px] pointer-events-none">
+                     <div className="w-[2px] h-[20px] rounded-full bg-neutral-600"></div>
+                     <div className="w-[2px] h-[20px] rounded-full bg-neutral-600 "></div>
+                  </div>
+               </div>
 
                <div className={` h-[17px]  px-1  overflow-hidden text-ellipsis whitespace-nowrap   border-b border-neutral-200`}>
                   <p className={`text-[11px] pointer-events-none select-none  font-medium text-ellipsis text-center`}>{formation.name}</p>
                </div>
 
                {/* formation group color bar */}
-               <div
+               {/* <div
                   style={{
                      backgroundColor: formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color,
                   }}
-                  className="absolute w-full h-[4px] bottom-[-9px] rounded-full"
-               ></div>
+                  className="absolute w-full h-[4px] bottom-[0px] rounded-full"
+               ></div> */}
 
                <div className={` flex flex-row  box-border`}>
                   {index !== 0 ? (

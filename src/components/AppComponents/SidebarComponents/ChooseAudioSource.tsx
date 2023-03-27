@@ -157,7 +157,7 @@ export const ChooseAudioSource: React.FC<{
                               setSoundCloudTrackId(null);
                               setLocalSource(null);
 
-                              toast.success("deselected track");
+                              toast.success("Deselected Track");
                            }}
                         >
                            <svg

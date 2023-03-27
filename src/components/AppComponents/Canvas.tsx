@@ -125,10 +125,12 @@ export const Canvas: React.FC<{
       }
 
       if (e.key === "ArrowRight") {
+         if (selectedFormation === null) return;
          e.preventDefault();
          setSelectedFormation((i) => (i === formations.length - 1 ? i : i + 1));
       }
       if (e.key === "ArrowLeft") {
+         if (selectedFormation === null) return;
          e.preventDefault();
          setSelectedFormation((i) => (i === 0 ? 0 : i - 1));
       }
