@@ -10,8 +10,10 @@ import { Rosters } from "../components/DashboardComponents/Rosters";
 import { AudioFiles } from "../components/DashboardComponents/AudioFiles";
 import { Trash } from "../components/DashboardComponents/Trash";
 import { grandfatheredEmails } from "../../public/grandfathered";
-const Dashboard = ({ dances, audioFiles, subscription }: {}) => {
-   console.log({ subscription });
+// import { Organization } from "../components/DashboardComponents/Organization";
+// import { OrganizationPerformances } from "../components/DashboardComponents/OrganizationPerformances";
+import { SharedWithMe } from "../components/DashboardComponents/SharedWithMe";
+const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: {}) => {
    let session = useSession();
    const supabase = useSupabaseClient();
    const [importIsOpen, setImportIsOpen] = useState(!dances.length);
@@ -19,7 +21,14 @@ const Dashboard = ({ dances, audioFiles, subscription }: {}) => {
    const router = useRouter();
    const [myDances, setMyDances] = useState(dances);
    const [menuOpen, setMenuOpen] = useState<"mydances" | "rosters" | "audio" | "trash">("mydances");
-
+   // const [organization, setOrganization] = useState(initialOrganization);
+   // const [orgName, setOrgName] = useState("");
+   async function getOrganization(session: Session) {
+      let data = await supabase.rpc("get_organization_and_people", {
+         idd: session.user.id,
+      });
+      // setOrganization(data.data || []);
+   }
    const removeFromTrash = async (id: string) => {
       console.log(id);
       const { data, error } = await supabase.from("dances").update({ isInTrash: false }).eq("id", id);
@@ -127,15 +136,13 @@ const Dashboard = ({ dances, audioFiles, subscription }: {}) => {
             </div>
          ) : null}
          <>
+            <Toaster></Toaster>
             <div className="h-screen flex flex-row font-proxima">
                <Toaster></Toaster>
                {/* <Header></Header> */}
 
                <div className="min-w-[300px] lg:w-[20%] px-6 py-4 h-screen lg:flex hidden flex-col shadow-xl  ">
-                  <div className=" font-proxima">
-                     <h1 className="text-5xl font-bold z-10 relative select-none">FORMI</h1>
-                     <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[100%]"></div>
-                  </div>
+                  <img className="w-44" src="/logos/logo_light.svg" alt="" />
 
                   <div className="flex flex-row mt-3  ">
                      <img
@@ -144,6 +151,7 @@ const Dashboard = ({ dances, audioFiles, subscription }: {}) => {
                         src={session?.user.user_metadata.avatar_url}
                         alt=""
                      />
+
                      <div className="flex flex-col items-start justify-center w-full">
                         <p className="font-semibold">{session?.user.user_metadata?.full_name}</p>
                         <div className="text-gray-500 text-sm flex flex-row items-center justify-between w-full">
@@ -195,8 +203,24 @@ const Dashboard = ({ dances, audioFiles, subscription }: {}) => {
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                      onClick={() => setMenuOpen("mydances")}
                   >
-                     <p>Home</p>
+                     <p>My Performances</p>
                   </button>
+                  <button
+                     className={`flex flex-row justify-between items-center ${
+                        menuOpen === "sharedwithme" ? "bg-gray-200" : ""
+                     } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
+                     onClick={() => setMenuOpen("sharedwithme")}
+                  >
+                     <p>Shared With Me</p>
+                  </button>
+                  {/* <button
+                     className={`flex flex-row justify-between items-center ${
+                        menuOpen === "orgdances" ? "bg-gray-200" : ""
+                     } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
+                     onClick={() => setMenuOpen("orgdances")}
+                  >
+                     <p>My Organization's Performances</p>
+                  </button> */}
 
                   {/* <button
                      className={`flex flex-row justify-between items-center ${
@@ -214,8 +238,17 @@ const Dashboard = ({ dances, audioFiles, subscription }: {}) => {
                   >
                      <p>Uploaded Audio</p>
                   </button> */}
-                  <button
+                  {/* <button
                      className={`flex flex-row justify-between items-center mt-auto ${
+                        menuOpen === "organization" ? "bg-gray-200" : ""
+                     } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
+                     onClick={() => setMenuOpen("organization")}
+                  >
+                     <p>My Organization</p>
+                  </button> */}
+
+                  <button
+                     className={`flex flex-row justify-between items-center mt-auto  ${
                         menuOpen === "trash" ? "bg-gray-200" : ""
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                      onClick={() => setMenuOpen("trash")}
@@ -227,6 +260,16 @@ const Dashboard = ({ dances, audioFiles, subscription }: {}) => {
                <div className="flex flex-col bg-gray-100  lg:pl-10 font-proxima w-full justify-center items-center lg:items-start  lg:w-[80%]">
                   <div className="flex flex-row items-center justify-end p-6 text-gray-500 ml-auto">
                      <div className="flex flex-row items-center text-gray-900">
+                        {/* {organization ? (
+                           <p
+                              onClick={() => {
+                                 toast("You're plan is managed by your organization.");
+                              }}
+                              className="mr-4 "
+                           >
+                              {organization[0].organization_name}
+                           </p>
+                        ) : null} */}
                         {subscription.plan.product && subscription.plan.product !== "legacy" ? (
                            <>
                               {subscription.cancel_at ? (
@@ -271,6 +314,14 @@ const Dashboard = ({ dances, audioFiles, subscription }: {}) => {
                      <Rosters></Rosters>
                   ) : menuOpen === "trash" ? (
                      <Trash removeFromTrash={removeFromTrash} deleteDance={deleteDance} trash={myDances.filter((dance) => dance.isInTrash)}></Trash>
+                  ) : // : menuOpen === "organization" ? (
+                  //       <Organization organization={organization} getOrganization={getOrganization}></Organization>
+                  //    ) : menuOpen === "orgdances" ? (
+                  //       <OrganizationPerformances></OrganizationPerformances>
+                  //    )
+
+                  menuOpen === "sharedwithme" ? (
+                     <SharedWithMe sharedWithMe={sharedWithMe}></SharedWithMe>
                   ) : null}
                </div>
             </div>
@@ -294,6 +345,27 @@ export const getServerSideProps = withPageAuth({
       }
       if (!session) {
          return { props: {} };
+      }
+
+      // async function getOrganizationPerformances(session: Session) {
+      //    let { data, error } = await supabase.rpc("organization_performances_from_user_id", {
+      //       idd: session.user.id,
+      //    });
+      //    console.log(error);
+      // }
+      async function getOrganization(session: Session) {
+         return [];
+         let data = await supabase.rpc("get_organization_and_people", {
+            idd: session.user.id,
+         });
+         return data.data || [];
+      }
+
+      async function getSharedWithMe(session: Session) {
+         let data = await supabase.rpc("shared_with_me", {
+            email: session.user.email,
+         });
+         return data.data || [];
       }
 
       async function getSubscriptionPlan(session: Session) {
@@ -323,12 +395,17 @@ export const getServerSideProps = withPageAuth({
                return plan || { plan: { product: null } };
             });
       }
-
-      let [dances, subscription] = await Promise.all([supabase.from("dances").select("*").eq("user", session.user.id), getSubscriptionPlan(session)]);
+      // getOrganizationPerformances(session);
+      let [dances, subscription, organization, sharedWithMe] = await Promise.all([
+         supabase.from("dances").select("*").eq("user", session.user.id),
+         getSubscriptionPlan(session),
+         getOrganization(session),
+         getSharedWithMe(session),
+      ]);
 
       // const { data } = await supabase.from("dances").select("*").eq("user", user.id);
 
-      return { props: { dances: dances.data, subscription: subscription } };
+      return { props: { dances: dances.data, subscription: subscription, initialOrganization: organization, sharedWithMe } };
    },
 });
 
