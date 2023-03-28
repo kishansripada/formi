@@ -89,16 +89,18 @@ export const Share: React.FC<{
                         onKeyDown={(e) => {
                            if (e.key === "Enter") {
                               e.preventDefault();
+
                               if (!validateEmail(newUserEmail)) {
                                  toast.error("please enter a valid email");
                                  return;
                               }
-                              if (shareSettings[e.target.value]) {
+                              console.log(shareSettings);
+                              if (shareSettings[newUserEmail]) {
                                  toast.error("you've already entered that email");
                                  return;
                               }
                               setShareSettings((users) => {
-                                 return { ...users, [e.target.value]: "view" };
+                                 return { ...users, [newUserEmail]: "view" };
                               });
                               setNewUserEmail("");
                            }
@@ -110,16 +112,18 @@ export const Share: React.FC<{
                      <button
                         onClick={(e) => {
                            e.preventDefault();
+
                            if (!validateEmail(newUserEmail)) {
                               toast.error("please enter a valid email");
                               return;
                            }
-                           if (shareSettings[e.target.value]) {
+                           console.log(shareSettings);
+                           if (shareSettings[newUserEmail]) {
                               toast.error("you've already entered that email");
                               return;
                            }
                            setShareSettings((users) => {
-                              return { ...users, [e.target.value]: "view" };
+                              return { ...users, [newUserEmail]: "view" };
                            });
                            setNewUserEmail("");
                         }}

@@ -106,10 +106,25 @@ export const Header: React.FC<{
                <a href="https://forms.gle/qTo1MAenHpguvsXW7" target={"_blank"} className="text-sm mr-5 text-blue-700 hidden lg:block">
                   Report Bug
                </a>
+               <button
+                  onClick={() =>
+                     setLocalSettings((settings: localSettings) => {
+                        return { ...settings, stageFlipped: !localSettings.stageFlipped };
+                     })
+                  }
+                  className="border hidden lg:block border-black text-sm rounded-md px-3 py-3 ml-4"
+               >
+                  <div className="flex flex-row items-center ">
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5">
+                        <path d="M19.6 42H9q-1.2 0-2.1-.9Q6 40.2 6 39V9q0-1.2.9-2.1Q7.8 6 9 6h10.6v3H9v30h10.6Zm3 4V2h3v44ZM39 9h-.7V6h.7q1.2 0 2.1.9.9.9.9 2.1v.7h-3Zm0 17.75v-5.5h3v5.5ZM39 42h-.7v-3h.7v-.7h3v.7q0 1.2-.9 2.1-.9.9-2.1.9Zm0-23.75V12.7h3v5.55Zm0 17.05v-5.55h3v5.55ZM28.6 42v-3h6.7v3Zm0-33V6h6.7v3Z" />
+                     </svg>
 
+                     <p className="ml-1">Flip Stage</p>
+                  </div>
+               </button>
                {!viewOnly ? (
                   <>
-                     <button className="mr-3 hidden lg:block" onClick={undo}>
+                     <button className="mx-3 hidden lg:block" onClick={undo}>
                         <svg
                            xmlns="http://www.w3.org/2000/svg"
                            fill="none"
@@ -121,22 +136,7 @@ export const Header: React.FC<{
                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
                         </svg>
                      </button>
-                     <button
-                        onClick={() =>
-                           setLocalSettings((settings: localSettings) => {
-                              return { ...settings, stageFlipped: !localSettings.stageFlipped };
-                           })
-                        }
-                        className="border hidden lg:block border-black text-sm rounded-md px-3 py-3 ml-4"
-                     >
-                        <div className="flex flex-row items-center ">
-                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5">
-                              <path d="M19.6 42H9q-1.2 0-2.1-.9Q6 40.2 6 39V9q0-1.2.9-2.1Q7.8 6 9 6h10.6v3H9v30h10.6Zm3 4V2h3v44ZM39 9h-.7V6h.7q1.2 0 2.1.9.9.9.9 2.1v.7h-3Zm0 17.75v-5.5h3v5.5ZM39 42h-.7v-3h.7v-.7h3v.7q0 1.2-.9 2.1-.9.9-2.1.9Zm0-23.75V12.7h3v5.55Zm0 17.05v-5.55h3v5.55ZM28.6 42v-3h6.7v3Zm0-33V6h6.7v3Z" />
-                           </svg>
 
-                           <p className="ml-1">Flip Stage</p>
-                        </div>
-                     </button>
                      <button
                         onClick={() => setShareIsOpen((state: boolean) => !state)}
                         className="border hidden lg:block border-black text-sm rounded-md px-3 py-3 ml-4"
