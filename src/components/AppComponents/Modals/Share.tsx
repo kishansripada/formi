@@ -139,6 +139,19 @@ export const Share: React.FC<{
                            <div className="flex flex-row py-2 rounded-md px-2 hover:bg-gray-100" key={user[0]}>
                               <p className="text-gray-700">{user[0]}</p>
 
+                              <select
+                                 onChange={(e) => {
+                                    setShareSettings((users) => {
+                                       return { ...users, [user[0]]: e.target.value };
+                                    });
+                                 }}
+                                 className="ml-auto mr-2"
+                                 value={user[1]}
+                                 id=""
+                              >
+                                 <option value="view">View</option>
+                                 <option value="edit">Edit</option>
+                              </select>
                               <button
                                  onClick={() => {
                                     setShareSettings((users) => {
@@ -147,7 +160,7 @@ export const Share: React.FC<{
                                        return state;
                                     });
                                  }}
-                                 className="text-gray-700 text-sm border border-gray-300 rounded-md px-2 py-1 ml-auto"
+                                 className="text-gray-700 text-sm border border-gray-300 rounded-md px-2 py-1 "
                               >
                                  Remove
                               </button>

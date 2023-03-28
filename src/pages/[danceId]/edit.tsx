@@ -1027,7 +1027,7 @@ export const getServerSideProps = async (ctx) => {
    if (!pricingTier) {
       pricingTier = "basic";
    }
-   if (dance.id === 207 || dance?.user === session?.user?.id) {
+   if (dance.id === 207 || dance?.user === session?.user?.id || dance?.sharesettings?.[session?.user?.email] === "edit") {
       viewOnly = false;
    }
    dance = { ...{ ...dance, formations: dance.formations } };
