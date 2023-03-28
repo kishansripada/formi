@@ -98,8 +98,8 @@ export const Layers: React.FC<{
             return formations.map((formation) => {
                if (
                   formation.id === resizingTransition &&
-                  // transition should be longer than 1 second
-                  formation.transition.durationSeconds + e.movementX / pixelsPerSecond > 1 &&
+                  // transition should be longer than 0.5 seconds
+                  formation.transition.durationSeconds + e.movementX / pixelsPerSecond > 0.5 &&
                   // formation should be longer than 0 seconds
                   formation.durationSeconds - e.movementX / pixelsPerSecond > 0
                ) {

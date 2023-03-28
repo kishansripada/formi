@@ -139,6 +139,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
    const [shareIsOpen, setShareIsOpen] = useState(false);
    const [isChangingCollisionRadius, setIsChangingCollisionRadius] = useState(false);
    const [isEditingFormationGroup, setIsEditingFormationGroup] = useState(false);
+   const [isScrollingTimeline, setIsScrollingTimeline] = useState(false);
    // const [stageFlipped, setStageFlipped] = useState(true);
    // not in use
    // {
@@ -531,7 +532,28 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
    }, [session]);
 
    const [scrollRef, scrollInfo] = useHorizontalScrollInfo(pixelsPerSecond);
+   const handleMouseMove = (e: MouseEvent) => {
+      if (isScrollingTimeline) {
+         console.log("move");
+         scrollRef.current.scrollLeft = scrollRef.current.scrollLeft + (e.movementX * scrollInfo.scrollWidth) / scrollInfo.clientWidth;
+      }
+   };
+   const handleDocumentMouseUp = () => {
+      setIsScrollingTimeline(false);
+   };
 
+   useEffect(() => {
+      document.addEventListener("mouseup", handleDocumentMouseUp);
+      return () => {
+         document.removeEventListener("mouseup", handleDocumentMouseUp);
+      };
+   }, [isScrollingTimeline]);
+
+   useEffect(() => {
+      window.addEventListener("mousemove", handleMouseMove);
+
+      return () => window.removeEventListener("mousemove", handleMouseMove);
+   }, [isScrollingTimeline]);
    return (
       <>
          <Toaster></Toaster>
@@ -927,8 +949,12 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                   localSource={localSource}
                ></AudioControls>
 
-               <div className="w-full h-[10px] bg-neutral-300 ">
+               <div className="w-full h-[10px] bg-neutral-300  select-none">
                   <div
+                     onMouseDown={() => {
+                        console.log("mouse down");
+                        setIsScrollingTimeline(true);
+                     }}
                      id="scrollbar"
                      style={{
                         width: (scrollInfo.clientWidth / scrollInfo.scrollWidth) * scrollInfo.clientWidth + pixelsPerSecond * 0,
