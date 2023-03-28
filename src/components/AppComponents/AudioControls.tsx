@@ -45,25 +45,21 @@ export const AudioControls: React.FC<{
    let minPixelsPerSecond = songDuration ? ((window.screen.width - 10) * 1000) / songDuration : 10;
    let percentZoom = (pixelsPerSecond - minPixelsPerSecond) / (MAX_PIXELS_PER_SECOND - minPixelsPerSecond);
 
-   const handleMouseMove = (e) => {
-      if (isChangingZoom) {
-         // console.log(pixelsPerSecond + (e.movementX / 96) * (MAX_PIXELS_PER_SECOND - minPixelsPerSecond));
-         let newPixelsPerSecond = pixelsPerSecond + (e.movementX / 96) * (MAX_PIXELS_PER_SECOND - minPixelsPerSecond);
-         if (newPixelsPerSecond > minPixelsPerSecond && newPixelsPerSecond < MAX_PIXELS_PER_SECOND) {
-            setPixelsPerSecond(newPixelsPerSecond);
-         }
-      }
-   };
+   // const handleMouseMove = (e) => {
+   //    if (isChangingZoom) {
+   //       // console.log(pixelsPerSecond + (e.movementX / 96) * (MAX_PIXELS_PER_SECOND - minPixelsPerSecond));
+   //       let newPixelsPerSecond = pixelsPerSecond + (e.movementX / 96) * (MAX_PIXELS_PER_SECOND - minPixelsPerSecond);
+   //       if (newPixelsPerSecond > minPixelsPerSecond && newPixelsPerSecond < MAX_PIXELS_PER_SECOND) {
+   //          setPixelsPerSecond(newPixelsPerSecond);
+   //       }
+   //    }
+   // };
 
    // useEffect(() => {
    //    window.addEventListener("mousemove", handleMouseMove);
 
    //    return () => window.removeEventListener("mousemove", handleMouseMove);
    // }, [isChangingZoom, pixelsPerSecond]);
-
-   // const handleDocumentMouseUp = () => {
-   //    setIsChangingZoom(false);
-   // };
 
    // useEffect(() => {
    //    document.addEventListener("mouseup", handleDocumentMouseUp);

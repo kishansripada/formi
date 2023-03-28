@@ -1,9 +1,8 @@
 import { detectCollisions } from "../../types/collisionDetector";
 import { useState, useEffect, useRef, useCallback, lazy } from "react";
 import Head from "next/head";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useLocalStorage, useHorizontalScrollInfo } from "../../hooks";
+import { useLocalStorage } from "../../hooks";
 import { ThreeDancer } from "../../components/AppComponents/ThreeDancer";
 import { debounce } from "lodash";
 import toast, { Toaster } from "react-hot-toast";
@@ -18,7 +17,6 @@ import { DancerAliasShadow } from "../../components/AppComponents/DancerAliasSha
 import { Canvas } from "../../components/AppComponents/Canvas";
 import { EditDancer } from "../../components/AppComponents/Modals/EditDancer";
 import { EditFormationGroup } from "../../components/AppComponents/Modals/EditFormationGroup";
-import { Layers } from "../../components/AppComponents/Layers";
 import { PathEditor } from "../../components/AppComponents/PathEditor";
 import { Share } from "../../components/AppComponents/Modals/Share";
 import { Collision } from "../../components/AppComponents/Collision";
@@ -33,16 +31,8 @@ import { Collisions } from "../../components/AppComponents/SidebarComponents/Col
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { PricingTable } from "../../components/NonAppComponents/PricingTable";
 import { grandfatheredEmails } from "../../../public/grandfathered";
-import {
-   PostgrestResponse,
-   REALTIME_LISTEN_TYPES,
-   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
-   REALTIME_PRESENCE_LISTEN_EVENTS,
-   REALTIME_SUBSCRIBE_STATES,
-   RealtimeChannelSendResponse,
-   RealtimePostgresInsertPayload,
-} from "@supabase/supabase-js";
-import { NoFilePlayer } from "../../components/AppComponents/NoFilePlayer";
+import { Timeline } from "../../components/AppComponents/Timeline";
+
 var jsondiffpatch = require("jsondiffpatch").create({
    objectHash: function (obj) {
       return obj.id;
@@ -67,29 +57,13 @@ const useDidMountEffect = (func, deps) => {
    }, deps);
 };
 
-const FileAudioPlayer = dynamic<{
-   setPosition: Function;
-   setIsPlaying: Function;
-   setSongDuration: Function;
-   songDuration: number | null;
-   soundCloudTrackId: string | null;
-   setSelectedFormation: Function;
-   setFormations: Function;
-   viewOnly: boolean;
-   pixelsPerSecond: number;
-   player: any;
-   setPlayer: Function;
-}>(() => import("../../components/AppComponents/FileAudioPlayer").then((mod) => mod.FileAudioPlayer), {
-   ssr: false,
-});
-
 const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => {
    const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
 
    const supabase = useSupabaseClient();
-
    let session = useSession();
    const router = useRouter();
+
    const videoPlayer = useRef();
 
    // cloud
@@ -125,7 +99,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
    const [zoom, setZoom] = useState(1);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [isCommenting, setIsCommenting] = useState<boolean>(false);
-   const [position, setPosition] = useState<number | null>(null);
+   const [position, setPosition] = useState<number>(0);
    const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(25);
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
    const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
@@ -139,7 +113,6 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
    const [shareIsOpen, setShareIsOpen] = useState(false);
    const [isChangingCollisionRadius, setIsChangingCollisionRadius] = useState(false);
    const [isEditingFormationGroup, setIsEditingFormationGroup] = useState(false);
-   const [isScrollingTimeline, setIsScrollingTimeline] = useState(false);
    // const [stageFlipped, setStageFlipped] = useState(true);
    // not in use
    // {
@@ -156,7 +129,8 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
    const [channelGlobal, setChannelGlobal] = useState<RealtimeChannel>();
 
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
-   const coordsToPosition = (coords: { x: number; y: number } | null | undefined) => {
+
+   const coordsToPosition = (coords: { x: number; y: number }) => {
       if (!coords) return null;
       let { x, y } = coords;
       return {
@@ -174,20 +148,20 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
    //       return [...newForms];
    //    });
    // }, [deltas]);
-
+   useEffect(() => {
+      if (!session) return;
+      supabase.storage
+         .from("audiofiles")
+         .list(session?.user.id, {})
+         .then((r) => {
+            if (!r.data) return;
+            setAudiofiles(r);
+         });
+   }, [session]);
    useEffect(() => {
       if (!isPlaying) return;
       setSelectedFormation(currentFormationIndex);
    }, [currentFormationIndex, isPlaying]);
-
-   useEffect(() => {
-      if (!songDuration) return;
-
-      setPixelsPerSecond(25);
-      if (pixelsPerSecond * (songDuration / 1000) < window.screen.width - 20) {
-         setPixelsPerSecond((window.screen.width - 20) / (songDuration / 1000));
-      }
-   }, [soundCloudTrackId, songDuration]);
 
    const removeDancer = (id: string) => {
       // remove dancer and all their positions
@@ -236,6 +210,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
          setFormations((formations) => {
             var delta = jsondiffpatch.diff(previousFormations, JSON.parse(JSON.stringify(formations)));
             // console.log(delta);
+            // console.log(deltaToSqlQuery(delta, "formations"));
             if (delta) {
                setDeltas((deltas) => [...deltas, delta]);
                // channelGlobal.send({
@@ -520,40 +495,6 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
       ? detectCollisions(localSettings.stageFlipped ? flippedFormations : formations, selectedFormation, cloudSettings.collisionRadius)
       : [];
 
-   useEffect(() => {
-      if (!session) return;
-      supabase.storage
-         .from("audiofiles")
-         .list(session?.user.id, {})
-         .then((r) => {
-            if (!r.data) return;
-            setAudiofiles(r);
-         });
-   }, [session]);
-
-   const [scrollRef, scrollInfo] = useHorizontalScrollInfo(pixelsPerSecond);
-   const handleMouseMove = (e: MouseEvent) => {
-      if (isScrollingTimeline) {
-         console.log("move");
-         scrollRef.current.scrollLeft = scrollRef.current.scrollLeft + (e.movementX * scrollInfo.scrollWidth) / scrollInfo.clientWidth;
-      }
-   };
-   const handleDocumentMouseUp = () => {
-      setIsScrollingTimeline(false);
-   };
-
-   useEffect(() => {
-      document.addEventListener("mouseup", handleDocumentMouseUp);
-      return () => {
-         document.removeEventListener("mouseup", handleDocumentMouseUp);
-      };
-   }, [isScrollingTimeline]);
-
-   useEffect(() => {
-      window.addEventListener("mousemove", handleMouseMove);
-
-      return () => window.removeEventListener("mousemove", handleMouseMove);
-   }, [isScrollingTimeline]);
    return (
       <>
          <Toaster></Toaster>
@@ -800,7 +741,6 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                            localSettings={localSettings}
                            isPlaying={isPlaying}
                            coordsToPosition={coordsToPosition}
-                           localSettings={localSettings}
                         />
                      ) : (
                         <></>
@@ -810,7 +750,6 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                         ? dancers.map((dancer, index) => (
                              <DancerAlias
                                 zoom={zoom}
-                                //   stageFlipped={stageFlipped}
                                 setZoom={setZoom}
                                 cloudSettings={cloudSettings}
                                 coordsToPosition={coordsToPosition}
@@ -949,173 +888,32 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                   localSource={localSource}
                ></AudioControls>
 
-               <div className="w-full h-[10px] bg-neutral-300  select-none">
-                  <div
-                     onMouseDown={() => {
-                        console.log("mouse down");
-                        setIsScrollingTimeline(true);
-                     }}
-                     id="scrollbar"
-                     style={{
-                        width: (scrollInfo.clientWidth / scrollInfo.scrollWidth) * scrollInfo.clientWidth + pixelsPerSecond * 0,
-                        left: (scrollInfo.scrollLeft / scrollInfo.scrollWidth) * scrollInfo.clientWidth,
-                     }}
-                     className="h-[10px] cursor-pointer rounded-full bg-neutral-400 flex flex-row items-center  relative "
-                  >
-                     <div className="rounded-l-full  bg-pink-600 w-[10px] mr-auto h-[10px]"></div>
-                     <div className="rounded-r-full bg-pink-600 w-[10px] ml-auto h-[10px]"></div>
-                  </div>
-               </div>
-
-               <div ref={scrollRef} className="overflow-x-scroll removeScrollBar  bg-[#fafafa] overscroll-contain ">
-                  <div
-                     style={{
-                        width: songDuration
-                           ? Math.max(
-                                formations
-                                   .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
-                                   .reduce((a, b) => a + b, 0) * pixelsPerSecond,
-                                (songDuration / 1000) * pixelsPerSecond
-                             )
-                           : "100%",
-                     }}
-                     className=" relative  "
-                     // id="wave-timeline"
-                  >
-                     <div
-                        onClick={(e) => {
-                           var rect = e.currentTarget.getBoundingClientRect();
-                           var x = e.clientX - rect.left; //x position within the element.
-                           setPosition(x / pixelsPerSecond);
-
-                           if (!(songDuration && player)) return;
-
-                           player.seekTo(x / pixelsPerSecond / (songDuration / 1000));
-                        }}
-                        style={{
-                           width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
-                        }}
-                        className={` relative left-[40px] py-1 ${!soundCloudTrackId ? "h-[15px]" : ""} `}
-                        id="wave-timeline"
-                     ></div>
-                     <div
-                        style={{
-                           // add 40 but subract 8 to account for the width of the svg
-                           left: (position || 0) * pixelsPerSecond + 32,
-                        }}
-                        className="absolute z-[999] top-[0px]   left-0"
-                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 180 157">
-                           <path fill="#DB2777" d="M96 154c-3 4-9 4-12 0L2 11C-1 6 2 1 8 1h164c6 0 9 5 6 10L96 154Z" />
-                        </svg>
-                        <div className="h-[90px] ml-[7px] w-[2px] bg-pink-600  absolute"></div>
-                     </div>
-                  </div>
-
-                  <div
-                     style={{
-                        width: songDuration
-                           ? Math.max(
-                                formations
-                                   .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
-                                   .reduce((a, b) => a + b, 0) * pixelsPerSecond,
-                                (songDuration / 1000) * pixelsPerSecond
-                             )
-                           : formations
-                                .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
-                                .reduce((a, b) => a + b, 0) * pixelsPerSecond,
-                     }}
-                     className="bg-neutral-400 h-[1px] "
-                  />
-
-                  <Layers
-                     formationGroups={formationGroups}
-                     userPositions={userPositions}
-                     onlineUsers={onlineUsers}
-                     addToStack={addToStack}
-                     pushChange={pushChange}
-                     setSelectedDancers={setSelectedDancers}
-                     viewOnly={viewOnly}
-                     songDuration={songDuration}
-                     setFormations={setFormations}
-                     formations={formations}
-                     selectedFormation={selectedFormation}
-                     setSelectedFormation={setSelectedFormation}
-                     isPlaying={isPlaying}
-                     position={position}
-                     soundCloudTrackId={soundCloudTrackId}
-                     pixelsPerSecond={pixelsPerSecond}
-                  />
-                  <div
-                     style={{
-                        width: songDuration
-                           ? Math.max(
-                                formations
-                                   .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
-                                   .reduce((a, b) => a + b, 0) * pixelsPerSecond,
-                                (songDuration / 1000) * pixelsPerSecond
-                             )
-                           : formations
-                                .map((formation) => formation.durationSeconds + formation.transition.durationSeconds)
-                                .reduce((a, b) => a + b, 0) * pixelsPerSecond,
-                     }}
-                     className="bg-neutral-400 h-[1px] "
-                  />
-
-                  {soundCloudTrackId || localSource ? (
-                     <div
-                        className="relative "
-                        style={{
-                           left: 40,
-                           borderColor: "#404040",
-                           width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
-                        }}
-                     >
-                        <FileAudioPlayer
-                           player={player}
-                           setPlayer={setPlayer}
-                           key={localSource || soundCloudTrackId}
-                           setSelectedFormation={setSelectedFormation}
-                           setFormations={setFormations}
-                           soundCloudTrackId={localSource || soundCloudTrackId}
-                           setSongDuration={setSongDuration}
-                           songDuration={songDuration}
-                           setIsPlaying={setIsPlaying}
-                           setPosition={setPosition}
-                           viewOnly={viewOnly}
-                           pixelsPerSecond={pixelsPerSecond}
-                           videoPlayer={videoPlayer}
-                        ></FileAudioPlayer>
-                     </div>
-                  ) : (
-                     <>
-                        <NoFilePlayer
-                           player={player}
-                           isPlaying={isPlaying}
-                           setPlayer={setPlayer}
-                           key={localSource || soundCloudTrackId}
-                           setSelectedFormation={setSelectedFormation}
-                           setFormations={setFormations}
-                           soundCloudTrackId={localSource || soundCloudTrackId}
-                           setSongDuration={setSongDuration}
-                           songDuration={songDuration}
-                           setIsPlaying={setIsPlaying}
-                           setPosition={setPosition}
-                           viewOnly={viewOnly}
-                           pixelsPerSecond={pixelsPerSecond}
-                           videoPlayer={videoPlayer}
-                           formations={formations}
-                           position={position}
-                        ></NoFilePlayer>
-                     </>
-                  )}
-               </div>
-               <div
-                  style={{
-                     width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
-                  }}
-                  className="w-full h-[10px] bg-neutral-500 "
-               ></div>
+               <Timeline
+                  setPixelsPerSecond={setPixelsPerSecond}
+                  formationGroups={formationGroups}
+                  userPositions={userPositions}
+                  onlineUsers={onlineUsers}
+                  addToStack={addToStack}
+                  pushChange={pushChange}
+                  setSelectedDancers={setSelectedDancers}
+                  viewOnly={viewOnly}
+                  songDuration={songDuration}
+                  setFormations={setFormations}
+                  formations={formations}
+                  selectedFormation={selectedFormation}
+                  setSelectedFormation={setSelectedFormation}
+                  isPlaying={isPlaying}
+                  position={position}
+                  soundCloudTrackId={soundCloudTrackId}
+                  pixelsPerSecond={pixelsPerSecond}
+                  player={player}
+                  setPlayer={setPlayer}
+                  setSongDuration={setSongDuration}
+                  setIsPlaying={setIsPlaying}
+                  setPosition={setPosition}
+                  videoPlayer={videoPlayer}
+                  localSource={localSource}
+               ></Timeline>
             </div>
          </div>
       </>
@@ -1278,4 +1076,39 @@ function isVideo(filename: string) {
 function getExtension(filename: string) {
    var parts = filename.split(".");
    return parts[parts.length - 1];
+}
+
+const columnName = "formations";
+
+function jsonDeltaToPostgresQuery(delta: JsonDelta, columnName: string, basePath: string = ""): string {
+   let query = "";
+
+   for (const key in delta) {
+      if (key === "_t") continue;
+
+      const value = delta[key];
+      const currentPath = basePath ? `${basePath}.${key}` : key;
+
+      if (typeof value === "object" && !Array.isArray(value)) {
+         query += jsonDeltaToPostgresQuery(value, columnName, currentPath);
+      } else {
+         const path = `{${currentPath}}`;
+         query += ` ${columnName} = jsonb_set(${columnName}, '${path}', ${value[1]}),`;
+      }
+   }
+
+   return query;
+}
+
+function deltaToSqlQuery(delta: JsonDelta): string {
+   const tableName = "dances";
+   const columnName = "formations";
+
+   const setStatements = jsonDeltaToPostgresQuery(delta, columnName);
+
+   // Remove the last comma and add a WHERE clause with the primary key condition
+   // Replace 'id' with the primary key column name and 1 with the primary key value
+   const sqlQuery = `UPDATE ${tableName} SET${setStatements.slice(0, -1)} WHERE id = 1;`;
+
+   return sqlQuery;
 }
