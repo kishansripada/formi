@@ -84,7 +84,6 @@ export const Timeline: React.FC<{
    const [scrollRef, scrollInfo] = useHorizontalScrollInfo(pixelsPerSecond);
    const handleMouseMove = (e: MouseEvent) => {
       if (isScrollingTimeline) {
-         console.log("move");
          scrollRef.current.scrollLeft = scrollRef.current.scrollLeft + (e.movementX * scrollInfo.scrollWidth) / scrollInfo.clientWidth;
       }
    };

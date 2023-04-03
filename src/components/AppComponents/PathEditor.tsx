@@ -51,6 +51,7 @@ export const PathEditor: React.FC<{
                      return (
                         <>
                            <path
+                              key={dancerPosition.id + "path"}
                               d={`M ${startCoords.left} ${startCoords.top} L ${endCoords.left} ${endCoords.top}`}
                               // className=" stroke-red-700 "
                               fill="transparent"
@@ -58,6 +59,7 @@ export const PathEditor: React.FC<{
                               strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
                            />
                            <path
+                              key={dancerPosition.id + "rightTail"}
                               d={`M ${midpoint.left} ${midpoint.top} L ${rightTail.left} ${rightTail.top}`}
                               // className=" stroke-red-700 "
                               fill="transparent"
@@ -65,6 +67,7 @@ export const PathEditor: React.FC<{
                               strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
                            />
                            <path
+                              key={dancerPosition.id + "leftTail"}
                               d={`M ${midpoint.left} ${midpoint.top} L ${leftTail.left} ${leftTail.top}`}
                               // className=" stroke-red-700  "
                               fill="transparent"
@@ -91,18 +94,21 @@ export const PathEditor: React.FC<{
                      return (
                         <>
                            <path
+                              key={dancerPosition.id + "path"}
                               d={`M ${startCoords.left} ${startCoords.top} C ${controlPointStartCoords.left} ${controlPointStartCoords.top},  ${controlPointEndCoords.left} ${controlPointEndCoords.top}, ${endCoords.left} ${endCoords.top}`}
                               stroke={dancer?.color || "#db2777"}
                               fill="transparent"
                               strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
                            />
                            <path
+                              key={dancerPosition.id + "rightTail"}
                               d={`M ${midpoint.left} ${midpoint.top} L ${rightTail.left} ${rightTail.top}`}
                               fill="transparent"
                               stroke={dancer?.color || "#db2777"}
                               strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
                            />
                            <path
+                              key={dancerPosition.id + "leftTail"}
                               d={`M ${midpoint.left} ${midpoint.top} L ${leftTail.left} ${leftTail.top}`}
                               stroke={dancer?.color || "#db2777"}
                               fill="transparent"
@@ -111,11 +117,13 @@ export const PathEditor: React.FC<{
                            {selectedDancers[0] === dancerPosition.id ? (
                               <>
                                  <path
+                                    key={dancerPosition.id + "startControlPoint"}
                                     d={`M ${startCoords.left} ${startCoords.top} L ${controlPointStartCoords.left} ${controlPointStartCoords.top}`}
                                     fill="transparent"
                                     className="z-[60] stroke-black"
                                  />
                                  <path
+                                    key={dancerPosition.id + "endControlPoint"}
                                     d={`M ${endCoords.left} ${endCoords.top} L ${controlPointEndCoords.left} ${controlPointEndCoords.top}`}
                                     fill="transparent"
                                     className="z-[60] stroke-black"

@@ -16,6 +16,11 @@ export const Share: React.FC<{
    const router = useRouter();
    let session = useSession();
    const supabase = useSupabaseClient();
+   // useEffect(() => {
+   //    if (session) {
+   //       updateShareSettings();
+   //    }
+   // }, [shareSettings]);
    const updateShareSettings = async () => {
       const { data, error } = await supabase
          .from("dances")
@@ -105,21 +110,23 @@ export const Share: React.FC<{
                               setNewUserEmail("");
                            }
                         }}
-                        className="focus:border-pink-700 focus:border-2 rounded-md w-full mr-10 h-8 py-4 border-gray-300 border text-sm shadow-sm px-2 focus:outline-none"
+                        className="focus:border-pink-700 focus:border-2 rounded-md w-full mr-2 h-8 py-4 border-gray-300 border text-sm shadow-sm px-2 focus:outline-none"
                         type="text"
                         placeholder="Enter an Email"
                      />
                      <button
+                        style={{
+                           backgroundColor: validateEmail(newUserEmail) ? "#db2777" : "#F3F4F6",
+                        }}
                         onClick={(e) => {
                            e.preventDefault();
 
                            if (!validateEmail(newUserEmail)) {
-                              toast.error("please enter a valid email");
                               return;
                            }
-                           console.log(shareSettings);
+
                            if (shareSettings[newUserEmail]) {
-                              toast.error("you've already entered that email");
+                              toast.error("You've already entered that email");
                               return;
                            }
                            setShareSettings((users) => {
@@ -127,23 +134,31 @@ export const Share: React.FC<{
                            });
                            setNewUserEmail("");
                         }}
-                        className="text-gray-700 text-sm border border-gray-300 rounded-md px-2 py-1 ml-auto"
+                        className="text-white text-sm  rounded-md px-2 py-2  w-24"
                      >
-                        Add
+                        Share
                      </button>
                   </div>
 
                   <div className="mt-5">
                      {Object.entries(shareSettings).map((user) => {
                         return (
-                           <div className="flex flex-row py-2 rounded-md px-2 hover:bg-gray-100" key={user[0]}>
+                           <div className="flex flex-row py-2 rounded-md px-2 py-2 " key={user[0]}>
                               <p className="text-gray-700">{user[0]}</p>
 
                               <select
                                  onChange={(e) => {
-                                    setShareSettings((users) => {
-                                       return { ...users, [user[0]]: e.target.value };
-                                    });
+                                    if (e.target.value === "remove") {
+                                       setShareSettings((users) => {
+                                          let state = { ...users };
+                                          delete state[user[0]];
+                                          return state;
+                                       });
+                                    } else {
+                                       setShareSettings((users) => {
+                                          return { ...users, [user[0]]: e.target.value };
+                                       });
+                                    }
                                  }}
                                  className="ml-auto mr-2"
                                  value={user[1]}
@@ -151,19 +166,8 @@ export const Share: React.FC<{
                               >
                                  <option value="view">View</option>
                                  <option value="edit">Edit</option>
+                                 <option value="remove">Remove</option>
                               </select>
-                              <button
-                                 onClick={() => {
-                                    setShareSettings((users) => {
-                                       let state = { ...users };
-                                       delete state[user[0]];
-                                       return state;
-                                    });
-                                 }}
-                                 className="text-gray-700 text-sm border border-gray-300 rounded-md px-2 py-1 "
-                              >
-                                 Remove
-                              </button>
                            </div>
                         );
                      })}
@@ -173,6 +177,35 @@ export const Share: React.FC<{
                <div className="flex flex-row justify-between items-center w-full bg-gray-100 h-16 rounded-b-xl px-5">
                   <button onClick={() => setShareIsOpen(false)} className=" border border-gray-300 bg-white hover:bg-gray-100 px-4  py-1 rounded-md">
                      Cancel
+                  </button>
+                  <button
+                     onClick={() => {
+                        navigator.clipboard.writeText(window.location.href).then(
+                           function () {
+                              toast.success("Link Copied");
+                           },
+                           function (err) {
+                              toast.error("There was an error copying the link");
+                           }
+                        );
+                     }}
+                     className=" text-blue-500 text-sm ml-4 flex flex-row items-center"
+                  >
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 mr-2"
+                     >
+                        <path
+                           strokeLinecap="round"
+                           strokeLinejoin="round"
+                           d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"
+                        />
+                     </svg>
+                     Copy Link
                   </button>
                   <button className="ml-auto bg-pink-600 hover:bg-pink-700 text-white px-5 py-1 rounded-md" onClick={updateShareSettings}>
                      Save

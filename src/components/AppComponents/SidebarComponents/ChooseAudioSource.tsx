@@ -85,51 +85,56 @@ export const ChooseAudioSource: React.FC<{
       <>
          <div className="lg:flex hidden overflow-y-scroll  min-w-[350px] w-[23%]  flex-col   bg-white border-r border-r-gray-300   px-6 py-6 overflow-hidden">
             <div className="flex flex-col ">
-               <p className="text-xl font-medium text-[#1A1B25] h-12">Add Media</p>
-
-               <button
-                  onClick={(e) => {
-                     if (pricingTier === "basic" && audioFiles?.data?.length) {
-                        e.preventDefault();
-                        toast("Upgrade to upload more than one audio file");
-                        setUpgradeIsOpen(true);
-                        return;
-                     }
-                  }}
-                  className="relative border border-dashed border-gray-300 h-24 w-full rounded-xl bg-gray-50 "
-               >
-                  <input
-                     accept="audio/mp4,audio/mpeg,.aac,.wav,.m4a,audio/*"
-                     type="file"
-                     autoComplete="off"
-                     tabIndex={-1}
-                     className="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50"
-                     onChange={(event) => {
-                        if (event.target.files && event.target.files[0]) {
-                           const i = event.target.files[0];
-
-                           setFile(i);
+               <p className="text-xl font-medium text-[#1A1B25] h-12 flex flex-row justify-between items-center">
+                  <p>Add Media</p>
+                  <button
+                     onClick={(e) => {
+                        if (pricingTier === "basic" && audioFiles?.data?.length) {
+                           e.preventDefault();
+                           toast("Upgrade to upload more than one audio file");
+                           setUpgradeIsOpen(true);
+                           return;
                         }
                      }}
-                  />
-                  <div className=" w-full h-full rounded-xl absolute top-0 right-0 left-0 m-auto  flex flex-col items-center justify-center">
-                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" width="24" height="24" color="#5D647B">
-                        <path d="M16 16l-4-4-4 4M12 12v9" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
-                        <path
-                           d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"
+                     className="text-sm w-30 font-normal relative cursor-pointer"
+                  >
+                     <input
+                        accept="audio/mp4,audio/mpeg,.aac,.wav,.m4a,audio/*"
+                        type="file"
+                        autoComplete="off"
+                        tabIndex={-1}
+                        className="cursor-pointer absolute w-32 left-0 opacity-0 z-50"
+                        onChange={(event) => {
+                           if (event.target.files && event.target.files[0]) {
+                              const i = event.target.files[0];
+                              setFile(i);
+                           }
+                        }}
+                     />
+                     <div className="flex flex-row items-center cursor-pointer">
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
                            stroke="currentColor"
-                           strokeLinecap="round"
-                           strokeLinejoin="round"
-                        ></path>
-                        <path d="M16 16l-4-4-4 4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
-                     </svg>
-                     <p className="text-sm">Upload Audio or Video</p>
-                  </div>
-               </button>
+                           className="w-4 h-4 mr-2"
+                        >
+                           <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                           />
+                        </svg>
+
+                        <p className="relative cursor-pointer ">Upload Media</p>
+                     </div>
+                  </button>
+               </p>
             </div>
 
             <div>
-               <p className=" font-medium mb-2 mt-4 text-gray-600">Selected File</p>
+               <p className=" font-medium mb-2 mt-4 text-gray-800">Selected File</p>
                <div className="p-3 rounded-md my-1 cursor-pointer w-full min-h-[48px] flex flex-row items-center justify-center whitespace-nowrap bg-pink-100 border-pink-600 border-2">
                   {soundCloudTrackId ? (
                      <>
@@ -184,7 +189,7 @@ export const ChooseAudioSource: React.FC<{
                </div>
             </div>
 
-            <p className=" font-medium mb-2 mt-6 text-gray-600">My Uploaded Files</p>
+            <p className=" font-medium mb-2 mt-6 text-gray-800">My Uploaded Files</p>
             <div className="h-[300px]">
                <div className=" flex flex-col overflow-scroll removeScrollBar ">
                   {audioFiles?.data?.length ? (
