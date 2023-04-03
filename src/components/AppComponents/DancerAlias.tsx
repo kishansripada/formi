@@ -76,12 +76,12 @@ export const DancerAlias: React.FC<{
    let { left, top } = coordsToPosition(myPosition);
 
    // // since only one person should be selecting a single dancer, we just choose the first person that's selecting that dancer
-   // let idSelectingMe = Object.keys(userPositions).filter(
-   //    (id) => userPositions[id].selectedFormation === selectedFormation && userPositions[id].selectedDancers.includes(dancer.id)
-   // )?.[0];
+   let idSelectingMe = Object.keys(userPositions).filter(
+      (id) => userPositions[id].selectedFormation === selectedFormation && userPositions[id].selectedDancers.includes(dancer.id)
+   )?.[0];
 
    // let color = onlineUsers?.[idSelectingMe]?.[0]?.color || dancer.color;
-   // let name = onlineUsers?.[idSelectingMe]?.[0]?.name;
+   let name = onlineUsers?.[idSelectingMe]?.[0]?.name;
 
    // console.log(color);
    // let firstNamesOnThisFormation = idsOnThisFormation.map((id) => onlineUsers[id][0].name).map((name) => name.split(" ")[0]);

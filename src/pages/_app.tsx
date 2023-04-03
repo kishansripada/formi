@@ -19,7 +19,8 @@ function MyApp({
          options: {
             realtime: {
                params: {
-                  eventsPerSecond: 5,
+                  eventsPerSecond: -1,
+                  log_level: "debug",
                },
             },
          },

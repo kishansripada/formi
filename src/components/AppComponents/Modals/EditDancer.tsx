@@ -11,7 +11,8 @@ export const EditDancer: React.FC<{
    removeDancer: Function;
    pricingTier: string;
    setUpgradeIsOpen: Function;
-}> = ({ setEditingDancer, editingDancer, dancers, setDancers, removeDancer, pricingTier, setUpgradeIsOpen }) => {
+   pushChange: Function;
+}> = ({ setEditingDancer, editingDancer, dancers, setDancers, removeDancer, pricingTier, setUpgradeIsOpen, pushChange }) => {
    let height = convertToFeetAndInches(dancers.find((dancer) => dancer.id === editingDancer)?.height || 182.88);
    const [heightFeet, setHeightFeet] = useState<number>(height.feet);
    const [heightIn, setHeightIn] = useState<number>(height.inches);
@@ -23,6 +24,7 @@ export const EditDancer: React.FC<{
             if (e.target.id === "outside") {
                setEditingDancer(null);
             }
+            pushChange();
          }}
       >
          <div className="flex  flex-col rounded-xl bg-white pt-6 pb-6 ">

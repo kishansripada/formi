@@ -41,13 +41,14 @@ export const Formation: React.FC<{
    let colorsOnThisFormation = idsOnThisFormation.map((id) => onlineUsers?.[id]?.[0]?.color);
    colorsOnThisFormation = colorsOnThisFormation.filter((color) => color);
    let firstNamesOnThisFormation = idsOnThisFormation.map((id) => onlineUsers?.[id]?.[0]?.name).map((name) => name?.split(" ")[0]);
-   let listOfNames = ((list) => {
-      if (!list.length) return null;
-      if (list.length === 1) return list[0];
-      if (list.length === 2) return `${list[0] & list[1]}`;
-      return list.slice(0, -1).join(", ") + " & " + list[list.length - 1];
-   })(firstNamesOnThisFormation);
 
+   // let listOfNames = ((list) => {
+   //    if (!list.length) return null;
+   //    if (list.length === 1) return list[0];
+   //    if (list.length === 2) return `${list[0] & list[1]}`;
+   //    return list.slice(0, -1).join(", ") + " & " + list[list.length - 1];
+   // })(firstNamesOnThisFormation);
+   // console.log(listOfNames);
    if (amSelected) {
       colorsOnThisFormation = [...colorsOnThisFormation, "#DB2777"];
    }
@@ -87,14 +88,15 @@ export const Formation: React.FC<{
                   // subtract 4 to account for the mx-[2px]
                }}
             >
-               {/* {listOfNames ? (
-               <div
-                  className="absolute h-5 right-[-4px] top-[-20px] z-10 w-fit px-2 text-xs text-white opacity-0 group-hover:opacity-100 transition duration-300 ease-in-out pointer-events-none "
-                  style={{ backgroundColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "black" }}
-               >
-                  <p>{listOfNames}</p>
-               </div>
-            ) : null} */}
+               {firstNamesOnThisFormation.length ? (
+                  <div
+                     // opacity-0 group-hover:opacity-100
+                     className="absolute h-5 right-[0px] top-[-20px] z-10 w-fit px-2 text-xs text-white  transition duration-300 ease-in-out pointer-events-none "
+                     style={{ backgroundColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "black" }}
+                  >
+                     <p>{formatNames(firstNamesOnThisFormation)}</p>
+                  </div>
+               ) : null}
 
                {/* drag handle */}
 
@@ -223,4 +225,19 @@ function averageHex(colors) {
 
    // return them as a single hex string
    return "#" + averages.join("");
+}
+
+function formatNames(names: string[]): string {
+   const length = names.length;
+
+   if (length === 1) {
+      return names[0];
+   } else if (length === 2) {
+      return `${names[0]} & ${names[1]}`;
+   } else if (length > 2) {
+      const allButLast = names.slice(0, length - 1).join(", ");
+      return `${allButLast} & ${names[length - 1]}`;
+   }
+
+   return "";
 }

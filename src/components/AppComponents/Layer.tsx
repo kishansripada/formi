@@ -53,7 +53,7 @@ export const Layer: React.FC<{
       })
    );
    function handleDragStart(event) {
-      addToStack();
+      // addToStack();
       setActiveId(event.active.id);
    }
 

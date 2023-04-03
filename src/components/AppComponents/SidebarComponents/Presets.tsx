@@ -53,7 +53,7 @@ export const Presets: React.FC<{
                      if (pricingTier === "basic") {
                         setUpgradeIsOpen(true);
                      }
-                     addToStack();
+                     // addToStack();
                      setFormations(horizontalLineFormation(formations, selectedFormation));
                      pushChange();
                   }}

@@ -174,7 +174,7 @@ export const Canvas: React.FC<{
       }
 
       if (e.key === "c" && selectedDancers.length) {
-         addToStack();
+         // addToStack();
          e.preventDefault();
          setCopiedPositions(formations[selectedFormation].positions.filter((dancerPosition) => selectedDancers.includes(dancerPosition.id)));
       }
@@ -401,7 +401,7 @@ export const Canvas: React.FC<{
             toast.error("Sign In to Comment");
             return;
          }
-         addToStack();
+         // addToStack();
          const target = e.currentTarget;
          // Get the bounding rectangle of target
          const rect = target.getBoundingClientRect();
@@ -466,26 +466,26 @@ export const Canvas: React.FC<{
       }
 
       if (e.target.dataset.type === "comment") {
-         addToStack();
+         // addToStack();
          setDraggingCommentId(e.target.id);
       }
 
       if (e.target.dataset.type === "controlPointStart") {
-         addToStack();
+         // addToStack();
          setChangingControlId(e.target.id);
          setChangingControlType("start");
       }
 
       if (e.target.dataset.type === "controlPointEnd") {
-         addToStack();
+         // addToStack();
          setChangingControlId(e.target.id);
          setChangingControlType("end");
       }
 
-      if (e.target.dataset.type === "rotater") {
-         addToStack();
-         setRotatingDancerId(e.target.id);
-      }
+      // if (e.target.dataset.type === "rotater") {
+      //    addToStack();
+      //    setRotatingDancerId(e.target.id);
+      // }
 
       if (!e.target.id) {
          setSelectedDancers([]);
@@ -504,7 +504,7 @@ export const Canvas: React.FC<{
          });
       }
       if (e.target.dataset.type === "dancer") {
-         addToStack();
+         // addToStack();
          setDraggingDancerId(e.target.id);
          if (!shiftHeld && !selectedDancers.includes(e.target.id)) {
             setSelectedDancers([e.target.id]);
@@ -527,9 +527,9 @@ export const Canvas: React.FC<{
       if (draggingCommentId) {
          pushChange();
       }
-      if (rotatingDancerId) {
-         pushChange();
-      }
+      // if (rotatingDancerId) {
+      //    pushChange();
+      // }
 
       setChangingControlId(null);
       setChangingControlType(null);
@@ -684,7 +684,7 @@ export const Canvas: React.FC<{
                onPointerDown={!viewOnly ? pointerDown : () => null}
                onPointerMove={handleDragMove}
                ref={stage}
-               className="relative  border-2 border-gray-300 bg-white rounded-3xl box-content "
+               className="relative  border-2 border-gray-300 bg-white  box-content "
                // border-pink-600 border-4 box-border
                style={{
                   // boxShadow: "inset 0px 0px 0px 4px #db2777",

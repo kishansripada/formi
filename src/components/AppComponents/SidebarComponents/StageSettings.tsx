@@ -11,7 +11,8 @@ export const StageSettings: React.FC<{
    cloudSettings: any;
    setCloudSettings: Function;
    setUpgradeIsOpen: Function;
-}> = ({ setFormations, pricingTier, formations, setCloudSettings, cloudSettings, setUpgradeIsOpen }) => {
+   pushChange: Function;
+}> = ({ setFormations, pricingTier, formations, setCloudSettings, cloudSettings, setUpgradeIsOpen, pushChange }) => {
    const [backgroundDropdownIsOpen, setBackgroundDropdownIsOpen] = useState<boolean>();
    let { stageBackground, stageDimensions } = cloudSettings;
    const closeWindow = (e) => {
@@ -118,6 +119,7 @@ export const StageSettings: React.FC<{
                      setCloudSettings((cloudSettings: cloudSettings) => {
                         return { ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width - 2 } };
                      });
+                     pushChange();
                   }}
                >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -150,6 +152,7 @@ export const StageSettings: React.FC<{
                      setCloudSettings((cloudSettings: cloudSettings) => {
                         return { ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width + 2 } };
                      });
+                     pushChange();
                   }}
                >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -178,6 +181,7 @@ export const StageSettings: React.FC<{
                      setCloudSettings((cloudSettings) => {
                         return { ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height - 2 } };
                      });
+                     pushChange();
                   }}
                >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -190,11 +194,12 @@ export const StageSettings: React.FC<{
                </div>
                <button
                   className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
-                  onClick={() =>
+                  onClick={() => {
                      setCloudSettings((cloudSettings) => {
                         return { ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height + 2 } };
-                     })
-                  }
+                     });
+                     pushChange();
+                  }}
                >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />

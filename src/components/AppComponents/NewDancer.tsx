@@ -13,7 +13,7 @@ export const NewDancer: React.FC<{
 
    const createNewDancer = () => {
       if (newName === "") return;
-      addToStack();
+      // addToStack();
       let id = crypto.randomUUID();
       setDancers((dancers: dancer[]) => {
          return [

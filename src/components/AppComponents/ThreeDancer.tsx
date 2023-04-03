@@ -167,7 +167,7 @@ export function ThreeDancer({
                               name="RootNode"
                               onPointerDown={() => {
                                  if (viewOnly) return;
-                                 addToStack();
+                                 // addToStack();
                               }}
                               onPointerEnter={() => {
                                  if (viewOnly) return;

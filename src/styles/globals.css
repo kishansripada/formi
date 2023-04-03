@@ -8,3 +8,17 @@
 .removeScrollBar::-webkit-scrollbar {
     display: none;
 }
+
+.white-svg {
+    filter: invert(100%) brightness(100);
+    background-color: white;
+    mix-blend-mode: screen;
+}
+
+.pointer-events-auto-important {
+    pointer-events: auto !important;
+}
+
+.pointer-events-none-important {
+    pointer-events: none !important;
+}

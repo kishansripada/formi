@@ -32,6 +32,7 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import { PricingTable } from "../../components/NonAppComponents/PricingTable";
 import { grandfatheredEmails } from "../../../public/grandfathered";
 import { Timeline } from "../../components/AppComponents/Timeline";
+import * as jsonpatch from "fast-json-patch";
 
 var jsondiffpatch = require("jsondiffpatch").create({
    objectHash: function (obj) {
@@ -41,7 +42,7 @@ var jsondiffpatch = require("jsondiffpatch").create({
 
 // import jsondiffpatch from "jsondiffpatch";
 
-// let jsondiffpatch = patcher.create({
+// let jsondiffpatch = jsondiffpatch.create({
 //    objectHash: function (obj) {
 //       return obj.id;
 //    },
@@ -63,7 +64,6 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
    const supabase = useSupabaseClient();
    let session = useSession();
    const router = useRouter();
-
    const videoPlayer = useRef();
 
    // cloud
@@ -74,9 +74,11 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
       collisionRadius: initialData.settings.collisionRadius || 0.5,
    });
 
-   const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
    const [formations, setFormations] = useState<formation[]>(initialData.formations);
+
+   const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
    const [shareSettings, setShareSettings] = useState(initialData.sharesettings);
+
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(initialData.soundCloudId);
    const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
    const [danceName, setDanceName] = useState<string>(initialData.name);
@@ -104,7 +106,10 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
    const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
    const [editingDancer, setEditingDancer] = useState<string | null>(null);
-   const [previousFormation, setPreviousFormation] = useState<formation[]>();
+   const [previousFormation, setPreviousFormation] = useState<formation[]>(initialData.formations);
+   const [previousDancers, setPreviousDancers] = useState<formation[]>(initialData.dancers);
+   const [previousCloudSettings, setPreviousCloudSettings] = useState<formation[]>(initialData.settings);
+   // const [previousFormation, setPreviousFormation] = useState<formation[]>(initialData.formations);
    const [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
    const [menuOpen, setMenuOpen] = useState<string>("formations");
    const [isPreviewingThree, setIsPreviewingThree] = useState<boolean>(false);
@@ -113,17 +118,8 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
    const [shareIsOpen, setShareIsOpen] = useState(false);
    const [isChangingCollisionRadius, setIsChangingCollisionRadius] = useState(false);
    const [isEditingFormationGroup, setIsEditingFormationGroup] = useState(false);
-   // const [stageFlipped, setStageFlipped] = useState(true);
-   // not in use
-   // {
-   //    "f30197ba-cf06-4234-bcdb-5d40d83c7999": [{ name: "Kishan Sripada", color: "#e6194B" }],
-   //    "0e5f35d1-3989-401c-9693-f6a632954d0b": [
-   //       {
-   //          name: "Sasha Shrestha",
-   //          color: "#4363d8",
-   //       },
-   //    ],
-   // }
+   const [subscriptionStatus, setSubscriptionStatus] = useState("NOT SUBSCRIBED");
+
    const [onlineUsers, setOnlineUsers] = useState({});
    const [userPositions, setUserPositions] = useState({});
    const [channelGlobal, setChannelGlobal] = useState<RealtimeChannel>();
@@ -139,15 +135,6 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
       };
    };
 
-   // useEffect(() => {
-   //    setFormations((formations: formation[]) => {
-   //       let newForms = initialData.formations;
-   //       for (let i = 0; i < deltas.length; i++) {
-   //          jsondiffpatch.patch(newForms, deltas[i]);
-   //       }
-   //       return [...newForms];
-   //    });
-   // }, [deltas]);
    useEffect(() => {
       if (!session) return;
       supabase.storage
@@ -173,253 +160,358 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
       setDancers((dancers: dancer[]) => {
          return dancers.filter((dancer) => dancer.id !== id);
       });
+      pushChange();
    };
 
    const undo = () => {
-      if (!deltas.length) return;
-      // setSaved(false);
+      console.log("undo");
+      // if (!deltas.length) return;
+      // // setSaved(false);
 
-      let reverseDelta = jsondiffpatch.reverse(deltas[deltas.length - 1]);
-      setDeltas((deltas) => {
-         return [...deltas].slice(0, -1);
-      });
-      console.log(reverseDelta);
-      setFormations((formations: formation[]) => {
-         jsondiffpatch.patch(formations, reverseDelta);
+      // let reverseDelta = jsondiffpatch.reverse(deltas[deltas.length - 1]);
+      // setDeltas((deltas) => {
+      //    return [...deltas].slice(0, -1);
+      // });
+      // console.log(reverseDelta);
+      // setFormations((formations: formation[]) => {
+      //    jsondiffpatch.patch(formations, reverseDelta);
 
-         return [...formations];
-      });
-
-      // supabase
-      //    .from("deltas")
-      //    .insert([{ userid: session?.user?.id, timestamp: new Date(), delta: reverseDelta, danceid: router.query.danceId }])
-      //    .then((r) => {
-      //       setSaved(true);
-      //       console.log(r);
-      //    });
+      //    return [...formations];
+      // });
    };
 
    const addToStack = () => {
-      console.log("add to stack");
       setPreviousFormation(formations);
    };
 
    const pushChange = () => {
       console.log("push change");
-      setPreviousFormation((previousFormations: formation[]) => {
-         setFormations((formations) => {
-            var delta = jsondiffpatch.diff(previousFormations, JSON.parse(JSON.stringify(formations)));
-            // console.log(delta);
-            // console.log(deltaToSqlQuery(delta, "formations"));
-            if (delta) {
-               setDeltas((deltas) => [...deltas, delta]);
-               // channelGlobal.send({
-               //    type: "broadcast",
-               //    event: "formation-update",
-               //    payload: diffs,
-               // });
-               // setSaved(false);
-               // supabase
-               //    .from("deltas")
-               //    .insert([{ userid: session?.user?.id, timestamp: new Date(), delta: delta, danceid: router.query.danceId }])
-               //    .then((r) => {
-               //       setSaved(true);
-               //       console.log(r);
-               //    });
+      setCloudSettings((cloudSettings) => {
+         setPreviousCloudSettings((previousCloudSettings: dancer[]) => {
+            if (!previousCloudSettings) return cloudSettings;
+            var delta = jsonpatch.compare(previousCloudSettings, JSON.parse(JSON.stringify(cloudSettings)));
+            if (!delta.length) return cloudSettings;
+            console.log({ settings: delta });
+
+            setSaved(false);
+            try {
+               supabase
+                  .from("dances")
+                  .update({ settings: cloudSettings, last_edited: new Date() })
+                  .eq("id", router.query.danceId)
+                  .then((r) => {
+                     console.log("pushed new settings to db");
+                     setSaved(true);
+                  });
+               if (Object.keys(onlineUsers).length > 1) {
+                  console.log("sending settings update to clients");
+                  channelGlobal.send({
+                     type: "broadcast",
+                     event: "settings-update",
+                     payload: cloudSettings,
+                  });
+               }
+            } catch (error) {
+               setSaved(true);
+               toast.error("Error saving changes. Please refresh the page.");
+            }
+
+            // if (delta) {
+            //    setDeltas((deltas) => [...deltas, delta]);
+            // }
+
+            return cloudSettings;
+         });
+         return cloudSettings;
+      });
+      setDancers((dancers) => {
+         setPreviousDancers((previousDancers: dancer[]) => {
+            if (!previousDancers) return dancers;
+            var delta = jsonpatch.compare(previousDancers, dancers);
+
+            if (!delta.length) return dancers;
+            console.log({ dancers: delta });
+            setSaved(false);
+            try {
+               supabase
+                  .from("dances")
+                  .update({ dancers: dancers, last_edited: new Date() })
+                  .eq("id", router.query.danceId)
+                  .then((r) => {
+                     console.log("pushed new dancers to db");
+                     setSaved(true);
+                  });
+               if (Object.keys(onlineUsers).length > 1) {
+                  console.log("sending dancers update to clients");
+                  channelGlobal.send({
+                     type: "broadcast",
+                     event: "dancers-update",
+                     payload: dancers,
+                  });
+               }
+            } catch (error) {
+               setSaved(true);
+               toast.error("Error saving changes. Please refresh the page.");
+            }
+
+            // if (delta) {
+            //    setDeltas((deltas) => [...deltas, delta]);
+            // }
+
+            return dancers;
+         });
+         return dancers;
+      });
+      setFormations((formations) => {
+         setPreviousFormation((previousFormations: formation[]) => {
+            if (!previousFormations) return formations;
+            var delta = jsonpatch.compare(previousFormations, JSON.parse(JSON.stringify(formations)));
+            if (!delta.length) return formations;
+            console.log({ formations: delta });
+            setSaved(false);
+            try {
+               supabase
+                  .rpc("apply_json_patch_operations", {
+                     operations: delta,
+                     dance_id: router.query.danceId,
+                  })
+                  .then((r) => {
+                     setSaved(true);
+                     console.log("pushed new formations to db");
+                     if (r.error) {
+                        toast.error("Error saving changes. Please refresh the page.");
+                     }
+                  });
+               if (Object.keys(onlineUsers).length > 1) {
+                  console.log("sending formation update to clients");
+                  channelGlobal.send({
+                     type: "broadcast",
+                     event: "formation-update",
+                     payload: delta,
+                  });
+               }
+            } catch (error) {
+               setSaved(true);
+               toast.error("Error saving changes. Please refresh the page.");
             }
 
             return formations;
          });
-         return previousFormations;
+         return formations;
       });
    };
 
-   // useEffect(() => {
-   //    if (!channelGlobal) return;
-   //    if (!session) return;
-   //    channelGlobal.send({
-   //       type: "broadcast",
-   //       event: "user-position-update",
-   //       payload: {
-   //          [session?.user?.id]: {
-   //             selectedFormation,
-   //             selectedDancers,
-   //          },
-   //       },
-   //    });
-   // }, [selectedFormation, selectedDancers, channelGlobal]);
+   useEffect(() => {
+      if (!channelGlobal) return;
+      if (!session) return;
+      channelGlobal.send({
+         type: "broadcast",
+         event: "user-position-update",
+         payload: {
+            [session?.user?.id]: {
+               selectedFormation,
+               selectedDancers,
+            },
+         },
+      });
+   }, [selectedFormation, selectedDancers, channelGlobal]);
 
-   // useEffect(() => {
-   //    if (!session) return;
+   useEffect(() => {
+      if (!session || !router?.query?.danceId) return;
 
-   //    let channel = supabase.channel("1", {
-   //       config: {
-   //          presence: {
-   //             key: session?.user.id,
-   //          },
-   //       },
-   //    });
+      let channel = supabase.channel(router.query.danceId, {
+         config: {
+            presence: {
+               key: session?.user.id,
+            },
+         },
+      });
 
-   //    setChannelGlobal(channel);
+      setChannelGlobal(channel);
 
-   //    channel.on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.SYNC }, () => {
-   //       let state = channel.presenceState();
-   //       console.log(state);
-   //       console.log({ state });
-   //       setOnlineUsers({ ...state });
+      // recieve presence data
+      channel.on("presence", { event: "sync" }, () => {
+         let state = channel.presenceState();
+         // console.log(state);
+         Object.keys(state).forEach((id, index) => {
+            state[id][0].color = colors[index];
+         });
+         setUserPositions((userPositions) => {
+            let filteredKeys = Object.keys(userPositions).filter((position) => Object.keys(state).includes(position));
+            const filteredObject = filteredKeys.reduce((obj, key) => {
+               obj[key] = userPositions[key];
+               return obj;
+            }, {});
 
-   //       Object.keys(state).forEach((id, index) => {
-   //          state[id][0].color = colors[index];
-   //       });
-   //       // setOnlineUsers({ ...state });
-   //       // state = {Object.keys(state)}
-   //       // User attempting to navigate directly to an existing room with users
+            return filteredObject;
+         });
 
-   //       // User will be assigned an existing room with the fewest users
+         setOnlineUsers({ ...state });
+      });
 
-   //       // Generate an id if no existing rooms are available
-   //    });
+      // send presence data
+      channel.subscribe(async (status) => {
+         console.log(status);
+         setSubscriptionStatus(status);
+         if (status === "SUBSCRIBED") {
+            const resp = await channel.track({ name: session?.user.user_metadata.full_name, profilePicUrl: session?.user.user_metadata.avatar_url });
+            console.log({ resp });
+         }
+      });
 
-   //    channel.subscribe(async (status: `${REALTIME_SUBSCRIBE_STATES}`) => {
-   //       if (status === REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
-   //          // const resp: RealtimeChannelSendResponse = await channel.track({ name: session?.user.user_metadata.full_name, formations });
-   //          // const resp: RealtimeChannelSendResponse = await channel.track(formations);
-   //          // console.log(resp);
-   //          //   if (resp === 'ok') {
-   //          //     router.push(`/${roomId}`)
-   //          //   } else {
-   //          //     router.push(`/`)
-   //          //   }
-   //       }
-   //    });
+      // receive broadcasted data
+      const formsChannel = channel
+         .on("broadcast", { event: "user-position-update" }, ({ payload }) => {
+            // console.log(payload);
+            setUserPositions((userPositions) => {
+               return { ...userPositions, ...payload };
+            });
+         })
+         .on("broadcast", { event: "formation-update" }, ({ payload }) => {
+            console.log("recieved formation update");
+            // if the formation you are viewing is deleted, reset the selected formation to 0
+            payload.forEach((patch: any) => {
+               if (patch.path.split("/").length === 2 && patch.op === "remove") {
+                  setSelectedFormation((selectedFormation) => {
+                     if (parseInt(patch.path.split("/")[1]) === selectedFormation) {
+                        toast("The formation you were viewing was deleted.");
+                        return 0;
+                     } else {
+                        return selectedFormation;
+                     }
+                  });
+               }
+            });
+            try {
+               setFormations((formations: formation[]) => {
+                  let newForms = jsonpatch.applyPatch(formations, payload).newDocument;
+                  return [...newForms];
+               });
+            } catch (error) {
+               toast.error("Error saving changes. Please refresh the page.");
+            }
+         })
+         .on("broadcast", { event: "dancers-update" }, ({ payload }) => {
+            console.log("recieved dancers update");
+            try {
+               setDancers((dancers) => {
+                  var delta = jsonpatch.compare(dancers, JSON.parse(JSON.stringify(payload)));
+                  if (delta.length) {
+                     return payload;
+                  } else {
+                     return dancers;
+                  }
+               });
+            } catch (error) {
+               toast.error("Error saving changes. Please refresh the page.");
+            }
+         })
+         .on("broadcast", { event: "settings-update" }, ({ payload }) => {
+            console.log("recieved settings update");
+            try {
+               setCloudSettings((cloudSettings) => {
+                  var delta = jsonpatch.compare(cloudSettings, JSON.parse(JSON.stringify(payload)));
+                  if (delta.length) {
+                     return payload;
+                  } else {
+                     return cloudSettings;
+                  }
+               });
+            } catch (error) {
+               toast.error("Error saving changes. Please refresh the page.");
+            }
+         });
 
-   //    const formsChannel = channel
-   //       .on("broadcast", { event: "user-position-update" }, ({ payload }) => {
-   //          console.log(payload);
-   //          setUserPositions((userPositions) => {
-   //             return { ...userPositions, ...payload };
-   //          });
-   //       })
-   //       .on("broadcast", { event: "formation-update" }, ({ payload }) => {
-   //          console.log(payload);
-   //          setDeltas((deltas) => [...deltas, payload]);
-   //          // setFormations((formations: formation[]) => {
-   //          //    let newFormations = { formations: [...formations] };
-   //          //    applyChangeset(newFormations, unflattenChanges(payload));
-   //          //    return [...newFormations.formations];
-   //          // });
-   //       });
-
-   //    return () => {
-   //       // usersChannel.unsubscribe();
-   //       supabase.removeChannel(formsChannel);
-   //       supabase.removeChannel(channel);
-   //    };
-   // }, [router.query.danceId, session]);
-
-   let uploadSettings = useCallback(
-      debounce(async (cloudSettings) => {
-         console.log("uploading settings");
-         const { data, error } = await supabase
-            .from("dances")
-            .update({ settings: cloudSettings, last_edited: new Date() })
-            .eq("id", router.query.danceId);
-
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 2000),
-      [router.query.danceId]
-   );
-
-   useDidMountEffect(() => {
-      if (!session && router.query.danceId !== "207") {
-         router.push("/login");
-      }
-      if (router.isReady) {
-         setSaved(false);
-         uploadSettings(cloudSettings);
-      }
-   }, [cloudSettings]);
-
-   ////////////////////////////////////////
-   let uploadDancers = useCallback(
-      debounce(async (dancers) => {
-         console.log("uploading dancers");
-         const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
-
-         console.log({ data });
-
-         console.log({ error });
-         setSaved(true);
-      }, 2000),
-      [router.query.danceId]
-   );
-
-   useDidMountEffect(() => {
-      if (!session && router.query.danceId !== "207") {
-         router.push("/login");
-      }
-      if (router.isReady) {
-         setSaved(false);
-         uploadDancers(dancers);
-      }
-   }, [dancers]);
+      return () => {
+         supabase.removeChannel(formsChannel);
+         supabase.removeChannel(channel);
+      };
+   }, [router.query.danceId, session]);
 
    ////////////////////////////////////////
-   let uploadGroups = useCallback(
-      debounce(async (formationGroups) => {
-         console.log("uploading dancers");
-         const { data, error } = await supabase
-            .from("dances")
-            .update({ formation_groups: formationGroups, last_edited: new Date() })
-            .eq("id", router.query.danceId);
+   // let uploadSettings = useCallback(
+   //    debounce(async (cloudSettings) => {
+   //       console.log("uploading settings");
+   //       const { data, error } = await supabase
+   //          .from("dances")
+   //          .update({ settings: cloudSettings, last_edited: new Date() })
+   //          .eq("id", router.query.danceId);
+   //       channelGlobal.send({
+   //          type: "broadcast",
+   //          event: "settings-update",
+   //          payload: cloudSettings,
+   //       });
+   //       console.log({ data });
+   //       console.log({ error });
+   //       setSaved(true);
+   //    }, 0),
+   //    [router.query.danceId, channelGlobal]
+   // );
 
-         console.log({ data });
+   // useDidMountEffect(() => {
+   //    if (!session && router.query.danceId !== "207") {
+   //       router.push("/login");
+   //    }
+   //    if (router.isReady) {
+   //       setSaved(false);
+   //       uploadSettings(cloudSettings);
+   //    }
+   // }, [cloudSettings]);
 
-         console.log({ error });
-         setSaved(true);
-      }, 5000),
-      [router.query.danceId]
-   );
+   ////////////////////////////////////////
+   // let uploadDancers = useCallback(
+   //    debounce(async (dancers) => {
+   //       console.log("uploading dancers");
+   //       const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
+   //       channelGlobal.send({
+   //          type: "broadcast",
+   //          event: "dancers-update",
+   //          payload: dancers,
+   //       });
+   //       console.log({ data });
+   //       console.log({ error });
+   //       setSaved(true);
+   //    }, 0),
+   //    [router.query.danceId, channelGlobal]
+   // );
 
-   useDidMountEffect(() => {
-      if (!session && router.query.danceId !== "207") {
-         router.push("/login");
-      }
-      if (router.isReady) {
-         setSaved(false);
-         uploadGroups(formationGroups);
-      }
-   }, [formationGroups]);
+   // useDidMountEffect(() => {
+   //    if (!session && router.query.danceId !== "207") {
+   //       router.push("/login");
+   //    }
+   //    if (router.isReady) {
+   //       setSaved(false);
+   //       uploadDancers(dancers);
+   //    }
+   // }, [dancers]);
 
-   // // ///////////
-   let uploadFormations = useCallback(
-      debounce(async (formations) => {
-         console.log("uploading formations");
-         const { data, error } = await supabase
-            .from("dances")
-            .update({ formations: formations, last_edited: new Date() })
-            .eq("id", router.query.danceId);
-         console.log({ data });
-         console.log({ error });
+   ////////////////////////////////////////
+   // let uploadGroups = useCallback(
+   //    debounce(async (formationGroups) => {
+   //       console.log("uploading dancers");
+   //       const { data, error } = await supabase
+   //          .from("dances")
+   //          .update({ formation_groups: formationGroups, last_edited: new Date() })
+   //          .eq("id", router.query.danceId);
 
-         setSaved(true);
-      }, 5000),
-      [router.query.danceId]
-   );
+   //       console.log({ data });
 
-   useDidMountEffect(() => {
-      if (!session && router.query.danceId !== "207") {
-         router.push("/login");
-      }
-      if (router.isReady) {
-         setSaved(false);
-         uploadFormations(formations);
-      }
-   }, [formations]);
-   ////////////////////////
-   // ///////////
+   //       console.log({ error });
+   //       setSaved(true);
+   //    }, 5000),
+   //    [router.query.danceId, channelGlobal]
+   // );
+
+   // useDidMountEffect(() => {
+   //    if (!session && router.query.danceId !== "207") {
+   //       router.push("/login");
+   //    }
+   //    if (router.isReady) {
+   //       setSaved(false);
+   //       uploadGroups(formationGroups);
+   //    }
+   // }, [formationGroups]);
+   // // // // // // // // // // // //
    let uploadSoundCloudId = useCallback(
       debounce(async (soundCloudTrackId) => {
          console.log("uploading formations");
@@ -427,11 +519,12 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
             .from("dances")
             .update({ soundCloudId: soundCloudTrackId, last_edited: new Date() })
             .eq("id", router.query.danceId);
+
          console.log({ data });
          console.log({ error });
          setSaved(true);
       }, 0),
-      [router.query.danceId]
+      [router.query.danceId, channelGlobal]
    );
 
    useDidMountEffect(() => {
@@ -444,7 +537,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
       }
    }, [soundCloudTrackId]);
    // //////////////////////////
-   // ///////////
+
    let uploadName = useCallback(
       debounce(async (danceName) => {
          console.log("uploading name");
@@ -452,8 +545,8 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 1000),
-      [router.query.danceId]
+      }, 500),
+      [router.query.danceId, channelGlobal]
    );
 
    useDidMountEffect(() => {
@@ -465,6 +558,32 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
          uploadName(danceName);
       }
    }, [danceName]);
+   // // ///////////
+   // let uploadFormations = useCallback(
+   //    debounce(async (formations) => {
+   //       console.log("uploading formations");
+   //       const { data, error } = await supabase
+   //          .from("dances")
+   //          .update({ formations: formations, last_edited: new Date() })
+   //          .eq("id", router.query.danceId);
+   //       console.log({ data });
+   //       console.log({ error });
+
+   //       setSaved(true);
+   //    }, 5000),
+   //    [router.query.danceId]
+   // );
+
+   // useDidMountEffect(() => {
+   //    if (!session && router.query.danceId !== "207") {
+   //       router.push("/login");
+   //    }
+   //    if (router.isReady) {
+   //       setSaved(false);
+   //       uploadFormations(formations);
+   //    }
+   // }, [formations]);
+   ////////////////////////
    let flippedFormations = formations.map((formation: formation) => {
       let flippedPositions = formation.positions.map((position) => {
          if (position.controlPointEnd && position.controlPointStart) {
@@ -518,6 +637,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
 
          {editingDancer !== null ? (
             <EditDancer
+               pushChange={pushChange}
                setUpgradeIsOpen={setUpgradeIsOpen}
                pricingTier={pricingTier}
                removeDancer={removeDancer}
@@ -578,7 +698,24 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
             </>
          ) : null}
 
-         <div className="flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none text-gray-900  ">
+         {subscriptionStatus !== "SUBSCRIBED" ? (
+            <>
+               <div className="fixed bottom-0 left-0 h-full  w-full  flex flex-col z-[9999999]  ">
+                  <div className="flex flex-row items-center justify-center h-14 bg-red-600 mt-auto pointer-events-auto">
+                     <p className="text-white text-sm">
+                        You are disconnected, please <button className="font-bold">click here</button> or refresh the page to connect.
+                     </p>
+                  </div>
+               </div>
+            </>
+         ) : null}
+
+         <div
+            // style={{
+            //    pointerEvents: subscriptionStatus === "SUBSCRIBED" ? "none" : "auto",
+            // }}
+            className={`flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none text-gray-900 `}
+         >
             <div className="flex flex-row  overflow-hidden w-screen h-full">
                {!viewOnly ? (
                   <>
@@ -613,6 +750,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                         <Settings setLocalSettings={setLocalSettings} localSettings={localSettings}></Settings>
                      ) : menuOpen === "stageSettings" ? (
                         <StageSettings
+                           pushChange={pushChange}
                            formations={formations}
                            pricingTier={pricingTier}
                            cloudSettings={cloudSettings}
@@ -674,6 +812,8 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
 
                <div className={`flex flex-col min-w-0 flex-grow items-center `}>
                   <Header
+                     setSelectedFormation={setSelectedFormation}
+                     userPositions={userPositions}
                      pricingTier={pricingTier}
                      onlineUsers={onlineUsers}
                      setFormations={setFormations}
@@ -868,7 +1008,7 @@ const Edit = ({ initialData, viewOnly, pricingTier }: { viewOnly: boolean }) => 
                </div>
             </div>
 
-            <div className="">
+            <div className=" overscroll-contain">
                <AudioControls
                   addToStack={addToStack}
                   pushChange={pushChange}
@@ -1078,37 +1218,41 @@ function getExtension(filename: string) {
    return parts[parts.length - 1];
 }
 
-const columnName = "formations";
+function jsonPatchToPostgres(patch: JsonPatchOperation[], danceId: number): string[] {
+   const queries: string[] = [];
 
-function jsonDeltaToPostgresQuery(delta: JsonDelta, columnName: string, basePath: string = ""): string {
-   let query = "";
+   patch.forEach((operation) => {
+      // Convert JSON Patch path to PostgreSQL path format (e.g., "/formations/0/dancers/0/x" -> "{formations,0,dancers,0,x}")
+      const path = `{${operation.path.slice(1).replace(/\//g, ",")}}`;
 
-   for (const key in delta) {
-      if (key === "_t") continue;
+      let query: string | null = null;
 
-      const value = delta[key];
-      const currentPath = basePath ? `${basePath}.${key}` : key;
-
-      if (typeof value === "object" && !Array.isArray(value)) {
-         query += jsonDeltaToPostgresQuery(value, columnName, currentPath);
-      } else {
-         const path = `{${currentPath}}`;
-         query += ` ${columnName} = jsonb_set(${columnName}, '${path}', ${value[1]}),`;
+      switch (operation.op) {
+         case "add":
+         case "replace":
+            query = `
+           UPDATE dances SET formations = jsonb_set(formations, '${path}', '${JSON.stringify(operation.value)}'::jsonb) WHERE dance_id = ${danceId};`;
+            break;
+         case "remove":
+            query = `UPDATE dances SET formations = formations #- '${path}' WHERE dance_id = ${danceId};`;
+            break;
+         case "move":
+         case "copy":
+            const fromPath = `{${operation.from!.slice(1).replace(/\//g, ",")}}`;
+            if (operation.op === "move") {
+               query = `
+             WITH moved_value AS (SELECT formations # '${fromPath}' AS value FROM dances WHERE dance_id = ${danceId}) UPDATE dances SET formations = jsonb_set(formations #- '${fromPath}', '${path}', (SELECT value FROM moved_value)) WHERE dance_id = ${danceId};`;
+            } else {
+               query = `
+             WITH copied_value AS (SELECT formations # '${fromPath}' AS value FROM dances WHERE dance_id = ${danceId}) UPDATE dances SET formations = jsonb_set(formations, '${path}', (SELECT value FROM copied_value)) WHERE dance_id = ${danceId};`;
+            }
+            break;
       }
-   }
 
-   return query;
-}
+      if (query) {
+         queries.push(query.trim());
+      }
+   });
 
-function deltaToSqlQuery(delta: JsonDelta): string {
-   const tableName = "dances";
-   const columnName = "formations";
-
-   const setStatements = jsonDeltaToPostgresQuery(delta, columnName);
-
-   // Remove the last comma and add a WHERE clause with the primary key condition
-   // Replace 'id' with the primary key column name and 1 with the primary key value
-   const sqlQuery = `UPDATE ${tableName} SET${setStatements.slice(0, -1)} WHERE id = 1;`;
-
-   return sqlQuery;
+   return queries;
 }

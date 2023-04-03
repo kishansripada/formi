@@ -58,11 +58,11 @@ export const Layers: React.FC<{
    };
    const pointerDown = (e) => {
       if (e.target.dataset.type === "transition-resize") {
-         addToStack();
+         // addToStack();
          setResizingTransition(e.target.id);
       }
       if (e.target.dataset.type === "formation-resize") {
-         addToStack();
+         // addToStack();
          setResizingFormation(e.target.id);
       }
    };

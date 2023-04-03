@@ -36,7 +36,7 @@ const home = () => {
          <Header></Header>
 
          <div className="overflow-hidden relative ">
-            <div className="absolute w-[1000px] opacity-50  h-[500px] left-0 -translate-x-1/2 -z-[100] top-[100px] ">
+            <div className="absolute w-[1000px] opacity-50 -z-[100]   h-[500px] left-0 -translate-x-1/2 top-[100px] ">
                <div
                   style={{
                      backgroundImage:
@@ -45,7 +45,7 @@ const home = () => {
                   className="absolute w-[1000px] h-[500px] top-0 left-0 bottom-0 right-0"
                ></div>
                <div
-                  className="flex flex-row h-full justify-between rounded-xl -z-[100] relative  "
+                  className="flex flex-row h-full justify-between rounded-xl  relative  "
                   style={{
                      width: 1000,
                   }}
@@ -61,7 +61,7 @@ const home = () => {
                   ))}
                </div>
                <div
-                  className="flex flex-col justify-between  rounded-xl relative -z-[100]  "
+                  className="flex flex-col justify-between  rounded-xl relative  "
                   style={{
                      height: 500,
                      top: -500,
@@ -78,6 +78,7 @@ const home = () => {
                   ))}
                </div>
             </div>
+
             <div className="absolute w-[1000px] opacity-50  h-[500px] right-0  translate-x-1/2  -z-[100] top-[100px]">
                <div
                   style={{
@@ -112,7 +113,7 @@ const home = () => {
                   {new Array(12).fill(0).map((_, i) => (
                      <div
                         key={i}
-                        className={`w-full bg-gray-300 `}
+                        className={`w-full  bg-gray-300 `}
                         style={{
                            height: 1,
                         }}
@@ -124,23 +125,24 @@ const home = () => {
                {/* <img className="w-[800px] right-[-200px]  -rotate-[30deg]" src="/background.png" alt="" /> */}
             </div>
 
-            <div className="overflow-hidden">
+            <div className="overflow-hidden dark:bg-[#191919]">
                <div className=" flex flex-row items-center justify-center w-full  text-center pt-8 px-[10%] lg:px-[20%]   ">
                   <div className="w-full  ">
-                     <div className="w-full bg-opacity-50 mb-8 bg-pink-100 text-lg text-gray-600 rounded-xl h-12 lg:flex hidden flex-row items-center justify-center ">
-                        FORMI is used by&nbsp;<span className=" text-purple-600 font-bold">5000+ dancers&nbsp;</span> and coaches like you
+                     <div className="w-full  bg-opacity-50 mb-8 bg-pink-700 text-lg dark:text-gray-100 text-gray-600 rounded-xl h-12 lg:flex hidden flex-row items-center justify-center ">
+                        FORMI is used by&nbsp;<span className=" dark:text-gray-100 text-purple-100 font-bold">5000+ dancers&nbsp;</span> and coaches
+                        like you
                      </div>
                      <h1
                         style={{
                            lineHeight: 1.15,
                         }}
-                        className=" text-4xl lg:text-6xl   font-bold text-gray-900 "
+                        className=" text-4xl lg:text-6xl dark:text-white    font-bold text-gray-900 "
                      >
                         Manage the movement in your performance
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
-                     <h1 className="   text-gray-500 lg:px-[20%]    mt-4 ">
-                        Create and plan stunning 3D dance & cheer formations in minutes, saving time in rehearsals
+                     <h1 className=" dark:text-gray-300  text-gray-500 lg:px-[20%]    mt-4 ">
+                        Create and plan stunning 3D dance & cheer formations in minutes, saving hours in rehearsals
                      </h1>
                      {/* <p className="text-gray-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
                      <Link href={"/login"} className="z-50">
@@ -148,27 +150,30 @@ const home = () => {
                            Get Started
                         </button>
                      </Link>
-                     <Link href={"/207/edit"} className="">
-                        <button className=" bg-pink-600 flex-row items-center   text-white px-4 py-2  mx-auto hidden lg:flex rounded-full mt-8 text-xl group">
-                           <span className="mr-2  ">View Demo</span>
-                           <span className="relative left-0 group-hover:left-3 transition-all duration-300">
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth={1.5}
-                                 stroke="currentColor"
-                                 className="w-6 h-6"
-                              >
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                              </svg>
-                           </span>
-                        </button>
-                     </Link>
+                     <div className="flex flex-col mx-auto justify-center">
+                        <Link href={"/207/edit"} className="">
+                           <button className=" bg-pink-600 flex-row items-center mx-auto  text-white px-4 py-2   hidden lg:flex rounded-full mt-8 text-xl group">
+                              <span className="mr-2  ">View Demo</span>
+                              <span className="relative left-0 group-hover:left-3 transition-all duration-300">
+                                 <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-6 h-6"
+                                 >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                 </svg>
+                              </span>
+                           </button>
+                        </Link>
+                     </div>
                   </div>
                </div>
 
                <div className=" mt-12 relative">
+                  {/* <Image width={"1000"} height={"1000"} src={"/threeDPreview.png"}></Image> */}
                   <img
                      className=" max-w-[1000px] lg:block hidden  w-full mx-auto relative -bottom-5 rounded-xl border border-gray-200 shadow-2xl z-10"
                      src="/threeDPreview.png"
@@ -181,16 +186,16 @@ const home = () => {
                         top: -200,
                         left: "50%",
                         transform: "translate(-50%, 0)",
-                        opacity: 0.8,
+                        opacity: 1,
                      }}
                   ></div>
                </div>
             </div>
             <hr />
-            <div className="   lg:flex flex-col items-center justify-center  hidden py-10  ">
+            <div className=" dark:bg-[#191919]   lg:flex flex-col items-center justify-center  hidden py-10  ">
                {/* <p className=" text-2xl mx-auto text-center font-proxima font-semibold mt-10 ">Trusted by 5000+ dance teams</p> */}
 
-               <div className=" grid grid-cols-4 place-items-center child:mx-8 child:my-8  select-none opacity-60 ">
+               <div className=" grid grid-cols-4 place-items-center child:mx-8   child:my-8  select-none opacity-60 dark:opacity-70 ">
                   <img
                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cornell_University_logo.svg/1280px-Cornell_University_logo.svg.png"
                      className=" w-48  transition duration-500"
@@ -323,11 +328,11 @@ const home = () => {
                </Canvas> */}
             </div>
             <hr />
-            <div className="bg-white lg:px-0 px-7  font-proxima">
+            <div className="bg-white dark:bg-[#191919] lg:px-0 px-7  font-proxima">
                <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-8 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
-                     <p className="text-3xl font-bold">Collaborate, communicate</p>
-                     <p className="text-lg mt-6 lg:w-[80%] text-gray-500">
+                     <p className="text-3xl font-bold dark:text-white">Collaborate, communicate</p>
+                     <p className="text-lg mt-6 lg:w-[80%] text-gray-500 dark:text-gray-300">
                         Directly add comments and annotations on the stage, making collaboration among team members easier and more efficient. Make
                         FORMI a central platform for discussion and feedback, streamlining the choreography process.
                      </p>
@@ -345,15 +350,15 @@ const home = () => {
                </div>
             </div>
 
-            <div className="bg-white  font-proxima lg:px-0 px-7">
+            <div className="bg-white dark:bg-[#191919]  font-proxima lg:px-0 px-7">
                <div className="flex lg:flex-row flex-col-reverse items-center mx-auto max-w-[1000px] py-8 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
                      <video autoPlay muted src="/curveDemo.mp4" loop className=" lg:mr-auto lg:w-[90%] border border-gray-200 rounded-xl relative" />
                   </div>
                   <div className="lg:w-1/2 w-[90%] ">
                      <div className="lg:w-[90%] mx-auto">
-                        <p className="text-3xl font-bold">Complex dancer paths</p>
-                        <p className="text-lg mt-6  text-gray-500">
+                        <p className="text-3xl font-bold dark:text-white">Complex dancer paths</p>
+                        <p className="text-lg mt-6  text-gray-500 dark:text-gray-300 ">
                            Our non-linear path feature lets you plan complex formations with ease, making your choreography process smoother and more
                            efficient. Say goodbye to old-fashioned, complicated methods and hello to modern, streamlined choreography.
                         </p>
@@ -362,11 +367,11 @@ const home = () => {
                </div>
             </div>
             <hr />
-            <div className="bg-white  font-proxima lg:px-0 px-7">
+            <div className="bg-white dark:bg-[#191919]  font-proxima lg:px-0 px-7">
                <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-16 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
-                     <p className="text-3xl font-bold">No Credit Card Required</p>
-                     <p className="text-lg mt-6 lg:w-[80%] text-gray-500">
+                     <p className="text-3xl font-bold dark:text-white">No Credit Card Required</p>
+                     <p className="text-lg mt-6 lg:w-[80%]  dark:text-gray-300 text-gray-500">
                         Start free today without a credit card. Create all of your dance formations, view in 3D and upload your own audio completely
                         free.
                      </p>
@@ -377,15 +382,7 @@ const home = () => {
                      </Link>
                   </div>
 
-                  <div className="lg:w-1/2 w-[90%] flex flex-row justify-center items-center ">
-                     <div className="w-[150px] cursor-pointer">
-                        {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
-                     <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
-                        <h1 className="text-4xl font-bold z-10 relative">FORMI</h1>
-
-                        <div className="bg-pink-600 relative h-2 opacity-40 top-[-10px] mr-auto w-[100%]"></div>
-                     </div>
-                  </div>
+                  <div className="lg:w-1/2 w-[90%] flex flex-row justify-center items-center "></div>
                </div>
             </div>
 

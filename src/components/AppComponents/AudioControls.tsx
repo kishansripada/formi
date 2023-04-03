@@ -77,7 +77,7 @@ export const AudioControls: React.FC<{
                      <div className="flex flex-row items-center justify-center mr-auto">
                         <button
                            onClick={() => {
-                              addToStack();
+                              // addToStack();
                               let id = crypto.randomUUID();
                               setFormations((formations: formation[]) => {
                                  return [
@@ -115,7 +115,7 @@ export const AudioControls: React.FC<{
                                  toast.error("you must have at least one formation");
                                  return;
                               }
-                              addToStack();
+                              // addToStack();
                               if (selectedFormation === formations.length - 1) {
                                  setSelectedFormation(selectedFormation - 1);
                               }
@@ -146,7 +146,7 @@ export const AudioControls: React.FC<{
                            onClick={() => {
                               if (selectedFormation === null) return;
 
-                              addToStack();
+                              // addToStack();
 
                               setFormations((formations: formation[]) => {
                                  formations.splice(selectedFormation + 1, 0, {

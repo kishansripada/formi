@@ -106,7 +106,7 @@ export const Comment: React.FC<{
                      e.target.style.height = "auto";
                      e.target.style.height = `${e.target.scrollHeight}px`;
                      setIsEditing(true);
-                     addToStack();
+                     // addToStack();
                   }}
                   onBlur={() => {
                      setIsEditing(false);

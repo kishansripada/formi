@@ -283,7 +283,7 @@ export const CurrentFormation: React.FC<{
                            <div
                               className="p-4 flex flex-row items-center"
                               onClick={() => {
-                                 addToStack();
+                                 // addToStack();
                                  selectedDancers.forEach((selectedDancer) => {
                                     setFormations((formations: formation[]) => {
                                        return formations.map((formation, index: number) => {
@@ -332,7 +332,7 @@ export const CurrentFormation: React.FC<{
                                     setUpgradeIsOpen(true);
                                     return;
                                  }
-                                 addToStack();
+                                 // addToStack();
                                  selectedDancers.forEach((selectedDancer) => {
                                     setFormations((formations: formation[]) => {
                                        let start = formations[selectedFormation - 1]?.positions.find(
@@ -571,7 +571,7 @@ export const CurrentFormation: React.FC<{
                                  </div>
                                  <button
                                     onClick={() => {
-                                       addToStack();
+                                       // addToStack();
                                        deleteComment(comment.id);
                                        pushChange();
                                     }}
