@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useGLTF } from "@react-three/drei";
 import { dancerPosition, dancer, formation, localSettings } from "../../types/types";
-import { Text } from "@react-three/drei";
+import { Text, Cylinder } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 import { useDrag } from "@use-gesture/react";
 import { useThree, useFrame } from "@react-three/fiber";
-import { useDancerDragging } from "./Canvas";
+
 import * as THREE from "three";
 
 export function ThreeDancer({
@@ -23,6 +23,9 @@ export function ThreeDancer({
    viewOnly,
    pushChange,
    addToStack,
+   setIsThreeDancerDragging,
+   isThreeDancerDragging,
+   selectedDancers,
 }: {
    dancerPosition: dancerPosition;
    dancers: dancer[];
@@ -38,6 +41,9 @@ export function ThreeDancer({
    viewOnly: boolean;
    pushChange: Function;
    addToStack: Function;
+   setIsThreeDancerDragging: Function;
+   isThreeDancerDragging: boolean;
+   selectedDancers: string[];
 }) {
    let { gridSnap } = localSettings;
    /**
@@ -45,14 +51,14 @@ export function ThreeDancer({
     */
    const textRef = useRef();
 
-   const changeStateDancerDragging = useDancerDragging((state) => state.changeStateDancerDragging);
+   // const changeStateDancerDragging = useDancerDragging((state) => state.changeStateDancerDragging);
    useFrame((state, dt) => {
       if (textRef?.current != null) {
          textRef.current.lookAt(state.camera.position);
       }
    });
    let dancer = dancers?.find((dancer) => dancer.id === dancerPosition.id);
-   const isDancerDragging = useDancerDragging((state) => state.isDancerDragging);
+   // const isDancerDragging = useDancerDragging((state) => state.isDancerDragging);
    let planeIntersectPoint = new THREE.Vector3();
    const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
@@ -107,7 +113,7 @@ export function ThreeDancer({
          } else {
             document.body.style.cursor = "default";
          }
-         changeStateDancerDragging(!active);
+         setIsThreeDancerDragging(active);
 
          // api.start({
          //    position: [dancerPosition.position.x, dancerPosition.position.y],
@@ -122,8 +128,10 @@ export function ThreeDancer({
    let maxHeight = Math.max(...dancers.map((dancer) => dancer?.height || 0)) || 182.88;
    let dancerPos;
    let textPos;
+   let selectedPos;
    dancerPos = useSpring({ position: [dancerPosition.position.x / 2, 0, -dancerPosition.position.y / 2] });
    textPos = useSpring({ position: [dancerPosition.position.x / 2, ((dancer?.height || 182.88) / maxHeight) * 2, -dancerPosition.position.y / 2] });
+   selectedPos = useSpring({ position: [dancerPosition.position.x / 2, 0, -dancerPosition.position.y / 2] });
    // if (isDancerDragging && position !== null && currentFormationIndex !== null) {
    //    dancerPos = { position: [dancerPosition.position.x, 0, dancerPosition.position.y] };
    //    textPos = { position: [dancerPosition.position.x, 2, dancerPosition.position.y] };
@@ -137,7 +145,9 @@ export function ThreeDancer({
       let y = -myPosition.y / 2;
       dancerPos = { position: [x, 0, y] };
       textPos = { position: [x, ((dancer?.height || 182.88) / maxHeight) * 2, y] };
+      selectedPos = { position: [x, 0, y] };
    }
+   // const outerMaterial = new MeshStandardMaterial({ color: 0x00ff00 });
 
    return (
       <>
@@ -146,6 +156,20 @@ export function ThreeDancer({
                {dancer?.name}
             </Text>
          </animated.mesh>
+         {selectedDancers.includes(dancer?.id) ? (
+            <animated.mesh position={selectedPos.position}>
+               <group>
+                  <Cylinder
+                     args={[0.5, 0.5, 0.02, 32]} // Adjust outer cylinder radius
+                     // material={(<meshStandardMaterial color={"#db2777"}></meshStandardMaterial>)}
+                     // position={textPos.position}
+                     rotation={[Math.PI, 0, 0]}
+                  >
+                     <meshStandardMaterial attach="material" color={"#db2777"} />
+                  </Cylinder>
+               </group>
+            </animated.mesh>
+         ) : null}
 
          <animated.mesh
             // {...spring}
@@ -167,6 +191,7 @@ export function ThreeDancer({
                               name="RootNode"
                               onPointerDown={() => {
                                  if (viewOnly) return;
+
                                  // addToStack();
                               }}
                               onPointerEnter={() => {

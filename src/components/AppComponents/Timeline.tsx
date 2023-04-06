@@ -105,7 +105,7 @@ export const Timeline: React.FC<{
    }, [isScrollingTimeline]);
    return (
       <>
-         <div className="w-full h-[10px] bg-neutral-300  select-none">
+         <div className="w-full h-[10px] bg-neutral-100 select-none">
             <div
                onMouseDown={() => {
                   setIsScrollingTimeline(true);
@@ -122,7 +122,7 @@ export const Timeline: React.FC<{
             </div>
          </div>
 
-         <div ref={scrollRef} className="overflow-x-scroll removeScrollBar  bg-[#fafafa] overscroll-contain ">
+         <div ref={scrollRef} className="overflow-x-scroll removeScrollBar   overscroll-contain ">
             <div
                style={{
                   width: songDuration
@@ -157,7 +157,7 @@ export const Timeline: React.FC<{
                      // add 40 but subract 8 to account for the width of the svg
                      left: (position || 0) * pixelsPerSecond + 32,
                   }}
-                  className="absolute z-[999] top-[0px]   left-0"
+                  className="absolute z-[999] top-[0px] pointer-events-none   left-0"
                >
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 180 157">
                      <path fill="#DB2777" d="M96 154c-3 4-9 4-12 0L2 11C-1 6 2 1 8 1h164c6 0 9 5 6 10L96 154Z" />

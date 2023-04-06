@@ -51,7 +51,7 @@ const home = () => {
                {new Array(25).fill(0).map((_, i) => (
                   <div
                      key={i}
-                     className={`h-full bg-gray-300 `}
+                     className={`h-full bg-neutral-300 `}
                      style={{
                         width: 1,
                      }}
@@ -68,7 +68,7 @@ const home = () => {
                {new Array(12).fill(0).map((_, i) => (
                   <div
                      key={i}
-                     className={`w-full bg-gray-300 `}
+                     className={`w-full bg-neutral-300 `}
                      style={{
                         height: 1,
                      }}
@@ -88,13 +88,13 @@ const home = () => {
                         style={{
                            lineHeight: 1.15,
                         }}
-                        className=" text-4xl lg:text-6xl   font-bold text-gray-900 "
+                        className=" text-4xl lg:text-6xl   font-bold text-neutral-900 "
                      >
                         Latest news & knowledge hub
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
-                     <h1 className=" text-xl  text-gray-500 px-[20%]  mt-4 ">Know more, do more.</h1>
-                     {/* <p className="text-gray-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
+                     <h1 className=" text-xl  text-neutral-500 px-[20%]  mt-4 ">Know more, do more.</h1>
+                     {/* <p className="text-neutral-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
                      <Link href={"/login"} className="z-50">
                         <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white  px-4 py-2 block lg:hidden mx-auto mt-5  rounded-full">
                            Get Started
@@ -112,7 +112,7 @@ const home = () => {
                               <p className="text-3xl mt-2 hover:text-pink-600 transition">
                                  Why Are Formations So Important? How Can I Use FORMI to Perfect Them?
                               </p>
-                              <p className="mt-4  text-gray-600 ">
+                              <p className="mt-4  text-neutral-600 ">
                                  Dance formations are an essential part of any dance performance, whether it's a ballet, jazz, contemporary, or hip
                                  hop routine. They not only enhance the visual appeal of the performance but also help to convey the mood and message
                                  of the dance.
@@ -135,7 +135,7 @@ const home = () => {
                               <p className="text-xl mt-1 hover:text-pink-600 transition">
                                  Mastering the Art of Dance Formations: Tips for Creating Stunning Visuals with FORMI
                               </p>
-                              <p className="mt-2 text-sm text-gray-600 ">
+                              <p className="mt-2 text-sm text-neutral-600 ">
                                  Dance is a beautiful form of expression, and one of the key elements that makes a performance truly captivating is
                                  the choreography. The ability to create intricate and stunning dance formations can make all the difference when it
                                  comes to captivating your audience.

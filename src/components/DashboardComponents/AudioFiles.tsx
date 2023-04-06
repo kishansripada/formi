@@ -14,14 +14,14 @@ export const AudioFiles: React.FC<{ audioFiles: any }> = ({ audioFiles }) => {
                .map((audioFile) => {
                   return (
                      <div className="overflow-hidden w-[200px] mr-3 whitespace-nowrap">
-                        <div className="bg-gray-200 rounded-xl w-[200px] h-[100px]  grid place-items-center ">
+                        <div className="bg-neutral-200 rounded-xl w-[200px] h-[100px]  grid place-items-center ">
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
                               stroke="currentColor"
-                              className="w-10 h-10 stroke-gray-500"
+                              className="w-10 h-10 stroke-neutral-500"
                            >
                               <path
                                  strokeLinecap="round"
@@ -31,7 +31,7 @@ export const AudioFiles: React.FC<{ audioFiles: any }> = ({ audioFiles }) => {
                            </svg>
                         </div>
                         <p className="font-bold w-full text-ellipsis">{audioFile.name}</p>
-                        <p className="text-sm text-gray-500">{timeSince(audioFile.created_at)} ago</p>
+                        <p className="text-sm text-neutral-500">{timeSince(audioFile.created_at)} ago</p>
                      </div>
                   );
                })}

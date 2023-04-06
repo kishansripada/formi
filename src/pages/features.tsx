@@ -63,7 +63,7 @@ const features = () => {
                {new Array(25).fill(0).map((_, i) => (
                   <div
                      key={i}
-                     className={`h-full bg-gray-300 `}
+                     className={`h-full bg-neutral-300 `}
                      style={{
                         width: 1,
                      }}
@@ -80,7 +80,7 @@ const features = () => {
                {new Array(12).fill(0).map((_, i) => (
                   <div
                      key={i}
-                     className={`w-full bg-gray-300 `}
+                     className={`w-full bg-neutral-300 `}
                      style={{
                         height: 1,
                      }}
@@ -99,21 +99,21 @@ const features = () => {
             <div className="overflow-hidden">
                <div className=" flex flex-row items-center justify-center w-full  text-center pt-8 px-[10%] lg:px-[20%]   ">
                   <div className="w-full  ">
-                     <p className="text-gray-500 leading-loose mt-12">FEATURES & BENEFITS</p>
+                     <p className="text-neutral-500 leading-loose mt-12">FEATURES & BENEFITS</p>
                      <h1
                         style={{
                            lineHeight: 1.15,
                         }}
-                        className=" text-4xl lg:text-6xl mt-2  font-bold text-gray-900 "
+                        className=" text-4xl lg:text-6xl mt-2  font-bold text-neutral-900 "
                      >
                         All of your performance needs in{" "}
                         <span className=" text-transparent  bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">one place</span>
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
-                     {/* <h1 className=" text-xl  text-gray-500 lg:px-[20%]  mt-4 ">
+                     {/* <h1 className=" text-xl  text-neutral-500 lg:px-[20%]  mt-4 ">
                         Create and plan stunning 3D dance formations in minutes, saving time in rehearsals
                      </h1> */}
-                     {/* <p className="text-gray-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
+                     {/* <p className="text-neutral-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
                   </div>
                </div>
             </div>
@@ -164,56 +164,56 @@ const features = () => {
                </div>
                <div className="lg:w-[80%] w-full  h-full flex flex-col items-center justify center px-[6%] relative z-10">
                   <div className=" rounded-2xl   w-full shadow-2xl flex flex-col px-[6%] py-[6%]">
-                     <img className=" rounded-xl border border-gray-300" src="/viewOnly.png" alt="" />
-                     <div className="rounded-full mt-8  bg-gray-100 text-pink-600 w-fit flex flex-row items-center px-3 justify-center py-1">
+                     <img className=" rounded-xl border border-neutral-300" src="/viewOnly.png" alt="" />
+                     <div className="rounded-full mt-8  bg-neutral-100 text-pink-600 w-fit flex flex-row items-center px-3 justify-center py-1">
                         <p className=" text-sm">COMMUNICATION & COLLABORATION</p>
                      </div>
-                     <p className="text-gray-800 mt-4  text-3xl">Share "view only" performances with all of your dancers</p>
-                     <p className="text-gray-700 font-light mt-2">
+                     <p className="text-neutral-800 mt-4  text-3xl">Share "view only" performances with all of your dancers</p>
+                     <p className="text-neutral-700 font-light mt-2">
                         FORMI enables you to prepare formations in advnace of rehearsals, and share them with your dancers. This allows for more
                         productive rehearsals, saving time and money.
                      </p>
                   </div>
                   <div className=" mt-14 rounded-2xl  w-full shadow-2xl flex flex-col px-[6%] py-[6%]">
-                     <img className="rounded-xl border border-gray-300" src="/comment.png" alt="" />
-                     <div className="rounded-full mt-8  bg-gray-100 text-pink-600 w-fit flex flex-row items-center px-3 justify-center py-1">
+                     <img className="rounded-xl border border-neutral-300" src="/comment.png" alt="" />
+                     <div className="rounded-full mt-8  bg-neutral-100 text-pink-600 w-fit flex flex-row items-center px-3 justify-center py-1">
                         <p className=" text-sm">COMMUNICATION & COLLABORATION</p>
                      </div>
-                     <p className="text-gray-800 mt-4  text-3xl">Leave comments and annotations directly on the stage</p>
-                     <p className="text-gray-700 font-light mt-2">
+                     <p className="text-neutral-800 mt-4  text-3xl">Leave comments and annotations directly on the stage</p>
+                     <p className="text-neutral-700 font-light mt-2">
                         Directly add comments and annotations on the stage, making collaboration among team members easier and more efficient. Make
                         FORMI a central platform for discussion and feedback, streamlining the choreography process.
                      </p>
                   </div>
                   <div className=" mt-14 rounded-2xl  w-full shadow-2xl flex flex-col px-[6%] py-[6%]">
-                     <img className="rounded-xl border border-gray-300" src="/threeDFeature.png" alt="" />
-                     <div className="rounded-full mt-8  bg-gray-100 text-pink-600 w-fit flex flex-row items-center px-3 justify-center py-1">
+                     <img className="rounded-xl border border-neutral-300" src="/threeDFeature.png" alt="" />
+                     <div className="rounded-full mt-8  bg-neutral-100 text-pink-600 w-fit flex flex-row items-center px-3 justify-center py-1">
                         <p className=" text-sm">PROFESSIONAL FEATURES</p>
                      </div>
-                     <p className="text-gray-800 mt-4  text-3xl">View dancers from all angles in three dimensions</p>
-                     <p className="text-gray-700 font-light mt-2">
+                     <p className="text-neutral-800 mt-4  text-3xl">View dancers from all angles in three dimensions</p>
+                     <p className="text-neutral-700 font-light mt-2">
                         Limitations of current choreography software are that you cannot see what formations look like from a true audience
                         perspective. FORMI enables you to view formations from any angle, even a judges perspective.
                      </p>
                   </div>
                   <div className=" mt-14 rounded-2xl  w-full shadow-2xl flex flex-col px-[6%] py-[6%]">
-                     <img className="rounded-xl border border-gray-300" src="/collisions.png" alt="" />
-                     <div className="rounded-full mt-8  bg-gray-100 text-pink-600 w-fit flex flex-row items-center px-3 justify-center py-1">
+                     <img className="rounded-xl border border-neutral-300" src="/collisions.png" alt="" />
+                     <div className="rounded-full mt-8  bg-neutral-100 text-pink-600 w-fit flex flex-row items-center px-3 justify-center py-1">
                         <p className=" text-sm">PROFESSIONAL FEATURES</p>
                      </div>
-                     <p className="text-gray-800 mt-4  text-3xl">Determine if dancers will collide BEFORE you perform</p>
-                     <p className="text-gray-700 font-light mt-2">
+                     <p className="text-neutral-800 mt-4  text-3xl">Determine if dancers will collide BEFORE you perform</p>
+                     <p className="text-neutral-700 font-light mt-2">
                         With adjustable sensitivity, FORMI will alert you if dancers will collide during a performance. This allows you to be
                         proactive in preventing collisions, and avoid potential injuries.
                      </p>
                   </div>
                   <div className=" mt-14 rounded-2xl  w-full shadow-2xl flex flex-col px-[6%] py-[6%]">
-                     <img className="rounded-xl border border-gray-300" src="/nonlinear.png" alt="" />
-                     <div className="rounded-full mt-8  bg-gray-100 text-pink-600 w-fit flex flex-row items-center px-3 justify-center py-1">
+                     <img className="rounded-xl border border-neutral-300" src="/nonlinear.png" alt="" />
+                     <div className="rounded-full mt-8  bg-neutral-100 text-pink-600 w-fit flex flex-row items-center px-3 justify-center py-1">
                         <p className=" text-sm">PROFESSIONAL FEATURES</p>
                      </div>
-                     <p className="text-gray-800 mt-4  text-3xl">Create non-linear, curved dancer paths to avoid collisions</p>
-                     <p className="text-gray-700 font-light mt-2">
+                     <p className="text-neutral-800 mt-4  text-3xl">Create non-linear, curved dancer paths to avoid collisions</p>
+                     <p className="text-neutral-700 font-light mt-2">
                         FORMI goes beyond simple linear dancer paths, which are so often not the case in real life. Move your dancers in the path that
                         they will actually follow to avoid collisions with other dancers.
                      </p>

@@ -1,192 +1,68 @@
 import { dancer, dancerPosition, formation, localSettings, stageDimensions } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
-
+import Dropdown from "../Dropdown";
 export const Settings: React.FC<{
    setLocalSettings: Function;
    localSettings: any;
-}> = ({ setLocalSettings, localSettings }) => {
+   dropDownToggle: boolean;
+}> = ({ setLocalSettings, localSettings, dropDownToggle }) => {
    let { previousFormationView, gridSnap, dancerStyle } = localSettings;
+   const setPreviousFormationView = (val: string) => {
+      setLocalSettings((settings: localSettings) => {
+         return { ...settings, previousFormationView: val };
+      });
+   };
 
+   const setGridSnap = (val: number) => {
+      setLocalSettings((settings: localSettings) => {
+         return { ...settings, gridSnap: val };
+      });
+   };
+   const setDancerStyle = (val: string) => {
+      setLocalSettings((settings: localSettings) => {
+         return { ...settings, dancerStyle: val };
+      });
+   };
    return (
       <>
          <Toaster></Toaster>
-         <div className=" w-[23%]  min-w-[350px] hidden lg:block bg-white border-r border-r-gray-300 px-6 py-6 overflow-y-scroll">
-            <h1 className="h-12 font-medium text-xl">Settings</h1>
+         <div className=" w-[250px]  min-w-[250px] hidden lg:block bg-white h-full  py-4 overflow-y-scroll pl-1">
+            <p className="text-neutral-800 pl-3  font-medium mb-1 text-sm">Previous Formation</p>
+            <Dropdown
+               dropDownToggle={dropDownToggle}
+               value={
+                  previousFormationView === "none" ? "None" : previousFormationView === "ghostDancers" ? "Ghost Dancers" : "Ghost Dancers + Paths"
+               }
+               actions={[
+                  () => setPreviousFormationView("none"),
+                  () => setPreviousFormationView("ghostDancers"),
+                  () => setPreviousFormationView("ghostDancersAndPaths"),
+               ]}
+               options={["None", "Ghost Dancers", "Ghost Dancers + Paths"]}
+            ></Dropdown>
 
-            <p className="text-gray-500 font-medium mb-3 mt-10 text-sm">Previous Formation</p>
+            <hr className="my-2" />
 
-            <div className="border border-gray-200 rounded-xl w-full text-sm shadow-sm cursor-pointer select-none ">
-               <div
-                  className="p-4 flex flex-row items-center"
-                  onClick={() =>
-                     setLocalSettings((settings: localSettings) => {
-                        return { ...settings, previousFormationView: "none" };
-                     })
-                  }
-               >
-                  {previousFormationView === "none" ? (
-                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
-                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
-                     </div>
-                  ) : (
-                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
-                  )}
-                  <p>None</p>
-               </div>
-               <hr />
-               <div
-                  className="p-4 flex flex-row items-center"
-                  onClick={() =>
-                     setLocalSettings((settings: localSettings) => {
-                        return { ...settings, previousFormationView: "ghostDancers" };
-                     })
-                  }
-               >
-                  {previousFormationView === "ghostDancers" ? (
-                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
-                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
-                     </div>
-                  ) : (
-                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
-                  )}
-                  <p>View Ghost Dancers</p>
-               </div>
-               <hr />
-               <div
-                  className={`p-4 flex flex-row items-center `}
-                  onClick={() =>
-                     setLocalSettings((settings: localSettings) => {
-                        return { ...settings, previousFormationView: "ghostDancersAndPaths" };
-                     })
-                  }
-               >
-                  {previousFormationView === "ghostDancersAndPaths" ? (
-                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
-                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
-                     </div>
-                  ) : (
-                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
-                  )}
+            <p className="text-neutral-800 pl-3 font-medium mb-1 text-sm">Grid Snap</p>
+            <Dropdown
+               dropDownToggle={dropDownToggle}
+               value={gridSnap === 100 ? "None" : gridSnap === 1 ? "Whole Square" : "Half Square"}
+               actions={[() => setGridSnap(100), () => setGridSnap(2), () => setGridSnap(1)]}
+               options={["None", "Half Square", "Whole Square"]}
+            ></Dropdown>
 
-                  <p>View Ghost Dancers and Paths</p>
-               </div>
-            </div>
+            <hr className="my-2" />
 
-            <p className="text-gray-500 text-sm font-medium mt-10 mb-3">Grid Snap</p>
+            <p className="text-neutral-800  pl-3 font-medium mb-1 text-sm">Dancer Style</p>
+            <Dropdown
+               dropDownToggle={dropDownToggle}
+               value={dancerStyle === "initials" ? "Initials" : dancerStyle === "numbered" ? "Numbered" : "Solid"}
+               actions={[() => setDancerStyle("initials"), () => setDancerStyle("numbered"), () => setDancerStyle("solid")]}
+               options={["Initials", "Numbered", "Solid"]}
+            ></Dropdown>
 
-            <div className="border border-gray-200 rounded-xl w-full text-sm shadow-sm cursor-pointer select-none ">
-               <div
-                  className="p-4 flex flex-row items-center"
-                  onClick={() =>
-                     setLocalSettings((settings: localSettings) => {
-                        return { ...settings, gridSnap: 100 };
-                     })
-                  }
-               >
-                  {gridSnap === 100 ? (
-                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
-                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
-                     </div>
-                  ) : (
-                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
-                  )}
-                  <p>None</p>
-               </div>
-               <hr />
-               <div
-                  className="p-4 flex flex-row items-center"
-                  onClick={() =>
-                     setLocalSettings((settings: localSettings) => {
-                        return { ...settings, gridSnap: 2 };
-                     })
-                  }
-               >
-                  {gridSnap === 2 ? (
-                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
-                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
-                     </div>
-                  ) : (
-                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
-                  )}
-                  <p>Nearest Half Square</p>
-               </div>
-               <hr />
-               <div
-                  className={`p-4 flex flex-row items-center `}
-                  onClick={() =>
-                     setLocalSettings((settings: localSettings) => {
-                        return { ...settings, gridSnap: 1 };
-                     })
-                  }
-               >
-                  {gridSnap === 1 ? (
-                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
-                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
-                     </div>
-                  ) : (
-                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
-                  )}
-                  <p>Nearest Whole Square</p>
-               </div>
-            </div>
-            <p className="text-gray-500 text-sm font-medium mt-10 mb-3">Dancer Style</p>
-
-            <div className="border border-gray-200 rounded-xl w-full text-sm shadow-sm cursor-pointer select-none ">
-               <div
-                  className="p-4 flex flex-row items-center"
-                  onClick={() =>
-                     setLocalSettings((settings: localSettings) => {
-                        return { ...settings, dancerStyle: "initials" };
-                     })
-                  }
-               >
-                  {dancerStyle === "initials" ? (
-                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
-                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
-                     </div>
-                  ) : (
-                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
-                  )}
-                  <p>Initials</p>
-               </div>
-               <hr />
-               <div
-                  className="p-4 flex flex-row items-center"
-                  onClick={() =>
-                     setLocalSettings((settings: localSettings) => {
-                        return { ...settings, dancerStyle: "numbered" };
-                     })
-                  }
-               >
-                  {dancerStyle === "numbered" ? (
-                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
-                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
-                     </div>
-                  ) : (
-                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
-                  )}
-                  <p>Numbered</p>
-               </div>
-               <hr />
-               <div
-                  className="p-4 flex flex-row items-center"
-                  onClick={() =>
-                     setLocalSettings((settings: localSettings) => {
-                        return { ...settings, dancerStyle: "solid" };
-                     })
-                  }
-               >
-                  {dancerStyle === "solid" ? (
-                     <div className="rounded-full h-4 w-4 border-pink-400 border mr-3 grid place-items-center">
-                        <div className="rounded-full h-2 w-2 bg-pink-400"></div>
-                     </div>
-                  ) : (
-                     <div className="rounded-full h-4 w-4 border-gray-500 border mr-3"></div>
-                  )}
-                  <p>Solid</p>
-               </div>
-            </div>
+            <hr className="my-2" />
          </div>
       </>
    );

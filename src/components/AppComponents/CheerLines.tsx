@@ -12,7 +12,7 @@ export const CheerLines: React.FC<{ stageDimensions: { width: number; height: nu
             {new Array(10).fill(0).map((_, i) => (
                <div
                   key={i}
-                  className={`bg-gray-600 `}
+                  className={`bg-neutral-600 `}
                   style={{
                      width: i === 0 || i === 9 ? 0 : 2.5,
                   }}

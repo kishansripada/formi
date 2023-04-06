@@ -4,14 +4,6 @@ import { GridLines } from "./GridLines";
 import { CheerLines } from "./CheerLines";
 import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings } from "../../types/types";
 import { toast, Toaster } from "react-hot-toast";
-import { Canvas as Canva, events, useFrame, useLoader } from "@react-three/fiber";
-import { useGLTF, Stage, Grid, OrbitControls, Environment, useFBX, useVideoTexture } from "@react-three/drei";
-import { create } from "zustand";
-import { Text } from "@react-three/drei";
-export const useDancerDragging = create((set) => ({
-   isDancerDragging: false,
-   changeStateDancerDragging: (status) => set((state) => ({ isDancerDragging: !status })),
-}));
 
 export const Canvas: React.FC<{
    children: React.ReactNode;
@@ -39,8 +31,9 @@ export const Canvas: React.FC<{
    setZoom: Function;
    soundCloudTrackId: string | null;
    cloudSettings: cloudSettings;
-   isPreviewingThree: boolean;
    stageFlipped: boolean;
+   shiftHeld: boolean;
+   setShiftHeld: Function;
 }> = ({
    player,
    children,
@@ -66,19 +59,19 @@ export const Canvas: React.FC<{
    setIsCommenting,
    zoom,
    setZoom,
-   isPreviewingThree,
    soundCloudTrackId,
    stageFlipped,
+   shiftHeld,
+   setShiftHeld,
 }) => {
    let { stageDimensions, stageBackground } = cloudSettings;
    const stageFlippedFactor = stageFlipped ? -1 : 1;
-   const [shiftHeld, setShiftHeld] = useState(false);
+
    const [draggingCommentId, setDraggingCommentId] = useState<string | null>();
-   const [commandHeld, setCommandHeld] = useState(false);
+
    const [changingControlId, setChangingControlId] = useState<null | string>(null);
    const [changingControlType, setChangingControlType] = useState<"start" | "end" | null>(null);
 
-   const [copiedPositions, setCopiedPositions] = useState([]);
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
    const [isDragging, setIsDragging] = useState(false);
 
@@ -89,110 +82,17 @@ export const Canvas: React.FC<{
    const stage = useRef();
 
    const session = useSession();
-   const isDancerDragging = useDancerDragging((state) => state.isDancerDragging);
-   useEffect(() => {
-      window.addEventListener("keydown", downHandler);
-      window.addEventListener("keyup", upHandler);
-      return () => {
-         window.removeEventListener("keydown", downHandler);
-         window.removeEventListener("keyup", upHandler);
-      };
-   }, [selectedFormation, commandHeld, selectedDancers, formations, copiedPositions]);
 
    useEffect(() => {
       if (!container.current) return;
       if (!stage.current) return;
 
-      let heightPercentage = (container.current.clientHeight - (isVideo(soundCloudTrackId) ? 5 : 40)) / stage.current.clientHeight;
-      let widthPercentage = (container.current.clientWidth - (isVideo(soundCloudTrackId) ? 5 : 40)) / stage.current.clientWidth;
+      let heightPercentage = (container.current.clientHeight - (isVideo(soundCloudTrackId) ? 5 : 30)) / stage.current.clientHeight;
+      let widthPercentage = (container.current.clientWidth - (isVideo(soundCloudTrackId) ? 5 : 30)) / stage.current.clientWidth;
       // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
       // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
       setZoom(Math.min(heightPercentage, widthPercentage));
    }, [container?.current?.clientHeight, stage?.current?.clientHeight, stageDimensions, children]);
-
-   const downHandler = (e: any) => {
-      if (e?.composedPath()?.[0]?.tagName === "INPUT" || e?.composedPath()?.[0]?.tagName === "TEXTAREA" || e.target.id === "input") return;
-
-      // console.log(e.key);
-      if (e.key === " ") {
-         e.preventDefault();
-         if (player && player.isReady) {
-            player.playPause();
-            setIsPlaying((isPlaying: boolean) => !isPlaying);
-         } else {
-            setIsPlaying((isPlaying: boolean) => !isPlaying);
-         }
-      }
-
-      if (e.key === "ArrowRight") {
-         if (selectedFormation === null) return;
-         e.preventDefault();
-         setSelectedFormation((i) => (i === formations.length - 1 ? i : i + 1));
-      }
-      if (e.key === "ArrowLeft") {
-         if (selectedFormation === null) return;
-         e.preventDefault();
-         setSelectedFormation((i) => (i === 0 ? 0 : i - 1));
-      }
-      if (e.key === "Meta") {
-         setCommandHeld(true);
-      }
-      if (e.key === "Shift") {
-         setShiftHeld(true);
-      }
-      if (e.key === "Escape") {
-         setSelectedDancers([]);
-         setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
-         setIsCommenting(false);
-      }
-      if (selectedFormation === null) return;
-
-      if (!commandHeld) return;
-
-      // on paste, filter out all of the dancers that are being pasted before splicing them into the array of positions
-      if (e.key === "v" && copiedPositions.length) {
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, i) => {
-               if (i === selectedFormation) {
-                  return {
-                     ...formation,
-                     positions: [
-                        ...formation.positions.filter((dancerPosition) => {
-                           return !copiedPositions.map((dancerPositionCopy: dancerPosition) => dancerPositionCopy.id).includes(dancerPosition.id);
-                        }),
-                        ...copiedPositions,
-                     ],
-                  };
-               }
-               return formation;
-            });
-         });
-      }
-      if (e.key === "a") {
-         e.preventDefault();
-         setSelectedDancers([...formations[selectedFormation]?.positions.map((position) => position.id)]);
-      }
-
-      if (e.key === "c" && selectedDancers.length) {
-         // addToStack();
-         e.preventDefault();
-         setCopiedPositions(formations[selectedFormation].positions.filter((dancerPosition) => selectedDancers.includes(dancerPosition.id)));
-      }
-
-      if (e.key === "z") {
-         e.preventDefault();
-         undo();
-      }
-   };
-
-   function upHandler({ key }) {
-      if (key === "Shift") {
-         setShiftHeld(false);
-      }
-      if (key === "Meta") {
-         setCommandHeld(false);
-      }
-   }
 
    const handleDragMove = (e: any) => {
       if (selectedFormation === null) return;
@@ -564,201 +464,72 @@ export const Canvas: React.FC<{
       setIsDragging(false);
    };
 
-   useEffect(() => {
-      window.addEventListener("wheel", handleScroll, { passive: false });
-
-      return () => {
-         window.removeEventListener("wheel", handleScroll);
-      };
-   }, [songDuration]);
-
-   const handleScroll = (e) => {
-      let MAX_PIXELS_PER_SECOND = 45;
-      let minPixelsPerSecond = songDuration ? ((window.screen.width - 10) * 1000) / songDuration : 10;
-
-      if (
-         e
-            .composedPath()
-            .map((elem) => elem.id)
-            .includes("layers") &&
-         e.ctrlKey === true
-      ) {
-         e.preventDefault();
-         setPixelsPerSecond((pixelsPerSecond: number) => {
-            let newPixelsPerSecond = pixelsPerSecond - e.deltaY / 25;
-
-            if (newPixelsPerSecond < minPixelsPerSecond) return pixelsPerSecond;
-            if (newPixelsPerSecond > MAX_PIXELS_PER_SECOND) {
-               return pixelsPerSecond;
-            }
-            return newPixelsPerSecond;
-         });
-      }
-   };
-
    return (
       <div
-         className="flex flex-row relative justify-center  h-full  w-full overflow-hidden  overscroll-contain items-center  "
+         className="flex flex-row relative justify-center bg-neutral-100  h-full  w-full overflow-hidden  overscroll-contain items-center  "
          id="stage"
          ref={container}
          onPointerUp={!viewOnly ? pointerUp : () => null}
       >
          <Toaster />
 
-         {isPreviewingThree ? (
-            <Canva
-               onPointerUp={() => {
-                  if (viewOnly) return;
-                  pushChange();
-               }}
-               gl={{ logarithmicDepthBuffer: true }}
-               camera={{ position: [0, 10, stageFlippedFactor * 14], fov: 40 }}
-            >
-               <Stage position={[0, 0, 0]} environment="apartment" adjustCamera={false}></Stage>
-               <Grid
-                  renderOrder={-1}
-                  position={[0, 0, 0]}
-                  args={[stageDimensions.width / 2, stageDimensions.height / 2]}
-                  cellSize={0.5}
-                  cellThickness={0.5}
-                  sectionSize={2.5}
-                  sectionThickness={1.5}
-                  sectionColor={[0.5, 0.5, 10]}
-               />
+         <div
+            onPointerDown={!viewOnly ? pointerDown : () => null}
+            onPointerMove={handleDragMove}
+            ref={stage}
+            className="relative  border-2 border-neutral-300 bg-white  box-content "
+            // border-pink-600 border-4 box-border
+            style={{
+               // boxShadow: "inset 0px 0px 0px 4px #db2777",
+               // border: "solid 4px transparent",
+               // borderImage: "linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%)",
+               // backgroundImage: "linear-gradient(white, white), radial-gradient(circle at top left, #8e24aa,#db2777)",
 
-               {children}
-               <OrbitControls
-                  enableDamping={false}
-                  // dampingFactor={0.5}
-                  autoRotate
-                  autoRotateSpeed={0}
-                  enableZoom={true}
-                  makeDefault
-                  minPolarAngle={0}
-                  maxPolarAngle={Math.PI / 2}
-                  enabled={!isDancerDragging}
-               />
-               <Text
-                  scale={[0.5, 0.5, 0.5]}
-                  position={[0, 0, stageDimensions.height / 4 + 1]}
-                  rotation={[Math.PI * 1.5, 0, 0]}
-                  color="black"
-                  anchorX="center"
-                  // anchorY="middle"
-               >
-                  AUDIENCE
-               </Text>
-               <Text
-                  scale={[0.5, 0.5, 0.5]}
-                  position={[0, 0, -(stageDimensions.height / 4 + 1)]}
-                  rotation={[Math.PI * 1.5, 0, Math.PI * 1]}
-                  color="black"
-                  anchorX="center"
-                  // anchorY="middle"
-               >
-                  BACKSTAGE
-               </Text>
-               <Text
-                  scale={[0.5, 0.5, 0.5]}
-                  position={[stageDimensions.width / 4 + 1, 0, 0]}
-                  rotation={[Math.PI * 1.5, 0, Math.PI * 2.5]}
-                  color="black"
-                  anchorX="center"
-                  // anchorY="middle"
-               >
-                  STAGE LEFT
-               </Text>
-               <Text
-                  scale={[0.5, 0.5, 0.5]}
-                  position={[-(stageDimensions.width / 4 + 1), 0, 0]}
-                  rotation={[Math.PI * 1.5, 0, Math.PI * 1.5]}
-                  color="black"
-                  anchorX="center"
-                  // anchorY="middle"
-               >
-                  STAGE RIGHT
-               </Text>
-            </Canva>
-         ) : (
-            <div
-               onPointerDown={!viewOnly ? pointerDown : () => null}
-               onPointerMove={handleDragMove}
-               ref={stage}
-               className="relative  border-2 border-gray-300 bg-white  box-content "
-               // border-pink-600 border-4 box-border
-               style={{
-                  // boxShadow: "inset 0px 0px 0px 4px #db2777",
-                  // border: "solid 4px transparent",
-                  // borderImage: "linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%)",
-                  // backgroundImage: "linear-gradient(white, white), radial-gradient(circle at top left, #8e24aa,#db2777)",
+               // backgroundOrigin: "border-box",
+               // backgroundClip: "padding-box, border-box",
+               // top: scrollOffset.y,
+               // left: scrollOffset.x,
+               // transformOrigin: `${scrollOffset.x}px ${scrollOffset.y}px`,
+               transform: `scale(${zoom})  `,
+               // translate(${scrollOffset.x}px, ${scrollOffset.y}px)
+               height: stageDimensions.height * PIXELS_PER_SQUARE,
+               width: stageDimensions.width * PIXELS_PER_SQUARE,
+            }}
+         >
+            {children}
 
-                  // backgroundOrigin: "border-box",
-                  // backgroundClip: "padding-box, border-box",
-                  // top: scrollOffset.y,
-                  // left: scrollOffset.x,
-                  // transformOrigin: `${scrollOffset.x}px ${scrollOffset.y}px`,
-                  transform: `scale(${zoom})  `,
-                  // translate(${scrollOffset.x}px, ${scrollOffset.y}px)
-                  height: stageDimensions.height * PIXELS_PER_SQUARE,
-                  width: stageDimensions.width * PIXELS_PER_SQUARE,
-               }}
-            >
-               {children}
-
-               {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y ? (
-                  <div
-                     className="absolute bg-blue-200/50 z-10 cursor-default "
-                     style={{
-                        width: Math.abs(dragBoxCoords.end.x - dragBoxCoords.start.x),
-                        height: Math.abs(dragBoxCoords.end.y - dragBoxCoords.start.y),
-                        left: dragBoxCoords.end.x - dragBoxCoords.start.x < 0 ? dragBoxCoords.end.x : dragBoxCoords.start.x,
-                        top: dragBoxCoords.end.y - dragBoxCoords.start.y < 0 ? dragBoxCoords.end.y : dragBoxCoords.start.y,
-                     }}
-                  ></div>
-               ) : (
-                  <></>
-               )}
-
-               {/* {stageBackground !== "cheer9" && stageBackground !== "cheer7" ? (
-                  <>
-                     <div
-                        style={{
-                           width: PIXELS_PER_SQUARE * 2.5,
-                        }}
-                        className="absolute h-full bg-black opacity-30 z-[100] pointer-events-none border-r-pink-700  "
-                     ></div>
-                     <div
-                        style={{
-                           width: PIXELS_PER_SQUARE * 2.5,
-                        }}
-                        className="absolute h-full bg-black opacity-30 z-[100] right-0 pointer-events-none flex flex-col justify-center border-l-pink-700 "
-                     ></div>
-                  </>
-               ) : null} */}
-
+            {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y ? (
                <div
+                  className="absolute bg-blue-200/50 z-10 cursor-default "
                   style={{
-                     width: stageDimensions.width * PIXELS_PER_SQUARE,
+                     width: Math.abs(dragBoxCoords.end.x - dragBoxCoords.start.x),
+                     height: Math.abs(dragBoxCoords.end.y - dragBoxCoords.start.y),
+                     left: dragBoxCoords.end.x - dragBoxCoords.start.x < 0 ? dragBoxCoords.end.x : dragBoxCoords.start.x,
+                     top: dragBoxCoords.end.y - dragBoxCoords.start.y < 0 ? dragBoxCoords.end.y : dragBoxCoords.start.y,
                   }}
                ></div>
+            ) : (
+               <></>
+            )}
 
-               {cloudSettings.backgroundUrl && cloudSettings.stageBackground === "custom" ? (
-                  <img
-                     className="w-full h-full object-contain pointer-events-none select-none opacity-40 "
-                     src={cloudSettings.backgroundUrl}
-                     alt=""
-                  />
-               ) : null}
+            <div
+               style={{
+                  width: stageDimensions.width * PIXELS_PER_SQUARE,
+               }}
+            ></div>
 
-               {stageBackground === "grid" ? <GridLines cloudSettings={cloudSettings} stageDimensions={stageDimensions} /> : null}
+            {cloudSettings.backgroundUrl && cloudSettings.stageBackground === "custom" ? (
+               <img className="w-full h-full object-contain pointer-events-none select-none opacity-40 " src={cloudSettings.backgroundUrl} alt="" />
+            ) : null}
 
-               {stageBackground === "cheer9" ? (
-                  <div className="absolute top-0 left-0 right-0 bottom-0 m-auto pointer-events-none select-none">
-                     <CheerLines stageDimensions={stageDimensions}></CheerLines>
-                  </div>
-               ) : null}
-            </div>
-         )}
+            {stageBackground === "grid" ? <GridLines cloudSettings={cloudSettings} stageDimensions={stageDimensions} /> : null}
+
+            {stageBackground === "cheer9" ? (
+               <div className="absolute top-0 left-0 right-0 bottom-0 m-auto pointer-events-none select-none">
+                  <CheerLines stageDimensions={stageDimensions}></CheerLines>
+               </div>
+            ) : null}
+         </div>
       </div>
    );
 };

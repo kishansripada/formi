@@ -15,14 +15,14 @@ export const Trash: React.FC<{ trash: any; deleteDance: Function; removeFromTras
                   .map((dance) => {
                      return (
                         <>
-                           <div className="flex flex-col items-center text-gray-700 mr-5 relative  ">
+                           <div className="flex flex-col items-center text-neutral-700 mr-5 relative  ">
                               <div className="">
-                                 <div className="bg-gray-200 rounded-xl h-[200px] w-[350px] flex flex-row justify-between items-center p-3  ">
+                                 <div className="bg-neutral-200 rounded-xl h-[200px] w-[350px] flex flex-row justify-between items-center p-3  ">
                                     <button
                                        onClick={() => {
                                           deleteDance(dance.id);
                                        }}
-                                       className="w-[48%] flex flex-col items-center justify-center rounded-xl bg-gray-300 h-full"
+                                       className="w-[48%] flex flex-col items-center justify-center rounded-xl bg-neutral-300 h-full"
                                     >
                                        <svg
                                           xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +45,7 @@ export const Trash: React.FC<{ trash: any; deleteDance: Function; removeFromTras
                                        onClick={() => {
                                           removeFromTrash(dance.id);
                                        }}
-                                       className="w-[48%] flex flex-col items-center justify-center rounded-xl bg-gray-300 h-full"
+                                       className="w-[48%] flex flex-col items-center justify-center rounded-xl bg-neutral-300 h-full"
                                     >
                                        <svg
                                           xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +64,7 @@ export const Trash: React.FC<{ trash: any; deleteDance: Function; removeFromTras
                                  <div className="flex flex-row justify-between w-full items-center">
                                     <div className="flex flex-col items-start  w-full">
                                        <p className="mt-1 font-semibold">{dance.name}</p>
-                                       <p className=" text-xs text-gray-400">{timeSince(dance.last_edited)} ago</p>
+                                       <p className=" text-xs text-neutral-400">{timeSince(dance.last_edited)} ago</p>
                                     </div>
                                  </div>
                               </div>

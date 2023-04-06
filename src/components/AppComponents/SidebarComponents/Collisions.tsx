@@ -50,7 +50,7 @@ export const Collisions: React.FC<{
    return (
       <>
          <Toaster></Toaster>
-         <div className=" w-[23%]  min-w-[350px] hidden lg:block bg-white border-r border-r-gray-300 px-6 py-6 overflow-y-scroll">
+         <div className=" w-[250px]  min-w-[250px] hidden h-full lg:block bg-white border-r border-r-gray-300 px-6 py-6 overflow-y-scroll">
             <h1 className="h-12 font-medium text-xl">Collision Detection</h1>
 
             <p className="text-gray-500 font-medium mb-3 mt-10 text-sm">View Collisions</p>

@@ -38,6 +38,8 @@ export type localSettings = {
    dancerStyle: "initials" | "numbered" | "solid";
    viewCollisions: boolean;
    stageFlipped: boolean;
+   viewingThree: boolean;
+   viewingTwo: boolean;
 };
 
 export type cloudSettings = {

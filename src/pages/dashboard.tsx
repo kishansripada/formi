@@ -154,7 +154,7 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
 
                      <div className="flex flex-col items-start justify-center w-full">
                         <p className="font-semibold">{session?.user.user_metadata?.full_name}</p>
-                        <div className="text-gray-500 text-sm flex flex-row items-center justify-between w-full">
+                        <div className="text-neutral-500 text-sm flex flex-row items-center justify-between w-full">
                            {subscription.plan.product === "legacy" ? (
                               <p>Early Adopter</p>
                            ) : subscription.plan.product ? (
@@ -199,7 +199,7 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
 
                   <button
                      className={`flex flex-row justify-between items-center ${
-                        menuOpen === "mydances" ? "bg-gray-200" : ""
+                        menuOpen === "mydances" ? "bg-neutral-200" : ""
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                      onClick={() => setMenuOpen("mydances")}
                   >
@@ -207,7 +207,7 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                   </button>
                   <button
                      className={`flex flex-row justify-between items-center ${
-                        menuOpen === "sharedwithme" ? "bg-gray-200" : ""
+                        menuOpen === "sharedwithme" ? "bg-neutral-200" : ""
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                      onClick={() => setMenuOpen("sharedwithme")}
                   >
@@ -215,7 +215,7 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                   </button>
                   {/* <button
                      className={`flex flex-row justify-between items-center ${
-                        menuOpen === "orgdances" ? "bg-gray-200" : ""
+                        menuOpen === "orgdances" ? "bg-neutral-200" : ""
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                      onClick={() => setMenuOpen("orgdances")}
                   >
@@ -224,7 +224,7 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
 
                   {/* <button
                      className={`flex flex-row justify-between items-center ${
-                        menuOpen === "rosters" ? "bg-gray-200" : ""
+                        menuOpen === "rosters" ? "bg-neutral-200" : ""
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                      onClick={() => setMenuOpen("rosters")}
                   >
@@ -233,14 +233,14 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                   {/* <button
                      onClick={() => setMenuOpen("audio")}
                      className={`flex flex-row justify-between items-center ${
-                        menuOpen === "audio" ? "bg-gray-200" : ""
+                        menuOpen === "audio" ? "bg-neutral-200" : ""
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                   >
                      <p>Uploaded Audio</p>
                   </button> */}
                   {/* <button
                      className={`flex flex-row justify-between items-center mt-auto ${
-                        menuOpen === "organization" ? "bg-gray-200" : ""
+                        menuOpen === "organization" ? "bg-neutral-200" : ""
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                      onClick={() => setMenuOpen("organization")}
                   >
@@ -249,7 +249,7 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
 
                   <button
                      className={`flex flex-row justify-between items-center mt-auto  ${
-                        menuOpen === "trash" ? "bg-gray-200" : ""
+                        menuOpen === "trash" ? "bg-neutral-200" : ""
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                      onClick={() => setMenuOpen("trash")}
                   >
@@ -257,9 +257,9 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                   </button>
                </div>
 
-               <div className="flex flex-col bg-gray-100  lg:pl-10 font-proxima w-full justify-center items-center lg:items-start  lg:w-[80%]">
-                  <div className="flex flex-row items-center justify-end p-6 text-gray-500 ml-auto">
-                     <div className="flex flex-row items-center text-gray-900">
+               <div className="flex flex-col bg-neutral-100  lg:pl-10 font-proxima w-full justify-center items-center lg:items-start  lg:w-[80%]">
+                  <div className="flex flex-row items-center justify-end p-6 text-neutral-500 ml-auto">
+                     <div className="flex flex-row items-center text-neutral-900">
                         {/* {organization ? (
                            <p
                               onClick={() => {
@@ -273,7 +273,7 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                         {subscription.plan.product && subscription.plan.product !== "legacy" ? (
                            <>
                               {subscription.cancel_at ? (
-                                 <p className="mr-4 text-gray-600 text-sm">{daysLeft(subscription.cancel_at)} days remaining </p>
+                                 <p className="mr-4 text-neutral-600 text-sm">{daysLeft(subscription.cancel_at)} days remaining </p>
                               ) : null}
 
                               <button

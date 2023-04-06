@@ -26,8 +26,7 @@
     "react-color": "^2.19.3",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.3.0",
-    "three": "^0.148.0",
-    "zustand": "^4.3.3"
+    "three": "^0.148.0"
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.7",

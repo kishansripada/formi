@@ -70,7 +70,7 @@ export const AudioControls: React.FC<{
 
    return (
       <>
-         <div className="min-h-[50px] bg-[#fafafa] w-full border-t border-gray-300 flex flex-row items-center justify-between select-none">
+         <div className="min-h-[50px] bg-neutral-50 w-full border-t  border-neutral-300 flex flex-row items-center justify-between select-none">
             <div className="w-[45%] flex flex-col items-center justify-center   pl-4">
                {!viewOnly ? (
                   <>
@@ -92,7 +92,7 @@ export const AudioControls: React.FC<{
                               setSelectedFormation(formations.length);
                               pushChange();
                            }}
-                           className=" rounded-md  hidden transition duration-300  text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer  "
+                           className=" rounded-md  hidden transition duration-300  text-[#18191B]  hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer  "
                         >
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -102,82 +102,92 @@ export const AudioControls: React.FC<{
                               stroke="currentColor"
                               className="w-5 h-5 mr-1"
                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                            </svg>
 
-                           <p className="text-sm">Add</p>
+                           <p className="text-sm">New</p>
                         </button>
+
                         <button
                            onClick={() => {
                               if (selectedFormation === null) return;
 
-                              if (formations.length === 1) {
-                                 toast.error("you must have at least one formation");
-                                 return;
-                              }
-                              // addToStack();
-                              if (selectedFormation === formations.length - 1) {
-                                 setSelectedFormation(selectedFormation - 1);
-                              }
-
                               setFormations((formations: formation[]) => {
-                                 return formations.filter((formation, index) => {
-                                    return index !== selectedFormation;
-                                 });
+                                 return [
+                                    ...formations.slice(0, selectedFormation + 1),
+                                    {
+                                       ...formations[selectedFormation],
+                                       id: crypto.randomUUID(),
+                                       name: formations[selectedFormation].name + " copy",
+                                    },
+                                    ...formations.slice(selectedFormation + 1),
+                                 ];
                               });
-                              toast.success("Formation Deleted");
+                              setSelectedFormation((i: number) => i + 1);
+
                               pushChange();
                            }}
-                           className="rounded-md  hidden transition duration-300   text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
+                           className="rounded-md  hidden transition duration-300 mr-auto  text-[#18191B]  hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
                         >
-                           <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-5 h-5 mr-1"
-                           >
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                           </svg>
-                           <p className="text-sm"> Delete </p>
-                        </button>
-                        <button
-                           onClick={() => {
-                              if (selectedFormation === null) return;
-
-                              // addToStack();
-
-                              setFormations((formations: formation[]) => {
-                                 formations.splice(selectedFormation + 1, 0, {
-                                    ...formations[selectedFormation],
-                                    id: crypto.randomUUID(),
-                                    name: formations[selectedFormation].name + " copy",
-                                 });
-                                 return formations;
-                              });
-                              setSelectedFormation((i) => i + 1);
-                              toast.success("Formation Duplicated");
-                              pushChange();
-                           }}
-                           className="rounded-md  hidden transition duration-300 mr-auto  text-[#18191B]  hover:bg-gray-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
-                        >
-                           <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-5 h-5 mr-1"
-                           >
-                              <path
-                                 strokeLinecap="round"
-                                 strokeLinejoin="round"
-                                 d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
-                              />
+                           <svg className="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                              <path d="M180 975q-24 0-42-18t-18-42V312h60v603h474v60H180Zm120-120q-24 0-42-18t-18-42V235q0-24 18-42t42-18h440q24 0 42 18t18 42v560q0 24-18 42t-42 18H300Zm0-60h440V235H300v560Zm0 0V235v560Z" />
                            </svg>
 
                            <p className="text-sm">Duplicate</p>
+                        </button>
+                        <button
+                           onClick={() => {
+                              if (selectedFormation === null) return;
+
+                              setFormations((formations: formation[]) => {
+                                 return formations.map((formation) => {
+                                    if (formation.id === formations[selectedFormation].id) {
+                                       return {
+                                          ...formation,
+                                          positions: formation.positions.map((position) => {
+                                             return { ...position, position: { x: position.position.x, y: -position.position.y } };
+                                          }),
+                                       };
+                                    }
+                                    return formation;
+                                 });
+                              });
+
+                              pushChange();
+                           }}
+                           className="rounded-md  hidden transition duration-300 mr-auto  text-[#18191B]  hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
+                        >
+                           <svg className="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                              <path d="M80 606v-60h800v60H80Zm210-120V386h380v100H290Zm0 280V666h380v100H290Z" />
+                           </svg>
+                           <p className="text-sm">Flip X</p>
+                        </button>
+                        <button
+                           onClick={() => {
+                              if (selectedFormation === null) return;
+
+                              setFormations((formations: formation[]) => {
+                                 return formations.map((formation) => {
+                                    if (formation.id === formations[selectedFormation].id) {
+                                       return {
+                                          ...formation,
+                                          positions: formation.positions.map((position) => {
+                                             return { ...position, position: { x: -position.position.x, y: position.position.y } };
+                                          }),
+                                       };
+                                    }
+                                    return formation;
+                                 });
+                              });
+
+                              pushChange();
+                           }}
+                           className="rounded-md  hidden transition duration-300 mr-auto  text-[#18191B]  hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
+                        >
+                           <svg className="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                              <path d="M450 976V176h60v800h-60Zm120-210V386h100v380H570Zm-280 0V386h100v380H290Z" />
+                           </svg>
+                           <p className="text-sm">Flip Y</p>
                         </button>
                      </div>
                   </>
@@ -203,7 +213,7 @@ export const AudioControls: React.FC<{
                </button>
                {isPlaying ? (
                   <div
-                     className={`hover:bg-gray-100 transition duration-300 cursor-pointer p-1 rounded-2xl mx-3 select-none`}
+                     className={`hover:bg-neutral-100 transition duration-300 cursor-pointer p-1 rounded-2xl mx-3 select-none`}
                      onClick={() => {
                         if (player && player.isReady) {
                            player.playPause();
@@ -213,7 +223,7 @@ export const AudioControls: React.FC<{
                         }
                      }}
                   >
-                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 fill-gray-600">
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 fill-neutral-600">
                         <path
                            fillRule="evenodd"
                            d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7.5 0A.75.75 0 0115 4.5h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75V5.25z"
@@ -223,7 +233,7 @@ export const AudioControls: React.FC<{
                   </div>
                ) : (
                   <div
-                     className={`hover:bg-gray-100 transition duration-300 p-1 rounded-2xl mx-3 select-none cursor-pointer `}
+                     className={`hover:bg-neutral-100 transition duration-300 p-1 rounded-2xl mx-3 select-none cursor-pointer `}
                      onClick={() => {
                         if (player && player.isReady) {
                            player.playPause();
@@ -233,7 +243,7 @@ export const AudioControls: React.FC<{
                         }
                      }}
                   >
-                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 fill-gray-600">
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 fill-neutral-600">
                         <path
                            fillRule="evenodd"
                            d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
@@ -254,9 +264,9 @@ export const AudioControls: React.FC<{
             </div>
 
             <div className="w-[45%] pr-10 flex flex-row justify-center items-center ">
-               <p className=" ml-auto lg:mr-auto text-gray-600 ">
+               <p className=" ml-auto lg:mr-auto text-neutral-600 ">
                   <span>{formatTime(position || 0)}</span>
-                  {/* {msToTime((position || 0) * 1000)}:<span className="text-gray-500">{Math.round(((position || 0) * 10) % 10)}</span> */}
+                  {/* {msToTime((position || 0) * 1000)}:<span className="text-neutral-500">{Math.round(((position || 0) * 10) % 10)}</span> */}
                </p>
 
                <button
@@ -297,7 +307,7 @@ export const AudioControls: React.FC<{
                      />
                   </svg>
 
-                  <div className="w-24 rounded-full h-1 bg-gray-200 mx-2 relative">
+                  <div className="w-24 rounded-full h-1 bg-neutral-200 mx-2 relative">
                      <div
                         onMouseDown={() => {
                            setIsChangingZoom(true);

@@ -39,10 +39,10 @@ export const MyDances: React.FC<{ myDances: any; invalidateDances: Function }> =
                   .map((dance) => {
                      return (
                         <>
-                           <div key={dance.id} className="flex flex-col items-center text-gray-700 mr-5 relative cursor-pointer  ">
+                           <div key={dance.id} className="flex flex-col items-center text-neutral-700 mr-5 relative cursor-pointer  ">
                               <Link key={dance.id} href={`/${dance.id}/edit`}>
                                  <div className="">
-                                    <div className="bg-white rounded-xl h-[200px] w-[300px] relative border-gray-300 border  ">
+                                    <div className="bg-white rounded-xl h-[200px] w-[300px] relative border-neutral-300 border  ">
                                        {dance.formations[0].positions.map((position) => {
                                           return (
                                              <>
@@ -69,7 +69,7 @@ export const MyDances: React.FC<{ myDances: any; invalidateDances: Function }> =
                                     <div className="flex flex-row justify-between w-full items-center">
                                        <div className="flex flex-col items-start  w-full">
                                           <p className="mt-1 font-semibold">{dance.name}</p>
-                                          <p className=" text-xs text-gray-400">{timeSince(dance.last_edited)} ago</p>
+                                          <p className=" text-xs text-neutral-400">{timeSince(dance.last_edited)} ago</p>
                                        </div>
                                        <button
                                           id="dropdown"

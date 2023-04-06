@@ -129,7 +129,7 @@ export const PathEditor: React.FC<{
                                     className="z-[60] stroke-black"
                                  />
 
-                                 <svg className="rotate-90">
+                                 <svg key={dancerPosition.id + "controlPointStart"} className="rotate-90">
                                     <rect
                                        id={dancerPosition.id}
                                        data-type={"controlPointStart"}
@@ -149,7 +149,7 @@ export const PathEditor: React.FC<{
                                        className="pointer-events-auto z-[60] fill-white  -translate-x-[5px] -translate-y-[5px]"
                                     />
                                  </svg>
-                                 <svg className="rotate-90">
+                                 <svg key={dancerPosition.id + "controlPointEnd"} className="rotate-90">
                                     <rect
                                        id={dancerPosition.id}
                                        data-type={"controlPointEnd"}

@@ -52,7 +52,7 @@ export const Formation: React.FC<{
    if (amSelected) {
       colorsOnThisFormation = [...colorsOnThisFormation, "#DB2777"];
    }
-
+   let myWidth = ((index === 0 ? 0 : formation.transition.durationSeconds) + formation.durationSeconds) * pixelsPerSecond;
    return (
       <>
          <div
@@ -75,7 +75,7 @@ export const Formation: React.FC<{
             <div
                className={`    cursor-pointer  bg-white  border-b-[4px]    border-neutral-400  border-x-[1px]  relative group  `}
                style={{
-                  width: ((index === 0 ? 0 : formation.transition.durationSeconds) + formation.durationSeconds) * pixelsPerSecond,
+                  width: myWidth,
                   // borderTopColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#404040",
                   borderBottomColor:
                      formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color ||
@@ -88,7 +88,7 @@ export const Formation: React.FC<{
                   // subtract 4 to account for the mx-[2px]
                }}
             >
-               {firstNamesOnThisFormation.length ? (
+               {firstNamesOnThisFormation.length && myWidth > 100 ? (
                   <div
                      // opacity-0 group-hover:opacity-100
                      className="absolute h-5 right-[0px] top-[-20px] z-10 w-fit px-2 text-xs text-white  transition duration-300 ease-in-out pointer-events-none "

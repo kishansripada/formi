@@ -3,30 +3,18 @@ import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
-
+import Dropdown from "../../AppComponents/Dropdown";
 export const StageSettings: React.FC<{
    setFormations: Function;
    pricingTier: string;
    formations: formation[];
-   cloudSettings: any;
+   cloudSettings: cloudSettings;
    setCloudSettings: Function;
    setUpgradeIsOpen: Function;
    pushChange: Function;
-}> = ({ setFormations, pricingTier, formations, setCloudSettings, cloudSettings, setUpgradeIsOpen, pushChange }) => {
-   const [backgroundDropdownIsOpen, setBackgroundDropdownIsOpen] = useState<boolean>();
+   dropDownToggle: boolean;
+}> = ({ setFormations, pricingTier, formations, setCloudSettings, cloudSettings, setUpgradeIsOpen, pushChange, dropDownToggle }) => {
    let { stageBackground, stageDimensions } = cloudSettings;
-   const closeWindow = (e) => {
-      console.log(e.target.id);
-      if (e.target.id === "menu-item") return;
-      setBackgroundDropdownIsOpen(false);
-   };
-
-   useEffect(() => {
-      window.addEventListener("mousedown", closeWindow);
-      return () => {
-         window.removeEventListener("mousedown", closeWindow);
-      };
-   }, [backgroundDropdownIsOpen]);
 
    const [file, setFile] = useState<File | null>();
    const router = useRouter();
@@ -75,18 +63,27 @@ export const StageSettings: React.FC<{
          });
    }, [file]);
 
+   const setStageBackground = (val: string) => {
+      if (val === "cheer9") {
+         setCloudSettings((s) => {
+            return { ...s, stageDimensions: { width: 36, height: 28 } };
+         });
+      }
+      setCloudSettings((cloudSettings: cloudSettings) => {
+         return {
+            ...cloudSettings,
+            stageBackground: val,
+         };
+      });
+   };
    return (
       <>
          <Toaster></Toaster>
-         <div className=" w-[23%]  min-w-[350px] hidden lg:block bg-white border-r border-r-gray-300 px-6 py-6 overflow-y-scroll">
-            <h1 className="h-12 font-medium text-xl">Stage Settings</h1>
-
-            <p className="font-medium h-10">Stage Dimensions</p>
-
-            <p className="text-gray-500 font-medium text-sm">Width</p>
+         <div className=" w-[250px]  min-w-[250px] hidden lg:block bg-white h-full px-6 py-6 overflow-y-scroll">
+            <p className="text-neutral-800 font-medium text-sm">Width</p>
             <div className="my-6 flex flex-row justify-center items-center">
                <button
-                  className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
+                  className="p-2 rounded-xl hover:bg-neutral-100 transition duration-300"
                   onClick={() => {
                      for (let i = 0; i < formations.length; i++) {
                         for (let j = 0; j < formations[i].positions.length; j++) {
@@ -127,11 +124,11 @@ export const StageSettings: React.FC<{
                   </svg>
                </button>
                <div className="flex flex-col justify-center items-center">
-                  <p className="mx-6 text-2xl text-gray-700">{stageDimensions.width}</p>
-                  <p className="text-gray-400 text-xs">Squares</p>
+                  <p className="mx-6 text-2xl text-neutral-700">{stageDimensions.width}</p>
+                  <p className="text-neutral-400 text-xs">Squares</p>
                </div>
                <button
-                  className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
+                  className="p-2 rounded-xl hover:bg-neutral-100 transition duration-300"
                   onClick={() => {
                      setFormations((formations: formation[]) => {
                         return formations.map((formation, i) => {
@@ -160,11 +157,11 @@ export const StageSettings: React.FC<{
                   </svg>
                </button>
             </div>
-
-            <p className="text-gray-500 font-medium text-sm">Height</p>
+            <hr />
+            <p className="text-neutral-800 font-medium text-sm">Height</p>
             <div className="my-6 flex flex-row justify-center items-center">
                <button
-                  className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
+                  className="p-2 rounded-xl hover:bg-neutral-100 transition duration-300"
                   onClick={() => {
                      for (let i = 0; i < formations.length; i++) {
                         for (let j = 0; j < formations[i].positions.length; j++) {
@@ -189,11 +186,11 @@ export const StageSettings: React.FC<{
                   </svg>
                </button>
                <div className="flex flex-col justify-center items-center">
-                  <p className="mx-6 text-2xl text-gray-700">{stageDimensions.height}</p>
-                  <p className="text-gray-400 text-xs">Squares</p>
+                  <p className="mx-6 text-2xl text-neutral-700">{stageDimensions.height}</p>
+                  <p className="text-neutral-400 text-xs">Squares</p>
                </div>
                <button
-                  className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
+                  className="p-2 rounded-xl hover:bg-neutral-100 transition duration-300"
                   onClick={() => {
                      setCloudSettings((cloudSettings) => {
                         return { ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height + 2 } };
@@ -206,133 +203,33 @@ export const StageSettings: React.FC<{
                   </svg>
                </button>
             </div>
-
-            <div className="relative mt-16 text-left  ">
-               <div onClick={() => setBackgroundDropdownIsOpen((x) => !x)}>
-                  <button
-                     type="button"
-                     className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-                     id="menu-button"
-                     aria-expanded="true"
-                     aria-haspopup="true"
-                  >
-                     Stage Background
-                     <svg
-                        className="-mr-1 ml-2 h-5 w-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                     >
-                        <path
-                           fillRule="evenodd"
-                           d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                           clipRule="evenodd"
-                        />
-                     </svg>
-                  </button>
-               </div>
-
-               <div
-                  className={`absolute ${
-                     backgroundDropdownIsOpen ? " opacity-100 scale-100" : "transform opacity-0 scale-95 pointer-events-none "
-                  } right-0 z-20 mt-2 w-full transform transition ease-out duration-100 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
-                  role="menu"
-                  aria-orientation="vertical"
-                  aria-labelledby="menu-button"
-                  tabIndex={-1}
-               >
-                  <div className="py-1" role="none">
-                     <a
-                        onClick={() => {
-                           if (pricingTier === "basic") {
-                              setUpgradeIsOpen(true);
-                              return;
-                           }
-                           setCloudSettings((s) => {
-                              return { ...s, stageBackground: "none" };
-                           });
-                        }}
-                        href="#"
-                        className={`${
-                           stageBackground === "none" ? "text-gray-900 bg-gray-100 " : ""
-                        } text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900`}
-                        role="menuitem"
-                        tabIndex={-1}
-                        id="menu-item"
-                     >
-                        None
-                     </a>
-
-                     <a
-                        onClick={() => {
-                           setCloudSettings((s) => {
-                              return { ...s, stageBackground: "grid" };
-                           });
-                        }}
-                        href="#"
-                        className={`${
-                           stageBackground === "grid" ? "text-gray-900 bg-gray-100 " : ""
-                        } text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900`}
-                        role="menuitem"
-                        tabIndex={-1}
-                        id="menu-item"
-                     >
-                        Grid
-                     </a>
-                     <a
-                        onClick={() => {
-                           if (pricingTier === "basic") {
-                              setUpgradeIsOpen(true);
-                              return;
-                           }
-                           setCloudSettings((s) => {
-                              return { ...s, stageDimensions: { width: 36, height: 28 } };
-                           });
-                           setCloudSettings((s) => {
-                              return { ...s, stageBackground: "cheer9" };
-                           });
-                        }}
-                        href="#"
-                        className={`${
-                           stageBackground === "cheer9" ? "text-gray-900 bg-gray-100 " : ""
-                        } text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900`}
-                        role="menuitem"
-                        tabIndex={-1}
-                        id="menu-item"
-                     >
-                        Cheer Floor (9 Rolls)
-                     </a>
-                     <a
-                        onClick={() => {
-                           if (pricingTier === "basic") {
-                              setUpgradeIsOpen(true);
-                              return;
-                           }
-                           setCloudSettings((s) => {
-                              return { ...s, stageBackground: "custom" };
-                           });
-                        }}
-                        href="#"
-                        className={`${
-                           stageBackground === "custom" ? "text-gray-900 bg-gray-100 " : ""
-                        } text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 hover:text-gray-900`}
-                        role="menuitem"
-                        tabIndex={-1}
-                        id="menu-item"
-                     >
-                        Custom Image Upload
-                     </a>
-                  </div>
-               </div>
-
+            <p className="text-neutral-800 font-medium text-sm mb-2">Stage Background</p>
+            <Dropdown
+               dropDownToggle={dropDownToggle}
+               value={
+                  cloudSettings.stageBackground === "none"
+                     ? "None"
+                     : cloudSettings.stageBackground === "grid"
+                     ? "Grid"
+                     : cloudSettings.stageBackground === "cheer9"
+                     ? "Cheer Floor (9 Rolls)"
+                     : "Custom"
+               }
+               options={["None", "Grid", "Cheer 9", "Custom"]}
+               actions={[
+                  () => setStageBackground("none"),
+                  () => setStageBackground("grid"),
+                  () => setStageBackground("cheer9"),
+                  () => setStageBackground("custom"),
+               ]}
+            ></Dropdown>
+            <div className="relative mt-6 text-left  ">
                {stageBackground === "grid" ? (
                   <>
-                     {/* <grid subdivisions> */}
-                     <p className="text-gray-500 font-medium text-sm mt-6">Grid Subdivisions</p>
+                     <p className="text-neutral-800 font-medium text-sm mt-6">Grid Subdivisions</p>
                      <div className="my-6 flex flex-row justify-center items-center">
                         <button
-                           className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
+                           className="p-2 rounded-xl hover:bg-neutral-100 transition duration-300"
                            onClick={() => {
                               if (pricingTier === "basic") {
                                  setUpgradeIsOpen(true);
@@ -356,11 +253,11 @@ export const StageSettings: React.FC<{
                            </svg>
                         </button>
                         <div className="flex flex-col justify-center items-center">
-                           <p className="mx-6 text-2xl text-gray-700">{cloudSettings.gridSubdivisions}</p>
-                           <p className="text-gray-400 text-xs">Squares</p>
+                           <p className="mx-6 text-2xl text-neutral-700">{cloudSettings.gridSubdivisions}</p>
+                           <p className="text-neutral-400 text-xs">Squares</p>
                         </div>
                         <button
-                           className="p-2 rounded-xl hover:bg-gray-100 transition duration-300"
+                           className="p-2 rounded-xl hover:bg-neutral-100 transition duration-300"
                            onClick={() => {
                               if (pricingTier === "basic") {
                                  setUpgradeIsOpen(true);
@@ -389,7 +286,7 @@ export const StageSettings: React.FC<{
             </div>
 
             {cloudSettings.stageBackground === "custom" ? (
-               <button className="relative border border-dashed border-gray-300 h-24 w-full rounded-xl bg-gray-50 mt-4 ">
+               <button className="relative border border-dashed border-neutral-300 h-24 w-full rounded-xl bg-neutral-50 mt-4 ">
                   <input
                      accept="image/png, image/gif, image/jpeg"
                      type="file"

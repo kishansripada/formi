@@ -9,31 +9,31 @@ export const Header = () => {
       <>
          <div className="sticky top-0 z-50  ">
             <Link href={"/pricing"}>
-               <div className="h-12 bg-pink-600 cursor-pointer text-sm w-full text-white flex flex-row items-center justify-center hidden lg:flex">
+               <div className="h-12 bg-pink-600 cursor-pointer text-sm w-full text-neutral-100 flex flex-row items-center justify-center hidden lg:flex">
                   👨‍🎓 Get 80% off with a registered .edu email address for a limited time
                </div>
             </Link>
 
-            <nav className="flex flex-row py-3 lg:justify-between text-black items-center justify-center px-[10%]  bg-[#fafafa]  ">
+            <nav className="flex flex-row py-3 lg:justify-between text-black items-center justify-center px-[10%]  bg-neutral-50 dark:bg-neutral-900  ">
                <div className="flex flex-row items-center">
                   <Link href={"/"}>
                      <div className="w-[150px] cursor-pointer">
                         {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
-                        <h1 className="text-4xl font-bold z-10 relative">FORMI</h1>
+                        <h1 className="text-4xl font-bold z-10 dark:text-neutral-200 relative">FORMI</h1>
 
-                        <div className="bg-pink-600 relative h-2 opacity-40 top-[-10px] mr-auto w-[100%]"></div>
+                        <div className="bg-[#E7ADC5] dark:bg-pink-600 relative h-2  top-[-10px] mr-auto w-[100%]"></div>
                      </div>
                   </Link>
-                  <div className="flex flex-row items-center ml-9 ">
+                  <div className="flex flex-row items-center ml-9 dark:text-neutral-300 ">
                      <Link href={"/features"} className="z-50">
-                        <button className="text-gray-700 hover:text-black text-medium hidden lg:block mr-8">Features</button>
+                        <button className="  text-medium hidden lg:block mr-8">Features</button>
                      </Link>
                      <Link href={"/blog"} className="z-50">
-                        <button className="text-gray-700 hover:text-black text-medium hidden lg:block mr-8 ">Blog</button>
+                        <button className=" text-medium hidden lg:block mr-8 ">Blog</button>
                      </Link>
                      <Link href={"/pricing"} className="z-50">
-                        <button className="text-gray-700 hover:text-black text-medium hidden lg:block mr-8">Pricing</button>
+                        <button className="  text-medium hidden lg:block mr-8">Pricing</button>
                      </Link>
                   </div>
                </div>
@@ -48,14 +48,16 @@ export const Header = () => {
                      </Link> */}
 
                   <Link href={"/login"} className="z-50">
-                     <button className=" border-2 text-pink-600 border-pink-600 mr-2  px-4 py-2 hidden lg:block  rounded-full">Login</button>
+                     <button className=" border-2 text-pink-600 border-pink-600 mr-2  px-4 py-2 hidden lg:block dark:text-neutral-100  rounded-full">
+                        Login
+                     </button>
                   </Link>
                   <Link href={"/login"} className="z-50">
                      <button className="bg-pink-600 text-white  px-4 py-2 hidden lg:block  rounded-full">Try Free</button>
                   </Link>
                </div>
             </nav>
-            <hr></hr>
+            <div className="w-full h-[1px] bg-neutral-700"></div>
          </div>
       </>
    );

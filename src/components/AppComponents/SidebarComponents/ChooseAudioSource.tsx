@@ -83,10 +83,9 @@ export const ChooseAudioSource: React.FC<{
 
    return (
       <>
-         <div className="lg:flex hidden overflow-y-scroll  min-w-[350px] w-[23%]  flex-col   bg-white border-r border-r-gray-300   px-6 py-6 overflow-hidden">
+         <div className="lg:flex hidden overflow-y-scroll w-[250px]  min-w-[250px] h-full  flex-col   bg-white    px-6 py-6 overflow-hidden">
             <div className="flex flex-col ">
-               <p className="text-xl font-medium text-[#1A1B25] h-12 flex flex-row justify-between items-center">
-                  <p>Add Media</p>
+               <div className="text-xl font-medium text-[#1A1B25]  flex flex-row justify-between items-center">
                   <button
                      onClick={(e) => {
                         if (pricingTier === "basic" && audioFiles?.data?.length) {
@@ -130,29 +129,15 @@ export const ChooseAudioSource: React.FC<{
                         <p className="relative cursor-pointer ">Upload Media</p>
                      </div>
                   </button>
-               </p>
+               </div>
             </div>
 
             <div>
-               <p className=" font-medium mb-2 mt-4 text-gray-800">Selected File</p>
-               <div className="p-3 rounded-md my-1 cursor-pointer w-full min-h-[48px] flex flex-row items-center justify-center whitespace-nowrap bg-pink-100 border-pink-600 border-2">
+               <p className=" font-medium mb-2 mt-4 text-sm text-neutral-800">Selected File</p>
+               <div className="px-2 py-2  rounded-md my-1 cursor-pointer w-full flex flex-row items-center justify-center whitespace-nowrap bg-pink-100 border-pink-600 border">
                   {soundCloudTrackId ? (
                      <>
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth="1.5"
-                           stroke="currentColor"
-                           className="w-6 h-6 mr-2 shrink-0"
-                        >
-                           <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
-                           />
-                        </svg>
-                        <p className="text-gray-700 text-sm font-medium w-[200px] text-ellipsis overflow-hidden">
+                        <p className="text-neutral-700 text-xs font-medium w-full text-ellipsis overflow-hidden">
                            {soundCloudTrackId?.split("/").slice(-1)[0]}
                         </p>
 
@@ -183,13 +168,13 @@ export const ChooseAudioSource: React.FC<{
                      </>
                   ) : (
                      <>
-                        <p className="text-gray-800">No File Selected</p>
+                        <p className="text-neutral-800 text-xs">No File Selected</p>
                      </>
                   )}
                </div>
             </div>
 
-            <p className=" font-medium mb-2 mt-6 text-gray-800">My Uploaded Files</p>
+            <p className=" font-medium mb-2 mt-6 px-2 text-sm text-neutral-800">Uploaded Media</p>
             <div className="h-[300px]">
                <div className=" flex flex-col overflow-scroll removeScrollBar ">
                   {audioFiles?.data?.length ? (
@@ -205,27 +190,14 @@ export const ChooseAudioSource: React.FC<{
                                  );
                                  setLocalSource(null);
                               }}
-                              className={`p-3 ${
+                              className={` ${
                                  audiofile.name === soundCloudTrackId?.split("/").slice(-1)[0] ? "opacity-50 pointer-events-none" : ""
-                              }   rounded-md my-1 cursor-pointer w-full min-h-[48px] flex flex-row items-center justify-center whitespace-nowrap border-gray-300 border `}
+                              }   rounded-md my-1 px-2 group hover:bg-neutral-100 cursor-pointer w-full min-h-[40px] flex flex-row items-center  whitespace-nowrap  `}
                            >
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth="1.5"
-                                 stroke="currentColor"
-                                 className="w-6 h-6 mr-2 shrink-0"
-                              >
-                                 <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
-                                 />
-                              </svg>
-                              <p className="text-gray-700 text-sm font-medium w-[200px] text-ellipsis overflow-hidden">{audiofile.name}</p>
+                              <p className="text-neutral-700 text-xs  text-left text-ellipsis overflow-hidden">{audiofile.name}</p>
 
                               <button
+                                 className="ml-auto mr-2"
                                  onClick={async (e) => {
                                     e.stopPropagation();
                                     const { data, error } = await supabase.storage
@@ -249,7 +221,7 @@ export const ChooseAudioSource: React.FC<{
                                     viewBox="0 0 24 24"
                                     strokeWidth={1.5}
                                     stroke="currentColor"
-                                    className="w-6 h-6 ml-auto"
+                                    className="w-5 h-5 group-hover:opacity-100 opacity-0 "
                                  >
                                     <path
                                        strokeLinecap="round"
@@ -263,7 +235,7 @@ export const ChooseAudioSource: React.FC<{
                      })
                   ) : (
                      <>
-                        <p className="text-gray-600 text-sm">No Uploaded Files</p>
+                        <p className="text-neutral-600 text-sm">No Uploaded Files</p>
                      </>
                   )}
                </div>

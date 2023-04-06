@@ -99,12 +99,12 @@ export const DancerAlias: React.FC<{
                pointerEvents: isPlaying ? "none" : "auto",
                backgroundColor: selectedDancers.includes(dancer.id) && !isPlaying ? "#404040" : hexToRGBA(dancer?.color || "#db2777", 0.5),
                transition: !draggingDancerId && !isPlaying ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",
-               width: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
-               height: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
+               // width: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
+               // height: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
             }}
             id={dancer.id}
             data-type={"dancer"}
-            className={`rounded-full   lg:pointer-events-auto pointer-events-none flex  -translate-y-1/2 -translate-x-1/2 flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
+            className={`rounded-full w-[35px] h-[35px] hover:w-[38px]   hover:h-[38px] lg:pointer-events-auto pointer-events-none flex  -translate-y-1/2 -translate-x-1/2 flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
          >
             {/* <span className="animate-ping absolute  inline-flex w-[30px] h-[30px] rounded-full bg-sky-400 opacity-75"></span> */}
 
@@ -156,7 +156,7 @@ export const DancerAlias: React.FC<{
                   id={dancer.id}
                   data-type={"dancer"}
                   draggable={false}
-                  className="w-[32px] h-[32px] rounded-full select-none"
+                  className="w-[29px] h-[29px] rounded-full select-none"
                   src={dancer.instagramUsername}
                   alt={dancer.name}
                />
@@ -168,13 +168,12 @@ export const DancerAlias: React.FC<{
                      //  dancerStyle === "solid" ? : "white",
                      backgroundColor: dancer.color || "#db2777",
                   }}
-                  className={` rounded-full w-[32px] h-[32px] grid place-items-center select-none text-white cursor-default `}
+                  className={` rounded-full w-[29px] h-[29px] grid place-items-center select-none text-white cursor-default `}
                >
                   <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
                      {dancerStyle === "numbered" ? <>{index + 1}</> : dancerStyle === "initials" ? <> {initials}</> : <></>}
                   </p>
                </div>
-               // ${  isInCollision ? "bg-red-500 text-white" : "bg-white"}
             )}
             {dancerStyle !== "initials" ? (
                <p className="absolute -bottom-6 text-center select-none pointer-events-none   rounded-full px-1">{dancer.name.split(" ")[0]}</p>

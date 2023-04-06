@@ -42,7 +42,7 @@ export const Presets: React.FC<{
    let { stageDimensions } = cloudSettings;
    return (
       <>
-         <div className="lg:flex hidden flex-col p-6 min-w-[350px] w-[23%] bg-white border-r border-r-gray-300 ">
+         <div className="lg:flex hidden flex-col p-6 w-[250px]  min-w-[250px]  bg-white h-full ">
             <p className="  font-medium text-xl">Formation Templates</p>
             <p className="text-gray-500 text-xs mt-2">Quickly arrange all your dancers into prebuilt formations (more templates on the way)</p>
 
@@ -79,7 +79,7 @@ export const Presets: React.FC<{
                      if (pricingTier === "basic") {
                         setUpgradeIsOpen(true);
                      }
-                     addToStack();
+                     // addToStack();
                      setFormations(verticalLineFormation(formations, selectedFormation));
                      pushChange();
                   }}

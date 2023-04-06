@@ -97,7 +97,7 @@ export const Comment: React.FC<{
             <div
                className={` flex-col h-full justify-center ml-4 text-white font-medium  w-full	 pointer-events-none ${isOpen ? "flex" : "hidden"}  `}
             >
-               <div className="flex flex-row items-center text-xs text-gray-200 ">
+               <div className="flex flex-row items-center text-xs text-neutral-200 ">
                   <p>{comment.user.name}</p>
                </div>
 
@@ -134,7 +134,7 @@ export const Comment: React.FC<{
                         });
                      });
                   }}
-                  className="bg-gray-800 focus:outline-none resize-none pointer-events-auto w-full text-sm font-normal  mt-1 selection:bg-pink-900"
+                  className="bg-neutral-800 focus:outline-none resize-none pointer-events-auto w-full text-sm font-normal  mt-1 selection:bg-pink-900"
                   value={comment.content}
                   ref={textAreaRef}
                   style={

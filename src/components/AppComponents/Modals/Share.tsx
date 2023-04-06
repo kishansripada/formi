@@ -53,39 +53,9 @@ export const Share: React.FC<{
                }
             }}
          >
-            <div className="flex  w-[700px] flex-col rounded-xl bg-white ">
+            <div className="flex  w-[500px] flex-col  bg-white    text-sm ">
                <div className="flex flex-col rounded-xl px-10 pt-10 pb-6 h-full">
-                  <div className="flex flex-row">
-                     <h1 className="text-2xl  mr-auto">Sharing Settings</h1>
-                     <div className="flex flex-col items-end justify-center mx-5">
-                        <p className="text-sm  text-gray-700  mb-3">Anyone With The Link Can View</p>
-
-                        <label className="inline-flex relative items-center cursor-pointer">
-                           <input
-                              type="checkbox"
-                              id="checked-toggle"
-                              className="sr-only peer"
-                              checked={anyoneCanView}
-                              onChange={async (e) => {
-                                 const { data, error } = await supabase
-                                    .from("dances")
-                                    .update({ anyonecanview: !anyoneCanView, last_edited: new Date() })
-                                    .eq("id", router.query.danceId);
-                                 console.log(data);
-                                 if (!error) {
-                                    toast.success("Share Settings Updated");
-                                    setAnyoneCanView(!anyoneCanView);
-                                 }
-                                 if (error) {
-                                    toast.error("there was an error saving your settings");
-                                 }
-                              }}
-                           />
-                           <div className="w-11 h-6 bg-gray-200 rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
-                        </label>
-                     </div>
-                  </div>
-                  <div className="flex flex-row justify-between items-center mt-10 ">
+                  <div className="flex flex-row justify-between items-center  ">
                      <input
                         value={newUserEmail}
                         onChange={(e) => {
@@ -110,7 +80,7 @@ export const Share: React.FC<{
                               setNewUserEmail("");
                            }
                         }}
-                        className="focus:border-pink-700 focus:border-2 rounded-md w-full mr-2 h-8 py-4 border-gray-300 border text-sm shadow-sm px-2 focus:outline-none"
+                        className="focus:border-pink-700 focus:border-2 rounded-md w-full mr-2 h-8 py-4 border-neutral-300 border text-sm shadow-sm px-2 focus:outline-none"
                         type="text"
                         placeholder="Enter an Email"
                      />
@@ -141,10 +111,34 @@ export const Share: React.FC<{
                   </div>
 
                   <div className="mt-5">
+                     <div className="flex flex-row py-2 rounded-md px-2  ">
+                        <p className="text-neutral-700">Anyone with the link</p>
+
+                        <select
+                           onChange={(e) => {
+                              if (e.target.value === "view") {
+                                 console.log("viewing");
+                                 supabase
+                                    .from("dances")
+                                    .update({ anyonecanview: true, last_edited: new Date() })
+                                    .eq("id", router.query.danceId)
+                                    .then((r) => console.log(r));
+                                 setAnyoneCanView(true);
+                              } else {
+                                 supabase.from("dances").update({ anyonecanview: false, last_edited: new Date() }).eq("id", router.query.danceId);
+                                 setAnyoneCanView(false);
+                              }
+                           }}
+                           className="ml-auto mr-2 text-right"
+                        >
+                           <option value="view">View</option>
+                           <option value="none">None</option>
+                        </select>
+                     </div>
                      {Object.entries(shareSettings).map((user) => {
                         return (
                            <div className="flex flex-row py-2 rounded-md px-2 py-2 " key={user[0]}>
-                              <p className="text-gray-700">{user[0]}</p>
+                              <p className="text-neutral-700">{user[0]}</p>
 
                               <select
                                  onChange={(e) => {
@@ -160,7 +154,7 @@ export const Share: React.FC<{
                                        });
                                     }
                                  }}
-                                 className="ml-auto mr-2"
+                                 className="ml-auto mr-2 text-right"
                                  value={user[1]}
                                  id=""
                               >
@@ -172,10 +166,15 @@ export const Share: React.FC<{
                         );
                      })}
                   </div>
-                  {Object.entries(shareSettings).length ? <p className="text-gray-400 text-xs mt-4 ">Collaborative Editing is Coming Soon</p> : null}
+                  {Object.entries(shareSettings).length ? (
+                     <p className="text-neutral-400 text-xs mt-4 ">Collaborative Editing is Coming Soon</p>
+                  ) : null}
                </div>
-               <div className="flex flex-row justify-between items-center w-full bg-gray-100 h-16 rounded-b-xl px-5">
-                  <button onClick={() => setShareIsOpen(false)} className=" border border-gray-300 bg-white hover:bg-gray-100 px-4  py-1 rounded-md">
+               <div className="flex flex-row justify-between items-center w-full bg-neutral-100 h-16 rounded-b-xl px-5">
+                  <button
+                     onClick={() => setShareIsOpen(false)}
+                     className=" border border-neutral-300 bg-white hover:bg-neutral-100 px-4  py-1 rounded-md"
+                  >
                      Cancel
                   </button>
                   <button
