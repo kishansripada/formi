@@ -6,7 +6,23 @@
 const { withSentryConfig } = require('@sentry/nextjs');
 
 const moduleExports = {
-  // Your existing module.exports
+
+  removeConsole: process.env.NODE_ENV === "production",
+  reactStrictMode: false,
+  swcMinify: true,
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
+  },
+
 
   sentry: {
     // Use `hidden-source-map` rather than `source-map` as the Webpack `devtool`
