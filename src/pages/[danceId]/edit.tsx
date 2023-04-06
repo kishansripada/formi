@@ -189,17 +189,16 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    };
 
    const pushChange = () => {
-      return;
-      // setFormations((formations: formation[]) => {
-      //    setDancers((dancers: dancer[]) => {
-      //       let delta = jsondiffpatch.diff({ formations: previousFormation, dancers: previousDancers }, { formations, dancers });
-      //       setDeltas((deltas) => {
-      //          return [...deltas, delta];
-      //       });
-      //       return dancers;
-      //    });
-      //    return formations;
-      // });
+      setFormations((formations: formation[]) => {
+         setDancers((dancers: dancer[]) => {
+            let delta = jsondiffpatch.diff({ formations: previousFormation, dancers: previousDancers }, { formations, dancers });
+            setDeltas((deltas) => {
+               return [...deltas, delta];
+            });
+            return dancers;
+         });
+         return formations;
+      });
 
       // console.log({ deltas });
 
