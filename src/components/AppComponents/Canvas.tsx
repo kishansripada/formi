@@ -65,22 +65,19 @@ export const Canvas: React.FC<{
    setShiftHeld,
 }) => {
    let { stageDimensions, stageBackground } = cloudSettings;
+   let { gridSnap } = localSettings;
+
    const stageFlippedFactor = stageFlipped ? -1 : 1;
 
    const [draggingCommentId, setDraggingCommentId] = useState<string | null>();
-
    const [changingControlId, setChangingControlId] = useState<null | string>(null);
    const [changingControlType, setChangingControlType] = useState<"start" | "end" | null>(null);
-
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
    const [isDragging, setIsDragging] = useState(false);
-
    const [rotatingDancerId, setRotatingDancerId] = useState(null);
 
-   let { gridSnap } = localSettings;
    const container = useRef();
    const stage = useRef();
-
    const session = useSession();
 
    useEffect(() => {

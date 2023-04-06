@@ -32,6 +32,8 @@ export const Header: React.FC<{
    isCommenting: boolean;
    isChangingCollisionRadius: boolean;
    setIsChangingCollisionRadius: Function;
+   formations: formation[];
+   dropDownToggle: Function;
 }> = ({
    saved,
    danceName,
@@ -57,11 +59,17 @@ export const Header: React.FC<{
    isCommenting,
    isChangingCollisionRadius,
    setIsChangingCollisionRadius,
+   formations,
+   dropDownToggle,
 }) => {
    const router = useRouter();
    let session = useSession();
    const supabase = useSupabaseClient();
+   const [templatesIsOpen, setTemplatesIsOpen] = useState(false);
 
+   useEffect(() => {
+      setTemplatesIsOpen(false);
+   }, [dropDownToggle]);
    return (
       <>
          <div className=" min-h-[50px] bg-neutral-800 flex flex-row items-center w-full  text-white border-b border-neutral-700 ">
@@ -117,7 +125,7 @@ export const Header: React.FC<{
                   </svg>
                </button>
                {isChangingCollisionRadius ? (
-                  <div className="w-[200px] left-12 h-[80px] bg-neutral-800 absolute top-12 flex flex-col  text-sm" id="dropdown-menu">
+                  <div className="w-[200px] left-12 h-[80px] bg-neutral-800 absolute top-14 flex flex-col  text-sm shadow-2xl" id="dropdown-menu">
                      <p className="font-semibold ml-2 mt-1">Collision Radius</p>
                      <div className="flex flex-row items-center border border-neutral-200 mt-auto m-1">
                         <input
@@ -230,6 +238,77 @@ export const Header: React.FC<{
                      />
                   </svg>
                </button>
+
+               <button
+                  onClick={() => {
+                     setTemplatesIsOpen((x: boolean) => !x);
+                  }}
+                  className="w-12   h-full grid place-items-center"
+               >
+                  <svg className="w-6 fill-white h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                     <path d="M340.118 766Q361 766 375.5 751.382q14.5-14.617 14.5-35.5Q390 695 375.382 680.5q-14.617-14.5-35.5-14.5Q319 666 304.5 680.618q-14.5 14.617-14.5 35.5Q290 737 304.618 751.5q14.617 14.5 35.5 14.5Zm0-280Q361 486 375.5 471.382q14.5-14.617 14.5-35.5Q390 415 375.382 400.5q-14.617-14.5-35.5-14.5Q319 386 304.5 400.618q-14.5 14.617-14.5 35.5Q290 457 304.618 471.5q14.617 14.5 35.5 14.5Zm280 280Q641 766 655.5 751.382q14.5-14.617 14.5-35.5Q670 695 655.382 680.5q-14.617-14.5-35.5-14.5Q599 666 584.5 680.618q-14.5 14.617-14.5 35.5Q570 737 584.618 751.5q14.617 14.5 35.5 14.5Zm0-280Q641 486 655.5 471.382q14.5-14.617 14.5-35.5Q670 415 655.382 400.5q-14.617-14.5-35.5-14.5Q599 386 584.5 400.618q-14.5 14.617-14.5 35.5Q570 457 584.618 471.5q14.617 14.5 35.5 14.5ZM180 936q-24 0-42-18t-18-42V276q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600V276H180v600Zm0-600v600-600Z" />
+                  </svg>
+               </button>
+               {templatesIsOpen ? (
+                  <div
+                     className="w-[300px] left-[200px] h-[500px] bg-neutral-800 absolute top-12 flex flex-col  text-sm shadow-2xl z-[50]"
+                     id="dropdown-menu"
+                  >
+                     <p className="font-semibold ml-2 mt-1">Formation Templates</p>
+                     <div className="flex flex-row items-center mt-auto m-1">
+                        <div className=" grid   flex-col mt-6  grid-cols-2  gap-2 h-full w-full p-2 ">
+                           <button
+                              className=" w-full h-24 border border-gray-200 shadow-sm ml-auto mr-auto rounded-xl grid place-items-center"
+                              onClick={() => {
+                                 if (pricingTier === "basic") {
+                                    setUpgradeIsOpen(true);
+                                 }
+                                 // addToStack();
+                                 setFormations(horizontalLineFormation(formations, selectedFormation));
+                                 pushChange();
+                              }}
+                           >
+                              <svg
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 strokeWidth={1.5}
+                                 stroke="currentColor"
+                                 className="w-10 h-10"
+                              >
+                                 <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                                 />
+                              </svg>
+                           </button>
+                           <button
+                              className=" w-full h-24 border border-gray-200 shadow-sm ml-auto mr-auto rounded-xl grid place-items-center"
+                              onClick={() => {
+                                 setFormations(verticalLineFormation(formations, selectedFormation));
+                                 pushChange();
+                              }}
+                           >
+                              <svg
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 strokeWidth={1.5}
+                                 stroke="currentColor"
+                                 className="w-10 h-10"
+                              >
+                                 <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+                                 />
+                              </svg>
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+               ) : null}
             </div>
             {/* 
             {!viewOnly ? (
@@ -303,3 +382,59 @@ export const Header: React.FC<{
       </>
    );
 };
+
+const horizontalLineFormation = (formations: formation[], selectedFormation: number | null) => {
+   let previousFormation = selectedFormation === 0 ? formations[selectedFormation] : formations[selectedFormation - 1];
+
+   let numberOfDancers = previousFormation.positions.length;
+   let possiblePositions = previousFormation.positions.map((position, i) => {
+      return { x: i - Math.round(numberOfDancers / 2), y: 0 };
+   });
+
+   let newPositions = previousFormation?.positions.map((position) => {
+      let distances = possiblePositions.map((possiblePosition) => {
+         return calculateDistance(position.position, possiblePosition);
+      });
+      let positionIndex = distances.indexOf(Math.min(...distances));
+      let newPosition = possiblePositions.splice(positionIndex, 1);
+      return { ...position, position: newPosition[0] };
+   });
+
+   return formations.map((formation, i) => {
+      if (i === selectedFormation) {
+         return { ...formation, positions: newPositions };
+      }
+      return formation;
+   });
+};
+
+const verticalLineFormation = (formations: formation[], selectedFormation: number | null) => {
+   let previousFormation = selectedFormation === 0 ? formations[selectedFormation] : formations[selectedFormation - 1];
+
+   let numberOfDancers = previousFormation.positions.length;
+   let possiblePositions = previousFormation.positions.map((position, i) => {
+      return { y: i - Math.round(numberOfDancers / 2), x: 0 };
+   });
+
+   let newPositions = previousFormation?.positions.map((position) => {
+      let distances = possiblePositions.map((possiblePosition) => {
+         return calculateDistance(position.position, possiblePosition);
+      });
+      let positionIndex = distances.indexOf(Math.min(...distances));
+      let newPosition = possiblePositions.splice(positionIndex, 1);
+      return { ...position, position: newPosition[0] };
+   });
+
+   return formations.map((formation, i) => {
+      if (i === selectedFormation) {
+         return { ...formation, positions: newPositions };
+      }
+      return formation;
+   });
+};
+
+function calculateDistance(point1: Point, point2: Point) {
+   const xDistance = point1.x - point2.x;
+   const yDistance = point1.y - point2.y;
+   return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+}

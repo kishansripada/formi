@@ -21,12 +21,10 @@ import { Share } from "../../components/AppComponents/Modals/Share";
 import { Collision } from "../../components/AppComponents/Collision";
 import { Sidebar } from "../../components/AppComponents/Sidebar";
 import { Settings } from "../../components/AppComponents/SidebarComponents/Settings";
-import { Presets } from "../../components/AppComponents/SidebarComponents/Presets";
 import { ChooseAudioSource } from "../../components/AppComponents/SidebarComponents/ChooseAudioSource";
 import { Roster } from "../../components/AppComponents/SidebarComponents/Roster";
 import { CurrentFormation } from "../../components/AppComponents/SidebarComponents/CurrentFormation";
 import { StageSettings } from "../../components/AppComponents/SidebarComponents/StageSettings";
-
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { PricingTable } from "../../components/NonAppComponents/PricingTable";
 import { grandfatheredEmails } from "../../../public/grandfathered";
@@ -170,19 +168,19 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
    const undo = () => {
       console.log("undo");
-      // if (!deltas.length) return;
-      // // setSaved(false);
+      if (!deltas.length) return;
+      // setSaved(false);
 
-      // let reverseDelta = jsondiffpatch.reverse(deltas[deltas.length - 1]);
-      // setDeltas((deltas) => {
-      //    return [...deltas].slice(0, -1);
-      // });
-      // console.log(reverseDelta);
-      // setFormations((formations: formation[]) => {
-      //    jsondiffpatch.patch(formations, reverseDelta);
-
-      //    return [...formations];
-      // });
+      let reverseDelta = jsondiffpatch.reverse(deltas[deltas.length - 1]);
+      setDeltas((deltas) => {
+         return [...deltas].slice(0, -1);
+      });
+      console.log(reverseDelta);
+      setFormations((formations: formation[]) => {
+         let reversed = jsondiffpatch.patch({ formations, dancers }, reverseDelta);
+         setDancers(reversed.dancers ? reversed.dancers : dancers);
+         return [...reversed.formations];
+      });
    };
 
    const addToStack = () => {
@@ -191,7 +189,20 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    };
 
    const pushChange = () => {
-      console.log("push change");
+      return;
+      // setFormations((formations: formation[]) => {
+      //    setDancers((dancers: dancer[]) => {
+      //       let delta = jsondiffpatch.diff({ formations: previousFormation, dancers: previousDancers }, { formations, dancers });
+      //       setDeltas((deltas) => {
+      //          return [...deltas, delta];
+      //       });
+      //       return dancers;
+      //    });
+      //    return formations;
+      // });
+
+      // console.log({ deltas });
+
       setCloudSettings((cloudSettings) => {
          setPreviousCloudSettings((previousCloudSettings: dancer[]) => {
             if (!previousCloudSettings) return cloudSettings;
@@ -308,20 +319,20 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       });
    };
 
-   useEffect(() => {
-      if (!channelGlobal) return;
-      if (!session) return;
-      channelGlobal.send({
-         type: "broadcast",
-         event: "user-position-update",
-         payload: {
-            [session?.user?.id]: {
-               selectedFormation,
-               selectedDancers,
-            },
-         },
-      });
-   }, [selectedFormation, selectedDancers, channelGlobal]);
+   // useEffect(() => {
+   //    if (!channelGlobal) return;
+   //    if (!session) return;
+   //    channelGlobal.send({
+   //       type: "broadcast",
+   //       event: "user-position-update",
+   //       payload: {
+   //          [session?.user?.id]: {
+   //             selectedFormation,
+   //             selectedDancers,
+   //          },
+   //       },
+   //    });
+   // }, [selectedFormation, selectedDancers, channelGlobal]);
 
    useEffect(() => {
       if (!session || !router?.query?.danceId) return;
@@ -568,6 +579,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          uploadName(danceName);
       }
    }, [danceName]);
+   // console.log(formations);
    // // ///////////
    // let uploadFormations = useCallback(
    //    debounce(async (formations) => {
@@ -749,6 +761,8 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                dancers={dancers}
             ></EventHandler>
             <Header
+               dropDownToggle={dropDownToggle}
+               formations={formations}
                isChangingCollisionRadius={isChangingCollisionRadius}
                setIsChangingCollisionRadius={setIsChangingCollisionRadius}
                isCommenting={isCommenting}
@@ -818,23 +832,6 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                               setFormations={setFormations}
                               setUpgradeIsOpen={setUpgradeIsOpen}
                            ></StageSettings>
-                        ) : menuOpen === "presets" ? (
-                           <Presets
-                              isCommenting={isCommenting}
-                              setIsCommenting={setIsCommenting}
-                              addToStack={addToStack}
-                              pushChange={pushChange}
-                              pricingTier={pricingTier}
-                              cloudSettings={cloudSettings}
-                              selectedDancers={selectedDancers}
-                              setSelectedDancers={setSelectedDancers}
-                              setSelectedFormation={setSelectedFormation}
-                              dancers={dancers}
-                              setFormations={setFormations}
-                              formations={formations}
-                              selectedFormation={selectedFormation}
-                              setUpgradeIsOpen={setUpgradeIsOpen}
-                           ></Presets>
                         ) : (
                            <CurrentFormation
                               dropDownToggle={dropDownToggle}

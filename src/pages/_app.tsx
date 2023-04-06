@@ -51,7 +51,7 @@ function MyApp({
       <SessionContextProvider supabaseClient={supabaseClient} initialSession={pageProps.initialSession}>
          {loading ? (
             <>
-               <div className="flex items-center justify-center h-screen ">
+               <div className="flex items-center justify-center h-screen dark:bg-neutral-900 ">
                   <div className="w-16 h-16 border-b-2 border-pink-600 rounded-full animate-spin"></div>
                </div>
             </>

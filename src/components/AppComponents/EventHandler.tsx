@@ -81,8 +81,9 @@ export const EventHandler: React.FC<{
       return () => {
          window.removeEventListener("keydown", downHandler);
          window.removeEventListener("keyup", upHandler);
-         window.removeEventListener("wheel", handleScroll);
          window.removeEventListener("pointerdown", pointerDown);
+         window.removeEventListener("wheel", handleScroll);
+         window.removeEventListener("pointerup", pointerUp);
       };
    }, [selectedFormation, commandHeld, selectedDancers, formations, copiedPositions, songDuration]);
 

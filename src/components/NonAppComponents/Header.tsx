@@ -25,7 +25,7 @@ export const Header = () => {
                         <div className="bg-[#E7ADC5] dark:bg-pink-600 relative h-2  top-[-10px] mr-auto w-[100%]"></div>
                      </div>
                   </Link>
-                  <div className="flex flex-row items-center ml-9 dark:text-neutral-300 ">
+                  <div className="flex flex-row items-center ml-9 dark:text-neutral-300 text-neutral-600 ">
                      <Link href={"/features"} className="z-50">
                         <button className="  text-medium hidden lg:block mr-8">Features</button>
                      </Link>
@@ -57,7 +57,7 @@ export const Header = () => {
                   </Link>
                </div>
             </nav>
-            <div className="w-full h-[1px] bg-neutral-700"></div>
+            <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
          </div>
       </>
    );

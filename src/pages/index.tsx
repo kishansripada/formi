@@ -36,7 +36,7 @@ const home = () => {
          <Header></Header>
 
          <div className="overflow-hidden relative ">
-            <div className="absolute w-[1000px] opacity-50 -z-[100]   h-[500px] left-0 -translate-x-1/2 top-[100px] ">
+            <div className="absolute w-[1000px] opacity-50  h-[500px] left-0  -translate-x-1/2  -z-[100] top-[100px]">
                <div
                   style={{
                      backgroundImage:
@@ -45,7 +45,7 @@ const home = () => {
                   className="absolute w-[1000px] h-[500px] top-0 left-0 bottom-0 right-0"
                ></div>
                <div
-                  className="flex flex-row h-full justify-between rounded-xl  relative  "
+                  className="flex flex-row h-full justify-between rounded-xl -z-[100] relative  "
                   style={{
                      width: 1000,
                   }}
@@ -61,7 +61,7 @@ const home = () => {
                   ))}
                </div>
                <div
-                  className="flex flex-col justify-between  rounded-xl relative  "
+                  className="flex flex-col justify-between  rounded-xl relative -z-[100]  "
                   style={{
                      height: 500,
                      top: -500,
@@ -70,7 +70,7 @@ const home = () => {
                   {new Array(12).fill(0).map((_, i) => (
                      <div
                         key={i}
-                        className={`w-full bg-neutral-300 `}
+                        className={`w-full  bg-neutral-300 `}
                         style={{
                            height: 1,
                         }}
@@ -128,15 +128,15 @@ const home = () => {
             <div className="overflow-hidden dark:bg-[#191919]">
                <div className=" flex flex-row items-center justify-center w-full  text-center pt-8 px-[10%] lg:px-[20%]   ">
                   <div className="w-full  ">
-                     <div className="w-full  bg-opacity-50 mb-8 bg-pink-700 text-lg dark:text-neutral-100 text-neutral-600 rounded-xl h-12 lg:flex hidden flex-row items-center justify-center ">
-                        FORMI is used by&nbsp;<span className=" dark:text-neutral-100 text-purple-100 font-bold">5000+ dancers&nbsp;</span> and
+                     <div className="w-full  bg-opacity-50 mb-8 dark:bg-pink-700 bg-pink-300 text-lg dark:text-neutral-100 text-neutral-700 rounded-xl h-12 lg:flex hidden flex-row items-center justify-center ">
+                        FORMI is used by&nbsp;<span className=" dark:text-neutral-100 text-purple-700 font-bold">5000+ dancers&nbsp;</span> and
                         coaches like you
                      </div>
                      <h1
                         style={{
                            lineHeight: 1.15,
                         }}
-                        className=" text-4xl lg:text-6xl dark:text-neutral-100   font-bold text-neutral-900 "
+                        className=" text-4xl lg:text-6xl dark:text-neutral-100   font-bold text-neutral-800 "
                      >
                         Professional, collaborative choreography software
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
@@ -152,8 +152,8 @@ const home = () => {
                      </Link>
                      <div className="flex flex-col mx-auto justify-center">
                         <Link href={"/207/edit"} className="">
-                           <button className=" bg-pink-600 flex-row items-center mx-auto  text-neutral-100 px-4 py-2   hidden lg:flex rounded-full mt-8 text-xl group">
-                              <span className="mr-2  ">View Demo</span>
+                           <button className="  flex-row items-center mx-auto  text-neutral-100 px-4 py-2 border border-pink-600  hidden lg:flex rounded-full mt-8 text-xl group">
+                              <span className="mr-2 text-pink-600 ">View Demo</span>
                               <span className="relative left-0 group-hover:left-3 transition-all duration-300">
                                  <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -161,7 +161,7 @@ const home = () => {
                                     viewBox="0 0 24 24"
                                     strokeWidth={1.5}
                                     stroke="currentColor"
-                                    className="w-6 h-6"
+                                    className="w-6 h-6 stroke-pink-600"
                                  >
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
                                  </svg>
@@ -175,14 +175,14 @@ const home = () => {
                <div className=" mt-12 relative">
                   {/* <Image width={"1000"} height={"1000"} src={"/threeDPreview.png"}></Image> */}
                   <img
-                     className=" max-w-[1000px] lg:block hidden  w-full mx-auto relative -bottom-5 rounded-xl border border-neutral-200 shadow-2xl z-10"
+                     className=" max-w-[1000px] lg:block hidden  w-full mx-auto relative -bottom-5 rounded-xl border border-neutral-200 dark:border-neutral-600 shadow-2xl z-10"
                      src="/threeDPreview.png"
                   ></img>
 
                   <div
                      className="pointer-events-none absolute  h-[2000px] overflow-hidden w-[2000px]  "
                      style={{
-                        backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
+                        backgroundImage: "radial-gradient(37.66% 48.2% at 50% 50%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
                         top: -200,
                         left: "50%",
                         transform: "translate(-50%, 0)",
@@ -191,7 +191,7 @@ const home = () => {
                   ></div>
                </div>
             </div>
-            <hr />
+            <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
             <div className=" dark:bg-[#191919]   lg:flex flex-col items-center justify-center  hidden py-10  ">
                {/* <p className=" text-2xl mx-auto text-center font-proxima font-semibold mt-10 ">Trusted by 5000+ dance teams</p> */}
 
@@ -327,8 +327,8 @@ const home = () => {
                   
                </Canvas> */}
             </div>
-            <hr />
-            <div className="bg-neutral-100 dark:bg-[#191919] lg:px-0 px-7  font-proxima">
+            <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
+            <div className="bg-neutral-50 dark:bg-[#191919] lg:px-0 px-7  font-proxima">
                <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-8 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
                      <p className="text-3xl font-bold dark:text-neutral-50">Collaborate, communicate</p>
@@ -350,7 +350,7 @@ const home = () => {
                </div>
             </div>
 
-            <div className="bg-neutral-100 dark:bg-[#191919]  font-proxima lg:px-0 px-7">
+            <div className="bg-neutral-50 dark:bg-[#191919]  font-proxima lg:px-0 px-7">
                <div className="flex lg:flex-row flex-col-reverse items-center mx-auto max-w-[1000px] py-8 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
                      <video
@@ -372,8 +372,8 @@ const home = () => {
                   </div>
                </div>
             </div>
-            <hr />
-            <div className="bg-neutral-100 dark:bg-[#191919]  font-proxima lg:px-0 px-7">
+            <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
+            <div className="bg-neutral-50 dark:bg-[#191919]  font-proxima lg:px-0 px-7">
                <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-16 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
                      <p className="text-3xl font-bold dark:text-neutral-50">No Credit Card Required</p>
@@ -382,7 +382,7 @@ const home = () => {
                         free.
                      </p>
                      <Link href={"/login"} className="z-50">
-                        <button className="bg-gradient-to-r mt-8 from-purple-500 to-pink-500 text-neutral-100 px-4 py-2 hidden lg:block  rounded-full">
+                        <button className="bg-pink-600 mt-8 text-neutral-100 px-4 py-2 hidden lg:block  rounded-full">
                            Build Your First Performance Free
                         </button>
                      </Link>
@@ -393,7 +393,7 @@ const home = () => {
             </div>
 
             {/* FOOTER */}
-            <hr />
+            <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
             <Footer></Footer>
          </div>
       </>
