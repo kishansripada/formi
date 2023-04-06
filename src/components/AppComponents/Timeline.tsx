@@ -46,6 +46,8 @@ export const Timeline: React.FC<{
    videoPlayer: any;
    localSource: any;
    setPixelsPerSecond: Function;
+   isScrollingTimeline: boolean;
+   setIsScrollingTimeline: Function;
 }> = ({
    formations,
    selectedFormation,
@@ -71,6 +73,8 @@ export const Timeline: React.FC<{
    videoPlayer,
    localSource,
    setPixelsPerSecond,
+   isScrollingTimeline,
+   setIsScrollingTimeline,
 }) => {
    useEffect(() => {
       if (!songDuration) return;
@@ -80,23 +84,13 @@ export const Timeline: React.FC<{
          setPixelsPerSecond((window.screen.width - 20) / (songDuration / 1000));
       }
    }, [soundCloudTrackId, songDuration]);
-   const [isScrollingTimeline, setIsScrollingTimeline] = useState(false);
+
    const [scrollRef, scrollInfo] = useHorizontalScrollInfo(pixelsPerSecond);
    const handleMouseMove = (e: MouseEvent) => {
       if (isScrollingTimeline) {
          scrollRef.current.scrollLeft = scrollRef.current.scrollLeft + (e.movementX * scrollInfo.scrollWidth) / scrollInfo.clientWidth;
       }
    };
-   const handleDocumentMouseUp = () => {
-      setIsScrollingTimeline(false);
-   };
-
-   useEffect(() => {
-      document.addEventListener("mouseup", handleDocumentMouseUp);
-      return () => {
-         document.removeEventListener("mouseup", handleDocumentMouseUp);
-      };
-   }, [isScrollingTimeline]);
 
    useEffect(() => {
       window.addEventListener("mousemove", handleMouseMove);

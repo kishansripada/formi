@@ -87,7 +87,7 @@ export const Canvas: React.FC<{
       if (!container.current) return;
       if (!stage.current) return;
 
-      let heightPercentage = (container.current.clientHeight - (isVideo(soundCloudTrackId) ? 5 : 30)) / stage.current.clientHeight;
+      let heightPercentage = (container.current.clientHeight - (isVideo(soundCloudTrackId) ? 5 : 15)) / stage.current.clientHeight;
       let widthPercentage = (container.current.clientWidth - (isVideo(soundCloudTrackId) ? 5 : 30)) / stage.current.clientWidth;
       // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
       // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;

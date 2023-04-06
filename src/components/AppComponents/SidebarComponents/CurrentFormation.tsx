@@ -152,7 +152,7 @@ export const CurrentFormation: React.FC<{
       let dancers = formations[selectedFormation]?.positions.filter((position) => selectedDancers.includes(position.id));
       if (!dancers?.length) return "";
 
-      if (dancers.every((position) => position.transitionType === "linear")) {
+      if (dancers.every((position) => position.transitionType === "linear" || !position.transitionType)) {
          return "Straight";
       }
       if (dancers.every((position) => position.transitionType === "cubic")) {

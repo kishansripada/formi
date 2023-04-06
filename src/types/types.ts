@@ -40,6 +40,7 @@ export type localSettings = {
    stageFlipped: boolean;
    viewingThree: boolean;
    viewingTwo: boolean;
+   collisionRadius: number;
 };
 
 export type cloudSettings = {

@@ -32,6 +32,9 @@ export const EventHandler: React.FC<{
    setShiftHeld: Function;
    setDropDownToggle: Function;
    dancers: dancer[];
+   setIsChangingCollisionRadius: Function;
+
+   setIsScrollingTimeline: Function;
 }> = ({
    player,
    children,
@@ -63,6 +66,8 @@ export const EventHandler: React.FC<{
    setShiftHeld,
    setDropDownToggle,
    dancers,
+   setIsChangingCollisionRadius,
+   setIsScrollingTimeline,
 }) => {
    const [commandHeld, setCommandHeld] = useState(false);
    const [copiedPositions, setCopiedPositions] = useState([]);
@@ -72,6 +77,7 @@ export const EventHandler: React.FC<{
       window.addEventListener("keyup", upHandler);
       window.addEventListener("wheel", handleScroll, { passive: false });
       window.addEventListener("pointerdown", pointerDown);
+      window.addEventListener("pointerup", pointerUp);
       return () => {
          window.removeEventListener("keydown", downHandler);
          window.removeEventListener("keyup", upHandler);
@@ -80,6 +86,9 @@ export const EventHandler: React.FC<{
       };
    }, [selectedFormation, commandHeld, selectedDancers, formations, copiedPositions, songDuration]);
 
+   const pointerUp = (e: PointerEvent) => {
+      setIsScrollingTimeline(false);
+   };
    const pointerDown = (e: PointerEvent) => {
       if (
          !e
@@ -88,6 +97,7 @@ export const EventHandler: React.FC<{
             .includes("dropdown-menu")
       ) {
          setDropDownToggle((x: boolean) => !x);
+         setIsChangingCollisionRadius(false);
       }
    };
 

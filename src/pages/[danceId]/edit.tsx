@@ -26,7 +26,7 @@ import { ChooseAudioSource } from "../../components/AppComponents/SidebarCompone
 import { Roster } from "../../components/AppComponents/SidebarComponents/Roster";
 import { CurrentFormation } from "../../components/AppComponents/SidebarComponents/CurrentFormation";
 import { StageSettings } from "../../components/AppComponents/SidebarComponents/StageSettings";
-import { Collisions } from "../../components/AppComponents/SidebarComponents/Collisions";
+
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { PricingTable } from "../../components/NonAppComponents/PricingTable";
 import { grandfatheredEmails } from "../../../public/grandfathered";
@@ -73,7 +73,6 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       ...initialData.settings,
       stageBackground: initialData.settings.stageBackground || "grid",
       gridSubdivisions: initialData.settings.gridSubdivisions || 7,
-      collisionRadius: initialData.settings.collisionRadius || 0.5,
    });
 
    const [formations, setFormations] = useState<formation[]>(initialData.formations);
@@ -95,6 +94,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       stageFlipped: false,
       viewingThree: false,
       viewingTwo: true,
+      collisionRadius: 0.5,
    });
    const [dropDownToggle, setDropDownToggle] = useState<boolean>(false);
    const [viewOnly, setViewOnly] = useState(viewOnlyInitial);
@@ -110,7 +110,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(25);
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
    const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
-
+   const [isScrollingTimeline, setIsScrollingTimeline] = useState(false);
    const [previousFormation, setPreviousFormation] = useState<formation[]>(initialData.formations);
    const [previousDancers, setPreviousDancers] = useState<formation[]>(initialData.dancers);
    const [previousCloudSettings, setPreviousCloudSettings] = useState<formation[]>(initialData.settings);
@@ -621,7 +621,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    });
    //////////////////////////
    const collisions = localSettings.viewCollisions
-      ? detectCollisions(localSettings.stageFlipped ? flippedFormations : formations, selectedFormation, cloudSettings.collisionRadius)
+      ? detectCollisions(localSettings.stageFlipped ? flippedFormations : formations, selectedFormation, localSettings.collisionRadius)
       : [];
 
    return (
@@ -713,6 +713,8 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
             className={`flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none text-neutral-900 `}
          >
             <EventHandler
+               setIsScrollingTimeline={setIsScrollingTimeline}
+               setIsChangingCollisionRadius={setIsChangingCollisionRadius}
                dancers={dancers}
                setDropDownToggle={setDropDownToggle}
                shiftHeld={shiftHeld}
@@ -747,6 +749,8 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                dancers={dancers}
             ></EventHandler>
             <Header
+               isChangingCollisionRadius={isChangingCollisionRadius}
+               setIsChangingCollisionRadius={setIsChangingCollisionRadius}
                isCommenting={isCommenting}
                pushChange={pushChange}
                selectedFormation={selectedFormation}
@@ -831,17 +835,6 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                               selectedFormation={selectedFormation}
                               setUpgradeIsOpen={setUpgradeIsOpen}
                            ></Presets>
-                        ) : menuOpen === "collisions" ? (
-                           <Collisions
-                              isChangingCollisionRadius={isChangingCollisionRadius}
-                              setIsChangingCollisionRadius={setIsChangingCollisionRadius}
-                              setCloudSettings={setCloudSettings}
-                              cloudSettings={cloudSettings}
-                              setLocalSettings={setLocalSettings}
-                              localSettings={localSettings}
-                              setUpgradeIsOpen={setUpgradeIsOpen}
-                              pricingTier={pricingTier}
-                           ></Collisions>
                         ) : (
                            <CurrentFormation
                               dropDownToggle={dropDownToggle}
@@ -868,7 +861,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                   </>
                ) : null}
 
-               <div className={`flex flex-row min-w-0 flex-grow items-center bg-neutral-100 `}>
+               <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-100 `}>
                   <video
                      ref={videoPlayer}
                      style={{
@@ -876,9 +869,9 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                      }}
                      src={localSource || soundCloudTrackId}
                   ></video>
-                  {/* {localSettings.viewingTwo && localSettings.stageFlipped ? (
+                  {localSettings.viewingTwo && localSettings.stageFlipped ? (
                      <p className="text-neutral-600 font-semibold text-sm mt-2">AUDIENCE</p>
-                  ) : null} */}
+                  ) : null}
                   {localSettings.viewingThree ? (
                      <Canva
                         onPointerUp={() => {
@@ -1122,9 +1115,9 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                         ) : null}
                      </Canvas>
                   ) : null}
-                  {/* {localSettings.viewingTwo && !localSettings.stageFlipped ? (
-                     <p className="text-neutral-600 font-semibold text-sm mb-2">AUDIENCE</p>
-                  ) : null} */}
+                  {localSettings.viewingTwo && !localSettings.stageFlipped ? (
+                     <p className="text-neutral-600 font-semibold text-sm mb-1">AUDIENCE</p>
+                  ) : null}
                </div>
             </div>
 
@@ -1149,6 +1142,8 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                ></AudioControls>
 
                <Timeline
+                  setIsScrollingTimeline={setIsScrollingTimeline}
+                  isScrollingTimeline={isScrollingTimeline}
                   setPixelsPerSecond={setPixelsPerSecond}
                   formationGroups={formationGroups}
                   userPositions={userPositions}

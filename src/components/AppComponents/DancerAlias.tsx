@@ -45,8 +45,8 @@ export const DancerAlias: React.FC<{
    index,
    isChangingCollisionRadius,
 }) => {
-   let { stageDimensions, collisionRadius } = cloudSettings;
-   let { dancerStyle } = localSettings;
+   let { stageDimensions } = cloudSettings;
+   let { dancerStyle, collisionRadius } = localSettings;
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])
@@ -54,12 +54,12 @@ export const DancerAlias: React.FC<{
       .join("")
       .toUpperCase();
 
-   let isInCollision = selectedFormation
-      ? collisions
-           ?.map((collision) => collision.dancers)
-           .flat(Infinity)
-           .includes(dancer.id)
-      : false;
+   // let isInCollision = selectedFormation
+   //    ? collisions
+   //         ?.map((collision) => collision.dancers)
+   //         .flat(Infinity)
+   //         .includes(dancer.id)
+   //    : false;
 
    let myPosition;
    // if the track is playing then  return with the animation function
