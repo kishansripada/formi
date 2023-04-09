@@ -64,7 +64,7 @@ export function ThreeDancer({
 
    const bind = useDrag(
       ({ active, movement: [x, y], timeStamp, event }) => {
-         if (viewOnly) return;
+         if (viewOnly || isPlaying) return;
          event.stopPropagation();
 
          if (active) {
@@ -195,11 +195,11 @@ export function ThreeDancer({
                                  // addToStack();
                               }}
                               onPointerEnter={() => {
-                                 if (viewOnly) return;
+                                 if (viewOnly || isPlaying) return;
                                  document.body.style.cursor = "grab";
                               }}
                               onPointerLeave={() => {
-                                 if (viewOnly) return;
+                                 if (viewOnly || isPlaying) return;
                                  document.body.style.cursor = "default";
                               }}
                            >

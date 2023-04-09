@@ -26,12 +26,11 @@ import { Roster } from "../../components/AppComponents/SidebarComponents/Roster"
 import { CurrentFormation } from "../../components/AppComponents/SidebarComponents/CurrentFormation";
 import { StageSettings } from "../../components/AppComponents/SidebarComponents/StageSettings";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { PricingTable } from "../../components/NonAppComponents/PricingTable";
 import { grandfatheredEmails } from "../../../public/grandfathered";
 import { Timeline } from "../../components/AppComponents/Timeline";
 import * as jsonpatch from "fast-json-patch";
-import { Canvas as Canva, events, useFrame, useLoader } from "@react-three/fiber";
-import { useGLTF, Stage, Grid, OrbitControls, Environment, useFBX, useVideoTexture } from "@react-three/drei";
+import { Canvas as Canva } from "@react-three/fiber";
+import { Stage, Grid, OrbitControls } from "@react-three/drei";
 import { Text } from "@react-three/drei";
 import { EventHandler } from "../../components/AppComponents/EventHandler";
 var jsondiffpatch = require("jsondiffpatch").create({
@@ -181,6 +180,9 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    };
 
    const pushChange = () => {
+      setDeltas((deltas) => {
+         return deltas.slice(-40);
+      });
       setFormations((formations: formation[]) => {
          setDancers((dancers: dancer[]) => {
             let delta = jsondiffpatch.diff({ formations: previousFormation, dancers: previousDancers }, { formations, dancers });
@@ -232,82 +234,82 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       //    });
       //    return cloudSettings;
       // });
-      // setDancers((dancers) => {
-      //    setPreviousDancers((previousDancers: dancer[]) => {
-      //       if (!previousDancers) return dancers;
-      //       var delta = jsonpatch.compare(previousDancers, dancers);
+      setDancers((dancers) => {
+         setPreviousDancers((previousDancers: dancer[]) => {
+            // if (!previousDancers) return dancers;
+            // var delta = jsonpatch.compare(previousDancers, dancers);
 
-      //       if (!delta.length) return dancers;
-      //       console.log({ dancers: delta });
-      //       setSaved(false);
-      //       try {
-      //          supabase
-      //             .from("dances")
-      //             .update({ dancers: dancers, last_edited: new Date() })
-      //             .eq("id", router.query.danceId)
-      //             .then((r) => {
-      //                console.log("pushed new dancers to db");
-      //                setSaved(true);
-      //             });
-      //          if (Object.keys(onlineUsers).length > 1) {
-      //             console.log("sending dancers update to clients");
-      //             channelGlobal.send({
-      //                type: "broadcast",
-      //                event: "dancers-update",
-      //                payload: dancers,
-      //             });
-      //          }
-      //       } catch (error) {
-      //          setSaved(true);
-      //          toast.error("Error saving changes. Please refresh the page.");
-      //       }
+            // if (!delta.length) return dancers;
+            // console.log({ dancers: delta });
+            // setSaved(false);
+            // try {
+            //    supabase
+            //       .from("dances")
+            //       .update({ dancers: dancers, last_edited: new Date() })
+            //       .eq("id", router.query.danceId)
+            //       .then((r) => {
+            //          console.log("pushed new dancers to db");
+            //          setSaved(true);
+            //       });
+            //    if (Object.keys(onlineUsers).length > 1) {
+            //       console.log("sending dancers update to clients");
+            //       channelGlobal.send({
+            //          type: "broadcast",
+            //          event: "dancers-update",
+            //          payload: dancers,
+            //       });
+            //    }
+            // } catch (error) {
+            //    setSaved(true);
+            //    toast.error("Error saving changes. Please refresh the page.");
+            // }
 
-      //       // if (delta) {
-      //       //    setDeltas((deltas) => [...deltas, delta]);
-      //       // }
+            // if (delta) {
+            //    setDeltas((deltas) => [...deltas, delta]);
+            // }
 
-      //       return dancers;
-      //    });
-      //    return dancers;
-      // });
-      // setFormations((formations) => {
-      //    setPreviousFormation((previousFormations: formation[]) => {
-      //       if (!previousFormations) return formations;
-      //       var delta = jsonpatch.compare([...previousFormations], JSON.parse(JSON.stringify(formations)));
+            return dancers;
+         });
+         return dancers;
+      });
+      setFormations((formations) => {
+         setPreviousFormation((previousFormations: formation[]) => {
+            // if (!previousFormations) return formations;
+            // var delta = jsonpatch.compare([...previousFormations], JSON.parse(JSON.stringify(formations)));
 
-      //       if (!delta.length) return formations;
-      //       console.log({ formations: delta });
-      //       setSaved(false);
-      //       try {
-      //          supabase
-      //             .rpc("apply_json_patch_operations", {
-      //                operations: delta,
-      //                dance_id: router.query.danceId,
-      //             })
-      //             .then((r) => {
-      //                setSaved(true);
-      //                console.log("pushed new formations to db");
-      //                if (r.error) {
-      //                   toast.error("Error saving changes. Please refresh the page.");
-      //                }
-      //             });
-      //          if (Object.keys(onlineUsers).length > 1) {
-      //             console.log("sending formation update to clients");
-      //             channelGlobal.send({
-      //                type: "broadcast",
-      //                event: "formation-update",
-      //                payload: delta,
-      //             });
-      //          }
-      //       } catch (error) {
-      //          setSaved(true);
-      //          toast.error("Error saving changes. Please refresh the page.");
-      //       }
+            // if (!delta.length) return formations;
+            // console.log({ formations: delta });
+            // setSaved(false);
+            // try {
+            //    supabase
+            //       .rpc("apply_json_patch_operations", {
+            //          operations: delta,
+            //          dance_id: router.query.danceId,
+            //       })
+            //       .then((r) => {
+            //          setSaved(true);
+            //          console.log("pushed new formations to db");
+            //          if (r.error) {
+            //             toast.error("Error saving changes. Please refresh the page.");
+            //          }
+            //       });
+            //    if (Object.keys(onlineUsers).length > 1) {
+            //       console.log("sending formation update to clients");
+            //       channelGlobal.send({
+            //          type: "broadcast",
+            //          event: "formation-update",
+            //          payload: delta,
+            //       });
+            //    }
+            // } catch (error) {
+            //    setSaved(true);
+            //    toast.error("Error saving changes. Please refresh the page.");
+            // }
 
-      //       return formations;
-      //    });
-      //    return formations;
-      // });
+            return formations;
+         });
+         return formations;
+      });
    };
 
    // useEffect(() => {
@@ -475,7 +477,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 0),
+      }, 2000),
       [router.query.danceId]
    );
 

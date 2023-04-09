@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { Header } from "../components/NonAppComponents/Header";
 import toast, { Toaster } from "react-hot-toast";
-import { withPageAuth } from "@supabase/auth-helpers-nextjs";
+
 import { useSupabaseClient, useSession, Session } from "@supabase/auth-helpers-react";
 import { MyDances } from "../components/DashboardComponents/MyDances";
 import { Rosters } from "../components/DashboardComponents/Rosters";

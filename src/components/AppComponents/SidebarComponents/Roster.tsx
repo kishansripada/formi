@@ -1,7 +1,7 @@
 import { dancer, dancerPosition, formation, stageDimensions } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
-
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Dancer } from "../Dancer";
 import { CirclePicker } from "react-color";
 export const Roster: React.FC<{
@@ -32,9 +32,25 @@ export const Roster: React.FC<{
    setSelectedDancers,
 }) => {
    let { stageDimensions } = cloudSettings;
+   const [uniqueDancers, setUniqueDancers] = useState<string[]>([]);
+   const supabase = useSupabaseClient();
+   const session = useSession();
+   useEffect(() => {
+      if (!session) return;
+      supabase
+         .rpc("unique_dancers", {
+            p_user_id: session?.user?.id,
+         })
+         .then((r) => {
+            if (!r?.data?.length) return;
+            setUniqueDancers(r.data?.map((dancer: any) => dancer.dancer_name));
+         });
+   }, []);
    let height = convertToFeetAndInches(dancers.find((dancer) => dancer.id === selectedDancers[0])?.height || 182.88);
-   const [heightFeet, setHeightFeet] = useState<number>(height.feet);
-   const [heightIn, setHeightIn] = useState<number>(height.inches);
+
+   // const [heightFeet, setHeightFeet] = useState<number>(height.feet);
+   // const [heightIn, setHeightIn] = useState<number>(height.inches);
+   // console.log(heightIn);
    const createNewDancer = () => {
       let id = crypto.randomUUID();
       setDancers((dancers: dancer[]) => {
@@ -81,6 +97,7 @@ export const Roster: React.FC<{
             <div className="flex-grow overflow-y-scroll">
                {dancers.slice().map((dancer, index) => (
                   <Dancer
+                     uniqueDancers={uniqueDancers}
                      pushChange={pushChange}
                      setSelectedDancers={setSelectedDancers}
                      selectedDancers={selectedDancers}
@@ -134,19 +151,16 @@ export const Roster: React.FC<{
                      <div className="flex flex-row items-center  w-full ">
                         <div className="flex flex-row items-center border border-neutral-200">
                            <input
-                              value={heightFeet}
+                              onBlur={pushChange}
+                              value={height.feet}
                               type="number"
                               onChange={(e) => {
-                                 // if (pricingTier === "basic") {
-                                 //    setUpgradeIsOpen(true);
-                                 //    return;
-                                 // }
-                                 setHeightFeet(parseInt(e.target.value));
-                                 if (heightFeet === null || heightFeet === undefined) return;
+                                 // setHeightFeet(parseInt(e.target.value));
+                                 if (height.feet === null || height.feet === undefined) return;
                                  setDancers((dancers: dancer[]) => {
                                     return dancers.map((dancer) => {
                                        if (selectedDancers.includes(dancer.id)) {
-                                          return { ...dancer, height: convertToCentimeters(parseInt(e.target.value), heightIn) };
+                                          return { ...dancer, height: convertToCentimeters(parseInt(e.target.value), height.inches) };
                                        }
                                        return dancer;
                                     });
@@ -161,19 +175,16 @@ export const Roster: React.FC<{
                         </div>
                         <div className="flex flex-row items-center border border-neutral-200 ml-4">
                            <input
+                              onBlur={pushChange}
                               type="number"
-                              value={heightIn}
+                              value={height.inches}
                               onChange={(e) => {
-                                 // if (pricingTier === "basic") {
-                                 //    setUpgradeIsOpen(true);
-                                 //    return;
-                                 // }
-                                 setHeightIn(parseInt(e.target.value));
-                                 if (heightFeet === null || heightFeet === undefined) return;
+                                 // setHeightIn(parseInt(e.target.value));
+                                 if (height.inches === null || height.inches === undefined) return;
                                  setDancers((dancers: dancer[]) => {
                                     return dancers.map((dancer) => {
                                        if (selectedDancers.includes(dancer.id)) {
-                                          return { ...dancer, height: convertToCentimeters(heightFeet, parseInt(e.target.value)) };
+                                          return { ...dancer, height: convertToCentimeters(height.feet, parseInt(e.target.value)) };
                                        }
                                        return dancer;
                                     });
@@ -213,6 +224,7 @@ export const Roster: React.FC<{
                                  return dancer;
                               });
                            });
+                           pushChange();
                         }}
                      />
                   </div>

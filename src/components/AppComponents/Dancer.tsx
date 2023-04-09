@@ -12,6 +12,7 @@ export const Dancer: React.FC<{
    index: number;
    setSelectedDancers: Function;
    pushChange: Function;
+   uniqueDancers: string[];
 }> = ({
    setDancers,
    dancers,
@@ -24,10 +25,14 @@ export const Dancer: React.FC<{
    index,
    setSelectedDancers,
    pushChange,
+   uniqueDancers,
 }) => {
    let { name, id, instagramUsername, color } = dancer;
 
    let amSelected = selectedDancers.includes(id);
+   let suggestedDancer = uniqueDancers.find((dancer: string) => {
+      return dancer.toLowerCase().startsWith(name.toLowerCase());
+   });
 
    let canBeAddedToStage =
       // there is a formation select
@@ -78,19 +83,23 @@ export const Dancer: React.FC<{
             className={`flex flex-row items-center px-5 box-border   group  select-none border border-white hover:border-pink-600   min-h-[40px] bg-white`}
          >
             <p className="font-semibold   text-sm "> {index + 1}</p>
-            <input
-               style={{
-                  backgroundColor: amSelected ? "#fbcfe8" : "transparent",
-               }}
-               className="h-6 w-full    px-2 py-4  text-sm rounded-md  ml-2  text-neutral-800  outline-none cursor-default"
-               value={name}
-               onBlur={pushChange}
-               onChange={(e) => {
-                  setDancers((dancers: dancer[]) => {
-                     return dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer));
-                  });
-               }}
-            />
+            <div className="relative">
+               <input
+                  style={{
+                     backgroundColor: amSelected ? "#fbcfe8" : "transparent",
+                  }}
+                  className="h-6 w-full    px-2 py-4  text-sm rounded-md  ml-2  text-neutral-800  outline-none cursor-default"
+                  value={name}
+                  onBlur={pushChange}
+                  onChange={(e) => {
+                     setDancers((dancers: dancer[]) => {
+                        return dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer));
+                     });
+                  }}
+               />
+               {/* <p className="absolute z-[50] left-[16px] top-[6.5px] text-neutral-500 text-sm">{suggestedDancer}</p> */}
+            </div>
+
             {canBeAddedToStage ? (
                <button onClick={addDancerToStage}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">

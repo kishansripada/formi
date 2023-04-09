@@ -10,7 +10,7 @@ const home = () => {
    return (
       <>
          <Head>
-            <title>FORMI: the collaborative whiteboard for choreographers</title>
+            <title>FORMI: the collaborative whiteboard for choreographers.</title>
             <meta
                name="description"
                content="Dance formation app. Easily build, create and visualize your dance and cheer formations synced to music. Formi is the ultimate choreographer formation tool. Dance formation builder. Cheer formation builder."
