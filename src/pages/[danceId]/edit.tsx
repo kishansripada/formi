@@ -40,14 +40,6 @@ var jsondiffpatch = require("jsondiffpatch").create({
    },
 });
 
-// import jsondiffpatch from "jsondiffpatch";
-
-// let jsondiffpatch = jsondiffpatch.create({
-//    objectHash: function (obj) {
-//       return obj.id;
-//    },
-// });
-
 // use effect, but not on initial render
 const useDidMountEffect = (func, deps) => {
    const didMount = useRef(false);
@@ -202,120 +194,120 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
       // console.log({ deltas });
 
-      setCloudSettings((cloudSettings) => {
-         setPreviousCloudSettings((previousCloudSettings: dancer[]) => {
-            if (!previousCloudSettings) return cloudSettings;
-            var delta = jsonpatch.compare(previousCloudSettings, JSON.parse(JSON.stringify(cloudSettings)));
-            if (!delta.length) return cloudSettings;
-            console.log({ settings: delta });
+      // setCloudSettings((cloudSettings) => {
+      //    setPreviousCloudSettings((previousCloudSettings: dancer[]) => {
+      //       if (!previousCloudSettings) return cloudSettings;
+      //       var delta = jsonpatch.compare(previousCloudSettings, JSON.parse(JSON.stringify(cloudSettings)));
+      //       if (!delta.length) return cloudSettings;
+      //       console.log({ settings: delta });
 
-            setSaved(false);
-            try {
-               supabase
-                  .from("dances")
-                  .update({ settings: cloudSettings, last_edited: new Date() })
-                  .eq("id", router.query.danceId)
-                  .then((r) => {
-                     console.log("pushed new settings to db");
-                     setSaved(true);
-                  });
-               if (Object.keys(onlineUsers).length > 1) {
-                  console.log("sending settings update to clients");
-                  channelGlobal.send({
-                     type: "broadcast",
-                     event: "settings-update",
-                     payload: cloudSettings,
-                  });
-               }
-            } catch (error) {
-               setSaved(true);
-               toast.error("Error saving changes. Please refresh the page.");
-            }
+      //       setSaved(false);
+      //       try {
+      //          supabase
+      //             .from("dances")
+      //             .update({ settings: cloudSettings, last_edited: new Date() })
+      //             .eq("id", router.query.danceId)
+      //             .then((r) => {
+      //                console.log("pushed new settings to db");
+      //                setSaved(true);
+      //             });
+      //          if (Object.keys(onlineUsers).length > 1) {
+      //             console.log("sending settings update to clients");
+      //             channelGlobal.send({
+      //                type: "broadcast",
+      //                event: "settings-update",
+      //                payload: cloudSettings,
+      //             });
+      //          }
+      //       } catch (error) {
+      //          setSaved(true);
+      //          toast.error("Error saving changes. Please refresh the page.");
+      //       }
 
-            // if (delta) {
-            //    setDeltas((deltas) => [...deltas, delta]);
-            // }
+      //       // if (delta) {
+      //       //    setDeltas((deltas) => [...deltas, delta]);
+      //       // }
 
-            return cloudSettings;
-         });
-         return cloudSettings;
-      });
-      setDancers((dancers) => {
-         setPreviousDancers((previousDancers: dancer[]) => {
-            if (!previousDancers) return dancers;
-            var delta = jsonpatch.compare(previousDancers, dancers);
+      //       return cloudSettings;
+      //    });
+      //    return cloudSettings;
+      // });
+      // setDancers((dancers) => {
+      //    setPreviousDancers((previousDancers: dancer[]) => {
+      //       if (!previousDancers) return dancers;
+      //       var delta = jsonpatch.compare(previousDancers, dancers);
 
-            if (!delta.length) return dancers;
-            console.log({ dancers: delta });
-            setSaved(false);
-            try {
-               supabase
-                  .from("dances")
-                  .update({ dancers: dancers, last_edited: new Date() })
-                  .eq("id", router.query.danceId)
-                  .then((r) => {
-                     console.log("pushed new dancers to db");
-                     setSaved(true);
-                  });
-               if (Object.keys(onlineUsers).length > 1) {
-                  console.log("sending dancers update to clients");
-                  channelGlobal.send({
-                     type: "broadcast",
-                     event: "dancers-update",
-                     payload: dancers,
-                  });
-               }
-            } catch (error) {
-               setSaved(true);
-               toast.error("Error saving changes. Please refresh the page.");
-            }
+      //       if (!delta.length) return dancers;
+      //       console.log({ dancers: delta });
+      //       setSaved(false);
+      //       try {
+      //          supabase
+      //             .from("dances")
+      //             .update({ dancers: dancers, last_edited: new Date() })
+      //             .eq("id", router.query.danceId)
+      //             .then((r) => {
+      //                console.log("pushed new dancers to db");
+      //                setSaved(true);
+      //             });
+      //          if (Object.keys(onlineUsers).length > 1) {
+      //             console.log("sending dancers update to clients");
+      //             channelGlobal.send({
+      //                type: "broadcast",
+      //                event: "dancers-update",
+      //                payload: dancers,
+      //             });
+      //          }
+      //       } catch (error) {
+      //          setSaved(true);
+      //          toast.error("Error saving changes. Please refresh the page.");
+      //       }
 
-            // if (delta) {
-            //    setDeltas((deltas) => [...deltas, delta]);
-            // }
+      //       // if (delta) {
+      //       //    setDeltas((deltas) => [...deltas, delta]);
+      //       // }
 
-            return dancers;
-         });
-         return dancers;
-      });
-      setFormations((formations) => {
-         setPreviousFormation((previousFormations: formation[]) => {
-            if (!previousFormations) return formations;
-            var delta = jsonpatch.compare([...previousFormations], JSON.parse(JSON.stringify(formations)));
+      //       return dancers;
+      //    });
+      //    return dancers;
+      // });
+      // setFormations((formations) => {
+      //    setPreviousFormation((previousFormations: formation[]) => {
+      //       if (!previousFormations) return formations;
+      //       var delta = jsonpatch.compare([...previousFormations], JSON.parse(JSON.stringify(formations)));
 
-            if (!delta.length) return formations;
-            console.log({ formations: delta });
-            setSaved(false);
-            try {
-               supabase
-                  .rpc("apply_json_patch_operations", {
-                     operations: delta,
-                     dance_id: router.query.danceId,
-                  })
-                  .then((r) => {
-                     setSaved(true);
-                     console.log("pushed new formations to db");
-                     if (r.error) {
-                        toast.error("Error saving changes. Please refresh the page.");
-                     }
-                  });
-               if (Object.keys(onlineUsers).length > 1) {
-                  console.log("sending formation update to clients");
-                  channelGlobal.send({
-                     type: "broadcast",
-                     event: "formation-update",
-                     payload: delta,
-                  });
-               }
-            } catch (error) {
-               setSaved(true);
-               toast.error("Error saving changes. Please refresh the page.");
-            }
+      //       if (!delta.length) return formations;
+      //       console.log({ formations: delta });
+      //       setSaved(false);
+      //       try {
+      //          supabase
+      //             .rpc("apply_json_patch_operations", {
+      //                operations: delta,
+      //                dance_id: router.query.danceId,
+      //             })
+      //             .then((r) => {
+      //                setSaved(true);
+      //                console.log("pushed new formations to db");
+      //                if (r.error) {
+      //                   toast.error("Error saving changes. Please refresh the page.");
+      //                }
+      //             });
+      //          if (Object.keys(onlineUsers).length > 1) {
+      //             console.log("sending formation update to clients");
+      //             channelGlobal.send({
+      //                type: "broadcast",
+      //                event: "formation-update",
+      //                payload: delta,
+      //             });
+      //          }
+      //       } catch (error) {
+      //          setSaved(true);
+      //          toast.error("Error saving changes. Please refresh the page.");
+      //       }
 
-            return formations;
-         });
-         return formations;
-      });
+      //       return formations;
+      //    });
+      //    return formations;
+      // });
    };
 
    // useEffect(() => {
@@ -333,204 +325,196 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    //    });
    // }, [selectedFormation, selectedDancers, channelGlobal]);
 
-   useEffect(() => {
-      if (!session || !router?.query?.danceId) return;
+   // useEffect(() => {
+   // if (!session || !router?.query?.danceId) return;
 
-      let channel = supabase.channel(router.query.danceId, {
-         config: {
-            presence: {
-               key: session?.user.id,
-            },
-         },
-      });
+   // let channel = supabase.channel(router.query.danceId, {
+   //    config: {
+   //       presence: {
+   //          key: session?.user.id,
+   //       },
+   //    },
+   // });
 
-      setChannelGlobal(channel);
+   // setChannelGlobal(channel);
 
-      // recieve presence data
-      channel.on("presence", { event: "sync" }, () => {
-         let state = channel.presenceState();
-         // console.log(state);
-         Object.keys(state).forEach((id, index) => {
-            state[id][0].color = colors[index];
-         });
-         setUserPositions((userPositions) => {
-            let filteredKeys = Object.keys(userPositions).filter((position) => Object.keys(state).includes(position));
-            const filteredObject = filteredKeys.reduce((obj, key) => {
-               obj[key] = userPositions[key];
-               return obj;
-            }, {});
+   // recieve presence data
+   // channel.on("presence", { event: "sync" }, () => {
+   //    let state = channel.presenceState();
+   //    // console.log(state);
+   //    Object.keys(state).forEach((id, index) => {
+   //       state[id][0].color = colors[index];
+   //    });
+   //    setUserPositions((userPositions) => {
+   //       let filteredKeys = Object.keys(userPositions).filter((position) => Object.keys(state).includes(position));
+   //       const filteredObject = filteredKeys.reduce((obj, key) => {
+   //          obj[key] = userPositions[key];
+   //          return obj;
+   //       }, {});
 
-            return filteredObject;
-         });
+   //       return filteredObject;
+   //    });
 
-         setOnlineUsers({ ...state });
-      });
+   //    setOnlineUsers({ ...state });
+   // });
 
-      // send presence data
-      channel.subscribe(async (status) => {
-         console.log(status);
-         setSubscriptionStatus(status);
-         if (status === "SUBSCRIBED") {
-            const resp = await channel.track({
-               name: session?.user.user_metadata.full_name,
-               profilePicUrl: session?.user.user_metadata.avatar_url,
-            });
-            console.log({ resp });
-         }
-      }, 20000);
-
-      // receive broadcasted data
-      const formsChannel = channel
-         .on("broadcast", { event: "user-position-update" }, ({ payload }) => {
-            // console.log(payload);
-            setUserPositions((userPositions) => {
-               return { ...userPositions, ...payload };
-            });
-         })
-         .on("broadcast", { event: "formation-update" }, ({ payload }) => {
-            console.log("recieved formation update");
-            // if the formation you are viewing is deleted, reset the selected formation to 0
-            payload.forEach((patch: any) => {
-               if (patch.path.split("/").length === 2 && patch.op === "remove") {
-                  setSelectedFormation((selectedFormation) => {
-                     if (parseInt(patch.path.split("/")[1]) === selectedFormation) {
-                        toast("The formation you were viewing was deleted.");
-                        return 0;
-                     } else {
-                        return selectedFormation;
-                     }
-                  });
-               }
-            });
-            try {
-               setFormations((formations: formation[]) => {
-                  let newForms = jsonpatch.applyPatch(formations, payload).newDocument;
-                  return [...newForms];
-               });
-            } catch (error) {
-               toast.error("Error saving changes. Please refresh the page.");
-            }
-         })
-         .on("broadcast", { event: "dancers-update" }, ({ payload }) => {
-            console.log("recieved dancers update");
-            try {
-               setDancers((dancers) => {
-                  var delta = jsonpatch.compare(dancers, JSON.parse(JSON.stringify(payload)));
-                  if (delta.length) {
-                     return payload;
-                  } else {
-                     return dancers;
-                  }
-               });
-            } catch (error) {
-               toast.error("Error saving changes. Please refresh the page.");
-            }
-         })
-         .on("broadcast", { event: "settings-update" }, ({ payload }) => {
-            console.log("recieved settings update");
-            try {
-               setCloudSettings((cloudSettings) => {
-                  var delta = jsonpatch.compare(cloudSettings, JSON.parse(JSON.stringify(payload)));
-                  if (delta.length) {
-                     return payload;
-                  } else {
-                     return cloudSettings;
-                  }
-               });
-            } catch (error) {
-               toast.error("Error saving changes. Please refresh the page.");
-            }
-         });
-
-      return () => {
-         supabase.removeChannel(formsChannel);
-         supabase.removeChannel(channel);
-      };
-   }, [router.query.danceId, session]);
-
-   ////////////////////////////////////////
-   // let uploadSettings = useCallback(
-   //    debounce(async (cloudSettings) => {
-   //       console.log("uploading settings");
-   //       const { data, error } = await supabase
-   //          .from("dances")
-   //          .update({ settings: cloudSettings, last_edited: new Date() })
-   //          .eq("id", router.query.danceId);
-   //       channelGlobal.send({
-   //          type: "broadcast",
-   //          event: "settings-update",
-   //          payload: cloudSettings,
+   // send presence data
+   // channel.subscribe(async (status) => {
+   //    console.log(status);
+   //    setSubscriptionStatus(status);
+   //    if (status === "SUBSCRIBED") {
+   //       const resp = await channel.track({
+   //          name: session?.user.user_metadata.full_name,
+   //          profilePicUrl: session?.user.user_metadata.avatar_url,
    //       });
-   //       console.log({ data });
-   //       console.log({ error });
-   //       setSaved(true);
-   //    }, 0),
-   //    [router.query.danceId, channelGlobal]
-   // );
-
-   // useDidMountEffect(() => {
-   //    if (!session && router.query.danceId !== "207") {
-   //       router.push("/login");
+   //       console.log({ resp });
    //    }
-   //    if (router.isReady) {
-   //       setSaved(false);
-   //       uploadSettings(cloudSettings);
-   //    }
-   // }, [cloudSettings]);
+   // }, 20000);
 
-   ////////////////////////////////////////
-   // let uploadDancers = useCallback(
-   //    debounce(async (dancers) => {
-   //       console.log("uploading dancers");
-   //       const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
-   //       channelGlobal.send({
-   //          type: "broadcast",
-   //          event: "dancers-update",
-   //          payload: dancers,
+   // receive broadcasted data
+   //    const formsChannel = channel
+   //       .on("broadcast", { event: "user-position-update" }, ({ payload }) => {
+   //          // console.log(payload);
+   //          setUserPositions((userPositions) => {
+   //             return { ...userPositions, ...payload };
+   //          });
+   //       })
+   //       .on("broadcast", { event: "formation-update" }, ({ payload }) => {
+   //          console.log("recieved formation update");
+   //          // if the formation you are viewing is deleted, reset the selected formation to 0
+   //          payload.forEach((patch: any) => {
+   //             if (patch.path.split("/").length === 2 && patch.op === "remove") {
+   //                setSelectedFormation((selectedFormation) => {
+   //                   if (parseInt(patch.path.split("/")[1]) === selectedFormation) {
+   //                      toast("The formation you were viewing was deleted.");
+   //                      return 0;
+   //                   } else {
+   //                      return selectedFormation;
+   //                   }
+   //                });
+   //             }
+   //          });
+   //          try {
+   //             setFormations((formations: formation[]) => {
+   //                let newForms = jsonpatch.applyPatch(formations, payload).newDocument;
+   //                return [...newForms];
+   //             });
+   //          } catch (error) {
+   //             toast.error("Error saving changes. Please refresh the page.");
+   //          }
+   //       })
+   //       .on("broadcast", { event: "dancers-update" }, ({ payload }) => {
+   //          console.log("recieved dancers update");
+   //          try {
+   //             setDancers((dancers) => {
+   //                var delta = jsonpatch.compare(dancers, JSON.parse(JSON.stringify(payload)));
+   //                if (delta.length) {
+   //                   return payload;
+   //                } else {
+   //                   return dancers;
+   //                }
+   //             });
+   //          } catch (error) {
+   //             toast.error("Error saving changes. Please refresh the page.");
+   //          }
+   //       })
+   //       .on("broadcast", { event: "settings-update" }, ({ payload }) => {
+   //          console.log("recieved settings update");
+   //          try {
+   //             setCloudSettings((cloudSettings) => {
+   //                var delta = jsonpatch.compare(cloudSettings, JSON.parse(JSON.stringify(payload)));
+   //                if (delta.length) {
+   //                   return payload;
+   //                } else {
+   //                   return cloudSettings;
+   //                }
+   //             });
+   //          } catch (error) {
+   //             toast.error("Error saving changes. Please refresh the page.");
+   //          }
    //       });
-   //       console.log({ data });
-   //       console.log({ error });
-   //       setSaved(true);
-   //    }, 0),
-   //    [router.query.danceId, channelGlobal]
-   // );
 
-   // useDidMountEffect(() => {
-   //    if (!session && router.query.danceId !== "207") {
-   //       router.push("/login");
-   //    }
-   //    if (router.isReady) {
-   //       setSaved(false);
-   //       uploadDancers(dancers);
-   //    }
-   // }, [dancers]);
+   //    return () => {
+   //       supabase.removeChannel(formsChannel);
+   //       supabase.removeChannel(channel);
+   //    };
+   // }, [router.query.danceId, session]);
 
    ////////////////////////////////////////
-   // let uploadGroups = useCallback(
-   //    debounce(async (formationGroups) => {
-   //       console.log("uploading dancers");
-   //       const { data, error } = await supabase
-   //          .from("dances")
-   //          .update({ formation_groups: formationGroups, last_edited: new Date() })
-   //          .eq("id", router.query.danceId);
+   let uploadSettings = useCallback(
+      debounce(async (cloudSettings) => {
+         console.log("uploading settings");
+         const { data, error } = await supabase
+            .from("dances")
+            .update({ settings: cloudSettings, last_edited: new Date() })
+            .eq("id", router.query.danceId);
 
-   //       console.log({ data });
+         console.log({ data });
+         console.log({ error });
+         setSaved(true);
+      }, 0),
+      [router.query.danceId]
+   );
 
-   //       console.log({ error });
-   //       setSaved(true);
-   //    }, 5000),
-   //    [router.query.danceId, channelGlobal]
-   // );
+   useDidMountEffect(() => {
+      if (!session && router.query.danceId !== "207") {
+         router.push("/login");
+      }
+      if (router.isReady) {
+         setSaved(false);
+         uploadSettings(cloudSettings);
+      }
+   }, [cloudSettings]);
 
-   // useDidMountEffect(() => {
-   //    if (!session && router.query.danceId !== "207") {
-   //       router.push("/login");
-   //    }
-   //    if (router.isReady) {
-   //       setSaved(false);
-   //       uploadGroups(formationGroups);
-   //    }
-   // }, [formationGroups]);
+   ////////////////////////////////////////
+   let uploadDancers = useCallback(
+      debounce(async (dancers) => {
+         console.log("uploading dancers");
+         const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
+
+         console.log({ data });
+         console.log({ error });
+         setSaved(true);
+      }, 0),
+      [router.query.danceId]
+   );
+
+   useDidMountEffect(() => {
+      if (!session && router.query.danceId !== "207") {
+         router.push("/login");
+      }
+      if (router.isReady) {
+         setSaved(false);
+         uploadDancers(dancers);
+      }
+   }, [dancers]);
+
+   //////////////////////////////////////
+   let uploadGroups = useCallback(
+      debounce(async (formationGroups) => {
+         console.log("uploading dancers");
+         const { data, error } = await supabase
+            .from("dances")
+            .update({ formation_groups: formationGroups, last_edited: new Date() })
+            .eq("id", router.query.danceId);
+
+         console.log({ data });
+
+         console.log({ error });
+         setSaved(true);
+      }, 5000),
+      [router.query.danceId]
+   );
+
+   useDidMountEffect(() => {
+      if (!session && router.query.danceId !== "207") {
+         router.push("/login");
+      }
+      if (router.isReady) {
+         setSaved(false);
+         uploadGroups(formationGroups);
+      }
+   }, [formationGroups]);
    // // // // // // // // // // // //
    let uploadSoundCloudId = useCallback(
       debounce(async (soundCloudTrackId) => {
@@ -544,7 +528,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          console.log({ error });
          setSaved(true);
       }, 0),
-      [router.query.danceId, channelGlobal]
+      [router.query.danceId]
    );
 
    useDidMountEffect(() => {
@@ -566,7 +550,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          console.log({ error });
          setSaved(true);
       }, 500),
-      [router.query.danceId, channelGlobal]
+      [router.query.danceId]
    );
 
    useDidMountEffect(() => {
@@ -580,30 +564,30 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    }, [danceName]);
    // console.log(formations);
    // // ///////////
-   // let uploadFormations = useCallback(
-   //    debounce(async (formations) => {
-   //       console.log("uploading formations");
-   //       const { data, error } = await supabase
-   //          .from("dances")
-   //          .update({ formations: formations, last_edited: new Date() })
-   //          .eq("id", router.query.danceId);
-   //       console.log({ data });
-   //       console.log({ error });
+   let uploadFormations = useCallback(
+      debounce(async (formations) => {
+         console.log("uploading formations");
+         const { data, error } = await supabase
+            .from("dances")
+            .update({ formations: formations, last_edited: new Date() })
+            .eq("id", router.query.danceId);
+         console.log({ data });
+         console.log({ error });
 
-   //       setSaved(true);
-   //    }, 5000),
-   //    [router.query.danceId]
-   // );
+         setSaved(true);
+      }, 5000),
+      [router.query.danceId]
+   );
 
-   // useDidMountEffect(() => {
-   //    if (!session && router.query.danceId !== "207") {
-   //       router.push("/login");
-   //    }
-   //    if (router.isReady) {
-   //       setSaved(false);
-   //       uploadFormations(formations);
-   //    }
-   // }, [formations]);
+   useDidMountEffect(() => {
+      if (!session && router.query.danceId !== "207") {
+         router.push("/login");
+      }
+      if (router.isReady) {
+         setSaved(false);
+         uploadFormations(formations);
+      }
+   }, [formations]);
    ////////////////////////
    let flippedFormations = formations.map((formation: formation) => {
       let flippedPositions = formation.positions.map((position) => {
@@ -705,7 +689,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
             </>
          ) : null}
 
-         {subscriptionStatus !== "SUBSCRIBED" ? (
+         {/* {subscriptionStatus !== "SUBSCRIBED" ? (
             <>
                <div className="fixed bottom-0 left-0 h-full  w-full  flex flex-col z-[9999999]  ">
                   <div className="flex flex-row items-center justify-center h-14 bg-red-600 mt-auto pointer-events-auto">
@@ -715,7 +699,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                   </div>
                </div>
             </>
-         ) : null}
+         ) : null} */}
 
          <div
             // style={{

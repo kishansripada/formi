@@ -10,7 +10,7 @@ const home = () => {
    return (
       <>
          <Head>
-            <title>FORMI: Dance and cheer formation planning software.</title>
+            <title>FORMI: the collaborative whiteboard for choreographers</title>
             <meta
                name="description"
                content="Dance formation app. Easily build, create and visualize your dance and cheer formations synced to music. Formi is the ultimate choreographer formation tool. Dance formation builder. Cheer formation builder."
@@ -138,7 +138,7 @@ const home = () => {
                         }}
                         className=" text-4xl lg:text-6xl dark:text-neutral-100   font-bold text-neutral-800 "
                      >
-                        Professional, collaborative choreography software
+                        Collaborative whiteboarding for choreographers
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
                      <h1 className=" dark:text-neutral-300  text-neutral-500 lg:px-[20%]    mt-4 ">
@@ -197,8 +197,8 @@ const home = () => {
 
                <div className=" grid grid-cols-4 place-items-center child:mx-8   child:my-8  select-none opacity-60 dark:opacity-70 ">
                   <img
-                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cornell_University_logo.svg/1280px-Cornell_University_logo.svg.png"
-                     className=" w-48  transition duration-500"
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cornell_University_logo.svg/1280px-Cornell_University_logo.svg"
+                     className=" w-48 h-10  transition duration-500"
                      alt=""
                   />
                   <img

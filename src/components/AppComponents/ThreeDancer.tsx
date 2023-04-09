@@ -156,7 +156,7 @@ export function ThreeDancer({
                {dancer?.name}
             </Text>
          </animated.mesh>
-         {selectedDancers.includes(dancer?.id) ? (
+         {/* {selectedDancers.includes(dancer?.id) ? (
             <animated.mesh position={selectedPos.position}>
                <group>
                   <Cylinder
@@ -169,7 +169,7 @@ export function ThreeDancer({
                   </Cylinder>
                </group>
             </animated.mesh>
-         ) : null}
+         ) : null} */}
 
          <animated.mesh
             // {...spring}
