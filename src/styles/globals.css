@@ -22,7 +22,3 @@
 .pointer-events-none-important {
     pointer-events: none !important;
 }
-
-body {
-    overscroll-behavior: none;
-}

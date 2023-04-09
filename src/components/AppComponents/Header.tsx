@@ -212,48 +212,53 @@ export const Header: React.FC<{
                      )}
                   </div>
                ) : null}
-               <button
-                  style={{
-                     backgroundColor: isCommenting ? "#db2777" : "transparent",
-                  }}
-                  className="min-w-[48px]   h-full grid place-items-center"
-                  onClick={() => {
-                     setIsCommenting((isCommenting: boolean) => {
-                        if (!isCommenting && !localSettings.viewingTwo) {
-                           toast.error("You must be in 2D mode to comment");
-                           return isCommenting;
-                        }
+               {!viewOnlyInitial ? (
+                  <button
+                     style={{
+                        backgroundColor: isCommenting ? "#db2777" : "transparent",
+                     }}
+                     className="min-w-[48px]   h-full grid place-items-center"
+                     onClick={() => {
+                        setIsCommenting((isCommenting: boolean) => {
+                           if (!isCommenting && !localSettings.viewingTwo) {
+                              toast.error("You must be in 2D mode to comment");
+                              return isCommenting;
+                           }
 
-                        return !isCommenting;
-                     });
-                  }}
-               >
-                  <svg
-                     xmlns="http://www.w3.org/2000/svg"
-                     fill="none"
-                     viewBox="0 0 24 24"
-                     strokeWidth={1.5}
-                     stroke="currentColor"
-                     className="w-6 h-6 "
+                           return !isCommenting;
+                        });
+                     }}
                   >
-                     <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z"
-                     />
-                  </svg>
-               </button>
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-6 h-6 "
+                     >
+                        <path
+                           strokeLinecap="round"
+                           strokeLinejoin="round"
+                           d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z"
+                        />
+                     </svg>
+                  </button>
+               ) : null}
 
-               <button
-                  onClick={() => {
-                     setTemplatesIsOpen((x: boolean) => !x);
-                  }}
-                  className="min-w-[48px]   h-full grid place-items-center"
-               >
-                  <svg className="w-6 fill-white h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                     <path d="M340.118 766Q361 766 375.5 751.382q14.5-14.617 14.5-35.5Q390 695 375.382 680.5q-14.617-14.5-35.5-14.5Q319 666 304.5 680.618q-14.5 14.617-14.5 35.5Q290 737 304.618 751.5q14.617 14.5 35.5 14.5Zm0-280Q361 486 375.5 471.382q14.5-14.617 14.5-35.5Q390 415 375.382 400.5q-14.617-14.5-35.5-14.5Q319 386 304.5 400.618q-14.5 14.617-14.5 35.5Q290 457 304.618 471.5q14.617 14.5 35.5 14.5Zm280 280Q641 766 655.5 751.382q14.5-14.617 14.5-35.5Q670 695 655.382 680.5q-14.617-14.5-35.5-14.5Q599 666 584.5 680.618q-14.5 14.617-14.5 35.5Q570 737 584.618 751.5q14.617 14.5 35.5 14.5Zm0-280Q641 486 655.5 471.382q14.5-14.617 14.5-35.5Q670 415 655.382 400.5q-14.617-14.5-35.5-14.5Q599 386 584.5 400.618q-14.5 14.617-14.5 35.5Q570 457 584.618 471.5q14.617 14.5 35.5 14.5ZM180 936q-24 0-42-18t-18-42V276q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600V276H180v600Zm0-600v600-600Z" />
-                  </svg>
-               </button>
+               {!viewOnlyInitial ? (
+                  <button
+                     onClick={() => {
+                        setTemplatesIsOpen((x: boolean) => !x);
+                     }}
+                     className="min-w-[48px]   h-full grid place-items-center"
+                  >
+                     <svg className="w-6 fill-white h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                        <path d="M340.118 766Q361 766 375.5 751.382q14.5-14.617 14.5-35.5Q390 695 375.382 680.5q-14.617-14.5-35.5-14.5Q319 666 304.5 680.618q-14.5 14.617-14.5 35.5Q290 737 304.618 751.5q14.617 14.5 35.5 14.5Zm0-280Q361 486 375.5 471.382q14.5-14.617 14.5-35.5Q390 415 375.382 400.5q-14.617-14.5-35.5-14.5Q319 386 304.5 400.618q-14.5 14.617-14.5 35.5Q290 457 304.618 471.5q14.617 14.5 35.5 14.5Zm280 280Q641 766 655.5 751.382q14.5-14.617 14.5-35.5Q670 695 655.382 680.5q-14.617-14.5-35.5-14.5Q599 666 584.5 680.618q-14.5 14.617-14.5 35.5Q570 737 584.618 751.5q14.617 14.5 35.5 14.5Zm0-280Q641 486 655.5 471.382q14.5-14.617 14.5-35.5Q670 415 655.382 400.5q-14.617-14.5-35.5-14.5Q599 386 584.5 400.618q-14.5 14.617-14.5 35.5Q570 457 584.618 471.5q14.617 14.5 35.5 14.5ZM180 936q-24 0-42-18t-18-42V276q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600V276H180v600Zm0-600v600-600Z" />
+                     </svg>
+                  </button>
+               ) : null}
+
                {templatesIsOpen ? (
                   <div
                      className="w-[300px] left-[200px] h-[500px] bg-neutral-800 absolute top-12 flex flex-col  text-sm shadow-2xl z-[50]"
@@ -326,7 +331,7 @@ export const Header: React.FC<{
                      )}
                   </>
                ) : (
-                  <p className="text-neutral-500 ml-6 lg:ml-0">viewing</p>
+                  <p className="text-neutral-300 text-sm  ml-3">viewing</p>
                )}
             </div>
 

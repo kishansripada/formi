@@ -115,6 +115,7 @@ export const Share: React.FC<{
                         <p className="text-neutral-700">Anyone with the link</p>
 
                         <select
+                           value={anyoneCanView ? "view" : "none"}
                            onChange={(e) => {
                               if (e.target.value === "view") {
                                  console.log("viewing");
@@ -125,7 +126,12 @@ export const Share: React.FC<{
                                     .then((r) => console.log(r));
                                  setAnyoneCanView(true);
                               } else {
-                                 supabase.from("dances").update({ anyonecanview: false, last_edited: new Date() }).eq("id", router.query.danceId);
+                                 console.log("make false");
+                                 supabase
+                                    .from("dances")
+                                    .update({ anyonecanview: false, last_edited: new Date() })
+                                    .eq("id", router.query.danceId)
+                                    .then((r) => console.log(r));
                                  setAnyoneCanView(false);
                               }
                            }}

@@ -693,6 +693,13 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
             // }}
             className={`   flex-col h-screen   flex  bg-[#fafafa] overflow-hidden text-neutral-900 select-none `}
          >
+            <style>
+               {`
+               body {
+                  overscroll-behavior: none;
+              }
+               `}
+            </style>
             <EventHandler
                setIsScrollingTimeline={setIsScrollingTimeline}
                setIsChangingCollisionRadius={setIsChangingCollisionRadius}
