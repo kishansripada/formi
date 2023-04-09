@@ -649,22 +649,6 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
             ></EditFormationGroup>
          ) : null}
 
-         {upgradeIsOpen ? (
-            <div
-               className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
-               id="outside"
-               onClick={(e) => {
-                  if (e.target.id === "outside") {
-                     setUpgradeIsOpen(false);
-                  }
-               }}
-            >
-               <div className="flex  w-[80%] h-[90%] overflow-y-scroll   flex-col rounded-xl font-proxima  bg-white overflow-hidden">
-                  <PricingTable></PricingTable>
-               </div>
-            </div>
-         ) : null}
-
          {shareIsOpen ? (
             <Share
                shareSettings={shareSettings}
@@ -682,7 +666,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                      left: "50%",
                      transform: "translate(-50%, 0)",
                   }}
-                  className="fixed w-60 h-12 rounded-full shadow-xl bottom-6 bg-black z-[9999] opacity-70 grid place-items-center"
+                  className="fixed w-60 h-12 select-none rounded-full shadow-xl bottom-6 bg-black z-[9999] opacity-70 grid place-items-center"
                >
                   <p className="text-white text-sm pointer-events-none">Click on the stage to comment</p>
                </div>
@@ -705,7 +689,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
             // style={{
             //    pointerEvents: subscriptionStatus === "SUBSCRIBED" ? "none" : "auto",
             // }}
-            className={`flex flex-col h-screen overflow-hidden bg-[#fafafa] overscroll-y-none text-neutral-900 `}
+            className={`   flex-col h-screen   flex  bg-[#fafafa] overflow-hidden text-neutral-900 select-none `}
          >
             <EventHandler
                setIsScrollingTimeline={setIsScrollingTimeline}

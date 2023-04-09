@@ -163,7 +163,7 @@ export const CurrentFormation: React.FC<{
 
    return (
       <>
-         <div className=" lg:flex hidden  w-[250px]  min-w-[250px] flex-col h-full  bg-white  ">
+         <div className=" lg:flex hidden  w-[260px]  min-w-[260px] flex-col h-full  bg-white  ">
             {selectedFormation !== null && formations[selectedFormation] ? (
                <>
                   {/* <div className="px-6">

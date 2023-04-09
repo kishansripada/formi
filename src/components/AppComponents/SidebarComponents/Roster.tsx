@@ -77,7 +77,7 @@ export const Roster: React.FC<{
    };
    return (
       <>
-         <div className="lg:flex hidden w-[250px]  min-w-[250px] flex-col overflow-hidden  bg-white h-full ">
+         <div className="lg:flex hidden w-[260px]  min-w-[260px] flex-col overflow-hidden  bg-white h-full ">
             <div className="flex-grow overflow-y-scroll">
                {dancers.slice().map((dancer, index) => (
                   <Dancer

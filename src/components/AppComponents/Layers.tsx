@@ -77,7 +77,8 @@ export const Layers: React.FC<{
                   if (formation.durationSeconds + e.movementX / pixelsPerSecond >= 0) {
                      return { ...formation, durationSeconds: formation.durationSeconds + e.movementX / pixelsPerSecond };
                   } else {
-                     if (formation.transition.durationSeconds + e.movementX / pixelsPerSecond > 1) {
+                     // transition should be longer than 0.5 seconds
+                     if (formation.transition.durationSeconds + e.movementX / pixelsPerSecond > 0.5) {
                         return {
                            ...formation,
                            transition: {

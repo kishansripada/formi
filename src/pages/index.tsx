@@ -197,8 +197,8 @@ const home = () => {
 
                <div className=" grid grid-cols-4 place-items-center child:mx-8   child:my-8  select-none opacity-60 dark:opacity-70 ">
                   <img
-                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cornell_University_logo.svg/1280px-Cornell_University_logo.svg"
-                     className=" w-48 h-10  transition duration-500"
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cornell_University_logo.svg/1280px-Cornell_University_logo.svg.png"
+                     className=" w-48  transition duration-500"
                      alt=""
                   />
                   <img

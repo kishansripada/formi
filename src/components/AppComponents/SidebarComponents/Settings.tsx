@@ -27,7 +27,7 @@ export const Settings: React.FC<{
    return (
       <>
          <Toaster></Toaster>
-         <div className=" w-[250px]  min-w-[250px] hidden lg:block bg-white h-full  py-4 overflow-y-scroll pl-1">
+         <div className=" w-[260px]  min-w-[260px] hidden lg:block bg-white h-full  py-4 overflow-y-scroll pl-1">
             <p className="text-neutral-800 pl-3  font-medium mb-1 text-sm">Previous Formation</p>
             <Dropdown
                dropDownToggle={dropDownToggle}
