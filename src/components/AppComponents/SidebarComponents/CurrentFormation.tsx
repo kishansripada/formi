@@ -64,6 +64,29 @@ export const CurrentFormation: React.FC<{
       pushChange();
    };
 
+   const setTeleport = () => {
+      setFormations((formations: formation[]) => {
+         return formations.map((formation, index: number) => {
+            if (index === selectedFormation) {
+               return {
+                  ...formation,
+                  positions: formation.positions.map((dancerPosition) => {
+                     if (selectedDancers.includes(dancerPosition.id)) {
+                        return {
+                           ...dancerPosition,
+                           transitionType: "teleport",
+                        };
+                     }
+                     return dancerPosition;
+                  }),
+               };
+            }
+            return formation;
+         });
+      });
+      pushChange();
+   };
+
    const setCurved = () => {
       selectedDancers.forEach((selectedDancer) => {
          setFormations((formations: formation[]) => {
@@ -154,6 +177,9 @@ export const CurrentFormation: React.FC<{
 
       if (dancers.every((position) => position.transitionType === "linear" || !position.transitionType)) {
          return "Straight";
+      }
+      if (dancers.every((position) => position.transitionType === "teleport" || !position.transitionType)) {
+         return "Teleport";
       }
       if (dancers.every((position) => position.transitionType === "cubic")) {
          return "Curved";
@@ -396,8 +422,8 @@ export const CurrentFormation: React.FC<{
   <path fill="white" d="M766 936q-41 0-71.5-24.5T656 852H443q-66 0-109.5-43.5T290 699q0-66 43.5-109.5T443 546h77q41 0 67-26t26-67q0-41-26-67t-67-26H304q-9 35-39 59.5T194 444q-48 0-81-33t-33-81q0-48 33-81t81-33q41 0 71 24.5t39 59.5h216q66 0 109.5 43.5T673 453q0 66-43.5 109.5T520 606h-77q-41 0-67 26t-26 67q0 41 26 67t67 26h213q9-35 39-59.5t71-24.5q48 0 81 33t33 81q0 48-33 81t-81 33ZM194 384q23 0 38.5-15.5T248 330q0-23-15.5-38.5T194 276q-23 0-38.5 15.5T140 330q0 23 15.5 38.5T194 384Z"/>
 </svg>`,
                                  ]}
-                                 options={["Straight", "Curved"]}
-                                 actions={[setLinear, setCurved]}
+                                 options={["Straight", "Curved", "Teleport"]}
+                                 actions={[setLinear, setCurved, setTeleport]}
                               ></Dropdown>
                            </div>
                            <hr />

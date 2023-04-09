@@ -9,7 +9,7 @@ export type dancer = {
 export type dancerPosition = {
    id: string;
    position: { x: number; y: number };
-   transitionType?: "linear" | "cubic";
+   transitionType?: "linear" | "cubic" | "teleport";
    controlPointStart?: { x: number; y: number };
    controlPointEnd?: { x: number; y: number };
 };

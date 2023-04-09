@@ -267,6 +267,9 @@ const animate = (
 
    percentThroughTransition = easeInOutQuad(percentThroughTransition);
 
+   if (inThisFormation?.transitionType === "teleport") {
+      return null;
+   }
    if (inThisFormation?.transitionType === "cubic" && inThisFormation?.controlPointStart?.y && inThisFormation?.controlPointStart?.x) {
       return {
          x:

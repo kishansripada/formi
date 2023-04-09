@@ -132,49 +132,49 @@ export const Canvas: React.FC<{
          setIsDragging(true);
       }
 
-      if (rotatingDancerId) {
-         const target = e.currentTarget;
+      // if (rotatingDancerId) {
+      //    const target = e.currentTarget;
 
-         // Get the bounding rectangle of target
-         const rect = target.getBoundingClientRect();
+      //    // Get the bounding rectangle of target
+      //    const rect = target.getBoundingClientRect();
 
-         // Mouse position
-         const left = e.clientX - rect.left;
-         const top = e.clientY - rect.top;
+      //    // Mouse position
+      //    const left = e.clientX - rect.left;
+      //    const top = e.clientY - rect.top;
 
-         let dancerPos = coordsToPosition(formations[selectedFormation]?.positions.find((position) => position.id === rotatingDancerId)?.position);
-         dancerPos = { left: dancerPos.left * zoom, top: dancerPos.top * zoom };
-         function getAngle(pointA, pointB): number {
-            const angleRad = Math.atan2(pointB.top - pointA.top, pointB.left - pointA.left);
-            let angleDeg = (angleRad * 180) / Math.PI - 90;
-            angleDeg = angleDeg >= 0 ? angleDeg : 360 + angleDeg;
-            return angleDeg;
-         }
+      //    let dancerPos = coordsToPosition(formations[selectedFormation]?.positions.find((position) => position.id === rotatingDancerId)?.position);
+      //    dancerPos = { left: dancerPos.left * zoom, top: dancerPos.top * zoom };
+      //    function getAngle(pointA, pointB): number {
+      //       const angleRad = Math.atan2(pointB.top - pointA.top, pointB.left - pointA.left);
+      //       let angleDeg = (angleRad * 180) / Math.PI - 90;
+      //       angleDeg = angleDeg >= 0 ? angleDeg : 360 + angleDeg;
+      //       return angleDeg;
+      //    }
 
-         let angle = getAngle(dancerPos, { left, top });
+      //    let angle = getAngle(dancerPos, { left, top });
 
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, index: number) => {
-               if (index === selectedFormation) {
-                  return {
-                     ...formation,
-                     positions: formation.positions.map((dancerPosition) => {
-                        if (selectedDancers.length ? selectedDancers.includes(dancerPosition.id) : dancerPosition.id === rotatingDancerId) {
-                           return {
-                              ...dancerPosition,
-                              rotation: {
-                                 angle: Math.round(angle / 45) * 45 === 360 ? 0 : Math.round(angle / 45) * 45,
-                              },
-                           };
-                        }
-                        return dancerPosition;
-                     }),
-                  };
-               }
-               return formation;
-            });
-         });
-      }
+      //    setFormations((formations: formation[]) => {
+      //       return formations.map((formation, index: number) => {
+      //          if (index === selectedFormation) {
+      //             return {
+      //                ...formation,
+      //                positions: formation.positions.map((dancerPosition) => {
+      //                   if (selectedDancers.length ? selectedDancers.includes(dancerPosition.id) : dancerPosition.id === rotatingDancerId) {
+      //                      return {
+      //                         ...dancerPosition,
+      //                         rotation: {
+      //                            angle: Math.round(angle / 45) * 45 === 360 ? 0 : Math.round(angle / 45) * 45,
+      //                         },
+      //                      };
+      //                   }
+      //                   return dancerPosition;
+      //                }),
+      //             };
+      //          }
+      //          return formation;
+      //       });
+      //    });
+      // }
 
       if (dragBoxCoords.start.x && dragBoxCoords.start.y) {
          const target = e.currentTarget;
@@ -243,7 +243,9 @@ export const Canvas: React.FC<{
                         }
                         if (
                            selectedDancers.includes(dancerPosition.id) &&
-                           (dancerPosition.transitionType === "linear" || !dancerPosition.transitionType)
+                           (dancerPosition.transitionType === "linear" ||
+                              !dancerPosition.transitionType ||
+                              dancerPosition.transitionType === "teleport")
                         ) {
                            return {
                               ...dancerPosition,
@@ -403,6 +405,7 @@ export const Canvas: React.FC<{
       if (e.target.dataset.type === "dancer") {
          // addToStack();
          setDraggingDancerId(e.target.id);
+
          if (!shiftHeld && !selectedDancers.includes(e.target.id)) {
             setSelectedDancers([e.target.id]);
          }
