@@ -79,7 +79,7 @@ export const Timeline: React.FC<{
    useEffect(() => {
       if (!songDuration) return;
 
-      setPixelsPerSecond(30);
+      setPixelsPerSecond(35);
       if (pixelsPerSecond * (songDuration / 1000) < window.screen.width - 20) {
          setPixelsPerSecond((window.screen.width - 20) / (songDuration / 1000));
       }

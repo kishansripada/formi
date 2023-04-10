@@ -146,6 +146,24 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       setSelectedFormation(currentFormationIndex);
    }, [currentFormationIndex, isPlaying]);
 
+   useEffect(() => {
+      // Add event listener for beforeunload event
+      window.addEventListener("beforeunload", handleBeforeUnload);
+
+      // Cleanup event listener on unmount
+      return () => {
+         window.removeEventListener("beforeunload", handleBeforeUnload);
+      };
+   }, [saved]);
+
+   function handleBeforeUnload(event) {
+      if (!saved) {
+         // Prompt the user before closing the tab
+         event.preventDefault();
+         event.returnValue = "Please wait a few more seconds before closing the tab, your changes are still being saved";
+      }
+   }
+
    const removeDancer = (id: string) => {
       // remove dancer and all their positions
       setFormations((formations) => {

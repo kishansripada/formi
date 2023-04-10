@@ -83,7 +83,7 @@ export const ChooseAudioSource: React.FC<{
 
    return (
       <>
-         <div className="lg:flex hidden overflow-y-scroll w-[260px]  min-w-[260px] h-full  flex-col   bg-white    px-6 py-6 overflow-hidden">
+         <div className="lg:flex hidden overflow-y-scroll w-[260px]  min-w-[260px] h-full  flex-col   bg-white    px-4 py-6 overflow-hidden">
             <div className="flex flex-col ">
                <div className="text-xl font-medium text-[#1A1B25]  flex flex-row justify-between items-center">
                   <button

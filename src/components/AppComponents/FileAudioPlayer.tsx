@@ -76,7 +76,6 @@ export const FileAudioPlayer: React.FC<{
                TimelinePlugin.create({
                   container: "#wave-timeline",
                   notchPercentHeight: 0,
-
                   height: 10,
                }),
             ],

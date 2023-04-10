@@ -80,7 +80,7 @@ export const StageSettings: React.FC<{
    return (
       <>
          <Toaster></Toaster>
-         <div className=" w-[260px]  min-w-[260px] hidden lg:block bg-white h-full px-6 py-6 overflow-y-scroll">
+         <div className=" w-[260px]  min-w-[260px] hidden lg:block bg-white h-full px-2 py-6 overflow-y-scroll">
             <p className="text-neutral-800 font-medium text-sm">Width</p>
             <div className="my-6 flex flex-row justify-center items-center">
                <button

@@ -176,7 +176,7 @@ export const Share: React.FC<{
                      <p className="text-neutral-400 text-xs mt-4 ">Collaborative Editing is Coming Soon</p>
                   ) : null}
                </div>
-               <div className="flex flex-row justify-between items-center w-full bg-neutral-100 h-16 rounded-b-xl px-5">
+               <div className="flex flex-row justify-between items-center w-full bg-neutral-100 h-16  px-5">
                   <button
                      onClick={() => setShareIsOpen(false)}
                      className=" border border-neutral-300 bg-white hover:bg-neutral-100 px-4  py-1 rounded-md"
