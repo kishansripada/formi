@@ -1,9 +1,9 @@
 import { detectCollisions } from "../../types/collisionDetector";
+import dynamic from "next/dynamic";
 import { useState, useEffect, useRef, useCallback, lazy } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useLocalStorage } from "../../hooks";
-import { ThreeDancer } from "../../components/AppComponents/ThreeDancer";
 import { debounce } from "lodash";
 import toast, { Toaster } from "react-hot-toast";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -28,10 +28,12 @@ import { StageSettings } from "../../components/AppComponents/SidebarComponents/
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { grandfatheredEmails } from "../../../public/grandfathered";
 import { Timeline } from "../../components/AppComponents/Timeline";
+
 import * as jsonpatch from "fast-json-patch";
-import { Canvas as Canva } from "@react-three/fiber";
-import { Stage, Grid, OrbitControls } from "@react-three/drei";
-import { Text } from "@react-three/drei";
+const ThreeD = dynamic(() => import("../../components/AppComponents/ThreeD").then((mod) => mod.ThreeD), {
+   loading: () => <p>Loading...</p>,
+});
+
 import { EventHandler } from "../../components/AppComponents/EventHandler";
 var jsondiffpatch = require("jsondiffpatch").create({
    objectHash: function (obj) {
@@ -96,7 +98,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [isCommenting, setIsCommenting] = useState<boolean>(false);
    const [position, setPosition] = useState<number>(0);
-   const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(25);
+   const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(35);
    const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
    const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
    const [isScrollingTimeline, setIsScrollingTimeline] = useState(false);
@@ -846,102 +848,44 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                      <p className="text-neutral-600 font-semibold text-sm mt-2">AUDIENCE</p>
                   ) : null}
                   {localSettings.viewingThree ? (
-                     <Canva
-                        onPointerUp={() => {
-                           if (viewOnly) return;
-                           pushChange();
-                        }}
-                        gl={{ logarithmicDepthBuffer: true }}
-                        camera={{ position: [0, 10, (localSettings.stageFlipped ? -1 : 1) * 14], fov: 40 }}
-                     >
-                        <Stage position={[0, 0, 0]} environment="apartment" adjustCamera={false}></Stage>
-                        <Grid
-                           renderOrder={-1}
-                           position={[0, 0, 0]}
-                           args={[cloudSettings.stageDimensions.width / 2, cloudSettings.stageDimensions.height / 2]}
-                           cellSize={0.5}
-                           cellThickness={0.5}
-                           sectionSize={2.5}
-                           sectionThickness={1.5}
-                           sectionColor={[0.5, 0.5, 10]}
-                        />
-
-                        {selectedFormation !== null
-                           ? formations[selectedFormation].positions.map((dancerPosition: dancerPosition) => {
-                                return (
-                                   <ThreeDancer
-                                      selectedDancers={selectedDancers}
-                                      setIsThreeDancerDragging={setIsThreeDancerDragging}
-                                      isThreeDancerDragging={isThreeDancerDragging}
-                                      addToStack={addToStack}
-                                      pushChange={pushChange}
-                                      viewOnly={viewOnly}
-                                      isPlaying={isPlaying}
-                                      currentFormationIndex={currentFormationIndex}
-                                      percentThroughTransition={percentThroughTransition}
-                                      dancers={dancers}
-                                      position={position}
-                                      dancerPosition={dancerPosition}
-                                      formations={formations}
-                                      setFormations={setFormations}
-                                      selectedFormation={selectedFormation}
-                                      localSettings={localSettings}
-                                   ></ThreeDancer>
-                                );
-                             })
-                           : null}
-                        <OrbitControls
-                           enableDamping={false}
-                           // dampingFactor={0.5}
-                           autoRotate
-                           autoRotateSpeed={0}
-                           enableZoom={true}
-                           makeDefault
-                           minPolarAngle={0}
-                           maxPolarAngle={Math.PI / 2}
-                           enabled={!isThreeDancerDragging}
-                        />
-                        <Text
-                           scale={[0.5, 0.5, 0.5]}
-                           position={[0, 0, cloudSettings.stageDimensions.height / 4 + 1]}
-                           rotation={[Math.PI * 1.5, 0, 0]}
-                           color="black"
-                           anchorX="center"
-                           // anchorY="middle"
-                        >
-                           AUDIENCE
-                        </Text>
-                        <Text
-                           scale={[0.5, 0.5, 0.5]}
-                           position={[0, 0, -(cloudSettings.stageDimensions.height / 4 + 1)]}
-                           rotation={[Math.PI * 1.5, 0, Math.PI * 1]}
-                           color="black"
-                           anchorX="center"
-                           // anchorY="middle"
-                        >
-                           BACKSTAGE
-                        </Text>
-                        <Text
-                           scale={[0.5, 0.5, 0.5]}
-                           position={[cloudSettings.stageDimensions.width / 4 + 1, 0, 0]}
-                           rotation={[Math.PI * 1.5, 0, Math.PI * 2.5]}
-                           color="black"
-                           anchorX="center"
-                           // anchorY="middle"
-                        >
-                           STAGE LEFT
-                        </Text>
-                        <Text
-                           scale={[0.5, 0.5, 0.5]}
-                           position={[-(cloudSettings.stageDimensions.width / 4 + 1), 0, 0]}
-                           rotation={[Math.PI * 1.5, 0, Math.PI * 1.5]}
-                           color="black"
-                           anchorX="center"
-                           // anchorY="middle"
-                        >
-                           STAGE RIGHT
-                        </Text>
-                     </Canva>
+                     <ThreeD
+                        setIsThreeDancerDragging={setIsThreeDancerDragging}
+                        isThreeDancerDragging={isThreeDancerDragging}
+                        isPlaying={isPlaying}
+                        currentFormationIndex={currentFormationIndex}
+                        percentThroughTransition={percentThroughTransition}
+                        dancers={dancers}
+                        position={position}
+                        shiftHeld={shiftHeld}
+                        setShiftHeld={setShiftHeld}
+                        stageFlipped={localSettings.stageFlipped}
+                        soundCloudTrackId={soundCloudTrackId}
+                        zoom={zoom}
+                        setZoom={setZoom}
+                        isCommenting={isCommenting}
+                        setIsCommenting={setIsCommenting}
+                        localSettings={localSettings}
+                        pushChange={pushChange}
+                        undo={undo}
+                        addToStack={addToStack}
+                        player={player}
+                        draggingDancerId={draggingDancerId}
+                        setDraggingDancerId={setDraggingDancerId}
+                        songDuration={songDuration}
+                        viewOnly={viewOnly}
+                        setSelectedFormation={setSelectedFormation}
+                        formations={formations}
+                        selectedFormation={selectedFormation}
+                        setFormations={setFormations}
+                        selectedDancers={selectedDancers}
+                        setSelectedDancers={setSelectedDancers}
+                        setIsPlaying={setIsPlaying}
+                        setPixelsPerSecond={setPixelsPerSecond}
+                        cloudSettings={cloudSettings}
+                        coordsToPosition={coordsToPosition}
+                        currentFormationIndex={currentFormationIndex}
+                        percentThroughTransition={percentThroughTransition}
+                     ></ThreeD>
                   ) : null}
 
                   {localSettings.viewingTwo ? (

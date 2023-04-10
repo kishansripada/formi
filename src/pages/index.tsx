@@ -328,8 +328,8 @@ const home = () => {
                </Canvas> */}
             </div>
             {/* <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div> */}
-            <div>
-               <p className="text-5xl text-center px-[20%] py-12">
+            <div className="dark:bg-neutral-900 dark:text-neutral-300">
+               <p className="lg:text-5xl text-2xl text-center px-[20%] py-12 ">
                   The <span className=" text-transparent  bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">all-in-one platform </span> to
                   plan and excecute the best performances
                </p>
@@ -381,10 +381,16 @@ const home = () => {
             </div>
             <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
 
-            <div className="bg-neutral-50  flex flex-row justify-center font-proxima py-10  ">
-               <div className="text-white  bg-pink-600 py-10 rounded-xl">
-                  <p className="text-4xl">Build Your First Performance Free</p>
+            <div className="bg-neutral-50  flex flex-row justify-center items-center font-proxima py-10 dark:bg-neutral-900  ">
+               <div className="text-white  bg-pink-600 py-10 rounded-xl w-[70%]">
+                  <p className="text-3xl text-center">Build Your First Performance Free</p>
+                  <Link href={"/login"} className="">
+                     <button className="  flex-row items-center mx-auto  text-neutral-100 px-4 py-2 border border-white  hidden lg:flex rounded-full mt-8 text-xl group">
+                        <span className="mr-2 text-white ">Get Started</span>
+                     </button>
+                  </Link>
                </div>
+
                {/* <p className="text-3xl font-bold dark:text-neutral-50">No Credit Card Required</p>
                      <p className="text-lg mt-6 lg:w-[80%]  dark:text-neutral-300 text-neutral-500">
                         Start free today without a credit card. Create all of your dance formations, view in 3D and upload your own audio completely
@@ -395,9 +401,8 @@ const home = () => {
                            Build Your First Performance Free
                         </button>
                      </Link> */}
-
-               <div className="lg:w-1/2 w-[90%] flex flex-row justify-center items-center "></div>
             </div>
+            <div className="lg:w-1/2 w-[90%] flex flex-row justify-center items-center "></div>
 
             {/* FOOTER */}
             <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>

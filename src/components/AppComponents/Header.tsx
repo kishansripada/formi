@@ -214,6 +214,7 @@ export const Header: React.FC<{
                ) : null}
                {!viewOnlyInitial ? (
                   <button
+                     title="Comment on stage"
                      style={{
                         backgroundColor: isCommenting ? "#db2777" : "transparent",
                      }}
@@ -248,6 +249,7 @@ export const Header: React.FC<{
 
                {!viewOnlyInitial ? (
                   <button
+                     title="Formation templates"
                      onClick={() => {
                         setTemplatesIsOpen((x: boolean) => !x);
                      }}

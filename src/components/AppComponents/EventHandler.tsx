@@ -201,7 +201,7 @@ export const EventHandler: React.FC<{
    }
 
    const handleScroll = (e) => {
-      let MAX_PIXELS_PER_SECOND = 45;
+      let MAX_PIXELS_PER_SECOND = 55;
       let minPixelsPerSecond = songDuration ? ((window.screen.width - 10) * 1000) / songDuration : 10;
 
       if (
