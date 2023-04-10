@@ -1,9 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
-import { GridLines } from "./GridLines";
-import { CheerLines } from "./CheerLines";
 import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings } from "../../types/types";
-import { toast, Toaster } from "react-hot-toast";
 import { ThreeDancer } from "../AppComponents/ThreeDancer";
 import { Canvas as Canva } from "@react-three/fiber";
 import { Stage, Grid, OrbitControls } from "@react-three/drei";

@@ -107,6 +107,7 @@ export const Header: React.FC<{
                </button>
 
                <button
+                  title="Toggle collision detection"
                   onClick={() => {
                      setLocalSettings((localSettings: localSettings) => {
                         return {
@@ -121,7 +122,7 @@ export const Header: React.FC<{
                   style={{
                      backgroundColor: localSettings.viewCollisions ? "#db2777" : "transparent",
                   }}
-                  className=" h-full min-w-[48px] grid place-items-center relative"
+                  className=" h-full min-w-[48px]  grid place-items-center relative"
                >
                   <svg className="w-6 h-6 fill-white flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 457.68 457.68">
                      <path d="m453.822 195.374-58.311-44.323 45.737-40.447c3.195-2.825 4.189-7.396 2.455-11.292-1.733-3.896-5.779-6.215-10.03-5.738l-61.163 6.943 26.917-68.152c1.591-4.027.341-8.622-3.07-11.288-3.412-2.665-8.17-2.77-11.696-.254L318.889 67.78l-14.022-54.566c-1.041-4.05-4.543-6.989-8.712-7.311-4.157-.317-8.081 2.044-9.731 5.886L262.659 67.11l-66.396-34.183c-4.117-2.12-9.157-1.059-12.068 2.541-2.913 3.599-2.901 8.748.031 12.333l42.625 52.133-45.023 21.367c-3.829 1.817-6.05 5.895-5.499 10.098.551 4.203 3.748 7.571 7.916 8.34l46.369 8.554s10.757 1.677 16.309 10.642c.044.072.116.122.175.181l9.481-10.928c2.297-2.648 3-6.324 1.841-9.633s-4.002-5.744-7.449-6.38l-33.463-6.174 28.999-13.762c2.714-1.288 4.685-3.753 5.345-6.684.659-2.932-.067-6.003-1.97-8.329l-20.773-25.407 33.922 17.464c2.408 1.24 5.227 1.425 7.776.508 2.551-.916 4.606-2.85 5.675-5.34l16.59-38.618 10.435 40.61c.802 3.121 3.09 5.645 6.117 6.749s6.403.643 9.025-1.228l50.452-36.021-20.746 52.529c-1.26 3.191-.754 6.81 1.332 9.533 2.087 2.723 5.456 4.155 8.858 3.766l46.548-5.284-31.451 27.814c-2.193 1.939-3.401 4.758-3.292 7.682.108 2.925 1.522 5.646 3.851 7.418l30.374 23.087-31.878-7.801c-3.224-.787-6.633.114-9.044 2.399-2.41 2.284-3.496 5.637-2.882 8.901l6.75 35.854-27.148-33.493c-2.056-2.537-5.248-3.886-8.497-3.576-3.252.302-6.138 2.209-7.69 5.082l-20.833 38.531-8.793-52.25c-.463-2.753-2.081-5.175-4.445-6.658-2.33-1.46-5.208-1.895-7.931-1.101l-25.402 7.419c.817 3.021 1.263 6.163 1.303 9.372l.133 10.569 18.893-5.518 11.684 69.435c.692 4.114 3.92 7.335 8.036 8.018 4.118.685 8.211-1.322 10.195-4.993l27.384-50.648 42.275 52.154c2.817 3.475 7.636 4.595 11.697 2.714 4.06-1.88 6.325-6.278 5.497-10.675l-11.098-58.949 62.802 15.369c4.493 1.097 9.151-1.107 11.143-5.286 1.996-4.178.782-9.182-2.904-11.983z" />
@@ -130,7 +131,10 @@ export const Header: React.FC<{
                   </svg>
                </button>
                {isChangingCollisionRadius ? (
-                  <div className="w-[200px] left-12 h-[80px] bg-neutral-800 absolute top-14 flex flex-col  text-sm shadow-2xl" id="dropdown-menu">
+                  <div
+                     className="w-[200px] left-12 h-[80px] bg-neutral-800 absolute top-14 flex flex-col z-[50] text-sm shadow-2xl"
+                     id="dropdown-menu"
+                  >
                      <p className="font-semibold ml-2 mt-1">Collision Radius</p>
                      <div className="flex flex-row items-center border border-neutral-200 mt-auto m-1">
                         <input
@@ -154,6 +158,7 @@ export const Header: React.FC<{
                ) : null}
 
                <button
+                  title="Flip stage"
                   onClick={() =>
                      setLocalSettings((settings: localSettings) => {
                         return { ...settings, stageFlipped: !localSettings.stageFlipped };

@@ -146,7 +146,7 @@ export const Timeline: React.FC<{
                   className={` relative  left-[40px] py-1 ${!soundCloudTrackId ? "h-[15px]" : ""} `}
                   id="wave-timeline"
                ></div>
-               <div title="Loop" className="w-[200px] bg-neutral-300  cursor-pointer left-[40px] h-[15px] relative bottom-[1px]"></div>
+               {/* <div title="Loop" className="w-[200px] bg-neutral-300  cursor-pointer left-[40px] h-[15px] relative bottom-[1px]"></div> */}
                <div
                   style={{
                      // add 40 but subract 8 to account for the width of the svg

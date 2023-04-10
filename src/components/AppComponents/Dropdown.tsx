@@ -26,7 +26,7 @@ const Dropdown: React.FC<Props> = ({ options, icons, actions, value, icon, dropD
    };
 
    return (
-      <div className="relative group  border hover:border-neutral-200 border-white h-[32px] w-38">
+      <div id="dropdown-menu" className="relative group  border hover:border-neutral-200 border-white h-[32px] w-38">
          <div className=" py-1 px-3   flex flex-row items-center  " onClick={toggleDropdown}>
             {icon ? <img className="w-5 h-5 mr-2  stroke-neutral-800 fill-neutral-800" src={`data:image/svg+xml;utf8,${icon}`} /> : null}
 
