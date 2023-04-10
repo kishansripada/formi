@@ -87,6 +87,19 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       viewingTwo: true,
       collisionRadius: 0.5,
    });
+   if (localSettings.viewingTwo === undefined) {
+      setLocalSettings({
+         gridSnap: 1,
+         previousFormationView: "ghostDancersAndPaths",
+         dancerStyle: "solid",
+         viewCollisions: false,
+         stageFlipped: false,
+         viewingThree: false,
+         viewingTwo: true,
+         collisionRadius: 0.5,
+      });
+   }
+
    const [dropDownToggle, setDropDownToggle] = useState<boolean>(false);
    const [viewOnly, setViewOnly] = useState(viewOnlyInitial);
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
