@@ -867,17 +867,19 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                   </>
                ) : null}
 
-               <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-100 `}>
+               <div className={`flex flex-row min-w-0 flex-grow items-center bg-neutral-100 `}>
                   <video
                      ref={videoPlayer}
                      style={{
-                        height: localSource?.startsWith("data:video") || isVideo(soundCloudTrackId) ? "33%" : 0,
+                        height: localSource?.startsWith("data:video") || isVideo(soundCloudTrackId) ? "95%" : 0,
                      }}
+                     // className="my-3"
                      src={localSource || soundCloudTrackId}
                   ></video>
-                  {localSettings.viewingTwo && localSettings.stageFlipped ? (
+
+                  {/* {localSettings.viewingTwo && localSettings.stageFlipped ? (
                      <p className="text-neutral-600 font-semibold text-sm mt-2">AUDIENCE</p>
-                  ) : null}
+                  ) : null} */}
                   {localSettings.viewingThree ? (
                      <ThreeD
                         setIsThreeDancerDragging={setIsThreeDancerDragging}
@@ -1063,9 +1065,9 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                         ) : null}
                      </Canvas>
                   ) : null}
-                  {localSettings.viewingTwo && !localSettings.stageFlipped ? (
+                  {/* {localSettings.viewingTwo && !localSettings.stageFlipped ? (
                      <p className="text-neutral-600 font-semibold text-sm mb-1">AUDIENCE</p>
-                  ) : null}
+                  ) : null} */}
                </div>
             </div>
 
