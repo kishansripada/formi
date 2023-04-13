@@ -27,19 +27,34 @@ export const MyDances: React.FC<{ myDances: any; invalidateDances: Function }> =
 
    return (
       <>
+         <style>
+            {`.scroll-container::-webkit-scrollbar {
+    height: 12px; /* Adjust the height of the scrollbar as needed */
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background-color: #888; /* Adjust the color of the scrollbar thumb as needed */
+    border-radius: 6px; /* Adjust the border-radius of the scrollbar thumb as needed */
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    background-color: #eee; /* Adjust the color of the scrollbar track as needed */
+    border-radius: 6px; /* Adjust the border-radius of the scrollbar track as needed */
+}`}
+         </style>
          <h1 className="mt-16 text-2xl">
             Let's create some <span className="font-bold">Performances</span>!
          </h1>
          <p className="mt-9 font-medium">Recent Performances</p>
          <p className=" font-medium lg:hidden">Create dances on your laptop and view them here</p>
-         <div className="w-full flex flex-col lg:items-start lg:flex-row overflow-x-scroll mt-7 removeScrollBar h-full overscroll-contain items-center">
+         <div className="w-full flex flex-col lg:items-start lg:flex-row overflow-x-scroll scroll-container mt-7 frame h-full overscroll-contain items-center">
             {myDances.length ? (
                myDances
                   .sort((a, b) => new Date(b.last_edited) - new Date(a.last_edited))
                   .map((dance) => {
                      return (
                         <>
-                           <div key={dance.id} className="flex flex-col items-center text-neutral-700 mr-5 relative cursor-pointer  ">
+                           <div key={dance.id} className="flex flex-col items-center  text-neutral-700 mr-5 relative cursor-pointer  ">
                               <Link key={dance.id} href={`/${dance.id}/edit`}>
                                  <div className="">
                                     <div className="bg-white rounded-xl h-[200px] w-[300px] relative border-neutral-300 border  ">
