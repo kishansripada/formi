@@ -134,6 +134,8 @@ export const Timeline: React.FC<{
                   onClick={(e) => {
                      var rect = e.currentTarget.getBoundingClientRect();
                      var x = e.clientX - rect.left; //x position within the element.
+                     if (x < 0) return;
+
                      setPosition(x / pixelsPerSecond);
 
                      if (!(songDuration && player)) return;
