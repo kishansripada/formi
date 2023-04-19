@@ -79,7 +79,7 @@ const home = () => {
                </div>
             </div>
 
-            <div className="absolute w-[1000px] opacity-50  h-[500px] right-0  translate-x-1/2  -z-[100] top-[100px]">
+            <div className="absolute w-[1000px] opacity-50  h-[500px] right-0  translate-x-1/2  -z-[100] top-[100px] blur">
                <div
                   style={{
                      backgroundImage:
@@ -192,7 +192,7 @@ const home = () => {
                </div>
             </div>
             <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
-            <div className=" dark:bg-[#191919]   lg:flex flex-col items-center justify-center  hidden py-10  ">
+            <div className=" dark:bg-neutral-900   lg:flex flex-col items-center justify-center  hidden py-10  ">
                {/* <p className=" text-2xl mx-auto text-center font-proxima font-semibold mt-10 ">Trusted by 5000+ dance teams</p> */}
 
                <div className=" grid grid-cols-4 place-items-center child:mx-8   child:my-8  select-none opacity-60 dark:opacity-70 ">
@@ -335,7 +335,7 @@ const home = () => {
                </p>
             </div>
             {/* <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div> */}
-            <div className="bg-neutral-50 dark:bg-[#191919] lg:px-0 px-7  font-proxima">
+            <div className="bg-neutral-50 dark:bg-neutral-900 lg:px-0 px-7  font-proxima">
                <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-8 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
                      <p className="text-3xl font-bold dark:text-neutral-50">Collaborate, communicate</p>
