@@ -143,7 +143,7 @@ export const PricingTable = () => {
                               <ul role="list" className="mb-8 space-y-4 text-left">
                                  {[
                                     "Everything in the choreographer plan",
-                                    "Collaborative editing",
+                                    // "Collaborative editing",
                                     `10 individual choreography accounts`,
                                     `Priority support`,
                                  ].map((featureDescription) => {
@@ -212,15 +212,15 @@ export const PricingTable = () => {
 
                            <button
                               onClick={() => {
-                                 if (!session) {
-                                    router.push("/login");
-                                    return;
-                                 }
-                                 router.push("/api/checkout?price=price_1MvAZ0HvC3w6e8fc2IPfCFJS");
+                                 // if (!session) {
+                                 //    router.push("/login");
+                                 //    return;
+                                 // }
+                                 // router.push("/api/checkout?price=price_1MvAZ0HvC3w6e8fc2IPfCFJS");
                               }}
                               className="text-white bg-pink-600 mt-auto bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
                            >
-                              Start 7 Day Trial
+                              Contact Us
                            </button>
                         </div>
                      </div>
