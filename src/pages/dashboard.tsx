@@ -108,7 +108,7 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                {/* <Header></Header> */}
 
                <div className="min-w-[240px] w-[240px]  py-4 h-screen lg:flex hidden flex-col box-border border-r-neutral-200 text-sm border ">
-                  <img className="w-44" src="/logos/logo_light.svg" alt="" />
+                  {/* <img className="w-44" src="/logos/logo_light.svg" alt="" /> */}
 
                   <div className="flex flex-row mt-3 ml-2  ">
                      <img
