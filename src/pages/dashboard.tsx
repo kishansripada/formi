@@ -13,9 +13,11 @@ import { Trash } from "../components/DashboardComponents/Trash";
 import { grandfatheredEmails } from "../../public/grandfathered";
 // import { Organization } from "../components/DashboardComponents/Organization";
 // import { OrganizationPerformances } from "../components/DashboardComponents/OrganizationPerformances";
-import { SharedWithMe } from "../components/DashboardComponents/SharedWithMe";
+// import { SharedWithMe } from "../components/DashboardComponents/SharedWithMe";
+import { Dropdown } from "../components/DashboardComponents/Dropdown";
 const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: {}) => {
    let session = useSession();
+
    const supabase = useSupabaseClient();
    const [importIsOpen, setImportIsOpen] = useState(!dances.length);
    const [danceAppLink, setDanceAppLink] = useState("");
@@ -35,12 +37,14 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
       const { data, error } = await supabase.from("dances").update({ isInTrash: false }).eq("id", id);
       console.log(error);
       invalidateDances();
-      toast.success("moved to trash");
+      toast.success("Removed from trash");
    };
 
    const invalidateDances = async () => {
-      const { data } = await supabase.from("dances").select("*").eq("user", session?.user.id);
-      setMyDances(data);
+      let data = await supabase.rpc("get_dances_by_user", {
+         input_uuid: session.user.id,
+      });
+      setMyDances(data.data);
    };
 
    const deleteDance = async (id: number) => {
@@ -50,7 +54,7 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
          toast.error("there was an issue deleting your dance");
          return;
       }
-      toast.success("deleted dance");
+      toast.success("Deleted dance");
       invalidateDances();
    };
 
@@ -89,63 +93,24 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
 
    return (
       <>
-         {importIsOpen ? (
-            <div
-               className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
-               id="outside"
-               onClick={(e) => {
-                  if (e.target.id === "outside") {
-                     setImportIsOpen(false);
-                  }
-               }}
-            >
-               <div className="flex  w-[700px] flex-col rounded-xl bg-white">
-                  <div className="flex flex-col rounded-xl px-10 pt-10 pb-10 h-full">
-                     <h1 className="text-2xl font-bold">Welcome to FORMI</h1>
-                     <p className="mt-2">Before you create your first performance, consider watching this short tutorial</p>
-                     <div className="w-full flex flex-row items-center justify-center rounded-xl  mt-10">
-                        <iframe
-                           width="560"
-                           height="315"
-                           src="https://www.youtube.com/embed/w-OgtsMom0o"
-                           title="YouTube video player"
-                           frameborder="0"
-                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                           allowfullscreen
-                        ></iframe>
-                     </div>
-
-                     {/* 
-                     <input
-                        value={danceAppLink}
-                        onChange={(e) => {
-                           setDanceAppLink(e.target.value);
-                        }}
-                        placeholder="danceapp.us link"
-                        type="text"
-                        className=" outline outline-2 rounded px-2 mt-6"
-                     />
-                     <div className="flex flex-row items-center justify-center">
-                        <img referrerPolicy="no-referrer" src="https://i.imgur.com/mBCNO7A.png" className="w-48 rounded-xl mt-10" alt="" />
-                        <p className="w-48 ml-10">make sure the dance is uploaded before pasting the url</p>
-                     </div>
-                     <button onClick={importFromDanceApp} className="ml-auto bg-blue-600 text-white px-3 mt-5 py-1 rounded-md">
-                        import
-                     </button> */}
-                  </div>
-               </div>
-            </div>
-         ) : null}
          <>
             <Toaster></Toaster>
-            <div className="h-screen flex flex-row font-proxima">
+            <style>
+               {`
+               body {
+                  overscroll-behavior: none;
+                  user-select: none;
+              }
+               `}
+            </style>
+            <div className="h-screen flex flex-row font-inter overscroll-none overflow-hidden">
                <Toaster></Toaster>
                {/* <Header></Header> */}
 
-               <div className="min-w-[300px] lg:w-[20%] px-6 py-4 h-screen lg:flex hidden flex-col shadow-xl  ">
+               <div className="min-w-[240px] w-[240px]  py-4 h-screen lg:flex hidden flex-col box-border border-r-neutral-200 text-sm border ">
                   <img className="w-44" src="/logos/logo_light.svg" alt="" />
 
-                  <div className="flex flex-row mt-3  ">
+                  <div className="flex flex-row mt-3 ml-2  ">
                      <img
                         referrerPolicy="no-referrer"
                         className="rounded-md w-16 pointer-events-none select-none mr-3"
@@ -163,57 +128,41 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                            ) : (
                               <p>Free Plan </p>
                            )}
-
-                           {/* <a
-                              href={`https://billing.stripe.com/p/login/28o4ki3Rwgm0132144?prefilled_email=${session?.user.email}`}
-                              className="text-xs text-blue-500"
-                           >
-                              Manage
-                           </a> */}
                         </div>
                      </div>
                   </div>
 
                   <button
-                     className="flex flex-row justify-between items-center bg-pink-600 text-white text-sm w-full py-3 px-3 rounded-lg mt-5    font-medium"
-                     onClick={() => {
-                        if (!subscription.plan.product && myDances.length > 0) {
-                           router.push("/pricing");
-                           return;
-                        }
-                        createNewDance();
-                     }}
-                  >
-                     <p>New Performance</p>
-
-                     <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="w-4 h-4 mr-1"
-                     >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                     </svg>
-                  </button>
-
-                  <button
-                     className={`flex flex-row justify-between items-center ${
-                        menuOpen === "mydances" ? "bg-neutral-200" : ""
-                     } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
+                     className={`flex flex-row justify-between mt-4 items-center ${menuOpen === "mydances" ? "bg-pink-200" : ""}   w-full h-9 px-3`}
                      onClick={() => setMenuOpen("mydances")}
                   >
-                     <p>My Performances</p>
+                     <p>Recents</p>
                   </button>
-                  <button
+                  {/* <button
+                     className={`flex flex-row justify-between items-center ${menuOpen === "sharedwithme" ? "bg-pink-200" : ""}   w-full h-9 px-3`}
+                     onClick={() => setMenuOpen("sharedwithme")}
+                  >
+                     <p>Shared With Me</p>
+                  </button> */}
+                  {!subscription.plan.product ? (
+                     <div className="w-full px-3 mt-2">
+                        <div className="w-full p-6 bg-neutral-100 text-center text-xs rounded-md">
+                           <p>Ready to go beyond the free plan? Upgrade for unlimited performances.</p>
+                           <Link href={"/pricing"}>
+                              <button className="bg-pink-600 text-white w-full mt-3 py-2 rounded-md">View Plans</button>
+                           </Link>
+                        </div>
+                     </div>
+                  ) : null}
+
+                  {/* <button
                      className={`flex flex-row justify-between items-center ${
-                        menuOpen === "sharedwithme" ? "bg-neutral-200" : ""
+                        menuOpen === "sharedwithme" ? "bg-pink-200" : ""
                      } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
                      onClick={() => setMenuOpen("sharedwithme")}
                   >
                      <p>Shared With Me</p>
-                  </button>
+                  </button> */}
                   {/* <button
                      className={`flex flex-row justify-between items-center ${
                         menuOpen === "orgdances" ? "bg-neutral-200" : ""
@@ -258,8 +207,8 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                   </button>
                </div>
 
-               <div className="flex flex-col bg-neutral-100  lg:pl-10 font-proxima w-full justify-center items-center lg:items-start  lg:w-[80%]">
-                  <div className="flex flex-row items-center justify-end p-6 text-neutral-500 ml-auto">
+               <div className="flex flex-col bg-neutral    w-full justify-start items-center ">
+                  <div className="flex flex-row items-center justify-end px-6 py-4 text-neutral-500 ml-auto border-b border-b-neutral-200 w-full">
                      <div className="flex flex-row items-center text-neutral-900">
                         {/* {organization ? (
                            <p
@@ -309,8 +258,14 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                         Sign Out
                      </button>
                   </div>
+
                   {menuOpen === "mydances" ? (
-                     <MyDances invalidateDances={invalidateDances} myDances={myDances.filter((dance) => !dance.isInTrash)}></MyDances>
+                     <MyDances
+                        subscription={subscription}
+                        createNewDance={createNewDance}
+                        invalidateDances={invalidateDances}
+                        myDances={[...myDances.filter((dance) => !dance.isInTrash), ...sharedWithMe]}
+                     ></MyDances>
                   ) : menuOpen === "rosters" ? (
                      <Rosters></Rosters>
                   ) : menuOpen === "trash" ? (
@@ -321,9 +276,7 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                   //       <OrganizationPerformances></OrganizationPerformances>
                   //    )
 
-                  menuOpen === "sharedwithme" ? (
-                     <SharedWithMe sharedWithMe={sharedWithMe}></SharedWithMe>
-                  ) : null}
+                  null}
                </div>
             </div>
          </>
@@ -362,8 +315,16 @@ export const getServerSideProps = withPageAuth({
          return data.data || [];
       }
 
+      async function getMyDances(session: Session) {
+         let data = await supabase.rpc("get_dances_by_user", {
+            input_uuid: session.user.id,
+         });
+         console.log(data.data);
+         return data.data || [];
+      }
+
       async function getSharedWithMe(session: Session) {
-         let data = await supabase.rpc("shared_with_me", {
+         let data = await supabase.rpc("get_shared_dances_with_first_formation", {
             email: session.user.email,
          });
          return data.data || [];
@@ -398,7 +359,7 @@ export const getServerSideProps = withPageAuth({
       }
       // getOrganizationPerformances(session);
       let [dances, subscription, organization, sharedWithMe] = await Promise.all([
-         supabase.from("dances").select("*").eq("user", session.user.id),
+         getMyDances(session),
          getSubscriptionPlan(session),
          getOrganization(session),
          getSharedWithMe(session),
@@ -406,7 +367,7 @@ export const getServerSideProps = withPageAuth({
 
       // const { data } = await supabase.from("dances").select("*").eq("user", user.id);
 
-      return { props: { dances: dances.data, subscription: subscription, initialOrganization: organization, sharedWithMe } };
+      return { props: { dances: dances, subscription: subscription, initialOrganization: organization, sharedWithMe } };
    },
 });
 
