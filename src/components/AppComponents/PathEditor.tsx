@@ -40,13 +40,13 @@ export const PathEditor: React.FC<{
                   );
                   if (!endCoords || !startCoords) return;
 
-                  if (dancerPosition.transitionType === "linear" || !dancerPosition.transitionType) {
+                  if (dancerPosition.transitionType === "linear" || !dancerPosition.transitionType || dancerPosition.transitionType === "teleport") {
                      let midpoint = {
                         left: (startCoords.left + endCoords.left) / 2,
                         top: (startCoords.top + endCoords.top) / 2,
                      };
-                     let rightTail = findPoint(midpoint, lineAngle(startCoords, endCoords) + 140, 20);
-                     let leftTail = findPoint(midpoint, lineAngle(startCoords, endCoords) - 140, 20);
+                     // let rightTail = findPoint(midpoint, lineAngle(startCoords, endCoords) + 140, 20);
+                     // let leftTail = findPoint(midpoint, lineAngle(startCoords, endCoords) - 140, 20);
                      // either previousFormationView is true or the dancer is selected to show their linear path
                      return (
                         <>
@@ -55,10 +55,17 @@ export const PathEditor: React.FC<{
                               d={`M ${startCoords.left} ${startCoords.top} L ${endCoords.left} ${endCoords.top}`}
                               // className=" stroke-red-700 "
                               fill="transparent"
+                              stroke-linecap="round"
+                              stroke-dasharray={"10, 10"}
                               stroke={dancer?.color || "#db2777"}
-                              strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
-                           />
-                           <path
+                              strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 3 : 0.5}
+                           >
+                              {selectedDancers.includes(dancerPosition.id) && (
+                                 <animate attributeName="stroke-dashoffset" to="0" from="20" dur="1s" repeatCount="indefinite" />
+                              )}
+                           </path>
+
+                           {/* <path
                               key={dancerPosition.id + "rightTail"}
                               d={`M ${midpoint.left} ${midpoint.top} L ${rightTail.left} ${rightTail.top}`}
                               // className=" stroke-red-700 "
@@ -73,7 +80,7 @@ export const PathEditor: React.FC<{
                               fill="transparent"
                               stroke={dancer?.color || "#db2777"}
                               strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
-                           />
+                           /> */}
                         </>
                      );
                   }
@@ -88,8 +95,8 @@ export const PathEditor: React.FC<{
 
                      let midpoint = cubicBezierMidpoint(startCoords, endCoords, controlPointStartCoords, controlPointEndCoords);
                      let cubicSlope = cubicBezierSlope(startCoords, controlPointStartCoords, controlPointEndCoords, endCoords, 0.5);
-                     let rightTail = findPoint(midpoint, cubicSlope + 140, 20);
-                     let leftTail = findPoint(midpoint, cubicSlope - 140, 20);
+                     // let rightTail = findPoint(midpoint, cubicSlope + 140, 20);
+                     // let leftTail = findPoint(midpoint, cubicSlope - 140, 20);
 
                      return (
                         <>
@@ -98,9 +105,15 @@ export const PathEditor: React.FC<{
                               d={`M ${startCoords.left} ${startCoords.top} C ${controlPointStartCoords.left} ${controlPointStartCoords.top},  ${controlPointEndCoords.left} ${controlPointEndCoords.top}, ${endCoords.left} ${endCoords.top}`}
                               stroke={dancer?.color || "#db2777"}
                               fill="transparent"
+                              stroke-linecap="round"
+                              stroke-dasharray={"10, 10"}
                               strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
-                           />
-                           <path
+                           >
+                              {selectedDancers.includes(dancerPosition.id) && (
+                                 <animate attributeName="stroke-dashoffset" to="0" from="20" dur="1s" repeatCount="indefinite" />
+                              )}
+                           </path>
+                           {/* <path
                               key={dancerPosition.id + "rightTail"}
                               d={`M ${midpoint.left} ${midpoint.top} L ${rightTail.left} ${rightTail.top}`}
                               fill="transparent"
@@ -113,7 +126,7 @@ export const PathEditor: React.FC<{
                               stroke={dancer?.color || "#db2777"}
                               fill="transparent"
                               strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
-                           />
+                           /> */}
                            {selectedDancers[0] === dancerPosition.id ? (
                               <>
                                  <path
