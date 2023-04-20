@@ -16,6 +16,66 @@ export const StageSettings: React.FC<{
 }> = ({ setFormations, pricingTier, formations, setCloudSettings, cloudSettings, setUpgradeIsOpen, pushChange, dropDownToggle }) => {
    let { stageBackground, stageDimensions } = cloudSettings;
 
+   const changeWidth = (amount: number) => {
+      for (let i = 0; i < formations.length; i++) {
+         for (let j = 0; j < formations[i].positions.length; j++) {
+            if (
+               (formations[i].positions[j]?.position.x === stageDimensions.width / 2 - 3 ||
+                  formations[i].positions[j]?.position.x === -stageDimensions.width / 2 + 3) &&
+               amount < 0
+            ) {
+               toast.error("Dancers are too close to the edge");
+               return;
+            }
+         }
+      }
+
+      // move dancers that are too close to the edge
+      setFormations((formations: formation[]) => {
+         return formations.map((formation, i) => {
+            return {
+               ...formation,
+               positions: formation.positions.map((position) => {
+                  if (position.position.x < -(stageDimensions.width / 2 - 3)) {
+                     return { ...position, position: { ...position.position, x: position.position.x - amount / 2 } };
+                  }
+                  if (position.position.x > stageDimensions.width / 2 - 3) {
+                     return { ...position, position: { ...position.position, x: position.position.x + amount / 2 } };
+                  }
+                  return position;
+               }),
+            };
+         });
+      });
+
+      setCloudSettings((cloudSettings: cloudSettings) => {
+         return { ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width + amount } };
+      });
+
+      pushChange();
+   };
+
+   const changeHeight = (amount: number) => {
+      // check to make sure dancers won't fall off the stage
+      for (let i = 0; i < formations.length; i++) {
+         for (let j = 0; j < formations[i].positions.length; j++) {
+            if (
+               (formations[i].positions[j]?.position.y === stageDimensions.height / 2 - 1 ||
+                  formations[i].positions[j]?.position.y === -stageDimensions.height / 2 + 1) &&
+               amount < 0
+            ) {
+               toast.error("dancers will fall off the stage");
+               return;
+            }
+         }
+      }
+
+      setCloudSettings((cloudSettings: cloudSettings) => {
+         return { ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height + amount } };
+      });
+      pushChange();
+   };
+
    const [file, setFile] = useState<File | null>();
    const router = useRouter();
    let session = useSession();
@@ -80,164 +140,108 @@ export const StageSettings: React.FC<{
    return (
       <>
          <Toaster></Toaster>
-         <div className=" w-[260px]  min-w-[260px] hidden lg:block bg-white h-full px-2 py-6 overflow-y-scroll">
-            <p className="text-neutral-800 font-medium text-sm">Width</p>
-            <div className="my-6 flex flex-row justify-center items-center">
-               <button
-                  className="p-2 rounded-xl hover:bg-neutral-100 transition duration-300"
-                  onClick={() => {
-                     for (let i = 0; i < formations.length; i++) {
-                        for (let j = 0; j < formations[i].positions.length; j++) {
-                           if (
-                              formations[i].positions[j]?.position.x === stageDimensions.width / 2 - 3 ||
-                              formations[i].positions[j]?.position.x === -stageDimensions.width / 2 + 3
-                           ) {
-                              toast.error("dancers will fall off the stage");
-                              return;
-                           }
-                        }
-                     }
+         <div className=" w-[260px]  min-w-[260px] hidden lg:block bg-white h-full   overflow-y-scroll focus:outline-none">
+            <div className="p-4">
+               <p className="text-neutral-800 font-medium text-sm">Width</p>
+               <div className=" flex flex-row w-min items-center border border-neutral-200  ">
+                  <button className="p-2  hover:bg-neutral-100 transition duration-300" onClick={() => changeWidth(-2)}>
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-5 h-5"
+                     >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
+                     </svg>
+                  </button>
 
-                     setFormations((formations: formation[]) => {
-                        return formations.map((formation, i) => {
-                           return {
-                              ...formation,
-                              positions: formation.positions.map((position) => {
-                                 if (position.position.x < -(stageDimensions.width / 2 - 3)) {
-                                    return { ...position, position: { ...position.position, x: position.position.x + 1 } };
-                                 }
-                                 if (position.position.x > stageDimensions.width / 2 - 3) {
-                                    return { ...position, position: { ...position.position, x: position.position.x - 1 } };
-                                 }
-                                 return position;
-                              }),
-                           };
-                        });
-                     });
-                     setCloudSettings((cloudSettings: cloudSettings) => {
-                        return { ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width - 2 } };
-                     });
-                     pushChange();
-                  }}
-               >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
-                  </svg>
-               </button>
-               <div className="flex flex-col justify-center items-center">
-                  <p className="mx-6 text-2xl text-neutral-700">{stageDimensions.width}</p>
-                  <p className="text-neutral-400 text-xs">Squares</p>
+                  <p className=" px-4 border-x border-neutral-200 h-full text-neutral-700">{stageDimensions.width}</p>
+
+                  <button className="p-2  hover:bg-neutral-100 transition duration-300" onClick={() => changeWidth(2)}>
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-5 h-5"
+                     >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                     </svg>
+                  </button>
                </div>
-               <button
-                  className="p-2 rounded-xl hover:bg-neutral-100 transition duration-300"
-                  onClick={() => {
-                     setFormations((formations: formation[]) => {
-                        return formations.map((formation, i) => {
-                           return {
-                              ...formation,
-                              positions: formation.positions.map((position) => {
-                                 if (position.position.x < -(stageDimensions.width / 2 - 3)) {
-                                    return { ...position, position: { ...position.position, x: position.position.x - 1 } };
-                                 }
-                                 if (position.position.x > stageDimensions.width / 2 - 3) {
-                                    return { ...position, position: { ...position.position, x: position.position.x + 1 } };
-                                 }
-                                 return position;
-                              }),
-                           };
-                        });
-                     });
-                     setCloudSettings((cloudSettings: cloudSettings) => {
-                        return { ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width + 2 } };
-                     });
-                     pushChange();
-                  }}
-               >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                  </svg>
-               </button>
+
+               <p className="text-neutral-800 font-medium text-sm mt-6">Height</p>
+               <div className=" flex flex-row w-min items-center border border-neutral-200  ">
+                  <button className="p-2  hover:bg-neutral-100 transition duration-300" onClick={() => changeHeight(-2)}>
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-5 h-5"
+                     >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
+                     </svg>
+                  </button>
+
+                  <p className=" px-4 border-x border-neutral-200 h-full text-neutral-700">{stageDimensions.height}</p>
+
+                  <button className="p-2  hover:bg-neutral-100 transition duration-300" onClick={() => changeHeight(2)}>
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-5 h-5"
+                     >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                     </svg>
+                  </button>
+               </div>
             </div>
             <hr />
-            <p className="text-neutral-800 font-medium text-sm">Height</p>
-            <div className="my-6 flex flex-row justify-center items-center">
-               <button
-                  className="p-2 rounded-xl hover:bg-neutral-100 transition duration-300"
-                  onClick={() => {
-                     for (let i = 0; i < formations.length; i++) {
-                        for (let j = 0; j < formations[i].positions.length; j++) {
-                           if (
-                              formations[i].positions[j]?.position.y === stageDimensions.height / 2 - 1 ||
-                              formations[i].positions[j]?.position.y === -stageDimensions.height / 2 + 1
-                           ) {
-                              toast.error("dancers will fall off the stage");
-                              return;
-                           }
-                        }
-                     }
-
-                     setCloudSettings((cloudSettings) => {
-                        return { ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height - 2 } };
-                     });
-                     pushChange();
-                  }}
-               >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
-                  </svg>
-               </button>
-               <div className="flex flex-col justify-center items-center">
-                  <p className="mx-6 text-2xl text-neutral-700">{stageDimensions.height}</p>
-                  <p className="text-neutral-400 text-xs">Squares</p>
-               </div>
-               <button
-                  className="p-2 rounded-xl hover:bg-neutral-100 transition duration-300"
-                  onClick={() => {
-                     setCloudSettings((cloudSettings) => {
-                        return { ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height + 2 } };
-                     });
-                     pushChange();
-                  }}
-               >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                  </svg>
-               </button>
+            <div className="p-4">
+               <p className="text-neutral-800 font-medium text-sm ">Stage Background</p>
+               <Dropdown
+                  dropDownToggle={dropDownToggle}
+                  value={
+                     cloudSettings.stageBackground === "none"
+                        ? "None"
+                        : cloudSettings.stageBackground === "grid"
+                        ? "Grid"
+                        : cloudSettings.stageBackground === "cheer9"
+                        ? "Cheer Floor (9 Rolls)"
+                        : "Custom"
+                  }
+                  options={["None", "Grid", "Cheer 9", "Custom"]}
+                  actions={[
+                     () => setStageBackground("none"),
+                     () => setStageBackground("grid"),
+                     () => setStageBackground("cheer9"),
+                     () => setStageBackground("custom"),
+                  ]}
+               ></Dropdown>
             </div>
-            <p className="text-neutral-800 font-medium text-sm mb-2">Stage Background</p>
-            <Dropdown
-               dropDownToggle={dropDownToggle}
-               value={
-                  cloudSettings.stageBackground === "none"
-                     ? "None"
-                     : cloudSettings.stageBackground === "grid"
-                     ? "Grid"
-                     : cloudSettings.stageBackground === "cheer9"
-                     ? "Cheer Floor (9 Rolls)"
-                     : "Custom"
-               }
-               options={["None", "Grid", "Cheer 9", "Custom"]}
-               actions={[
-                  () => setStageBackground("none"),
-                  () => setStageBackground("grid"),
-                  () => setStageBackground("cheer9"),
-                  () => setStageBackground("custom"),
-               ]}
-            ></Dropdown>
-            <div className="relative mt-6 text-left  ">
+
+            <div className="relative  text-left p-4  ">
                {stageBackground === "grid" ? (
                   <>
-                     <p className="text-neutral-800 font-medium text-sm mt-6">Grid Subdivisions</p>
-                     <div className="my-6 flex flex-row justify-center items-center">
+                     <p className="text-neutral-800 font-medium text-sm">Grid Subdivisions</p>
+                     <div className=" flex flex-row w-min items-center border border-neutral-200  ">
                         <button
-                           className="p-2 rounded-xl hover:bg-neutral-100 transition duration-300"
+                           className="p-2  hover:bg-neutral-100 transition duration-300"
                            onClick={() => {
                               if (pricingTier === "basic") {
                                  setUpgradeIsOpen(true);
                                  return;
                               }
                               if (cloudSettings.gridSubdivisions === 1) return;
-                              setCloudSettings((cloudSettings) => {
+                              setCloudSettings((cloudSettings: cloudSettings) => {
                                  return { ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions - 1 };
                               });
                            }}
@@ -248,24 +252,23 @@ export const StageSettings: React.FC<{
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
                               stroke="currentColor"
-                              className="w-6 h-6"
+                              className="w-5 h-5"
                            >
                               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
                            </svg>
                         </button>
-                        <div className="flex flex-col justify-center items-center">
-                           <p className="mx-6 text-2xl text-neutral-700">{cloudSettings.gridSubdivisions}</p>
-                           <p className="text-neutral-400 text-xs">Squares</p>
-                        </div>
+
+                        <p className=" px-4 border-x border-neutral-200 h-full text-neutral-700">{cloudSettings.gridSubdivisions}</p>
+
                         <button
-                           className="p-2 rounded-xl hover:bg-neutral-100 transition duration-300"
+                           className="p-2  hover:bg-neutral-100 transition duration-300"
                            onClick={() => {
                               if (pricingTier === "basic") {
                                  setUpgradeIsOpen(true);
                                  return;
                               }
                               if (cloudSettings.gridSubdivisions === 15) return;
-                              setCloudSettings((cloudSettings) => {
+                              setCloudSettings((cloudSettings: cloudSettings) => {
                                  return { ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions + 1 };
                               });
                            }}
@@ -276,7 +279,7 @@ export const StageSettings: React.FC<{
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
                               stroke="currentColor"
-                              className="w-6 h-6"
+                              className="w-5 h-5"
                            >
                               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                            </svg>
