@@ -6,7 +6,7 @@ import { Session } from "@supabase/supabase-js";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
-
+import toast, { Toaster } from "react-hot-toast";
 const Login = () => {
    const router = useRouter();
    const session = useSession();
@@ -19,7 +19,7 @@ const Login = () => {
    }, [session]);
 
    const handleLogin = async () => {
-      const { data } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
          provider: "google",
          options: {
             redirectTo: `${window.location.origin}/dashboard`,
@@ -64,6 +64,7 @@ const Login = () => {
                }}
             ></div> */}
          <div className="flex  flex-row  h-screen overflow-hidden relative font-proxima">
+            <Toaster></Toaster>
             <div className="flex flex-col items-center w-full lg:w-[40%] justify-center">
                <div className="flex flex-col items-center w-80">
                   <Link href={"/"}>
@@ -112,7 +113,12 @@ const Login = () => {
                               //    emailRedirectTo: "https://example.com/welcome",
                               // },
                            });
-                           console.log(data, error);
+                           if (!error) {
+                              toast("Check your email for a login link!");
+                           }
+                           if (error) {
+                              toast("Too many links requested");
+                           }
                         }
                         signInWithEmail();
                      }}
