@@ -164,7 +164,7 @@ export const MyDances: React.FC<{ myDances: any; invalidateDances: Function; cre
                      );
                   })
             ) : (
-               <p>looks like you don't have any dances</p>
+               <p>Looks like you don't have any performances</p>
             )}
          </div>
          {/* </div> */}

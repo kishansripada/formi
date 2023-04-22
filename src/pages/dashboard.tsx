@@ -114,7 +114,10 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                      <img
                         referrerPolicy="no-referrer"
                         className="rounded-md w-16 pointer-events-none select-none mr-3"
-                        src={session?.user.user_metadata.avatar_url}
+                        src={
+                           session?.user.user_metadata.avatar_url ||
+                           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjof8tQrQxYWAJQ7ICx4AaaN9rZK_bfgKsFuqssREfxA&s"
+                        }
                         alt=""
                      />
 
