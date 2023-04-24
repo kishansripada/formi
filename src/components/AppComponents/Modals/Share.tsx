@@ -16,12 +16,13 @@ export const Share: React.FC<{
    const router = useRouter();
    let session = useSession();
    const supabase = useSupabaseClient();
-   // useEffect(() => {
-   //    if (session) {
-   //       updateShareSettings();
-   //    }
-   // }, [shareSettings]);
+   useEffect(() => {
+      if (session) {
+         updateShareSettings();
+      }
+   }, [shareSettings]);
    const updateShareSettings = async () => {
+      // setShareSettings(async (shareSettings) => {
       const { data, error } = await supabase
          .from("dances")
          .update({ sharesettings: shareSettings, last_edited: new Date() })
@@ -32,7 +33,8 @@ export const Share: React.FC<{
       if (error) {
          toast.error("there was an error saving your settings");
       }
-      setShareIsOpen(false);
+      //    return shareSettings;
+      // });
    };
    const validateEmail = (email: string) => {
       return String(email)
@@ -103,6 +105,7 @@ export const Share: React.FC<{
                               return { ...users, [newUserEmail]: "view" };
                            });
                            setNewUserEmail("");
+                           // updateShareSettings();
                         }}
                         className="text-white text-sm  rounded-md px-2 py-2  w-24"
                      >
@@ -212,7 +215,13 @@ export const Share: React.FC<{
                      </svg>
                      Copy Link
                   </button>
-                  <button className="ml-auto bg-pink-600 hover:bg-pink-700 text-white px-5 py-1 rounded-md" onClick={updateShareSettings}>
+                  <button
+                     className="ml-auto bg-pink-600 hover:bg-pink-700 text-white px-5 py-1 rounded-md"
+                     onClick={() => {
+                        // updateShareSettings();
+                        setShareIsOpen(false);
+                     }}
+                  >
                      Save
                   </button>
                </div>
