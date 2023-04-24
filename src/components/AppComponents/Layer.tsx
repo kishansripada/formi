@@ -21,6 +21,8 @@ export const Layer: React.FC<{
    addToStack: Function;
    pushChange: Function;
    formationGroups: formationGroup;
+   player: any;
+   setPosition: Function;
 }> = ({
    formations,
    selectedFormation,
@@ -37,6 +39,8 @@ export const Layer: React.FC<{
    pushChange,
    addToStack,
    formationGroups,
+   player,
+   setPosition,
 }) => {
    const [activeId, setActiveId] = useState(null);
 
@@ -84,8 +88,21 @@ export const Layer: React.FC<{
                         id={formation.id}
                         onClick={(e: any) => {
                            if (selectedFormation === index) return;
-                           setSelectedDancers([]);
-                           setSelectedFormation(index);
+                           if (isPlaying) {
+                              let position = formations
+                                 .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
+                                 .slice(0, index)
+                                 .reduce((a, b) => a + b, 0);
+                              // console.log(position);
+                              setPosition(position);
+
+                              if (!(songDuration && player)) return;
+
+                              player.seekTo(position / (songDuration / 1000));
+                           } else {
+                              setSelectedDancers([]);
+                              setSelectedFormation(index);
+                           }
                         }}
                      >
                         <Formation

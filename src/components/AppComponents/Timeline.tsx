@@ -194,6 +194,8 @@ export const Timeline: React.FC<{
                position={position}
                soundCloudTrackId={soundCloudTrackId}
                pixelsPerSecond={pixelsPerSecond}
+               setPosition={setPosition}
+               player={player}
             />
 
             <div

@@ -19,6 +19,8 @@ export const Layers: React.FC<{
    userPositions: any;
    onlineUsers: any;
    formationGroups: formationGroup[];
+   setPosition: Function;
+   player: any;
 }> = ({
    formations,
    selectedFormation,
@@ -36,6 +38,8 @@ export const Layers: React.FC<{
    userPositions,
    onlineUsers,
    formationGroups,
+   setPosition,
+   player,
 }) => {
    const [resizingTransition, setResizingTransition] = useState<string | null>(null);
    const [resizingFormation, setResizingFormation] = useState<string | null>(null);
@@ -143,6 +147,8 @@ export const Layers: React.FC<{
          id="layers"
       >
          <Layer
+            setPosition={setPosition}
+            player={player}
             userPositions={userPositions}
             onlineUsers={onlineUsers}
             setSelectedDancers={setSelectedDancers}
