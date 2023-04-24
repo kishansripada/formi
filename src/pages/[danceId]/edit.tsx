@@ -1214,10 +1214,18 @@ export const getServerSideProps = async (ctx) => {
    //    supabase.from("dances").update({ formations: dance.formations }).eq("id", ctx.query.danceId),
    // ]);
 
-   if (!dance?.formations) {
+   if (!dance?.formations && session) {
       return {
          redirect: {
             destination: "/noaccess",
+            permanent: false,
+         },
+      };
+   }
+   if (!dance?.formations && !session) {
+      return {
+         redirect: {
+            destination: "/login",
             permanent: false,
          },
       };
