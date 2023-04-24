@@ -87,22 +87,24 @@ export const Layer: React.FC<{
                         key={formation.id}
                         id={formation.id}
                         onClick={(e: any) => {
-                           if (selectedFormation === index) return;
-                           if (isPlaying) {
-                              let position = formations
-                                 .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
-                                 .slice(0, index)
-                                 .reduce((a, b) => a + b, 0);
-                              // console.log(position);
-                              setPosition(position);
-
-                              if (!(songDuration && player)) return;
-
-                              player.seekTo(position / (songDuration / 1000));
-                           } else {
+                           if (selectedFormation !== index) {
                               setSelectedDancers([]);
-                              setSelectedFormation(index);
                            }
+                           // if (isPlaying) {
+                           let position = formations
+                              .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
+                              .slice(0, index)
+                              .reduce((a, b) => a + b, 0);
+                           // console.log(position);
+                           setPosition(position);
+
+                           if (!(songDuration && player)) return;
+
+                           player.seekTo(position / (songDuration / 1000));
+                           // } else {
+
+                           setSelectedFormation(index);
+                           // }
                         }}
                      >
                         <Formation
