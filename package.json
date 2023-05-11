@@ -19,6 +19,7 @@
     "@supabase/supabase-js": "^2.7.1",
     "@types/three": "^0.148.0",
     "@use-gesture/react": "^10.2.24",
+    "dom-to-pdf": "^0.3.2",
     "fast-json-patch": "^3.1.1",
     "jsondiffpatch": "^0.4.1",
     "lodash": "^4.17.21",

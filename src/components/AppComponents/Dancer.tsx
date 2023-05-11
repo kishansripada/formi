@@ -13,6 +13,7 @@ export const Dancer: React.FC<{
    setSelectedDancers: Function;
    pushChange: Function;
    uniqueDancers: string[];
+   viewOnly: boolean;
 }> = ({
    setDancers,
    dancers,
@@ -26,6 +27,7 @@ export const Dancer: React.FC<{
    setSelectedDancers,
    pushChange,
    uniqueDancers,
+   viewOnly,
 }) => {
    let { name, id, instagramUsername, color } = dancer;
 
@@ -91,7 +93,9 @@ export const Dancer: React.FC<{
                   className="h-6 w-full    px-2 py-4  text-sm rounded-md  ml-2  text-neutral-800  outline-none cursor-default"
                   value={name}
                   onBlur={pushChange}
+                  disabled={viewOnly}
                   onChange={(e) => {
+                     if (viewOnly) return;
                      setDancers((dancers: dancer[]) => {
                         return dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer));
                      });

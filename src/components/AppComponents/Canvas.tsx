@@ -66,6 +66,9 @@ export const Canvas: React.FC<{
 }) => {
    let { stageDimensions, stageBackground } = cloudSettings;
    let { gridSnap } = localSettings;
+   function getDevicePixelRatio() {
+      return window.devicePixelRatio || 1;
+   }
 
    const stageFlippedFactor = stageFlipped ? -1 : 1;
 
@@ -95,6 +98,9 @@ export const Canvas: React.FC<{
       if (selectedFormation === null) return;
 
       if (changingControlId) {
+         if (viewOnly) return;
+         let devicePixelRatio = getDevicePixelRatio();
+         devicePixelRatio = devicePixelRatio / 2;
          setFormations((formations: formation[]) => {
             return formations.map((formation, index: number) => {
                if (index === selectedFormation) {
@@ -105,8 +111,12 @@ export const Canvas: React.FC<{
                            return {
                               ...dancerPosition,
                               controlPointStart: {
-                                 x: dancerPosition.controlPointStart.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
-                                 y: dancerPosition.controlPointStart.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
+                                 x:
+                                    dancerPosition.controlPointStart.x +
+                                    (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                 y:
+                                    dancerPosition.controlPointStart.y -
+                                    (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
                               },
                            };
                         }
@@ -114,8 +124,12 @@ export const Canvas: React.FC<{
                            return {
                               ...dancerPosition,
                               controlPointEnd: {
-                                 x: dancerPosition.controlPointEnd.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
-                                 y: dancerPosition.controlPointEnd.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
+                                 x:
+                                    dancerPosition.controlPointEnd.x +
+                                    (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                 y:
+                                    dancerPosition.controlPointEnd.y -
+                                    (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
                               },
                            };
                         }
@@ -215,6 +229,9 @@ export const Canvas: React.FC<{
          }
       }
       if (draggingDancerId) {
+         if (viewOnly) return;
+         let devicePixelRatio = getDevicePixelRatio();
+         devicePixelRatio = devicePixelRatio / 2;
          setFormations((formations: formation[]) => {
             return formations.map((formation, index: number) => {
                if (index === selectedFormation) {
@@ -232,12 +249,16 @@ export const Canvas: React.FC<{
                            return {
                               ...dancerPosition,
                               position: {
-                                 x: dancerPosition.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
-                                 y: dancerPosition.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
+                                 x: dancerPosition.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                 y: dancerPosition.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
                               },
                               controlPointEnd: {
-                                 x: dancerPosition.controlPointEnd.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
-                                 y: dancerPosition.controlPointEnd.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
+                                 x:
+                                    dancerPosition.controlPointEnd.x +
+                                    (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                 y:
+                                    dancerPosition.controlPointEnd.y -
+                                    (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
                               },
                            };
                         }
@@ -250,8 +271,8 @@ export const Canvas: React.FC<{
                            return {
                               ...dancerPosition,
                               position: {
-                                 x: dancerPosition.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
-                                 y: dancerPosition.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
+                                 x: dancerPosition.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                 y: dancerPosition.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
                               },
                            };
                         }
@@ -266,6 +287,9 @@ export const Canvas: React.FC<{
       }
 
       if (draggingCommentId) {
+         if (viewOnly) return;
+         let devicePixelRatio = getDevicePixelRatio();
+         devicePixelRatio = devicePixelRatio / 2;
          setFormations((formations: formation[]) => {
             return formations.map((formation, index: number) => {
                if (index === selectedFormation) {
@@ -278,8 +302,8 @@ export const Canvas: React.FC<{
                            return {
                               ...comment,
                               position: {
-                                 x: comment.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
-                                 y: comment.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
+                                 x: comment.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                 y: comment.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
                               },
                            };
                         }
@@ -296,6 +320,7 @@ export const Canvas: React.FC<{
 
    const pointerDown = (e: any) => {
       if (isCommenting) {
+         if (viewOnly) return;
          if (!session) {
             toast.error("Sign In to Comment");
             return;
@@ -469,12 +494,11 @@ export const Canvas: React.FC<{
          className="flex flex-row relative justify-center bg-neutral-100  h-full  w-full overflow-hidden  overscroll-contain items-center  "
          id="stage"
          ref={container}
-         onPointerUp={!viewOnly ? pointerUp : () => null}
+         onPointerUp={pointerUp}
       >
          <Toaster />
-
          <div
-            onPointerDown={!viewOnly ? pointerDown : () => null}
+            onPointerDown={pointerDown}
             onPointerMove={handleDragMove}
             ref={stage}
             className="relative  border-2 border-neutral-300 bg-white  box-content "

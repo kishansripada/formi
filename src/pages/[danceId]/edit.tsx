@@ -28,6 +28,7 @@ import { StageSettings } from "../../components/AppComponents/SidebarComponents/
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { grandfatheredEmails } from "../../../public/grandfathered";
 import { Timeline } from "../../components/AppComponents/Timeline";
+import domToPdf from "dom-to-pdf";
 
 import * as jsonpatch from "fast-json-patch";
 const ThreeD = dynamic(() => import("../../components/AppComponents/ThreeD").then((mod) => mod.ThreeD), {
@@ -76,6 +77,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [danceName, setDanceName] = useState<string>(initialData.name);
    const [formationGroups, setFormationGroups] = useState<formationGroup[]>(initialData.formation_groups);
    const [shiftHeld, setShiftHeld] = useState(false);
+
    // local
    const [localSettings, setLocalSettings] = useLocalStorage<localSettings>("localSettings", {
       gridSnap: 1,
@@ -86,7 +88,9 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       viewingThree: false,
       viewingTwo: true,
       collisionRadius: 0.5,
+      fullScreen: false,
    });
+
    if (localSettings.viewingTwo === undefined) {
       setLocalSettings({
          gridSnap: 1,
@@ -97,6 +101,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          viewingThree: false,
          viewingTwo: true,
          collisionRadius: 0.5,
+         fullScreen: false,
       });
    }
 
@@ -168,6 +173,41 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          window.removeEventListener("beforeunload", handleBeforeUnload);
       };
    }, [saved]);
+
+   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+   const exportPdf = async () => {
+      setLocalSettings({ ...localSettings, viewingTwo: true, viewingThree: false });
+      const parentContainer = document.createElement("div");
+
+      for (let index = 0; index < formations.length; index++) {
+         setSelectedFormation(index); // Assuming this function sets the formation
+
+         // Wait for the formation to be rendered in the DOM
+         await sleep(1000); // Delay in milliseconds. Adjust as needed.
+
+         const stageElement = document.getElementById("stage");
+         const clonedElement = stageElement.cloneNode(true); // Clone the element with its children
+
+         // Add each stage to the parentContainer
+         const label = document.createElement("p");
+         label.textContent = `Formation ${index + 1} of ${formations.length}`;
+         label.style.textAlign = "center";
+         label.style.width = "100%";
+         // Add the label and formation to the parentContainer
+
+         parentContainer.appendChild(clonedElement);
+         parentContainer.appendChild(label);
+      }
+
+      var options = {
+         filename: `${danceName}.pdf`,
+      };
+
+      domToPdf(parentContainer, options, (pdf) => {
+         console.log("done");
+      });
+   };
 
    function handleBeforeUnload(event) {
       if (!saved) {
@@ -770,6 +810,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                dancers={dancers}
             ></EventHandler>
             <Header
+               exportPdf={exportPdf}
                dropDownToggle={dropDownToggle}
                formations={formations}
                isChangingCollisionRadius={isChangingCollisionRadius}
@@ -796,11 +837,12 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                viewOnly={viewOnly}
                setUpgradeIsOpen={setUpgradeIsOpen}
             />
+
             <div className="flex flex-row  overflow-hidden w-screen h-full">
-               {!viewOnly ? (
+               {!localSettings.fullScreen ? (
                   <>
                      <div className="flex flex-col ">
-                        <Sidebar setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
+                        <Sidebar viewOnly={viewOnly} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
 
                         {menuOpen === "dancers" ? (
                            <Roster
@@ -815,6 +857,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                               cloudSettings={cloudSettings}
                               setFormations={setFormations}
                               selectedDancers={selectedDancers}
+                              viewOnly={viewOnly}
                            ></Roster>
                         ) : menuOpen === "audio" ? (
                            <ChooseAudioSource
@@ -843,6 +886,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                            ></StageSettings>
                         ) : (
                            <CurrentFormation
+                              viewOnly={viewOnly}
                               dropDownToggle={dropDownToggle}
                               setIsEditingFormationGroup={setIsEditingFormationGroup}
                               formationGroups={formationGroups}
@@ -1006,7 +1050,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
                         {selectedFormation !== null && !isPlaying ? (
                            <>
-                              {((localSettings.stageFlipped ? flippedFormations : formations)[selectedFormation].comments || []).map(
+                              {((localSettings.stageFlipped ? flippedFormations : formations)[selectedFormation]?.comments || []).map(
                                  (comment: comment) => {
                                     return (
                                        <>

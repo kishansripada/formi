@@ -17,6 +17,7 @@ export const Header: React.FC<{
    setFormations: Function;
    onlineUsers: any;
 
+   exportPdf: Function;
    pricingTier: string;
    setUpgradeIsOpen: Function;
    localSettings: localSettings;
@@ -43,7 +44,7 @@ export const Header: React.FC<{
    setFormations,
    onlineUsers,
    undo,
-
+   exportPdf,
    pricingTier,
    setUpgradeIsOpen,
    localSettings,
@@ -70,6 +71,7 @@ export const Header: React.FC<{
    useEffect(() => {
       setTemplatesIsOpen(false);
    }, [dropDownToggle]);
+
    return (
       <>
          <div className=" min-h-[50px] bg-neutral-800 flex flex-row items-center w-full  text-white border-b border-neutral-700 ">
@@ -160,8 +162,8 @@ export const Header: React.FC<{
                <button
                   title="Flip stage"
                   onClick={() =>
-                     setLocalSettings((settings: localSettings) => {
-                        return { ...settings, stageFlipped: !localSettings.stageFlipped };
+                     setLocalSettings((localSettings: localSettings) => {
+                        return { ...localSettings, stageFlipped: !localSettings.stageFlipped };
                      })
                   }
                   className=" hidden lg:block h-full text-xs  min-w-[48px]  py-2 "
@@ -173,50 +175,25 @@ export const Header: React.FC<{
                   </div>
                </button>
 
-               {!viewOnlyInitial ? (
-                  <div
-                     onClick={() => {
-                        setViewOnly((x: boolean) => !x);
-                     }}
-                     style={{
-                        backgroundColor: viewOnly ? "#db2777" : "transparent",
-                     }}
-                     className=" min-w-[48px] grid place-items-center h-full    cursor-pointer "
-                  >
-                     {viewOnly ? (
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-6 h-6"
-                        >
-                           <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
-                           />
-                        </svg>
-                     ) : (
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-6 h-6"
-                        >
-                           <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                           />
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                     )}
-                  </div>
-               ) : null}
+               <div
+                  onClick={() => {
+                     setLocalSettings((localSettings: localSettings) => {
+                        return { ...localSettings, fullScreen: !localSettings.fullScreen };
+                     });
+                  }}
+                  className=" min-w-[48px] grid place-items-center h-full    cursor-pointer "
+               >
+                  {localSettings.fullScreen ? (
+                     <svg className="w-6 h-6 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                        <path d="m122 976-42-42 298-298H180v-60h300v300h-60V678L122 976Zm358-400V276h60v198l298-298 42 42-298 298h198v60H480Z" />
+                     </svg>
+                  ) : (
+                     <svg className="w-6 h-6 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                        <path d="M120 936V636h60v198l558-558H540v-60h300v300h-60V318L222 876h198v60H120Z" />
+                     </svg>
+                  )}
+               </div>
+
                {!viewOnlyInitial ? (
                   <button
                      title="Comment on stage"
@@ -380,6 +357,13 @@ export const Header: React.FC<{
                        );
                     })
                   : null}
+               <button title="Export pdf" onClick={exportPdf} className=" hidden lg:block h-full text-xs  min-w-[48px]  py-2 ">
+                  <div className="flex flex-row items-center justify-center ">
+                     <svg className="h-6 w-6 fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                        <path d="M331 625h37v-83h48q15.725 0 26.362-10.638Q453 520.725 453 505v-48q0-15.725-10.638-26.362Q431.725 420 416 420h-85v205Zm37-120v-48h48v48h-48Zm129 120h84q15 0 26-10.638 11-10.637 11-26.362V457q0-15.725-11-26.362Q596 420 581 420h-84v205Zm37-37V457h47v131h-47Zm133 37h37v-83h50v-37h-50v-48h50v-37h-87v205ZM260 856q-24 0-42-18t-18-42V236q0-24 18-42t42-18h560q24 0 42 18t18 42v560q0 24-18 42t-42 18H260Zm0-60h560V236H260v560ZM140 976q-24 0-42-18t-18-42V296h60v620h620v60H140Zm120-740v560-560Z" />
+                     </svg>
+                  </div>
+               </button>
                {!viewOnly ? (
                   <>
                      <button

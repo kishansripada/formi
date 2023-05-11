@@ -41,6 +41,7 @@ export type localSettings = {
    viewingThree: boolean;
    viewingTwo: boolean;
    collisionRadius: number;
+   fullScreen: boolean;
 };
 
 export type cloudSettings = {

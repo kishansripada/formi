@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 export const Sidebar: React.FC<{
    setMenuOpen: Function;
    menuOpen: string;
-}> = ({ setMenuOpen, menuOpen }) => {
+   viewOnly: boolean;
+}> = ({ setMenuOpen, menuOpen, viewOnly }) => {
    return (
       <>
          <div className="lg:flex hidden flex-row  w-full  items-center justify-start   bg-neutral-800 min-h-[40px] h-10 px-3 ">
@@ -168,18 +169,23 @@ export const Sidebar: React.FC<{
             >
                Roster
             </button>
-            <button
-               onClick={() => setMenuOpen("audio")}
-               className={` text-xs font-medium mr-3 ${menuOpen === "audio" ? "text-neutral-100" : "text-neutral-400"}`}
-            >
-               Media
-            </button>
-            <button
-               className={` text-xs font-medium mr-3 ${menuOpen === "stageSettings" ? "text-neutral-100" : "text-neutral-400"}`}
-               onClick={() => setMenuOpen("stageSettings")}
-            >
-               Stage
-            </button>
+            {!viewOnly ? (
+               <>
+                  {" "}
+                  <button
+                     onClick={() => setMenuOpen("audio")}
+                     className={` text-xs font-medium mr-3 ${menuOpen === "audio" ? "text-neutral-100" : "text-neutral-400"}`}
+                  >
+                     Media
+                  </button>
+                  <button
+                     className={` text-xs font-medium mr-3 ${menuOpen === "stageSettings" ? "text-neutral-100" : "text-neutral-400"}`}
+                     onClick={() => setMenuOpen("stageSettings")}
+                  >
+                     Stage
+                  </button>
+               </>
+            ) : null}
 
             <button onClick={() => setMenuOpen("settings")} className="text-neutral-100 text-xs font-medium ml-auto">
                <svg
@@ -188,7 +194,7 @@ export const Sidebar: React.FC<{
                   strokeWidth={1.5}
                   stroke=""
                   fill="none"
-                  className={`w-5 h-5  transition duration-300  ${menuOpen === "settings" ? "stroke-[#db2777]" : "stroke-white"}`}
+                  className={`w-5 h-5  transition duration-300  ${menuOpen === "settings" ? "stroke-white" : "stroke-neutral-400"}`}
                >
                   <path
                      strokeLinecap="round"

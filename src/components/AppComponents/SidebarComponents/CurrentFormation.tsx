@@ -21,6 +21,7 @@ export const CurrentFormation: React.FC<{
    setIsEditingFormationGroup: Function;
    setFormationGroups: Function;
    dropDownToggle: boolean;
+   viewOnly: boolean;
 }> = ({
    formations,
    selectedFormation,
@@ -40,6 +41,7 @@ export const CurrentFormation: React.FC<{
    setIsEditingFormationGroup,
    setFormationGroups,
    dropDownToggle,
+   viewOnly,
 }) => {
    const setLinear = () => {
       setFormations((formations: formation[]) => {
@@ -189,7 +191,12 @@ export const CurrentFormation: React.FC<{
 
    return (
       <>
-         <div className=" lg:flex hidden  w-[260px]  min-w-[260px] flex-col h-full  bg-white  ">
+         <div
+            className=" lg:flex hidden  w-[260px]  min-w-[260px] flex-col h-full  bg-white  "
+            style={{
+               pointerEvents: viewOnly ? "none" : "auto",
+            }}
+         >
             {selectedFormation !== null && formations[selectedFormation] ? (
                <>
                   {/* <div className="px-6">
@@ -433,31 +440,33 @@ export const CurrentFormation: React.FC<{
                         </div>
                      ) : null}
 
-                     <div
-                        onClick={() => {
-                           if (selectedFormation === null) return;
+                     {!viewOnly ? (
+                        <div
+                           onClick={() => {
+                              if (selectedFormation === null) return;
 
-                           if (formations.length === 1) {
-                              toast.error("you must have at least one formation");
-                              return;
-                           }
-                           // addToStack();
-                           if (selectedFormation === formations.length - 1) {
-                              setSelectedFormation(selectedFormation - 1);
-                           }
+                              if (formations.length === 1) {
+                                 toast.error("you must have at least one formation");
+                                 return;
+                              }
+                              // addToStack();
+                              if (selectedFormation === formations.length - 1) {
+                                 setSelectedFormation(selectedFormation - 1);
+                              }
 
-                           setFormations((formations: formation[]) => {
-                              return formations.filter((formation, index) => {
-                                 return index !== selectedFormation;
+                              setFormations((formations: formation[]) => {
+                                 return formations.filter((formation, index) => {
+                                    return index !== selectedFormation;
+                                 });
                               });
-                           });
 
-                           pushChange();
-                        }}
-                        className="border-t border-neutral-200   w-full text-sm shadow-sm cursor-pointer select-none  mt-auto grid place-items-center  bg-opacity-80 py-2 bg-red-600 text-white  "
-                     >
-                        Delete Formation
-                     </div>
+                              pushChange();
+                           }}
+                           className="border-t border-neutral-200   w-full text-sm shadow-sm cursor-pointer select-none  mt-auto grid place-items-center  bg-opacity-80 py-2 bg-red-600 text-white  "
+                        >
+                           Delete Formation
+                        </div>
+                     ) : null}
                   </div>
                </>
             ) : (

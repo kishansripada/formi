@@ -9,7 +9,7 @@ export const Roster: React.FC<{
    dancers: dancer[];
    formations: formation[];
    selectedFormation: number | null;
-
+   viewOnly: boolean;
    cloudSettings: any;
    setFormations: Function;
    addToStack: Function;
@@ -30,6 +30,7 @@ export const Roster: React.FC<{
    selectedDancers,
    removeDancer,
    setSelectedDancers,
+   viewOnly,
 }) => {
    let { stageDimensions } = cloudSettings;
    const [uniqueDancers, setUniqueDancers] = useState<string[]>([]);
@@ -97,6 +98,7 @@ export const Roster: React.FC<{
             <div className="flex-grow overflow-y-scroll">
                {dancers.slice().map((dancer, index) => (
                   <Dancer
+                     viewOnly={viewOnly}
                      uniqueDancers={uniqueDancers}
                      pushChange={pushChange}
                      setSelectedDancers={setSelectedDancers}
@@ -135,18 +137,32 @@ export const Roster: React.FC<{
                            />
                            <p className="text-xs text-neutral-500  mt-2">For profile picture</p>
                         </div> */}
-
-               <button onClick={createNewDancer} className=" mr-2 flex flex-row items-center text-sm justify-center py-2">
-                  <p className="ml-auto mr-2">New Dancer</p>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                  </svg>
-               </button>
-
-               <hr />
+               {!viewOnly ? (
+                  <>
+                     <button onClick={createNewDancer} className=" mr-2 flex flex-row items-center text-sm justify-center py-2">
+                        <p className="ml-auto mr-2">New Dancer</p>
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
+                           stroke="currentColor"
+                           className="w-6 h-6"
+                        >
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                     </button>
+                     <hr />
+                  </>
+               ) : null}
 
                {selectedDancers.length ? (
-                  <div className="px-3 mt-3">
+                  <div
+                     className="px-3 mt-3"
+                     style={{
+                        pointerEvents: viewOnly ? "none" : "auto",
+                     }}
+                  >
                      <p className=" text-neutral-800  text-sm mb-2 font-medium">Height</p>
                      <div className="flex flex-row items-center  w-full ">
                         <div className="flex flex-row items-center border border-neutral-200">
@@ -231,19 +247,20 @@ export const Roster: React.FC<{
                ) : (
                   <p className="h-full w-full grid place-items-center">No Dancers Selected</p>
                )}
-
-               <div
-                  onClick={() => {
-                     selectedDancers.forEach((dancerId) => {
-                        removeDancer(dancerId);
-                     });
-                     // console.log(selectedDancers);
-                     pushChange();
-                  }}
-                  className="border-t border-neutral-200 mt-auto  w-full text-sm  cursor-pointer select-none  text-center  bg-opacity-80 py-2 bg-red-600 text-white  "
-               >
-                  Delete Dancer
-               </div>
+               {!viewOnly ? (
+                  <div
+                     onClick={() => {
+                        selectedDancers.forEach((dancerId) => {
+                           removeDancer(dancerId);
+                        });
+                        // console.log(selectedDancers);
+                        pushChange();
+                     }}
+                     className="border-t border-neutral-200 mt-auto  w-full text-sm  cursor-pointer select-none  text-center  bg-opacity-80 py-2 bg-red-600 text-white  "
+                  >
+                     Delete Dancer
+                  </div>
+               ) : null}
             </div>
          </div>
       </>
