@@ -97,13 +97,13 @@ export const Layer: React.FC<{
                               .reduce((a, b) => a + b, 0);
                            // console.log(position);
                            setPosition(position);
-
+                           setSelectedFormation(index);
                            if (!(songDuration && player)) return;
 
                            player.seekTo(position / (songDuration / 1000));
+
                            // } else {
 
-                           setSelectedFormation(index);
                            // }
                         }}
                      >

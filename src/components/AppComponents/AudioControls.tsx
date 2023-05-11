@@ -51,7 +51,7 @@ export const AudioControls: React.FC<{
             <div className="w-[45%] flex flex-col items-center justify-center   pl-4">
                {!viewOnly ? (
                   <>
-                     <div className="flex flex-row items-center justify-center mr-auto">
+                     <div className="flex flex-row items-center justify-center mr-auto ">
                         <button
                            onClick={() => {
                               // addToStack();
@@ -69,7 +69,7 @@ export const AudioControls: React.FC<{
                               setSelectedFormation(formations.length);
                               pushChange();
                            }}
-                           className=" rounded-md  hidden transition duration-300  text-[#18191B]  hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer  "
+                           className=" rounded-md  hidden transition duration-300    hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer  "
                         >
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -104,7 +104,7 @@ export const AudioControls: React.FC<{
 
                               pushChange();
                            }}
-                           className="rounded-md  hidden transition duration-300 mr-auto  text-[#18191B]  hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
+                           className="rounded-md  hidden transition duration-300 mr-auto    hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
                         >
                            <svg className="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                               <path d="M180 975q-24 0-42-18t-18-42V312h60v603h474v60H180Zm120-120q-24 0-42-18t-18-42V235q0-24 18-42t42-18h440q24 0 42 18t18 42v560q0 24-18 42t-42 18H300Zm0-60h440V235H300v560Zm0 0V235v560Z" />
@@ -132,7 +132,7 @@ export const AudioControls: React.FC<{
 
                               pushChange();
                            }}
-                           className="rounded-md  hidden transition duration-300 mr-auto  text-[#18191B]  hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
+                           className="rounded-md  hidden transition duration-300 mr-auto    hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
                         >
                            <svg className="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                               <path d="M80 606v-60h800v60H80Zm210-120V386h380v100H290Zm0 280V666h380v100H290Z" />
@@ -159,7 +159,7 @@ export const AudioControls: React.FC<{
 
                               pushChange();
                            }}
-                           className="rounded-md  hidden transition duration-300 mr-auto  text-[#18191B]  hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
+                           className="rounded-md  hidden transition duration-300 mr-auto    hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
                         >
                            <svg className="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                               <path d="M450 976V176h60v800h-60Zm120-210V386h100v380H570Zm-280 0V386h100v380H290Z" />
