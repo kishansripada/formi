@@ -87,14 +87,15 @@ export const PricingTable = () => {
                               {[
                                  "Unlimited performances",
                                  "Unlimited audio file uploads",
-                                 // "Collision detection",
-                                 // "Video sync",
-                                 // "Stage commenting",
-                                 // "Curved dancer paths",
+                                 "Collision detection",
+                                 "Video sync",
+                                 "Stage commenting",
+                                 "Curved dancer paths",
                                  // "Upload custom stage background",
-                                 // "Formation templates",
+                                 "Formation templates",
                                  // "Formation categories",
-                                 // "Custom dancer heights",
+                                 "Custom dancer heights",
+                                 "Export PDF",
                               ].map((featureDescription) => {
                                  return (
                                     <li className="flex items-center space-x-3">
@@ -144,7 +145,7 @@ export const PricingTable = () => {
                                  {[
                                     "Everything in the choreographer plan",
                                     // "Collaborative editing",
-                                    `10 individual choreography accounts`,
+                                    "Accounts for all your choreographers",
                                     `Priority support`,
                                  ].map((featureDescription) => {
                                     return (
@@ -174,7 +175,7 @@ export const PricingTable = () => {
                                     return;
                                  }
 
-                                 router.push("/api/checkout?price=price_1MpZLNHvC3w6e8fcTPQIBkZm");
+                                 router.push("/api/checkout?price=price_1M5ePvHvC3w6e8fcq7fWBqJr");
                               }}
                               className="text-white bg-pink-600 mt-auto bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
                            >
