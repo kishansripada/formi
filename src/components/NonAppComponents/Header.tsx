@@ -8,11 +8,11 @@ export const Header = () => {
    return (
       <>
          <div className="sticky top-0 z-50  ">
-            <Link href={"/pricing"}>
+            {/* <Link href={"/pricing"}>
                <div className="h-12 bg-pink-600 cursor-pointer text-sm w-full text-neutral-100 flex flex-row items-center justify-center hidden lg:flex">
                   👨‍🎓 Get 80% off with a registered .edu email address for a limited time
                </div>
-            </Link>
+            </Link> */}
 
             <nav className="flex flex-row py-3 lg:justify-between text-black items-center justify-center px-[10%]  bg-neutral-50 dark:bg-neutral-900  ">
                <div className="flex flex-row items-center">
@@ -32,9 +32,9 @@ export const Header = () => {
                      <Link href={"/blog"} className="z-50">
                         <button className=" text-medium hidden lg:block mr-8 ">Blog</button>
                      </Link>
-                     <Link href={"/pricing"} className="z-50">
+                     {/* <Link href={"/pricing"} className="z-50">
                         <button className="  text-medium hidden lg:block mr-8">Pricing</button>
-                     </Link>
+                     </Link> */}
                   </div>
                </div>
 
