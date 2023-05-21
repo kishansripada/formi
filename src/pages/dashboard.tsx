@@ -147,7 +147,7 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                   >
                      <p>Shared With Me</p>
                   </button> */}
-                  {/* {!subscription.plan.product ? (
+                  {!subscription.plan.product ? (
                      <div className="w-full px-3 mt-2">
                         <div className="w-full p-6 bg-neutral-100 text-center text-xs rounded-md">
                            <p>Ready to go beyond the free plan? Upgrade for unlimited performances.</p>
@@ -156,7 +156,7 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                            </Link>
                         </div>
                      </div>
-                  ) : null} */}
+                  ) : null}
 
                   {/* <button
                      className={`flex flex-row justify-between items-center ${
@@ -239,15 +239,14 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                               </button>
                            </>
                         ) : (
-                           <></>
-                           // <button
-                           //    onClick={() => {
-                           //       router.push("/pricing");
-                           //    }}
-                           //    className="mr-5"
-                           // >
-                           //    Upgrade
-                           // </button>
+                           <button
+                              onClick={() => {
+                                 router.push("/pricing");
+                              }}
+                              className="mr-5"
+                           >
+                              Upgrade
+                           </button>
                         )}
                      </div>
 

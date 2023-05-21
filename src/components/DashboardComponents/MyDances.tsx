@@ -44,10 +44,10 @@ export const MyDances: React.FC<{ myDances: any; invalidateDances: Function; cre
          <div className="w-full px-[32px] mt-[32px] lg:block hidden">
             <div
                onClick={() => {
-                  // if (!subscription.plan.product && myDances.length > 0) {
-                  //    router.push("/pricing");
-                  //    return;
-                  // }
+                  if (!subscription.plan.product && myDances.length > 0) {
+                     router.push("/pricing");
+                     return;
+                  }
                   createNewDance();
                }}
                className="border border-neutral-200 w-[300px]  rounded-md p-4 hover:bg-neutral-100 transition cursor-pointer  flex flex-row h-[70px]  items-center text-sm font-medium"
