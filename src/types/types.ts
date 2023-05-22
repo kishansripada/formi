@@ -42,6 +42,7 @@ export type localSettings = {
    viewingTwo: boolean;
    collisionRadius: number;
    fullScreen: boolean;
+   isDarkMode: boolean;
 };
 
 export type cloudSettings = {

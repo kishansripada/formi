@@ -491,7 +491,7 @@ export const Canvas: React.FC<{
 
    return (
       <div
-         className="flex flex-row relative justify-center bg-neutral-100  h-full  w-full overflow-hidden  overscroll-contain items-center  "
+         className="flex flex-row relative justify-center bg-neutral-100   h-full  w-full overflow-hidden  overscroll-contain items-center  "
          id="stage"
          ref={container}
          onPointerUp={pointerUp}
@@ -501,7 +501,7 @@ export const Canvas: React.FC<{
             onPointerDown={pointerDown}
             onPointerMove={handleDragMove}
             ref={stage}
-            className="relative  border-2 border-neutral-300 bg-white  box-content "
+            className="relative  border-2 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 box-content "
             // border-pink-600 border-4 box-border
             style={{
                // boxShadow: "inset 0px 0px 0px 4px #db2777",

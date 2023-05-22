@@ -53,7 +53,7 @@ export const Header = () => {
                      </button>
                   </Link>
                   <Link href={"/login"} className="z-50">
-                     <button className="bg-pink-600 text-white  px-4 py-2 hidden lg:block  rounded-full">Try Free</button>
+                     <button className="bg-pink-600 text-white  px-4 py-2 hidden lg:block  rounded-full">Sign Up</button>
                   </Link>
                </div>
             </nav>

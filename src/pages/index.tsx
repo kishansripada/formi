@@ -379,9 +379,9 @@ const home = () => {
                   </div>
                </div>
             </div>
-            <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
+            {/* <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div> */}
 
-            <div className="bg-neutral-50  flex flex-row justify-center items-center font-proxima py-10 dark:bg-neutral-900  ">
+            {/* <div className="bg-neutral-50  flex flex-row justify-center items-center font-proxima py-10 dark:bg-neutral-900  ">
                <div className="text-white  bg-pink-600 py-10 rounded-xl w-[70%]">
                   <p className="text-3xl text-center">Build Your First Performance Free</p>
                   <Link href={"/login"} className="">
@@ -390,19 +390,8 @@ const home = () => {
                      </button>
                   </Link>
                </div>
-
-               {/* <p className="text-3xl font-bold dark:text-neutral-50">No Credit Card Required</p>
-                     <p className="text-lg mt-6 lg:w-[80%]  dark:text-neutral-300 text-neutral-500">
-                        Start free today without a credit card. Create all of your dance formations, view in 3D and upload your own audio completely
-                        free.
-                     </p>
-                     <Link href={"/login"} className="z-50">
-                        <button className="bg-pink-600 mt-8 text-neutral-100 px-4 py-2 hidden lg:block  rounded-full">
-                           Build Your First Performance Free
-                        </button>
-                     </Link> */}
-            </div>
-            <div className="lg:w-1/2 w-[90%] flex flex-row justify-center items-center "></div>
+            </div> */}
+            {/* <div className="lg:w-1/2 w-[90%] flex flex-row justify-center items-center "></div> */}
 
             {/* FOOTER */}
             <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>

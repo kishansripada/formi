@@ -97,7 +97,12 @@ export const DancerAlias: React.FC<{
                // transform: `scale(${(1 / zoom) * 0.66}) translate(-${50 * zoom * (1 / 0.6)}%, -${50 * zoom * (1 / 0.66)}%)`,
                // transformOrigin: "center",
                pointerEvents: isPlaying ? "none" : "auto",
-               backgroundColor: selectedDancers.includes(dancer.id) && !isPlaying ? "#404040" : hexToRGBA(dancer?.color || "#db2777", 0.5),
+               backgroundColor:
+                  selectedDancers.includes(dancer.id) && !isPlaying
+                     ? localSettings.isDarkMode
+                        ? "white"
+                        : "#404040"
+                     : hexToRGBA(dancer?.color || "#db2777", 0.5),
                transition: !draggingDancerId && !isPlaying ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",
                // width: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
                // height: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
@@ -176,7 +181,9 @@ export const DancerAlias: React.FC<{
                </div>
             )}
             {dancerStyle !== "initials" ? (
-               <p className="absolute -bottom-6 text-center select-none pointer-events-none   rounded-full px-1">{dancer.name.split(" ")[0]}</p>
+               <p className="absolute -bottom-6 text-center select-none pointer-events-none dark:text-white  rounded-full px-1">
+                  {dancer.name.split(" ")[0]}
+               </p>
             ) : null}
          </div>
       </>

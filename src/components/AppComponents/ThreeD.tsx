@@ -94,7 +94,8 @@ export const ThreeD: React.FC<{
             cellThickness={0.5}
             sectionSize={2.5}
             sectionThickness={1.5}
-            sectionColor={[0.5, 0.5, 10]}
+            cellColor={`${localSettings.isDarkMode ? "white" : "black"}`}
+            sectionColor={"#db2777"}
          />
 
          {selectedFormation !== null
@@ -136,7 +137,7 @@ export const ThreeD: React.FC<{
             scale={[0.5, 0.5, 0.5]}
             position={[0, 0, cloudSettings.stageDimensions.height / 4 + 1]}
             rotation={[Math.PI * 1.5, 0, 0]}
-            color="black"
+            color={`${localSettings.isDarkMode ? "white" : "black"}`}
             anchorX="center"
             // anchorY="middle"
          >
@@ -146,7 +147,7 @@ export const ThreeD: React.FC<{
             scale={[0.5, 0.5, 0.5]}
             position={[0, 0, -(cloudSettings.stageDimensions.height / 4 + 1)]}
             rotation={[Math.PI * 1.5, 0, Math.PI * 1]}
-            color="black"
+            color={`${localSettings.isDarkMode ? "white" : "black"}`}
             anchorX="center"
             // anchorY="middle"
          >
@@ -156,7 +157,7 @@ export const ThreeD: React.FC<{
             scale={[0.5, 0.5, 0.5]}
             position={[cloudSettings.stageDimensions.width / 4 + 1, 0, 0]}
             rotation={[Math.PI * 1.5, 0, Math.PI * 2.5]}
-            color="black"
+            color={`${localSettings.isDarkMode ? "white" : "black"}`}
             anchorX="center"
             // anchorY="middle"
          >
@@ -166,7 +167,7 @@ export const ThreeD: React.FC<{
             scale={[0.5, 0.5, 0.5]}
             position={[-(cloudSettings.stageDimensions.width / 4 + 1), 0, 0]}
             rotation={[Math.PI * 1.5, 0, Math.PI * 1.5]}
-            color="black"
+            color={`${localSettings.isDarkMode ? "white" : "black"}`}
             anchorX="center"
             // anchorY="middle"
          >

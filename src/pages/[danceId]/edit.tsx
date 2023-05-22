@@ -89,6 +89,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       viewingTwo: true,
       collisionRadius: 0.5,
       fullScreen: false,
+      isDarkMode: true,
    });
 
    if (localSettings.viewingTwo === undefined) {
@@ -102,6 +103,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          viewingTwo: true,
          collisionRadius: 0.5,
          fullScreen: false,
+         isDarkMode: true,
       });
    }
 
@@ -764,7 +766,9 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
             // style={{
             //    pointerEvents: subscriptionStatus === "SUBSCRIBED" ? "none" : "auto",
             // }}
-            className={`   flex-col h-screen   flex  bg-[#fafafa] overflow-hidden text-neutral-900 select-none `}
+            className={`   flex-col h-screen ${
+               localSettings.isDarkMode ? "dark" : ""
+            }  flex  bg-[#fafafa] overflow-hidden text-neutral-900 select-none `}
          >
             <style>
                {`
@@ -911,7 +915,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                   </>
                ) : null}
 
-               <div className={`flex flex-row min-w-0 flex-grow items-center bg-neutral-100 `}>
+               <div className={`flex flex-row min-w-0 flex-grow items-center bg-neutral-100 dark:bg-neutral-900 `}>
                   <video
                      ref={videoPlayer}
                      style={{

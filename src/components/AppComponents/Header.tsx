@@ -7,6 +7,8 @@ import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import Dropdown from "../AppComponents/Dropdown";
+import { DarkModeSwitch } from "react-toggle-dark-mode";
+
 export const Header: React.FC<{
    saved: boolean;
    danceName: string;
@@ -228,8 +230,21 @@ export const Header: React.FC<{
                      </svg>
                   </button>
                ) : null}
+               <div className="min-w-[48px] grid place-items-center h-full    cursor-pointer">
+                  <DarkModeSwitch
+                     style={{ width: 25, height: 25, fill: "white" }}
+                     sunColor={"white"}
+                     checked={localSettings.isDarkMode}
+                     onChange={() => {
+                        setLocalSettings((localSettings: localSettings) => {
+                           return { ...localSettings, isDarkMode: !localSettings.isDarkMode };
+                        });
+                     }}
+                     size={120}
+                  />
+               </div>
 
-               {!viewOnlyInitial ? (
+               {/* {!viewOnlyInitial ? (
                   <button
                      title="Formation templates"
                      onClick={() => {
@@ -241,9 +256,9 @@ export const Header: React.FC<{
                         <path d="M340.118 766Q361 766 375.5 751.382q14.5-14.617 14.5-35.5Q390 695 375.382 680.5q-14.617-14.5-35.5-14.5Q319 666 304.5 680.618q-14.5 14.617-14.5 35.5Q290 737 304.618 751.5q14.617 14.5 35.5 14.5Zm0-280Q361 486 375.5 471.382q14.5-14.617 14.5-35.5Q390 415 375.382 400.5q-14.617-14.5-35.5-14.5Q319 386 304.5 400.618q-14.5 14.617-14.5 35.5Q290 457 304.618 471.5q14.617 14.5 35.5 14.5Zm280 280Q641 766 655.5 751.382q14.5-14.617 14.5-35.5Q670 695 655.382 680.5q-14.617-14.5-35.5-14.5Q599 666 584.5 680.618q-14.5 14.617-14.5 35.5Q570 737 584.618 751.5q14.617 14.5 35.5 14.5Zm0-280Q641 486 655.5 471.382q14.5-14.617 14.5-35.5Q670 415 655.382 400.5q-14.617-14.5-35.5-14.5Q599 386 584.5 400.618q-14.5 14.617-14.5 35.5Q570 457 584.618 471.5q14.617 14.5 35.5 14.5ZM180 936q-24 0-42-18t-18-42V276q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600V276H180v600Zm0-600v600-600Z" />
                      </svg>
                   </button>
-               ) : null}
+               ) : null} */}
 
-               {templatesIsOpen ? (
+               {/* {templatesIsOpen ? (
                   <div
                      className="w-[300px] left-[200px] h-[500px] bg-neutral-800 absolute top-12 flex flex-col  text-sm shadow-2xl z-[50]"
                      id="dropdown-menu"
@@ -302,7 +317,7 @@ export const Header: React.FC<{
                         </div>
                      </div>
                   </div>
-               ) : null}
+               ) : null} */}
 
                {!viewOnly ? (
                   <>

@@ -28,7 +28,7 @@ export const Share: React.FC<{
          .update({ sharesettings: shareSettings, last_edited: new Date() })
          .eq("id", router.query.danceId);
       if (!error) {
-         toast.success("Share Settings Updated");
+         // toast.success("Share Settings Updated");
       }
       if (error) {
          toast.error("there was an error saving your settings");

@@ -152,7 +152,7 @@ export function ThreeDancer({
    return (
       <>
          <animated.mesh position={textPos.position}>
-            <Text ref={textRef} scale={[0.2, 0.2, 0.2]} color="black" anchorX="center" anchorY="middle">
+            <Text ref={textRef} scale={[0.2, 0.2, 0.2]} color={`${localSettings.isDarkMode ? "white" : "black"}`} anchorX="center" anchorY="middle">
                {dancer?.name}
             </Text>
          </animated.mesh>
