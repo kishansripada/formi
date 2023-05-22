@@ -85,7 +85,7 @@ export const ThreeD: React.FC<{
          gl={{ logarithmicDepthBuffer: true }}
          camera={{ position: [0, 10, (localSettings.stageFlipped ? -1 : 1) * 14], fov: 40 }}
       >
-         <Stage position={[0, 0, 0]} environment="apartment" adjustCamera={false}></Stage>
+         <Stage position={[0, 0, 0]} adjustCamera={false}></Stage>
          <Grid
             renderOrder={-1}
             position={[0, 0, 0]}
