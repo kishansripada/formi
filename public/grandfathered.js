@@ -268,7 +268,7 @@ export let grandfatheredEmails = [
     "isabellau22505@gmail.com",
     "stri6704@gmail.com",
     "claus.schirling@googlemail.com",
-    "ksripada@umich.edu",
+    "darrengundling18@gmail.com",
     "brianscottpack@gmail.com",
     "gfg54wtdsgb67@gmail.com",
     "delgadomr@appstate.edu",
