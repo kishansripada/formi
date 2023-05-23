@@ -138,7 +138,7 @@ const home = () => {
                         }}
                         className=" text-4xl lg:text-6xl dark:text-neutral-100   font-bold text-neutral-800 "
                      >
-                        Collaborative whiteboarding for choreographers
+                        For the most creative and organized choreographers
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
                      <h1 className=" dark:text-neutral-300  text-neutral-500 lg:px-[20%]    mt-4 ">
