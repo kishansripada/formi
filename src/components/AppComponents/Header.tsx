@@ -347,8 +347,12 @@ export const Header: React.FC<{
             />
 
             <div className=" flex flex-row items-center justify-end mr-3 w-[40%] ">
-               <a href="https://forms.gle/qTo1MAenHpguvsXW7" target={"_blank"} className="text-xs mr-6 text-neutral-100 hidden lg:block">
-                  Send Feedback/Report Bug
+               <a
+                  href="https://discord.gg/4B2vm2zS"
+                  target={"_blank"}
+                  className="text-xs mr-6 text-neutral-100 hidden lg:block border-pink-600 border p-2 rounded-md"
+               >
+                  I have an idea to make FORMI better!
                </a>
 
                {onlineUsers
