@@ -92,6 +92,10 @@ export const DancerAlias: React.FC<{
             style={{
                left: left,
                top: top,
+               WebkitUserSelect: "none",
+               MozUserSelect: "none",
+               msUserSelect: "none",
+               userSelect: "none",
 
                // pointerEvents: idSelectingMe ? "none" : "auto",
                // transform: `scale(${(1 / zoom) * 0.66}) translate(-${50 * zoom * (1 / 0.6)}%, -${50 * zoom * (1 / 0.66)}%)`,
@@ -107,9 +111,10 @@ export const DancerAlias: React.FC<{
                // width: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
                // height: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
             }}
+            onMouseDown={(e) => e.preventDefault()}
             id={dancer.id}
             data-type={"dancer"}
-            className={`rounded-full w-[35px] h-[35px] hover:w-[38px]   hover:h-[38px] lg:pointer-events-auto pointer-events-none flex  -translate-y-1/2 -translate-x-1/2 flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
+            className={`rounded-full w-[35px] h-[35px] select-none hover:w-[38px]   hover:h-[38px] lg:pointer-events-auto pointer-events-none flex  -translate-y-1/2 -translate-x-1/2 flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
          >
             {/* <span className="animate-ping absolute  inline-flex w-[30px] h-[30px] rounded-full bg-sky-400 opacity-75"></span> */}
 
