@@ -89,7 +89,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       viewingTwo: true,
       collisionRadius: 0.5,
       fullScreen: false,
-      isDarkMode: true,
+      isDarkMode: false,
    });
 
    if (localSettings.viewingTwo === undefined) {
@@ -103,12 +103,13 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          viewingTwo: true,
          collisionRadius: 0.5,
          fullScreen: false,
-         isDarkMode: true,
+         isDarkMode: false,
       });
    }
 
    const [dropDownToggle, setDropDownToggle] = useState<boolean>(false);
-   const [viewOnly, setViewOnly] = useState(viewOnlyInitial);
+   const [viewOnly, setViewOnly] = useState(false);
+
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
    const [upgradeIsOpen, setUpgradeIsOpen] = useState<boolean>(false);
    const [deltas, setDeltas] = useState([]);
@@ -971,6 +972,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
                   {localSettings.viewingTwo ? (
                      <Canvas
+                        isPlaying={isPlaying}
                         shiftHeld={shiftHeld}
                         setShiftHeld={setShiftHeld}
                         stageFlipped={localSettings.stageFlipped}
@@ -1166,6 +1168,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                   setPosition={setPosition}
                   videoPlayer={videoPlayer}
                   localSource={localSource}
+                  localSettings={localSettings}
                ></Timeline>
             </div>
          </div>
