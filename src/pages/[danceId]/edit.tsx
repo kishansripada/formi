@@ -111,7 +111,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [viewOnly, setViewOnly] = useState(false);
 
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
-   const [upgradeIsOpen, setUpgradeIsOpen] = useState<boolean>(false);
+   const [upgradeIsOpen, setUpgradeIsOpen] = useState<boolean>(viewOnlyInitial);
    const [deltas, setDeltas] = useState([]);
    const [localSource, setLocalSource] = useState(null);
    const [songDuration, setSongDuration] = useState<number | null>(null);
