@@ -553,6 +553,17 @@ export const Canvas: React.FC<{
                   <CheerLines stageDimensions={stageDimensions}></CheerLines>
                </div>
             ) : null}
+
+            {!isPlaying && !localSettings.stageFlipped && (
+               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10">
+                  <p className="text-center text-3xl font-extrabold opacity-30 tracking-widest">AUDIENCE</p>
+               </div>
+            )}
+            {!isPlaying && localSettings.stageFlipped && (
+               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10">
+                  <p className="text-center text-3xl font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
+               </div>
+            )}
          </div>
       </div>
    );
