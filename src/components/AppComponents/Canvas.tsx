@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { GridLines } from "./GridLines";
 import { CheerLines } from "./CheerLines";
-import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings } from "../../types/types";
+import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings, localSettings } from "../../types/types";
 import { toast, Toaster } from "react-hot-toast";
 
 export const Canvas: React.FC<{
@@ -34,6 +34,7 @@ export const Canvas: React.FC<{
    stageFlipped: boolean;
    shiftHeld: boolean;
    setShiftHeld: Function;
+   isPlaying: boolean;
 }> = ({
    player,
    children,
@@ -63,6 +64,7 @@ export const Canvas: React.FC<{
    stageFlipped,
    shiftHeld,
    setShiftHeld,
+   isPlaying,
 }) => {
    let { stageDimensions, stageBackground } = cloudSettings;
    let { gridSnap } = localSettings;
@@ -491,7 +493,7 @@ export const Canvas: React.FC<{
 
    return (
       <div
-         className="flex flex-row relative justify-center bg-neutral-100   h-full  w-full overflow-hidden  overscroll-contain items-center  "
+         className="flex flex-row relative justify-center bg-neutral-100  dark:bg-black  h-full  w-full overflow-hidden  overscroll-contain items-center  "
          id="stage"
          ref={container}
          onPointerUp={pointerUp}
