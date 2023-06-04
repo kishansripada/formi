@@ -684,13 +684,13 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          }
       });
 
-      let flippedComments = formation.comments
-         ? formation.comments.map((comment: comment) => {
-              return { ...comment, position: { x: -comment.position.x, y: -comment.position.y } };
-           })
-         : [];
+      // let flippedComments = formation.comments
+      //    ? formation.comments.map((comment: comment) => {
+      //         return { ...comment, position: { x: -comment.position.x, y: -comment.position.y } };
+      //      })
+      //    : [];
 
-      return { ...formation, positions: flippedPositions, comments: flippedComments };
+      return { ...formation, positions: flippedPositions };
    });
    //////////////////////////
    const collisions = localSettings.viewCollisions
@@ -1056,24 +1056,23 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
                         {selectedFormation !== null && !isPlaying ? (
                            <>
-                              {((localSettings.stageFlipped ? flippedFormations : formations)[selectedFormation]?.comments || []).map(
-                                 (comment: comment) => {
-                                    return (
-                                       <>
-                                          <Comment
-                                             zoom={zoom}
-                                             coordsToPosition={coordsToPosition}
-                                             setFormations={setFormations}
-                                             selectedFormation={selectedFormation}
-                                             key={comment.id}
-                                             comment={comment}
-                                             addToStack={addToStack}
-                                             pushChange={pushChange}
-                                          />
-                                       </>
-                                    );
-                                 }
-                              )}
+                              {(formations[selectedFormation]?.comments || []).map((comment: comment) => {
+                                 return (
+                                    <>
+                                       <Comment
+                                          zoom={zoom}
+                                          localSettings={localSettings}
+                                          coordsToPosition={coordsToPosition}
+                                          setFormations={setFormations}
+                                          selectedFormation={selectedFormation}
+                                          key={comment.id}
+                                          comment={comment}
+                                          addToStack={addToStack}
+                                          pushChange={pushChange}
+                                       />
+                                    </>
+                                 );
+                              })}
 
                               {localSettings.previousFormationView !== "none"
                                  ? dancers.map((dancer, index) => (

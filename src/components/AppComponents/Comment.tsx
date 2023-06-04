@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation, stageDimensions, comment, initials } from "../../types/types";
+import { dancer, dancerPosition, formation, stageDimensions, comment, initials, localSettings } from "../../types/types";
 import { useRef, useEffect, useState } from "react";
 
 export const Comment: React.FC<{
@@ -9,12 +9,14 @@ export const Comment: React.FC<{
    coordsToPosition: Function;
    pushChange: Function;
    addToStack: Function;
-}> = ({ comment, selectedFormation, setFormations, coordsToPosition, zoom, addToStack, pushChange }) => {
+   localSettings: localSettings;
+}> = ({ comment, selectedFormation, setFormations, coordsToPosition, zoom, addToStack, pushChange, localSettings }) => {
+   const { stageFlipped } = localSettings;
    // if there is no formation selected and the track is not playing, then just return nothing
    if (selectedFormation === null) return <></>;
 
    // if the dancer does not have any coordinates right now, return nothing since it shouln't be displayed
-   let { left, top } = coordsToPosition(comment.position);
+   let { left, top } = coordsToPosition({ x: (stageFlipped ? -1 : 1) * comment.position.x, y: (stageFlipped ? -1 : 1) * comment.position.y });
    if (!left || !top) return <></>;
 
    let textAreaRef = useRef<HTMLTextAreaElement>(null);
