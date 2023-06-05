@@ -13,28 +13,28 @@ export const Header = () => {
                   👨‍🎓 Get 80% off with a registered .edu email address for a limited time
                </div>
             </Link> */}
-
-            <nav className="flex flex-row py-3 lg:justify-between text-black items-center justify-center px-[10%]  bg-neutral-50 dark:bg-neutral-900  ">
-               <div className="flex flex-row items-center">
+            <div className="h-1 bg-pink-600 w-full"></div>
+            <nav className="flex flex-row py-8 lg:justify-between text-black items-center justify-center px-[10%]  border-b border-b-neutral-200 bg-white dark:bg-neutral-900  ">
+               <div className="flex flex-row items-center justify-center">
                   <Link href={"/"}>
-                     <div className="w-[150px] cursor-pointer">
+                     <div className=" cursor-pointer">
                         {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
                         <h1 className="text-4xl font-bold z-10 dark:text-neutral-200 relative">FORMI</h1>
 
-                        <div className="bg-[#E7ADC5] dark:bg-pink-600 relative h-2  top-[-10px] mr-auto w-[100%]"></div>
+                        {/* <div className=" bg-pink-600 relative h-2  top-[-10px] mr-auto w-[100%]"></div> */}
                      </div>
                   </Link>
-                  <div className="flex flex-row items-center ml-9 dark:text-neutral-300 text-neutral-600 ">
+                  <div className=" flex-row items-center ml-9 dark:text-neutral-300 text-neutral-600 lg:flex hidden ">
                      <Link href={"/features"} className="z-50">
                         <button className="  text-medium hidden lg:block mr-8">Features</button>
                      </Link>
                      <Link href={"/blog"} className="z-50">
                         <button className=" text-medium hidden lg:block mr-8 ">Blog</button>
                      </Link>
-                     {/* <Link href={"/pricing"} className="z-50">
+                     <Link href={"/pricing"} className="z-50">
                         <button className="  text-medium hidden lg:block mr-8">Pricing</button>
-                     </Link> */}
+                     </Link>
                   </div>
                </div>
 
@@ -57,7 +57,6 @@ export const Header = () => {
                   </Link>
                </div>
             </nav>
-            <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
          </div>
       </>
    );

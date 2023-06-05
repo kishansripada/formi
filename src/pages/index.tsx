@@ -36,124 +36,95 @@ const home = () => {
          <Header></Header>
 
          <div className="overflow-hidden relative ">
-            <div className="absolute w-[1000px] opacity-50  h-[500px] left-0  -translate-x-1/2  -z-[100] top-[100px]">
-               <div
-                  style={{
-                     backgroundImage:
-                        "radial-gradient(ellipse 1000px 500px at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%)",
-                  }}
-                  className="absolute w-[1000px] h-[500px] top-0 left-0 bottom-0 right-0"
-               ></div>
-               <div
-                  className="flex flex-row h-full justify-between rounded-xl -z-[100] relative  "
-                  style={{
-                     width: 1000,
-                  }}
-               >
-                  {new Array(25).fill(0).map((_, i) => (
-                     <div
-                        key={i}
-                        className={`h-full bg-neutral-300 `}
-                        style={{
-                           width: 1,
-                        }}
-                     ></div>
-                  ))}
-               </div>
-               <div
-                  className="flex flex-col justify-between  rounded-xl relative -z-[100]  "
-                  style={{
-                     height: 500,
-                     top: -500,
-                  }}
-               >
-                  {new Array(12).fill(0).map((_, i) => (
-                     <div
-                        key={i}
-                        className={`w-full  bg-neutral-300 `}
-                        style={{
-                           height: 1,
-                        }}
-                     ></div>
-                  ))}
-               </div>
-            </div>
-
-            <div className="absolute w-[1000px] opacity-50  h-[500px] right-0  translate-x-1/2  -z-[100] top-[100px] blur">
-               <div
-                  style={{
-                     backgroundImage:
-                        "radial-gradient(ellipse 1000px 500px at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%)",
-                  }}
-                  className="absolute w-[1000px] h-[500px] top-0 left-0 bottom-0 right-0"
-               ></div>
-               <div
-                  className="flex flex-row h-full justify-between rounded-xl -z-[100] relative  "
-                  style={{
-                     width: 1000,
-                  }}
-               >
-                  {new Array(25).fill(0).map((_, i) => (
-                     <div
-                        key={i}
-                        className={`h-full bg-neutral-300 `}
-                        style={{
-                           width: 1,
-                        }}
-                     ></div>
-                  ))}
-               </div>
-               <div
-                  className="flex flex-col justify-between  rounded-xl relative -z-[100]  "
-                  style={{
-                     height: 500,
-                     top: -500,
-                  }}
-               >
-                  {new Array(12).fill(0).map((_, i) => (
-                     <div
-                        key={i}
-                        className={`w-full  bg-neutral-300 `}
-                        style={{
-                           height: 1,
-                        }}
-                     ></div>
-                  ))}
-               </div>
-            </div>
-            <div className="absolute -z-10 left-[-150px] top-[200px] opacity-10">
-               {/* <img className="w-[800px] right-[-200px]  -rotate-[30deg]" src="/background.png" alt="" /> */}
-            </div>
-
             <div className="overflow-hidden dark:bg-[#191919]">
-               <div className=" flex flex-row items-center justify-center w-full  text-center pt-8 px-[10%] lg:px-[20%]   ">
-                  <div className="w-full  ">
-                     <div className="w-full  bg-opacity-50 mb-8 dark:bg-pink-700 bg-pink-300 text-lg dark:text-neutral-100 text-neutral-700 rounded-xl h-12 lg:flex hidden flex-row items-center justify-center ">
+               <div className=" flex flex-row items-center justify-center w-full  text-center py-24 px-[10%] backdrop-blur-sm  relative  ">
+                  <div className="absolute w-full opacity-20   h-full left-1/2 -translate-x-1/2   -z-[100] ">
+                     {/* <div
+                        style={{
+                           backgroundImage:
+                              "radial-gradient(ellipse 1000px 500px at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%)",
+                        }}
+                        className="absolute w-[1000px] h-[500px] top-0 left-0 bottom-0 right-0"
+                     ></div> */}
+                     <div
+                        className="flex flex-row justify-between  absolute left-1/2 -translate-x-1/2 rounded-xl -z-[100]   "
+                        style={{
+                           width: 2000,
+                           height: 2000,
+                        }}
+                     >
+                        {new Array(50).fill(0).map((_, i) => (
+                           <div
+                              key={i}
+                              className={`h-full bg-neutral-300 `}
+                              style={{
+                                 width: 1,
+                              }}
+                           ></div>
+                        ))}
+                     </div>
+                     <div
+                        className="flex flex-col justify-between   rounded-xl left-1/2 -translate-x-1/2 absolute -z-[100]  "
+                        style={{
+                           width: 2000,
+                           height: 2000,
+                        }}
+                     >
+                        {new Array(50).fill(0).map((_, i) => (
+                           <div
+                              key={i}
+                              className={`w-full  bg-neutral-300 `}
+                              style={{
+                                 height: 1,
+                              }}
+                           ></div>
+                        ))}
+                     </div>
+                  </div>
+                  <div className="  relative lg:w-2/3 w-full  mr-auto  ">
+                     {/* <img src="/backgroundIndex.png" className="absolute object-cover  w-full h-full" alt="" /> */}
+                     {/* <div className="w-full  bg-opacity-50 mb-8 dark:bg-pink-700 bg-pink-300 text-lg dark:text-neutral-100 text-neutral-700 rounded-xl h-12 lg:flex hidden flex-row items-center justify-center ">
                         FORMI is used by&nbsp;<span className=" dark:text-neutral-100 text-purple-700 font-bold">5000+ dancers&nbsp;</span> and
                         coaches like you
-                     </div>
+                     </div> */}
+                     <div
+                        className="pointer-events-none absolute  h-[2000px] overflow-hidden w-[2000px]  "
+                        style={{
+                           backgroundImage: "radial-gradient(37.66% 48.2% at 50% 50%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
+                           top: -200,
+                           // left: "50%",
+                           // transform: "translate(-50%, 0)",
+                           opacity: 0.3,
+                        }}
+                     ></div>
+                     <div
+                        className="pointer-events-none absolute  h-[2000px] overflow-hidden w-[2000px]  "
+                        style={{
+                           backgroundImage: "radial-gradient(37.66% 48.2% at 50% 50%, #9333ea 0%, rgba(239, 255, 250, 0) 100%)",
+                           top: -200,
+                           // left: "50%",
+                           right: 0,
+                           // transform: "translate(-50%, 0)",
+                           opacity: 0.3,
+                        }}
+                     ></div>
                      <h1
                         style={{
                            lineHeight: 1.15,
                         }}
-                        className=" text-4xl lg:text-6xl dark:text-neutral-100   font-bold text-neutral-800 "
+                        className=" text-4xl lg:text-6xl dark:text-neutral-100 lg:text-left text-center relative z-10 font-bold text-neutral-800 "
                      >
-                        For the most creative and organized choreographers
+                        Choreography software to execute stunning performances
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
-                     <h1 className=" dark:text-neutral-300  text-neutral-500 lg:px-[20%]    mt-4 ">
+                     <h1 className=" dark:text-neutral-300 lg:text-left text-center text-neutral-700 relative  z-10 mt-4 ">
                         Create, plan, and share stunning 3D dance & cheer formations in minutes
                      </h1>
                      {/* <p className="text-neutral-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
-                     <Link href={"/login"} className="z-50">
-                        <button className="bg-gradient-to-r from-purple-500 to-pink-500 text-neutral-100 px-4 py-2 block lg:hidden mx-auto mt-5  rounded-full">
-                           Get Started
-                        </button>
-                     </Link>
-                     <div className="flex flex-col mx-auto justify-center">
+                     <div className="flex flex-row mt-24 ">
                         <Link href={"/207/edit"} className="">
-                           <button className="  flex-row items-center mx-auto  text-neutral-100 px-4 py-2 border border-pink-600  hidden lg:flex rounded-full mt-8 text-xl group">
-                              <span className="mr-2 text-pink-600 ">View Demo</span>
+                           <button className="  flex-row items-center   text-neutral-100 px-4 py-2  mr-3 border border-black  hidden lg:flex rounded-md  text-xl group">
+                              <span className="mr-2 text-black ">View demo</span>
                               <span className="relative left-0 group-hover:left-3 transition-all duration-300">
                                  <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -161,7 +132,24 @@ const home = () => {
                                     viewBox="0 0 24 24"
                                     strokeWidth={1.5}
                                     stroke="currentColor"
-                                    className="w-6 h-6 stroke-pink-600"
+                                    className="w-6 h-6 stroke-black "
+                                 >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                 </svg>
+                              </span>
+                           </button>
+                        </Link>
+                        <Link href={"/login"} className="">
+                           <button className="  flex-row items-center   text-neutral-100 px-4 py-2 border border-black  hidden lg:flex rounded-md  text-xl group">
+                              <span className="mr-2 text-black ">Start creating</span>
+                              <span className="relative left-0 group-hover:left-3 transition-all duration-300">
+                                 <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-6 h-6 stroke-black "
                                  >
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
                                  </svg>
@@ -170,10 +158,12 @@ const home = () => {
                         </Link>
                      </div>
                   </div>
+                  <div className="w-1/3 lg:static absolute lg:opacity-100 opacity-0 grid place-items-center">
+                     <img src="/dancers.png" className="w-full h-full  scale-[2]" alt="" />
+                  </div>
                </div>
 
-               <div className=" mt-12 relative">
-                  {/* <Image width={"1000"} height={"1000"} src={"/threeDPreview.png"}></Image> */}
+               {/* <div className=" mt-12 relative">
                   <img
                      className=" max-w-[1000px] lg:block hidden  w-full mx-auto relative -bottom-5 rounded-xl border border-neutral-200 dark:border-neutral-600 shadow-2xl z-10"
                      src="/threeDPreview.png"
@@ -189,7 +179,7 @@ const home = () => {
                         opacity: 1,
                      }}
                   ></div>
-               </div>
+               </div> */}
             </div>
             <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
             <div className=" dark:bg-neutral-900   lg:flex flex-col items-center justify-center  hidden py-10  ">

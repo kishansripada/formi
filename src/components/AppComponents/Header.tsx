@@ -352,7 +352,7 @@ export const Header: React.FC<{
                   target={"_blank"}
                   className="text-xs mr-6 text-neutral-100 hidden lg:block border-pink-600 border p-2 rounded-md"
                >
-                  I have an idea to make FORMI better!
+                  Join our discord to help us improve FORMI
                </a>
 
                {onlineUsers
