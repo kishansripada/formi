@@ -32,9 +32,9 @@ export const Header = () => {
                      <Link href={"/blog"} className="z-50">
                         <button className=" text-medium hidden lg:block mr-8 ">Blog</button>
                      </Link>
-                     <Link href={"/pricing"} className="z-50">
+                     {/* <Link href={"/pricing"} className="z-50">
                         <button className="  text-medium hidden lg:block mr-8">Pricing</button>
-                     </Link>
+                     </Link> */}
                   </div>
                </div>
 
