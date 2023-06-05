@@ -348,7 +348,7 @@ export const Header: React.FC<{
 
             <div className=" flex flex-row items-center justify-end mr-3 w-[40%] ">
                <a
-                  href="https://discord.gg/4B2vm2zS"
+                  href="https://discord.gg/Fn3BCk2PMB"
                   target={"_blank"}
                   className="text-xs mr-6 text-neutral-100 hidden lg:block border-pink-600 border p-2 rounded-md"
                >
