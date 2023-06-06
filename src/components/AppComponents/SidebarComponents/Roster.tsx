@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Dancer } from "../Dancer";
 import { CirclePicker } from "react-color";
+import { v4 as uuidv4 } from "uuid";
+
 export const Roster: React.FC<{
    setDancers: Function;
    dancers: dancer[];
@@ -53,7 +55,7 @@ export const Roster: React.FC<{
    // const [heightIn, setHeightIn] = useState<number>(height.inches);
    // console.log(heightIn);
    const createNewDancer = () => {
-      let id = crypto.randomUUID();
+      let id = uuidv4();
       setDancers((dancers: dancer[]) => {
          return [
             ...dancers,

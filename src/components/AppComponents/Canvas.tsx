@@ -4,6 +4,7 @@ import { GridLines } from "./GridLines";
 import { CheerLines } from "./CheerLines";
 import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings, localSettings } from "../../types/types";
 import { toast, Toaster } from "react-hot-toast";
+import { v4 as uuidv4 } from "uuid";
 
 export const Canvas: React.FC<{
    children: React.ReactNode;
@@ -355,7 +356,7 @@ export const Canvas: React.FC<{
                         comments: [
                            ...formation?.comments,
                            {
-                              id: crypto.randomUUID(),
+                              id: uuidv4(),
                               user: {
                                  name: session?.user.user_metadata.full_name,
                                  avatar_url: session?.user.user_metadata.avatar_url,
@@ -371,7 +372,7 @@ export const Canvas: React.FC<{
                         ...formation,
                         comments: [
                            {
-                              id: crypto.randomUUID(),
+                              id: uuidv4(),
                               user: {
                                  name: session?.user.user_metadata.full_name,
                                  avatar_url: session?.user.user_metadata.avatar_url,
