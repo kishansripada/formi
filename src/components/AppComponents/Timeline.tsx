@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { dancer, dancerPosition, formation, formationGroup } from "../../types/types";
+import { dancer, dancerPosition, formation, formationGroup, localSettings } from "../../types/types";
 import { useHorizontalScrollInfo } from "../../hooks";
 import { Layer } from "./Layer";
 import { Layers } from "./Layers";
@@ -77,6 +77,8 @@ export const Timeline: React.FC<{
    setPixelsPerSecond,
    isScrollingTimeline,
    setIsScrollingTimeline,
+   localSettings,
+   playbackRate,
 }) => {
    useEffect(() => {
       if (!songDuration) return;
@@ -198,6 +200,7 @@ export const Timeline: React.FC<{
                pixelsPerSecond={pixelsPerSecond}
                setPosition={setPosition}
                player={player}
+               localSettings={localSettings}
             />
 
             <div
@@ -237,6 +240,7 @@ export const Timeline: React.FC<{
                      videoPlayer={videoPlayer}
                      viewOnly={viewOnly}
                      pixelsPerSecond={pixelsPerSecond}
+                     localSettings={localSettings}
                   ></FileAudioPlayer>
                </div>
             ) : (

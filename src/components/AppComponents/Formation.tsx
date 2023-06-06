@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation, formationGroup } from "../../types/types";
+import { dancer, dancerPosition, formation, formationGroup, localSettings } from "../../types/types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useRef } from "react";
@@ -15,6 +15,7 @@ export const Formation: React.FC<{
    addToStack: Function;
    activeId: string | null;
    formationGroups: formationGroup[];
+   localSettings: localSettings;
 }> = ({
    formation,
    amSelected,
@@ -28,6 +29,7 @@ export const Formation: React.FC<{
    addToStack,
    activeId,
    formationGroups,
+   localSettings,
 }) => {
    // console.log(onlineUsers);
    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: formation.id });

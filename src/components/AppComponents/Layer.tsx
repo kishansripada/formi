@@ -1,7 +1,7 @@
 import { ReactEventHandler } from "react";
 import { Formation } from "./Formation";
 import { useCallback, useEffect, useState } from "react";
-import { dancer, dancerPosition, formation, formationGroup } from "../../types/types";
+import { dancer, dancerPosition, formation, formationGroup, localSettings } from "../../types/types";
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay } from "@dnd-kit/core";
 import { SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 
@@ -22,6 +22,7 @@ export const Layer: React.FC<{
    pushChange: Function;
    formationGroups: formationGroup;
    player: any;
+   localSettings: localSettings;
    setPosition: Function;
 }> = ({
    formations,
@@ -41,6 +42,7 @@ export const Layer: React.FC<{
    formationGroups,
    player,
    setPosition,
+   localSettings,
 }) => {
    const [activeId, setActiveId] = useState(null);
 
@@ -120,6 +122,7 @@ export const Layer: React.FC<{
                            addToStack={addToStack}
                            activeId={activeId}
                            formationGroups={formationGroups}
+                           localSettings={localSettings}
                         />
                      </div>
                   ))}

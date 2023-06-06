@@ -2,7 +2,7 @@ import Script from "next/script";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
-import { formation } from "../../types/types";
+import { formation, localSettings } from "../../types/types";
 import TimelinePlugin from "../../timeline-plugin";
 
 export const FileAudioPlayer: React.FC<{
@@ -17,7 +17,7 @@ export const FileAudioPlayer: React.FC<{
    pixelsPerSecond: number;
    player: any;
    setPlayer: Function;
-
+   localSettings: localSettings;
    videoPlayer: any;
 }> = memo(
    ({
@@ -33,6 +33,7 @@ export const FileAudioPlayer: React.FC<{
       player,
       setPlayer,
       videoPlayer,
+      localSettings,
    }) => {
       const [ready, setReady] = useState(false);
 

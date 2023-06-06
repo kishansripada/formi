@@ -218,7 +218,7 @@ export const StageSettings: React.FC<{
                         ? "Cheer Floor (9 Rolls)"
                         : "Custom"
                   }
-                  options={["None", "Grid", "Cheer 9", "Custom"]}
+                  options={["None", "Grid", "Cheer (9 rolls)", "Custom"]}
                   actions={[
                      () => setStageBackground("none"),
                      () => setStageBackground("grid"),
