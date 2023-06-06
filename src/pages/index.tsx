@@ -123,8 +123,8 @@ const home = () => {
                      {/* <p className="text-neutral-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
                      <div className="flex flex-row mt-24 ">
                         <Link href={"/207/edit"} className="">
-                           <button className="  flex-row items-center   text-neutral-100 px-4 py-2  mr-3 border border-black  hidden lg:flex rounded-md  text-xl group">
-                              <span className="mr-2 text-black ">View demo</span>
+                           <button className="  flex-row items-center   bg-neutral-800 relative z-20 px-4 py-2  mr-3 border border-black  hidden lg:flex rounded-full text-xl group">
+                              <span className="mr-2 text-white ">View demo</span>
                               <span className="relative left-0 group-hover:left-3 transition-all duration-300">
                                  <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -132,7 +132,7 @@ const home = () => {
                                     viewBox="0 0 24 24"
                                     strokeWidth={1.5}
                                     stroke="currentColor"
-                                    className="w-6 h-6 stroke-black "
+                                    className="w-6 h-6 stroke-white "
                                  >
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
                                  </svg>
@@ -140,7 +140,7 @@ const home = () => {
                            </button>
                         </Link>
                         <Link href={"/login"} className="">
-                           <button className="  flex-row items-center   text-neutral-100 px-4 py-2 border border-black  hidden lg:flex rounded-md  text-xl group">
+                           <button className="  flex-row items-center border-neutral-800 border  text-neutral-100 relative z-20 px-4 py-2  hidden lg:flex rounded-full  text-xl group">
                               <span className="mr-2 text-black ">Start creating</span>
                               <span className="relative left-0 group-hover:left-3 transition-all duration-300">
                                  <svg
@@ -182,9 +182,54 @@ const home = () => {
                </div> */}
             </div>
             <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
-            <div className=" dark:bg-neutral-900   lg:flex flex-col items-center justify-center  hidden py-10  ">
-               {/* <p className=" text-2xl mx-auto text-center font-proxima font-semibold mt-10 ">Trusted by 5000+ dance teams</p> */}
 
+            <div className=" bg-neutral-100 font-proxima overflow-hidden relative lg:px-0 px-7 "></div>
+
+            <div className="bg-neutral-50 dark:bg-neutral-900 lg:px-0 px-7  font-proxima">
+               <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-8 w-full ">
+                  <div className="lg:w-1/2 w-[90%]">
+                     <p className="text-3xl font-bold dark:text-neutral-50">Collaborate, communicate</p>
+                     <p className="text-lg mt-6 lg:w-[80%] text-neutral-500 dark:text-neutral-300">
+                        Directly add comments and annotations on the stage, making collaboration among team members easier and more efficient. Make
+                        FORMI a central platform for discussion and feedback, streamlining the choreography process.
+                     </p>
+                  </div>
+
+                  <div className="lg:w-1/2 w-[90%]">
+                     <video
+                        autoPlay
+                        muted
+                        src="/commentdemo.mp4"
+                        loop
+                        className=" lg:ml-auto lg:w-[90%] border border-neutral-200 rounded-xl relative"
+                     />
+                  </div>
+               </div>
+            </div>
+
+            <div className="bg-neutral-50 dark:bg-[#191919]  font-proxima lg:px-0 px-7">
+               <div className="flex lg:flex-row flex-col-reverse items-center mx-auto max-w-[1000px] py-8 w-full ">
+                  <div className="lg:w-1/2 w-[90%]">
+                     <video
+                        autoPlay
+                        muted
+                        src="/curveDemo.mp4"
+                        loop
+                        className=" lg:mr-auto lg:w-[90%] border border-neutral-200 rounded-xl relative"
+                     />
+                  </div>
+                  <div className="lg:w-1/2 w-[90%] ">
+                     <div className="lg:w-[90%] mx-auto">
+                        <p className="text-3xl font-bold dark:text-neutral-50">Complex dancer paths</p>
+                        <p className="text-lg mt-6  text-neutral-500 dark:text-neutral-300 ">
+                           Our non-linear path feature lets you plan complex formations with ease, making your choreography process smoother and more
+                           efficient. Say goodbye to old-fashioned, complicated methods and hello to modern, streamlined choreography.
+                        </p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div className=" dark:bg-neutral-900   lg:flex flex-col items-center justify-center  hidden py-10  ">
                <div className=" grid grid-cols-4 place-items-center child:mx-8   child:my-8  select-none opacity-60 dark:opacity-70 ">
                   <img
                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cornell_University_logo.svg/1280px-Cornell_University_logo.svg.png"
@@ -233,140 +278,6 @@ const home = () => {
                      className=" w-48 transition duration-500"
                      alt=""
                   />
-               </div>
-            </div>
-            <div className=" bg-neutral-100 font-proxima overflow-hidden relative lg:px-0 px-7 ">
-               <div className="absolute top-12 w-full px-4 -translate-x-1/2 left-1/2">
-                  {/* <p className="font-bold w-full text-3xl">Bring your dancers to life.</p> */}
-               </div>
-               {/* <div
-                  className="pointer-events-none absolute  h-[2000px]  w-[2000px]  "
-                  style={{
-                     backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #0284c7 0%, rgba(239, 255, 250, 0) 100%)",
-                     // top: -200,
-                     left: -1000,
-
-                     opacity: 0.2,
-                  }}
-               ></div>
-               <div
-                  className="pointer-events-none absolute  h-[2000px]  w-[2000px]  "
-                  style={{
-                     backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #10b981 0%, rgba(239, 255, 250, 0) 100%)",
-                     // top: -200,
-                     right: -1000,
-
-                     opacity: 0.2,
-                  }}
-               ></div> */}
-
-               {/* <div className="flex  flex-col items-center mx-auto max-w-[1000px] py-8 w-full  ">
-                  <div className="text-center w-full">
-                     <p className="text-3xl font-bold">Bring your dancers to life in 3D</p>
-                     <p className="text-lg mt-6  text-neutral-500">
-                        Save precious time in practices by designing stage formation in advance so you are ready to go during rehearsals.
-                     </p>
-                  </div>
-
-                  <div className="w-[85%] ">
-                     <img className=" rounded-xl mt-10" src="/threeD.png" alt="" />
-                  </div>
-               </div> */}
-
-               {/* <video className="rounded-xl w-full mx-auto max-w-[1000px] my-5 border border-neutral-300" autoPlay muted loop src="/threeD.mp4"></video> */}
-               {/* <Canvas
-                  className="h-[700px] relative bottom-0 w-full "
-                  gl={{ logarithmicDepthBuffer: true }}
-                  camera={{ position: [15, 15, 15], fov: 40 }}
-               >
-                 
-                  <Stage
-                     position={[10, 0, 0]}
-                    
-                     environment="apartment"
-                   
-                     adjustCamera={false}
-                  ></Stage>
-                  <Grid
-                     renderOrder={-1}
-                     position={[0, 0, 0]}
-                     args={[40 / 2, 30 / 2]}
-                     cellSize={0.5}
-                     cellThickness={0.5}
-                     sectionSize={2.5}
-                     sectionThickness={1.5}
-                     sectionColor={[0.5, 0.5, 10]}
-                    
-                  />
-
-                  {formations[0].positions.map((dancerPosition) => {
-                     return (
-                        <ThreeDancer
-                           isPlaying={true}
-                           currentFormationIndex={currentFormationIndex}
-                           percentThroughTransition={percentThroughTransition}
-                           dancers={dancers}
-                           position={position}
-                           dancerPosition={dancerPosition}
-                           formations={formations}
-                        ></ThreeDancer>
-                     );
-                  })}
-
-                  <OrbitControls autoRotate autoRotateSpeed={1} enableZoom={false} makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
-                  
-               </Canvas> */}
-            </div>
-            {/* <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div> */}
-            <div className="dark:bg-neutral-900 dark:text-neutral-300">
-               <p className="lg:text-5xl text-2xl text-center px-[20%] py-12 ">
-                  The <span className=" text-transparent  bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">all-in-one platform </span> to
-                  plan and excecute the best performances
-               </p>
-            </div>
-            {/* <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div> */}
-            <div className="bg-neutral-50 dark:bg-neutral-900 lg:px-0 px-7  font-proxima">
-               <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-8 w-full ">
-                  <div className="lg:w-1/2 w-[90%]">
-                     <p className="text-3xl font-bold dark:text-neutral-50">Collaborate, communicate</p>
-                     <p className="text-lg mt-6 lg:w-[80%] text-neutral-500 dark:text-neutral-300">
-                        Directly add comments and annotations on the stage, making collaboration among team members easier and more efficient. Make
-                        FORMI a central platform for discussion and feedback, streamlining the choreography process.
-                     </p>
-                  </div>
-
-                  <div className="lg:w-1/2 w-[90%]">
-                     <video
-                        autoPlay
-                        muted
-                        src="/commentdemo.mp4"
-                        loop
-                        className=" lg:ml-auto lg:w-[90%] border border-neutral-200 rounded-xl relative"
-                     />
-                  </div>
-               </div>
-            </div>
-
-            <div className="bg-neutral-50 dark:bg-[#191919]  font-proxima lg:px-0 px-7">
-               <div className="flex lg:flex-row flex-col-reverse items-center mx-auto max-w-[1000px] py-8 w-full ">
-                  <div className="lg:w-1/2 w-[90%]">
-                     <video
-                        autoPlay
-                        muted
-                        src="/curveDemo.mp4"
-                        loop
-                        className=" lg:mr-auto lg:w-[90%] border border-neutral-200 rounded-xl relative"
-                     />
-                  </div>
-                  <div className="lg:w-1/2 w-[90%] ">
-                     <div className="lg:w-[90%] mx-auto">
-                        <p className="text-3xl font-bold dark:text-neutral-50">Complex dancer paths</p>
-                        <p className="text-lg mt-6  text-neutral-500 dark:text-neutral-300 ">
-                           Our non-linear path feature lets you plan complex formations with ease, making your choreography process smoother and more
-                           efficient. Say goodbye to old-fashioned, complicated methods and hello to modern, streamlined choreography.
-                        </p>
-                     </div>
-                  </div>
                </div>
             </div>
             {/* <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div> */}
