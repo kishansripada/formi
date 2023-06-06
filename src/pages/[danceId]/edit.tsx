@@ -108,10 +108,10 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    }
 
    const [dropDownToggle, setDropDownToggle] = useState<boolean>(false);
-   const [viewOnly, setViewOnly] = useState(false);
+   const [viewOnly, setViewOnly] = useState(viewOnlyInitial);
 
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
-   const [upgradeIsOpen, setUpgradeIsOpen] = useState<boolean>(viewOnlyInitial);
+   const [upgradeIsOpen, setUpgradeIsOpen] = useState<boolean>(false);
    const [deltas, setDeltas] = useState([]);
    const [localSource, setLocalSource] = useState(null);
    const [songDuration, setSongDuration] = useState<number | null>(null);
