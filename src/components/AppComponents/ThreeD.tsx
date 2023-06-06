@@ -1,8 +1,9 @@
 import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings } from "../../types/types";
 import { ThreeDancer } from "../AppComponents/ThreeDancer";
 import { Canvas as Canva } from "@react-three/fiber";
-import { Stage, Grid, OrbitControls } from "@react-three/drei";
+import { Stage, Grid, OrbitControls, Environment } from "@react-three/drei";
 import { Text } from "@react-three/drei";
+
 export const ThreeD: React.FC<{
    children: React.ReactNode;
    setFormations: Function;
@@ -85,7 +86,8 @@ export const ThreeD: React.FC<{
          gl={{ logarithmicDepthBuffer: true }}
          camera={{ position: [0, 10, (localSettings.stageFlipped ? -1 : 1) * 14], fov: 40 }}
       >
-         <Stage environment={"city"} position={[0, 0, 0]} adjustCamera={false}></Stage>
+         <Environment path="/" files="potsdamer_platz_1k.hdr" />
+         <Stage position={[0, 0, 0]} adjustCamera={false}></Stage>
          <Grid
             renderOrder={-1}
             position={[0, 0, 0]}
@@ -97,7 +99,6 @@ export const ThreeD: React.FC<{
             cellColor={`${localSettings.isDarkMode ? "white" : "black"}`}
             sectionColor={"#db2777"}
          />
-
          {selectedFormation !== null
             ? formations[selectedFormation].positions.map((dancerPosition: dancerPosition) => {
                  return (
