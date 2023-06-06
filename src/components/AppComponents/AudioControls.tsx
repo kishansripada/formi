@@ -20,6 +20,7 @@ export const AudioControls: React.FC<{
    setPixelsPerSecond: Function;
    pixelsPerSecond: number;
    localSource: string | null;
+   setPlaybackRate: Function;
 }> = ({
    soundCloudTrackId,
    setSelectedFormation,
@@ -37,6 +38,7 @@ export const AudioControls: React.FC<{
    setPixelsPerSecond,
    pixelsPerSecond,
    localSource,
+   setPlaybackRate,
 }) => {
    const [isChangingZoom, setIsChangingZoom] = useState(false);
    const [playbackRateIndex, setPlaybackRateIndex] = useState(2);
@@ -83,7 +85,7 @@ export const AudioControls: React.FC<{
                               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                            </svg>
 
-                           <p className="text-sm">New</p>
+                           <p className="text-sm">New Formation</p>
                         </button>
 
                         <button
@@ -95,7 +97,7 @@ export const AudioControls: React.FC<{
                                     ...formations.slice(0, selectedFormation + 1),
                                     {
                                        ...formations[selectedFormation],
-                                       id: crypto.randomUUID(),
+                                       id: uuidv4(),
                                        name: formations[selectedFormation].name + " copy",
                                     },
                                     ...formations.slice(selectedFormation + 1),
@@ -251,7 +253,11 @@ export const AudioControls: React.FC<{
                   className="hidden lg:block"
                   onClick={() => {
                      setPlaybackRateIndex((i) => i + 1);
+                     setPlaybackRate(playbackRates[(playbackRateIndex + 1) % 5]);
+                     console.log(playbackRates[(playbackRateIndex + 1) % 5]);
+                     if (player) {
                      player.setPlaybackRate(playbackRates[(playbackRateIndex + 1) % 5]);
+                     }
                   }}
                >
                   <p>{JSON.stringify(playbackRates[playbackRateIndex % 5])}x</p>

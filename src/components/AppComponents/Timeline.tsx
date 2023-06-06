@@ -48,6 +48,8 @@ export const Timeline: React.FC<{
    setPixelsPerSecond: Function;
    isScrollingTimeline: boolean;
    setIsScrollingTimeline: Function;
+   localSettings: localSettings;
+   playbackRate: number;
 }> = ({
    formations,
    selectedFormation,
@@ -240,6 +242,7 @@ export const Timeline: React.FC<{
             ) : (
                <>
                   <NoFilePlayer
+                     playbackRate={playbackRate}
                      player={player}
                      isPlaying={isPlaying}
                      setPlayer={setPlayer}

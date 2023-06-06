@@ -21,6 +21,7 @@ export const NoFilePlayer: React.FC<{
    videoPlayer: any;
    isPlaying: boolean;
    position: number;
+   playbackRate: number;
 }> = memo(
    ({
       setPosition,
@@ -37,9 +38,10 @@ export const NoFilePlayer: React.FC<{
       formations,
       isPlaying,
       position,
+      playbackRate,
    }) => {
       let songDuration = formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0);
-
+      // console.log({ playbackRate });
       useEffect(() => {
          let interval;
          if (isPlaying) {
@@ -47,7 +49,7 @@ export const NoFilePlayer: React.FC<{
                setPosition((prevTime: number) => {
                   if (prevTime < songDuration) {
                      //  console.log("adding 0.5 sec");
-                     return prevTime + 0.02;
+                     return prevTime + 0.02 * playbackRate;
                   } else {
                      setIsPlaying(false);
                      return 0;
@@ -56,7 +58,7 @@ export const NoFilePlayer: React.FC<{
             }, 20);
          }
          return () => clearInterval(interval);
-      }, [isPlaying, songDuration]);
+      }, [isPlaying, songDuration, playbackRate]);
       return (
          <>
             <div

@@ -77,6 +77,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [danceName, setDanceName] = useState<string>(initialData.name);
    const [formationGroups, setFormationGroups] = useState<formationGroup[]>(initialData.formation_groups);
    const [shiftHeld, setShiftHeld] = useState(false);
+   const [playbackRate, setPlaybackRate] = useState(1);
 
    // local
    const [localSettings, setLocalSettings] = useLocalStorage<localSettings>("localSettings", {
@@ -1122,6 +1123,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
             <div className=" overscroll-contain">
                <AudioControls
+                  setPlaybackRate={setPlaybackRate}
                   addToStack={addToStack}
                   pushChange={pushChange}
                   viewOnly={viewOnly}
@@ -1141,6 +1143,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                ></AudioControls>
 
                <Timeline
+                  playbackRate={playbackRate}
                   setIsScrollingTimeline={setIsScrollingTimeline}
                   isScrollingTimeline={isScrollingTimeline}
                   setPixelsPerSecond={setPixelsPerSecond}
