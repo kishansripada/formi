@@ -103,6 +103,7 @@ export const ThreeD: React.FC<{
             ? formations[selectedFormation].positions.map((dancerPosition: dancerPosition) => {
                  return (
                     <ThreeDancer
+                       key={dancerPosition.id}
                        selectedDancers={selectedDancers}
                        setIsThreeDancerDragging={setIsThreeDancerDragging}
                        isThreeDancerDragging={isThreeDancerDragging}
