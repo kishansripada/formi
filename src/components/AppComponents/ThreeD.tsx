@@ -86,7 +86,7 @@ export const ThreeD: React.FC<{
          gl={{ logarithmicDepthBuffer: true }}
          camera={{ position: [0, 10, (localSettings.stageFlipped ? -1 : 1) * 14], fov: 40 }}
       >
-         <Environment path="/" files="potsdamer_platz_1k.hdr" />
+         {/* <Environment path="/" files="potsdamer_platz_1k.hdr" /> */}
          <Stage position={[0, 0, 0]} adjustCamera={false}></Stage>
          <Grid
             renderOrder={-1}
