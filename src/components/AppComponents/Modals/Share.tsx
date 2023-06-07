@@ -55,9 +55,9 @@ export const Share: React.FC<{
                }
             }}
          >
-            <div className="flex  w-[500px] flex-col  bg-white    text-sm ">
+            <div className="flex  w-[500px] flex-col   bg-neutral-800 border border-neutral-500  rounded-xl  text-sm ">
                <div className="flex flex-col rounded-xl px-10 pt-10 pb-6 h-full">
-                  <div className="flex flex-row justify-between items-center  ">
+                  <div className="flex flex-row justify-between items-stretch border-neutral-500 overflow-hidden bg-neutral-700 border rounded-md ">
                      <input
                         value={newUserEmail}
                         onChange={(e) => {
@@ -71,7 +71,7 @@ export const Share: React.FC<{
                                  toast.error("please enter a valid email");
                                  return;
                               }
-                              console.log(shareSettings);
+                              // console.log(shareSettings);
                               if (shareSettings[newUserEmail]) {
                                  toast.error("you've already entered that email");
                                  return;
@@ -82,14 +82,16 @@ export const Share: React.FC<{
                               setNewUserEmail("");
                            }
                         }}
-                        className="focus:border-pink-700 focus:border-2 rounded-md w-full mr-2 h-8 py-4 border-neutral-300 border text-sm shadow-sm px-2 focus:outline-none"
+                        className=" bg-transparent   w-full mr-2 h-8 py-4   text-neutral-200 text-sm  px-2 focus:outline-none"
                         type="text"
-                        placeholder="Enter an Email"
+                        placeholder="Email address"
                      />
                      <button
-                        style={{
-                           backgroundColor: validateEmail(newUserEmail) ? "#db2777" : "#F3F4F6",
-                        }}
+                        style={
+                           {
+                              // backgroundColor: validateEmail(newUserEmail) ? "#db2777" : "#F3F4F6",
+                           }
+                        }
                         onClick={(e) => {
                            e.preventDefault();
 
@@ -107,21 +109,34 @@ export const Share: React.FC<{
                            setNewUserEmail("");
                            // updateShareSettings();
                         }}
-                        className="text-white text-sm  rounded-md px-2 py-2  w-24"
+                        className="text-sm bg-neutral-600 text-neutral-200 w-10 grid place-items-center  "
                      >
-                        Share
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
+                           stroke="currentColor"
+                           className="w-5 h-5"
+                        >
+                           <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                           />
+                        </svg>
                      </button>
                   </div>
 
-                  <div className="mt-5">
-                     <div className="flex flex-row py-2 rounded-md px-2  ">
-                        <p className="text-neutral-700">Anyone with the link</p>
+                  <div className="mt-5 text-neutral-200">
+                     <div className="flex flex-row py-2 rounded-md px-2   ">
+                        <p className="text-neutral-200">Anyone with the link</p>
 
                         <select
                            value={anyoneCanView ? "view" : "none"}
                            onChange={(e) => {
                               if (e.target.value === "view") {
-                                 console.log("viewing");
+                                 // console.log("viewing");
                                  supabase
                                     .from("dances")
                                     .update({ anyonecanview: true, last_edited: new Date() })
@@ -129,7 +144,7 @@ export const Share: React.FC<{
                                     .then((r) => console.log(r));
                                  setAnyoneCanView(true);
                               } else {
-                                 console.log("make false");
+                                 // console.log("make false");
                                  supabase
                                     .from("dances")
                                     .update({ anyonecanview: false, last_edited: new Date() })
@@ -138,16 +153,16 @@ export const Share: React.FC<{
                                  setAnyoneCanView(false);
                               }
                            }}
-                           className="ml-auto mr-2 text-right"
+                           className="ml-auto mr-2 text-right bg-transparent text-neutral-200"
                         >
-                           <option value="view">View</option>
-                           <option value="none">None</option>
+                           <option value="view">can view</option>
+                           <option value="none">none</option>
                         </select>
                      </div>
                      {Object.entries(shareSettings).map((user) => {
                         return (
                            <div className="flex flex-row py-2 rounded-md px-2 py-2 " key={user[0]}>
-                              <p className="text-neutral-700">{user[0]}</p>
+                              <p className="text-neutral-200">{user[0]}</p>
 
                               <select
                                  onChange={(e) => {
@@ -163,13 +178,13 @@ export const Share: React.FC<{
                                        });
                                     }
                                  }}
-                                 className="ml-auto mr-2 text-right"
+                                 className="ml-auto mr-2 text-right bg-transparent"
                                  value={user[1]}
                                  id=""
                               >
-                                 <option value="view">View</option>
-                                 <option value="edit">Edit</option>
-                                 <option value="remove">Remove</option>
+                                 <option value="view">can view</option>
+                                 <option value="edit">can edit</option>
+                                 <option value="remove">remove</option>
                               </select>
                            </div>
                         );
@@ -179,7 +194,7 @@ export const Share: React.FC<{
                      <p className="text-neutral-400 text-xs mt-4 ">Collaborative Editing is Coming Soon</p>
                   ) : null}
                </div>
-               <div className="flex flex-row justify-between items-center w-full bg-neutral-100 h-16  px-5">
+               {/* <div className="flex flex-row justify-between items-center w-full bg-neutral-100 h-16  px-5">
                   <button
                      onClick={() => setShareIsOpen(false)}
                      className=" border border-neutral-300 bg-white hover:bg-neutral-100 px-4  py-1 rounded-md"
@@ -224,7 +239,7 @@ export const Share: React.FC<{
                   >
                      Save
                   </button>
-               </div>
+               </div> */}
             </div>
          </div>
          <Toaster />
