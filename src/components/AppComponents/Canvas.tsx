@@ -558,7 +558,7 @@ export const Canvas: React.FC<{
             ) : null}
 
             {!isPlaying && !localSettings.stageFlipped && (
-               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10">
+               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
                   <p className="text-center text-3xl font-extrabold opacity-30 tracking-widest">AUDIENCE</p>
                </div>
             )}

@@ -129,7 +129,8 @@ export const Timeline: React.FC<{
                              pixelsPerSecond,
                           (songDuration / 1000) * pixelsPerSecond
                        )
-                     : "100%",
+                     : formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0) *
+                       pixelsPerSecond,
                }}
                className=" relative  "
                // id="wave-timeline"
