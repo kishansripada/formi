@@ -70,6 +70,7 @@ export const Canvas: React.FC<{
    let { stageDimensions, stageBackground } = cloudSettings;
    let { gridSnap } = localSettings;
    function getDevicePixelRatio() {
+      // return window.devicePixelRatio || 1;
       return 1;
    }
 
@@ -103,7 +104,7 @@ export const Canvas: React.FC<{
       if (changingControlId) {
          if (viewOnly) return;
          let devicePixelRatio = getDevicePixelRatio();
-         devicePixelRatio = devicePixelRatio / 2;
+         // devicePixelRatio = devicePixelRatio / 2;
          setFormations((formations: formation[]) => {
             return formations.map((formation, index: number) => {
                if (index === selectedFormation) {
@@ -234,7 +235,7 @@ export const Canvas: React.FC<{
       if (draggingDancerId) {
          if (viewOnly) return;
          let devicePixelRatio = getDevicePixelRatio();
-         devicePixelRatio = devicePixelRatio / 2;
+         // devicePixelRatio = devicePixelRatio / 2;
          setFormations((formations: formation[]) => {
             return formations.map((formation, index: number) => {
                if (index === selectedFormation) {
@@ -292,7 +293,7 @@ export const Canvas: React.FC<{
       if (draggingCommentId) {
          if (viewOnly) return;
          let devicePixelRatio = getDevicePixelRatio();
-         devicePixelRatio = devicePixelRatio / 2;
+         // devicePixelRatio = devicePixelRatio / 2;
          setFormations((formations: formation[]) => {
             return formations.map((formation, index: number) => {
                if (index === selectedFormation) {
