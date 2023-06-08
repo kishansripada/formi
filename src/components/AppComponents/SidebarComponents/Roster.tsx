@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation, stageDimensions } from "../../../types/types";
+import { dancer, dancerPosition, formation, localSettings, stageDimensions } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -19,6 +19,7 @@ export const Roster: React.FC<{
    selectedDancers: string[];
    removeDancer: Function;
    setSelectedDancers: Function;
+   localSettings: localSettings;
 }> = ({
    setDancers,
    dancers,
@@ -33,6 +34,7 @@ export const Roster: React.FC<{
    removeDancer,
    setSelectedDancers,
    viewOnly,
+   localSettings,
 }) => {
    let { stageDimensions } = cloudSettings;
    const [uniqueDancers, setUniqueDancers] = useState<string[]>([]);
@@ -96,7 +98,7 @@ export const Roster: React.FC<{
    };
    return (
       <>
-         <div className="lg:flex hidden w-[260px]  min-w-[260px] flex-col overflow-hidden  bg-white h-full ">
+         <div className="lg:flex hidden w-[260px]  min-w-[260px] flex-col overflow-hidden  bg-white dark:bg-neutral-800 dark:text-white h-full ">
             <div className="flex-grow overflow-y-scroll">
                {dancers.slice().map((dancer, index) => (
                   <Dancer
@@ -113,13 +115,13 @@ export const Roster: React.FC<{
                      key={dancer.id}
                      dancers={dancers}
                      index={index}
+                     localSettings={localSettings}
                   />
                ))}
             </div>
             {/* <div className="bg-blue-200 flex-grow  overflow-y-auto"></div> */}
 
-            <hr className="" />
-            <div className=" min-h-[300px] h-[300px]  flex flex-col  ">
+            <div className=" min-h-[300px] h-[300px]  flex flex-col   ">
                {/* <div className="flex flex-col items-start mr-5">
                            <input
                               defaultValue={dancers.find((dancer) => dancer.id === editingDancer)?.instagramUsername || ""}
@@ -141,7 +143,10 @@ export const Roster: React.FC<{
                         </div> */}
                {!viewOnly ? (
                   <>
-                     <button onClick={createNewDancer} className=" mr-2 flex flex-row items-center text-sm justify-center py-2">
+                     <button
+                        onClick={createNewDancer}
+                        className="  flex flex-row items-center text-sm justify-center py-2 border-y border-neutral-200 dark:border-neutral-700"
+                     >
                         <p className="ml-auto mr-2">New Dancer</p>
                         <svg
                            xmlns="http://www.w3.org/2000/svg"
@@ -149,12 +154,11 @@ export const Roster: React.FC<{
                            viewBox="0 0 24 24"
                            strokeWidth={1.5}
                            stroke="currentColor"
-                           className="w-6 h-6"
+                           className="w-6 h-6 mr-2"
                         >
                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
                      </button>
-                     <hr />
                   </>
                ) : null}
 
@@ -165,9 +169,9 @@ export const Roster: React.FC<{
                         pointerEvents: viewOnly ? "none" : "auto",
                      }}
                   >
-                     <p className=" text-neutral-800  text-sm mb-2 font-medium">Height</p>
+                     <p className="   text-sm mb-2 font-medium">Height</p>
                      <div className="flex flex-row items-center  w-full ">
-                        <div className="flex flex-row items-center border border-neutral-200">
+                        <div className="flex flex-row items-center border border-neutral-200 dark:border-neutral-700">
                            <input
                               onBlur={pushChange}
                               value={height.feet}
@@ -187,11 +191,11 @@ export const Roster: React.FC<{
                               style={{
                                  borderRadius: 0,
                               }}
-                              className="w-[45px] p-1 focus:outline-none rounded-none text-center  "
+                              className="w-[45px] p-1 focus:outline-none rounded-none text-center dark:bg-neutral-800  "
                            />
                            <p className="mx-1">ft</p>
                         </div>
-                        <div className="flex flex-row items-center border border-neutral-200 ml-4">
+                        <div className="flex flex-row items-center border border-neutral-200 ml-4 dark:border-neutral-700">
                            <input
                               onBlur={pushChange}
                               type="number"
@@ -211,7 +215,7 @@ export const Roster: React.FC<{
                               style={{
                                  borderRadius: 0,
                               }}
-                              className="w-[45px] p-1 focus:outline-none rounded-none text-center  "
+                              className="w-[45px] p-1 focus:outline-none rounded-none text-center  dark:bg-neutral-800"
                            />
                            <p className="mx-1">in</p>
                         </div>
@@ -250,17 +254,34 @@ export const Roster: React.FC<{
                   <p className="h-full w-full grid place-items-center">No Dancers Selected</p>
                )}
                {!viewOnly ? (
-                  <div
-                     onClick={() => {
-                        selectedDancers.forEach((dancerId) => {
-                           removeDancer(dancerId);
-                        });
-                        // console.log(selectedDancers);
-                        pushChange();
-                     }}
-                     className="border-t border-neutral-200 mt-auto  w-full text-sm  cursor-pointer select-none  text-center  bg-opacity-80 py-2 bg-red-600 text-white  "
-                  >
-                     Delete Dancer
+                  // <div
+                  //    onClick={() => {
+                  //       selectedDancers.forEach((dancerId) => {
+                  //          removeDancer(dancerId);
+                  //       });
+                  //       setSelectedDancers([]);
+                  //       // console.log(selectedDancers);
+                  //       pushChange();
+                  //    }}
+                  //    className=" mt-auto  w-full text-sm  cursor-pointer select-none  text-center  bg-opacity-80 py-2 bg-red-600 text-white  "
+                  // >
+                  //    Delete Dancer
+                  // </div>
+
+                  <div className="mt-auto p-2">
+                     <div
+                        onClick={() => {
+                           selectedDancers.forEach((dancerId) => {
+                              removeDancer(dancerId);
+                           });
+                           setSelectedDancers([]);
+                           // console.log(selectedDancers);
+                           pushChange();
+                        }}
+                        className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-red-500 dark:text-red-400 text-red-600  "
+                     >
+                        Delete Dancer
+                     </div>
                   </div>
                ) : null}
             </div>
