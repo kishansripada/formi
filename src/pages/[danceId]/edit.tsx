@@ -92,9 +92,10 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       collisionRadius: 0.5,
       fullScreen: false,
       isDarkMode: false,
+      autoScroll: true,
    });
 
-   if (localSettings.viewingTwo === undefined) {
+   if (localSettings.viewingTwo === undefined || localSettings.isDarkMode === undefined || localSettings.autoScroll === undefined) {
       setLocalSettings({
          gridSnap: 1,
          previousFormationView: "ghostDancersAndPaths",
@@ -106,6 +107,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          collisionRadius: 0.5,
          fullScreen: false,
          isDarkMode: false,
+         autoScroll: true,
       });
    }
 

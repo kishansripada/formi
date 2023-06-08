@@ -43,6 +43,7 @@ export type localSettings = {
    collisionRadius: number;
    fullScreen: boolean;
    isDarkMode: boolean;
+   autoScroll: boolean;
 };
 
 export type cloudSettings = {

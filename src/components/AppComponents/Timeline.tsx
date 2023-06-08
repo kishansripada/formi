@@ -101,6 +101,25 @@ export const Timeline: React.FC<{
 
       return () => window.removeEventListener("mousemove", handleMouseMove);
    }, [isScrollingTimeline]);
+
+   useEffect(() => {
+      if (!scrollRef.current || !isPlaying || !localSettings.autoScroll) return;
+
+      const scrollElement = scrollRef.current;
+      const cursorPosition = (position || 0) * pixelsPerSecond + 32;
+      const viewableAreaStart = scrollElement.scrollLeft;
+      // const viewableAreaEnd = viewableAreaStart + scrollElement.clientWidth;
+      const threshold = viewableAreaStart + 0.75 * scrollElement.clientWidth;
+
+      // If the cursor is beyond the 75% threshold, adjust the scroll position.
+      if (cursorPosition > threshold) {
+         // Calculate the amount needed to scroll
+         // const scrollTo = cursorPosition - 0.25 * scrollElement.clientWidth;
+         // scrollElement.scrollLeft = scrollTo - viewableAreaStart;
+         scrollElement.scrollLeft = cursorPosition - 0.25 * scrollElement.clientWidth;
+      }
+   }, [position, pixelsPerSecond]); // This effect runs every time the posi
+
    return (
       <>
          <div className="w-full h-[10px] bg-neutral-100 dark:bg-neutral-700 select-none ">
@@ -153,6 +172,7 @@ export const Timeline: React.FC<{
                   className={` relative  left-[40px] py-1 ${!soundCloudTrackId ? "h-[15px]" : ""} `}
                   id="wave-timeline"
                ></div>
+
                {/* <div title="Loop" className="w-[200px] bg-neutral-300  cursor-pointer left-[40px] h-[15px] relative bottom-[1px]"></div> */}
                <div
                   style={{
