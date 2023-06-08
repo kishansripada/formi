@@ -40,7 +40,7 @@ export const Sidebar: React.FC<{
             >
                <svg
                   className={` ${
-                     menuOpen === "formations" ? "stroke-pink-600" : "dark:stroke-white stroke-neutral-600"
+                     menuOpen === "formations" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"
                   } transition duration-300 ease-in-out  w-7 h-7 mt-4`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -63,7 +63,7 @@ export const Sidebar: React.FC<{
             >
                <svg
                   className={` ${
-                     menuOpen === "dancers" ? "stroke-pink-600" : "dark:stroke-white stroke-neutral-600"
+                     menuOpen === "dancers" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"
                   } transition duration-300 ease-in-out  w-7 h-7`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -89,7 +89,7 @@ export const Sidebar: React.FC<{
                   strokeWidth={1.5}
                   stroke="currentColor"
                   fill="none"
-                  className={`w-7 h-7 ${menuOpen === "audio" ? "stroke-pink-600" : "dark:stroke-white stroke-neutral-600"} `}
+                  className={`w-7 h-7 ${menuOpen === "audio" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
                >
                   <path
                      strokeLinecap="round"
@@ -98,6 +98,41 @@ export const Sidebar: React.FC<{
                   />
                </svg>
                <p className=" mt-1">Media</p>
+            </button>
+            <button
+               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
+               onClick={() => setMenuOpen("collisions")}
+            >
+               {/* <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  fill="none"
+                  className={`w-7 h-7 ${menuOpen === "audio" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
+               >
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
+                  />
+               </svg> */}
+
+               <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className={`w-7 h-7 ${menuOpen === "collisions" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
+               >
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                  />
+               </svg>
+               <p className=" mt-1">Collisions</p>
             </button>
 
             {/* <button
@@ -129,7 +164,7 @@ export const Sidebar: React.FC<{
             >
                <svg
                   className={`w-7 h-7 transition duration-300  ml-auto mr-auto ${
-                     menuOpen === "stageSettings" ? "stroke-pink-600" : "dark:stroke-white stroke-neutral-600"
+                     menuOpen === "stageSettings" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"
                   }`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -156,7 +191,7 @@ export const Sidebar: React.FC<{
                   stroke=""
                   fill="none"
                   className={`w-7 h-7 transition duration-300  ml-auto mr-auto ${
-                     menuOpen === "settings" ? "stroke-pink-600" : "dark:stroke-white stroke-neutral-600"
+                     menuOpen === "settings" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"
                   }`}
                >
                   <path

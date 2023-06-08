@@ -26,6 +26,7 @@ import { Roster } from "../../components/AppComponents/SidebarComponents/Roster"
 import { CurrentFormation } from "../../components/AppComponents/SidebarComponents/CurrentFormation";
 import { StageSettings } from "../../components/AppComponents/SidebarComponents/StageSettings";
 import { RealtimeChannel } from "@supabase/supabase-js";
+import { Collisions } from "../../components/AppComponents/SidebarComponents/Collisions";
 import { grandfatheredEmails } from "../../../public/grandfathered";
 import { Timeline } from "../../components/AppComponents/Timeline";
 import domToPdf from "dom-to-pdf";
@@ -885,6 +886,12 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                                  setFormations={setFormations}
                                  setUpgradeIsOpen={setUpgradeIsOpen}
                               ></StageSettings>
+                           ) : menuOpen === "collisions" ? (
+                              <Collisions
+                                 dropDownToggle={dropDownToggle}
+                                 setLocalSettings={setLocalSettings}
+                                 localSettings={localSettings}
+                              ></Collisions>
                            ) : (
                               <CurrentFormation
                                  viewOnly={viewOnly}

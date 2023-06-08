@@ -26,9 +26,12 @@ const Dropdown: React.FC<Props> = ({ options, icons, actions, value, icon, dropD
    };
 
    return (
-      <div id="dropdown-menu" className="relative group  border hover:border-neutral-200 border-white h-[32px] w-38">
+      <div
+         id="dropdown-menu"
+         className="relative group  border hover:border-neutral-200 border-white dark:border-neutral-800 dark:hover:border-neutral-700 h-[32px] w-38"
+      >
          <div className=" py-1 px-3   flex flex-row items-center  " onClick={toggleDropdown}>
-            {icon ? <img className="w-5 h-5 mr-2  stroke-neutral-800 fill-neutral-800" src={`data:image/svg+xml;utf8,${icon}`} /> : null}
+            {icon ? <img className="w-5 h-5 mr-2  stroke-neutral-800 fill-neutral-800 " src={`data:image/svg+xml;utf8,${icon}`} /> : null}
 
             <p className="cursor-default text-sm">{value}</p>
             <svg
@@ -45,7 +48,7 @@ const Dropdown: React.FC<Props> = ({ options, icons, actions, value, icon, dropD
          {isDropdownOpen && (
             <div
                id="dropdown-menu"
-               className="absolute z-10  top-full mt-2 w-[200px] py-1 bg-neutral-800  shadow-lg  ring-1 ring-black ring-opacity-5"
+               className="absolute z-10 border border-neutral-700  top-full mt-2 w-[200px] py-1 bg-neutral-800  shadow-lg  ring-1 ring-black ring-opacity-5"
             >
                {options.map((option, i) => (
                   <div key={option} className=" px-4 py-1  text-xs text-white hover:bg-pink-600   flex flex-row items-center" onClick={actions[i]}>
