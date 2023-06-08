@@ -1,8 +1,10 @@
-import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings } from "../../types/types";
+import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings, localSettings } from "../../types/types";
 import { ThreeDancer } from "../AppComponents/ThreeDancer";
 import { Canvas as Canva } from "@react-three/fiber";
 import { Stage, Grid, OrbitControls, Environment, Lightformer } from "@react-three/drei";
 import { Text } from "@react-three/drei";
+import { Line } from "@react-three/drei";
+import { Vector3 } from "three";
 
 export const ThreeD: React.FC<{
    children: React.ReactNode;
@@ -77,6 +79,7 @@ export const ThreeD: React.FC<{
    dancers,
    position,
 }) => {
+   const { stageBackground } = cloudSettings;
    return (
       <Canva
          onPointerUp={() => {
@@ -86,17 +89,26 @@ export const ThreeD: React.FC<{
          gl={{ logarithmicDepthBuffer: true }}
          camera={{ position: [0, 10, (localSettings.stageFlipped ? -1 : 1) * 14], fov: 40 }}
       >
-         <Grid
-            renderOrder={-1}
-            position={[0, 0, 0]}
-            args={[cloudSettings.stageDimensions.width / 2, cloudSettings.stageDimensions.height / 2]}
-            cellSize={0.5}
-            cellThickness={0.5}
-            sectionSize={2.5}
-            sectionThickness={1.5}
-            cellColor={`${localSettings.isDarkMode ? "white" : "black"}`}
-            sectionColor={"#db2777"}
-         />
+         {stageBackground === "cheer9" ? (
+            <VerticalLines
+               localSettings={localSettings}
+               stageWidth={cloudSettings.stageDimensions.width}
+               stageHeight={cloudSettings.stageDimensions.height}
+            />
+         ) : stageBackground === "grid" ? (
+            <Grid
+               renderOrder={-1}
+               position={[0, 0, 0]}
+               args={[cloudSettings.stageDimensions.width / 2, cloudSettings.stageDimensions.height / 2]}
+               cellSize={0.5}
+               cellThickness={0.5}
+               sectionSize={2.5}
+               sectionThickness={1.5}
+               cellColor={`${localSettings.isDarkMode ? "white" : "black"}`}
+               sectionColor={"#db2777"}
+            />
+         ) : null}
+
          <ambientLight intensity={0.5} />
          <directionalLight position={[0, 10, 5]} intensity={1} />
          {selectedFormation !== null
@@ -177,4 +189,28 @@ export const ThreeD: React.FC<{
          </Text>
       </Canva>
    );
+};
+
+const VerticalLines = ({ stageWidth, stageHeight, localSettings }: { stageWidth: number; stageHeight: number; localSettings: localSettings }) => {
+   const lines = [];
+   const numLines = 10;
+   const spacing = stageWidth / 2 / (numLines - 1);
+   const halfHeight = stageHeight / 4;
+
+   for (let i = 0; i < numLines; i++) {
+      const xPosition = -stageWidth / 4 + i * spacing;
+      const start = new Vector3(xPosition, 0, -halfHeight);
+      const end = new Vector3(xPosition, 0, halfHeight);
+      lines.push(
+         <Line
+            points={[start, end]}
+            color={localSettings.isDarkMode ? "#52525b" : "#d4d4d4"}
+            lineWidth={2} // You can adjust the line width
+            renderOrder={-1}
+            key={i}
+         />
+      );
+   }
+
+   return <>{lines}</>;
 };

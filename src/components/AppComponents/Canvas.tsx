@@ -551,11 +551,7 @@ export const Canvas: React.FC<{
 
             {stageBackground === "grid" ? <GridLines cloudSettings={cloudSettings} stageDimensions={stageDimensions} /> : null}
 
-            {stageBackground === "cheer9" ? (
-               <div className="absolute top-0 left-0 right-0 bottom-0 m-auto pointer-events-none select-none">
-                  <CheerLines stageDimensions={stageDimensions}></CheerLines>
-               </div>
-            ) : null}
+            {stageBackground === "cheer9" ? <CheerLines stageDimensions={stageDimensions}></CheerLines> : null}
 
             {!isPlaying && !localSettings.stageFlipped && (
                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
