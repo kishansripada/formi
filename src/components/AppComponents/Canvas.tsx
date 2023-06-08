@@ -70,7 +70,7 @@ export const Canvas: React.FC<{
    let { stageDimensions, stageBackground } = cloudSettings;
    let { gridSnap } = localSettings;
    function getDevicePixelRatio() {
-      return window.devicePixelRatio || 1;
+      return 1;
    }
 
    const stageFlippedFactor = stageFlipped ? -1 : 1;
