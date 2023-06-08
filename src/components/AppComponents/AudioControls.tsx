@@ -50,7 +50,7 @@ export const AudioControls: React.FC<{
 
    return (
       <>
-         <div className="min-h-[50px] bg-neutral-50 w-full border-t  border-neutral-300 flex flex-row items-center justify-between select-none">
+         <div className="min-h-[50px]  dark:bg-neutral-800 dark:text-neutral-100  bg-neutral-50 w-full border-t dark:border-neutral-700  border-neutral-300 flex flex-row items-center justify-between select-none">
             <div className="w-[45%] flex flex-col items-center justify-center   pl-4">
                {!viewOnly ? (
                   <>
@@ -109,7 +109,7 @@ export const AudioControls: React.FC<{
                            }}
                            className="rounded-md  hidden transition duration-300 mr-auto    hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
                         >
-                           <svg className="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                           <svg className="w-5 h-5 mr-1 dark:fill-neutral-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                               <path d="M180 975q-24 0-42-18t-18-42V312h60v603h474v60H180Zm120-120q-24 0-42-18t-18-42V235q0-24 18-42t42-18h440q24 0 42 18t18 42v560q0 24-18 42t-42 18H300Zm0-60h440V235H300v560Zm0 0V235v560Z" />
                            </svg>
 
@@ -137,7 +137,7 @@ export const AudioControls: React.FC<{
                            }}
                            className="rounded-md  hidden transition duration-300 mr-auto    hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
                         >
-                           <svg className="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                           <svg className="w-5 h-5 mr-1 dark:fill-neutral-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                               <path d="M80 606v-60h800v60H80Zm210-120V386h380v100H290Zm0 280V666h380v100H290Z" />
                            </svg>
                            <p className="text-sm">Flip X</p>
@@ -162,9 +162,9 @@ export const AudioControls: React.FC<{
 
                               pushChange();
                            }}
-                           className="rounded-md  hidden transition duration-300 mr-auto    hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
+                           className="rounded-md  hidden transition duration-300 mr-auto   hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
                         >
-                           <svg className="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                           <svg className="w-5 h-5 mr-1 dark:fill-neutral-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                               <path d="M450 976V176h60v800h-60Zm120-210V386h100v380H570Zm-280 0V386h100v380H290Z" />
                            </svg>
                            <p className="text-sm">Flip Y</p>
@@ -193,7 +193,7 @@ export const AudioControls: React.FC<{
                </button>
                {isPlaying ? (
                   <div
-                     className={`hover:bg-neutral-100 transition duration-300 cursor-pointer p-1 rounded-2xl mx-3 select-none`}
+                     className={`hover:bg-neutral-100 dark:hover:bg-neutral-800  transition duration-300 cursor-pointer p-1 rounded-2xl mx-3 select-none`}
                      onClick={() => {
                         if (player && player.isReady) {
                            player.playPause();
@@ -203,7 +203,12 @@ export const AudioControls: React.FC<{
                         }
                      }}
                   >
-                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 fill-neutral-600">
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="w-8 h-8 dark:fill-neutral-300 fill-neutral-600"
+                     >
                         <path
                            fillRule="evenodd"
                            d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7.5 0A.75.75 0 0115 4.5h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75V5.25z"
@@ -213,7 +218,7 @@ export const AudioControls: React.FC<{
                   </div>
                ) : (
                   <div
-                     className={`hover:bg-neutral-100 transition duration-300 p-1 rounded-2xl mx-3 select-none cursor-pointer `}
+                     className={`hover:bg-neutral-100 dark:hover:bg-neutral-800  transition duration-300 p-1 rounded-2xl mx-3 select-none cursor-pointer `}
                      onClick={() => {
                         if (player && player.isReady) {
                            player.playPause();
@@ -223,7 +228,12 @@ export const AudioControls: React.FC<{
                         }
                      }}
                   >
-                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 fill-neutral-600">
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="w-8 h-8 dark:fill-neutral-300 fill-neutral-600"
+                     >
                         <path
                            fillRule="evenodd"
                            d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
@@ -244,9 +254,8 @@ export const AudioControls: React.FC<{
             </div>
 
             <div className="w-[45%] pr-10 flex flex-row justify-center items-center ">
-               <p className=" ml-auto lg:mr-auto text-neutral-600 ">
+               <p className=" ml-auto lg:mr-auto dark:text-neutral-400 text-neutral-600 ">
                   <span>{formatTime(position || 0)}</span>
-                  {/* {msToTime((position || 0) * 1000)}:<span className="text-neutral-500">{Math.round(((position || 0) * 10) % 10)}</span> */}
                </p>
 
                <button
@@ -256,7 +265,7 @@ export const AudioControls: React.FC<{
                      setPlaybackRate(playbackRates[(playbackRateIndex + 1) % 5]);
                      console.log(playbackRates[(playbackRateIndex + 1) % 5]);
                      if (player) {
-                     player.setPlaybackRate(playbackRates[(playbackRateIndex + 1) % 5]);
+                        player.setPlaybackRate(playbackRates[(playbackRateIndex + 1) % 5]);
                      }
                   }}
                >

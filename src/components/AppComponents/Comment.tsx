@@ -80,7 +80,7 @@ export const Comment: React.FC<{
             data-type={"comment"}
             className={`${
                isOpen ? "w-72 rounded-t-xl h-auto py-3 justify-start px-3" : "w-[50px] h-[50px] rounded-br-full rounded-t-full justify-center"
-            }    bg-neutral-800 group select-none shadow-xl   transition ease-in-out duration-300  lg:pointer-events-auto pointer-events-none flex    flex-row   items-center absolute z-[300]  cursor-default `}
+            }    bg-neutral-800 dark:bg-neutral-200 group select-none shadow-xl  dark:text-black text-white transition ease-in-out duration-300  lg:pointer-events-auto pointer-events-none flex    flex-row   items-center absolute z-[300]  cursor-default `}
          >
             {comment.user.avatar_url ? (
                <img
@@ -91,15 +91,13 @@ export const Comment: React.FC<{
                   referrerPolicy="no-referrer"
                />
             ) : (
-               <div className="bg-purple-500 text-white  rounded-full  min-w-[32px] font-semibold min-h-[32px] grid place-items-center select-none cursor-default pointer-events-none  ">
+               <div className="bg-purple-500   rounded-full  min-w-[32px] font-semibold min-h-[32px] grid place-items-center select-none cursor-default pointer-events-none  ">
                   {initials(comment?.user?.name)}
                </div>
             )}
 
-            <div
-               className={` flex-col h-full justify-center ml-4 text-white font-medium  w-full	 pointer-events-none ${isOpen ? "flex" : "hidden"}  `}
-            >
-               <div className="flex flex-row items-center text-xs text-neutral-200 ">
+            <div className={` flex-col h-full justify-center ml-4  font-medium  w-full	 pointer-events-none ${isOpen ? "flex" : "hidden"}  `}>
+               <div className="flex flex-row items-center text-sm  ">
                   <p>{comment.user.name}</p>
                </div>
 
@@ -136,7 +134,7 @@ export const Comment: React.FC<{
                         });
                      });
                   }}
-                  className="bg-neutral-800 focus:outline-none resize-none pointer-events-auto w-full text-sm font-normal  mt-1 selection:bg-pink-900"
+                  className="bg-neutral-800 dark:bg-neutral-200 focus:outline-none resize-none pointer-events-auto w-full text-sm font-normal  mt-1 selection:bg-pink-900"
                   value={comment.content}
                   ref={textAreaRef}
                   style={

@@ -4,7 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
 import { formation, localSettings } from "../../types/types";
 import TimelinePlugin from "../../timeline-plugin";
-
+// import WaveSurfer from "../../Wavesurfer";
 export const FileAudioPlayer: React.FC<{
    setPosition: Function;
    setIsPlaying: Function;
@@ -36,6 +36,7 @@ export const FileAudioPlayer: React.FC<{
       localSettings,
    }) => {
       const [ready, setReady] = useState(false);
+      const { isDarkMode } = localSettings;
 
       useEffect(() => {
          if (!document.getElementById("waveform")?.firstChild) return;
@@ -47,7 +48,7 @@ export const FileAudioPlayer: React.FC<{
          try {
             player.zoom(pixelsPerSecond);
          } catch {
-            console.log("zoom error");
+            // console.log("zoom error");
          }
       }, [pixelsPerSecond, player, soundCloudTrackId]);
 
@@ -66,7 +67,7 @@ export const FileAudioPlayer: React.FC<{
             waveColor: "#a3a3a3",
             progressColor: "#db2777",
             cursorColor: "#db2777",
-            backgroundColor: "#fafafa",
+            backgroundColor: isDarkMode ? "#262626" : "#fafafa",
             barWidth: 4,
             barRadius: 5,
             cursorWidth: 2,
@@ -78,6 +79,8 @@ export const FileAudioPlayer: React.FC<{
                   container: "#wave-timeline",
                   notchPercentHeight: 0,
                   height: 10,
+                  color: "#FFFFFF",
+                  style: {},
                }),
             ],
          });
@@ -89,7 +92,7 @@ export const FileAudioPlayer: React.FC<{
             setPosition(Math.ceil(e / 0.01) * 0.01); // 100fps
          });
          wavesurfer.on("ready", function (e) {
-            console.log("ready");
+            // console.log("ready");
             setReady(true);
 
             let duration = wavesurfer.getDuration() * 1000;

@@ -192,7 +192,7 @@ export const CurrentFormation: React.FC<{
    return (
       <>
          <div
-            className=" lg:flex hidden  w-[260px]  min-w-[260px] flex-col h-full  bg-white  "
+            className=" lg:flex hidden  w-[260px] bg-white  min-w-[260px] flex-col h-full  dark:bg-neutral-800 dark:text-neutral-100  "
             style={{
                pointerEvents: viewOnly ? "none" : "auto",
             }}
@@ -321,7 +321,7 @@ export const CurrentFormation: React.FC<{
                            e.target.select();
                         }}
                         onBlur={pushChange}
-                        className="font-medium w-full  rounded-md  h-6 text-xl    text-neutral-800  outline-none cursor-pointer "
+                        className="font-medium w-full bg rounded-md  h-6 text-xl dark:bg-neutral-800 dark:text-white   text-neutral-800  outline-none cursor-pointer "
                         onChange={(e) =>
                            setFormations((formations: formation[]) => {
                               return formations.map((formation, i) => {
@@ -358,7 +358,7 @@ export const CurrentFormation: React.FC<{
                                     </div>
                                  )}
                                  <div className=" overflow-hidden">
-                                    <p className=" text-neutral-500 text-xs font-medium">{comment.user.name}</p>
+                                    <p className=" text-neutral-500 dark:text-neutral-300 text-xs font-medium">{comment.user.name}</p>
                                     <p className="mr-2 mt-1 w-full text-xs ">{comment.content}</p>
                                  </div>
                                  <button
@@ -367,7 +367,7 @@ export const CurrentFormation: React.FC<{
                                        deleteComment(comment.id);
                                        pushChange();
                                     }}
-                                    className="ml-auto mt-auto mb-auto p-1 hover:bg-neutral-100 transition duration-300 rounded-xl group-hover:opacity-100 opacity-0"
+                                    className="ml-auto mt-auto mb-auto p-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition duration-300 rounded-xl group-hover:opacity-100 opacity-0"
                                  >
                                     <svg
                                        xmlns="http://www.w3.org/2000/svg"
@@ -375,7 +375,7 @@ export const CurrentFormation: React.FC<{
                                        viewBox="0 0 24 24"
                                        strokeWidth={1.5}
                                        stroke="currentColor"
-                                       className="w-5 h-5 stroke-neutral-600 shrink-0  "
+                                       className="w-5 h-5 stroke-neutral-600 dark:stroke-neutral-300 shrink-0  "
                                     >
                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                     </svg>
@@ -404,9 +404,8 @@ export const CurrentFormation: React.FC<{
                   </div> */}
 
                   <div className="h-[300px] min-h-[300px]  flex flex-col ">
-                     <hr />
                      {selectedDancers.length ? (
-                        <div className="">
+                        <div className=" border-t border-t-neutral-200 dark:border-t-neutral-700">
                            <div
                               style={{
                                  pointerEvents: selectedFormation === 0 ? "none" : "auto",
@@ -436,35 +435,36 @@ export const CurrentFormation: React.FC<{
                                  actions={[setLinear, setCurved, setTeleport]}
                               ></Dropdown>
                            </div>
-                           <hr />
                         </div>
                      ) : null}
 
                      {!viewOnly ? (
-                        <div
-                           onClick={() => {
-                              if (selectedFormation === null) return;
+                        <div className="mt-auto p-2">
+                           <div
+                              onClick={() => {
+                                 if (selectedFormation === null) return;
 
-                              if (formations.length === 1) {
-                                 toast.error("you must have at least one formation");
-                                 return;
-                              }
-                              // addToStack();
-                              if (selectedFormation === formations.length - 1) {
-                                 setSelectedFormation(selectedFormation - 1);
-                              }
+                                 if (formations.length === 1) {
+                                    toast.error("you must have at least one formation");
+                                    return;
+                                 }
+                                 // addToStack();
+                                 if (selectedFormation === formations.length - 1) {
+                                    setSelectedFormation(selectedFormation - 1);
+                                 }
 
-                              setFormations((formations: formation[]) => {
-                                 return formations.filter((formation, index) => {
-                                    return index !== selectedFormation;
+                                 setFormations((formations: formation[]) => {
+                                    return formations.filter((formation, index) => {
+                                       return index !== selectedFormation;
+                                    });
                                  });
-                              });
 
-                              pushChange();
-                           }}
-                           className="border-t border-neutral-200   w-full text-sm shadow-sm cursor-pointer select-none  mt-auto grid place-items-center  bg-opacity-80 py-2 bg-red-600 text-white  "
-                        >
-                           Delete Formation
+                                 pushChange();
+                              }}
+                              className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-red-500 dark:text-red-400 text-red-600  "
+                           >
+                              Delete Formation
+                           </div>
                         </div>
                      ) : null}
                   </div>

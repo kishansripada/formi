@@ -44,7 +44,7 @@ export const DancerAliasShadow: React.FC<{
                   alt={dancer.name}
                />
             ) : (
-               <div className="bg-white dark:bg-neutral-600 dark:text-white  rounded-full w-[32px] h-[32px] grid place-items-center select-none cursor-default ">
+               <div className="bg-transparent dark:text-white  rounded-full w-[32px] h-[32px] grid place-items-center select-none cursor-default ">
                   <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
                      {initials}
                   </p>

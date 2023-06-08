@@ -75,7 +75,7 @@ export const Formation: React.FC<{
                <div className="h-[1px] rounded-full bg-neutral-800 w-[12px] mt-[1px]"></div>
             </div>
             <div
-               className={`    cursor-pointer  bg-white  border-b-[4px]    border-neutral-400  border-x-[1px]  relative group  `}
+               className={`    cursor-pointer  bg-white dark:bg-neutral-800  dark:text-white border-b-[4px]    border-neutral-400  border-x-[1px]  relative group  `}
                style={{
                   width: myWidth,
                   // borderTopColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#404040",
@@ -136,8 +136,8 @@ export const Formation: React.FC<{
                   className="h-full absolute right-[0px] flex flex-row items-center justify-between  lg:pointer-events-auto pointer-events-none w-[5px] cursor-col-resize	z-[99]"
                >
                   <div className="relative flex flex-row item justify-between w-[5px] right-[2px] pointer-events-none">
-                     <div className="w-[2px] h-[20px] rounded-full bg-neutral-600"></div>
-                     <div className="w-[2px] h-[20px] rounded-full bg-neutral-600 "></div>
+                     <div className="w-[2px] h-[20px] rounded-full bg-neutral-600 dark:bg-neutral-300"></div>
+                     <div className="w-[2px] h-[20px] rounded-full bg-neutral-600 dark:bg-neutral-300"></div>
                   </div>
                </div>
 
@@ -153,7 +153,7 @@ export const Formation: React.FC<{
                   className="absolute w-full h-[4px] bottom-[0px] rounded-full"
                ></div> */}
 
-               <div className={` flex flex-row  box-border`}>
+               <div className={` flex flex-row  box-border `}>
                   {index !== 0 ? (
                      <div
                         style={{
@@ -161,7 +161,7 @@ export const Formation: React.FC<{
                         }}
                         className="  "
                      >
-                        <div className="flex flex-row bg-white pointer-events-none h-[26px] mr-[5px]">
+                        <div className="flex flex-row dark:bg-neutral-800 bg-white pointer-events-none h-[26px] mr-[5px]">
                            <svg className="w-1/2 relative" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
                               <polygon className="fill-neutral-300" strokeWidth={0} points="0,0 0,20 10,10" />
                            </svg>
@@ -183,8 +183,8 @@ export const Formation: React.FC<{
                            data-type="transition-resize"
                            className=" h-[26px]  w-[4px] lg:pointer-events-auto pointer-events-none cursor-col-resize	 absolute left-[-5px] z-50 flex flex-row justify-between"
                         >
-                           <div className="h-full w-[1px] bg-black pointer-events-none"></div>
-                           <div className="h-full w-[1px] bg-black pointer-events-none"></div>
+                           <div className="h-full w-[1px] bg-black pointer-events-none dark:bg-neutral-200"></div>
+                           <div className="h-full w-[1px] bg-black pointer-events-none dark:bg-neutral-200"></div>
                         </div>
                      ) : null}
                   </div>

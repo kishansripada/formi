@@ -9,79 +9,87 @@ export const Sidebar: React.FC<{
 }> = ({ setMenuOpen, menuOpen, viewOnly }) => {
    return (
       <>
-         <div className="lg:flex hidden flex-row  w-full  items-center justify-start   bg-neutral-800 min-h-[40px] h-10 px-3 ">
-            {/* <button className={` ${menuOpen === "formations" ? "bg-pink-600" : ""} `} onClick={() => setMenuOpen("formations")}>
-               <svg width="40" height="40" fill="none">
-                  <g filter="url(#a)" fillRule="evenodd" clipRule="evenodd">
+         <div className="lg:flex hidden flex-col  h-full  items-center  text-[10px] dark:bg-black  text-black bg-neutral-100  child:mb-5   w-20 min-w-20 border-r border-neutral-300 dark:border-neutral-700">
+            {/* <button onClick={() => setMenuOpen("formations")}>
+               <svg
+                  className={` ${
+                     menuOpen === "formations" ? "stroke-pink-600" : "dark:stroke-white stroke-neutral-600"
+                  } transition duration-300 ease-in-out  w-7 h-7`}
+                  fill="none"
+                  viewBox="0 0 40 40"
+               >
+                  <g filter="url(#a)">
+                     <path d="M8 17.6c0-3.3603 0-5.0405.65396-6.3239.57524-1.129 1.49314-2.0469 2.62214-2.62214C12.5595 8 14.2397 8 17.6 8h4.8c3.3603 0 5.0405 0 6.3239.65396 1.129.57524 2.0469 1.49314 2.6221 2.62214C32 12.5595 32 14.2397 32 17.6v4.8c0 3.3603 0 5.0405-.654 6.3239-.5752 1.129-1.4931 2.0469-2.6221 2.6221C27.4405 32 25.7603 32 22.4 32h-4.8c-3.3603 0-5.0405 0-6.3239-.654-1.129-.5752-2.0469-1.4931-2.62214-2.6221C8 27.4405 8 25.7603 8 22.4v-4.8Zm12.5649 2.9183c.1207.294.4656.5283 1.1555.9969l3.8726 2.6304c.8563.5816 1.2845.8725 1.6401.8534.3097-.0166.5964-.1685.7842-.4153.2155-.2835.2155-.8011.2155-1.8362v-5.2609c0-1.0351 0-1.5527-.2155-1.8361-.1878-.2469-.4745-.3988-.7842-.4154-.3556-.0191-.7838.2718-1.6401.8534l-3.8726 2.6304c-.6899.4686-1.0348.7029-1.1555.9969-.1056.2571-.1056.5454 0 .8025Z" />
                      <path
-                        className="transition duration-300 ease-in-out"
-                        d="M8 17.6c0-3.3603 0-5.0405.65396-6.3239.57524-1.129 1.49314-2.0469 2.62214-2.62214C12.5595 8 14.2397 8 17.6 8h4.8c3.3603 0 5.0405 0 6.3239.65396 1.129.57524 2.0469 1.49314 2.6221 2.62214C32 12.5595 32 14.2397 32 17.6v4.8c0 3.3603 0 5.0405-.654 6.3239-.5752 1.129-1.4931 2.0469-2.6221 2.6221C27.4405 32 25.7603 32 22.4 32h-4.8c-3.3603 0-5.0405 0-6.3239-.654-1.129-.5752-2.0469-1.4931-2.62214-2.6221C8 27.4405 8 25.7603 8 22.4v-4.8Zm12.5649 2.9183c.1207.294.4656.5283 1.1555.9969l3.8726 2.6304c.8563.5816 1.2845.8725 1.6401.8534.3097-.0166.5964-.1685.7842-.4153.2155-.2835.2155-.8011.2155-1.8362v-5.2609c0-1.0351 0-1.5527-.2155-1.8361-.1878-.2469-.4745-.3988-.7842-.4154-.3556-.0191-.7838.2718-1.6401.8534l-3.8726 2.6304c-.6899.4686-1.0348.7029-1.1555.9969-.1056.2571-.1056.5454 0 .8025Z"
-                        fill={menuOpen === "formations" ? "#db2777" : "#C5C7D0"}
-                     />
-                     <path
-                        d="M8 17.6c0-3.3603 0-5.0405.65396-6.3239.57524-1.129 1.49314-2.0469 2.62214-2.62214C12.5595 8 14.2397 8 17.6 8h4.8c3.3603 0 5.0405 0 6.3239.65396 1.129.57524 2.0469 1.49314 2.6221 2.62214C32 12.5595 32 14.2397 32 17.6v4.8c0 3.3603 0 5.0405-.654 6.3239-.5752 1.129-1.4931 2.0469-2.6221 2.6221C27.4405 32 25.7603 32 22.4 32h-4.8c-3.3603 0-5.0405 0-6.3239-.654-1.129-.5752-2.0469-1.4931-2.62214-2.6221C8 27.4405 8 25.7603 8 22.4v-4.8Zm12.5649 2.9183c.1207.294.4656.5283 1.1555.9969l3.8726 2.6304c.8563.5816 1.2845.8725 1.6401.8534.3097-.0166.5964-.1685.7842-.4153.2155-.2835.2155-.8011.2155-1.8362v-5.2609c0-1.0351 0-1.5527-.2155-1.8361-.1878-.2469-.4745-.3988-.7842-.4154-.3556-.0191-.7838.2718-1.6401.8534l-3.8726 2.6304c-.6899.4686-1.0348.7029-1.1555.9969-.1056.2571-.1056.5454 0 .8025Z"
                         fill="url(#b)"
-                        fillOpacity=".2"
+                        d="M8 17.6c0-3.3603 0-5.0405.65396-6.3239.57524-1.129 1.49314-2.0469 2.62214-2.62214C12.5595 8 14.2397 8 17.6 8h4.8c3.3603 0 5.0405 0 6.3239.65396 1.129.57524 2.0469 1.49314 2.6221 2.62214C32 12.5595 32 14.2397 32 17.6v4.8c0 3.3603 0 5.0405-.654 6.3239-.5752 1.129-1.4931 2.0469-2.6221 2.6221C27.4405 32 25.7603 32 22.4 32h-4.8c-3.3603 0-5.0405 0-6.3239-.654-1.129-.5752-2.0469-1.4931-2.62214-2.6221C8 27.4405 8 25.7603 8 22.4v-4.8Zm12.5649 2.9183c.1207.294.4656.5283 1.1555.9969l3.8726 2.6304c.8563.5816 1.2845.8725 1.6401.8534.3097-.0166.5964-.1685.7842-.4153.2155-.2835.2155-.8011.2155-1.8362v-5.2609c0-1.0351 0-1.5527-.2155-1.8361-.1878-.2469-.4745-.3988-.7842-.4154-.3556-.0191-.7838.2718-1.6401.8534l-3.8726 2.6304c-.6899.4686-1.0348.7029-1.1555.9969-.1056.2571-.1056.5454 0 .8025Z"
                      />
                   </g>
                   <g filter="url(#c)">
                      <path
-                        d="M18.2453 18.7189c.6898.4686 1.0348.7029 1.1555.9969.1056.2571.1056.5455 0 .8026-.1207.2939-.4657.5282-1.1555.9968l-3.8726 2.6304c-.8564.5817-1.2845.8725-1.6401.8534-.3097-.0166-.5964-.1685-.7842-.4153-.2156-.2834-.2156-.801-.2156-1.8362v-5.2608c0-1.0352 0-1.5528.2156-1.8362.1878-.2469.4745-.3988.7842-.4154.3556-.019.7837.2718 1.6401.8534l3.8726 2.6304Z"
                         fill="#fff"
+                        d="M18.2453 18.7189c.6898.4686 1.0348.7029 1.1555.9969.1056.2571.1056.5455 0 .8026-.1207.2939-.4657.5282-1.1555.9968l-3.8726 2.6304c-.8564.5817-1.2845.8725-1.6401.8534-.3097-.0166-.5964-.1685-.7842-.4153-.2156-.2834-.2156-.801-.2156-1.8362v-5.2608c0-1.0352 0-1.5528.2156-1.8362.1878-.2469.4745-.3988.7842-.4154.3556-.019.7837.2718 1.6401.8534l3.8726 2.6304Z"
                      />
                   </g>
-                  <defs>
-                     <filter id="a" x="8" y="8" width="24" height="24" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                        <feFlood floodOpacity="0" result="BackgroundImageFix" />
-                        <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-                        <feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
-                        <feOffset dy=".5" />
-                        <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
-                        <feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.1 0" />
-                        <feBlend in2="shape" result="effect1_innerShadow" />
-                     </filter>
-                     <filter
-                        id="c"
-                        x="9.73285"
-                        y="14.2343"
-                        width="11.7471"
-                        height="13.7657"
-                        filterUnits="userSpaceOnUse"
-                        colorInterpolationFilters="sRGB"
-                     >
-                        <feFlood floodOpacity="0" result="BackgroundImageFix" />
-                        <feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
-                        <feOffset dy="1" />
-                        <feGaussianBlur stdDeviation="1" />
-                        <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0" />
-                        <feBlend mode="multiply" in2="BackgroundImageFix" result="effect1_dropShadow" />
-                        <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
-                     </filter>
-                     <linearGradient id="b" x1="20" y1="8" x2="20" y2="32" gradientUnits="userSpaceOnUse">
-                        <stop stopColor="#fff" />
-                        <stop offset="1" stopColor="#fff" stopOpacity="0" />
-                     </linearGradient>
-                  </defs>
                </svg>
+            </button> */}
+
+            <button
+               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
+               onClick={() => setMenuOpen("formations")}
+            >
+               <svg
+                  className={` ${
+                     menuOpen === "formations" ? "stroke-pink-600" : "dark:stroke-white stroke-neutral-600"
+                  } transition duration-300 ease-in-out  w-7 h-7 mt-4`}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+               >
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+                  />
+               </svg>
+               <p className=" mt-1">Formation</p>
             </button>
 
-            <button className={` ${menuOpen === "dancers" ? "bg-pink-600" : ""} `} onClick={() => setMenuOpen("dancers")}>
+            <button
+               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
+               onClick={() => setMenuOpen("dancers")}
+            >
                <svg
-                  className={` ${menuOpen === "dancers" ? "fill-pink-600" : "fill-white"} scale-75 transition duration-300 ease-in-out w-10 h-10`}
+                  className={` ${
+                     menuOpen === "dancers" ? "stroke-pink-600" : "dark:stroke-white stroke-neutral-600"
+                  } transition duration-300 ease-in-out  w-7 h-7`}
                   xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 96 960 960"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
                >
-                  <path d="M0 816v-53q0-38.567 41.5-62.784Q83 676 150.376 676q12.165 0 23.395.5Q185 677 196 678.652q-8 17.348-12 35.165T180 751v65H0Zm240 0v-65q0-32 17.5-58.5T307 646q32-20 76.5-30t96.5-10q53 0 97.5 10t76.5 30q32 20 49 46.5t17 58.5v65H240Zm540 0v-65q0-19.861-3.5-37.431Q773 696 765 678.727q11-1.727 22.171-2.227 11.172-.5 22.829-.5 67.5 0 108.75 23.768T960 763v53H780Zm-480-60h360v-6q0-37-50.5-60.5T480 666q-79 0-129.5 23.5T300 751v5ZM149.567 646Q121 646 100.5 625.438 80 604.875 80 576q0-29 20.562-49.5Q121.125 506 150 506q29 0 49.5 20.5t20.5 49.933Q220 605 199.5 625.5T149.567 646Zm660 0Q781 646 760.5 625.438 740 604.875 740 576q0-29 20.562-49.5Q781.125 506 810 506q29 0 49.5 20.5t20.5 49.933Q880 605 859.5 625.5T809.567 646ZM480 576q-50 0-85-35t-35-85q0-51 35-85.5t85-34.5q51 0 85.5 34.5T600 456q0 50-34.5 85T480 576Zm.351-60Q506 516 523 498.649t17-43Q540 430 522.851 413t-42.5-17Q455 396 437.5 413.149t-17.5 42.5Q420 481 437.351 498.5t43 17.5ZM480 756Zm0-300Z" />
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
+                  />
                </svg>
+               <p className=" mt-1">Roster</p>
             </button>
-            <button className={` ${menuOpen === "audio" ? "bg-pink-600" : ""} `} onClick={() => setMenuOpen("audio")}>
+            <button
+               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
+               onClick={() => setMenuOpen("audio")}
+            >
                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
                   fill="none"
-                  className={`w-6 h-6 stroke-white `}
+                  className={`w-7 h-7 ${menuOpen === "audio" ? "stroke-pink-600" : "dark:stroke-white stroke-neutral-600"} `}
                >
                   <path
                      strokeLinecap="round"
@@ -89,27 +97,17 @@ export const Sidebar: React.FC<{
                      d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
                   />
                </svg>
+               <p className=" mt-1">Media</p>
             </button>
 
-            <button className={` ${menuOpen === "presets" ? "bg-pink-600" : ""} `} onClick={() => setMenuOpen("presets")}>
+            {/* <button
+               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
+               onClick={() => setMenuOpen("collisions")}
+            >
                <svg
-                  className={`w-8 h-8 transition duration-300  ml-auto mr-auto ${menuOpen === "presets" ? "stroke-[#db2777]" : "stroke-white"}`}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-               >
-                  <path
-                     strokeLinecap="round"
-                     strokeLinejoin="round"
-                     d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                  />
-               </svg>
-            </button>
-            <button className={` ${menuOpen === "collisions" ? "bg-pink-600" : ""} `} onClick={() => setMenuOpen("collisions")}>
-               <svg
-                  className={`w-8 h-8 transition duration-300  ml-auto mr-auto ${menuOpen === "collisions" ? "stroke-[#db2777]" : "stroke-white"}`}
+                  className={`w-7 h-7 transition duration-300  ml-auto mr-auto ${
+                     menuOpen === "collisions" ? "stroke-pink-600" : "dark:stroke-white stroke-neutral-600"
+                  }`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -122,11 +120,17 @@ export const Sidebar: React.FC<{
                      d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
                   />
                </svg>
-            </button>
+               <p className=" mt-1">Collisions</p>
+            </button> */}
 
-            <button onClick={() => setMenuOpen("stageSettings")} className="mt-auto mb-2">
+            <button
+               className="flex flex-col mt-auto mb-2 items-center dark:text-neutral-300 font-semibold text-neutral-600   "
+               onClick={() => setMenuOpen("stageSettings")}
+            >
                <svg
-                  className={`w-8 h-8 transition duration-300  ml-auto mr-auto ${menuOpen === "stageSettings" ? "stroke-[#db2777]" : "stroke-white"}`}
+                  className={`w-7 h-7 transition duration-300  ml-auto mr-auto ${
+                     menuOpen === "stageSettings" ? "stroke-pink-600" : "dark:stroke-white stroke-neutral-600"
+                  }`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -139,15 +143,21 @@ export const Sidebar: React.FC<{
                      d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"
                   />
                </svg>
+               <p className=" mt-1">Stage</p>
             </button>
-            <button onClick={() => setMenuOpen("settings")} className="">
+            <button
+               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
+               onClick={() => setMenuOpen("settings")}
+            >
                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke=""
-                  fill="white"
-                  className={`w-8 h-8 transition duration-300  ml-auto mr-auto ${menuOpen === "settings" ? "stroke-[#db2777]" : "stroke-white"}`}
+                  fill="none"
+                  className={`w-7 h-7 transition duration-300  ml-auto mr-auto ${
+                     menuOpen === "settings" ? "stroke-pink-600" : "dark:stroke-white stroke-neutral-600"
+                  }`}
                >
                   <path
                      strokeLinecap="round"
@@ -156,16 +166,35 @@ export const Sidebar: React.FC<{
                   />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                </svg>
-            </button> */}
-            <button
+               <p className=" mt-1">Settings</p>
+            </button>
+            {/* <button
                onClick={() => setMenuOpen("formations")}
-               className={` text-xs font-medium mr-3 ${menuOpen === "formations" ? "text-neutral-100" : "text-neutral-400"}`}
+               className={`  font-medium mr-3 ${menuOpen === "formations" ? "text-neutral-100" : "text-neutral-400"}`}
             >
-               Formation
+               <svg className="w-12 h-12" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 40 40">
+                  <g>
+                     <path
+                        fill="white"
+                        d="M8 17.6c0-3.3603 0-5.0405.65396-6.3239.57524-1.129 1.49314-2.0469 2.62214-2.62214C12.5595 8 14.2397 8 17.6 8h4.8c3.3603 0 5.0405 0 6.3239.65396 1.129.57524 2.0469 1.49314 2.6221 2.62214C32 12.5595 32 14.2397 32 17.6v4.8c0 3.3603 0 5.0405-.654 6.3239-.5752 1.129-1.4931 2.0469-2.6221 2.6221C27.4405 32 25.7603 32 22.4 32h-4.8c-3.3603 0-5.0405 0-6.3239-.654-1.129-.5752-2.0469-1.4931-2.62214-2.6221C8 27.4405 8 25.7603 8 22.4v-4.8Zm12.5649 2.9183c.1207.294.4656.5283 1.1555.9969l3.8726 2.6304c.8563.5816 1.2845.8725 1.6401.8534.3097-.0166.5964-.1685.7842-.4153.2155-.2835.2155-.8011.2155-1.8362v-5.2609c0-1.0351 0-1.5527-.2155-1.8361-.1878-.2469-.4745-.3988-.7842-.4154-.3556-.0191-.7838.2718-1.6401.8534l-3.8726 2.6304c-.6899.4686-1.0348.7029-1.1555.9969-.1056.2571-.1056.5454 0 .8025Z"
+                     />
+                     <path
+                        fill="white"
+                        fill-opacity=".2"
+                        d="M8 17.6c0-3.3603 0-5.0405.65396-6.3239.57524-1.129 1.49314-2.0469 2.62214-2.62214C12.5595 8 14.2397 8 17.6 8h4.8c3.3603 0 5.0405 0 6.3239.65396 1.129.57524 2.0469 1.49314 2.6221 2.62214C32 12.5595 32 14.2397 32 17.6v4.8c0 3.3603 0 5.0405-.654 6.3239-.5752 1.129-1.4931 2.0469-2.6221 2.6221C27.4405 32 25.7603 32 22.4 32h-4.8c-3.3603 0-5.0405 0-6.3239-.654-1.129-.5752-2.0469-1.4931-2.62214-2.6221C8 27.4405 8 25.7603 8 22.4v-4.8Zm12.5649 2.9183c.1207.294.4656.5283 1.1555.9969l3.8726 2.6304c.8563.5816 1.2845.8725 1.6401.8534.3097-.0166.5964-.1685.7842-.4153.2155-.2835.2155-.8011.2155-1.8362v-5.2609c0-1.0351 0-1.5527-.2155-1.8361-.1878-.2469-.4745-.3988-.7842-.4154-.3556-.0191-.7838.2718-1.6401.8534l-3.8726 2.6304c-.6899.4686-1.0348.7029-1.1555.9969-.1056.2571-.1056.5454 0 .8025Z"
+                     />
+                  </g>
+                  <g fill="white">
+                     <path
+                        fill="white"
+                        d="M18.2453 18.7189c.6898.4686 1.0348.7029 1.1555.9969.1056.2571.1056.5455 0 .8026-.1207.2939-.4657.5282-1.1555.9968l-3.8726 2.6304c-.8564.5817-1.2845.8725-1.6401.8534-.3097-.0166-.5964-.1685-.7842-.4153-.2156-.2834-.2156-.801-.2156-1.8362v-5.2608c0-1.0352 0-1.5528.2156-1.8362.1878-.2469.4745-.3988.7842-.4154.3556-.019.7837.2718 1.6401.8534l3.8726 2.6304Z"
+                     />
+                  </g>
+               </svg>
             </button>
             <button
                onClick={() => setMenuOpen("dancers")}
-               className={` text-xs font-medium mr-3 ${menuOpen === "dancers" ? "text-neutral-100" : "text-neutral-400"}`}
+               className={`  font-medium mr-3 ${menuOpen === "dancers" ? "text-neutral-100" : "text-neutral-400"}`}
             >
                Roster
             </button>
@@ -174,12 +203,12 @@ export const Sidebar: React.FC<{
                   {" "}
                   <button
                      onClick={() => setMenuOpen("audio")}
-                     className={` text-xs font-medium mr-3 ${menuOpen === "audio" ? "text-neutral-100" : "text-neutral-400"}`}
+                     className={`  font-medium mr-3 ${menuOpen === "audio" ? "text-neutral-100" : "text-neutral-400"}`}
                   >
                      Media
                   </button>
                   <button
-                     className={` text-xs font-medium mr-3 ${menuOpen === "stageSettings" ? "text-neutral-100" : "text-neutral-400"}`}
+                     className={`  font-medium mr-3 ${menuOpen === "stageSettings" ? "text-neutral-100" : "text-neutral-400"}`}
                      onClick={() => setMenuOpen("stageSettings")}
                   >
                      Stage
@@ -187,7 +216,7 @@ export const Sidebar: React.FC<{
                </>
             ) : null}
 
-            <button onClick={() => setMenuOpen("settings")} className="text-neutral-100 text-xs font-medium ml-auto">
+            <button onClick={() => setMenuOpen("settings")} className="text-neutral-100  font-medium ml-auto">
                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -203,7 +232,7 @@ export const Sidebar: React.FC<{
                   />
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                </svg>
-            </button>
+            </button> */}
          </div>
       </>
    );

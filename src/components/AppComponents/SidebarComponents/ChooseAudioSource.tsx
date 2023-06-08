@@ -83,9 +83,9 @@ export const ChooseAudioSource: React.FC<{
 
    return (
       <>
-         <div className="lg:flex hidden overflow-y-scroll w-[260px]  min-w-[260px] h-full  flex-col   bg-white    px-4 py-6 overflow-hidden">
+         <div className="lg:flex hidden overflow-y-scroll w-[260px]  min-w-[260px] h-full  flex-col   bg-white   dark:bg-neutral-800 dark:text-white  px-4 py-6 overflow-hidden">
             <div className="flex flex-col ">
-               <div className="text-xl font-medium text-[#1A1B25]  flex flex-row justify-between items-center">
+               <div className="text-xl font-medium   flex flex-row justify-between items-center">
                   <button
                      onClick={(e) => {
                         if (pricingTier === "basic" && audioFiles?.data?.length) {
@@ -133,17 +133,18 @@ export const ChooseAudioSource: React.FC<{
             </div>
 
             <div>
-               <p className=" font-medium mb-2 mt-4 text-sm text-neutral-800">Selected File</p>
-               <div className="px-2 py-2  rounded-md my-1 cursor-pointer w-full flex flex-row items-center justify-center whitespace-nowrap bg-pink-100 border-pink-600 border">
+               <p className=" font-medium mb-2 mt-4 text-sm ">Selected File</p>
+               <div className="px-2 py-2  rounded-md my-1 cursor-pointer w-full flex flex-row items-center justify-center whitespace-nowrap bg-pink-100 ">
                   {soundCloudTrackId ? (
                      <>
-                        <p className="text-neutral-700 text-xs font-medium w-full text-ellipsis overflow-hidden">
+                        <p className=" text-xs font-medium w-full text-ellipsis text-black overflow-hidden">
                            {soundCloudTrackId?.split("/").slice(-1)[0]}
                         </p>
 
                         <button
                            onClick={async (e) => {
                               e.stopPropagation();
+
                               setSoundCloudTrackId(null);
                               setLocalSource(null);
 
@@ -156,7 +157,7 @@ export const ChooseAudioSource: React.FC<{
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
                               stroke="currentColor"
-                              className="w-6 h-6 ml-auto"
+                              className="w-6 h-6 ml-auto text-black"
                            >
                               <path
                                  strokeLinecap="round"
@@ -168,13 +169,13 @@ export const ChooseAudioSource: React.FC<{
                      </>
                   ) : (
                      <>
-                        <p className="text-neutral-800 text-xs">No File Selected</p>
+                        <p className=" text-xs text-black">No File Selected</p>
                      </>
                   )}
                </div>
             </div>
 
-            <p className=" font-medium mb-2 mt-6 px-2 text-sm text-neutral-800">Uploaded Media</p>
+            <p className=" font-medium mb-2 mt-6 px-2 text-sm ">Uploaded Media</p>
             <div className="h-[300px]">
                <div className=" flex flex-col overflow-scroll removeScrollBar ">
                   {audioFiles?.data?.length ? (
@@ -192,9 +193,9 @@ export const ChooseAudioSource: React.FC<{
                               }}
                               className={` ${
                                  audiofile.name === soundCloudTrackId?.split("/").slice(-1)[0] ? "opacity-50 pointer-events-none" : ""
-                              }   rounded-md my-1 px-2 group hover:bg-neutral-100 cursor-pointer w-full min-h-[40px] flex flex-row items-center  whitespace-nowrap  `}
+                              }   rounded-md my-1 px-2 group hover:bg-neutral-100 dark:hover:bg-neutral-700 cursor-pointer w-full min-h-[40px] flex flex-row items-center  whitespace-nowrap  `}
                            >
-                              <p className="text-neutral-700 text-xs  text-left text-ellipsis overflow-hidden">{audiofile.name}</p>
+                              <p className=" text-xs  text-left text-ellipsis overflow-hidden">{audiofile.name}</p>
 
                               <button
                                  className="ml-auto mr-2"
@@ -235,7 +236,7 @@ export const ChooseAudioSource: React.FC<{
                      })
                   ) : (
                      <>
-                        <p className="text-neutral-600 text-sm">No Uploaded Files</p>
+                        <p className=" text-sm">No Uploaded Files</p>
                      </>
                   )}
                </div>

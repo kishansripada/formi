@@ -55,7 +55,7 @@ export const Share: React.FC<{
                }
             }}
          >
-            <div className="flex  w-[500px] flex-col   bg-neutral-800 border border-neutral-500  rounded-xl  text-sm ">
+            <div className="flex  w-[500px] flex-col   bg-neutral-800/90 border border-neutral-500  rounded-xl  text-sm ">
                <div className="flex flex-col rounded-xl px-10 pt-10 pb-6 h-full">
                   <div className="flex flex-row justify-between items-stretch border-neutral-500 overflow-hidden bg-neutral-700 border rounded-md ">
                      <input

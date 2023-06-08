@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation } from "../../types/types";
+import { dancer, dancerPosition, formation, localSettings } from "../../types/types";
 
 export const Dancer: React.FC<{
    setDancers: Function;
@@ -14,6 +14,7 @@ export const Dancer: React.FC<{
    pushChange: Function;
    uniqueDancers: string[];
    viewOnly: boolean;
+   localSettings: localSettings;
 }> = ({
    setDancers,
    dancers,
@@ -28,9 +29,10 @@ export const Dancer: React.FC<{
    pushChange,
    uniqueDancers,
    viewOnly,
+   localSettings,
 }) => {
    let { name, id, instagramUsername, color } = dancer;
-
+   const { isDarkMode } = localSettings;
    let amSelected = selectedDancers.includes(id);
    let suggestedDancer = uniqueDancers.find((dancer: string) => {
       return dancer.toLowerCase().startsWith(name.toLowerCase());
@@ -76,21 +78,25 @@ export const Dancer: React.FC<{
    return (
       <>
          <div
-            style={{
-               backgroundColor: amSelected ? "#fbcfe8" : "transparent",
-            }}
+            style={
+               {
+                  // backgroundColor: amSelected ? (isDarkMode ? "#db2777" : "#fbcfe8") : "transparent",
+               }
+            }
             onClick={() => {
                setSelectedDancers([id]);
             }}
-            className={`flex flex-row items-center px-5 box-border   group  select-none border border-white hover:border-pink-600   min-h-[40px] bg-white`}
+            className={`flex flex-row items-center px-5 box-border ${
+               amSelected ? "bg-pink-200 dark:bg-pink-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
+            }  group  select-none   min-h-[40px] `}
          >
             <p className="font-semibold   text-sm "> {index + 1}</p>
             <div className="relative">
                <input
                   style={{
-                     backgroundColor: amSelected ? "#fbcfe8" : "transparent",
+                     backgroundColor: amSelected ? (isDarkMode ? "#db2777" : "#fbcfe8") : "transparent",
                   }}
-                  className="h-6 w-full    px-2 py-4  text-sm rounded-md  ml-2  text-neutral-800  outline-none cursor-default"
+                  className="h-6 w-full    px-2 py-4  text-sm rounded-md  ml-2    outline-none cursor-default"
                   value={name}
                   onBlur={pushChange}
                   disabled={viewOnly}

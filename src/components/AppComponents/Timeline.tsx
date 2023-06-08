@@ -103,7 +103,7 @@ export const Timeline: React.FC<{
    }, [isScrollingTimeline]);
    return (
       <>
-         <div className="w-full h-[10px] bg-neutral-100 select-none">
+         <div className="w-full h-[10px] bg-neutral-100 dark:bg-neutral-700 select-none ">
             <div
                onMouseDown={() => {
                   setIsScrollingTimeline(true);
@@ -120,7 +120,7 @@ export const Timeline: React.FC<{
             </div>
          </div>
 
-         <div ref={scrollRef} className="overflow-x-scroll removeScrollBar   overscroll-contain ">
+         <div ref={scrollRef} className="overflow-x-scroll removeScrollBar bg-neutral-100 dark:bg-neutral-800 overscroll-contain ">
             <div
                style={{
                   width: songDuration
@@ -168,20 +168,6 @@ export const Timeline: React.FC<{
                </div>
             </div>
 
-            <div
-               style={{
-                  width: songDuration
-                     ? Math.max(
-                          formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0) *
-                             pixelsPerSecond,
-                          (songDuration / 1000) * pixelsPerSecond
-                       )
-                     : formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0) *
-                       pixelsPerSecond,
-               }}
-               className="bg-neutral-400 h-[1px] "
-            />
-
             <Layers
                formationGroups={formationGroups}
                userPositions={userPositions}
@@ -204,20 +190,6 @@ export const Timeline: React.FC<{
                localSettings={localSettings}
             />
 
-            <div
-               style={{
-                  width: songDuration
-                     ? Math.max(
-                          formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0) *
-                             pixelsPerSecond,
-                          (songDuration / 1000) * pixelsPerSecond
-                       )
-                     : formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0) *
-                       pixelsPerSecond,
-               }}
-               className="bg-neutral-400 h-[1px] "
-            />
-
             {soundCloudTrackId || localSource ? (
                <div
                   className="relative "
@@ -228,7 +200,7 @@ export const Timeline: React.FC<{
                   }}
                >
                   <FileAudioPlayer
-                     key={localSource || soundCloudTrackId}
+                     key={localSource || (soundCloudTrackId && localSettings.isDarkMode)}
                      setSelectedFormation={setSelectedFormation}
                      setFormations={setFormations}
                      soundCloudTrackId={localSource || soundCloudTrackId}
@@ -272,7 +244,7 @@ export const Timeline: React.FC<{
             style={{
                width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
             }}
-            className="w-full h-[10px] bg-neutral-500 "
+            className="w-full h-[10px] bg-neutral-500 dark:bg-neutral-700 "
          ></div>
       </>
    );

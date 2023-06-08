@@ -740,13 +740,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
          {isCommenting ? (
             <>
-               <div
-                  style={{
-                     left: "50%",
-                     transform: "translate(-50%, 0)",
-                  }}
-                  className="fixed w-60 h-12 select-none rounded-full shadow-xl bottom-6 bg-black z-[9999] opacity-70 grid place-items-center"
-               >
+               <div className="fixed left-1/2 -translate-x-1/2 w-60 h-12 select-none rounded-full shadow-xl bottom-6 bg-black  z-[9999] opacity-70 grid place-items-center">
                   <p className="text-white text-sm pointer-events-none">Click on the stage to comment</p>
                </div>
             </>
@@ -847,72 +841,74 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
             <div className="flex flex-row  overflow-hidden w-screen h-full">
                {!localSettings.fullScreen ? (
                   <>
-                     <div className="flex flex-col ">
+                     <div className="flex flex-row ">
                         <Sidebar viewOnly={viewOnly} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
-
-                        {menuOpen === "dancers" ? (
-                           <Roster
-                              removeDancer={removeDancer}
-                              setSelectedDancers={setSelectedDancers}
-                              addToStack={addToStack}
-                              pushChange={pushChange}
-                              setDancers={setDancers}
-                              dancers={dancers}
-                              formations={formations}
-                              selectedFormation={selectedFormation}
-                              cloudSettings={cloudSettings}
-                              setFormations={setFormations}
-                              selectedDancers={selectedDancers}
-                              viewOnly={viewOnly}
-                           ></Roster>
-                        ) : menuOpen === "audio" ? (
-                           <ChooseAudioSource
-                              pricingTier={pricingTier}
-                              setUpgradeIsOpen={setUpgradeIsOpen}
-                              player={player}
-                              setIsPlaying={setIsPlaying}
-                              soundCloudTrackId={soundCloudTrackId}
-                              setSoundCloudTrackId={setSoundCloudTrackId}
-                              audioFiles={audioFiles}
-                              setAudiofiles={setAudiofiles}
-                              setLocalSource={setLocalSource}
-                           ></ChooseAudioSource>
-                        ) : menuOpen === "settings" ? (
-                           <Settings dropDownToggle={dropDownToggle} setLocalSettings={setLocalSettings} localSettings={localSettings}></Settings>
-                        ) : menuOpen === "stageSettings" ? (
-                           <StageSettings
-                              dropDownToggle={dropDownToggle}
-                              pushChange={pushChange}
-                              formations={formations}
-                              pricingTier={pricingTier}
-                              cloudSettings={cloudSettings}
-                              setCloudSettings={setCloudSettings}
-                              setFormations={setFormations}
-                              setUpgradeIsOpen={setUpgradeIsOpen}
-                           ></StageSettings>
-                        ) : (
-                           <CurrentFormation
-                              viewOnly={viewOnly}
-                              dropDownToggle={dropDownToggle}
-                              setIsEditingFormationGroup={setIsEditingFormationGroup}
-                              formationGroups={formationGroups}
-                              setFormationGroups={setFormationGroups}
-                              isCommenting={isCommenting}
-                              setIsCommenting={setIsCommenting}
-                              addToStack={addToStack}
-                              pushChange={pushChange}
-                              pricingTier={pricingTier}
-                              cloudSettings={cloudSettings}
-                              selectedDancers={selectedDancers}
-                              setSelectedDancers={setSelectedDancers}
-                              setSelectedFormation={setSelectedFormation}
-                              dancers={dancers}
-                              setFormations={setFormations}
-                              formations={formations}
-                              selectedFormation={selectedFormation}
-                              setUpgradeIsOpen={setUpgradeIsOpen}
-                           />
-                        )}
+                        <div className="border-r border-neutral-300 dark:border-neutral-700">
+                           {menuOpen === "dancers" ? (
+                              <Roster
+                                 removeDancer={removeDancer}
+                                 setSelectedDancers={setSelectedDancers}
+                                 addToStack={addToStack}
+                                 pushChange={pushChange}
+                                 setDancers={setDancers}
+                                 dancers={dancers}
+                                 formations={formations}
+                                 selectedFormation={selectedFormation}
+                                 cloudSettings={cloudSettings}
+                                 setFormations={setFormations}
+                                 selectedDancers={selectedDancers}
+                                 viewOnly={viewOnly}
+                                 localSettings={localSettings}
+                              ></Roster>
+                           ) : menuOpen === "audio" ? (
+                              <ChooseAudioSource
+                                 pricingTier={pricingTier}
+                                 setUpgradeIsOpen={setUpgradeIsOpen}
+                                 player={player}
+                                 setIsPlaying={setIsPlaying}
+                                 soundCloudTrackId={soundCloudTrackId}
+                                 setSoundCloudTrackId={setSoundCloudTrackId}
+                                 audioFiles={audioFiles}
+                                 setAudiofiles={setAudiofiles}
+                                 setLocalSource={setLocalSource}
+                              ></ChooseAudioSource>
+                           ) : menuOpen === "settings" ? (
+                              <Settings dropDownToggle={dropDownToggle} setLocalSettings={setLocalSettings} localSettings={localSettings}></Settings>
+                           ) : menuOpen === "stageSettings" ? (
+                              <StageSettings
+                                 dropDownToggle={dropDownToggle}
+                                 pushChange={pushChange}
+                                 formations={formations}
+                                 pricingTier={pricingTier}
+                                 cloudSettings={cloudSettings}
+                                 setCloudSettings={setCloudSettings}
+                                 setFormations={setFormations}
+                                 setUpgradeIsOpen={setUpgradeIsOpen}
+                              ></StageSettings>
+                           ) : (
+                              <CurrentFormation
+                                 viewOnly={viewOnly}
+                                 dropDownToggle={dropDownToggle}
+                                 setIsEditingFormationGroup={setIsEditingFormationGroup}
+                                 formationGroups={formationGroups}
+                                 setFormationGroups={setFormationGroups}
+                                 isCommenting={isCommenting}
+                                 setIsCommenting={setIsCommenting}
+                                 addToStack={addToStack}
+                                 pushChange={pushChange}
+                                 pricingTier={pricingTier}
+                                 cloudSettings={cloudSettings}
+                                 selectedDancers={selectedDancers}
+                                 setSelectedDancers={setSelectedDancers}
+                                 setSelectedFormation={setSelectedFormation}
+                                 dancers={dancers}
+                                 setFormations={setFormations}
+                                 formations={formations}
+                                 selectedFormation={selectedFormation}
+                                 setUpgradeIsOpen={setUpgradeIsOpen}
+                              />
+                           )}
+                        </div>
                      </div>
                   </>
                ) : null}
@@ -1121,7 +1117,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                </div>
             </div>
 
-            <div className=" overscroll-contain">
+            <div className=" overscroll-contain bg-black">
                <AudioControls
                   setPlaybackRate={setPlaybackRate}
                   addToStack={addToStack}

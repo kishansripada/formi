@@ -133,13 +133,13 @@ export const PathEditor: React.FC<{
                                     key={dancerPosition.id + "startControlPoint"}
                                     d={`M ${startCoords.left} ${startCoords.top} L ${controlPointStartCoords.left} ${controlPointStartCoords.top}`}
                                     fill="transparent"
-                                    className="z-[60] stroke-black"
+                                    className="z-[60] stroke-black dark:stroke-neutral-100"
                                  />
                                  <path
                                     key={dancerPosition.id + "endControlPoint"}
                                     d={`M ${endCoords.left} ${endCoords.top} L ${controlPointEndCoords.left} ${controlPointEndCoords.top}`}
                                     fill="transparent"
-                                    className="z-[60] stroke-black"
+                                    className="z-[60] stroke-black dark:stroke-neutral-100"
                                  />
 
                                  <svg key={dancerPosition.id + "controlPointStart"} className="rotate-90">
@@ -159,7 +159,7 @@ export const PathEditor: React.FC<{
                                        y={controlPointStartCoords.top}
                                        width="10"
                                        height="10"
-                                       className="pointer-events-auto z-[60] fill-white  -translate-x-[5px] -translate-y-[5px]"
+                                       className="pointer-events-auto z-[60] fill-white dark:fill-neutral-700  -translate-x-[5px] -translate-y-[5px]"
                                     />
                                  </svg>
                                  <svg key={dancerPosition.id + "controlPointEnd"} className="rotate-90">
@@ -179,7 +179,7 @@ export const PathEditor: React.FC<{
                                        y={controlPointEndCoords.top}
                                        width="10"
                                        height="10"
-                                       className="pointer-events-auto z-[60] fill-white  -translate-x-[5px] -translate-y-[5px]"
+                                       className="pointer-events-auto z-[60] fill-white dark:fill-neutral-700  -translate-x-[5px] -translate-y-[5px]"
                                     />
                                  </svg>
                               </>

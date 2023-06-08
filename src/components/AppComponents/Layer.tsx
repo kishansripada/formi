@@ -81,7 +81,11 @@ export const Layer: React.FC<{
 
    return (
       <>
-         <div className=" flex flex-row  items-center w-full bg-[#fafafa] " id="outside" onClick={clickOutsideFormations}>
+         <div
+            className=" flex flex-row  items-center w-full bg-neutral-100 dark:bg-neutral-800 border-y border-neutral-300 dark:border-neutral-600 py-1 "
+            id="outside"
+            onClick={clickOutsideFormations}
+         >
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                <SortableContext items={formations} strategy={horizontalListSortingStrategy}>
                   {formations.map((formation, index) => (

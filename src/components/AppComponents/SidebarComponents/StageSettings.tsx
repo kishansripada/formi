@@ -140,9 +140,9 @@ export const StageSettings: React.FC<{
    return (
       <>
          <Toaster></Toaster>
-         <div className=" w-[260px]  min-w-[260px] hidden lg:block bg-white h-full   overflow-y-scroll focus:outline-none">
+         <div className=" w-[260px]  min-w-[260px] hidden lg:block bg-white dark:bg-neutral-800 dark:text-white h-full   overflow-y-scroll focus:outline-none">
             <div className="p-4">
-               <p className="text-neutral-800 font-medium text-sm">Width</p>
+               <p className="text-neutral-800 font-medium text-sm dark:text-neutral-200">Width</p>
                <div className=" flex flex-row w-min items-center border border-neutral-200  ">
                   <button className="p-2  hover:bg-neutral-100 transition duration-300" onClick={() => changeWidth(-2)}>
                      <svg
@@ -157,7 +157,7 @@ export const StageSettings: React.FC<{
                      </svg>
                   </button>
 
-                  <p className=" px-4 border-x border-neutral-200 h-full text-neutral-700">{stageDimensions.width}</p>
+                  <p className=" px-4 border-x border-neutral-200 h-full text-neutral-700 dark:text-neutral-200 ">{stageDimensions.width}</p>
 
                   <button className="p-2  hover:bg-neutral-100 transition duration-300" onClick={() => changeWidth(2)}>
                      <svg
@@ -173,7 +173,7 @@ export const StageSettings: React.FC<{
                   </button>
                </div>
 
-               <p className="text-neutral-800 font-medium text-sm mt-6">Height</p>
+               <p className="text-neutral-800 dark:text-neutral-200 font-medium text-sm mt-6">Height</p>
                <div className=" flex flex-row w-min items-center border border-neutral-200  ">
                   <button className="p-2  hover:bg-neutral-100 transition duration-300" onClick={() => changeHeight(-2)}>
                      <svg
@@ -188,7 +188,7 @@ export const StageSettings: React.FC<{
                      </svg>
                   </button>
 
-                  <p className=" px-4 border-x border-neutral-200 h-full text-neutral-700">{stageDimensions.height}</p>
+                  <p className=" px-4 border-x border-neutral-200 h-full text-neutral-700 dark:text-neutral-200">{stageDimensions.height}</p>
 
                   <button className="p-2  hover:bg-neutral-100 transition duration-300" onClick={() => changeHeight(2)}>
                      <svg
@@ -206,7 +206,7 @@ export const StageSettings: React.FC<{
             </div>
             <hr />
             <div className="p-4">
-               <p className="text-neutral-800 font-medium text-sm ">Stage Background</p>
+               <p className="text-neutral-800 dark:text-neutral-200 font-medium text-sm mb-2">Stage Background</p>
                <Dropdown
                   dropDownToggle={dropDownToggle}
                   value={
@@ -231,7 +231,7 @@ export const StageSettings: React.FC<{
             <div className="relative  text-left p-4  ">
                {stageBackground === "grid" ? (
                   <>
-                     <p className="text-neutral-800 font-medium text-sm">Grid Subdivisions</p>
+                     <p className="text-neutral-800 font-medium text-sm dark:text-neutral-200 mb-3">Grid Subdivisions</p>
                      <div className=" flex flex-row w-min items-center border border-neutral-200  ">
                         <button
                            className="p-2  hover:bg-neutral-100 transition duration-300"
@@ -258,7 +258,9 @@ export const StageSettings: React.FC<{
                            </svg>
                         </button>
 
-                        <p className=" px-4 border-x border-neutral-200 h-full text-neutral-700">{cloudSettings.gridSubdivisions}</p>
+                        <p className=" px-4 border-x border-neutral-200 h-full text-neutral-700 dark:text-neutral-200">
+                           {cloudSettings.gridSubdivisions}
+                        </p>
 
                         <button
                            className="p-2  hover:bg-neutral-100 transition duration-300"

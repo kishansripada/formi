@@ -494,7 +494,7 @@ export const Canvas: React.FC<{
 
    return (
       <div
-         className="flex flex-row relative justify-center bg-neutral-100  dark:bg-black  h-full  w-full overflow-hidden  overscroll-contain items-center  "
+         className="flex flex-row relative justify-center bg-neutral-100  dark:bg-neutral-900  h-full  w-full overflow-hidden  overscroll-contain items-center  "
          id="stage"
          ref={container}
          onPointerUp={pointerUp}
@@ -504,7 +504,7 @@ export const Canvas: React.FC<{
             onPointerDown={pointerDown}
             onPointerMove={handleDragMove}
             ref={stage}
-            className="relative  border-2 border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 box-content "
+            className="relative  border-2 dark:border-pink-600 border-pink-300 rounded-xl bg-white dark:bg-neutral-800 box-content "
             // border-pink-600 border-4 box-border
             style={{
                // boxShadow: "inset 0px 0px 0px 4px #db2777",
@@ -527,7 +527,7 @@ export const Canvas: React.FC<{
 
             {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y ? (
                <div
-                  className="absolute bg-blue-200/50 z-10 cursor-default "
+                  className="absolute bg-pink-200/50 z-10 cursor-default "
                   style={{
                      width: Math.abs(dragBoxCoords.end.x - dragBoxCoords.start.x),
                      height: Math.abs(dragBoxCoords.end.y - dragBoxCoords.start.y),
@@ -559,12 +559,12 @@ export const Canvas: React.FC<{
 
             {!isPlaying && !localSettings.stageFlipped && (
                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
-                  <p className="text-center text-3xl font-extrabold opacity-30 tracking-widest">AUDIENCE</p>
+                  <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">AUDIENCE</p>
                </div>
             )}
             {!isPlaying && localSettings.stageFlipped && (
                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10">
-                  <p className="text-center text-3xl font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
+                  <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
                </div>
             )}
          </div>
