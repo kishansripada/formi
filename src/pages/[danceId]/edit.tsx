@@ -1,4 +1,6 @@
 import { detectCollisions } from "../../types/collisionDetector";
+import { Video } from "../../components/AppComponents/Video";
+import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core";
 import dynamic from "next/dynamic";
 import { useState, useEffect, useRef, useCallback, lazy } from "react";
 import Head from "next/head";
@@ -146,7 +148,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [channelGlobal, setChannelGlobal] = useState<RealtimeChannel>();
 
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
-
+   const [videoPosition, setVideoPosition] = useState<"top-left" | "top-right" | "bottom-left" | "bottom-right">("top-right");
    const coordsToPosition = (coords: { x: number; y: number }) => {
       if (!coords) return null;
       let { x, y } = coords;
@@ -701,6 +703,14 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       ? detectCollisions(localSettings.stageFlipped ? flippedFormations : formations, selectedFormation, localSettings.collisionRadius)
       : [];
 
+   function handleDragEnd(event) {
+      const { active, over } = event;
+
+      if (over && active.data.current.supports.includes(over.data.current.type)) {
+         setVideoPosition(over.id);
+      }
+   }
+
    return (
       <>
          <Toaster></Toaster>
@@ -921,209 +931,227 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                      </div>
                   </>
                ) : null}
+               <DndContext onDragEnd={handleDragEnd}>
+                  <div className={`flex flex-row min-w-0 flex-grow items-center bg-neutral-100 dark:bg-neutral-900 relative `}>
+                     {/* <div
+                        className="absolute z-50 top-0 right-0 w-[700px] h-32  rounded-xl pointer-events-auto shadow-md bg-pink-600 "
+                        ref={setNodeRef}
+                        {...listeners}
+                        {...attributes}
+                        style={{
+                           // width: localSource?.startsWith("data:video") || isVideo(soundCloudTrackId) ? 300 : 0,
+                           ...style,
+                        }}
+                     ></div> */}
+                     <Video
+                        videoPlayer={videoPlayer}
+                        soundCloudTrackId={soundCloudTrackId}
+                        localSource={localSource}
+                        videoPosition={videoPosition}
+                     ></Video>
 
-               <div className={`flex flex-row min-w-0 flex-grow items-center bg-neutral-100 dark:bg-neutral-900 `}>
-                  <video
-                     ref={videoPlayer}
-                     style={{
-                        height: localSource?.startsWith("data:video") || isVideo(soundCloudTrackId) ? "95%" : 0,
-                     }}
-                     // className="my-3"
-                     src={localSource || soundCloudTrackId}
-                  ></video>
+                     <TopLeft></TopLeft>
+                     <TopRight></TopRight>
+                     <BottomLeft></BottomLeft>
+                     <BottomRight></BottomRight>
+                     {/* <div className="w-1/2 h-1/2 top-0 left-0 bg-blue-200 absolute z-10 opacity-40 pointer-events-none" ref={topLeft}></div>
+                     <div className="w-1/2 h-1/2 top-0 right-0 bg-blue-200 absolute z-10 opacity-40 pointer-events-none" ref={topRight}></div>
+                     <div className="w-1/2 h-1/2 bottom-0 left-0 bg-blue-200 absolute z-10 opacity-40 pointer-events-none" ref={bottomLeft}></div>
+                     <div className="w-1/2 h-1/2 bottom-0 right-0 bg-blue-200 absolute z-10 opacity-40 pointer-events-none" ref={bottomRight}></div> */}
 
-                  {/* {localSettings.viewingTwo && localSettings.stageFlipped ? (
+                     {/* {localSettings.viewingTwo && localSettings.stageFlipped ? (
                      <p className="text-neutral-600 font-semibold text-sm mt-2">AUDIENCE</p>
                   ) : null} */}
-                  {localSettings.viewingThree ? (
-                     <ThreeD
-                        setIsThreeDancerDragging={setIsThreeDancerDragging}
-                        isThreeDancerDragging={isThreeDancerDragging}
-                        isPlaying={isPlaying}
-                        currentFormationIndex={currentFormationIndex}
-                        percentThroughTransition={percentThroughTransition}
-                        dancers={dancers}
-                        position={position}
-                        shiftHeld={shiftHeld}
-                        setShiftHeld={setShiftHeld}
-                        stageFlipped={localSettings.stageFlipped}
-                        soundCloudTrackId={soundCloudTrackId}
-                        zoom={zoom}
-                        setZoom={setZoom}
-                        isCommenting={isCommenting}
-                        setIsCommenting={setIsCommenting}
-                        localSettings={localSettings}
-                        pushChange={pushChange}
-                        undo={undo}
-                        addToStack={addToStack}
-                        player={player}
-                        draggingDancerId={draggingDancerId}
-                        setDraggingDancerId={setDraggingDancerId}
-                        songDuration={songDuration}
-                        viewOnly={viewOnly}
-                        setSelectedFormation={setSelectedFormation}
-                        formations={formations}
-                        selectedFormation={selectedFormation}
-                        setFormations={setFormations}
-                        selectedDancers={selectedDancers}
-                        setSelectedDancers={setSelectedDancers}
-                        setIsPlaying={setIsPlaying}
-                        setPixelsPerSecond={setPixelsPerSecond}
-                        cloudSettings={cloudSettings}
-                        coordsToPosition={coordsToPosition}
-                        currentFormationIndex={currentFormationIndex}
-                        percentThroughTransition={percentThroughTransition}
-                     ></ThreeD>
-                  ) : null}
+                     {localSettings.viewingThree ? (
+                        <ThreeD
+                           setIsThreeDancerDragging={setIsThreeDancerDragging}
+                           isThreeDancerDragging={isThreeDancerDragging}
+                           isPlaying={isPlaying}
+                           currentFormationIndex={currentFormationIndex}
+                           percentThroughTransition={percentThroughTransition}
+                           dancers={dancers}
+                           position={position}
+                           shiftHeld={shiftHeld}
+                           setShiftHeld={setShiftHeld}
+                           stageFlipped={localSettings.stageFlipped}
+                           soundCloudTrackId={soundCloudTrackId}
+                           zoom={zoom}
+                           setZoom={setZoom}
+                           isCommenting={isCommenting}
+                           setIsCommenting={setIsCommenting}
+                           localSettings={localSettings}
+                           pushChange={pushChange}
+                           undo={undo}
+                           addToStack={addToStack}
+                           player={player}
+                           draggingDancerId={draggingDancerId}
+                           setDraggingDancerId={setDraggingDancerId}
+                           songDuration={songDuration}
+                           viewOnly={viewOnly}
+                           setSelectedFormation={setSelectedFormation}
+                           formations={formations}
+                           selectedFormation={selectedFormation}
+                           setFormations={setFormations}
+                           selectedDancers={selectedDancers}
+                           setSelectedDancers={setSelectedDancers}
+                           setIsPlaying={setIsPlaying}
+                           setPixelsPerSecond={setPixelsPerSecond}
+                           cloudSettings={cloudSettings}
+                           coordsToPosition={coordsToPosition}
+                           currentFormationIndex={currentFormationIndex}
+                           percentThroughTransition={percentThroughTransition}
+                        ></ThreeD>
+                     ) : null}
 
-                  {localSettings.viewingTwo ? (
-                     <Canvas
-                        isPlaying={isPlaying}
-                        shiftHeld={shiftHeld}
-                        setShiftHeld={setShiftHeld}
-                        stageFlipped={localSettings.stageFlipped}
-                        soundCloudTrackId={soundCloudTrackId}
-                        zoom={zoom}
-                        setZoom={setZoom}
-                        isCommenting={isCommenting}
-                        setIsCommenting={setIsCommenting}
-                        localSettings={localSettings}
-                        pushChange={pushChange}
-                        undo={undo}
-                        addToStack={addToStack}
-                        player={player}
-                        draggingDancerId={draggingDancerId}
-                        setDraggingDancerId={setDraggingDancerId}
-                        songDuration={songDuration}
-                        viewOnly={viewOnly}
-                        setSelectedFormation={setSelectedFormation}
-                        formations={formations}
-                        selectedFormation={selectedFormation}
-                        setFormations={setFormations}
-                        selectedDancers={selectedDancers}
-                        setSelectedDancers={setSelectedDancers}
-                        setIsPlaying={setIsPlaying}
-                        setPixelsPerSecond={setPixelsPerSecond}
-                        cloudSettings={cloudSettings}
-                        coordsToPosition={coordsToPosition}
-                        currentFormationIndex={currentFormationIndex}
-                        percentThroughTransition={percentThroughTransition}
-                        dancers={dancers}
-                     >
-                        {selectedFormation !== null ? (
-                           <PathEditor
-                              collisions={collisions}
-                              dancers={dancers}
-                              currentFormationIndex={currentFormationIndex}
-                              formations={localSettings.stageFlipped ? flippedFormations : formations}
-                              selectedFormation={selectedFormation}
-                              selectedDancers={selectedDancers}
-                              localSettings={localSettings}
-                              isPlaying={isPlaying}
-                              coordsToPosition={coordsToPosition}
-                           />
-                        ) : (
-                           <></>
-                        )}
+                     {localSettings.viewingTwo ? (
+                        <Canvas
+                           isPlaying={isPlaying}
+                           shiftHeld={shiftHeld}
+                           setShiftHeld={setShiftHeld}
+                           stageFlipped={localSettings.stageFlipped}
+                           soundCloudTrackId={soundCloudTrackId}
+                           zoom={zoom}
+                           setZoom={setZoom}
+                           isCommenting={isCommenting}
+                           setIsCommenting={setIsCommenting}
+                           localSettings={localSettings}
+                           pushChange={pushChange}
+                           undo={undo}
+                           addToStack={addToStack}
+                           player={player}
+                           draggingDancerId={draggingDancerId}
+                           setDraggingDancerId={setDraggingDancerId}
+                           songDuration={songDuration}
+                           viewOnly={viewOnly}
+                           setSelectedFormation={setSelectedFormation}
+                           formations={formations}
+                           selectedFormation={selectedFormation}
+                           setFormations={setFormations}
+                           selectedDancers={selectedDancers}
+                           setSelectedDancers={setSelectedDancers}
+                           setIsPlaying={setIsPlaying}
+                           setPixelsPerSecond={setPixelsPerSecond}
+                           cloudSettings={cloudSettings}
+                           coordsToPosition={coordsToPosition}
+                           currentFormationIndex={currentFormationIndex}
+                           percentThroughTransition={percentThroughTransition}
+                           dancers={dancers}
+                        >
+                           {selectedFormation !== null ? (
+                              <PathEditor
+                                 collisions={collisions}
+                                 dancers={dancers}
+                                 currentFormationIndex={currentFormationIndex}
+                                 formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                 selectedFormation={selectedFormation}
+                                 selectedDancers={selectedDancers}
+                                 localSettings={localSettings}
+                                 isPlaying={isPlaying}
+                                 coordsToPosition={coordsToPosition}
+                              />
+                           ) : (
+                              <></>
+                           )}
 
-                        {dancers.map((dancer, index) => (
-                           <DancerAlias
-                              zoom={zoom}
-                              setZoom={setZoom}
-                              cloudSettings={cloudSettings}
-                              coordsToPosition={coordsToPosition}
-                              selectedDancers={selectedDancers}
-                              isPlaying={isPlaying}
-                              position={position}
-                              selectedFormation={selectedFormation}
-                              setDancers={setDancers}
-                              key={dancer.id}
-                              dancer={dancer}
-                              formations={localSettings.stageFlipped ? flippedFormations : formations}
-                              setFormations={setFormations}
-                              draggingDancerId={draggingDancerId}
-                              userPositions={userPositions}
-                              onlineUsers={onlineUsers}
-                              currentFormationIndex={currentFormationIndex}
-                              percentThroughTransition={percentThroughTransition}
-                              localSettings={localSettings}
-                              index={index}
-                              isPlaying={isPlaying}
-                              collisions={collisions}
-                              isChangingCollisionRadius={isChangingCollisionRadius}
-                           />
-                        ))}
+                           {dancers.map((dancer, index) => (
+                              <DancerAlias
+                                 zoom={zoom}
+                                 setZoom={setZoom}
+                                 cloudSettings={cloudSettings}
+                                 coordsToPosition={coordsToPosition}
+                                 selectedDancers={selectedDancers}
+                                 isPlaying={isPlaying}
+                                 position={position}
+                                 selectedFormation={selectedFormation}
+                                 setDancers={setDancers}
+                                 key={dancer.id}
+                                 dancer={dancer}
+                                 formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                 setFormations={setFormations}
+                                 draggingDancerId={draggingDancerId}
+                                 userPositions={userPositions}
+                                 onlineUsers={onlineUsers}
+                                 currentFormationIndex={currentFormationIndex}
+                                 percentThroughTransition={percentThroughTransition}
+                                 localSettings={localSettings}
+                                 index={index}
+                                 isPlaying={isPlaying}
+                                 collisions={collisions}
+                                 isChangingCollisionRadius={isChangingCollisionRadius}
+                              />
+                           ))}
 
-                        {localSettings.viewCollisions && selectedFormation !== null
-                           ? collisions.map((collision) => {
-                                return <Collision coordsToPosition={coordsToPosition} collision={collision}></Collision>;
-                             })
-                           : null}
+                           {localSettings.viewCollisions && selectedFormation !== null
+                              ? collisions.map((collision) => {
+                                   return <Collision coordsToPosition={coordsToPosition} collision={collision}></Collision>;
+                                })
+                              : null}
 
-                        {selectedFormation !== null && !isPlaying ? (
-                           <>
-                              {(formations[selectedFormation]?.comments || []).map((comment: comment) => {
-                                 return (
-                                    <>
-                                       <Comment
-                                          zoom={zoom}
-                                          localSettings={localSettings}
-                                          coordsToPosition={coordsToPosition}
-                                          setFormations={setFormations}
-                                          selectedFormation={selectedFormation}
-                                          key={comment.id}
-                                          comment={comment}
-                                          addToStack={addToStack}
-                                          pushChange={pushChange}
-                                       />
-                                    </>
-                                 );
-                              })}
+                           {selectedFormation !== null && !isPlaying ? (
+                              <>
+                                 {(formations[selectedFormation]?.comments || []).map((comment: comment) => {
+                                    return (
+                                       <>
+                                          <Comment
+                                             zoom={zoom}
+                                             localSettings={localSettings}
+                                             coordsToPosition={coordsToPosition}
+                                             setFormations={setFormations}
+                                             selectedFormation={selectedFormation}
+                                             key={comment.id}
+                                             comment={comment}
+                                             addToStack={addToStack}
+                                             pushChange={pushChange}
+                                          />
+                                       </>
+                                    );
+                                 })}
 
-                              {localSettings.previousFormationView !== "none"
-                                 ? dancers.map((dancer, index) => (
-                                      <DancerAliasShadow
-                                         coordsToPosition={coordsToPosition}
-                                         currentFormationIndex={currentFormationIndex}
-                                         isPlaying={isPlaying}
-                                         selectedFormation={selectedFormation}
-                                         key={dancer.id}
-                                         dancer={dancer}
-                                         formations={localSettings.stageFlipped ? flippedFormations : formations}
-                                      />
-                                   ))
-                                 : dancers
-                                      .filter(
-                                         (dancer) =>
-                                            selectedDancers.includes(dancer.id) ||
-                                            (selectedFormation
-                                               ? collisions
-                                                    ?.map((collision) => collision.dancers)
-                                                    .flat(Infinity)
-                                                    .includes(dancer.id)
-                                               : false)
-                                      )
-                                      .map((dancer, index) => {
-                                         return (
-                                            <DancerAliasShadow
-                                               coordsToPosition={coordsToPosition}
-                                               currentFormationIndex={currentFormationIndex}
-                                               isPlaying={isPlaying}
-                                               selectedFormation={selectedFormation}
-                                               key={dancer.id}
-                                               dancer={dancer}
-                                               formations={localSettings.stageFlipped ? flippedFormations : formations}
-                                            />
-                                         );
-                                      })}
-                           </>
-                        ) : null}
-                     </Canvas>
-                  ) : null}
-                  {/* {localSettings.viewingTwo && !localSettings.stageFlipped ? (
+                                 {localSettings.previousFormationView !== "none"
+                                    ? dancers.map((dancer, index) => (
+                                         <DancerAliasShadow
+                                            coordsToPosition={coordsToPosition}
+                                            currentFormationIndex={currentFormationIndex}
+                                            isPlaying={isPlaying}
+                                            selectedFormation={selectedFormation}
+                                            key={dancer.id}
+                                            dancer={dancer}
+                                            formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                         />
+                                      ))
+                                    : dancers
+                                         .filter(
+                                            (dancer) =>
+                                               selectedDancers.includes(dancer.id) ||
+                                               (selectedFormation
+                                                  ? collisions
+                                                       ?.map((collision) => collision.dancers)
+                                                       .flat(Infinity)
+                                                       .includes(dancer.id)
+                                                  : false)
+                                         )
+                                         .map((dancer, index) => {
+                                            return (
+                                               <DancerAliasShadow
+                                                  coordsToPosition={coordsToPosition}
+                                                  currentFormationIndex={currentFormationIndex}
+                                                  isPlaying={isPlaying}
+                                                  selectedFormation={selectedFormation}
+                                                  key={dancer.id}
+                                                  dancer={dancer}
+                                                  formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                               />
+                                            );
+                                         })}
+                              </>
+                           ) : null}
+                        </Canvas>
+                     ) : null}
+                     {/* {localSettings.viewingTwo && !localSettings.stageFlipped ? (
                      <p className="text-neutral-600 font-semibold text-sm mb-1">AUDIENCE</p>
                   ) : null} */}
-               </div>
+                  </div>
+               </DndContext>
             </div>
 
             <div className=" overscroll-contain bg-black">
@@ -1330,21 +1358,46 @@ export const getServerSideProps = async (ctx) => {
    // }
 };
 
-function isVideo(filename: string) {
-   if (!filename) return false;
-   var ext = getExtension(filename);
-   switch (ext.toLowerCase()) {
-      case "m4v":
-      case "avi":
-      case "mpg":
-      case "mp4":
-         // etc
-         return true;
-   }
-   return false;
+function TopLeft() {
+   const { setNodeRef } = useDroppable({
+      id: "top-left",
+      data: {
+         type: "vid-container",
+      },
+   });
+
+   return <div className="w-1/2 h-1/2 top-0 left-0  absolute z-10 opacity-40 pointer-events-none" ref={setNodeRef}></div>;
 }
 
-function getExtension(filename: string) {
-   var parts = filename.split(".");
-   return parts[parts.length - 1];
+function TopRight() {
+   const { setNodeRef } = useDroppable({
+      id: "top-right",
+      data: {
+         type: "vid-container",
+      },
+   });
+
+   return <div className="w-1/2 h-1/2 top-0 right-0  absolute z-10 opacity-40 pointer-events-none" ref={setNodeRef}></div>;
+}
+
+function BottomLeft() {
+   const { setNodeRef } = useDroppable({
+      id: "bottom-left",
+      data: {
+         type: "vid-container",
+      },
+   });
+
+   return <div className="w-1/2 h-1/2 bottom-0 left-0  absolute z-10 opacity-40 pointer-events-none" ref={setNodeRef}></div>;
+}
+
+function BottomRight() {
+   const { setNodeRef } = useDroppable({
+      id: "bottom-right",
+      data: {
+         type: "vid-container",
+      },
+   });
+
+   return <div className="w-1/2 h-1/2 bottom-0 right-0  absolute z-10 opacity-40 pointer-events-none" ref={setNodeRef}></div>;
 }
