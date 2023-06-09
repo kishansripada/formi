@@ -159,6 +159,7 @@ export const EventHandler: React.FC<{
                return formation;
             });
          });
+         pushChange();
       }
       if (e.key === "a") {
          e.preventDefault();
