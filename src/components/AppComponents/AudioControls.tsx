@@ -66,6 +66,12 @@ export const AudioControls: React.FC<{
                                        ...formations[formations.length - 1],
                                        id,
                                        name: `Untitled ${formations.length + 1}`,
+                                       positions: formations[formations.length - 1]?.positions.map((dancer: dancerPosition) => {
+                                          return {
+                                             ...dancer,
+                                             transitionType: "linear",
+                                          };
+                                       }),
                                     },
                                  ];
                               });
