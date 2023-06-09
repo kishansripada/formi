@@ -445,14 +445,46 @@ export const CurrentFormation: React.FC<{
                                  if (selectedFormation === null) return;
 
                                  if (formations.length === 1) {
-                                    toast.error("you must have at least one formation");
+                                    toast.error("You must have at least one formation");
                                     return;
                                  }
-                                 // addToStack();
+
+                                 setFormations((formations: formation[]) => {
+                                    if (selectedFormation === formations.length - 1) {
+                                       return formations;
+                                    }
+                                    if (selectedFormation === 0) {
+                                       return formations.map((formation, index) => {
+                                          if (index === 1) {
+                                             return {
+                                                ...formation,
+                                                durationSeconds:
+                                                   formation.transition.durationSeconds + formation.durationSeconds + formations[0].durationSeconds,
+                                             };
+                                          }
+                                          return formation;
+                                       });
+                                    } else {
+                                       return formations.map((formation, index) => {
+                                          if (index === selectedFormation - 1) {
+                                             return {
+                                                ...formation,
+                                                durationSeconds:
+                                                   formation.durationSeconds +
+                                                   formations[selectedFormation]?.transition.durationSeconds +
+                                                   formations[selectedFormation].durationSeconds,
+                                             };
+                                          }
+                                          return formation;
+                                       });
+                                    }
+                                 });
+
                                  if (selectedFormation === formations.length - 1) {
                                     setSelectedFormation(selectedFormation - 1);
                                  }
 
+                                 // remove the formation
                                  setFormations((formations: formation[]) => {
                                     return formations.filter((formation, index) => {
                                        return index !== selectedFormation;
