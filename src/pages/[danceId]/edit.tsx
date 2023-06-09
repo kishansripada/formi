@@ -1156,6 +1156,8 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
             <div className=" overscroll-contain bg-black">
                <AudioControls
+                  localSettings={localSettings}
+                  setLocalSettings={setLocalSettings}
                   setPlaybackRate={setPlaybackRate}
                   addToStack={addToStack}
                   pushChange={pushChange}

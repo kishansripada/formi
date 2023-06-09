@@ -26,11 +26,11 @@ export const Settings: React.FC<{
       });
    };
 
-   const setAutoScroll = (val: boolean) => {
-      setLocalSettings((settings: localSettings) => {
-         return { ...settings, autoScroll: val };
-      });
-   };
+   // const setAutoScroll = (val: boolean) => {
+   //    setLocalSettings((settings: localSettings) => {
+   //       return { ...settings, autoScroll: val };
+   //    });
+   // };
    return (
       <>
          <Toaster></Toaster>
@@ -69,13 +69,13 @@ export const Settings: React.FC<{
                options={["Initials", "Numbered", "Solid"]}
             ></Dropdown>
 
-            <p className="  pl-3 font-medium mb-1 text-sm mt-4">Auto Scroll</p>
+            {/* <p className="  pl-3 font-medium mb-1 text-sm mt-4">Auto Scroll</p>
             <Dropdown
                dropDownToggle={dropDownToggle}
                value={localSettings.autoScroll ? "On" : "Off"}
                actions={[() => setAutoScroll(true), () => setAutoScroll(false)]}
                options={["On", "Off"]}
-            ></Dropdown>
+            ></Dropdown> */}
 
             {/* <hr className="my-2" /> */}
          </div>
