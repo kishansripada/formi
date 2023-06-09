@@ -98,7 +98,7 @@ export const ChooseAudioSource: React.FC<{
                      className="text-sm w-30 font-normal relative cursor-pointer"
                   >
                      <input
-                        accept="audio/mp4,audio/mpeg,.aac,.wav,.m4a,audio/*"
+                        accept="audio/mp3, audio/wav, video/mp4, video/avi"
                         type="file"
                         autoComplete="off"
                         tabIndex={-1}
