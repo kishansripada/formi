@@ -25,7 +25,7 @@ export function Video({ videoPosition, videoPlayer, localSource, soundCloudTrack
 
    return (
       <div
-         className={`absolute ${classList} z-50   pointer-events-auto shadow-md  `}
+         className={`absolute ${classList} z-50 lg:block hidden pointer-events-auto shadow-md  `}
          ref={setNodeRef}
          {...listeners}
          {...attributes}
@@ -34,7 +34,12 @@ export function Video({ videoPosition, videoPlayer, localSource, soundCloudTrack
             ...style,
          }}
       >
-         <video className=" pointer-events-none rounded-xl" ref={videoPlayer} src={localSource || soundCloudTrackId}></video>
+         <video
+            tabIndex={-1}
+            className=" pointer-events-none rounded-xl focus:outline-none focus-visible:outline-none"
+            ref={videoPlayer}
+            src={localSource || soundCloudTrackId}
+         ></video>
       </div>
    );
 }

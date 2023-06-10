@@ -150,7 +150,7 @@ export const Header: React.FC<{
                      id="dropdown-menu"
                   >
                      <p className="font-semibold ml-2 mt-1">Collision Radius</p>
-                     <div className="flex flex-row items-center border border-neutral-200 mt-auto m-1">
+                     <div className="flex flex-row items-center  border border-neutral-200 mt-auto m-1">
                         <input
                            value={localSettings.collisionRadius}
                            type="number"
@@ -193,7 +193,7 @@ export const Header: React.FC<{
                         return { ...localSettings, fullScreen: !localSettings.fullScreen };
                      });
                   }}
-                  className=" min-w-[48px] grid place-items-center h-full    cursor-pointer "
+                  className=" min-w-[48px] lg:grid place-items-center h-full hidden   cursor-pointer "
                >
                   {localSettings.fullScreen ? (
                      <svg className="w-6 h-6 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
@@ -209,7 +209,9 @@ export const Header: React.FC<{
                {!viewOnlyInitial ? (
                   <button
                      title="Comment on stage"
-                     className={`min-w-[48px]   h-full grid place-items-center ${isCommenting ? "dark:bg-pink-600 bg-pink-300" : "bg-transparent"}`}
+                     className={`min-w-[48px]  hidden lg:grid h-full  place-items-center ${
+                        isCommenting ? "dark:bg-pink-600 bg-pink-300" : "bg-transparent"
+                     }`}
                      onClick={() => {
                         setIsCommenting((isCommenting: boolean) => {
                            if (!isCommenting && !localSettings.viewingTwo) {
@@ -237,7 +239,7 @@ export const Header: React.FC<{
                      </svg>
                   </button>
                ) : null}
-               <div className="min-w-[48px] grid place-items-center h-full    cursor-pointer">
+               <div className="min-w-[48px] lg:grid place-items-center h-full  hidden  cursor-pointer">
                   <DarkModeSwitch
                      style={{ width: 25, height: 25, fill: "white" }}
                      sunColor={"black"}
@@ -349,7 +351,7 @@ export const Header: React.FC<{
                   e.target.select();
                }}
                placeholder={"Performance name"}
-               className={`h-6 text-center  px-3 py-4 w-[20%]  mx-auto text-sm bg-transparent rounded-md     outline-none  ${
+               className={`h-6 text-center  px-3 py-4 w-[20%]  mx-auto text-sm hidden bg-transparent rounded-md  lg:block   outline-none  ${
                   viewOnly ? "pointer-events-none" : ""
                } `}
             />
