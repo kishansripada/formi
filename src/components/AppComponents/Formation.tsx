@@ -67,7 +67,11 @@ export const Formation: React.FC<{
          >
             <div
                style={{
-                  backgroundColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#d4d4d4",
+                  backgroundColor: colorsOnThisFormation.length
+                     ? averageHex(colorsOnThisFormation)
+                     : localSettings.isDarkMode
+                     ? "#a3a3a3"
+                     : "#d4d4d4",
                }}
                className="h-[9px] w-full flex flex-col  border-x-[0.5px] border-neutral-400 justify-center items-center  "
             >
@@ -75,13 +79,13 @@ export const Formation: React.FC<{
                <div className="h-[1px] rounded-full bg-neutral-800 w-[12px] mt-[1px]"></div>
             </div>
             <div
-               className={`    cursor-pointer  bg-white dark:bg-neutral-800  dark:text-white border-b-[4px]    border-neutral-400  border-x-[1px]  relative group  `}
+               className={`    cursor-pointer  bg-white dark:bg-neutral-800  dark:text-white border-b-[4px]     border-neutral-400  border-x-[1px]  relative group  `}
                style={{
                   width: myWidth,
                   // borderTopColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#404040",
                   borderBottomColor:
                      formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color ||
-                     (colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#d4d4d4"),
+                     (colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : localSettings.isDarkMode ? "#a3a3a3" : "#d4d4d4"),
                   // borderBottomColor: "#18191B",
                   // borderRightColor: "#db2777",
                   // borderLeftColor: "#db2777",

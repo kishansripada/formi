@@ -23,6 +23,8 @@ export const AudioControls: React.FC<{
    setPlaybackRate: Function;
    localSettings: localSettings;
    setLocalSettings: Function;
+   isChangingZoom: boolean;
+   setIsChangingZoom: Function;
 }> = ({
    soundCloudTrackId,
    setSelectedFormation,
@@ -43,14 +45,37 @@ export const AudioControls: React.FC<{
    setPlaybackRate,
    localSettings,
    setLocalSettings,
+   isChangingZoom,
+   setIsChangingZoom,
 }) => {
-   const [isChangingZoom, setIsChangingZoom] = useState(false);
    const [playbackRateIndex, setPlaybackRateIndex] = useState(2);
    const playbackRates = [0.25, 0.5, 1, 1.5, 2];
 
    let MAX_PIXELS_PER_SECOND = 45;
    let minPixelsPerSecond = songDuration ? ((window.screen.width - 10) * 1000) / songDuration : 10;
    let percentZoom = (pixelsPerSecond - minPixelsPerSecond) / (MAX_PIXELS_PER_SECOND - minPixelsPerSecond);
+
+   useEffect(() => {
+      let animationFrameId;
+
+      const handleMouseMove = (e) => {
+         if (isChangingZoom) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = requestAnimationFrame(() => {
+               let newPixelsPerSecond = pixelsPerSecond + (e.movementX / 96) * (MAX_PIXELS_PER_SECOND - minPixelsPerSecond);
+               if (newPixelsPerSecond > minPixelsPerSecond && newPixelsPerSecond < MAX_PIXELS_PER_SECOND) {
+                  setPixelsPerSecond(newPixelsPerSecond);
+               }
+            });
+         }
+      };
+      window.addEventListener("mousemove", handleMouseMove);
+
+      return () => {
+         cancelAnimationFrame(animationFrameId);
+         window.removeEventListener("mousemove", handleMouseMove);
+      };
+   }, [isChangingZoom, pixelsPerSecond, MAX_PIXELS_PER_SECOND]);
 
    return (
       <>
@@ -263,8 +288,8 @@ export const AudioControls: React.FC<{
                </button>
             </div>
 
-            <div className="w-[45%] pr-10 flex flex-row justify-center items-center ">
-               <p className=" ml-auto lg:mr-auto dark:text-neutral-400 text-neutral-600 ">
+            <div className="w-[45%] pr-10 flex flex-row  items-center ">
+               <p className=" mr-auto  dark:text-neutral-400 text-neutral-600 ">
                   <span>{formatTime(position || 0)}</span>
                </p>
 
@@ -272,7 +297,7 @@ export const AudioControls: React.FC<{
                   onClick={() => {
                      setLocalSettings((s) => ({ ...s, autoScroll: !s.autoScroll }));
                   }}
-                  className={`mr-7 py-1 px-2 rounded-md border focus:outline-none hidden lg:flex flex-row items-center ${
+                  className={`py-1 px-2 rounded-md border focus:outline-none hidden lg:flex flex-row items-center ${
                      localSettings.autoScroll ? "dark:border-pink-600 border-pink-300 " : " border-neutral-200 dark:border-neutral-600"
                   }`}
                >
@@ -292,11 +317,11 @@ export const AudioControls: React.FC<{
                   <p className="text-sm">Auto Scroll</p>
                </button>
                <button
-                  className="hidden lg:block"
+                  className="hidden lg:block ml-7"
                   onClick={() => {
                      setPlaybackRateIndex((i) => i + 1);
                      setPlaybackRate(playbackRates[(playbackRateIndex + 1) % 5]);
-                     console.log(playbackRates[(playbackRateIndex + 1) % 5]);
+                     // console.log(playbackRates[(playbackRateIndex + 1) % 5]);
                      if (player) {
                         player.setPlaybackRate(playbackRates[(playbackRateIndex + 1) % 5]);
                      }
@@ -305,27 +330,15 @@ export const AudioControls: React.FC<{
                   <p>{JSON.stringify(playbackRates[playbackRateIndex % 5])}x</p>
                </button>
 
-               {/* <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6 mr-2 ml-auto lg:block hidden"
-               >
-                  <path
-                     strokeLinecap="round"
-                     strokeLinejoin="round"
-                     d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
-                  />
-               </svg>
-
-               <p className=" font-medium whitespace-nowrap overflow-hidden lg:block hidden ">
-                  {soundCloudTrackId ? soundCloudTrackId?.split("/").slice(-1)[0] : "No Audio Selected"}
-               </p> */}
-
-               {/* <div className="flex flex-row items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+               <div className="flex flex-row items-center ml-7 text-neutral-700 dark:text-neutral-200">
+                  <svg
+                     xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     strokeWidth={1.5}
+                     stroke="currentColor"
+                     className="w-5 h-5 "
+                  >
                      <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -333,35 +346,33 @@ export const AudioControls: React.FC<{
                      />
                   </svg>
 
-                  <div className="w-24 rounded-full h-1 bg-neutral-200 mx-2 relative">
+                  <div className="w-24 rounded-full h-1 dark:bg-neutral-600 bg-neutral-200 mx-2 relative">
                      <div
                         onMouseDown={() => {
                            setIsChangingZoom(true);
                         }}
-                        // onMouseMove={(e) => {
-                        //    if (isChangingZoom) {
-                        //       // console.log(pixelsPerSecond + (e.movementX / 96) * (MAX_PIXELS_PER_SECOND - minPixelsPerSecond));
-                        //       let newPixelsPerSecond = pixelsPerSecond + (e.movementX / 96) * (MAX_PIXELS_PER_SECOND - minPixelsPerSecond);
-                        //       if (newPixelsPerSecond > minPixelsPerSecond && newPixelsPerSecond < MAX_PIXELS_PER_SECOND) {
-                        //          setPixelsPerSecond(newPixelsPerSecond);
-                        //       }
-                        //    }
-                        // }}
                         style={{
                            left: `${Math.round(percentZoom * 100)}%`,
                         }}
-                        className="h-4  w-4 border-[3px] border-pink-600 rounded-full hover:shadow absolute box-border -translate-y-1/2 -translate-x-1/2 bg-white cursor-pointer top-[2px]"
+                        className="h-4  w-4 border-[3px] dark:border-pink-600 border-pink-300 rounded-full hover:shadow absolute box-border -translate-y-1/2 -translate-x-1/2 bg-white dark:bg-black cursor-pointer top-[2px]"
                      ></div>
                   </div>
 
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                  <svg
+                     xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     strokeWidth={1.5}
+                     stroke="currentColor"
+                     className="w-5 h-5 "
+                  >
                      <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6"
                      />
                   </svg>
-               </div> */}
+               </div>
             </div>
          </div>
       </>

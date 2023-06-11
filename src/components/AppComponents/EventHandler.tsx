@@ -35,6 +35,7 @@ export const EventHandler: React.FC<{
    setIsChangingCollisionRadius: Function;
 
    setIsScrollingTimeline: Function;
+   setIsChangingZoom: Function;
 }> = ({
    player,
    children,
@@ -68,6 +69,7 @@ export const EventHandler: React.FC<{
    dancers,
    setIsChangingCollisionRadius,
    setIsScrollingTimeline,
+   setIsChangingZoom,
 }) => {
    const [commandHeld, setCommandHeld] = useState(false);
    const [copiedPositions, setCopiedPositions] = useState([]);
@@ -89,6 +91,7 @@ export const EventHandler: React.FC<{
 
    const pointerUp = (e: PointerEvent) => {
       setIsScrollingTimeline(false);
+      setIsChangingZoom(false);
    };
    const pointerDown = (e: PointerEvent) => {
       if (
@@ -126,7 +129,7 @@ export const EventHandler: React.FC<{
          e.preventDefault();
          setSelectedFormation((i) => (i === 0 ? 0 : i - 1));
       }
-      if (e.key === "Meta") {
+      if (e.key === "Meta" || e.key === "Control") {
          setCommandHeld(true);
       }
       if (e.key === "Shift") {

@@ -85,7 +85,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    // local
    const [localSettings, setLocalSettings] = useLocalStorage<localSettings>("localSettings", {
       gridSnap: 1,
-      previousFormationView: "ghostDancersAndPaths",
+      previousFormationView: "none",
       dancerStyle: "solid",
       viewCollisions: false,
       stageFlipped: false,
@@ -100,7 +100,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    if (localSettings.viewingTwo === undefined || localSettings.isDarkMode === undefined || localSettings.autoScroll === undefined) {
       setLocalSettings({
          gridSnap: 1,
-         previousFormationView: "ghostDancersAndPaths",
+         previousFormationView: "none",
          dancerStyle: "solid",
          viewCollisions: false,
          stageFlipped: false,
@@ -140,7 +140,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [isChangingCollisionRadius, setIsChangingCollisionRadius] = useState(false);
    const [isEditingFormationGroup, setIsEditingFormationGroup] = useState(false);
    const [subscriptionStatus, setSubscriptionStatus] = useState("NOT SUBSCRIBED");
-
+   const [isChangingZoom, setIsChangingZoom] = useState(false);
    const [isThreeDancerDragging, setIsThreeDancerDragging] = useState(false);
 
    const [onlineUsers, setOnlineUsers] = useState({});
@@ -787,6 +787,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                `}
             </style>
             <EventHandler
+               setIsChangingZoom={setIsChangingZoom}
                setIsScrollingTimeline={setIsScrollingTimeline}
                setIsChangingCollisionRadius={setIsChangingCollisionRadius}
                dancers={dancers}
@@ -1156,6 +1157,8 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
             <div className=" overscroll-contain bg-black">
                <AudioControls
+                  setIsChangingZoom={setIsChangingZoom}
+                  isChangingZoom={isChangingZoom}
                   localSettings={localSettings}
                   setLocalSettings={setLocalSettings}
                   setPlaybackRate={setPlaybackRate}
