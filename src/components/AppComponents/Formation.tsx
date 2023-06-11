@@ -167,10 +167,10 @@ export const Formation: React.FC<{
                      >
                         <div className="flex flex-row dark:bg-neutral-800 bg-white pointer-events-none h-[26px] mr-[5px]">
                            <svg className="w-1/2 relative" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
-                              <polygon className="fill-neutral-300" strokeWidth={0} points="0,0 0,20 10,10" />
+                              <polygon className="fill-neutral-300 dark:fill-neutral-500" strokeWidth={0} points="0,0 0,20 10,10" />
                            </svg>
                            <svg className="w-1/2 " width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
-                              <polygon className="fill-neutral-300" strokeWidth={0} points="0,10 10,0 10,20" />
+                              <polygon className="fill-neutral-300 dark:fill-neutral-500" strokeWidth={0} points="0,10 10,0 10,20" />
                            </svg>
                         </div>
                      </div>
