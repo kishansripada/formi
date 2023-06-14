@@ -96,7 +96,7 @@ export const Canvas: React.FC<{
       // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
       // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
       setZoom(Math.min(heightPercentage, widthPercentage));
-   }, [container?.current?.clientHeight, stage?.current?.clientHeight]);
+   }, [container?.current?.clientHeight, stage?.current?.clientHeight, stageDimensions]);
 
    const handleDragMove = (e: any) => {
       if (selectedFormation === null) return;
