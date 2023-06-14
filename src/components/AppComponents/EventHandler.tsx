@@ -144,6 +144,15 @@ export const EventHandler: React.FC<{
 
       if (!commandHeld) return;
 
+      if (e.key === "=") {
+         e.preventDefault();
+         setZoom((zoom: number) => zoom * 1.1);
+      }
+      if (e.key === "-") {
+         e.preventDefault();
+         setZoom((zoom: number) => zoom * 0.9);
+      }
+
       // on paste, filter out all of the dancers that are being pasted before splicing them into the array of positions
       if (e.key === "v" && copiedPositions.length) {
          setFormations((formations: formation[]) => {
