@@ -96,17 +96,17 @@ export const DancerAlias: React.FC<{
                MozUserSelect: "none",
                msUserSelect: "none",
                userSelect: "none",
-
+               // borderRadius: dancer?.shape === "square" ? 0 : "50%",
                // pointerEvents: idSelectingMe ? "none" : "auto",
                // transform: `scale(${(1 / zoom) * 0.66}) translate(-${50 * zoom * (1 / 0.6)}%, -${50 * zoom * (1 / 0.66)}%)`,
                // transformOrigin: "center",
                pointerEvents: isPlaying ? "none" : "auto",
-               backgroundColor:
-                  selectedDancers.includes(dancer.id) && !isPlaying
-                     ? localSettings.isDarkMode
-                        ? "white"
-                        : "#404040"
-                     : hexToRGBA(dancer?.color || "#db2777", 0.5),
+               // backgroundColor:
+               //    selectedDancers.includes(dancer.id) && !isPlaying
+               //       ? localSettings.isDarkMode
+               //          ? "white"
+               //          : "#404040"
+               //       : hexToRGBA(dancer?.color || "#db2777", 0.5),
                transition: !draggingDancerId && !isPlaying ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",
                // width: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
                // height: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
@@ -114,43 +114,109 @@ export const DancerAlias: React.FC<{
             onMouseDown={(e) => e.preventDefault()}
             id={dancer.id}
             data-type={"dancer"}
-            className={`rounded-full w-[35px] h-[35px] select-none hover:w-[38px]   hover:h-[38px] lg:pointer-events-auto pointer-events-none flex  -translate-y-1/2 -translate-x-1/2 flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
+            className={` w-[35px] h-[35px]  group select-none  lg:pointer-events-auto pointer-events-none flex  -translate-y-1/2 -translate-x-1/2 flex-row justify-center items-center absolute z-[30] mr-auto ml-auto cursor-default `}
          >
-            {/* <span className="animate-ping absolute  inline-flex w-[30px] h-[30px] rounded-full bg-sky-400 opacity-75"></span> */}
-
-            {/* {idSelectingMe ? (
-               <div
-                  className="absolute h-4 text-xs text-white w-fit  px-1 bottom-[-14px]"
+            {dancer.shape === "square" ? (
+               <svg
+                  id={dancer.id}
+                  data-type={"dancer"}
+                  className={` w-full h-full select-none  lg:pointer-events-auto pointer-events-none flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
                   style={{
-                     backgroundColor: color,
+                     pointerEvents: isPlaying ? "none" : "auto",
+                  }}
+                  viewBox="0 0 140 140"
+               >
+                  <path
+                     className="group-hover:stroke-[20px]"
+                     id={dancer.id}
+                     data-type={"dancer"}
+                     fill={dancer?.color || "#db2777"}
+                     stroke={
+                        selectedDancers.includes(dancer.id) && !isPlaying
+                           ? localSettings.isDarkMode
+                              ? "white"
+                              : "#404040"
+                           : hexToRGBA(dancer?.color || "#db2777", 0.5)
+                     }
+                     // stroke-width="8"
+                     d="M3.5 3.5h133v133H3.5z"
+                  />
+               </svg>
+            ) : dancer.shape === "triangle" ? (
+               <svg
+                  id={dancer.id}
+                  data-type={"dancer"}
+                  className={` w-full h-full select-none  lg:pointer-events-auto pointer-events-none flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 134 116"
+                  style={{
+                     pointerEvents: isPlaying ? "none" : "auto",
                   }}
                >
-                  <p className="text-center">{name}</p>
-               </div>
-            ) : null} */}
-            {/* 
-            <div
-               className="flex flex-col pointer-events-none"
-               style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  width: 30,
-                  height: 100,
-                  transition: "transform 0.33s ease-in-out",
-                  transform: `translate(-50%, -50%) rotate(${
-                     formations[selectedFormation]?.positions.find((position) => position.id === dancer.id)?.rotation?.angle || 0
-                  }deg)`,
-               }}
-            >
-               <div id={dancer.id} data-type={"rotater"} className="rotate-180 mt-auto opacity-70 pointer-events-auto cursor-pointer">
-                  <svg id={dancer.id} data-type={"rotater"} className=" " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60.7 60.7">
-                     <path id={dancer.id} data-type={"rotater"} d="M30 0 1 30h17v31h25V30h17z" />
-                  </svg>
-               </div>
-            </div> */}
+                  <path
+                     className="group-hover:stroke-[20px]"
+                     id={dancer.id}
+                     data-type={"dancer"}
+                     fill={dancer?.color || "#db2777"}
+                     stroke={
+                        selectedDancers.includes(dancer.id) && !isPlaying
+                           ? localSettings.isDarkMode
+                              ? "white"
+                              : "#404040"
+                           : hexToRGBA(dancer?.color || "#db2777", 0.5)
+                     }
+                     stroke-width="8"
+                     d="M8.9763 110.5L67 10L125.024 110.5H8.9763Z"
+                  />
+               </svg>
+            ) : (
+               <svg
+                  id={dancer.id}
+                  data-type={"dancer"}
+                  className={` w-full h-full select-none  lg:pointer-events-auto pointer-events-none flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 154 154"
+                  style={{
+                     pointerEvents: isPlaying ? "none" : "auto",
+                  }}
+               >
+                  <circle
+                     cx="77"
+                     cy="77"
+                     r="65"
+                     className="group-hover:stroke-[20px]"
+                     id={dancer.id}
+                     data-type={"dancer"}
+                     fill={dancer?.color || "#db2777"}
+                     stroke={
+                        selectedDancers.includes(dancer.id) && !isPlaying
+                           ? localSettings.isDarkMode
+                              ? "white"
+                              : "#404040"
+                           : hexToRGBA(dancer?.color || "#db2777", 0.5)
+                     }
+                     stroke-width="8"
+                  />
+               </svg>
+            )}
 
-            {isChangingCollisionRadius ? (
+            {dancerStyle !== "initials" ? (
+               <p className="absolute -bottom-6 text-center select-none pointer-events-none dark:text-white  rounded-full px-1">
+                  {dancer.name.split(" ")[0]}
+               </p>
+            ) : null}
+            <p className="select-none font-semibold cursor-default  relative  pointer-events-none text-white z-50 ">
+               {dancerStyle === "numbered" ? <>{index + 1}</> : dancerStyle === "initials" ? <> {initials}</> : <></>}
+            </p>
+
+            {/* <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
+               {dancerStyle === "numbered" ? <>{index + 1}</> : dancerStyle === "initials" ? <> {initials}</> : <></>}
+            </p> */}
+            {/* {isChangingCollisionRadius ? (
                <div
                   style={{
                      width: PIXELS_PER_SQUARE * collisionRadius * 2,
@@ -160,36 +226,25 @@ export const DancerAlias: React.FC<{
                ></div>
             ) : null}
 
-            {dancer.instagramUsername ? (
-               <img
-                  referrerPolicy="no-referrer"
-                  id={dancer.id}
-                  data-type={"dancer"}
-                  draggable={false}
-                  className="w-[29px] h-[29px] rounded-full select-none"
-                  src={dancer.instagramUsername}
-                  alt={dancer.name}
-               />
-            ) : (
-               <div
-                  id={dancer.id}
-                  data-type={"dancer"}
-                  style={{
-                     //  dancerStyle === "solid" ? : "white",
-                     backgroundColor: dancer.color || "#db2777",
-                  }}
-                  className={` rounded-full w-[29px] h-[29px] grid place-items-center select-none text-white cursor-default `}
-               >
-                  <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
-                     {dancerStyle === "numbered" ? <>{index + 1}</> : dancerStyle === "initials" ? <> {initials}</> : <></>}
-                  </p>
-               </div>
-            )}
+            <div
+               id={dancer.id}
+               data-type={"dancer"}
+               style={{
+                  backgroundColor: dancer.color || "#db2777",
+                  borderRadius: dancer?.shape === "square" ? 0 : "50%",
+               }}
+               className={` w-[29px] h-[29px] grid place-items-center select-none text-white cursor-default `}
+            >
+               <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
+                  {dancerStyle === "numbered" ? <>{index + 1}</> : dancerStyle === "initials" ? <> {initials}</> : <></>}
+               </p>
+            </div>
+
             {dancerStyle !== "initials" ? (
                <p className="absolute -bottom-6 text-center select-none pointer-events-none dark:text-white  rounded-full px-1">
                   {dancer.name.split(" ")[0]}
                </p>
-            ) : null}
+            ) : null} */}
          </div>
       </>
    );

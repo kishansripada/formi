@@ -4,6 +4,7 @@ export type dancer = {
    instagramUsername?: string | null;
    color?: string | null;
    height: number;
+   shape?: "circle" | "square" | "triangle";
 };
 
 export type dancerPosition = {
