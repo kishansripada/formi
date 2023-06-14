@@ -16,7 +16,7 @@ export const PathEditor: React.FC<{
    // let dancersToRender = previousFormationView === "ghostDancersAndPaths" ? formations?.[selectedFormation - 1]?.positions
    return (
       <>
-         <svg className="absolute pointer-events-none w-full h-full z-10" xmlns="http://www.w3.org/2000/svg">
+         <svg className="absolute pointer-events-none w-full h-full z-40 overflow-visible" xmlns="http://www.w3.org/2000/svg">
             {formations?.[selectedFormation]?.positions
                .filter((position) => {
                   if (previousFormationView === "ghostDancersAndPaths") {
@@ -41,13 +41,6 @@ export const PathEditor: React.FC<{
                   if (!endCoords || !startCoords) return;
 
                   if (dancerPosition.transitionType === "linear" || !dancerPosition.transitionType || dancerPosition.transitionType === "teleport") {
-                     let midpoint = {
-                        left: (startCoords.left + endCoords.left) / 2,
-                        top: (startCoords.top + endCoords.top) / 2,
-                     };
-                     // let rightTail = findPoint(midpoint, lineAngle(startCoords, endCoords) + 140, 20);
-                     // let leftTail = findPoint(midpoint, lineAngle(startCoords, endCoords) - 140, 20);
-                     // either previousFormationView is true or the dancer is selected to show their linear path
                      return (
                         <>
                            <path
@@ -64,23 +57,6 @@ export const PathEditor: React.FC<{
                                  <animate attributeName="stroke-dashoffset" to="0" from="20" dur="1s" repeatCount="indefinite" />
                               )}
                            </path>
-
-                           {/* <path
-                              key={dancerPosition.id + "rightTail"}
-                              d={`M ${midpoint.left} ${midpoint.top} L ${rightTail.left} ${rightTail.top}`}
-                              // className=" stroke-red-700 "
-                              fill="transparent"
-                              stroke={dancer?.color || "#db2777"}
-                              strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
-                           />
-                           <path
-                              key={dancerPosition.id + "leftTail"}
-                              d={`M ${midpoint.left} ${midpoint.top} L ${leftTail.left} ${leftTail.top}`}
-                              // className=" stroke-red-700  "
-                              fill="transparent"
-                              stroke={dancer?.color || "#db2777"}
-                              strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
-                           /> */}
                         </>
                      );
                   }
@@ -92,11 +68,6 @@ export const PathEditor: React.FC<{
                      let controlPointEndCoords = coordsToPosition(controlPointEnd);
 
                      if (!controlPointStartCoords || !controlPointEndCoords) return;
-
-                     let midpoint = cubicBezierMidpoint(startCoords, endCoords, controlPointStartCoords, controlPointEndCoords);
-                     let cubicSlope = cubicBezierSlope(startCoords, controlPointStartCoords, controlPointEndCoords, endCoords, 0.5);
-                     // let rightTail = findPoint(midpoint, cubicSlope + 140, 20);
-                     // let leftTail = findPoint(midpoint, cubicSlope - 140, 20);
 
                      return (
                         <>
@@ -113,20 +84,7 @@ export const PathEditor: React.FC<{
                                  <animate attributeName="stroke-dashoffset" to="0" from="20" dur="1s" repeatCount="indefinite" />
                               )}
                            </path>
-                           {/* <path
-                              key={dancerPosition.id + "rightTail"}
-                              d={`M ${midpoint.left} ${midpoint.top} L ${rightTail.left} ${rightTail.top}`}
-                              fill="transparent"
-                              stroke={dancer?.color || "#db2777"}
-                              strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
-                           />
-                           <path
-                              key={dancerPosition.id + "leftTail"}
-                              d={`M ${midpoint.left} ${midpoint.top} L ${leftTail.left} ${leftTail.top}`}
-                              stroke={dancer?.color || "#db2777"}
-                              fill="transparent"
-                              strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
-                           /> */}
+
                            {selectedDancers[0] === dancerPosition.id ? (
                               <>
                                  <path
@@ -142,7 +100,7 @@ export const PathEditor: React.FC<{
                                     className="z-[60] stroke-black dark:stroke-neutral-100"
                                  />
 
-                                 <svg key={dancerPosition.id + "controlPointStart"} className="rotate-90">
+                                 <svg key={dancerPosition.id + "controlPointStart"} className="rotate-90 z-[40] relative overflow-visible ">
                                     <rect
                                        id={dancerPosition.id}
                                        data-type={"controlPointStart"}
@@ -162,7 +120,7 @@ export const PathEditor: React.FC<{
                                        className="pointer-events-auto z-[60] fill-white dark:fill-neutral-700  -translate-x-[5px] -translate-y-[5px]"
                                     />
                                  </svg>
-                                 <svg key={dancerPosition.id + "controlPointEnd"} className="rotate-90">
+                                 <svg key={dancerPosition.id + "controlPointEnd"} className="rotate-90 z-[40] relative overflow-visible ">
                                     <rect
                                        id={dancerPosition.id}
                                        data-type={"controlPointEnd"}

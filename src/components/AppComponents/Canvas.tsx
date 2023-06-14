@@ -96,7 +96,7 @@ export const Canvas: React.FC<{
       // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
       // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
       setZoom(Math.min(heightPercentage, widthPercentage));
-   }, [container?.current?.clientHeight, stage?.current?.clientHeight, stageDimensions, children]);
+   }, [container?.current?.clientHeight, stage?.current?.clientHeight]);
 
    const handleDragMove = (e: any) => {
       if (selectedFormation === null) return;
@@ -196,9 +196,10 @@ export const Canvas: React.FC<{
 
       if (dragBoxCoords.start.x && dragBoxCoords.start.y) {
          const target = e.currentTarget;
+         const stage = target.querySelector("#stage-cutout");
 
          // Get the bounding rectangle of target
-         const rect = target.getBoundingClientRect();
+         const rect = stage.getBoundingClientRect();
 
          // Mouse position
          const x = e.clientX - rect.left;
@@ -331,6 +332,7 @@ export const Canvas: React.FC<{
          }
          // addToStack();
          const target = e.currentTarget;
+
          // Get the bounding rectangle of target
          const rect = target.getBoundingClientRect();
          // Mouse position
@@ -419,7 +421,7 @@ export const Canvas: React.FC<{
          setSelectedDancers([]);
          // Get the target
          const target = e.currentTarget;
-         // console.log(target);
+
          // Get the bounding rectangle of target
          const rect = target.getBoundingClientRect();
 
@@ -492,6 +494,35 @@ export const Canvas: React.FC<{
       setDraggingDancerId(null);
       setIsDragging(false);
    };
+   useEffect(() => {
+      // This function is called when the wheel event is triggered
+      const handleWheel = (event) => {
+         // Check if the ctrl key is pressed
+
+         if (
+            event.ctrlKey &&
+            event
+               .composedPath()
+               .map((elem) => elem.id)
+               .includes("stage")
+         ) {
+            event.preventDefault();
+            setZoom((zoom) => Math.min(Math.max(0.4, zoom + event.deltaY * -0.01), 4));
+            // event.preventDefault();
+            // Handle zooming or whatever functionality you want here...
+         }
+      };
+
+      // Attach the event listener to the document
+      // The third parameter is an options object where 'passive' is set to true,
+      // meaning the event listener will not call preventDefault
+      document.addEventListener("wheel", handleWheel, { passive: false });
+
+      // Cleanup by removing the event listener when the component unmounts
+      return () => {
+         document.removeEventListener("wheel", handleWheel);
+      };
+   }, []);
 
    return (
       <div
@@ -499,12 +530,23 @@ export const Canvas: React.FC<{
          id="stage"
          ref={container}
          onPointerUp={pointerUp}
+         onPointerMove={handleDragMove}
       >
          <Toaster />
          <div
+            className=" absolute opacity-50 "
+            style={{
+               height: PIXELS_PER_SQUARE * (stageDimensions.height + 10),
+               width: PIXELS_PER_SQUARE * (stageDimensions.width + 30),
+               transform: `scale(${zoom})`,
+            }}
+         >
+            <GridLines cloudSettings={cloudSettings} stageDimensions={{ width: stageDimensions.width + 30, height: stageDimensions.height + 10 }} />
+         </div>
+         <div
             onPointerDown={pointerDown}
-            onPointerMove={handleDragMove}
             ref={stage}
+            id="stage-cutout"
             className="relative  border-2 dark:border-pink-600 border-pink-300 rounded-xl bg-white dark:bg-neutral-800 box-content "
             // border-pink-600 border-4 box-border
             style={{
@@ -525,20 +567,6 @@ export const Canvas: React.FC<{
             }}
          >
             {children}
-
-            {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y ? (
-               <div
-                  className="absolute bg-pink-200/50 z-10 cursor-default "
-                  style={{
-                     width: Math.abs(dragBoxCoords.end.x - dragBoxCoords.start.x),
-                     height: Math.abs(dragBoxCoords.end.y - dragBoxCoords.start.y),
-                     left: dragBoxCoords.end.x - dragBoxCoords.start.x < 0 ? dragBoxCoords.end.x : dragBoxCoords.start.x,
-                     top: dragBoxCoords.end.y - dragBoxCoords.start.y < 0 ? dragBoxCoords.end.y : dragBoxCoords.start.y,
-                  }}
-               ></div>
-            ) : (
-               <></>
-            )}
 
             <div
                style={{
@@ -563,6 +591,19 @@ export const Canvas: React.FC<{
                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10">
                   <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
                </div>
+            )}
+            {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y ? (
+               <div
+                  className="absolute bg-pink-200/50 z-20 cursor-default "
+                  style={{
+                     width: Math.abs(dragBoxCoords.end.x - dragBoxCoords.start.x),
+                     height: Math.abs(dragBoxCoords.end.y - dragBoxCoords.start.y),
+                     left: dragBoxCoords.end.x - dragBoxCoords.start.x < 0 ? dragBoxCoords.end.x : dragBoxCoords.start.x,
+                     top: dragBoxCoords.end.y - dragBoxCoords.start.y < 0 ? dragBoxCoords.end.y : dragBoxCoords.start.y,
+                  }}
+               ></div>
+            ) : (
+               <></>
             )}
          </div>
       </div>

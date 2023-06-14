@@ -145,7 +145,9 @@ export const Formation: React.FC<{
                   </div>
                </div>
 
-               <div className={` h-[17px]  px-1  overflow-hidden text-ellipsis whitespace-nowrap   border-b border-neutral-200`}>
+               <div
+                  className={` h-[17px]  px-1  overflow-hidden text-ellipsis whitespace-nowrap   border-b border-neutral-200 dark:border-neutral-600`}
+               >
                   <p className={`text-[11px] pointer-events-none select-none  font-medium text-ellipsis text-center`}>{formation.name}</p>
                </div>
 
