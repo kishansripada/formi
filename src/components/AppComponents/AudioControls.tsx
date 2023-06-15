@@ -51,7 +51,7 @@ export const AudioControls: React.FC<{
    const [playbackRateIndex, setPlaybackRateIndex] = useState(2);
    const playbackRates = [0.25, 0.5, 1, 1.5, 2];
 
-   let MAX_PIXELS_PER_SECOND = 45;
+   let MAX_PIXELS_PER_SECOND = 55;
    let minPixelsPerSecond = songDuration ? ((window.screen.width - 10) * 1000) / songDuration : 10;
    let percentZoom = (pixelsPerSecond - minPixelsPerSecond) / (MAX_PIXELS_PER_SECOND - minPixelsPerSecond);
 
