@@ -77,37 +77,47 @@ export const AudioControls: React.FC<{
       };
    }, [isChangingZoom, pixelsPerSecond, MAX_PIXELS_PER_SECOND]);
 
+   const newFormation = () => {
+      let id = uuidv4();
+      setFormations((formations: formation[]) => {
+         return [
+            ...formations,
+            {
+               ...formations[formations.length - 1],
+               id,
+               name: `Untitled ${formations.length + 1}`,
+               positions: formations[formations.length - 1]?.positions.map((dancer: dancerPosition) => {
+                  return {
+                     ...dancer,
+                     transitionType: "linear",
+                  };
+               }),
+            },
+         ];
+      });
+      setSelectedFormation(formations.length);
+      pushChange();
+   };
+
+   const playPause = () => {
+      if (player && player.isReady) {
+         player.playPause();
+         setIsPlaying(!isPlaying);
+      } else {
+         setIsPlaying(!isPlaying);
+      }
+   };
+
    return (
       <>
-         <div className="min-h-[50px]  dark:bg-neutral-800 dark:text-neutral-100  bg-neutral-50 w-full border-t dark:border-neutral-700  border-neutral-300 flex flex-row items-center justify-between select-none">
+         <div className="min-h-[45px]  dark:bg-neutral-800 dark:text-neutral-100  bg-neutral-50 w-full border-t dark:border-neutral-700  border-neutral-300 flex flex-row items-center justify-between select-none">
             <div className="w-[45%] flex flex-col items-center justify-center   pl-4">
                {!viewOnly ? (
                   <>
                      <div className="flex flex-row items-center justify-center mr-auto ">
                         <button
-                           onClick={() => {
-                              // addToStack();
-                              let id = uuidv4();
-                              setFormations((formations: formation[]) => {
-                                 return [
-                                    ...formations,
-                                    {
-                                       ...formations[formations.length - 1],
-                                       id,
-                                       name: `Untitled ${formations.length + 1}`,
-                                       positions: formations[formations.length - 1]?.positions.map((dancer: dancerPosition) => {
-                                          return {
-                                             ...dancer,
-                                             transitionType: "linear",
-                                          };
-                                       }),
-                                    },
-                                 ];
-                              });
-                              setSelectedFormation(formations.length);
-                              pushChange();
-                           }}
-                           className=" rounded-md  hidden transition duration-300    hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer  "
+                           onClick={newFormation}
+                           className=" rounded-md  hidden transition duration-300   mr-4  lg:flex  flex-row items-center   cursor-pointer  "
                         >
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -120,89 +130,7 @@ export const AudioControls: React.FC<{
                               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                            </svg>
 
-                           <p className="text-sm">New Formation</p>
-                        </button>
-
-                        <button
-                           onClick={() => {
-                              if (selectedFormation === null) return;
-
-                              setFormations((formations: formation[]) => {
-                                 return [
-                                    ...formations.slice(0, selectedFormation + 1),
-                                    {
-                                       ...formations[selectedFormation],
-                                       id: uuidv4(),
-                                       name: formations[selectedFormation].name + " copy",
-                                    },
-                                    ...formations.slice(selectedFormation + 1),
-                                 ];
-                              });
-                              setSelectedFormation((i: number) => i + 1);
-
-                              pushChange();
-                           }}
-                           className="rounded-md  hidden transition duration-300 mr-auto    hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
-                        >
-                           <svg className="w-5 h-5 mr-1 dark:fill-neutral-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                              <path d="M180 975q-24 0-42-18t-18-42V312h60v603h474v60H180Zm120-120q-24 0-42-18t-18-42V235q0-24 18-42t42-18h440q24 0 42 18t18 42v560q0 24-18 42t-42 18H300Zm0-60h440V235H300v560Zm0 0V235v560Z" />
-                           </svg>
-
-                           <p className="text-sm">Duplicate</p>
-                        </button>
-                        <button
-                           onClick={() => {
-                              if (selectedFormation === null) return;
-
-                              setFormations((formations: formation[]) => {
-                                 return formations.map((formation) => {
-                                    if (formation.id === formations[selectedFormation].id) {
-                                       return {
-                                          ...formation,
-                                          positions: formation.positions.map((position) => {
-                                             return { ...position, position: { x: position.position.x, y: -position.position.y } };
-                                          }),
-                                       };
-                                    }
-                                    return formation;
-                                 });
-                              });
-
-                              pushChange();
-                           }}
-                           className="rounded-md  hidden transition duration-300 mr-auto    hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
-                        >
-                           <svg className="w-5 h-5 mr-1 dark:fill-neutral-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                              <path d="M80 606v-60h800v60H80Zm210-120V386h380v100H290Zm0 280V666h380v100H290Z" />
-                           </svg>
-                           <p className="text-sm">Flip X</p>
-                        </button>
-                        <button
-                           onClick={() => {
-                              if (selectedFormation === null) return;
-
-                              setFormations((formations: formation[]) => {
-                                 return formations.map((formation) => {
-                                    if (formation.id === formations[selectedFormation].id) {
-                                       return {
-                                          ...formation,
-                                          positions: formation.positions.map((position) => {
-                                             return { ...position, position: { x: -position.position.x, y: position.position.y } };
-                                          }),
-                                       };
-                                    }
-                                    return formation;
-                                 });
-                              });
-
-                              pushChange();
-                           }}
-                           className="rounded-md  hidden transition duration-300 mr-auto   hover:bg-neutral-100 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
-                        >
-                           <svg className="w-5 h-5 mr-1 dark:fill-neutral-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                              <path d="M450 976V176h60v800h-60Zm120-210V386h100v380H570Zm-280 0V386h100v380H290Z" />
-                           </svg>
-                           <p className="text-sm">Flip Y</p>
+                           <p className="text-sm">New Formation </p>
                         </button>
                      </div>
                   </>
@@ -229,14 +157,7 @@ export const AudioControls: React.FC<{
                {isPlaying ? (
                   <div
                      className={`hover:bg-neutral-100 dark:hover:bg-neutral-800  transition duration-300 cursor-pointer p-1 rounded-2xl mx-3 select-none`}
-                     onClick={() => {
-                        if (player && player.isReady) {
-                           player.playPause();
-                           setIsPlaying(!isPlaying);
-                        } else {
-                           setIsPlaying(!isPlaying);
-                        }
-                     }}
+                     onClick={playPause}
                   >
                      <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -254,14 +175,7 @@ export const AudioControls: React.FC<{
                ) : (
                   <div
                      className={`hover:bg-neutral-100 dark:hover:bg-neutral-800  transition duration-300 p-1 rounded-2xl mx-3 select-none cursor-pointer `}
-                     onClick={() => {
-                        if (player && player.isReady) {
-                           player.playPause();
-                           setIsPlaying(!isPlaying);
-                        } else {
-                           setIsPlaying(!isPlaying);
-                        }
-                     }}
+                     onClick={playPause}
                   >
                      <svg
                         xmlns="http://www.w3.org/2000/svg"

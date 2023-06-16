@@ -30,9 +30,11 @@ import { StageSettings } from "../../components/AppComponents/SidebarComponents/
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { Collisions } from "../../components/AppComponents/SidebarComponents/Collisions";
 import { grandfatheredEmails } from "../../../public/grandfathered";
+import { Props } from "../../components/AppComponents/SidebarComponents/Props";
 import { Timeline } from "../../components/AppComponents/Timeline";
+import { FormationControls } from "../../components/AppComponents/FormationControls";
+import { Prop } from "../../components/AppComponents/Prop";
 import domToPdf from "dom-to-pdf";
-
 import * as jsonpatch from "fast-json-patch";
 const ThreeD = dynamic(() => import("../../components/AppComponents/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => <p>Loading...</p>,
@@ -81,7 +83,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [formationGroups, setFormationGroups] = useState<formationGroup[]>(initialData.formation_groups);
    const [shiftHeld, setShiftHeld] = useState(false);
    const [playbackRate, setPlaybackRate] = useState(1);
-
+   const [selectedPropIds, setSelectedPropIds] = useState<string[]>([]);
    // local
    const [localSettings, setLocalSettings] = useLocalStorage<localSettings>("localSettings", {
       gridSnap: 1,
@@ -94,7 +96,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       collisionRadius: 0.5,
       fullScreen: false,
       isDarkMode: false,
-      autoScroll: true,
+      autoScroll: false,
    });
 
    if (localSettings.viewingTwo === undefined || localSettings.isDarkMode === undefined || localSettings.autoScroll === undefined) {
@@ -109,7 +111,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          collisionRadius: 0.5,
          fullScreen: false,
          isDarkMode: false,
-         autoScroll: true,
+         autoScroll: false,
       });
    }
 
@@ -146,7 +148,9 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [onlineUsers, setOnlineUsers] = useState({});
    const [userPositions, setUserPositions] = useState({});
    const [channelGlobal, setChannelGlobal] = useState<RealtimeChannel>();
-
+   const [props, setProps] = useState(initialData.props);
+   const [propUploads, setPropUploads] = useState([]);
+   const [resizingPropId, setResizingPropId] = useState(null);
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
    const [videoPosition, setVideoPosition] = useState<"top-left" | "top-right" | "bottom-left" | "bottom-right">("top-right");
    const coordsToPosition = (coords: { x: number; y: number }) => {
@@ -167,7 +171,20 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
             if (!r.data) return;
             setAudiofiles(r);
          });
+      invalidatePropUploads();
    }, [session]);
+
+   const invalidatePropUploads = () => {
+      supabase.storage
+         .from("props")
+         .list(session?.user.id, {})
+         .then((r) => {
+            if (!r.data) return;
+            console.log(r.data);
+            setPropUploads(r?.data);
+         });
+   };
+
    useEffect(() => {
       if (!isPlaying) return;
       setSelectedFormation(currentFormationIndex);
@@ -574,31 +591,31 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    }, [dancers]);
 
    //////////////////////////////////////
-   let uploadGroups = useCallback(
-      debounce(async (formationGroups) => {
-         console.log("uploading dancers");
-         const { data, error } = await supabase
-            .from("dances")
-            .update({ formation_groups: formationGroups, last_edited: new Date() })
-            .eq("id", router.query.danceId);
+   // let uploadGroups = useCallback(
+   //    debounce(async (formationGroups) => {
+   //       console.log("uploading dancers");
+   //       const { data, error } = await supabase
+   //          .from("dances")
+   //          .update({ formation_groups: formationGroups, last_edited: new Date() })
+   //          .eq("id", router.query.danceId);
 
-         console.log({ data });
+   //       console.log({ data });
 
-         console.log({ error });
-         setSaved(true);
-      }, 5000),
-      [router.query.danceId]
-   );
+   //       console.log({ error });
+   //       setSaved(true);
+   //    }, 5000),
+   //    [router.query.danceId]
+   // );
 
-   useDidMountEffect(() => {
-      if (!session && router.query.danceId !== "207") {
-         router.push("/login");
-      }
-      if (router.isReady) {
-         setSaved(false);
-         uploadGroups(formationGroups);
-      }
-   }, [formationGroups]);
+   // useDidMountEffect(() => {
+   //    if (!session && router.query.danceId !== "207") {
+   //       router.push("/login");
+   //    }
+   //    if (router.isReady) {
+   //       setSaved(false);
+   //       uploadGroups(formationGroups);
+   //    }
+   // }, [formationGroups]);
    // // // // // // // // // // // //
    let uploadSoundCloudId = useCallback(
       debounce(async (soundCloudTrackId) => {
@@ -672,6 +689,28 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          uploadFormations(formations);
       }
    }, [formations]);
+
+   let uploadProps = useCallback(
+      debounce(async (props) => {
+         console.log("uploading props");
+         const { data, error } = await supabase.from("dances").update({ props: props, last_edited: new Date() }).eq("id", router.query.danceId);
+         console.log({ data });
+         console.log({ error });
+
+         setSaved(true);
+      }, 1000),
+      [router.query.danceId]
+   );
+
+   useDidMountEffect(() => {
+      if (!session && router.query.danceId !== "207") {
+         router.push("/login");
+      }
+      if (router.isReady) {
+         setSaved(false);
+         uploadProps(props);
+      }
+   }, [props]);
    ////////////////////////
    let flippedFormations = formations.map((formation: formation) => {
       let flippedPositions = formation.positions.map((position) => {
@@ -730,6 +769,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
             <meta property="og:description" content="automate, animate and visualize your dance formations synced to music" />
             <meta property="og:image" content="https://i.imgur.com/83VsfSG.png" />
             <meta property="og:site_name" content="FORMI — Online performance planning software." />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
          </Head>
 
          {isEditingFormationGroup ? (
@@ -787,6 +827,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                `}
             </style>
             <EventHandler
+               selectedPropIds={selectedPropIds}
                setIsChangingZoom={setIsChangingZoom}
                setIsScrollingTimeline={setIsScrollingTimeline}
                setIsChangingCollisionRadius={setIsChangingCollisionRadius}
@@ -905,6 +946,26 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                                  setLocalSettings={setLocalSettings}
                                  localSettings={localSettings}
                               ></Collisions>
+                           ) : menuOpen === "props" ? (
+                              <Props
+                                 setSelectedPropIds={setSelectedPropIds}
+                                 invalidatePropUploads={invalidatePropUploads}
+                                 selectedPropIds={selectedPropIds}
+                                 propUploads={propUploads}
+                                 selectedFormation={selectedFormation}
+                                 props={props}
+                                 setProps={setProps}
+                                 pricingTier={pricingTier}
+                                 setUpgradeIsOpen={setUpgradeIsOpen}
+                                 player={player}
+                                 setIsPlaying={setIsPlaying}
+                                 soundCloudTrackId={soundCloudTrackId}
+                                 setSoundCloudTrackId={setSoundCloudTrackId}
+                                 audioFiles={audioFiles}
+                                 setAudiofiles={setAudiofiles}
+                                 setLocalSource={setLocalSource}
+                                 setFormations={setFormations}
+                              ></Props>
                            ) : (
                               <CurrentFormation
                                  viewOnly={viewOnly}
@@ -933,7 +994,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                   </>
                ) : null}
                <DndContext onDragEnd={handleDragEnd}>
-                  <div className={`flex flex-row min-w-0 flex-grow items-center bg-neutral-100 dark:bg-neutral-900 relative `}>
+                  <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-100 dark:bg-neutral-900 relative `}>
                      {/* <div
                         className="absolute z-50 top-0 right-0 w-[700px] h-32  rounded-xl pointer-events-auto shadow-md bg-pink-600 "
                         ref={setNodeRef}
@@ -955,6 +1016,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                      <TopRight></TopRight>
                      <BottomLeft></BottomLeft>
                      <BottomRight></BottomRight>
+
                      {/* <div className="w-1/2 h-1/2 top-0 left-0 bg-blue-200 absolute z-10 opacity-40 pointer-events-none" ref={topLeft}></div>
                      <div className="w-1/2 h-1/2 top-0 right-0 bg-blue-200 absolute z-10 opacity-40 pointer-events-none" ref={topRight}></div>
                      <div className="w-1/2 h-1/2 bottom-0 left-0 bg-blue-200 absolute z-10 opacity-40 pointer-events-none" ref={bottomLeft}></div>
@@ -1006,6 +1068,11 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
                      {localSettings.viewingTwo ? (
                         <Canvas
+                           resizingPropId={resizingPropId}
+                           setResizingPropId={setResizingPropId}
+                           setSelectedPropIds={setSelectedPropIds}
+                           selectedPropIds={selectedPropIds}
+                           props={props}
                            isPlaying={isPlaying}
                            shiftHeld={shiftHeld}
                            setShiftHeld={setShiftHeld}
@@ -1040,6 +1107,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                         >
                            {selectedFormation !== null ? (
                               <PathEditor
+                                 zoom={zoom}
                                  collisions={collisions}
                                  dancers={dancers}
                                  currentFormationIndex={currentFormationIndex}
@@ -1082,6 +1150,29 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                               />
                            ))}
 
+                           {selectedFormation !== null
+                              ? props.map((prop: prop) => {
+                                   return (
+                                      <Prop
+                                         dropDownToggle={dropDownToggle}
+                                         setResizingPropId={setResizingPropId}
+                                         selectedPropIds={selectedPropIds}
+                                         coordsToPosition={coordsToPosition}
+                                         prop={prop}
+                                         props={props}
+                                         percentThroughTransition={percentThroughTransition}
+                                         selectedFormation={selectedFormation}
+                                         isPlaying={isPlaying}
+                                         position={position}
+                                         formations={formations}
+                                         currentFormationIndex={currentFormationIndex}
+                                         zoom={zoom}
+                                         setFormations={setFormations}
+                                         setProps={setProps}
+                                      ></Prop>
+                                   );
+                                })
+                              : null}
                            {localSettings.viewCollisions && selectedFormation !== null
                               ? collisions.map((collision) => {
                                    return <Collision coordsToPosition={coordsToPosition} collision={collision}></Collision>;
@@ -1148,9 +1239,30 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                            ) : null}
                         </Canvas>
                      ) : null}
-                     {/* {localSettings.viewingTwo && !localSettings.stageFlipped ? (
-                     <p className="text-neutral-600 font-semibold text-sm mb-1">AUDIENCE</p>
-                  ) : null} */}
+                     <FormationControls
+                        zoom={zoom}
+                        setIsChangingZoom={setIsChangingZoom}
+                        isChangingZoom={isChangingZoom}
+                        localSettings={localSettings}
+                        setLocalSettings={setLocalSettings}
+                        setPlaybackRate={setPlaybackRate}
+                        addToStack={addToStack}
+                        pushChange={pushChange}
+                        viewOnly={viewOnly}
+                        selectedFormation={selectedFormation}
+                        songDuration={songDuration}
+                        soundCloudTrackId={soundCloudTrackId}
+                        setSelectedFormation={setSelectedFormation}
+                        player={player}
+                        isPlaying={isPlaying}
+                        setIsPlaying={setIsPlaying}
+                        formations={formations}
+                        position={position}
+                        setFormations={setFormations}
+                        setPixelsPerSecond={setPixelsPerSecond}
+                        pixelsPerSecond={pixelsPerSecond}
+                        localSource={localSource}
+                     ></FormationControls>
                   </div>
                </DndContext>
             </div>

@@ -7,6 +7,19 @@ export type dancer = {
    shape?: "circle" | "square" | "triangle";
 };
 
+export type propPosition = {
+   width: number;
+   height: number;
+   position: { x: number; y: number };
+   rotation: number;
+   id: string;
+};
+export type prop = {
+   url: string;
+   id: string;
+   type: "static" | "animated";
+};
+
 export type dancerPosition = {
    id: string;
    position: { x: number; y: number };
@@ -18,6 +31,7 @@ export type dancerPosition = {
 export type formation = {
    durationSeconds: number;
    positions: dancerPosition[];
+   props?: propPosition[];
    transition: {
       durationSeconds: number;
    };
@@ -25,6 +39,7 @@ export type formation = {
    name: string | null;
    comments?: comment[];
    group?: string;
+   notes: string;
 };
 
 export type formationGroup = {

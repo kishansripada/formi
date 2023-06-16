@@ -80,7 +80,7 @@ export const Comment: React.FC<{
             data-type={"comment"}
             className={`${
                isOpen ? "w-72 rounded-t-xl h-auto py-3 justify-start px-3" : "w-[50px] h-[50px] rounded-br-full rounded-t-full justify-center"
-            }    bg-neutral-800 dark:bg-neutral-200 group select-none shadow-xl  dark:text-black text-white transition ease-in-out duration-300  lg:pointer-events-auto pointer-events-none flex    flex-row   items-center absolute z-[300]  cursor-default `}
+            }    bg-neutral-800 dark:bg-neutral-200 group select-none shadow-xl  dark:text-black text-white lg:pointer-events-auto pointer-events-none flex    flex-row   items-center absolute z-[300]  cursor-default `}
          >
             {comment.user.avatar_url ? (
                <img

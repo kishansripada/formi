@@ -2,9 +2,21 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { GridLines } from "./GridLines";
 import { CheerLines } from "./CheerLines";
-import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings, localSettings } from "../../types/types";
+import {
+   dancer,
+   dancerPosition,
+   formation,
+   dragBoxCoords,
+   PIXELS_PER_SQUARE,
+   comment,
+   cloudSettings,
+   localSettings,
+   prop,
+   propPosition,
+} from "../../types/types";
 import { toast, Toaster } from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
+import { Prop } from "./Prop";
 
 export const Canvas: React.FC<{
    children: React.ReactNode;
@@ -36,6 +48,11 @@ export const Canvas: React.FC<{
    shiftHeld: boolean;
    setShiftHeld: Function;
    isPlaying: boolean;
+   props: any;
+   setSelectedPropIds: Function;
+   selectedPropIds: string[];
+   resizingPropId: string | null;
+   setResizingPropId: Function;
 }> = ({
    player,
    children,
@@ -66,6 +83,11 @@ export const Canvas: React.FC<{
    shiftHeld,
    setShiftHeld,
    isPlaying,
+   props,
+   setSelectedPropIds,
+   selectedPropIds,
+   resizingPropId,
+   setResizingPropId,
 }) => {
    let { stageDimensions, stageBackground } = cloudSettings;
    let { gridSnap } = localSettings;
@@ -82,6 +104,9 @@ export const Canvas: React.FC<{
    const [dragBoxCoords, setDragBoxCoords] = useState<dragBoxCoords>({ start: { x: null, y: null }, end: { x: null, y: null } });
    const [isDragging, setIsDragging] = useState(false);
    const [rotatingDancerId, setRotatingDancerId] = useState(null);
+   const [draggingPropId, setDraggingPropId] = useState(null);
+
+   const [resizingPropType, setResizingPropType] = useState(null);
 
    const container = useRef();
    const stage = useRef();
@@ -99,7 +124,7 @@ export const Canvas: React.FC<{
    }, [container?.current?.clientHeight, stage?.current?.clientHeight, stageDimensions]);
 
    const handleDragMove = (e: any) => {
-      if (selectedFormation === null) return;
+      if (selectedFormation === null || isPlaying) return;
 
       if (changingControlId) {
          if (viewOnly) return;
@@ -321,9 +346,146 @@ export const Canvas: React.FC<{
             });
          });
       }
+
+      if (draggingPropId) {
+         let appliedTransformation = null;
+         if (viewOnly) return;
+         let devicePixelRatio = getDevicePixelRatio();
+         // devicePixelRatio = devicePixelRatio / 2;
+         setFormations((formations: formation[]) => {
+            return formations.map((formation, index: number) => {
+               if (index === selectedFormation) {
+                  return {
+                     ...formation,
+                     props: (formation.props || []).map((prop: propPosition) => {
+                        // console.log(comment.id);
+                        // console.log({ draggingCommentId });
+                        if (prop.id === draggingPropId) {
+                           appliedTransformation = {
+                              x: prop.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                              y: prop.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                           };
+                           return {
+                              ...prop,
+                              position: appliedTransformation,
+                           };
+                        }
+                        return prop;
+                     }),
+                  };
+               }
+
+               return formation;
+            });
+         });
+         setFormations((formations: formation[]) => {
+            return formations.map((formation, index: number) => {
+               if (props.find((prop: prop) => prop.id === draggingPropId).type === "static") {
+                  return {
+                     ...formation,
+                     props: (formation.props || []).map((prop: propPosition) => {
+                        // console.log(comment.id);
+                        // console.log({ draggingCommentId });
+                        if (prop.id === draggingPropId) {
+                           return {
+                              ...prop,
+                              position: appliedTransformation,
+                           };
+                        }
+                        return prop;
+                     }),
+                  };
+               }
+
+               return formation;
+            });
+         });
+      }
+
+      if (resizingPropId) {
+         if (viewOnly) return;
+         let devicePixelRatio = getDevicePixelRatio();
+         let appliedTransformation = null;
+         // devicePixelRatio = devicePixelRatio / 2;
+         setFormations((formations: formation[]) => {
+            return formations.map((formation, index: number) => {
+               if (index === selectedFormation) {
+                  return {
+                     ...formation,
+                     props: (formation.props || []).map((prop: propPosition) => {
+                        if (prop.id === resizingPropId) {
+                           let deltaX = (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio;
+                           let deltaY = (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio;
+
+                           if (resizingPropType === "prop-resize-top-left") {
+                              appliedTransformation = Math.max(prop.width - deltaX, 1);
+                              return {
+                                 ...prop,
+                                 width: Math.max(prop.width - deltaX, 1),
+                              };
+                           }
+                           if (resizingPropType === "prop-resize-top-right") {
+                              appliedTransformation = Math.max(prop.width + deltaX, 1);
+                              return {
+                                 ...prop,
+                                 width: Math.max(prop.width + deltaY, 1),
+                              };
+                           }
+                           if (resizingPropType === "prop-resize-bottom-right") {
+                              appliedTransformation = Math.max(prop.width + deltaX, 1);
+                              return {
+                                 ...prop,
+                                 width: Math.max(prop.width + deltaX, 1),
+                              };
+                           }
+                           if (resizingPropType === "prop-resize-bottom-left") {
+                              appliedTransformation = Math.max(prop.width - deltaX, 1);
+                              return {
+                                 ...prop,
+                                 width: Math.max(prop.width - deltaX, 1),
+                              };
+                           }
+                        }
+                        return prop;
+                     }),
+                  };
+               }
+
+               return formation;
+            });
+         });
+         setFormations((formations: formation[]) => {
+            return formations.map((formation, index: number) => {
+               if (props.find((prop: propPosition) => prop.id === resizingPropId).type === "static") {
+                  return {
+                     ...formation,
+                     props: (formation.props || []).map((prop: propPosition) => {
+                        if (prop.id === resizingPropId) {
+                           if (resizingPropType === "prop-resize-top-left" || resizingPropType === "prop-resize-bottom-left") {
+                              return {
+                                 ...prop,
+                                 width: appliedTransformation,
+                              };
+                           } else {
+                              return {
+                                 ...prop,
+                                 width: appliedTransformation,
+                              };
+                           }
+                        }
+                        return prop;
+                     }),
+                  };
+               }
+
+               return formation;
+            });
+         });
+      }
    };
 
    const pointerDown = (e: any) => {
+      if (isPlaying) return;
       if (isCommenting) {
          if (viewOnly) return;
          if (!session) {
@@ -400,16 +562,43 @@ export const Canvas: React.FC<{
          setDraggingCommentId(e.target.id);
       }
 
+      if (e.target.dataset.type === "prop") {
+         // addToStack();
+         setDraggingPropId(e.target.id);
+
+         if (!shiftHeld && !selectedPropIds.includes(e.target.id)) {
+            setSelectedPropIds([e.target.id]);
+         }
+
+         if (shiftHeld) {
+            if (!selectedPropIds.includes(e.target.id)) {
+               setSelectedPropIds((selectedPropIds: string[]) => [...selectedPropIds, e.target.id]);
+            } else {
+               setSelectedPropIds((selectedPropIds: string[]) => selectedPropIds.filter((id) => id !== e.target.id));
+            }
+         }
+      }
       if (e.target.dataset.type === "controlPointStart") {
          // addToStack();
          setChangingControlId(e.target.id);
          setChangingControlType("start");
       }
 
+      if (e.target.dataset.type?.startsWith("prop-resize")) {
+         // addToStack();
+         setResizingPropType(e.target.dataset.type);
+         setResizingPropId(e.target.id);
+      }
+
       if (e.target.dataset.type === "controlPointEnd") {
          // addToStack();
          setChangingControlId(e.target.id);
          setChangingControlType("end");
+      }
+
+      if (e.target.dataset.type === "prop") {
+         // addToStack();
+         setDraggingPropId(e.target.id);
       }
 
       // if (e.target.dataset.type === "rotater") {
@@ -419,6 +608,7 @@ export const Canvas: React.FC<{
 
       if (!e.target.id) {
          setSelectedDancers([]);
+         setSelectedPropIds([]);
          // Get the target
          const target = e.currentTarget;
 
@@ -466,6 +656,8 @@ export const Canvas: React.FC<{
       setChangingControlType(null);
       setDraggingCommentId(null);
       setRotatingDancerId(null);
+      setDraggingPropId(null);
+      setResizingPropId(null);
       setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
 
       if (e.target.dataset.type === "dancer" && !shiftHeld && !isDragging) {

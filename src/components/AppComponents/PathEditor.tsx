@@ -10,7 +10,19 @@ export const PathEditor: React.FC<{
    localSettings: any;
    collisions: any;
    coordsToPosition: (coords: { x: number; y: number } | null | undefined) => { left: number; top: number } | null;
-}> = ({ selectedFormation, formations, selectedDancers, isPlaying, currentFormationIndex, coordsToPosition, dancers, localSettings, collisions }) => {
+   zoom: number;
+}> = ({
+   selectedFormation,
+   formations,
+   selectedDancers,
+   isPlaying,
+   currentFormationIndex,
+   coordsToPosition,
+   dancers,
+   localSettings,
+   collisions,
+   zoom,
+}) => {
    if (isPlaying || selectedFormation === null) return;
    let { previousFormationView } = localSettings;
    // let dancersToRender = previousFormationView === "ghostDancersAndPaths" ? formations?.[selectedFormation - 1]?.positions
@@ -102,42 +114,58 @@ export const PathEditor: React.FC<{
 
                                  <svg key={dancerPosition.id + "controlPointStart"} className="rotate-90 z-[40] relative overflow-visible ">
                                     <rect
+                                       style={{
+                                          // translate x and y by half the width
+                                          transform: `translate(${-16 / zoom / 2}px, ${-16 / zoom / 2}px)`,
+                                       }}
                                        id={dancerPosition.id}
                                        data-type={"controlPointStart"}
                                        x={controlPointStartCoords.left}
                                        y={controlPointStartCoords.top}
-                                       width="16"
-                                       height="16"
-                                       className="pointer-events-auto z-[60] fill-pink-700 -translate-x-[8px] -translate-y-[8px] "
+                                       width={16 / zoom}
+                                       height={16 / zoom}
+                                       className="pointer-events-auto z-[60] fill-pink-700  "
                                     />
                                     <rect
+                                       style={{
+                                          // translate x and y by half the width
+                                          transform: `translate(${-10 / zoom / 2}px, ${-10 / zoom / 2}px)`,
+                                       }}
                                        id={dancerPosition.id}
                                        data-type={"controlPointStart"}
                                        x={controlPointStartCoords.left}
                                        y={controlPointStartCoords.top}
-                                       width="10"
-                                       height="10"
-                                       className="pointer-events-auto z-[60] fill-white dark:fill-neutral-700  -translate-x-[5px] -translate-y-[5px]"
+                                       width={10 / zoom}
+                                       height={10 / zoom}
+                                       className="pointer-events-auto z-[60] fill-white dark:fill-neutral-700  "
                                     />
                                  </svg>
                                  <svg key={dancerPosition.id + "controlPointEnd"} className="rotate-90 z-[40] relative overflow-visible ">
                                     <rect
+                                       style={{
+                                          // translate x and y by half the width
+                                          transform: `translate(${-16 / zoom / 2}px, ${-16 / zoom / 2}px)`,
+                                       }}
                                        id={dancerPosition.id}
                                        data-type={"controlPointEnd"}
                                        x={controlPointEndCoords.left}
                                        y={controlPointEndCoords.top}
-                                       width="16"
-                                       height="16"
-                                       className="pointer-events-auto z-[60] fill-pink-700 -translate-x-[8px] -translate-y-[8px] "
+                                       width={16 / zoom}
+                                       height={16 / zoom}
+                                       className="pointer-events-auto z-[60] fill-pink-700  "
                                     />
                                     <rect
+                                       style={{
+                                          // translate x and y by half the width
+                                          transform: `translate(${-10 / zoom / 2}px, ${-10 / zoom / 2}px)`,
+                                       }}
                                        id={dancerPosition.id}
                                        data-type={"controlPointEnd"}
                                        x={controlPointEndCoords.left}
                                        y={controlPointEndCoords.top}
-                                       width="10"
-                                       height="10"
-                                       className="pointer-events-auto z-[60] fill-white dark:fill-neutral-700  -translate-x-[5px] -translate-y-[5px]"
+                                       width={10 / zoom}
+                                       height={10 / zoom}
+                                       className="pointer-events-auto z-[60] fill-white dark:fill-neutral-700  "
                                     />
                                  </svg>
                               </>

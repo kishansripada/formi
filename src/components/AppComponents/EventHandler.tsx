@@ -33,7 +33,7 @@ export const EventHandler: React.FC<{
    setDropDownToggle: Function;
    dancers: dancer[];
    setIsChangingCollisionRadius: Function;
-
+   selectedPropIds: string[];
    setIsScrollingTimeline: Function;
    setIsChangingZoom: Function;
 }> = ({
@@ -70,6 +70,7 @@ export const EventHandler: React.FC<{
    setIsChangingCollisionRadius,
    setIsScrollingTimeline,
    setIsChangingZoom,
+   selectedPropIds,
 }) => {
    const [commandHeld, setCommandHeld] = useState(false);
    const [copiedPositions, setCopiedPositions] = useState([]);
@@ -119,6 +120,23 @@ export const EventHandler: React.FC<{
          }
       }
 
+      // on delete, check the selectedPropIds array to see if any props are selected. If so, delete them. Otherwise, delete the selected dancers
+      if (e.key === "Backspace" || e.key === "Delete") {
+         e.preventDefault();
+         if (selectedPropIds.length) {
+            setFormations((formations: formation[]) => {
+               return formations.map((formation, i) => {
+                  if (i === selectedFormation) {
+                     return {
+                        ...formation,
+                        props: (formation.props || []).filter((prop) => !selectedPropIds.includes(prop.id)),
+                     };
+                  }
+                  return formation;
+               });
+            });
+         }
+      }
       if (e.key === "ArrowRight") {
          if (selectedFormation === null) return;
          e.preventDefault();

@@ -103,21 +103,6 @@ export const Sidebar: React.FC<{
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
                onClick={() => setMenuOpen("collisions")}
             >
-               {/* <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  fill="none"
-                  className={`w-7 h-7 ${menuOpen === "audio" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
-               >
-                  <path
-                     strokeLinecap="round"
-                     strokeLinejoin="round"
-                     d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
-                  />
-               </svg> */}
-
                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -133,6 +118,28 @@ export const Sidebar: React.FC<{
                   />
                </svg>
                <p className=" mt-1">Collisions</p>
+            </button>
+            <button
+               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
+               onClick={() => setMenuOpen("props")}
+            >
+               <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className={`w-7 h-7 ${menuOpen === "props" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
+               >
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
+                  />
+               </svg>
+
+               <p className=" mt-1">Props</p>
+               <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p>
             </button>
 
             {/* <button

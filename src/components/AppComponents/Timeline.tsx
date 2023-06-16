@@ -264,7 +264,7 @@ export const Timeline: React.FC<{
             style={{
                width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
             }}
-            className="w-full h-[10px] bg-neutral-500 dark:bg-neutral-700 "
+            className="w-full h-[5px] bg-neutral-500 dark:bg-neutral-700 "
          ></div>
       </>
    );
