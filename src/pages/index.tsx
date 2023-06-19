@@ -239,7 +239,7 @@ const TikTokEmbed1 = () => {
    }, []);
 
    return (
-      <div ref={tiktokContainerRef}>
+      <div style={{ maxWidth: "350px", minWidth: "350px" }} ref={tiktokContainerRef}>
          <blockquote
             className="tiktok-embed"
             cite="https://www.tiktok.com/@formistudio.app/video/7231301456270347562"
@@ -282,7 +282,7 @@ const TikTokEmbed2 = () => {
    }, []);
 
    return (
-      <div ref={tiktokContainerRef}>
+      <div style={{ maxWidth: "350px", minWidth: "350px" }} ref={tiktokContainerRef}>
          <blockquote
             className="tiktok-embed"
             cite="https://www.tiktok.com/@lizenlair/video/7241294169652677894"
