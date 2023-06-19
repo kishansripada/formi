@@ -59,7 +59,7 @@ const home = () => {
                </div>
             </div>
 
-            <div className="flex lg:flex-row  flex-col justify-between max-w-screen-xl w-full  mt-12   ">
+            <div className="flex lg:flex-row  flex-col items-center justify-between max-w-screen-xl w-full  mt-12   ">
                <div className=" top-[-100px] relative">
                   <TikTokEmbed1></TikTokEmbed1>
                </div>
