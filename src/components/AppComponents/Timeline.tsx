@@ -220,7 +220,7 @@ export const Timeline: React.FC<{
                   }}
                >
                   <FileAudioPlayer
-                     key={localSource || (soundCloudTrackId && localSettings.isDarkMode)}
+                     key={localSource || soundCloudTrackId}
                      setSelectedFormation={setSelectedFormation}
                      setFormations={setFormations}
                      soundCloudTrackId={localSource || soundCloudTrackId}
