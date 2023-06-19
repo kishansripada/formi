@@ -149,6 +149,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [userPositions, setUserPositions] = useState({});
    const [channelGlobal, setChannelGlobal] = useState<RealtimeChannel>();
    const [props, setProps] = useState(initialData.props);
+   const [previousProps, setPreviousProps] = useState(initialData.props);
    const [propUploads, setPropUploads] = useState([]);
    const [resizingPropId, setResizingPropId] = useState(null);
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
@@ -267,8 +268,9 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       });
       console.log(reverseDelta);
       setFormations((formations: formation[]) => {
-         let reversed = jsondiffpatch.patch({ formations, dancers }, reverseDelta);
+         let reversed = jsondiffpatch.patch({ formations, dancers, props }, reverseDelta);
          setDancers(reversed.dancers ? reversed.dancers : dancers);
+         setProps(reversed.props ? reversed.props : props);
          return [...reversed.formations];
       });
    };
@@ -284,9 +286,15 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       });
       setFormations((formations: formation[]) => {
          setDancers((dancers: dancer[]) => {
-            let delta = jsondiffpatch.diff({ formations: previousFormation, dancers: previousDancers }, { formations, dancers });
+            setProps((props: prop[]) => {
+               let delta = jsondiffpatch.diff(
+                  { formations: previousFormation, dancers: previousDancers, props: previousProps },
+                  { formations, dancers, props }
+               );
             setDeltas((deltas) => {
                return [...deltas, delta];
+            });
+               return props;
             });
             return dancers;
          });
@@ -948,6 +956,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                               ></Collisions>
                            ) : menuOpen === "props" ? (
                               <Props
+                                 pushChange={pushChange}
                                  setSelectedPropIds={setSelectedPropIds}
                                  invalidatePropUploads={invalidatePropUploads}
                                  selectedPropIds={selectedPropIds}
@@ -1154,6 +1163,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                               ? props.map((prop: prop) => {
                                    return (
                                       <Prop
+                                         pushChange={pushChange}
                                          dropDownToggle={dropDownToggle}
                                          setResizingPropId={setResizingPropId}
                                          selectedPropIds={selectedPropIds}

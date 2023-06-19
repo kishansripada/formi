@@ -24,6 +24,7 @@ export const Props: React.FC<{
    selectedPropIds: string[];
    invalidatePropUploads: Function;
    setSelectedPropIds: Function;
+   pushChange: Function;
 }> = ({
    audioFiles,
    setSoundCloudTrackId,
@@ -42,6 +43,7 @@ export const Props: React.FC<{
    selectedPropIds,
    invalidatePropUploads,
    setSelectedPropIds,
+   pushChange,
 }) => {
    const [file, setFile] = useState<File | null>();
    const router = useRouter();
@@ -89,17 +91,7 @@ export const Props: React.FC<{
          <div className="lg:flex hidden overflow-y-scroll w-[260px]  min-w-[260px] h-full  flex-col   bg-white   dark:bg-neutral-800 dark:text-white  px-4 py-6 overflow-hidden">
             <div className="flex flex-col ">
                <div className="text-xl font-medium   flex flex-row justify-between items-center">
-                  <button
-                     onClick={(e) => {
-                        if (pricingTier === "basic" && audioFiles?.data?.length) {
-                           e.preventDefault();
-                           toast("Upgrade to upload more than one audio file");
-                           setUpgradeIsOpen(true);
-                           return;
-                        }
-                     }}
-                     className="text-sm w-30 font-normal relative cursor-pointer"
-                  >
+                  <button className="text-sm w-30 font-normal relative cursor-pointer">
                      <input
                         accept="image/jpeg, image/png, image/webp, image/bmp, image/tiff"
                         type="file"
@@ -155,6 +147,7 @@ export const Props: React.FC<{
                                     return formation;
                                  });
                               });
+                              pushChange();
                            }}
                            className={` rounded-md  px-2 w-full h-[90px] relative  group  cursor-pointer   flex flex-row items-center  whitespace-nowrap  `}
                         >

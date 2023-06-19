@@ -40,6 +40,7 @@ export const Prop: React.FC<{
    setResizingPropId: Function;
    dropDownToggle: boolean;
    setProps: Function;
+   pushChange: Function;
 }> = ({
    prop,
    props,
@@ -67,6 +68,7 @@ export const Prop: React.FC<{
    setResizingPropId,
    dropDownToggle,
    setProps,
+   pushChange,
 }) => {
    useEffect(() => {
       setIsDropdownOpen(false);
@@ -179,6 +181,7 @@ export const Prop: React.FC<{
                               return formation;
                            });
                         });
+                        pushChange();
                      }}
                      className=" px-4 py-1  text-xs text-white hover:bg-pink-600   flex flex-row items-center"
                   >

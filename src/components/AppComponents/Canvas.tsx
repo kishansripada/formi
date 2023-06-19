@@ -648,6 +648,12 @@ export const Canvas: React.FC<{
       if (draggingCommentId) {
          pushChange();
       }
+      if (resizingPropId) {
+         pushChange();
+      }
+      if (draggingPropId) {
+         pushChange();
+      }
       // if (rotatingDancerId) {
       //    pushChange();
       // }
