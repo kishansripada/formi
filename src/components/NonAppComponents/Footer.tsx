@@ -7,7 +7,7 @@ import Image from "next/image";
 export const Footer = () => {
    return (
       <>
-         <div className="bg-[#fafafa]  pt-6 pb-6 px-12 dark:bg-[#111111] ">
+         <div className="bg-[#fafafa]  pt-6 pb-6 px-12 dark:bg-[#111111] w-full ">
             <div className="w-[150px] cursor-pointer">
                {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}

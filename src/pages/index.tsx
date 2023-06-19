@@ -35,157 +35,76 @@ const home = () => {
 
          <Header></Header>
 
-         <div className="overflow-hidden relative ">
-            <div className="overflow-hidden dark:bg-[#191919]">
-               <div className=" flex flex-row items-center justify-center w-full  text-center py-24 px-[10%] backdrop-blur-sm  relative  ">
-                  <div className="absolute w-full opacity-20   h-full left-1/2 -translate-x-1/2   -z-[100] ">
-                     {/* <div
-                        style={{
-                           backgroundImage:
-                              "radial-gradient(ellipse 1000px 500px at center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%)",
-                        }}
-                        className="absolute w-[1000px] h-[500px] top-0 left-0 bottom-0 right-0"
-                     ></div> */}
-                     <div
-                        className="flex flex-row justify-between  absolute left-1/2 -translate-x-1/2 rounded-xl -z-[100]   "
-                        style={{
-                           width: 2000,
-                           height: 2000,
-                        }}
-                     >
-                        {new Array(50).fill(0).map((_, i) => (
-                           <div
-                              key={i}
-                              className={`h-full bg-neutral-300 `}
-                              style={{
-                                 width: 1,
-                              }}
-                           ></div>
-                        ))}
-                     </div>
-                     <div
-                        className="flex flex-col justify-between   rounded-xl left-1/2 -translate-x-1/2 absolute -z-[100]  "
-                        style={{
-                           width: 2000,
-                           height: 2000,
-                        }}
-                     >
-                        {new Array(50).fill(0).map((_, i) => (
-                           <div
-                              key={i}
-                              className={`w-full  bg-neutral-300 `}
-                              style={{
-                                 height: 1,
-                              }}
-                           ></div>
-                        ))}
-                     </div>
-                  </div>
-                  <div className="  relative lg:w-2/3 w-full  mr-auto  ">
-                     {/* <img src="/backgroundIndex.png" className="absolute object-cover  w-full h-full" alt="" /> */}
-                     {/* <div className="w-full  bg-opacity-50 mb-8 dark:bg-pink-700 bg-pink-300 text-lg dark:text-neutral-100 text-neutral-700 rounded-xl h-12 lg:flex hidden flex-row items-center justify-center ">
-                        FORMI is used by&nbsp;<span className=" dark:text-neutral-100 text-purple-700 font-bold">5000+ dancers&nbsp;</span> and
-                        coaches like you
-                     </div> */}
-                     <div
-                        className="pointer-events-none absolute  h-[2000px] overflow-hidden w-[2000px]  "
-                        style={{
-                           backgroundImage: "radial-gradient(37.66% 48.2% at 50% 50%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
-                           top: -200,
-                           // left: "50%",
-                           // transform: "translate(-50%, 0)",
-                           opacity: 0.3,
-                        }}
-                     ></div>
-                     <div
-                        className="pointer-events-none absolute  h-[2000px] overflow-hidden w-[2000px]  "
-                        style={{
-                           backgroundImage: "radial-gradient(37.66% 48.2% at 50% 50%, #9333ea 0%, rgba(239, 255, 250, 0) 100%)",
-                           top: -200,
-                           // left: "50%",
-                           right: 0,
-                           // transform: "translate(-50%, 0)",
-                           opacity: 0.3,
-                        }}
-                     ></div>
-                     <h1
-                        style={{
-                           lineHeight: 1.15,
-                        }}
-                        className=" text-4xl lg:text-6xl dark:text-neutral-100 lg:text-left text-center relative z-10 font-bold text-neutral-800 "
-                     >
-                        Choreography software to execute stunning performances
-                        {/* Visualize your stage formations <span className="italic">before</span> performing */}
-                     </h1>
-                     <h1 className=" dark:text-neutral-300 lg:text-left text-center text-neutral-700 relative  z-10 mt-4 ">
-                        Create, plan, and share stunning 3D dance & cheer formations in minutes
-                     </h1>
-                     {/* <p className="text-neutral-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
-                     <div className="flex flex-row mt-24 ">
-                        <Link href={"/207/edit"} className="">
-                           <button className="  flex-row items-center   bg-neutral-800 relative z-20 px-4 py-2  mr-3 border border-black  hidden lg:flex rounded-full text-xl group">
-                              <span className="mr-2 text-white ">View demo</span>
-                              <span className="relative left-0 group-hover:left-3 transition-all duration-300">
-                                 <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="w-6 h-6 stroke-white "
-                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                                 </svg>
-                              </span>
-                           </button>
-                        </Link>
-                        <Link href={"/login"} className="">
-                           <button className="  flex-row items-center border-neutral-800 border  text-neutral-100 relative z-20 px-4 py-2  hidden lg:flex rounded-full  text-xl group">
-                              <span className="mr-2 text-black ">Start creating</span>
-                              <span className="relative left-0 group-hover:left-3 transition-all duration-300">
-                                 <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="w-6 h-6 stroke-black "
-                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                                 </svg>
-                              </span>
-                           </button>
-                        </Link>
-                     </div>
-                  </div>
-                  <div className="w-1/3 lg:static absolute lg:opacity-100 opacity-0 grid place-items-center">
-                     <img src="/dancers.png" className="w-full h-full  scale-[2]" alt="" />
-                  </div>
-               </div>
-
-               {/* <div className=" mt-12 relative">
-                  <img
-                     className=" max-w-[1000px] lg:block hidden  w-full mx-auto relative -bottom-5 rounded-xl border border-neutral-200 dark:border-neutral-600 shadow-2xl z-10"
-                     src="/threeDPreview.png"
-                  ></img>
-
-                  <div
-                     className="pointer-events-none absolute  h-[2000px] overflow-hidden w-[2000px]  "
+         <div className="overflow-hidden relative flex flex-col items-center ">
+            <div className=" flex flex-row items-center justify-center w-full  text-center lg:py-12 py-8 lg:px-[10%] px-[5%] max-w-2xl lg:max-w-none   relative  ">
+               <div className="  relative  w-full lg:w-2/3 flex flex-col  items-center  ">
+                  <h1
                      style={{
-                        backgroundImage: "radial-gradient(37.66% 48.2% at 50% 50%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
-                        top: -200,
-                        left: "50%",
-                        transform: "translate(-50%, 0)",
-                        opacity: 1,
+                        lineHeight: 1.15,
                      }}
-                  ></div>
-               </div> */}
+                     className=" text-4xl lg:text-7xl dark:text-neutral-100   text-center  z-10 font-bold text-neutral-800 "
+                  >
+                     Plan and excecute stunning choreography
+                     {/* Visualize your stage formations <span className="italic">before</span> performing */}
+                  </h1>
+                  <h1 className=" dark:text-neutral-300  text-center text-neutral-700 relative lg:text-xl  z-10 lg:mt-16 mt-8  lg:w-1/2 ">
+                     Create, plan, and share stunning 3D dance & cheer formations in minutes
+                  </h1>
+
+                  <div className="block lg:hidden mb-8">
+                     <button className="rounded-full bg-pink-600 px-4 py-2 text-white mt-7">Mobile app coming soon </button>
+                     <p className="text-xs text-neutral-500 mt-3">To use FORMI, visit our website on your laptop</p>
+                  </div>
+                  {/* <p className="text-neutral-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
+               </div>
             </div>
-            <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
 
-            <div className=" bg-neutral-100 font-proxima overflow-hidden relative lg:px-0 px-7 "></div>
+            <div className="flex lg:flex-row  flex-col justify-between max-w-screen-xl w-full  mt-12   ">
+               <div className=" top-[-100px] relative">
+                  <TikTokEmbed1></TikTokEmbed1>
+               </div>
+               <div className="lg:flex hidden flex-row items-center justify-center mb-auto">
+                  <Link href={"/207/edit"} className="">
+                     <button className="  flex-row items-center  mr-3   bg-pink-600 relative z-20 px-4 py-2   border border-pink-600  hidden lg:flex rounded-full text-xl group">
+                        <span className="mr-2 text-white ">View demo</span>
+                        <span className="relative left-0 group-hover:left-3 transition-all duration-300">
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-6 h-6 stroke-white "
+                           >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                           </svg>
+                        </span>
+                     </button>
+                  </Link>
+                  <Link href={"/login"} className="">
+                     <button className="  flex-row items-center border-neutral-800 border   text-neutral-100 relative z-20 px-4 py-2  hidden lg:flex rounded-full  text-xl group">
+                        <span className="mr-2 text-black ">Start creating</span>
+                        <span className="relative left-0 group-hover:left-3 transition-all duration-300">
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-6 h-6 stroke-black "
+                           >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                           </svg>
+                        </span>
+                     </button>
+                  </Link>
+               </div>
+               <div className=" top-[-100px] relative">
+                  <TikTokEmbed2></TikTokEmbed2>
+               </div>
+            </div>
 
-            <div className="bg-neutral-50 dark:bg-neutral-900 lg:px-0 px-7  font-proxima">
+            <div className="bg-neutral-50 dark:bg-neutral-900 lg:px-0 px-7 w-full  font-proxima">
                <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-8 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
                      <p className="text-3xl font-bold dark:text-neutral-50">Collaborate, communicate</p>
@@ -207,7 +126,7 @@ const home = () => {
                </div>
             </div>
 
-            <div className="bg-neutral-50 dark:bg-[#191919]  font-proxima lg:px-0 px-7">
+            <div className="bg-neutral-50 dark:bg-[#191919] w-full  font-proxima lg:px-0 px-7">
                <div className="flex lg:flex-row flex-col-reverse items-center mx-auto max-w-[1000px] py-8 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
                      <video
@@ -302,3 +221,120 @@ const home = () => {
    );
 };
 export default home;
+
+const TikTokEmbed1 = () => {
+   const tiktokContainerRef = useRef(null);
+
+   useEffect(() => {
+      // Load TikTok script
+      const script = document.createElement("script");
+      script.setAttribute("src", "https://www.tiktok.com/embed.js");
+      script.setAttribute("async", true);
+      document.body.appendChild(script);
+
+      return () => {
+         // Clean up script to avoid multiple instances
+         document.body.removeChild(script);
+      };
+   }, []);
+
+   return (
+      <div ref={tiktokContainerRef}>
+         <blockquote
+            className="tiktok-embed"
+            cite="https://www.tiktok.com/@formistudio.app/video/7231301456270347562"
+            data-video-id="7231301456270347562"
+            style={{ maxWidth: "605px", minWidth: "350px" }}
+         >
+            <section>
+               <a target="_blank" rel="noopener noreferrer" title="@formistudio.app" href="https://www.tiktok.com/@formistudio.app?refer=embed">
+                  @formistudio.app
+               </a>
+               <p>check it out at https://formistudio.app</p>
+               <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="♬ stream escapism - #1 worth it. stan"
+                  href="https://www.tiktok.com/music/stream-escapism-7162468425431157510?refer=embed"
+               >
+                  ♬ stream escapism - #1 worth it. stan
+               </a>
+            </section>
+         </blockquote>
+      </div>
+   );
+};
+
+const TikTokEmbed2 = () => {
+   const tiktokContainerRef = useRef(null);
+
+   useEffect(() => {
+      // Load TikTok script
+      const script = document.createElement("script");
+      script.setAttribute("src", "https://www.tiktok.com/embed.js");
+      script.setAttribute("async", true);
+      document.body.appendChild(script);
+
+      return () => {
+         // Clean up script to avoid multiple instances
+         document.body.removeChild(script);
+      };
+   }, []);
+
+   return (
+      <div ref={tiktokContainerRef}>
+         <blockquote
+            className="tiktok-embed"
+            cite="https://www.tiktok.com/@lizenlair/video/7241294169652677894"
+            data-video-id="7241294169652677894"
+            style={{ maxWidth: "605px", minWidth: "350px" }}
+         >
+            {" "}
+            <section>
+               {" "}
+               <a target="_blank" title="@lizenlair" href="https://www.tiktok.com/@lizenlair?refer=embed">
+                  @lizenlair
+               </a>{" "}
+               if anyone needs this for their snowflake rehersals let me know and ill link it in my bio (@FORMI){" "}
+               <a title="ballettok" target="_blank" href="https://www.tiktok.com/tag/ballettok?refer=embed">
+                  #ballettok
+               </a>{" "}
+               <a title="balletteacher" target="_blank" href="https://www.tiktok.com/tag/balletteacher?refer=embed">
+                  #balletteacher
+               </a>{" "}
+               <a title="nutcrackerrehearsal" target="_blank" href="https://www.tiktok.com/tag/nutcrackerrehearsal?refer=embed">
+                  #nutcrackerrehearsal
+               </a>{" "}
+               <a title="choreography" target="_blank" href="https://www.tiktok.com/tag/choreography?refer=embed">
+                  #choreography
+               </a>{" "}
+               <a title="danceformation" target="_blank" href="https://www.tiktok.com/tag/danceformation?refer=embed">
+                  #danceformation
+               </a>{" "}
+               <a title="balletdancer" target="_blank" href="https://www.tiktok.com/tag/balletdancer?refer=embed">
+                  #balletdancer
+               </a>{" "}
+               <a title="balletclass" target="_blank" href="https://www.tiktok.com/tag/balletclass?refer=embed">
+                  #balletclass
+               </a>{" "}
+               <a title="ballettechnique" target="_blank" href="https://www.tiktok.com/tag/ballettechnique?refer=embed">
+                  #ballettechnique
+               </a>{" "}
+               <a title="waltzofthesnowflakes" target="_blank" href="https://www.tiktok.com/tag/waltzofthesnowflakes?refer=embed">
+                  #waltzofthesnowflakes
+               </a>{" "}
+               <a title="snowflakes" target="_blank" href="https://www.tiktok.com/tag/snowflakes?refer=embed">
+                  #snowflakes
+               </a>{" "}
+               <a
+                  target="_blank"
+                  title="♬ Waltz Of The Snowflakes - San Francisco Ballet"
+                  href="https://www.tiktok.com/music/Waltz-Of-The-Snowflakes-6786423811492284418?refer=embed"
+               >
+                  ♬ Waltz Of The Snowflakes - San Francisco Ballet
+               </a>{" "}
+            </section>{" "}
+         </blockquote>{" "}
+      </div>
+   );
+};
