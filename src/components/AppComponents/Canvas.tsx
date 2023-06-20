@@ -37,7 +37,7 @@ export const Canvas: React.FC<{
    undo: Function;
    addToStack: Function;
    pushChange: Function;
-   localSettings: any;
+   localSettings: localSettings;
    isCommenting: boolean;
    setIsCommenting: Function;
    zoom: number;
@@ -776,13 +776,15 @@ export const Canvas: React.FC<{
                <img className="w-full h-full object-contain pointer-events-none select-none opacity-40 " src={cloudSettings.backgroundUrl} alt="" />
             ) : null}
 
-            {stageBackground === "grid" ? <GridLines cloudSettings={cloudSettings} stageDimensions={stageDimensions} /> : null}
+            {stageBackground === "grid" ? (
+               <GridLines localSettings={localSettings} zoom={zoom} cloudSettings={cloudSettings} stageDimensions={stageDimensions} />
+            ) : null}
 
             {stageBackground === "cheer9" ? <CheerLines stageDimensions={stageDimensions}></CheerLines> : null}
 
             {!isPlaying && !localSettings.stageFlipped && (
-               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
-                  <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">AUDIENCE</p>
+               <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
+                  <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
                </div>
             )}
             {!isPlaying && localSettings.stageFlipped && (

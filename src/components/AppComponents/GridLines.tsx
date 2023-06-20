@@ -1,12 +1,68 @@
-import { cloudSettings, PIXELS_PER_SQUARE } from "../../types/types";
+import { cloudSettings, localSettings, PIXELS_PER_SQUARE } from "../../types/types";
 
-export const GridLines: React.FC<{ stageDimensions: { width: number; height: number }; cloudSettings: cloudSettings; opacity: number }> = ({
-   stageDimensions,
-   cloudSettings,
-   opacity,
-}) => {
+export const GridLines: React.FC<{
+   stageDimensions: { width: number; height: number };
+   cloudSettings: cloudSettings;
+   opacity: number;
+   zoom: number;
+   localSettings: localSettings;
+}> = ({ stageDimensions, cloudSettings, zoom, localSettings, opacity }) => {
    return (
       <>
+         {localSettings ? (
+            <div
+               style={{
+                  bottom: !localSettings.stageFlipped ? 0 : "auto",
+                  top: localSettings.stageFlipped ? 0 : "auto",
+               }}
+               className="absolute w-1/2 right-0 h-10 flex flex-row justify-between pointer-events-none"
+            >
+               {new Array(stageDimensions.width / 2).fill(0).map((_, i) => {
+                  return (
+                     <div
+                        className=" -translate-x-1/2 text-center  font-bold z-20 text-neutral-400 flex flex-col items-center justify-end"
+                        style={{
+                           width: 100 / (stageDimensions.width / 2) + "%",
+                           fontSize: i % 2 === 0 || zoom > 1 ? 16 / zoom : 0,
+                           flexDirection: !localSettings.stageFlipped ? "column" : "column-reverse",
+                        }}
+                     >
+                        <p className=""> {i}</p>
+                        {i % 2 === 0 || zoom > 1 ? <div className="h-3 w-[1px] bg-pink-300 dark:bg-pink-600"></div> : null}
+                     </div>
+                  );
+               })}
+            </div>
+         ) : null}
+         {localSettings ? (
+            <div
+               style={{
+                  bottom: !localSettings.stageFlipped ? 0 : "auto",
+                  top: localSettings.stageFlipped ? 0 : "auto",
+               }}
+               className="absolute w-1/2 left-0 h-10 flex justify-between pointer-events-none"
+            >
+               {new Array(stageDimensions.width / 2)
+                  .fill(0)
+
+                  .map((_, i) => {
+                     i = stageDimensions.width / 2 - 1 - i;
+                     return (
+                        <div
+                           className=" translate-x-1/2 text-center  font-bold z-20 text-neutral-400 flex flex-col items-center justify-end"
+                           style={{
+                              width: 100 / (stageDimensions.width / 2) + "%",
+                              fontSize: i % 2 === 0 || zoom > 1 ? 16 / zoom : 0,
+                              flexDirection: !localSettings.stageFlipped ? "column" : "column-reverse",
+                           }}
+                        >
+                           <p className=""> {i}</p>
+                           {i % 2 === 0 || zoom > 1 ? <div className="h-3 w-[1px] bg-pink-300 dark:bg-pink-600"></div> : null}
+                        </div>
+                     );
+                  })}
+            </div>
+         ) : null}
          <div
             className="flex flex-row h-full w-full  justify-between rounded-xl absolute z-10  "
             style={{
