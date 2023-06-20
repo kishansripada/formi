@@ -17,36 +17,36 @@ export const StageSettings: React.FC<{
    let { stageBackground, stageDimensions } = cloudSettings;
 
    const changeWidth = (amount: number) => {
-      for (let i = 0; i < formations.length; i++) {
-         for (let j = 0; j < formations[i].positions.length; j++) {
-            if (
-               (formations[i].positions[j]?.position.x === stageDimensions.width / 2 - 3 ||
-                  formations[i].positions[j]?.position.x === -stageDimensions.width / 2 + 3) &&
-               amount < 0
-            ) {
-               toast.error("Dancers are too close to the edge");
-               return;
-            }
-         }
-      }
+      // for (let i = 0; i < formations.length; i++) {
+      //    for (let j = 0; j < formations[i].positions.length; j++) {
+      //       if (
+      //          (formations[i].positions[j]?.position.x === stageDimensions.width / 2 - 3 ||
+      //             formations[i].positions[j]?.position.x === -stageDimensions.width / 2 + 3) &&
+      //          amount < 0
+      //       ) {
+      //          toast.error("Dancers are too close to the edge");
+      //          return;
+      //       }
+      //    }
+      // }
 
       // move dancers that are too close to the edge
-      setFormations((formations: formation[]) => {
-         return formations.map((formation, i) => {
-            return {
-               ...formation,
-               positions: formation.positions.map((position) => {
-                  if (position.position.x < -(stageDimensions.width / 2 - 3)) {
-                     return { ...position, position: { ...position.position, x: position.position.x - amount / 2 } };
-                  }
-                  if (position.position.x > stageDimensions.width / 2 - 3) {
-                     return { ...position, position: { ...position.position, x: position.position.x + amount / 2 } };
-                  }
-                  return position;
-               }),
-            };
-         });
-      });
+      // setFormations((formations: formation[]) => {
+      //    return formations.map((formation, i) => {
+      //       return {
+      //          ...formation,
+      //          positions: formation.positions.map((position) => {
+      //             if (position.position.x < -(stageDimensions.width / 2 - 3)) {
+      //                return { ...position, position: { ...position.position, x: position.position.x - amount / 2 } };
+      //             }
+      //             if (position.position.x > stageDimensions.width / 2 - 3) {
+      //                return { ...position, position: { ...position.position, x: position.position.x + amount / 2 } };
+      //             }
+      //             return position;
+      //          }),
+      //       };
+      //    });
+      // });
 
       setCloudSettings((cloudSettings: cloudSettings) => {
          return { ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width + amount } };
@@ -57,18 +57,18 @@ export const StageSettings: React.FC<{
 
    const changeHeight = (amount: number) => {
       // check to make sure dancers won't fall off the stage
-      for (let i = 0; i < formations.length; i++) {
-         for (let j = 0; j < formations[i].positions.length; j++) {
-            if (
-               (formations[i].positions[j]?.position.y === stageDimensions.height / 2 - 1 ||
-                  formations[i].positions[j]?.position.y === -stageDimensions.height / 2 + 1) &&
-               amount < 0
-            ) {
-               toast.error("dancers will fall off the stage");
-               return;
-            }
-         }
-      }
+      // for (let i = 0; i < formations.length; i++) {
+      //    for (let j = 0; j < formations[i].positions.length; j++) {
+      //       if (
+      //          (formations[i].positions[j]?.position.y === stageDimensions.height / 2 - 1 ||
+      //             formations[i].positions[j]?.position.y === -stageDimensions.height / 2 + 1) &&
+      //          amount < 0
+      //       ) {
+      //          toast.error("dancers will fall off the stage");
+      //          return;
+      //       }
+      //    }
+      // }
 
       setCloudSettings((cloudSettings: cloudSettings) => {
          return { ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height + amount } };
