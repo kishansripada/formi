@@ -23,7 +23,7 @@ export const GridLines: React.FC<{
                         className=" -translate-x-1/2 text-center  font-bold z-20 text-neutral-400 flex flex-col items-center justify-end"
                         style={{
                            width: 100 / (stageDimensions.width / 2) + "%",
-                           fontSize: i % 2 === 0 || zoom > 1 ? 16 / zoom : 0,
+                           fontSize: i % 2 === 0 || zoom > 1 ? Math.min(16 / zoom, 30) : 0,
                            flexDirection: !localSettings.stageFlipped ? "column" : "column-reverse",
                         }}
                      >
@@ -52,7 +52,7 @@ export const GridLines: React.FC<{
                            className=" translate-x-1/2 text-center  font-bold z-20 text-neutral-400 flex flex-col items-center justify-end"
                            style={{
                               width: 100 / (stageDimensions.width / 2) + "%",
-                              fontSize: i % 2 === 0 || zoom > 1 ? 16 / zoom : 0,
+                              fontSize: i % 2 === 0 || zoom > 1 ? Math.min(16 / zoom, 30) : 0,
                               flexDirection: !localSettings.stageFlipped ? "column" : "column-reverse",
                            }}
                         >
