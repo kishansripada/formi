@@ -10,7 +10,7 @@ import { debounce } from "lodash";
 import toast, { Toaster } from "react-hot-toast";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { comment, dancer, dancerPosition, formation, PIXELS_PER_SQUARE, localSettings, cloudSettings, formationGroup } from "../../types/types";
+import { comment, dancer, dancerPosition, formation, PIXELS_PER_SQUARE, localSettings, cloudSettings, formationGroup, prop } from "../../types/types";
 import { AudioControls } from "../../components/AppComponents/AudioControls";
 import { Header } from "../../components/AppComponents/Header";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
@@ -34,13 +34,13 @@ import { Props } from "../../components/AppComponents/SidebarComponents/Props";
 import { Timeline } from "../../components/AppComponents/Timeline";
 import { FormationControls } from "../../components/AppComponents/FormationControls";
 import { Prop } from "../../components/AppComponents/Prop";
+import { EventHandler } from "../../components/AppComponents/EventHandler";
 import domToPdf from "dom-to-pdf";
 import * as jsonpatch from "fast-json-patch";
 const ThreeD = dynamic(() => import("../../components/AppComponents/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => <p>Loading...</p>,
 });
 
-import { EventHandler } from "../../components/AppComponents/EventHandler";
 var jsondiffpatch = require("jsondiffpatch").create({
    objectHash: function (obj) {
       return obj.id;
@@ -416,6 +416,12 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
             return formations;
          });
          return formations;
+      });
+      setProps((props: prop[]) => {
+         setPreviousProps((previousProps: prop[]) => {
+            return props;
+         });
+         return props;
       });
    };
 
@@ -1004,16 +1010,6 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                ) : null}
                <DndContext onDragEnd={handleDragEnd}>
                   <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-100 dark:bg-neutral-900 relative `}>
-                     {/* <div
-                        className="absolute z-50 top-0 right-0 w-[700px] h-32  rounded-xl pointer-events-auto shadow-md bg-pink-600 "
-                        ref={setNodeRef}
-                        {...listeners}
-                        {...attributes}
-                        style={{
-                           // width: localSource?.startsWith("data:video") || isVideo(soundCloudTrackId) ? 300 : 0,
-                           ...style,
-                        }}
-                     ></div> */}
                      <Video
                         videoPlayer={videoPlayer}
                         soundCloudTrackId={soundCloudTrackId}
@@ -1026,14 +1022,6 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                      <BottomLeft></BottomLeft>
                      <BottomRight></BottomRight>
 
-                     {/* <div className="w-1/2 h-1/2 top-0 left-0 bg-blue-200 absolute z-10 opacity-40 pointer-events-none" ref={topLeft}></div>
-                     <div className="w-1/2 h-1/2 top-0 right-0 bg-blue-200 absolute z-10 opacity-40 pointer-events-none" ref={topRight}></div>
-                     <div className="w-1/2 h-1/2 bottom-0 left-0 bg-blue-200 absolute z-10 opacity-40 pointer-events-none" ref={bottomLeft}></div>
-                     <div className="w-1/2 h-1/2 bottom-0 right-0 bg-blue-200 absolute z-10 opacity-40 pointer-events-none" ref={bottomRight}></div> */}
-
-                     {/* {localSettings.viewingTwo && localSettings.stageFlipped ? (
-                     <p className="text-neutral-600 font-semibold text-sm mt-2">AUDIENCE</p>
-                  ) : null} */}
                      {localSettings.viewingThree ? (
                         <ThreeD
                            setIsThreeDancerDragging={setIsThreeDancerDragging}

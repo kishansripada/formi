@@ -169,6 +169,7 @@ export const Props: React.FC<{
                                     return props.filter((p) => p.id !== prop.id);
                                  });
                                  setSelectedPropIds([]);
+                                 pushChange();
                               }}
                               className="absolute z-20 top-1 right-1 bg-black/50 rounded-md opacity-0  text-white group-hover:opacity-100 transition p-1"
                            >
@@ -260,6 +261,7 @@ export const Props: React.FC<{
                                     });
                                  });
                               }
+                              pushChange();
                            }}
                            className={` rounded-md  px-2 w-full h-[90px] relative  group  cursor-pointer   flex flex-row items-center  whitespace-nowrap  `}
                         >
