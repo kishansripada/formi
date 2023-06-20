@@ -13,9 +13,9 @@ const ProtectedRoute: NextApiHandler = async (req, res) => {
    //       return res.redirect(307, "/login");
    //    }
 
-   //    const responseData = await supabase.from("user_data").insert({ user_id: session.user.id, response_data: req.body });
+   const responseData = await supabase.from("user_data").insert({ response_data: req.body });
 
-   res.json(req.body);
+   res.send("dummy");
 };
 
 export default ProtectedRoute;

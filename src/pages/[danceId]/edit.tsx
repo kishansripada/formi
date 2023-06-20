@@ -440,125 +440,120 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    //    });
    // }, [selectedFormation, selectedDancers, channelGlobal]);
 
-   useEffect(() => {
-      if (!session || !router?.query?.danceId) return;
+   // useEffect(() => {
+   // if (!session || !router?.query?.danceId) return;
 
-      let channel = supabase.channel(router.query.danceId, {
-         config: {
-            presence: {
-               key: session?.user.id,
-            },
-         },
-      });
+   // let channel = supabase.channel(router.query.danceId, {
+   //    config: {
+   //       presence: {
+   //          key: session?.user.id,
+   //       },
+   //    },
+   // });
 
-      setChannelGlobal(channel);
+   // setChannelGlobal(channel);
 
-      // recieve presence data
-      channel.on("presence", { event: "sync" }, () => {
-         let state = channel.presenceState();
-         console.log(state);
-         // console.log(state);
-         Object.keys(state).forEach((id, index) => {
-            state[id][0].color = colors[index];
-         });
-         setUserPositions((userPositions) => {
-            let filteredKeys = Object.keys(userPositions).filter((position) => Object.keys(state).includes(position));
-            const filteredObject = filteredKeys.reduce((obj, key) => {
-               obj[key] = userPositions[key];
-               return obj;
-            }, {});
+   // recieve presence data
+   // channel.on("presence", { event: "sync" }, () => {
+   //    let state = channel.presenceState();
+   //    // console.log(state);
+   //    Object.keys(state).forEach((id, index) => {
+   //       state[id][0].color = colors[index];
+   //    });
+   //    setUserPositions((userPositions) => {
+   //       let filteredKeys = Object.keys(userPositions).filter((position) => Object.keys(state).includes(position));
+   //       const filteredObject = filteredKeys.reduce((obj, key) => {
+   //          obj[key] = userPositions[key];
+   //          return obj;
+   //       }, {});
 
-            return filteredObject;
-         });
+   //       return filteredObject;
+   //    });
 
-         setOnlineUsers({ ...state });
-      });
+   //    setOnlineUsers({ ...state });
+   // });
 
-      // send presence data
-      channel.subscribe(async (status) => {
-         console.log(status);
-         if (status === "TIMED_OUT") {
-            throw new Error("Timed out");
-         }
-         setSubscriptionStatus(status);
-         if (status === "SUBSCRIBED") {
-            const resp = await channel.track({
-               name: session?.user.user_metadata.full_name,
-               profilePicUrl: session?.user.user_metadata.avatar_url,
-               // formations: formations,
-            });
-            console.log({ resp });
-         }
-      });
+   // send presence data
+   // channel.subscribe(async (status) => {
+   //    console.log(status);
+   //    setSubscriptionStatus(status);
+   //    if (status === "SUBSCRIBED") {
+   //       const resp = await channel.track({
+   //          name: session?.user.user_metadata.full_name,
+   //          profilePicUrl: session?.user.user_metadata.avatar_url,
+   //       });
+   //       console.log({ resp });
+   //    }
+   // }, 20000);
 
-      // receive broadcasted data
-      // const formsChannel = channel
-      //    .on("broadcast", { event: "user-position-update" }, ({ payload }) => {
-      //       // console.log(payload);
-      //       setUserPositions((userPositions) => {
-      //          return { ...userPositions, ...payload };
-      //       });
-      //    })
-      //    .on("broadcast", { event: "formation-update" }, ({ payload }) => {
-      //       console.log("recieved formation update");
-      //       // if the formation you are viewing is deleted, reset the selected formation to 0
-      //       payload.forEach((patch: any) => {
-      //          if (patch.path.split("/").length === 2 && patch.op === "remove") {
-      //             setSelectedFormation((selectedFormation) => {
-      //                if (parseInt(patch.path.split("/")[1]) === selectedFormation) {
-      //                   toast("The formation you were viewing was deleted.");
-      //                   return 0;
-      //                } else {
-      //                   return selectedFormation;
-      //                }
-      //             });
-      //          }
-      //       });
-      //       try {
-      //          setFormations((formations: formation[]) => {
-      //             let newForms = jsonpatch.applyPatch(formations, payload).newDocument;
-      //             return [...newForms];
-      //          });
-      //       } catch (error) {
-      //          toast.error("Error saving changes. Please refresh the page.");
-      //       }
-      //    })
-      //    .on("broadcast", { event: "dancers-update" }, ({ payload }) => {
-      //       console.log("recieved dancers update");
-      //       try {
-      //          setDancers((dancers) => {
-      //             var delta = jsonpatch.compare(dancers, JSON.parse(JSON.stringify(payload)));
-      //             if (delta.length) {
-      //                return payload;
-      //             } else {
-      //                return dancers;
-      //             }
-      //          });
-      //       } catch (error) {
-      //          toast.error("Error saving changes. Please refresh the page.");
-      //       }
-      //    })
-      //    .on("broadcast", { event: "settings-update" }, ({ payload }) => {
-      //       console.log("recieved settings update");
-      //       try {
-      //          setCloudSettings((cloudSettings) => {
-      //             var delta = jsonpatch.compare(cloudSettings, JSON.parse(JSON.stringify(payload)));
-      //             if (delta.length) {
-      //                return payload;
-      //             } else {
-      //                return cloudSettings;
-      //             }
-      //          });
-      //       } catch (error) {
-      //          toast.error("Error saving changes. Please refresh the page.");
-      //       }
-      //    });
+   // receive broadcasted data
+   //    const formsChannel = channel
+   //       .on("broadcast", { event: "user-position-update" }, ({ payload }) => {
+   //          // console.log(payload);
+   //          setUserPositions((userPositions) => {
+   //             return { ...userPositions, ...payload };
+   //          });
+   //       })
+   //       .on("broadcast", { event: "formation-update" }, ({ payload }) => {
+   //          console.log("recieved formation update");
+   //          // if the formation you are viewing is deleted, reset the selected formation to 0
+   //          payload.forEach((patch: any) => {
+   //             if (patch.path.split("/").length === 2 && patch.op === "remove") {
+   //                setSelectedFormation((selectedFormation) => {
+   //                   if (parseInt(patch.path.split("/")[1]) === selectedFormation) {
+   //                      toast("The formation you were viewing was deleted.");
+   //                      return 0;
+   //                   } else {
+   //                      return selectedFormation;
+   //                   }
+   //                });
+   //             }
+   //          });
+   //          try {
+   //             setFormations((formations: formation[]) => {
+   //                let newForms = jsonpatch.applyPatch(formations, payload).newDocument;
+   //                return [...newForms];
+   //             });
+   //          } catch (error) {
+   //             toast.error("Error saving changes. Please refresh the page.");
+   //          }
+   //       })
+   //       .on("broadcast", { event: "dancers-update" }, ({ payload }) => {
+   //          console.log("recieved dancers update");
+   //          try {
+   //             setDancers((dancers) => {
+   //                var delta = jsonpatch.compare(dancers, JSON.parse(JSON.stringify(payload)));
+   //                if (delta.length) {
+   //                   return payload;
+   //                } else {
+   //                   return dancers;
+   //                }
+   //             });
+   //          } catch (error) {
+   //             toast.error("Error saving changes. Please refresh the page.");
+   //          }
+   //       })
+   //       .on("broadcast", { event: "settings-update" }, ({ payload }) => {
+   //          console.log("recieved settings update");
+   //          try {
+   //             setCloudSettings((cloudSettings) => {
+   //                var delta = jsonpatch.compare(cloudSettings, JSON.parse(JSON.stringify(payload)));
+   //                if (delta.length) {
+   //                   return payload;
+   //                } else {
+   //                   return cloudSettings;
+   //                }
+   //             });
+   //          } catch (error) {
+   //             toast.error("Error saving changes. Please refresh the page.");
+   //          }
+   //       });
 
-      return () => {
-         // supabase.removeChannel(formsChannel);
-         supabase.removeChannel(channel);
-      };
-   }, [router.query.danceId, session]);
+   //    return () => {
+   //       supabase.removeChannel(formsChannel);
+   //       supabase.removeChannel(channel);
+   //    };
+   // }, [router.query.danceId, session]);
 
    ////////////////////////////////////////
    let uploadSettings = useCallback(
