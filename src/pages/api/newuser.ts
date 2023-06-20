@@ -13,7 +13,9 @@ const ProtectedRoute: NextApiHandler = async (req, res) => {
    //       return res.redirect(307, "/login");
    //    }
 
-   const responseData = await supabase.from("user_data").insert({ response_data: req.body });
+   const responseData = await supabase
+      .from("user_data")
+      .insert({ user_id: req.body?.form_response?.hidden?.user_id, response_data: req.body, name: req.body?.form_response?.answers[0]?.text });
 
    res.send("dummy");
 };
