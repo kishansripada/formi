@@ -962,6 +962,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                               ></Collisions>
                            ) : menuOpen === "props" ? (
                               <Props
+                                 viewOnly={viewOnly}
                                  pushChange={pushChange}
                                  setSelectedPropIds={setSelectedPropIds}
                                  invalidatePropUploads={invalidatePropUploads}

@@ -25,6 +25,7 @@ export const Props: React.FC<{
    invalidatePropUploads: Function;
    setSelectedPropIds: Function;
    pushChange: Function;
+   viewOnly: boolean;
 }> = ({
    audioFiles,
    setSoundCloudTrackId,
@@ -44,6 +45,7 @@ export const Props: React.FC<{
    invalidatePropUploads,
    setSelectedPropIds,
    pushChange,
+   viewOnly,
 }) => {
    const [file, setFile] = useState<File | null>();
    const router = useRouter();
@@ -89,47 +91,54 @@ export const Props: React.FC<{
    return (
       <>
          <div className="lg:flex hidden overflow-y-scroll w-[260px]  min-w-[260px] h-full  flex-col   bg-white   dark:bg-neutral-800 dark:text-white  px-4 py-6 overflow-hidden">
-            <div className="flex flex-col ">
-               <div className="text-xl font-medium   flex flex-row justify-between items-center">
-                  <button className="text-sm w-30 font-normal relative cursor-pointer">
-                     <input
-                        accept="image/jpeg, image/png, image/webp, image/bmp, image/tiff"
-                        type="file"
-                        autoComplete="off"
-                        tabIndex={-1}
-                        className="cursor-pointer absolute w-32 left-0 opacity-0 z-50"
-                        onChange={(event) => {
-                           if (event.target.files && event.target.files[0]) {
-                              const i = event.target.files[0];
-                              setFile(i);
-                           }
-                        }}
-                     />
-                     <div className="flex flex-row items-center cursor-pointer">
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-4 h-4 mr-2"
-                        >
-                           <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                           />
-                        </svg>
+            {!viewOnly && (
+               <div className="flex flex-col mb-6 ">
+                  <div className="text-xl font-medium   flex flex-row justify-between items-center">
+                     <button className="text-sm w-30 font-normal relative cursor-pointer">
+                        <input
+                           accept="image/jpeg, image/png, image/webp, image/bmp, image/tiff"
+                           type="file"
+                           autoComplete="off"
+                           tabIndex={-1}
+                           className="cursor-pointer absolute w-32 left-0 opacity-0 z-50"
+                           onChange={(event) => {
+                              if (event.target.files && event.target.files[0]) {
+                                 const i = event.target.files[0];
+                                 setFile(i);
+                              }
+                           }}
+                        />
+                        <div className="flex flex-row items-center cursor-pointer">
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-4 h-4 mr-2"
+                           >
+                              <path
+                                 strokeLinecap="round"
+                                 strokeLinejoin="round"
+                                 d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                              />
+                           </svg>
 
-                        <p className="relative cursor-pointer ">Upload Photo</p>
-                     </div>
-                  </button>
+                           <p className="relative cursor-pointer ">Upload Photo</p>
+                        </div>
+                     </button>
+                  </div>
                </div>
-            </div>
+            )}
 
-            <p className=" font-medium mb-2 mt-6 px-2 text-sm ">Props</p>
+            <p className=" font-medium mb-2  px-2 text-sm ">Props</p>
 
-            <div className=" grid gap-1  grid-cols-2 overflow-scroll removeScrollBar ">
+            <div
+               style={{
+                  pointerEvents: viewOnly ? "none" : "all",
+               }}
+               className=" grid gap-1  grid-cols-2 overflow-scroll removeScrollBar "
+            >
                {props.length ? (
                   [...props].reverse().map((prop) => {
                      return (
@@ -239,45 +248,47 @@ export const Props: React.FC<{
                )}
             </div>
 
-            <p className=" font-medium mb-2 mt-6 px-2 text-sm ">Image Uploads</p>
-            <div className=" grid gap-2  grid-cols-2 overflow-scroll removeScrollBar ">
-               {propUploads.length ? (
-                  [...propUploads].reverse().map((propUpload) => {
-                     return (
-                        <div
-                           key={propUpload.name}
-                           onClick={() => {
-                              if (!selectedPropIds.length) {
-                                 setProps((props: prop[]) => {
-                                    return [...props, { id: uuidv4(), user_id: session?.user.id, url: propUpload.name }];
-                                 });
-                              } else {
-                                 setProps((props: prop[]) => {
-                                    return props.map((prop) => {
-                                       if (selectedPropIds.includes(prop.id)) {
-                                          return { ...prop, url: propUpload.name, user_id: session?.user.id };
-                                       }
-                                       return prop;
-                                    });
-                                 });
-                              }
-                              pushChange();
-                           }}
-                           className={` rounded-md  px-2 w-full h-[90px] relative  group  cursor-pointer   flex flex-row items-center  whitespace-nowrap  `}
-                        >
-                           <img
-                              className="h-full w-full absolute object-contain left-0 top-0 z-10"
-                              src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${session?.user.id}/${propUpload.name}`}
-                              alt=""
-                           />
-                           <div className="w-full h-full absolute top-0 left-0 bg-black/50 opacity-0 group-hover:opacity-100 text-white   transition z-20 flex flex-row items-center justify-center flex-wrap ">
-                              {selectedPropIds.length ? (
-                                 <p className="text-xs  text-center whitespace-pre-wrap ">Replace Prop Image</p>
-                              ) : (
-                                 <p className="text-xs  text-center whitespace-pre-wrap ">New Prop From Image</p>
-                              )}
-                           </div>
-                           {/* <button
+            {!viewOnly && (
+               <>
+                  <p className=" font-medium mb-2 mt-6 px-2 text-sm ">Image Uploads</p>
+                  <div className=" grid gap-2  grid-cols-2 overflow-scroll removeScrollBar ">
+                     {propUploads.length ? (
+                        [...propUploads].reverse().map((propUpload) => {
+                           return (
+                              <div
+                                 key={propUpload.name}
+                                 onClick={() => {
+                                    if (!selectedPropIds.length) {
+                                       setProps((props: prop[]) => {
+                                          return [...props, { id: uuidv4(), user_id: session?.user.id, url: propUpload.name }];
+                                       });
+                                    } else {
+                                       setProps((props: prop[]) => {
+                                          return props.map((prop) => {
+                                             if (selectedPropIds.includes(prop.id)) {
+                                                return { ...prop, url: propUpload.name, user_id: session?.user.id };
+                                             }
+                                             return prop;
+                                          });
+                                       });
+                                    }
+                                    pushChange();
+                                 }}
+                                 className={` rounded-md  px-2 w-full h-[90px] relative  group  cursor-pointer   flex flex-row items-center  whitespace-nowrap  `}
+                              >
+                                 <img
+                                    className="h-full w-full absolute object-contain left-0 top-0 z-10"
+                                    src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${session?.user.id}/${propUpload.name}`}
+                                    alt=""
+                                 />
+                                 <div className="w-full h-full absolute top-0 left-0 bg-black/50 opacity-0 group-hover:opacity-100 text-white   transition z-20 flex flex-row items-center justify-center flex-wrap ">
+                                    {selectedPropIds.length ? (
+                                       <p className="text-xs  text-center whitespace-pre-wrap ">Replace Prop Image</p>
+                                    ) : (
+                                       <p className="text-xs  text-center whitespace-pre-wrap ">New Prop From Image</p>
+                                    )}
+                                 </div>
+                                 {/* <button
                                  className="ml-auto mr-2"
                                  onClick={async (e) => {
                                     e.stopPropagation();
@@ -309,15 +320,17 @@ export const Props: React.FC<{
                                     />
                                  </svg>
                               </button> */}
-                        </div>
-                     );
-                  })
-               ) : (
-                  <>
-                     <p className=" text-sm">No Uploaded Images</p>
-                  </>
-               )}
-            </div>
+                              </div>
+                           );
+                        })
+                     ) : (
+                        <>
+                           <p className=" text-sm">No Uploaded Images</p>
+                        </>
+                     )}
+                  </div>
+               </>
+            )}
          </div>
 
          <Toaster />
