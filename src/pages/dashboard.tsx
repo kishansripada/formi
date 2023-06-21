@@ -13,9 +13,9 @@ import { Trash } from "../components/DashboardComponents/Trash";
 import { grandfatheredEmails } from "../../public/grandfathered";
 
 import { Dropdown } from "../components/DashboardComponents/Dropdown";
-const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: {}) => {
+const Dashboard = ({ dances, sharedWithMe, userData }: {}) => {
    let session = useSession();
-   console.log(session);
+   console.log(dances);
    const supabase = useSupabaseClient();
    const [importIsOpen, setImportIsOpen] = useState(!dances.length);
    const [danceAppLink, setDanceAppLink] = useState("");
@@ -94,13 +94,14 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
               }
                `}
             </style>
-            <div className="h-10 bg-pink-600 w-full grid place-items-center text-white">
+            {/* <div className="h-10 bg-pink-600 w-full grid place-items-center text-white">
                Our servers our currently down for maintenance. We'll be back up shortly!
-            </div>
+            </div> */}
+            {/* {!userData ? <TypeFromEmbed user_id={session?.user?.id}></TypeFromEmbed> : null} */}
             <div className="h-screen flex flex-row font-inter overscroll-none overflow-hidden">
                <Toaster></Toaster>
                {/* <Header></Header> */}
-
+               {/* {JSON.stringify(userData)} */}
                <div className="min-w-[240px] w-[240px]  py-4 h-screen lg:flex hidden flex-col box-border border-r-neutral-200 text-sm border ">
                   {/* <img className="w-44" src="/logos/logo_light.svg" alt="" /> */}
 
@@ -129,12 +130,12 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
                   >
                      <p>Recents</p>
                   </button>
-                  <button
+                  {/* <button
                      className={`flex flex-row justify-between items-center ${menuOpen === "sharedWithMe" ? "bg-pink-200" : ""}   w-full h-9 px-3`}
                      onClick={() => setMenuOpen("sharedWithMe")}
                   >
                      <p>Shared With Me</p>
-                  </button>
+                  </button> */}
 
                   <button
                      className={`flex flex-row justify-between items-center mt-auto  ${
@@ -191,21 +192,22 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
 
                   {menuOpen === "mydances" ? (
                      <MyDances
-                        subscription={subscription}
+                        // subscription={subscription}
                         createNewDance={createNewDance}
                         invalidateDances={invalidateDances}
                         myDances={[...myDances.filter((dance) => !dance.isInTrash)]}
                         canCreatePerformance={true}
                      ></MyDances>
                   ) : menuOpen === "sharedWithMe" ? (
-                     <MyDances
-                        subscription={subscription}
-                        createNewDance={createNewDance}
-                        invalidateDances={invalidateDances}
-                        myDances={[...sharedWithMe.filter((dance) => !dance.isInTrash)]}
-                        canCreatePerformance={false}
-                     ></MyDances>
-                  ) : menuOpen === "trash" ? (
+                     <></>
+                  ) : // <MyDances
+                  //    // subscription={subscription}
+                  //    createNewDance={createNewDance}
+                  //    invalidateDances={invalidateDances}
+                  //    myDances={[...sharedWithMe.filter((dance) => !dance.isInTrash)]}
+                  //    canCreatePerformance={false}
+                  // ></MyDances>
+                  menuOpen === "trash" ? (
                      <Trash removeFromTrash={removeFromTrash} deleteDance={deleteDance} trash={myDances.filter((dance) => dance.isInTrash)}></Trash>
                   ) : null}
                </div>
@@ -241,19 +243,26 @@ export const getServerSideProps = withPageAuth({
       // }
 
       async function getMyDances(session: Session) {
-         let data = await supabase.rpc("get_dances_by_user", {
-            input_uuid: session.user.id,
-         });
-         console.log(data.data);
-         return data.data || [];
+         // let data = await supabase.rpc("get_dances_by_user", {
+         //    input_uuid: session.user.id,
+         // });
+         let data = await supabase.from("dances").select("*").eq("user", session.user.id);
+         console.log(data);
+         // console.log(data.data);
+         return data?.data || [];
       }
 
-      async function getSharedWithMe(session: Session) {
-         let data = await supabase.rpc("get_shared_dances_with_first_formation", {
-            email: session.user.email,
-         });
-         return data.data || [];
-      }
+      // async function getSharedWithMe(session: Session) {
+      //    let data = await supabase.rpc("get_shared_dances_with_first_formation", {
+      //       email: session.user.email,
+      //    });
+      //    return data.data || [];
+      // }
+
+      // async function getUserData(session: Session) {
+      //    let data = await supabase.from("user_data").select("*").eq("user_id", session.user.id).maybeSingle();
+      //    return data?.data || null;
+      // }
 
       // async function getSubscriptionPlan(session: Session) {
       //    if (!session?.user?.email) {
@@ -283,16 +292,17 @@ export const getServerSideProps = withPageAuth({
       //       });
       // }
       // getOrganizationPerformances(session);
-      let [dances, sharedWithMe] = await Promise.all([
+      let [dances] = await Promise.all([
          getMyDances(session),
          // getSubscriptionPlan(session),
          // getOrganization(session),
-         getSharedWithMe(session),
+         // getSharedWithMe(session),
+         // getUserData(session),
       ]);
 
       // const { data } = await supabase.from("dances").select("*").eq("user", user.id);
 
-      return { props: { dances: dances, sharedWithMe } };
+      return { props: { dances: dances } };
    },
 });
 
