@@ -32,10 +32,11 @@ const Dashboard = ({ dances, sharedWithMe, userData }: {}) => {
    };
 
    const invalidateDances = async () => {
-      let data = await supabase.rpc("get_dances_by_user", {
-         input_uuid: session.user.id,
-      });
-      setMyDances(data.data);
+      let data = await supabase.from("dances").select("*").eq("user", session.user.id);
+      console.log(data);
+      // console.log(data.data);
+
+      setMyDances(data?.data);
    };
 
    const deleteDance = async (id: number) => {
