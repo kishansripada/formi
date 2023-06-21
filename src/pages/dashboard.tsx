@@ -94,7 +94,9 @@ const Dashboard = ({ dances, subscription, initialOrganization, sharedWithMe }: 
               }
                `}
             </style>
-            {/* <TypeFromEmbed user_id={session?.user?.id}></TypeFromEmbed> */}
+            <div className="h-10 bg-pink-600 w-full grid place-items-center text-white">
+               Our servers our currently down for maintenance. We'll be back up shortly!
+            </div>
             <div className="h-screen flex flex-row font-inter overscroll-none overflow-hidden">
                <Toaster></Toaster>
                {/* <Header></Header> */}
