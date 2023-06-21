@@ -13,7 +13,7 @@ import { Trash } from "../components/DashboardComponents/Trash";
 import { grandfatheredEmails } from "../../public/grandfathered";
 
 import { Dropdown } from "../components/DashboardComponents/Dropdown";
-const Dashboard = ({ dances, sharedWithMe, userData }: {}) => {
+const Dashboard = ({ dances, userData }: {}) => {
    let session = useSession();
    console.log(dances);
    const supabase = useSupabaseClient();
@@ -98,7 +98,7 @@ const Dashboard = ({ dances, sharedWithMe, userData }: {}) => {
             {/* <div className="h-10 bg-pink-600 w-full grid place-items-center text-white">
                Our servers our currently down for maintenance. We'll be back up shortly!
             </div> */}
-            {/* {!userData ? <TypeFromEmbed user_id={session?.user?.id}></TypeFromEmbed> : null} */}
+            {!userData ? <TypeFromEmbed user_id={session?.user?.id}></TypeFromEmbed> : null}
             <div className="h-screen flex flex-row font-inter overscroll-none overflow-hidden">
                <Toaster></Toaster>
                {/* <Header></Header> */}
@@ -260,10 +260,10 @@ export const getServerSideProps = withPageAuth({
       //    return data.data || [];
       // }
 
-      // async function getUserData(session: Session) {
-      //    let data = await supabase.from("user_data").select("*").eq("user_id", session.user.id).maybeSingle();
-      //    return data?.data || null;
-      // }
+      async function getUserData(session: Session) {
+         let data = await supabase.from("user_data").select("*").eq("user_id", session.user.id).maybeSingle();
+         return data?.data || null;
+      }
 
       // async function getSubscriptionPlan(session: Session) {
       //    if (!session?.user?.email) {
@@ -293,17 +293,17 @@ export const getServerSideProps = withPageAuth({
       //       });
       // }
       // getOrganizationPerformances(session);
-      let [dances] = await Promise.all([
+      let [dances, userData] = await Promise.all([
          getMyDances(session),
          // getSubscriptionPlan(session),
          // getOrganization(session),
          // getSharedWithMe(session),
-         // getUserData(session),
+         getUserData(session),
       ]);
 
       // const { data } = await supabase.from("dances").select("*").eq("user", user.id);
 
-      return { props: { dances: dances } };
+      return { props: { dances: dances, userData } };
    },
 });
 
