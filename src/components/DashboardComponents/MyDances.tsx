@@ -10,9 +10,8 @@ export const MyDances: React.FC<{
    myDances: any;
    invalidateDances: Function;
    createNewDance: Function;
-   subscription: any;
    canCreatePerformance: boolean;
-}> = ({ myDances, invalidateDances, createNewDance, subscription, canCreatePerformance }) => {
+}> = ({ myDances, invalidateDances, createNewDance, canCreatePerformance }) => {
    let [openPerformanceMenu, setOpenPerformanceMenu] = useState<string | null>(null);
    const session = useSession();
    const clickHandler = (e) => {
@@ -85,7 +84,7 @@ export const MyDances: React.FC<{
             {myDances.length ? (
                myDances
                   .sort((a, b) => new Date(b.last_edited) - new Date(a.last_edited))
-                  .map((dance) => {
+                  ?.map((dance) => {
                      return (
                         <>
                            <div
@@ -99,7 +98,7 @@ export const MyDances: React.FC<{
                               <Link href={`/${dance.id}/edit`}>
                                  <div className="w-full border-neutral-200 border  rounded-md">
                                     <div className="bg-neutral-100 rounded-md min-h-[150px]  w-full relative  ">
-                                       {dance.formations.positions.map((position) => {
+                                       {dance.formations[0].positions?.map((position) => {
                                           return (
                                              <>
                                                 <div
@@ -143,7 +142,7 @@ export const MyDances: React.FC<{
                                           <p className="mt-1 text-sm font-semibold">{dance.name}</p>
                                           <p className=" text-xs text-neutral-500">Edited {timeSince(dance.last_edited)} ago</p>
                                           <p className=" text-xs text-neutral-500">
-                                             {dance.user != session.user.id ? "Shared with me" : "Owned by me"}
+                                             {dance.user != session?.user.id ? "Shared with me" : "Owned by me"}
                                           </p>
                                        </div>
                                     </div>
@@ -155,7 +154,7 @@ export const MyDances: React.FC<{
                                     setOpenPerformanceMenu={setOpenPerformanceMenu}
                                     invalidateDances={invalidateDances}
                                     dance={dance}
-                                    isMine={dance.user == session.user.id}
+                                    isMine={dance.user == session?.user.id}
                                  ></Dropdown>
                               ) : null}
                            </div>
