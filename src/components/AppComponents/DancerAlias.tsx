@@ -118,20 +118,13 @@ export const DancerAlias: React.FC<{
          >
             {dancer.shape === "square" ? (
                <svg
-                  id={dancer.id}
-                  data-type={"dancer"}
-                  className={` w-full h-full select-none  lg:pointer-events-auto pointer-events-none flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
+                  className={` w-full h-full select-none   pointer-events-none flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
-                  style={{
-                     pointerEvents: isPlaying ? "none" : "auto",
-                  }}
                   viewBox="0 0 140 140"
                >
                   <path
                      className="group-hover:stroke-[20px]"
-                     id={dancer.id}
-                     data-type={"dancer"}
                      fill={dancer?.color || "#db2777"}
                      stroke={
                         selectedDancers.includes(dancer.id) && !isPlaying
@@ -146,20 +139,13 @@ export const DancerAlias: React.FC<{
                </svg>
             ) : dancer.shape === "triangle" ? (
                <svg
-                  id={dancer.id}
-                  data-type={"dancer"}
-                  className={` w-full h-full select-none  lg:pointer-events-auto pointer-events-none flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
+                  className={` w-full h-full select-none  pointer-events-none flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 134 116"
-                  style={{
-                     pointerEvents: isPlaying ? "none" : "auto",
-                  }}
                >
                   <path
                      className="group-hover:stroke-[20px]"
-                     id={dancer.id}
-                     data-type={"dancer"}
                      fill={dancer?.color || "#db2777"}
                      stroke={
                         selectedDancers.includes(dancer.id) && !isPlaying
@@ -174,23 +160,16 @@ export const DancerAlias: React.FC<{
                </svg>
             ) : (
                <svg
-                  id={dancer.id}
-                  data-type={"dancer"}
-                  className={` w-full h-full select-none  lg:pointer-events-auto pointer-events-none flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
+                  className={` w-full h-full select-none  pointer-events-none flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 154 154"
-                  style={{
-                     pointerEvents: isPlaying ? "none" : "auto",
-                  }}
                >
                   <circle
                      cx="77"
                      cy="77"
                      r="65"
                      className="group-hover:stroke-[20px]"
-                     id={dancer.id}
-                     data-type={"dancer"}
                      fill={dancer?.color || "#db2777"}
                      stroke={
                         selectedDancers.includes(dancer.id) && !isPlaying
