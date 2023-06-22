@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Header } from "../components/NonAppComponents/Header";
 import toast, { Toaster } from "react-hot-toast";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
+import { Widget } from "@typeform/embed-react";
+import "@typeform/embed/build/css/widget.css";
 
 import { useSupabaseClient, useSession, Session } from "@supabase/auth-helpers-react";
 import { MyDances } from "../components/DashboardComponents/MyDances";
@@ -19,6 +21,7 @@ const Dashboard = ({ dances, userData }: {}) => {
    const supabase = useSupabaseClient();
    const [importIsOpen, setImportIsOpen] = useState(!dances.length);
    const [danceAppLink, setDanceAppLink] = useState("");
+   const [formOpen, setFormOpen] = useState(!userData);
    const router = useRouter();
    const [myDances, setMyDances] = useState(dances);
    const [menuOpen, setMenuOpen] = useState<"mydances" | "sharedWithMe" | "trash">("mydances");
@@ -98,7 +101,17 @@ const Dashboard = ({ dances, userData }: {}) => {
             {/* <div className="h-10 bg-pink-600 w-full grid place-items-center text-white">
                Our servers our currently down for maintenance. We'll be back up shortly!
             </div> */}
-            {!userData ? <TypeFromEmbed user_id={session?.user?.id}></TypeFromEmbed> : null}
+            {/* {!userData ? <TypeFromEmbed user_id={session?.user?.id}></TypeFromEmbed> : null} */}
+            {formOpen && session ? (
+               <Widget
+                  hidden={{
+                     user_id: session?.user?.id,
+                  }}
+                  // onSubmit={() => setFormOpen(false)}
+                  id="cq9sssDy"
+                  className="absolute top-0 left-0 w-full h-full z-50 rounded-none"
+               />
+            ) : null}
             <div className="h-screen flex flex-row font-inter overscroll-none overflow-hidden">
                <Toaster></Toaster>
                {/* <Header></Header> */}
