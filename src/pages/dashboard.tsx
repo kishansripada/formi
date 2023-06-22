@@ -102,7 +102,7 @@ const Dashboard = ({ dances, userData }: {}) => {
                Our servers our currently down for maintenance. We'll be back up shortly!
             </div> */}
             {/* {!userData ? <TypeFromEmbed user_id={session?.user?.id}></TypeFromEmbed> : null} */}
-            {formOpen && session ? (
+            {/* {formOpen && session ? (
                <Widget
                   hidden={{
                      user_id: session?.user?.id,
@@ -111,7 +111,7 @@ const Dashboard = ({ dances, userData }: {}) => {
                   id="cq9sssDy"
                   className="absolute top-0 left-0 w-full h-full z-50 rounded-none"
                />
-            ) : null}
+            ) : null} */}
             <div className="h-screen flex flex-row font-inter overscroll-none overflow-hidden">
                <Toaster></Toaster>
                {/* <Header></Header> */}
