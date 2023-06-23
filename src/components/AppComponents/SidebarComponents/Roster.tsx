@@ -312,6 +312,10 @@ export const Roster: React.FC<{
 
                   <div className="mt-auto p-2">
                      <div
+                        style={{
+                           opacity: selectedDancers.length ? 1 : 0.5,
+                           pointerEvents: selectedDancers.length ? "all" : "none",
+                        }}
                         onClick={() => {
                            selectedDancers.forEach((dancerId) => {
                               removeDancer(dancerId);
