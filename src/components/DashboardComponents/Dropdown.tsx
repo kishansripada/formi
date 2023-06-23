@@ -46,10 +46,10 @@ export const Dropdown: React.FC<{ dance: any; invalidateDances: Function; setOpe
    };
 
    const duplicateRoster = async (dance) => {
-      console.log(dance);
+      // console.log(dance);
       const { data: newDance } = await supabase
          .from("dances")
-         .insert([{ user: session.user.id, last_edited: new Date(), dancers: dance.dancers, formations: [dance.formations] }])
+         .insert([{ user: session?.user.id, last_edited: new Date(), dancers: dance.dancers, formations: [dance.formations[0]] }])
          .select("id")
          .single();
 
