@@ -44,7 +44,9 @@ const home = () => {
                      }}
                      className=" text-4xl lg:text-7xl dark:text-neutral-100   text-center  z-10 font-bold text-neutral-800 "
                   >
-                     Plan and excecute stunning choreography
+                     Plan and excecute{" "}
+                     <span className="font-bold text-transparent  bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">stunning</span>{" "}
+                     choreography
                      {/* Visualize your stage formations <span className="italic">before</span> performing */}
                   </h1>
                   <h1 className=" dark:text-neutral-300  text-center text-neutral-700 relative lg:text-xl  z-10 lg:mt-16 mt-8  lg:w-1/2 ">
@@ -60,10 +62,7 @@ const home = () => {
             </div>
 
             <div className="flex lg:flex-row  flex-col items-center justify-between max-w-screen-xl w-full  mt-12   ">
-               <div className=" top-[-100px] relative">
-                  <TikTokEmbed1></TikTokEmbed1>
-               </div>
-               <div className="lg:flex hidden flex-row items-center justify-center mb-auto">
+               <div className="lg:flex hidden flex-row items-center justify-center mb-12 w-full ">
                   <Link href={"/207/edit"} className="">
                      <button className="  flex-row items-center  mr-3   bg-pink-600 relative z-20 px-4 py-2   border border-pink-600  hidden lg:flex rounded-full text-xl group">
                         <span className="mr-2 text-white ">View demo</span>
@@ -98,9 +97,6 @@ const home = () => {
                         </span>
                      </button>
                   </Link>
-               </div>
-               <div className=" top-[-100px] relative">
-                  <TikTokEmbed2></TikTokEmbed2>
                </div>
             </div>
 

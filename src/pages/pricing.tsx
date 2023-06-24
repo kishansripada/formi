@@ -58,10 +58,17 @@ const Pricing = () => {
 
             <meta property="og:site_name" content="FORMI: Online stage performance planning software." />
          </Head>
+         <div className="h-screen w-full flex flex-col">
+            <Header></Header>
+            <div className="h-full">
+               <p className="  text-8xl text-center font-bold">Sike!</p>
+               <p className="  text-5xl text-center font-bold">We're free</p>
+            </div>
 
-         <Header></Header>
-         <PricingTable></PricingTable>
-         <Footer></Footer>
+            {/* <PricingTable></PricingTable> */}
+
+            <Footer></Footer>
+         </div>
       </>
    );
 };
