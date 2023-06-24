@@ -9,7 +9,7 @@ const ProtectedRoute: NextApiHandler = async (req, res) => {
    //          performance_id: 1442,
    //       },
    //    };
-   console.log(req.body);
+   console.error(req.body);
    const options = {
       method: "POST",
       body: JSON.stringify({
