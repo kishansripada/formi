@@ -1,11 +1,11 @@
 import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings, localSettings } from "../../types/types";
 import { ThreeDancer } from "../AppComponents/ThreeDancer";
-import { Canvas as Canva } from "@react-three/fiber";
+import { Canvas as Canva, useLoader } from "@react-three/fiber";
 import { Stage, Grid, OrbitControls, Environment, Lightformer } from "@react-three/drei";
 import { Text } from "@react-three/drei";
 import { Line } from "@react-three/drei";
-import { Vector3 } from "three";
-
+import { Vector3, TextureLoader, DoubleSide, BufferGeometry, MeshBasicMaterial } from "three";
+import { useState, useEffect } from "react";
 export const ThreeD: React.FC<{
    children: React.ReactNode;
    setFormations: Function;
@@ -25,7 +25,7 @@ export const ThreeD: React.FC<{
    undo: Function;
    addToStack: Function;
    pushChange: Function;
-   localSettings: any;
+   localSettings: localSettings;
    isCommenting: boolean;
    setIsCommenting: Function;
    zoom: number;
@@ -109,7 +109,25 @@ export const ThreeD: React.FC<{
             />
          ) : null}
 
+         {cloudSettings.stageBackground === "custom" || cloudSettings.stageBackground === "grid" ? (
+            <Grid
+               renderOrder={-1}
+               position={[0, 0, 0]}
+               args={[cloudSettings.stageDimensions.width / 2, cloudSettings.stageDimensions.height / 2]}
+               cellSize={0.5}
+               cellThickness={0.5}
+               sectionSize={2.5}
+               sectionThickness={1.5}
+               cellColor={`${localSettings.isDarkMode ? "white" : "black"}`}
+               sectionColor={"#db2777"}
+            />
+         ) : null}
+
          <ambientLight intensity={0.5} />
+         {cloudSettings?.backgroundUrl && cloudSettings.stageBackground === "custom" ? (
+            <ImageComponent cloudSettings={cloudSettings} url={cloudSettings.backgroundUrl}></ImageComponent>
+         ) : null}
+
          <directionalLight position={[0, 10, 5]} intensity={1} />
          {selectedFormation !== null
             ? formations[selectedFormation].positions.map((dancerPosition: dancerPosition) => {
@@ -191,6 +209,24 @@ export const ThreeD: React.FC<{
    );
 };
 
+function ImageComponent({ url, cloudSettings }: { url: string; cloudSettings: cloudSettings }) {
+   const texture = useLoader(TextureLoader, url);
+   const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
+
+   useEffect(() => {
+      calculateImageDimensions(cloudSettings, url, (width, height) => {
+         setDimensions({ width, height });
+      });
+   }, [cloudSettings, url]);
+
+   return (
+      <mesh position={[0, 0, 0]} rotation={[Math.PI * 1.5, 0, 0]}>
+         <planeBufferGeometry attach="geometry" args={[dimensions.width, dimensions.height]} />
+         <meshBasicMaterial opacity={0.7} transparent={true} attach="material" map={texture} side={DoubleSide} />
+      </mesh>
+   );
+}
+
 const VerticalLines = ({ stageWidth, stageHeight, localSettings }: { stageWidth: number; stageHeight: number; localSettings: localSettings }) => {
    const lines = [];
    const numLines = 10;
@@ -214,3 +250,47 @@ const VerticalLines = ({ stageWidth, stageHeight, localSettings }: { stageWidth:
 
    return <>{lines}</>;
 };
+
+function calculateImageDimensions(
+   cloudSettings: { stageDimensions: { width: number; height: number } },
+   url: string,
+   callback: (newWidth: number, newHeight: number) => void
+): void {
+   // Create a new image object
+   let img = new Image();
+
+   // Define the onload function
+   img.onload = function () {
+      // Get the actual width and height of the image
+      const imgWidth: number = this.width;
+      const imgHeight: number = this.height;
+
+      // Get the stage width and height
+      const stageWidth: number = cloudSettings.stageDimensions.width / 2;
+      const stageHeight: number = cloudSettings.stageDimensions.height / 2;
+
+      // Calculate the image aspect ratio
+      const imgAspectRatio: number = imgWidth / imgHeight;
+
+      // Calculate the stage aspect ratio
+      const stageAspectRatio: number = stageWidth / stageHeight;
+
+      let newImgWidth: number, newImgHeight: number;
+
+      if (stageAspectRatio > imgAspectRatio) {
+         // If stage aspect ratio is larger, image height should be equal to stage height
+         newImgHeight = stageHeight;
+         newImgWidth = newImgHeight * imgAspectRatio;
+      } else {
+         // If image aspect ratio is larger, image width should be equal to stage width
+         newImgWidth = stageWidth;
+         newImgHeight = newImgWidth / imgAspectRatio;
+      }
+
+      // Return the new width and height
+      callback(newImgWidth, newImgHeight);
+   };
+
+   // Set the src attribute to start loading the image
+   img.src = url;
+}
