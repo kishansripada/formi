@@ -75,7 +75,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [formations, setFormations] = useState<formation[]>(initialData.formations);
 
    const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
-   const [shareSettings, setShareSettings] = useState(initialData.sharesettings);
+   const [permissions, setPermissions] = useState(initialData.permissions);
 
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(initialData.soundCloudId);
    const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
@@ -797,8 +797,8 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
          {shareIsOpen ? (
             <Share
-               shareSettings={shareSettings}
-               setShareSettings={setShareSettings}
+               permissions={permissions}
+               setPermissions={setPermissions}
                anyoneCanView={anyoneCanView}
                setAnyoneCanView={setAnyoneCanView}
                setShareIsOpen={setShareIsOpen}
@@ -1373,35 +1373,38 @@ export const getServerSideProps = async (ctx) => {
    //    };
    // }
 
-   async function getSubscriptionPlan(supabase_id: string) {
-      return await fetch(
-         `https://api.stripe.com/v1/customers/search?query=metadata['supabase_id']:'${supabase_id}'&expand[]=data.subscriptions.data`,
-         {
-            headers: {
-               Authorization:
-                  "Basic cmtfbGl2ZV81MUxhajV0SHZDM3c2ZThmY21zVklCRjlKMjRLUWFFYlgwVUs0SHE0b245QTVXMUNIaWlHaHAwVzlrbHg5dDU3OW9WcWVibFJGOHh3cE8xc3FlUmFMOHBzYjAwMmhLNFl0NEU6",
-            },
-         }
-      )
-         .then((r) => r.json())
-         .then((r) => {
-            // customerExists = Boolean(r.data.length);
+   // async function getSubscriptionPlan(supabase_id: string) {
+   //    return await fetch(
+   //       `https://api.stripe.com/v1/customers/search?query=metadata['supabase_id']:'${supabase_id}'&expand[]=data.subscriptions.data`,
+   //       {
+   //          headers: {
+   //             Authorization:
+   //                "Basic cmtfbGl2ZV81MUxhajV0SHZDM3c2ZThmY21zVklCRjlKMjRLUWFFYlgwVUs0SHE0b245QTVXMUNIaWlHaHAwVzlrbHg5dDU3OW9WcWVibFJGOHh3cE8xc3FlUmFMOHBzYjAwMmhLNFl0NEU6",
+   //          },
+   //       }
+   //    )
+   //       .then((r) => r.json())
+   //       .then((r) => {
+   //          // customerExists = Boolean(r.data.length);
 
-            let plan = r?.data?.[0]?.subscriptions.data?.[0] || null;
-            return plan || { plan: { product: null } };
-         });
-   }
+   //          let plan = r?.data?.[0]?.subscriptions.data?.[0] || null;
+   //          return plan || { plan: { product: null } };
+   //       });
+   // }
 
-   let [{ data: dance }, subscription] = await Promise.all([
+   let [{ data: dance }, { data: permissions }] = await Promise.all([
       supabase.from("dances").select("*").eq("id", ctx.query.danceId).single(),
-      !session
-         ? { plan: { product: null } }
-         : grandfatheredEmails.includes(session?.user?.email)
-         ? { plan: { product: "legacy" } }
-         : getSubscriptionPlan(session?.user.id),
+      supabase.from("permissions").select("*").eq("performance_id", ctx.query.danceId),
    ]);
 
-   let pricingTier = subscription.plan.product;
+   // console.log(permissions);
+   // !session
+   // ? { plan: { product: null } }
+   // : grandfatheredEmails.includes(session?.user?.email)
+   // ? { plan: { product: "legacy" } }
+   // : getSubscriptionPlan(session?.user.id),
+
+   // let pricingTier = subscription.plan.product;
 
    // let { data: dance } = await supabase.from("dances").select("*").eq("id", ctx.query.danceId).single();
 
@@ -1415,7 +1418,7 @@ export const getServerSideProps = async (ctx) => {
    //    supabase.from("deltas").delete().eq("danceid", ctx.query.danceId),
    //    supabase.from("dances").update({ formations: dance.formations }).eq("id", ctx.query.danceId),
    // ]);
-
+   // console.log(dance);
    if (!dance?.formations && session) {
       return {
          redirect: {
@@ -1433,45 +1436,27 @@ export const getServerSideProps = async (ctx) => {
       };
    }
    let viewOnly = true;
-   // let pricingTier = "premium";
 
-   if (dance.id === 207) {
-      pricingTier = "legacy";
-   }
-
-   if (!pricingTier) {
-      pricingTier = "basic";
-   }
-   if (dance.id === 207 || dance?.user === session?.user?.id || dance?.sharesettings?.[session?.user?.email] === "edit") {
+   if (
+      // they can edit if its the demo
+      dance.id === 207 ||
+      // if it's their own
+      dance?.user === session?.user?.id ||
+      // if they have edit permissions
+      permissions?.find((permission) => permission.email === session?.user?.email)?.role === "edit"
+   ) {
       viewOnly = false;
    }
-   dance = { ...{ ...dance, formations: dance.formations } };
+
+   // dance = { ...{ ...dance, formations: dance.formations } };
 
    return {
       props: {
-         initialData: dance,
+         initialData: { ...dance, permissions },
          viewOnly,
          pricingTier: "legacy",
       },
    };
-
-   // if (dance?.sharesettings[session?.user?.email] === "view") {
-   //    return {
-   //       props: {
-   //          initialData: dance,
-   //          viewOnly: true,
-   //       },
-   //    };
-   // }
-
-   // if (dance) {
-   //    return {
-   //       props: {
-   //          initialData: dance,
-   //          viewOnly: true,
-   //       },
-   //    };
-   // }
 };
 
 function TopLeft() {
