@@ -1,15 +1,21 @@
 import { NextApiHandler } from "next";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 const ProtectedRoute: NextApiHandler = async (req, res) => {
    // Create authenticated Supabase Client
 
+   //    req.body = {
+   //       record: {
+   //          email: "kishansripada@gmail.com",
+   //          performance_id: 1442,
+   //       },
+   //    };
+   console.log(req.body);
    const options = {
       method: "POST",
       body: JSON.stringify({
          key: "md-pfCXPghMdPuLWa4eczrrEw",
          message: {
-            html: `Performance shared with you. Check it out at <a href=" https://formistudio.app/${req.body.record.performance_id}/edit"> https://formi.app/ </a>`,
+            html: `Performance shared with you. Check it out at <a href="https://formistudio.app/${req.body.record.performance_id}/edit"> here </a>`,
             text: "hi",
             subject: "Performance shared with you.",
             from_email: "kishansripada@formistudio.app",
