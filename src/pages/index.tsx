@@ -36,67 +36,75 @@ const home = () => {
          <Header></Header>
 
          <div className="overflow-hidden relative flex flex-col items-center ">
-            <div className=" flex flex-row items-center justify-center w-full  text-center lg:py-12 py-8 lg:px-[10%] px-[5%] max-w-2xl lg:max-w-none   relative  ">
-               <div className="  relative  w-full lg:w-2/3 flex flex-col  items-center  ">
+            <div className=" flex flex-row items-center justify-center w-full   lg:py-12 py-8 lg:px-[8%] px-[5%] max-w-2xl lg:max-w-none   relative  ">
+               <div className="relative  w-full flex flex-col  items-center  ">
                   <h1
                      style={{
                         lineHeight: 1.15,
                      }}
-                     className=" text-4xl lg:text-7xl dark:text-neutral-100   text-center  z-10 font-bold text-neutral-800 "
+                     className=" text-4xl lg:text-7xl dark:text-neutral-100 z-10 mr-auto  text-neutral-800 w-[80%] "
                   >
-                     Plan and excecute{" "}
-                     <span className="font-bold text-transparent  bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">stunning</span>{" "}
-                     choreography
+                     How you <span className="font-bold">dance</span>, <span className="font-bold">choreograph</span> and{" "}
+                     <span className="font-bold">move</span> matters.
                      {/* Visualize your stage formations <span className="italic">before</span> performing */}
                   </h1>
-                  <h1 className=" dark:text-neutral-300  text-center text-neutral-700 relative lg:text-xl  z-10 lg:mt-16 mt-8  lg:w-1/2 ">
-                     Create, plan, and share stunning 3D dance & cheer formations in minutes
-                  </h1>
+                  <div className="flex flex-row justify-between w-full">
+                     <h1
+                        style={{
+                           lineHeight: 1.15,
+                        }}
+                        className=" text-4xl lg:text-7xl dark:text-neutral-100 z-10   text-neutral-800  "
+                     >
+                        Do it together with FORMI.
+                        {/* Visualize your stage formations <span className="italic">before</span> performing */}
+                     </h1>
+                     <div className="lg:flex hidden flex-row items-center  ">
+                        <Link href={"/207/edit"} className="">
+                           <button className="  flex-row items-center  mr-3   bg-pink-600 relative z-20 px-4 py-2   border border-pink-600  hidden lg:flex rounded-md text-xl group">
+                              <span className="mr-2 text-white ">View demo</span>
+                              <span className="relative left-0 group-hover:left-3 transition-all duration-300">
+                                 <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-6 h-6 stroke-white "
+                                 >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                 </svg>
+                              </span>
+                           </button>
+                        </Link>
+                        <Link href={"/login"} className="">
+                           <button className="  flex-row items-center border-neutral-800 border   text-neutral-100 relative z-20 px-4 py-2  hidden lg:flex rounded-md  text-xl group">
+                              <span className="mr-2 text-black ">Start creating</span>
+                              <span className="relative left-0 group-hover:left-3 transition-all duration-300">
+                                 <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-6 h-6 stroke-black "
+                                 >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                 </svg>
+                              </span>
+                           </button>
+                        </Link>
+                     </div>
+                  </div>
 
+                  {/* <h1 className=" dark:text-neutral-300  text-center text-neutral-700 relative lg:text-xl  z-10 lg:mt-16 mt-8  lg:w-1/2 ">
+                     Create, plan, and share stunning 3D dance & cheer formations in minutes
+                  </h1> */}
+                  <img className="w-full rounded-xl mt-10" src="/demoFigma.png" alt="" />
                   <div className="block lg:hidden mb-8">
                      <button className="rounded-full bg-pink-600 px-4 py-2 text-white mt-7">Mobile app coming soon </button>
                      <p className="text-xs text-neutral-500 mt-3">To use FORMI, visit our website on your laptop</p>
                   </div>
                   {/* <p className="text-neutral-500  mt-5">Plan out your dance and cheer formations, visualizing the transitions synced to music.</p> */}
-               </div>
-            </div>
-
-            <div className="flex lg:flex-row  flex-col items-center justify-between max-w-screen-xl w-full  mt-12   ">
-               <div className="lg:flex hidden flex-row items-center justify-center mb-12 w-full ">
-                  <Link href={"/207/edit"} className="">
-                     <button className="  flex-row items-center  mr-3   bg-pink-600 relative z-20 px-4 py-2   border border-pink-600  hidden lg:flex rounded-full text-xl group">
-                        <span className="mr-2 text-white ">View demo</span>
-                        <span className="relative left-0 group-hover:left-3 transition-all duration-300">
-                           <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-6 h-6 stroke-white "
-                           >
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                           </svg>
-                        </span>
-                     </button>
-                  </Link>
-                  <Link href={"/login"} className="">
-                     <button className="  flex-row items-center border-neutral-800 border   text-neutral-100 relative z-20 px-4 py-2  hidden lg:flex rounded-full  text-xl group">
-                        <span className="mr-2 text-black ">Start creating</span>
-                        <span className="relative left-0 group-hover:left-3 transition-all duration-300">
-                           <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-6 h-6 stroke-black "
-                           >
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                           </svg>
-                        </span>
-                     </button>
-                  </Link>
                </div>
             </div>
 
