@@ -15,7 +15,7 @@ export const Trash: React.FC<{ trash: any; deleteDance: Function; removeFromTras
                   .map((dance) => {
                      return (
                         <>
-                           <div className="flex flex-col items-center text-neutral-700 mr-5 relative  ">
+                           <div key={dance.id} className="flex flex-col items-center text-neutral-700 mr-5 relative  ">
                               <div className="">
                                  <div className="bg-neutral-200 rounded-xl h-[200px] w-[350px] flex flex-row justify-between items-center p-3  ">
                                     <button

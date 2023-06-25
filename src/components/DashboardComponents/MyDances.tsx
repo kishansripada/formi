@@ -98,7 +98,7 @@ export const MyDances: React.FC<{
                               <Link href={`/${dance.id}/edit`}>
                                  <div className="w-full border-neutral-200 border  rounded-md">
                                     <div className="bg-neutral-100 rounded-md min-h-[150px]  w-full relative  ">
-                                       {dance.formations[0].positions?.map((position) => {
+                                       {dance.formations.positions?.map((position) => {
                                           return (
                                              <>
                                                 <div

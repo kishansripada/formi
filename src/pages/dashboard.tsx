@@ -15,9 +15,10 @@ import { Trash } from "../components/DashboardComponents/Trash";
 import { grandfatheredEmails } from "../../public/grandfathered";
 
 import { Dropdown } from "../components/DashboardComponents/Dropdown";
-const Dashboard = ({ dances, userData }: {}) => {
+const Dashboard = ({ dances, userData, sharedWithMe }: {}) => {
+   console.log(sharedWithMe);
    let session = useSession();
-   console.log(dances);
+   // console.log(dances);
    const supabase = useSupabaseClient();
    const [importIsOpen, setImportIsOpen] = useState(!dances.length);
    const [danceAppLink, setDanceAppLink] = useState("");
@@ -35,9 +36,21 @@ const Dashboard = ({ dances, userData }: {}) => {
    };
 
    const invalidateDances = async () => {
-      let data = await supabase.from("dances").select("*").eq("user", session.user.id);
-      console.log(data);
-      // console.log(data.data);
+      let data = await supabase
+         .from("dances")
+         .select(
+            `
+         id,
+         created_at,
+         user,
+         formations: formations->0,
+         name,
+         last_edited,
+         settings,
+         isInTrash,
+         dancers`
+         )
+         .eq("user", session.user.id);
 
       setMyDances(data?.data);
    };
@@ -142,14 +155,14 @@ const Dashboard = ({ dances, userData }: {}) => {
                      className={`flex flex-row justify-between mt-4 items-center ${menuOpen === "mydances" ? "bg-pink-200" : ""}   w-full h-9 px-3`}
                      onClick={() => setMenuOpen("mydances")}
                   >
-                     <p>Recents</p>
+                     <p>My Performances</p>
                   </button>
-                  {/* <button
+                  <button
                      className={`flex flex-row justify-between items-center ${menuOpen === "sharedWithMe" ? "bg-pink-200" : ""}   w-full h-9 px-3`}
                      onClick={() => setMenuOpen("sharedWithMe")}
                   >
                      <p>Shared With Me</p>
-                  </button> */}
+                  </button>
 
                   <button
                      className={`flex flex-row justify-between items-center mt-auto  ${
@@ -213,9 +226,15 @@ const Dashboard = ({ dances, userData }: {}) => {
                         canCreatePerformance={true}
                      ></MyDances>
                   ) : menuOpen === "sharedWithMe" ? (
-                     <></>
-                  ) : // <MyDances
-                  //    // subscription={subscription}
+                     <MyDances
+                        // subscription={subscription}
+                        createNewDance={createNewDance}
+                        invalidateDances={invalidateDances}
+                        myDances={[...sharedWithMe.filter((dance) => !dance.isInTrash)]}
+                        canCreatePerformance={false}
+                     ></MyDances>
+                  ) : //   <MyDances
+                  //    subscription={subscription}
                   //    createNewDance={createNewDance}
                   //    invalidateDances={invalidateDances}
                   //    myDances={[...sharedWithMe.filter((dance) => !dance.isInTrash)]}
@@ -257,21 +276,48 @@ export const getServerSideProps = withPageAuth({
       // }
 
       async function getMyDances(session: Session) {
-         // let data = await supabase.rpc("get_dances_by_user", {
-         //    input_uuid: session.user.id,
-         // });
-         let data = await supabase.from("dances").select("*").eq("user", session.user.id);
-         console.log(data);
-         // console.log(data.data);
+         let data = await supabase
+            .from("dances")
+            .select(
+               `
+               id,
+               created_at,
+               user,
+               formations: formations->0,
+               name,
+               last_edited,
+               settings,
+               isInTrash,
+               dancers`
+            )
+            .eq("user", session.user.id);
+
          return data?.data || [];
       }
 
-      // async function getSharedWithMe(session: Session) {
-      //    let data = await supabase.rpc("get_shared_dances_with_first_formation", {
-      //       email: session.user.email,
-      //    });
-      //    return data.data || [];
-      // }
+      async function getSharedWithMe(session: Session) {
+         let data = await supabase
+            .from("permissions")
+            .select(
+               `
+               performance_id (
+               id,
+               created_at,
+               user,
+               formations: formations->0,
+               name,
+               last_edited,
+               settings,
+               isInTrash,
+               dancers
+               )
+               
+               `
+            )
+            .eq("email", session.user.email);
+
+         return data?.data?.map((x) => x?.performance_id) || [];
+      }
 
       async function getUserData(session: Session) {
          let data = await supabase.from("user_data").select("*").eq("user_id", session.user.id).maybeSingle();
@@ -306,17 +352,19 @@ export const getServerSideProps = withPageAuth({
       //       });
       // }
       // getOrganizationPerformances(session);
-      let [dances, userData] = await Promise.all([
+      let [dances, sharedWithMe, userData] = await Promise.all([
          getMyDances(session),
          // getSubscriptionPlan(session),
          // getOrganization(session),
-         // getSharedWithMe(session),
+         getSharedWithMe(session),
          getUserData(session),
       ]);
 
+      // console.log(data);
+
       // const { data } = await supabase.from("dances").select("*").eq("user", user.id);
 
-      return { props: { dances: dances, userData } };
+      return { props: { dances: dances, userData, sharedWithMe } };
    },
 });
 
@@ -326,36 +374,3 @@ function daysLeft(timestamp: number): number {
    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
    return diffDays;
 }
-
-const TypeFromEmbed = ({ user_id }: { user_id: string }) => {
-   useEffect(() => {
-      // Load TikTok script
-      const script = document.createElement("script");
-      script.setAttribute("src", "//embed.typeform.com/next/embed.js");
-      script.setAttribute("async", true);
-      document.body.appendChild(script);
-
-      return () => {
-         // Clean up script to avoid multiple instances
-         document.body.removeChild(script);
-      };
-   }, []);
-
-   return (
-      <>
-         {user_id ? (
-            <div
-               data-tf-widget="cq9sssDy"
-               data-tf-opacity="100"
-               data-tf-inline-on-mobile
-               data-tf-iframe-props="title=Onboarding"
-               data-tf-transitive-search-params
-               data-tf-auto-focus
-               data-tf-medium="snippet"
-               data-tf-full-screen
-               data-tf-hidden={`user_id=${user_id}`}
-            ></div>
-         ) : null}
-      </>
-   );
-};

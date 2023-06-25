@@ -49,7 +49,7 @@ export const Dropdown: React.FC<{ dance: any; invalidateDances: Function; setOpe
       // console.log(dance);
       const { data: newDance } = await supabase
          .from("dances")
-         .insert([{ user: session?.user.id, last_edited: new Date(), dancers: dance.dancers, formations: [dance.formations[0]] }])
+         .insert([{ user: session?.user.id, last_edited: new Date(), dancers: dance.dancers, formations: [dance.formations] }])
          .select("id")
          .single();
 
