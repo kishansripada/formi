@@ -142,7 +142,9 @@ export const StageSettings: React.FC<{
          <Toaster></Toaster>
          <div className=" w-[260px]  min-w-[260px] hidden lg:block bg-white dark:bg-neutral-800 dark:text-white h-full   overflow-y-scroll focus:outline-none">
             <div className="p-4">
-               <p className="text-neutral-800 font-medium text-sm dark:text-neutral-200">Width</p>
+               <p className="text-neutral-800 font-medium text-sm dark:text-neutral-200">
+                  Width <span className="text-xs text-neutral-700 dark:text-neutral-400">(feet)</span>
+               </p>
                <div className=" flex flex-row w-min items-center border border-neutral-200  ">
                   <button className="p-2  hover:bg-neutral-100 transition duration-300" onClick={() => changeWidth(-2)}>
                      <svg
@@ -173,7 +175,9 @@ export const StageSettings: React.FC<{
                   </button>
                </div>
 
-               <p className="text-neutral-800 dark:text-neutral-200 font-medium text-sm mt-6">Height</p>
+               <p className="text-neutral-800 dark:text-neutral-200 font-medium text-sm mt-6">
+                  Height <span className="text-xs text-neutral-700 dark:text-neutral-400">(feet)</span>
+               </p>
                <div className=" flex flex-row w-min items-center border border-neutral-200  ">
                   <button className="p-2  hover:bg-neutral-100 transition duration-300" onClick={() => changeHeight(-2)}>
                      <svg

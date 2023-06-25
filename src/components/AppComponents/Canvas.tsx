@@ -705,7 +705,7 @@ export const Canvas: React.FC<{
                .includes("stage")
          ) {
             event.preventDefault();
-            setZoom((zoom) => Math.min(Math.max(0.4, zoom + event.deltaY * -0.01), 4));
+            setZoom((zoom) => Math.min(Math.max(0.1, zoom + event.deltaY * -0.01), 4));
             // event.preventDefault();
             // Handle zooming or whatever functionality you want here...
          }

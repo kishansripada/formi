@@ -87,7 +87,7 @@ export const ThreeD: React.FC<{
             pushChange();
          }}
          gl={{ logarithmicDepthBuffer: true }}
-         camera={{ position: [0, 10, (localSettings.stageFlipped ? -1 : 1) * 14], fov: 40 }}
+         camera={{ position: [0, 10, (localSettings.stageFlipped ? -1 : 1) * 40], fov: 40 }}
       >
          {stageBackground === "cheer9" ? (
             <VerticalLines
@@ -95,31 +95,17 @@ export const ThreeD: React.FC<{
                stageWidth={cloudSettings.stageDimensions.width}
                stageHeight={cloudSettings.stageDimensions.height}
             />
-         ) : stageBackground === "grid" ? (
+         ) : stageBackground === "grid" || stageBackground === "custom" ? (
             <Grid
                renderOrder={-1}
                position={[0, 0, 0]}
-               args={[cloudSettings.stageDimensions.width / 2, cloudSettings.stageDimensions.height / 2]}
-               cellSize={0.5}
+               args={[cloudSettings.stageDimensions.width, cloudSettings.stageDimensions.height]}
+               cellSize={1}
                cellThickness={0.5}
-               sectionSize={2.5}
+               sectionSize={8}
                sectionThickness={1.5}
                cellColor={`${localSettings.isDarkMode ? "white" : "black"}`}
-               sectionColor={"#db2777"}
-            />
-         ) : null}
-
-         {cloudSettings.stageBackground === "custom" || cloudSettings.stageBackground === "grid" ? (
-            <Grid
-               renderOrder={-1}
-               position={[0, 0, 0]}
-               args={[cloudSettings.stageDimensions.width / 2, cloudSettings.stageDimensions.height / 2]}
-               cellSize={0.5}
-               cellThickness={0.5}
-               sectionSize={2.5}
-               sectionThickness={1.5}
-               cellColor={`${localSettings.isDarkMode ? "white" : "black"}`}
-               sectionColor={"#db2777"}
+               sectionColor={"#737373"}
             />
          ) : null}
 
@@ -166,8 +152,8 @@ export const ThreeD: React.FC<{
             enabled={!isThreeDancerDragging}
          />
          <Text
-            scale={[0.5, 0.5, 0.5]}
-            position={[0, 0, cloudSettings.stageDimensions.height / 4 + 1]}
+            scale={[1, 1, 1]}
+            position={[0, 0, cloudSettings.stageDimensions.height / 2 + 1]}
             rotation={[Math.PI * 1.5, 0, 0]}
             color={`${localSettings.isDarkMode ? "white" : "black"}`}
             anchorX="center"
@@ -176,8 +162,8 @@ export const ThreeD: React.FC<{
             AUDIENCE
          </Text>
          <Text
-            scale={[0.5, 0.5, 0.5]}
-            position={[0, 0, -(cloudSettings.stageDimensions.height / 4 + 1)]}
+            scale={[1, 1, 1]}
+            position={[0, 0, -(cloudSettings.stageDimensions.height / 2 + 1)]}
             rotation={[Math.PI * 1.5, 0, Math.PI * 1]}
             color={`${localSettings.isDarkMode ? "white" : "black"}`}
             anchorX="center"
@@ -186,8 +172,8 @@ export const ThreeD: React.FC<{
             BACKSTAGE
          </Text>
          <Text
-            scale={[0.5, 0.5, 0.5]}
-            position={[cloudSettings.stageDimensions.width / 4 + 1, 0, 0]}
+            scale={[1, 1, 1]}
+            position={[cloudSettings.stageDimensions.width / 2 + 1, 0, 0]}
             rotation={[Math.PI * 1.5, 0, Math.PI * 2.5]}
             color={`${localSettings.isDarkMode ? "white" : "black"}`}
             anchorX="center"
@@ -196,8 +182,8 @@ export const ThreeD: React.FC<{
             STAGE LEFT
          </Text>
          <Text
-            scale={[0.5, 0.5, 0.5]}
-            position={[-(cloudSettings.stageDimensions.width / 4 + 1), 0, 0]}
+            scale={[1, 1, 1]}
+            position={[-(cloudSettings.stageDimensions.width / 2 + 1), 0, 0]}
             rotation={[Math.PI * 1.5, 0, Math.PI * 1.5]}
             color={`${localSettings.isDarkMode ? "white" : "black"}`}
             anchorX="center"
@@ -230,11 +216,11 @@ function ImageComponent({ url, cloudSettings }: { url: string; cloudSettings: cl
 const VerticalLines = ({ stageWidth, stageHeight, localSettings }: { stageWidth: number; stageHeight: number; localSettings: localSettings }) => {
    const lines = [];
    const numLines = 10;
-   const spacing = stageWidth / 2 / (numLines - 1);
-   const halfHeight = stageHeight / 4;
+   const spacing = stageWidth / (numLines - 1);
+   const halfHeight = stageHeight / 2;
 
    for (let i = 0; i < numLines; i++) {
-      const xPosition = -stageWidth / 4 + i * spacing;
+      const xPosition = -stageWidth / 2 + i * spacing;
       const start = new Vector3(xPosition, 0, -halfHeight);
       const end = new Vector3(xPosition, 0, halfHeight);
       lines.push(
@@ -266,8 +252,8 @@ function calculateImageDimensions(
       const imgHeight: number = this.height;
 
       // Get the stage width and height
-      const stageWidth: number = cloudSettings.stageDimensions.width / 2;
-      const stageHeight: number = cloudSettings.stageDimensions.height / 2;
+      const stageWidth: number = cloudSettings.stageDimensions.width;
+      const stageHeight: number = cloudSettings.stageDimensions.height;
 
       // Calculate the image aspect ratio
       const imgAspectRatio: number = imgWidth / imgHeight;

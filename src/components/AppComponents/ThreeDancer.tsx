@@ -82,8 +82,8 @@ export function ThreeDancer({
                               return {
                                  ...dancerPosition,
                                  position: {
-                                    x: Math.round(planeIntersectPoint.x * 2 * gridSnap) / gridSnap,
-                                    y: Math.round(-planeIntersectPoint.z * 2 * gridSnap) / gridSnap,
+                                    x: Math.round(planeIntersectPoint.x * gridSnap) / gridSnap,
+                                    y: Math.round(-planeIntersectPoint.z * gridSnap) / gridSnap,
                                  },
 
                                  // THIS NEEDS TO BE FIXED
@@ -97,8 +97,8 @@ export function ThreeDancer({
                               return {
                                  ...dancerPosition,
                                  position: {
-                                    x: Math.round(planeIntersectPoint.x * 2 * gridSnap) / gridSnap,
-                                    y: Math.round(-planeIntersectPoint.z * 2 * gridSnap) / gridSnap,
+                                    x: Math.round(planeIntersectPoint.x * gridSnap) / gridSnap,
+                                    y: Math.round(-planeIntersectPoint.z * gridSnap) / gridSnap,
                                  },
                               };
                            }
@@ -125,13 +125,12 @@ export function ThreeDancer({
 
    const { nodes, materials } = useGLTF("/roblox.glb");
 
-   let maxHeight = Math.max(...dancers.map((dancer) => dancer?.height || 0)) || 182.88;
    let dancerPos;
    let textPos;
    let selectedPos;
-   dancerPos = useSpring({ position: [dancerPosition.position.x / 2, 0, -dancerPosition.position.y / 2] });
-   textPos = useSpring({ position: [dancerPosition.position.x / 2, ((dancer?.height || 182.88) / maxHeight) * 2, -dancerPosition.position.y / 2] });
-   selectedPos = useSpring({ position: [dancerPosition.position.x / 2, 0, -dancerPosition.position.y / 2] });
+   dancerPos = useSpring({ position: [dancerPosition.position.x, 0, -dancerPosition.position.y] });
+   textPos = useSpring({ position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28, -dancerPosition.position.y] });
+   selectedPos = useSpring({ position: [dancerPosition.position.x, 0, -dancerPosition.position.y] });
    // if (isDancerDragging && position !== null && currentFormationIndex !== null) {
    //    dancerPos = { position: [dancerPosition.position.x, 0, dancerPosition.position.y] };
    //    textPos = { position: [dancerPosition.position.x, 2, dancerPosition.position.y] };
@@ -141,10 +140,10 @@ export function ThreeDancer({
       let myPosition = animate(formations, dancer?.id, currentFormationIndex, percentThroughTransition);
       // if the animation function returns null, the dancer is not on the stage
       if (myPosition === null) return <></>;
-      let x = myPosition.x / 2;
-      let y = -myPosition.y / 2;
+      let x = myPosition.x;
+      let y = -myPosition.y;
       dancerPos = { position: [x, 0, y] };
-      textPos = { position: [x, ((dancer?.height || 182.88) / maxHeight) * 2, y] };
+      textPos = { position: [x, (dancer?.height || 182.88) / 28, y] };
       selectedPos = { position: [x, 0, y] };
    }
    // const outerMaterial = new MeshStandardMaterial({ color: 0x00ff00 });
@@ -152,7 +151,7 @@ export function ThreeDancer({
    return (
       <>
          <animated.mesh position={textPos.position}>
-            <Text ref={textRef} scale={[0.2, 0.2, 0.2]} color={`${localSettings.isDarkMode ? "white" : "black"}`} anchorX="center" anchorY="middle">
+            <Text ref={textRef} scale={[0.4, 0.4, 0.4]} color={`${localSettings.isDarkMode ? "white" : "black"}`} anchorX="center" anchorY="middle">
                {dancer?.name}
             </Text>
          </animated.mesh>
@@ -174,9 +173,9 @@ export function ThreeDancer({
          <animated.mesh
             // {...spring}
             {...bind()}
-            scale={[0.25, ((dancer?.height || 182.88) / maxHeight) * 0.35, 0.3]}
+            scale={[0.6, (dancer?.height || 182.88) / 156, 0.7]}
             // scale={[0.25, ((dancer.height || 182.88) / maxHeight) * 0.35, 0.3]}
-            // rotation={[Math.PI / 2, 0, 0]}
+            // rotation={[Math.PI / 2, 0, Math.PI / 2]}
             // rotation={[0, Math.PI / 2, 0]}
             // rotation={[0, dancerPosition?.rotation?.angle ? dancerPosition?.rotation?.angle * (Math.PI / 180) : 0, 0]}
             position={dancerPos.position}
