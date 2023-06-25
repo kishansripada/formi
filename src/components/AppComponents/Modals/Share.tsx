@@ -41,6 +41,15 @@ export const Share: React.FC<{
          .upsert({ email: newUserEmail, performance_id: router.query.danceId }, { onConflict: "email, performance_id" })
          .eq("id", router.query.danceId);
 
+      await fetch("/api/sendshareemail", {
+         method: "POST",
+         body: JSON.stringify({
+            email: newUserEmail,
+            performance_id: router.query.danceId,
+         }),
+      })
+         .then((r) => r.json())
+         .then((r) => console.log(r));
       setNewUserEmail("");
 
       setPermissions([...permissions, { email: newUserEmail, role: "view" }]);
@@ -145,7 +154,7 @@ export const Share: React.FC<{
 
                                        setPermissions(permissions.filter((p) => p.email !== permission.email));
                                     } else {
-                                       console.log(e.target.value);
+                                       // console.log(e.target.value);
                                        setPermissions((permissions: permission[]) => {
                                           return permissions.map((p: permission) => {
                                              if (p.email === permission.email) {

@@ -9,20 +9,20 @@ const ProtectedRoute: NextApiHandler = async (req, res) => {
    //          performance_id: 1442,
    //       },
    //    };
-   console.error(req.body);
+   req.body = JSON.parse(req.body);
    const options = {
       method: "POST",
       body: JSON.stringify({
          key: "md-pfCXPghMdPuLWa4eczrrEw",
          message: {
-            html: `Performance shared with you. Check it out at <a href="https://formistudio.app/${req.body.record.performance_id}/edit"> here </a>`,
+            html: `Performance shared with you. Check it out at <a href="https://formistudio.app/${req.body.performance_id}/edit"> here </a>`,
             text: "hi",
             subject: "Performance shared with you.",
             from_email: "kishansripada@formistudio.app",
             from_name: "FORMI",
             to: [
                {
-                  email: req.body.record.email,
+                  email: req.body.email,
                   type: "to",
                },
             ],
