@@ -35,17 +35,17 @@ const home = () => {
 
          <Header></Header>
 
-         <div className="overflow-hidden relative flex flex-col items-center ">
+         <div className="overflow-hidden relative flex flex-col items-center font-proxima ">
             <div className=" flex flex-row items-center justify-center w-full   lg:py-12 py-8 lg:px-[8%] px-[5%] max-w-2xl lg:max-w-none   relative  ">
                <div className="relative  w-full flex flex-col  items-center  ">
                   <h1
                      style={{
                         lineHeight: 1.15,
                      }}
-                     className=" text-4xl lg:text-7xl dark:text-neutral-100 z-10 mr-auto  text-neutral-800 w-[80%] "
+                     className=" text-4xl lg:text-6xl xl:text-7xl dark:text-neutral-100 z-10 mr-auto  text-neutral-800 w-[80%] "
                   >
-                     How you <span className="font-bold">dance</span>, <span className="font-bold">choreograph</span> and{" "}
-                     <span className="font-bold">move</span> matters.
+                     How you <span className="font-bold text-purple-600">dance</span>, <span className="font-bold text-blue-600">choreograph</span>{" "}
+                     and <span className="font-bold text-pink-600">move</span> matters.
                      {/* Visualize your stage formations <span className="italic">before</span> performing */}
                   </h1>
                   <div className="flex flex-row justify-between w-full">
@@ -53,9 +53,9 @@ const home = () => {
                         style={{
                            lineHeight: 1.15,
                         }}
-                        className=" text-4xl lg:text-7xl dark:text-neutral-100 z-10   text-neutral-800  "
+                        className=" text-4xl lg:text-6xl xl:text-7xl dark:text-neutral-100 z-10   text-neutral-800  "
                      >
-                        Do it together with FORMI.
+                        Do it together with <span className="">FORMI</span>.
                         {/* Visualize your stage formations <span className="italic">before</span> performing */}
                      </h1>
                      <div className="lg:flex hidden flex-row items-center  ">
@@ -76,7 +76,7 @@ const home = () => {
                               </span>
                            </button>
                         </Link>
-                        <Link href={"/login"} className="">
+                        {/* <Link href={"/login"} className="">
                            <button className="  flex-row items-center border-neutral-800 border   text-neutral-100 relative z-20 px-4 py-2  hidden lg:flex rounded-md  text-xl group">
                               <span className="mr-2 text-black ">Start creating</span>
                               <span className="relative left-0 group-hover:left-3 transition-all duration-300">
@@ -92,14 +92,14 @@ const home = () => {
                                  </svg>
                               </span>
                            </button>
-                        </Link>
+                        </Link> */}
                      </div>
                   </div>
 
                   {/* <h1 className=" dark:text-neutral-300  text-center text-neutral-700 relative lg:text-xl  z-10 lg:mt-16 mt-8  lg:w-1/2 ">
                      Create, plan, and share stunning 3D dance & cheer formations in minutes
                   </h1> */}
-                  <img className="w-full rounded-xl mt-10" src="/demoFigma.png" alt="" />
+                  <img className="w-full rounded-xl mt-12  " src="/demoFigma.png" alt="" />
                   <div className="block lg:hidden mb-8">
                      <button className="rounded-full bg-pink-600 px-4 py-2 text-white mt-7">Mobile app coming soon </button>
                      <p className="text-xs text-neutral-500 mt-3">To use FORMI, visit our website on your laptop</p>
@@ -108,6 +108,20 @@ const home = () => {
                </div>
             </div>
 
+            <div className="lg:px-[8%] px-[5%] border-b-black border-b flex flex-col mt-24">
+               <h1 className="text-7xl">Choreography has never been this sweet</h1>
+               <div className="flex flex-row ">
+                  <div className="w-1/3 mr-5">
+                     <p className="mt-12 text-xl">
+                        By converting your formations into lifelike 3D models, you can see your dance routine from every angle. Get a bird's-eye view
+                        of your pyramid formations or zoom in to fine-tune a wave pattern, giving you unparalleled control over every detail.
+                     </p>
+                  </div>
+                  <div className="w-2/3 pt-12">
+                     <img className=" relative rounded-t-xl border-t border-l border-r border-black" src="/threeDdemo.png" alt="" />
+                  </div>
+               </div>
+            </div>
             <div className="bg-neutral-50 dark:bg-neutral-900 lg:px-0 px-7 w-full  font-proxima">
                <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-8 w-full ">
                   <div className="lg:w-1/2 w-[90%]">

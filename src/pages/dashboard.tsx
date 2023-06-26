@@ -16,9 +16,8 @@ import { grandfatheredEmails } from "../../public/grandfathered";
 
 import { Dropdown } from "../components/DashboardComponents/Dropdown";
 const Dashboard = ({ dances, userData, sharedWithMe }: {}) => {
-   console.log(sharedWithMe);
    let session = useSession();
-   // console.log(dances);
+
    const supabase = useSupabaseClient();
    const [importIsOpen, setImportIsOpen] = useState(!dances.length);
    const [danceAppLink, setDanceAppLink] = useState("");
@@ -115,16 +114,19 @@ const Dashboard = ({ dances, userData, sharedWithMe }: {}) => {
                Our servers our currently down for maintenance. We'll be back up shortly!
             </div> */}
             {/* {!userData ? <TypeFromEmbed user_id={session?.user?.id}></TypeFromEmbed> : null} */}
-            {/* {formOpen && session ? (
+            {formOpen && session ? (
                <Widget
                   hidden={{
                      user_id: session?.user?.id,
                   }}
-                  // onSubmit={() => setFormOpen(false)}
+                  onSubmit={() => setFormOpen(false)}
                   id="cq9sssDy"
+                  style={{
+                     borderRadius: "0",
+                  }}
                   className="absolute top-0 left-0 w-full h-full z-50 rounded-none"
                />
-            ) : null} */}
+            ) : null}
             <div className="h-screen flex flex-row font-inter overscroll-none overflow-hidden">
                <Toaster></Toaster>
                {/* <Header></Header> */}

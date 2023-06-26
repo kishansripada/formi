@@ -14,8 +14,8 @@ export const Header = () => {
                </div>
             </Link> */}
             <div className="h-1 bg-pink-600 w-full"></div>
-            <nav className="flex flex-row py-5 justify-between text-black items-center  px-7 lg:px-10   border-b-neutral-200  dark:bg-neutral-900  ">
-               <div className="lg:flex flex-row items-center justify-center w-1/3 hidden ">
+            <nav className="flex flex-row py-5 justify-between text-black items-center  px-[5%]     border-b-neutral-200  dark:bg-neutral-900  ">
+               {/* <div className="lg:flex flex-row items-center justify-center w-1/3 hidden ">
                   <a target="_black" href="https://www.tiktok.com/@formistudio.app/">
                      {" "}
                      <img
@@ -28,22 +28,20 @@ export const Header = () => {
                      <img className="w-10" src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="" />
                   </a>
 
-                  {/* <Link href={"/pricing"} className="z-50">
-                     <button className="  text-medium hidden lg:block ml-7 ">pricing</button>
-                  </Link> */}
-               </div>
-               <div className="flex flex-row  items-center justify-center w-full lg:w-1/3">
+                
+               </div> */}
+               <div className="flex flex-row  items-center justify-start w-full lg:w-1/3">
                   {/* <Link href={"/features"} className="z-50">
                      <button className="  text-medium hidden lg:block ">features</button>
                   </Link> */}
 
                   <Link href={"/"}>
-                     <div className=" cursor-pointer px-24">
+                     <div className=" cursor-pointer ">
                         {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
                         {/* <h1 className="text-5xl font-bold z-10 dark:text-neutral-200 relative">FORMI</h1> */}
-                        <p className="font-bold text-5xl">FORMI</p>
-                        {/* <img className="lg:w-12 min-w-10 w-10" src="/logo.png" alt="" /> */}
+                        {/* <p className="font-bold text-5xl">FORMI</p> */}
+                        <img className="lg:w-12 min-w-10 w-10" src="/logo.png" alt="" />
                         {/* <div className=" bg-pink-600 relative h-2  top-[-10px] mr-auto w-[100%]"></div> */}
                      </div>
                   </Link>
@@ -57,18 +55,16 @@ export const Header = () => {
                      <h1 className="text-7xl font-bold z-10 relative">n</h1>
                      <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-full"></div>
                   </div> */}
-               <div className=" flex-row items-center justify-center w-1/3 lg:flex hidden">
+               <div className=" flex-row items-center justify-end w-1/3 lg:flex hidden">
                   {/* <Link href={"/upgrade"} className="z-50">
                         <button className=" border-pink-600 border-2 mr-3 px-4 py-1 hidden lg:block  rounded-md ">pricing</button>
                      </Link> */}
 
                   <Link href={"/login"} className="z-50">
-                     <button className=" border-2 text-pink-600 border-pink-600 mr-2  px-4 py-2 hidden lg:block dark:text-neutral-100  rounded-full">
-                        Login
-                     </button>
+                     <p className="text-neutral-700 mr-5 cursor-pointer">Login</p>
                   </Link>
                   <Link href={"/login"} className="z-50">
-                     <button className="bg-pink-600 text-white  px-4 py-2 hidden lg:block  rounded-full">Sign Up</button>
+                     <button className="bg-pink-600 text-white  px-4 py-2 hidden lg:block  rounded-md">Get started</button>
                   </Link>
                </div>
             </nav>
