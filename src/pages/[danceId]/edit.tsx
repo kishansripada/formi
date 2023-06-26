@@ -144,6 +144,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [subscriptionStatus, setSubscriptionStatus] = useState("NOT SUBSCRIBED");
    const [isChangingZoom, setIsChangingZoom] = useState(false);
    const [isThreeDancerDragging, setIsThreeDancerDragging] = useState(false);
+   const [pdfLoading, setPdfLoading] = useState(false);
 
    const [onlineUsers, setOnlineUsers] = useState({});
    const [userPositions, setUserPositions] = useState({});
@@ -204,6 +205,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
    const exportPdf = async () => {
+      setPdfLoading(true);
       setLocalSettings({ ...localSettings, viewingTwo: true, viewingThree: false });
       const parentContainer = document.createElement("div");
 
@@ -211,20 +213,26 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          setSelectedFormation(index); // Assuming this function sets the formation
 
          // Wait for the formation to be rendered in the DOM
-         await sleep(1000); // Delay in milliseconds. Adjust as needed.
+         await sleep(100); // Delay in milliseconds. Adjust as needed.
 
          const stageElement = document.getElementById("stage");
          const clonedElement = stageElement.cloneNode(true); // Clone the element with its children
 
          // Add each stage to the parentContainer
          const label = document.createElement("p");
-         label.textContent = `Formation ${index + 1} of ${formations.length}`;
+         label.textContent = `${formations[index].name} (${index + 1} of ${formations.length})`;
          label.style.textAlign = "center";
          label.style.width = "100%";
+
+         const notes = document.createElement("p");
+         notes.textContent = `${formations[index].notes || ""}`;
+         notes.style.textAlign = "left";
+         notes.style.width = "100%";
          // Add the label and formation to the parentContainer
 
          parentContainer.appendChild(clonedElement);
          parentContainer.appendChild(label);
+         parentContainer.appendChild(notes);
       }
 
       var options = {
@@ -232,7 +240,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       };
 
       domToPdf(parentContainer, options, (pdf) => {
-         console.log("done");
+         setPdfLoading(false);
       });
    };
 
@@ -803,6 +811,12 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                setAnyoneCanView={setAnyoneCanView}
                setShareIsOpen={setShareIsOpen}
             />
+         ) : null}
+
+         {pdfLoading ? (
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] bg-black/80 text-white border border-neutral-600  rounded-xl h-[100px] bg-white z-50 grid place-items-center">
+               <p className="text-center">Loading, pdf. This may take a sec. lol</p>
+            </div>
          ) : null}
 
          {isCommenting ? (
