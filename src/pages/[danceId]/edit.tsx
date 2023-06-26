@@ -258,7 +258,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    };
 
    const undo = () => {
-      console.log("undo");
+      // console.log("undo");
       if (!deltas.length) return;
       // setSaved(false);
 
@@ -266,7 +266,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       setDeltas((deltas) => {
          return [...deltas].slice(0, -1);
       });
-      console.log(reverseDelta);
+      // console.log(reverseDelta);
       setFormations((formations: formation[]) => {
          let reversed = jsondiffpatch.patch({ formations, dancers, props }, reverseDelta);
          setDancers(reversed.dancers ? reversed.dancers : dancers);
@@ -962,6 +962,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                               ></Collisions>
                            ) : menuOpen === "props" ? (
                               <Props
+                                 formations={formations}
                                  viewOnly={viewOnly}
                                  pushChange={pushChange}
                                  setSelectedPropIds={setSelectedPropIds}
@@ -1066,6 +1067,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
                      {localSettings.viewingTwo ? (
                         <Canvas
+                           setProps={setProps}
                            resizingPropId={resizingPropId}
                            setResizingPropId={setResizingPropId}
                            setSelectedPropIds={setSelectedPropIds}

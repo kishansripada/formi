@@ -53,6 +53,7 @@ export const Canvas: React.FC<{
    selectedPropIds: string[];
    resizingPropId: string | null;
    setResizingPropId: Function;
+   setProps: Function;
 }> = ({
    player,
    children,
@@ -88,6 +89,7 @@ export const Canvas: React.FC<{
    selectedPropIds,
    resizingPropId,
    setResizingPropId,
+   setProps,
 }) => {
    let { stageDimensions, stageBackground } = cloudSettings;
    let { gridSnap } = localSettings;
@@ -112,7 +114,7 @@ export const Canvas: React.FC<{
    const stage = useRef();
    const session = useSession();
 
-   useEffect(() => {
+   const fitStageToScreen = () => {
       if (!container.current) return;
       if (!stage.current) return;
 
@@ -121,6 +123,10 @@ export const Canvas: React.FC<{
       // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
       // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
       setZoom(Math.min(heightPercentage, widthPercentage));
+   };
+
+   useEffect(() => {
+      fitStageToScreen();
    }, [container?.current?.clientHeight, stage?.current?.clientHeight, stageDimensions]);
 
    const handleDragMove = (e: any) => {
@@ -348,139 +354,115 @@ export const Canvas: React.FC<{
       }
 
       if (draggingPropId) {
-         let appliedTransformation = null;
          if (viewOnly) return;
          let devicePixelRatio = getDevicePixelRatio();
-         // devicePixelRatio = devicePixelRatio / 2;
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, index: number) => {
-               if (index === selectedFormation) {
-                  return {
-                     ...formation,
-                     props: (formation.props || []).map((prop: propPosition) => {
-                        // console.log(comment.id);
-                        // console.log({ draggingCommentId });
-                        if (prop.id === draggingPropId) {
-                           appliedTransformation = {
-                              x: prop.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
-                              y: prop.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
-                           };
-                           return {
-                              ...prop,
-                              position: appliedTransformation,
-                           };
-                        }
-                        return prop;
-                     }),
-                  };
-               }
 
-               return formation;
-            });
-         });
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, index: number) => {
-               if (props.find((prop: prop) => prop.id === draggingPropId).type === "static") {
-                  return {
-                     ...formation,
-                     props: (formation.props || []).map((prop: propPosition) => {
-                        // console.log(comment.id);
-                        // console.log({ draggingCommentId });
-                        if (prop.id === draggingPropId) {
-                           return {
-                              ...prop,
-                              position: appliedTransformation,
-                           };
-                        }
-                        return prop;
-                     }),
-                  };
-               }
+         if (props.find((prop: prop) => prop.id === draggingPropId)?.type === "static") {
+            // const prop = props.find((prop: prop) => prop.id === draggingPropId);
 
-               return formation;
+            setProps((props: prop[]) => {
+               return props.map((prop: prop) => {
+                  if (prop.id === draggingPropId) {
+                     return {
+                        ...prop,
+                        static: {
+                           ...prop.static,
+                           position: {
+                              x: prop.static.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                              y: prop.static.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                           },
+                        },
+                     };
+                  }
+                  return prop;
+               });
             });
-         });
+         } else {
+            setFormations((formations: formation[]) => {
+               return formations.map((formation, index: number) => {
+                  if (index === selectedFormation) {
+                     return {
+                        ...formation,
+                        props: (formation.props || []).map((prop: propPosition) => {
+                           if (prop.id === draggingPropId) {
+                              return {
+                                 ...prop,
+                                 position: {
+                                    x: prop.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                    y: prop.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                 },
+                              };
+                           }
+                           return prop;
+                        }),
+                     };
+                  }
+                  return formation;
+               });
+            });
+         }
       }
 
       if (resizingPropId) {
          if (viewOnly) return;
          let devicePixelRatio = getDevicePixelRatio();
-         let appliedTransformation = null;
-         // devicePixelRatio = devicePixelRatio / 2;
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, index: number) => {
-               if (index === selectedFormation) {
-                  return {
-                     ...formation,
-                     props: (formation.props || []).map((prop: propPosition) => {
-                        if (prop.id === resizingPropId) {
-                           let deltaX = (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio;
-                           let deltaY = (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio;
-
-                           if (resizingPropType === "prop-resize-top-left") {
-                              appliedTransformation = Math.max(prop.width - deltaX, 1);
-                              return {
-                                 ...prop,
-                                 width: Math.max(prop.width - deltaX, 1),
-                              };
-                           }
-                           if (resizingPropType === "prop-resize-top-right") {
-                              appliedTransformation = Math.max(prop.width + deltaX, 1);
-                              return {
-                                 ...prop,
-                                 width: Math.max(prop.width + deltaY, 1),
-                              };
-                           }
-                           if (resizingPropType === "prop-resize-bottom-right") {
-                              appliedTransformation = Math.max(prop.width + deltaX, 1);
-                              return {
-                                 ...prop,
-                                 width: Math.max(prop.width + deltaX, 1),
-                              };
-                           }
-                           if (resizingPropType === "prop-resize-bottom-left") {
-                              appliedTransformation = Math.max(prop.width - deltaX, 1);
-                              return {
-                                 ...prop,
-                                 width: Math.max(prop.width - deltaX, 1),
-                              };
-                           }
-                        }
-                        return prop;
-                     }),
-                  };
-               }
-
-               return formation;
+         if (props.find((prop: prop) => prop.id === resizingPropId)?.type === "static") {
+            // console.log("test");
+            setProps((props: prop[]) => {
+               return props.map((prop: prop) => {
+                  if (prop.id === resizingPropId) {
+                     let deltaX = (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio;
+                     if (resizingPropType === "prop-resize-top-left" || resizingPropType === "prop-resize-bottom-left") {
+                        return {
+                           ...prop,
+                           static: {
+                              ...prop.static,
+                              width: Math.max(prop.static.width - deltaX, 1),
+                           },
+                        };
+                     } else {
+                        return {
+                           ...prop,
+                           static: {
+                              ...prop.static,
+                              width: Math.max(prop.static.width + deltaX, 1),
+                           },
+                        };
+                     }
+                  }
+                  return prop;
+               });
             });
-         });
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, index: number) => {
-               if (props.find((prop: propPosition) => prop.id === resizingPropId).type === "static") {
-                  return {
-                     ...formation,
-                     props: (formation.props || []).map((prop: propPosition) => {
-                        if (prop.id === resizingPropId) {
-                           if (resizingPropType === "prop-resize-top-left" || resizingPropType === "prop-resize-bottom-left") {
-                              return {
-                                 ...prop,
-                                 width: appliedTransformation,
-                              };
-                           } else {
-                              return {
-                                 ...prop,
-                                 width: appliedTransformation,
-                              };
+         } else {
+            setFormations((formations: formation[]) => {
+               return formations.map((formation, index: number) => {
+                  if (index === selectedFormation) {
+                     return {
+                        ...formation,
+                        props: (formation.props || []).map((prop: propPosition) => {
+                           if (prop.id === resizingPropId) {
+                              let deltaX = (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio;
+                              if (resizingPropType === "prop-resize-top-left" || resizingPropType === "prop-resize-bottom-left") {
+                                 return {
+                                    ...prop,
+                                    width: Math.max(prop.width - deltaX, 1),
+                                 };
+                              } else {
+                                 return {
+                                    ...prop,
+                                    width: Math.max(prop.width + deltaX, 1),
+                                 };
+                              }
                            }
-                        }
-                        return prop;
-                     }),
-                  };
-               }
+                           return prop;
+                        }),
+                     };
+                  }
 
-               return formation;
+                  return formation;
+               });
             });
-         });
+         }
       }
    };
 
@@ -625,6 +607,7 @@ export const Canvas: React.FC<{
       }
       if (e.target.dataset.type === "dancer") {
          // addToStack();
+
          setDraggingDancerId(e.target.id);
 
          if (!shiftHeld && !selectedDancers.includes(e.target.id)) {
@@ -692,121 +675,191 @@ export const Canvas: React.FC<{
       setDraggingDancerId(null);
       setIsDragging(false);
    };
-   useEffect(() => {
-      // This function is called when the wheel event is triggered
-      const handleWheel = (event) => {
-         // Check if the ctrl key is pressed
 
+   // useEffect(() => {
+   //    const stageElem = document.getElementById("stage");
+   //    const stageRect = stageElem.getBoundingClientRect();
+   //    const stageCenter = {
+   //       x: stageRect.width / 2,
+   //       y: stageRect.height / 2,
+   //    };
+   //    const initialScrollOffset = {
+   //       x: stageCenter.x - (stageDimensions.width * PIXELS_PER_SQUARE) / 2,
+   //       y: stageCenter.y - (stageDimensions.height * PIXELS_PER_SQUARE) / 2,
+   //    };
+   //    setScrollOffset(initialScrollOffset);
+   // }, [stageDimensions.width, stageDimensions.height]);
+
+   const [scrollOffset, setScrollOffset] = useState({ x: 0, y: 0 });
+   const ZOOM_BASE = 1.6; // Adjust the base to fit your preferred zooming speed.
+
+   useEffect(() => {
+      const handleWheel = (event) => {
          if (
-            event.ctrlKey &&
-            event
+            !event
                .composedPath()
                .map((elem) => elem.id)
                .includes("stage")
-         ) {
+         )
+            return;
+         if (event.ctrlKey) {
             event.preventDefault();
-            setZoom((zoom) => Math.min(Math.max(0.1, zoom + event.deltaY * -0.01), 4));
-            // event.preventDefault();
-            // Handle zooming or whatever functionality you want here...
+            setZoom((oldZoom) => {
+               const logZoom = Math.log(oldZoom) / Math.log(ZOOM_BASE);
+               const newZoom = Math.pow(ZOOM_BASE, logZoom - event.deltaY * 0.01);
+               return Math.min(Math.max(0.1, newZoom), 4);
+            });
+         } else {
+            setScrollOffset((scrollOffset) => ({
+               x: scrollOffset.x - event.deltaX / zoom / 1.5,
+               y: scrollOffset.y - event.deltaY / zoom / 1.5,
+            }));
          }
       };
 
-      // Attach the event listener to the document
-      // The third parameter is an options object where 'passive' is set to true,
-      // meaning the event listener will not call preventDefault
       document.addEventListener("wheel", handleWheel, { passive: false });
 
-      // Cleanup by removing the event listener when the component unmounts
       return () => {
          document.removeEventListener("wheel", handleWheel);
       };
-   }, []);
+   }, [zoom]);
+
+   // useEffect(() => {
+   //    const div = container.current;
+   //    if (div) {
+   //       const x = (div.scrollWidth - div.offsetWidth) / 2;
+   //       const y = (div.scrollHeight - div.offsetHeight) / 2;
+   //       div.scrollTo(x, y);
+   //    }
+   // }, [stageDimensions]);
 
    return (
-      <div
-         className="flex flex-row relative justify-center bg-neutral-100  dark:bg-neutral-900  h-full  w-full overflow-hidden  overscroll-contain items-center  "
-         id="stage"
-         ref={container}
-         onPointerUp={pointerUp}
-         onPointerMove={handleDragMove}
-      >
-         <Toaster />
-         <div
-            className=" absolute opacity-50 "
-            style={{
-               height: PIXELS_PER_SQUARE * (stageDimensions.height + 10),
-               width: PIXELS_PER_SQUARE * (stageDimensions.width + 30),
-               transform: `scale(${zoom})`,
-            }}
-         >
-            <GridLines cloudSettings={cloudSettings} stageDimensions={{ width: stageDimensions.width + 30, height: stageDimensions.height + 10 }} />
-         </div>
-         <div
-            onPointerDown={pointerDown}
-            ref={stage}
-            id="stage-cutout"
-            className="relative  border-2 dark:border-pink-600 border-pink-300 rounded-xl bg-white dark:bg-neutral-800 box-content "
-            // border-pink-600 border-4 box-border
-            style={{
-               // boxShadow: "inset 0px 0px 0px 4px #db2777",
-               // border: "solid 4px transparent",
-               // borderImage: "linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%)",
-               // backgroundImage: "linear-gradient(white, white), radial-gradient(circle at top left, #8e24aa,#db2777)",
+      <>
+         {/* <style>
+            {`
+#stage::-webkit-scrollbar:vertical {
+   width: 11px;
+}
 
-               // backgroundOrigin: "border-box",
-               // backgroundClip: "padding-box, border-box",
-               // top: scrollOffset.y,
-               // left: scrollOffset.x,
-               // transformOrigin: `${scrollOffset.x}px ${scrollOffset.y}px`,
-               transform: `scale(${zoom})  `,
-               // translate(${scrollOffset.x}px, ${scrollOffset.y}px)
-               height: stageDimensions.height * PIXELS_PER_SQUARE,
-               width: stageDimensions.width * PIXELS_PER_SQUARE,
-            }}
+#stage::-webkit-scrollbar:horizontal {
+   height: 11px;
+}
+`}
+         </style> */}
+         <div
+            // flex
+            className="  relative  bg-neutral-100  dark:bg-neutral-900  h-full  w-full overflow-scroll  overscroll-contain  flex flex-row items-center justify-center "
+            id="stage"
+            ref={container}
+            onPointerUp={pointerUp}
+            onPointerMove={handleDragMove}
+            style={{}}
+            // style={{
+            //    width: `${(stageDimensions.width * PIXELS_PER_SQUARE) / zoom}px`,
+            //    height: `${(stageDimensions.height * PIXELS_PER_SQUARE) / zoom}px`,
+            // }}
          >
-            {children}
-
+            <Toaster />
             <div
                style={{
-                  width: stageDimensions.width * PIXELS_PER_SQUARE,
+                  transform: `scale(${zoom}) translate(${scrollOffset.x}px, ${scrollOffset.y}px)`,
+                  // width: PIXELS_PER_SQUARE * (stageDimensions.width + 30) * zoom,
+                  // height: PIXELS_PER_SQUARE * (stageDimensions.height + 10) * zoom,
+                  // transform: `scale(${zoom})`,
                }}
-            ></div>
-
-            {cloudSettings.backgroundUrl && cloudSettings.stageBackground === "custom" ? (
-               <img draggable={false} className="w-full h-full object-contain  select-none opacity-40 " src={cloudSettings.backgroundUrl} alt="" />
-            ) : null}
-
-            {stageBackground === "grid" ? (
-               <GridLines localSettings={localSettings} zoom={zoom} cloudSettings={cloudSettings} stageDimensions={stageDimensions} />
-            ) : null}
-
-            {stageBackground === "cheer9" ? <CheerLines stageDimensions={stageDimensions}></CheerLines> : null}
-
-            {!isPlaying && !localSettings.stageFlipped && (
-               <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
-                  <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
-               </div>
-            )}
-            {!isPlaying && localSettings.stageFlipped && (
-               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10">
-                  <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
-               </div>
-            )}
-            {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y ? (
+               // style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0, transform: `scale(${zoom})`, transformOrigin: "center" }}
+               className=" flex flex-row items-center justify-center  "
+            >
                <div
-                  className="absolute bg-pink-200/50 z-20 cursor-default "
+                  className=" absolute opacity-50  "
                   style={{
-                     width: Math.abs(dragBoxCoords.end.x - dragBoxCoords.start.x),
-                     height: Math.abs(dragBoxCoords.end.y - dragBoxCoords.start.y),
-                     left: dragBoxCoords.end.x - dragBoxCoords.start.x < 0 ? dragBoxCoords.end.x : dragBoxCoords.start.x,
-                     top: dragBoxCoords.end.y - dragBoxCoords.start.y < 0 ? dragBoxCoords.end.y : dragBoxCoords.start.y,
+                     height: PIXELS_PER_SQUARE * (stageDimensions.height + 10),
+                     minHeight: PIXELS_PER_SQUARE * (stageDimensions.height + 10),
+                     minWidth: PIXELS_PER_SQUARE * (stageDimensions.width + 30),
+                     width: PIXELS_PER_SQUARE * (stageDimensions.width + 30),
+                     // transform: `scale(${zoom}) translate(${scrollOffset.x}px, ${scrollOffset.y}px)`,
+                     // transform: `scale(${zoom}) `,
+                     // transformOrigin: "center",
                   }}
-               ></div>
-            ) : (
-               <></>
-            )}
+               >
+                  <GridLines
+                     cloudSettings={cloudSettings}
+                     stageDimensions={{ width: stageDimensions.width + 30, height: stageDimensions.height + 10 }}
+                  />
+               </div>
+               <div
+                  onPointerDown={pointerDown}
+                  ref={stage}
+                  id="stage-cutout"
+                  className="relative  border-2 dark:border-pink-600 border-pink-300 rounded-xl bg-white dark:bg-neutral-800 box-content "
+                  // border-pink-600 border-4 box-border
+                  style={{
+                     // margin: 400,
+                     // boxShadow: "inset 0px 0px 0px 4px #db2777",
+                     // border: "solid 4px transparent",
+                     // borderImage: "linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%)",
+                     // backgroundImage: "linear-gradient(white, white), radial-gradient(circle at top left, #8e24aa,#db2777)",
+
+                     // backgroundOrigin: "border-box",
+                     // backgroundClip: "padding-box, border-box",
+                     // top: scrollOffset.y,
+                     // left: scrollOffset.x,
+                     // transformOrigin: `${scrollOffset.x}px ${scrollOffset.y}px`,
+                     // transform: `scale(${zoom}) `,
+                     // transform: `scale(${zoom}) translate(${scrollOffset.x}px, ${scrollOffset.y}px)`,
+                     // translate(${scrollOffset.x}px, ${scrollOffset.y}px)
+
+                     // translate(${scrollOffset.x}px, ${scrollOffset.y}px)
+                     height: stageDimensions.height * PIXELS_PER_SQUARE,
+                     minHeight: stageDimensions.height * PIXELS_PER_SQUARE,
+                     width: stageDimensions.width * PIXELS_PER_SQUARE,
+                     minWidth: stageDimensions.width * PIXELS_PER_SQUARE,
+                  }}
+               >
+                  {children}
+
+                  {cloudSettings.backgroundUrl && cloudSettings.stageBackground === "custom" ? (
+                     <img
+                        draggable={false}
+                        className="w-full h-full object-contain  select-none opacity-40 "
+                        src={cloudSettings.backgroundUrl}
+                        alt=""
+                     />
+                  ) : null}
+
+                  {stageBackground === "grid" ? (
+                     <GridLines localSettings={localSettings} zoom={zoom} cloudSettings={cloudSettings} stageDimensions={stageDimensions} />
+                  ) : null}
+
+                  {stageBackground === "cheer9" ? <CheerLines stageDimensions={stageDimensions}></CheerLines> : null}
+
+                  {!isPlaying && !localSettings.stageFlipped && (
+                     <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
+                        <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
+                     </div>
+                  )}
+                  {!isPlaying && localSettings.stageFlipped && (
+                     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10">
+                        <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
+                     </div>
+                  )}
+                  {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y ? (
+                     <div
+                        className="absolute bg-pink-200/50 z-20 cursor-default "
+                        style={{
+                           width: Math.abs(dragBoxCoords.end.x - dragBoxCoords.start.x),
+                           height: Math.abs(dragBoxCoords.end.y - dragBoxCoords.start.y),
+                           left: dragBoxCoords.end.x - dragBoxCoords.start.x < 0 ? dragBoxCoords.end.x : dragBoxCoords.start.x,
+                           top: dragBoxCoords.end.y - dragBoxCoords.start.y < 0 ? dragBoxCoords.end.y : dragBoxCoords.start.y,
+                        }}
+                     ></div>
+                  ) : (
+                     <></>
+                  )}
+               </div>
+            </div>
          </div>
-      </div>
+      </>
    );
 };
 function getExtension(filename: string) {

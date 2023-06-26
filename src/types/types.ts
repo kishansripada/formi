@@ -17,7 +17,13 @@ export type propPosition = {
 export type prop = {
    url: string;
    id: string;
-   type: "static" | "animated";
+   type: "static" | "dynamic";
+   static: {
+      width: number;
+      height: number;
+      position: { x: number; y: number };
+      rotation: number;
+   };
 };
 
 export type dancerPosition = {

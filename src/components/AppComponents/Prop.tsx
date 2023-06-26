@@ -14,7 +14,7 @@ import { Dropdown } from "../DashboardComponents/Dropdown";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 
 export const Prop: React.FC<{
-   prop: propPosition;
+   prop: prop;
    props: prop[];
    currentFormationIndex: number | null;
    percentThroughTransition: number;
@@ -70,25 +70,31 @@ export const Prop: React.FC<{
    setProps,
    pushChange,
 }) => {
+   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
    useEffect(() => {
       setIsDropdownOpen(false);
    }, [dropDownToggle]);
+   if (selectedFormation === null) return <></>;
 
-   const propPosition = (formations[selectedFormation]?.props || [])?.find((propPosition: propPosition) => propPosition.id === prop.id);
-
-   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-
-   if (!propPosition) return <></>;
    let myPosition;
    // if the track is playing then  return with the animation function
-   if (isPlaying && position !== null) {
+   const propPosition =
+      prop.type === "static"
+         ? prop.static
+         : (formations[selectedFormation]?.props || [])?.find((propPosition: propPosition) => propPosition.id === prop.id);
+   if (!propPosition) return <></>;
+   if (prop.type === "static") {
+      myPosition = propPosition.position;
+   } else if (isPlaying && position !== null) {
       myPosition = animate(formations, prop.id, currentFormationIndex, percentThroughTransition);
-      console.log(myPosition);
    } else {
+      //   const propPosition = (formations[selectedFormation]?.props || [])?.find((propPosition: propPosition) => propPosition.id === prop.id);
+
+      if (!propPosition) return <></>;
       myPosition = propPosition.position;
    }
    // if there is no formation selected and the track is not playing, then just return nothing
-   if (selectedFormation === null) return <></>;
+
    // if the dancer does not have any coordinates right now, return nothing since it shouln't be displayed
    if (!myPosition) return <></>;
 
@@ -157,7 +163,7 @@ export const Prop: React.FC<{
             )}
             <img
                className=" pointer-events-none select-none w-full h-auto "
-               src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${session?.user.id}/${prop?.url}`}
+               src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${prop.user_id}/${prop?.url}`}
                alt=""
             />
             {isDropdownOpen && (
@@ -168,46 +174,62 @@ export const Prop: React.FC<{
                   }}
                   className="absolute  z-10 border border-neutral-700  top-1/2 mt-2 w-[200px] py-1 bg-neutral-800  shadow-lg  ring-1 ring-black ring-opacity-5"
                >
+                  {prop.type !== "static" && (
+                     <div
+                        onClick={() => {
+                           setFormations((formations: formation[]) => {
+                              return formations.map((formation, i) => {
+                                 if (i === selectedFormation) {
+                                    return {
+                                       ...formation,
+                                       props: (formation.props || []).filter((propx) => propx.id !== prop.id),
+                                    };
+                                 }
+                                 return formation;
+                              });
+                           });
+                           pushChange();
+                        }}
+                        className=" px-4 py-1  text-xs text-white hover:bg-pink-600   flex flex-row items-center"
+                     >
+                        Delete from formation
+                     </div>
+                  )}
                   <div
                      onClick={() => {
-                        setFormations((formations: formation[]) => {
-                           return formations.map((formation, i) => {
-                              if (i === selectedFormation) {
-                                 return {
-                                    ...formation,
-                                    props: (formation.props || []).filter((propx) => propx.id !== prop.id),
-                                 };
-                              }
-                              return formation;
+                        if (prop?.type === "dynamic" || !prop.type) {
+                           // add this prop to every single formation in the position it is in this formation, defined in propPosition, replace existing prop positions where the id of that prop is the same as the prop we are moving
+                           setProps((props: prop[]) => {
+                              return props.map((propx: prop) => {
+                                 if (propx.id === prop.id) {
+                                    return {
+                                       ...propx,
+                                       static: {
+                                          position: propPosition.position,
+                                          width: propPosition.width,
+                                       },
+                                    };
+                                 }
+                                 return propx;
+                              });
                            });
-                        });
-                        pushChange();
-                     }}
-                     className=" px-4 py-1  text-xs text-white hover:bg-pink-600   flex flex-row items-center"
-                  >
-                     Delete from formation
-                  </div>
-                  {/* <div
-                     onClick={() => {
+                        }
                         setProps((props: prop[]) => {
-                           return props.map((prop: prop) => {
-                              if (prop.id === prop.id) {
+                           return props.map((propx: prop) => {
+                              if (propx.id === prop.id) {
                                  return {
-                                    ...prop,
-                                    type: prop.type === "static" ? "dynamic" : "static",
+                                    ...propx,
+                                    type: propx.type === "static" ? "dynamic" : "static",
                                  };
-                                 //  if(prop.type !== "static"){
-
-                                 //  }
                               }
-                              return prop;
+                              return propx;
                            });
                         });
                      }}
                      className=" px-4 py-1  text-xs text-white hover:bg-pink-600   flex flex-row items-center"
                   >
                      {props.find((propx: prop) => propx.id === prop.id).type === "static" ? "Make dynamic" : "Make static"}
-                  </div> */}
+                  </div>
                </div>
             )}
          </div>
