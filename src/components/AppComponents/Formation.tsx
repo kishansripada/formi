@@ -1,6 +1,7 @@
 import { dancer, dancerPosition, formation, formationGroup, localSettings } from "../../types/types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+
 import { useRef } from "react";
 export const Formation: React.FC<{
    formation: formation;
@@ -58,14 +59,43 @@ export const Formation: React.FC<{
    return (
       <>
          <div
+            duration={formation.durationSeconds}
             style={{
                ...style,
                zIndex: activeId === formation.id ? 999 : 0,
+               width: myWidth,
+               minWidth: myWidth,
+               // borderColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "transparent",
+               // marginLeft: 2 / pixelsPerSecond,
+               // marginRight: 2 / pixelsPerSecond,
             }}
-            className="relative"
+            className="relative  border-2 border-transparent  rounded-lg overflow-hidden group   "
             ref={setNodeRef}
          >
-            <div
+            {/* <div className=" absolute z-[50] bottom-[-30px] whitespace-nowrap text-xs -translate-x-1/2 left-1/2 group bg-neutral-800/90 p-1 rounded-md text-white">
+               {formation.name}
+            </div> */}
+
+            {/* <div className=" absolute z-[50] top-[-40px] whitespace-nowrap text-xs -translate-x-1/2 left-1/2 group bg-neutral-800/90 p-1 rounded-md text-white">
+                  {formation.name}
+               </div> */}
+            <style jsx>{`
+               .group:hover::before {
+                  // content: "${formation.name}";
+                  // position: absolute;
+                  // bottom: -30px;
+                  // white-space: nowrap;
+                  // font-size: 0.875rem; /* approx 14px */
+                  // transform: translateX(-50%);
+                  // left: 50%;
+                  // background-color: #1f2937; /* match bg-neutral-800 */
+                  // padding: 0.25rem; /* approx 4px */
+                  // border-radius: 0.375rem; /* approx 6px */
+                  // color: white;
+                  // z-index: 99999;
+               }
+            `}</style>
+            {/* <div
                style={{
                   backgroundColor: colorsOnThisFormation.length
                      ? averageHex(colorsOnThisFormation)
@@ -73,36 +103,36 @@ export const Formation: React.FC<{
                      ? "#a3a3a3"
                      : "#d4d4d4",
                }}
+               
                className="h-[9px] w-full flex flex-col  border-x-[0.5px] border-neutral-400 justify-center items-center  "
             >
                <div className="h-[1px] rounded-full bg-neutral-800 w-[12px] mb-[1px]"></div>
                <div className="h-[1px] rounded-full bg-neutral-800 w-[12px] mt-[1px]"></div>
-            </div>
+            </div> */}
             <div
-               className={`    cursor-pointer  bg-white dark:bg-neutral-800  dark:text-white border-b-[4px]     border-neutral-400  border-x-[1px]  relative group  `}
+               className={`  cursor-pointer    dark:bg-neutral-800  h-[50px]  dark:text-white  rounded-lg   overflow-hidden border-neutral-300 dark:border-neutral-600  border-2 flex flex-col  relative   `}
                style={{
-                  width: myWidth,
-                  // borderTopColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "#404040",
-                  borderBottomColor:
-                     formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color ||
-                     (colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : localSettings.isDarkMode ? "#a3a3a3" : "#d4d4d4"),
+                  borderColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "",
+                  // borderBottomColor:
+                  // formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color ||
+                  // (colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : localSettings.isDarkMode ? "#a3a3a3" : "#d4d4d4"),
                   // borderBottomColor: "#18191B",
                   // borderRightColor: "#db2777",
                   // borderLeftColor: "#db2777",
                   // borderTopColor: formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color || "#18191B",
-
                   // subtract 4 to account for the mx-[2px]
                }}
             >
-               {firstNamesOnThisFormation.length && myWidth > 100 ? (
-                  <div
-                     // opacity-0 group-hover:opacity-100
-                     className="absolute h-5 right-[0px] top-[-20px] z-10 w-fit px-2 text-xs text-white  transition duration-300 ease-in-out pointer-events-none "
-                     style={{ backgroundColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "black" }}
-                  >
-                     <p>{formatNames(firstNamesOnThisFormation)}</p>
-                  </div>
-               ) : null}
+               <p className="text-[10px]  p-1 font-semibold  relative whitespace-nowrap">{formation.name}</p>
+               {/* {firstNamesOnThisFormation.length && myWidth > 100 ? (
+                     <div
+                        // opacity-0 group-hover:opacity-100
+                        className="absolute h-5 right-[0px] top-[-20px] z-10 w-fit px-2 text-xs text-white  transition duration-300 ease-in-out pointer-events-none "
+                        style={{ backgroundColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "black" }}
+                     >
+                        <p>{formatNames(firstNamesOnThisFormation)}</p>
+                     </div>
+                  ) : null} */}
 
                {/* drag handle */}
 
@@ -137,19 +167,18 @@ export const Formation: React.FC<{
                <div
                   data-type="formation-resize"
                   id={formation.id}
-                  className="h-full absolute right-[0px] flex flex-row items-center justify-between  lg:pointer-events-auto pointer-events-none w-[5px] cursor-col-resize	z-[99]"
+                  className="h-1/2 top-0 absolute right-[0px] flex flex-row items-center bg-black/50 justify-between    opacity-0 group-hover:opacity-100 transition lg:pointer-events-auto pointer-events-none w-[7px] cursor-col-resize	z-[99]"
                >
-                  <div className="relative flex flex-row item justify-between w-[5px] right-[2px] pointer-events-none">
-                     <div className="w-[2px] h-[20px] rounded-full bg-neutral-600 dark:bg-neutral-300"></div>
-                     <div className="w-[2px] h-[20px] rounded-full bg-neutral-600 dark:bg-neutral-300"></div>
+                  <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none">
+                     <div className="w-[2px] h-[15px] rounded-full bg-neutral-300 dark:bg-neutral-300"></div>
                   </div>
                </div>
 
-               <div
+               {/* <div
                   className={` h-[17px]  px-1  overflow-hidden text-ellipsis whitespace-nowrap   border-b border-neutral-200 dark:border-neutral-600`}
                >
                   <p className={`text-[11px] pointer-events-none select-none  font-medium text-ellipsis text-center`}>{formation.name}</p>
-               </div>
+               </div> */}
 
                {/* formation group color bar */}
                {/* <div
@@ -159,41 +188,76 @@ export const Formation: React.FC<{
                   className="absolute w-full h-[4px] bottom-[0px] rounded-full"
                ></div> */}
 
-               <div className={` flex flex-row  box-border `}>
+               <div
+                  duration={formation.transition.durationSeconds}
+                  className={` flex flex-row border-t dark:border-neutral-600  box-border h-1/2 mt-auto   `}
+               >
                   {index !== 0 ? (
                      <div
                         style={{
                            width: formation.transition.durationSeconds * pixelsPerSecond,
+                           minWidth: formation.transition.durationSeconds * pixelsPerSecond,
                         }}
                         className="  "
                      >
-                        <div className="flex flex-row dark:bg-neutral-800 bg-white pointer-events-none h-[26px] mr-[5px]">
-                           <svg className="w-1/2 relative" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
-                              <polygon className="fill-neutral-300 dark:fill-neutral-500" strokeWidth={0} points="0,0 0,20 10,10" />
-                           </svg>
-                           <svg className="w-1/2 " width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
-                              <polygon className="fill-neutral-300 dark:fill-neutral-500" strokeWidth={0} points="0,10 10,0 10,20" />
-                           </svg>
+                        <div className="flex flex-row relative  dark:bg-pink-600 bg-pink-400    pointer-events-none h-full  ">
+                           {/* <svg className="" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
+                                 <polygon className="fill-neutral-300 dark:fill-neutral-500" strokeWidth={0} points="0,0 0,20 10,10" />
+                              </svg> */}
+                           <div
+                              data-type="transition-resize"
+                              id={formation.id}
+                              className="h-full absolute right-[7px]  flex flex-row items-center bg-black/50 justify-between  opacity-0 group-hover:opacity-100 transition lg:pointer-events-auto pointer-events-none w-[7px] cursor-col-resize	z-[99]"
+                           >
+                              <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none">
+                                 <div className="w-[2px] h-[10px] rounded-full bg-neutral-300 dark:bg-neutral-300"></div>
+                              </div>
+                           </div>
+                           {/* <svg
+                                 className="w-1/2 relative h-full"
+                                 preserveAspectRatio="none"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 108 122"
+                              >
+                                 <path
+                                    stroke="#db2777"
+                                    stroke-width="9"
+                                    d="m101.75 64.0311-91.5 52.8279c-2.33334 1.347-5.25001-.337-5.25001-3.031L5 8.17246c0-2.69431 2.91668-4.37824 5.25-3.0311l91.5 52.82754c2.333 1.3472 2.333 4.715 0 6.0622Z"
+                                 />
+                              </svg>
+                              <svg
+                                 className="w-1/2 relative h-full rotate-180"
+                                 preserveAspectRatio="none"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 108 122"
+                              >
+                                 <path
+                                    stroke="#db2777"
+                                    stroke-width="9"
+                                    d="m101.75 64.0311-91.5 52.8279c-2.33334 1.347-5.25001-.337-5.25001-3.031L5 8.17246c0-2.69431 2.91668-4.37824 5.25-3.0311l91.5 52.82754c2.333 1.3472 2.333 4.715 0 6.0622Z"
+                                 />
+                              </svg> */}
                         </div>
                      </div>
                   ) : null}
-                  <div
-                     style={{
-                        width: formation.durationSeconds * pixelsPerSecond,
-                     }}
-                     className="relative  h-[26px]"
-                  >
-                     {index !== 0 ? (
-                        <div
-                           id={formation.id}
-                           data-type="transition-resize"
-                           className=" h-[26px]  w-[4px] lg:pointer-events-auto pointer-events-none cursor-col-resize	 absolute left-[-5px] z-50 flex flex-row justify-between"
-                        >
-                           <div className="h-full w-[1px] bg-black pointer-events-none dark:bg-neutral-200"></div>
-                           <div className="h-full w-[1px] bg-black pointer-events-none dark:bg-neutral-200"></div>
-                        </div>
-                     ) : null}
-                  </div>
+                  {/* <div
+                        style={{
+                           width: formation.durationSeconds * pixelsPerSecond,
+                        }}
+                        className="relative bg-black  h-full"
+                     >
+                        {index !== 0 ? (
+                           <div
+                              id={formation.id}
+                              data-type="transition-resize"
+                              className="   w-[4px] bg-black h-full lg:pointer-events-auto pointer-events-none cursor-col-resize	 absolute left-[-5px] z-50 flex flex-row justify-between"
+                           >
+                              <div className="h-full w-[1px] bg-black pointer-events-none dark:bg-neutral-200"></div>
+                           </div>
+                        ) : null}
+                     </div> */}
                </div>
             </div>
          </div>

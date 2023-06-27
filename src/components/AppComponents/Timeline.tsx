@@ -139,7 +139,10 @@ export const Timeline: React.FC<{
             </div>
          </div>
 
-         <div ref={scrollRef} className="overflow-x-scroll removeScrollBar bg-neutral-100 dark:bg-neutral-800 overscroll-contain ">
+         <div
+            ref={scrollRef}
+            className=" overflow-y-visible overflow-x-scroll  removeScrollBar bg-neutral-100 dark:bg-neutral-800   overscroll-contain "
+         >
             <div
                style={{
                   width: songDuration
