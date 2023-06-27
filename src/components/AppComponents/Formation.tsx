@@ -200,7 +200,7 @@ export const Formation: React.FC<{
                         }}
                         className="  "
                      >
-                        <div className="flex flex-row relative  dark:bg-pink-600 bg-pink-400    pointer-events-none h-full  ">
+                        <div className="flex flex-row relative  dark:bg-pink-600 bg-pink-600    pointer-events-none h-full  ">
                            {/* <svg className="" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
                                  <polygon className="fill-neutral-300 dark:fill-neutral-500" strokeWidth={0} points="0,0 0,20 10,10" />
                               </svg> */}
