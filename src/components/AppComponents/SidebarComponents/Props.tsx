@@ -279,9 +279,27 @@ export const Props: React.FC<{
                               <div
                                  key={propUpload.name}
                                  onClick={() => {
+                                    let newId = uuidv4();
                                     if (!selectedPropIds.length) {
                                        setProps((props: prop[]) => {
-                                          return [...props, { id: uuidv4(), user_id: session?.user.id, url: propUpload.name }];
+                                          return [...props, { id: newId, user_id: session?.user.id, url: propUpload.name, type: "static" }];
+                                       });
+                                       setProps((props: prop[]) => {
+                                          return props.map((propx) => {
+                                             if (propx.id === newId) {
+                                                return {
+                                                   ...propx,
+                                                   static: {
+                                                      width: 5,
+                                                      position: {
+                                                         x: 0,
+                                                         y: 0,
+                                                      },
+                                                   },
+                                                };
+                                             }
+                                             return propx;
+                                          });
                                        });
                                     } else {
                                        setProps((props: prop[]) => {
