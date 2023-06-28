@@ -6,7 +6,7 @@ import { useState, useEffect, useRef, useCallback, lazy } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useLocalStorage } from "../../hooks";
-import { debounce } from "lodash";
+import debounce from "lodash.debounce";
 import toast, { Toaster } from "react-hot-toast";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
@@ -14,10 +14,9 @@ import { comment, dancer, dancerPosition, formation, PIXELS_PER_SQUARE, localSet
 import { AudioControls } from "../../components/AppComponents/AudioControls";
 import { Header } from "../../components/AppComponents/Header";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
-import { Comment } from "../../components/AppComponents/Comment";
 import { DancerAliasShadow } from "../../components/AppComponents/DancerAliasShadow";
 import { Canvas } from "../../components/AppComponents/Canvas";
-import { EditFormationGroup } from "../../components/AppComponents/Modals/EditFormationGroup";
+// import { EditFormationGroup } from "../../components/AppComponents/Modals/EditFormationGroup";
 import { PathEditor } from "../../components/AppComponents/PathEditor";
 import { Share } from "../../components/AppComponents/Modals/Share";
 import { Collision } from "../../components/AppComponents/Collision";
@@ -29,13 +28,15 @@ import { CurrentFormation } from "../../components/AppComponents/SidebarComponen
 import { StageSettings } from "../../components/AppComponents/SidebarComponents/StageSettings";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { Collisions } from "../../components/AppComponents/SidebarComponents/Collisions";
-import { grandfatheredEmails } from "../../../public/grandfathered";
 import { Props } from "../../components/AppComponents/SidebarComponents/Props";
 import { Timeline } from "../../components/AppComponents/Timeline";
 import { FormationControls } from "../../components/AppComponents/FormationControls";
-import { Prop } from "../../components/AppComponents/Prop";
 import { EventHandler } from "../../components/AppComponents/EventHandler";
-import domToPdf from "dom-to-pdf";
+
+// could be dynamic imports
+import { Prop } from "../../components/AppComponents/Prop";
+import { Comment } from "../../components/AppComponents/Comment";
+
 import * as jsonpatch from "fast-json-patch";
 const ThreeD = dynamic(() => import("../../components/AppComponents/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => <p>Loading...</p>,
@@ -238,7 +239,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       var options = {
          filename: `${danceName}.pdf`,
       };
-
+      const domToPdf = (await import("dom-to-pdf")).default;
       domToPdf(parentContainer, options, (pdf) => {
          setPdfLoading(false);
       });
@@ -794,15 +795,6 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
          </Head>
 
-         {isEditingFormationGroup ? (
-            <EditFormationGroup
-               formationGroups={formationGroups}
-               setFormationGroups={setFormationGroups}
-               setIsEditingFormationGroup={setIsEditingFormationGroup}
-               isEditingFormationGroup={isEditingFormationGroup}
-            ></EditFormationGroup>
-         ) : null}
-
          {shareIsOpen ? (
             <Share
                permissions={permissions}
@@ -1076,6 +1068,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                            coordsToPosition={coordsToPosition}
                            currentFormationIndex={currentFormationIndex}
                            percentThroughTransition={percentThroughTransition}
+                           // comments={comments}
                         ></ThreeD>
                      ) : null}
 

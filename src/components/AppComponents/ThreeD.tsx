@@ -1,11 +1,28 @@
-import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings, localSettings } from "../../types/types";
-import { ThreeDancer } from "../AppComponents/ThreeDancer";
-import { Canvas as Canva, useLoader } from "@react-three/fiber";
-import { Stage, Grid, OrbitControls, Environment, Lightformer } from "@react-three/drei";
-import { Text } from "@react-three/drei";
-import { Line } from "@react-three/drei";
-import { Vector3, TextureLoader, DoubleSide, BufferGeometry, MeshBasicMaterial } from "three";
-import { useState, useEffect } from "react";
+import {
+   dancer,
+   dancerPosition,
+   formation,
+   dragBoxCoords,
+   PIXELS_PER_SQUARE,
+   comment,
+   cloudSettings,
+   localSettings,
+   initials,
+} from "../../types/types";
+import dynamic from "next/dynamic";
+import { useState } from "react";
+
+import { Vector3, Plane } from "three";
+import { Canvas } from "@react-three/fiber";
+import { Grid, OrbitControls, Text } from "@react-three/drei";
+
+import { ThreeDancer } from "./ThreeDComponents/ThreeDancer";
+// import { ThreeComment } from "./ThreeDComponents/ThreeComment";
+
+const CheerLines = dynamic(() => import("./ThreeDComponents/CheerLines").then((mod) => mod.CheerLines));
+const Path = dynamic(() => import("./ThreeDComponents/Path").then((mod) => mod.Path));
+const StageBackground = dynamic(() => import("./ThreeDComponents/StageBackground").then((mod) => mod.StageBackground));
+
 export const ThreeD: React.FC<{
    children: React.ReactNode;
    setFormations: Function;
@@ -42,6 +59,7 @@ export const ThreeD: React.FC<{
    percentThroughTransition: number;
    dancers: dancer[];
    position: number;
+   // comments: comment[];
 }> = ({
    player,
    children,
@@ -78,25 +96,68 @@ export const ThreeD: React.FC<{
    percentThroughTransition,
    dancers,
    position,
+   // comments,
 }) => {
+   const { gridSnap } = localSettings;
    const { stageBackground } = cloudSettings;
+   let planeIntersectPoint = new Vector3();
+   const floorPlane = new Plane(new Vector3(0, 1, 0), 0);
+
+   const [dragOffset, setDragOffset] = useState(null);
    return (
-      <Canva
+      <Canvas
          onPointerUp={() => {
             if (viewOnly) return;
+            setIsThreeDancerDragging(false);
+            setDragOffset(null);
+            setFormations((formations: formation[]) => {
+               return formations.map((formation) => {
+                  return {
+                     ...formation,
+                     positions: formation.positions.map((position) => {
+                        return {
+                           ...position,
+                           position: {
+                              x: Math.round(position.position.x * gridSnap) / gridSnap,
+                              y: Math.round(position.position.y * gridSnap) / gridSnap,
+                           },
+                        };
+                     }),
+                  };
+               });
+            });
             pushChange();
          }}
          gl={{ logarithmicDepthBuffer: true }}
          camera={{ position: [0, 10, (localSettings.stageFlipped ? -1 : 1) * 40], fov: 40 }}
       >
+         {/* {(formations[selectedFormation]?.comments || []).map((comment: comment) => {
+            return (
+               <ThreeComment
+                  // draggingCommentId={draggingCommentId}
+                  // setDraggingCommentId={setDraggingCommentId}
+                  setIsThreeDancerDragging={setIsThreeDancerDragging}
+                  isThreeDancerDragging={isThreeDancerDragging}
+                  viewOnly={viewOnly}
+                  isPlaying={isPlaying}
+                  selectedFormation={selectedFormation}
+                  formations={formations}
+                  setFormations={setFormations}
+                  comment={comment}
+               ></ThreeComment>
+            );
+         })} */}
          {stageBackground === "cheer9" ? (
-            <VerticalLines
+            <CheerLines
                localSettings={localSettings}
                stageWidth={cloudSettings.stageDimensions.width}
                stageHeight={cloudSettings.stageDimensions.height}
             />
          ) : stageBackground === "grid" || stageBackground === "custom" ? (
             <Grid
+               onPointerDown={(e) => {
+                  setSelectedDancers([]);
+               }}
                renderOrder={-1}
                position={[0, 0, 0]}
                args={[cloudSettings.stageDimensions.width, cloudSettings.stageDimensions.height]}
@@ -111,7 +172,7 @@ export const ThreeD: React.FC<{
 
          <ambientLight intensity={0.5} />
          {cloudSettings?.backgroundUrl && cloudSettings.stageBackground === "custom" ? (
-            <ImageComponent cloudSettings={cloudSettings} url={cloudSettings.backgroundUrl}></ImageComponent>
+            <StageBackground cloudSettings={cloudSettings} url={cloudSettings.backgroundUrl}></StageBackground>
          ) : null}
 
          <directionalLight position={[0, 10, 5]} intensity={1} />
@@ -119,6 +180,7 @@ export const ThreeD: React.FC<{
             ? formations[selectedFormation].positions.map((dancerPosition: dancerPosition) => {
                  return (
                     <ThreeDancer
+                       setSelectedDancers={setSelectedDancers}
                        key={dancerPosition.id}
                        selectedDancers={selectedDancers}
                        setIsThreeDancerDragging={setIsThreeDancerDragging}
@@ -140,6 +202,7 @@ export const ThreeD: React.FC<{
                  );
               })
             : null}
+
          <OrbitControls
             enableDamping={false}
             // dampingFactor={0.5}
@@ -191,92 +254,55 @@ export const ThreeD: React.FC<{
          >
             STAGE RIGHT
          </Text>
-      </Canva>
+
+         <mesh
+            rotation={[0, 0, 0]}
+            position={[0, -1, 0]}
+            onPointerMove={(event) => {
+               // console.log(planeIntersectPoint.x, planeIntersectPoint.z);
+               event.ray.intersectPlane(floorPlane, planeIntersectPoint);
+               if (!isThreeDancerDragging) return;
+
+               setFormations((formations: formation[]) => {
+                  return formations.map((formation, i) => {
+                     if (i === selectedFormation) {
+                        return {
+                           ...formation,
+                           positions: formation.positions.map((position: dancerPosition) => {
+                              if (selectedDancers.includes(position.id)) {
+                                 return {
+                                    ...position,
+                                    position: {
+                                       x: planeIntersectPoint.x,
+                                       y: -planeIntersectPoint.z,
+                                    },
+                                 };
+                              }
+                              return position;
+                           }),
+                        };
+                     }
+                     return formation;
+                  });
+               });
+            }}
+         >
+            <boxBufferGeometry attach="geometry" args={[100, 0.1, 100]} />
+            <meshBasicMaterial attach="material" color="transparent" opacity={0} transparent />
+         </mesh>
+
+         {selectedFormation &&
+            formations[selectedFormation].positions
+               .filter((position) => selectedDancers.includes(position.id))
+               .map((dancerPosition: dancerPosition) => {
+                  return (
+                     <Path
+                        dancer={dancers.find((dancer) => dancer.id === dancerPosition.id)}
+                        previousPosition={formations[selectedFormation - 1]?.positions.find((position) => position.id === dancerPosition.id)}
+                        dancerPosition={dancerPosition}
+                     ></Path>
+                  );
+               })}
+      </Canvas>
    );
 };
-
-function ImageComponent({ url, cloudSettings }: { url: string; cloudSettings: cloudSettings }) {
-   const texture = useLoader(TextureLoader, url);
-   const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
-
-   useEffect(() => {
-      calculateImageDimensions(cloudSettings, url, (width, height) => {
-         setDimensions({ width, height });
-      });
-   }, [cloudSettings, url]);
-
-   return (
-      <mesh position={[0, 0, 0]} rotation={[Math.PI * 1.5, 0, 0]}>
-         <planeBufferGeometry attach="geometry" args={[dimensions.width, dimensions.height]} />
-         <meshBasicMaterial opacity={0.7} transparent={true} attach="material" map={texture} side={DoubleSide} />
-      </mesh>
-   );
-}
-
-const VerticalLines = ({ stageWidth, stageHeight, localSettings }: { stageWidth: number; stageHeight: number; localSettings: localSettings }) => {
-   const lines = [];
-   const numLines = 10;
-   const spacing = stageWidth / (numLines - 1);
-   const halfHeight = stageHeight / 2;
-
-   for (let i = 0; i < numLines; i++) {
-      const xPosition = -stageWidth / 2 + i * spacing;
-      const start = new Vector3(xPosition, 0, -halfHeight);
-      const end = new Vector3(xPosition, 0, halfHeight);
-      lines.push(
-         <Line
-            points={[start, end]}
-            color={localSettings.isDarkMode ? "#52525b" : "#d4d4d4"}
-            lineWidth={2} // You can adjust the line width
-            renderOrder={-1}
-            key={i}
-         />
-      );
-   }
-
-   return <>{lines}</>;
-};
-
-function calculateImageDimensions(
-   cloudSettings: { stageDimensions: { width: number; height: number } },
-   url: string,
-   callback: (newWidth: number, newHeight: number) => void
-): void {
-   // Create a new image object
-   let img = new Image();
-
-   // Define the onload function
-   img.onload = function () {
-      // Get the actual width and height of the image
-      const imgWidth: number = this.width;
-      const imgHeight: number = this.height;
-
-      // Get the stage width and height
-      const stageWidth: number = cloudSettings.stageDimensions.width;
-      const stageHeight: number = cloudSettings.stageDimensions.height;
-
-      // Calculate the image aspect ratio
-      const imgAspectRatio: number = imgWidth / imgHeight;
-
-      // Calculate the stage aspect ratio
-      const stageAspectRatio: number = stageWidth / stageHeight;
-
-      let newImgWidth: number, newImgHeight: number;
-
-      if (stageAspectRatio > imgAspectRatio) {
-         // If stage aspect ratio is larger, image height should be equal to stage height
-         newImgHeight = stageHeight;
-         newImgWidth = newImgHeight * imgAspectRatio;
-      } else {
-         // If image aspect ratio is larger, image width should be equal to stage width
-         newImgWidth = stageWidth;
-         newImgHeight = newImgWidth / imgAspectRatio;
-      }
-
-      // Return the new width and height
-      callback(newImgWidth, newImgHeight);
-   };
-
-   // Set the src attribute to start loading the image
-   img.src = url;
-}

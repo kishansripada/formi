@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useGLTF } from "@react-three/drei";
-import { dancerPosition, dancer, formation, localSettings } from "../../types/types";
-import { Text, Cylinder } from "@react-three/drei";
+import { dancerPosition, dancer, formation, localSettings } from "../../../types/types";
+import { Text, Cylinder, RoundedBox } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 import { useDrag } from "@use-gesture/react";
 import { useThree, useFrame } from "@react-three/fiber";
@@ -26,6 +26,7 @@ export function ThreeDancer({
    setIsThreeDancerDragging,
    isThreeDancerDragging,
    selectedDancers,
+   setSelectedDancers,
 }: {
    dancerPosition: dancerPosition;
    dancers: dancer[];
@@ -44,97 +45,40 @@ export function ThreeDancer({
    setIsThreeDancerDragging: Function;
    isThreeDancerDragging: boolean;
    selectedDancers: string[];
+   setSelectedDancers: Function;
 }) {
-   let { gridSnap } = localSettings;
    /**
     * Text always looks at the camera
     */
    const textRef = useRef();
+   const bgRef = useRef();
 
    // const changeStateDancerDragging = useDancerDragging((state) => state.changeStateDancerDragging);
    useFrame((state, dt) => {
       if (textRef?.current != null) {
          textRef.current.lookAt(state.camera.position);
+         // bgRef.current.lookAt(state.camera.position);
       }
    });
    let dancer = dancers?.find((dancer) => dancer.id === dancerPosition.id);
-   // const isDancerDragging = useDancerDragging((state) => state.isDancerDragging);
-   let planeIntersectPoint = new THREE.Vector3();
-   const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
-
-   const bind = useDrag(
-      ({ active, movement: [x, y], timeStamp, event }) => {
-         if (viewOnly || isPlaying) return;
-         event.stopPropagation();
-
-         if (active) {
-            document.body.style.cursor = "grabbing";
-            event.ray.intersectPlane(floorPlane, planeIntersectPoint);
-            // setPos([-dancerPosition.position.x / 2 + planeIntersectPoint.x, 0, dancerPosition.position.y / 2 + planeIntersectPoint.z]);
-            // console.log(planeIntersectPoint.x);
-            setFormations((formations: formation[]) => {
-               return formations.map((formation, index: number) => {
-                  if (index === selectedFormation) {
-                     return {
-                        ...formation,
-                        positions: formation.positions.map((dancerPosition) => {
-                           if (dancerPosition.id === dancer.id && dancerPosition.transitionType === "cubic") {
-                              return {
-                                 ...dancerPosition,
-                                 position: {
-                                    x: Math.round(planeIntersectPoint.x * gridSnap) / gridSnap,
-                                    y: Math.round(-planeIntersectPoint.z * gridSnap) / gridSnap,
-                                 },
-
-                                 // THIS NEEDS TO BE FIXED
-                                 controlPointEnd: {
-                                    x: planeIntersectPoint.x,
-                                    y: -planeIntersectPoint.z,
-                                 },
-                              };
-                           }
-                           if (dancerPosition.id === dancer.id && (dancerPosition.transitionType === "linear" || !dancerPosition.transitionType)) {
-                              return {
-                                 ...dancerPosition,
-                                 position: {
-                                    x: Math.round(planeIntersectPoint.x * gridSnap) / gridSnap,
-                                    y: Math.round(-planeIntersectPoint.z * gridSnap) / gridSnap,
-                                 },
-                              };
-                           }
-                           return dancerPosition;
-                        }),
-                     };
-                  }
-
-                  return formation;
-               });
-            });
-         } else {
-            document.body.style.cursor = "default";
-         }
-         setIsThreeDancerDragging(active);
-
-         // api.start({
-         //    position: [dancerPosition.position.x, dancerPosition.position.y],
-         // });
-         return timeStamp;
-      },
-      { delay: true }
-   );
 
    const { nodes, materials } = useGLTF("/roblox.glb");
 
    let dancerPos;
    let textPos;
-   let selectedPos;
+   // let selectedPos;
+   let bgPos;
    dancerPos = useSpring({ position: [dancerPosition.position.x, 0, -dancerPosition.position.y] });
    textPos = useSpring({ position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28, -dancerPosition.position.y] });
-   selectedPos = useSpring({ position: [dancerPosition.position.x, 0, -dancerPosition.position.y] });
-   // if (isDancerDragging && position !== null && currentFormationIndex !== null) {
-   //    dancerPos = { position: [dancerPosition.position.x, 0, dancerPosition.position.y] };
-   //    textPos = { position: [dancerPosition.position.x, 2, dancerPosition.position.y] };
-   // } else
+   bgPos = useSpring({ position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28, -dancerPosition.position.y - 0.02] });
+
+   // selectedPos = useSpring({ position: [dancerPosition.position.x, 0, -dancerPosition.position.y] });
+   if (isThreeDancerDragging) {
+      dancerPos = { position: [dancerPosition.position.x, 0, -dancerPosition.position.y] };
+      textPos = { position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28, -dancerPosition.position.y] };
+      bgPos = { position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28, -dancerPosition.position.y - 0.02] };
+      // selectedPos = { position: [dancerPosition.position.x, 0, -dancerPosition.position.y] };
+   }
 
    if (isPlaying && position !== null && currentFormationIndex !== null) {
       let myPosition = animate(formations, dancer?.id, currentFormationIndex, percentThroughTransition);
@@ -144,35 +88,31 @@ export function ThreeDancer({
       let y = -myPosition.y;
       dancerPos = { position: [x, 0, y] };
       textPos = { position: [x, (dancer?.height || 182.88) / 28, y] };
-      selectedPos = { position: [x, 0, y] };
+      // selectedPos = { position: [x, 0, y] };
+      bgPos = { position: [x, (dancer?.height || 182.88) / 28, y] };
    }
    // const outerMaterial = new MeshStandardMaterial({ color: 0x00ff00 });
 
    return (
       <>
+         {/* <animated.mesh position={bgPos.position}>
+            <RoundedBox ref={bgRef} args={[3, 0.6, 0.001]} radius={0.2}>
+               <meshLambertMaterial
+                  attach="material"
+                  color={selectedDancers.includes(dancer.id) ? "#db2777" : localSettings.isDarkMode ? "white" : "#3f3f46"}
+               />
+            </RoundedBox>
+         </animated.mesh> */}
+
          <animated.mesh position={textPos.position}>
             <Text ref={textRef} scale={[0.4, 0.4, 0.4]} color={`${localSettings.isDarkMode ? "white" : "black"}`} anchorX="center" anchorY="middle">
-               {dancer?.name}
+               {dancer?.name.split(" ")[0]}
             </Text>
          </animated.mesh>
-         {/* {selectedDancers.includes(dancer?.id) ? (
-            <animated.mesh position={selectedPos.position}>
-               <group>
-                  <Cylinder
-                     args={[0.5, 0.5, 0.02, 32]} // Adjust outer cylinder radius
-                     // material={(<meshStandardMaterial color={"#db2777"}></meshStandardMaterial>)}
-                     // position={textPos.position}
-                     rotation={[Math.PI, 0, 0]}
-                  >
-                     <meshStandardMaterial attach="material" color={"#db2777"} />
-                  </Cylinder>
-               </group>
-            </animated.mesh>
-         ) : null} */}
 
          <animated.mesh
             // {...spring}
-            {...bind()}
+            // {...bind()}
             scale={[0.6, (dancer?.height || 182.88) / 156, 0.7]}
             // scale={[0.25, ((dancer.height || 182.88) / maxHeight) * 0.35, 0.3]}
             // rotation={[Math.PI / 2, 0, Math.PI / 2]}
@@ -188,9 +128,11 @@ export function ThreeDancer({
                         <group name="Object_2">
                            <group
                               name="RootNode"
-                              onPointerDown={() => {
+                              onPointerDown={(e) => {
                                  if (viewOnly) return;
-
+                                 e.stopPropagation();
+                                 setSelectedDancers([dancer.id]);
+                                 setIsThreeDancerDragging(true);
                                  // addToStack();
                               }}
                               onPointerEnter={() => {
