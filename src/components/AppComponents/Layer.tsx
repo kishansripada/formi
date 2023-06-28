@@ -82,7 +82,7 @@ export const Layer: React.FC<{
    return (
       <>
          <div
-            className=" flex flex-row  items-center w-full bg-neutral-100 dark:bg-neutral-800 border-y border-neutral-300 dark:border-neutral-600  "
+            className=" flex flex-row  items-center w-full bg-neutral-100 dark:bg-neutral-800  dark:border-neutral-600  "
             id="outside"
             onClick={clickOutsideFormations}
          >
