@@ -296,17 +296,16 @@ export const StageSettings: React.FC<{
             </div>
 
             {cloudSettings.stageBackground === "custom" ? (
-               <button className="relative border border-dashed border-neutral-300 h-24 w-full rounded-xl bg-neutral-50 mt-4 ">
+               <button className="relative border border-dashed border-neutral-300 h-24 w-full rounded-xl bg-neutral-50 mt-4 pointer-events-none ">
                   <input
                      accept="image/png, image/gif, image/jpeg"
                      type="file"
                      autoComplete="off"
                      tabIndex={-1}
-                     className="cursor-pointer relative block opacity-0 w-full h-full p-20 z-10"
+                     className="cursor-pointer relative block opacity-0 w-full h-full p-20 z-0 pointer-events-auto"
                      onChange={(event) => {
                         if (event.target.files && event.target.files[0]) {
                            const i = event.target.files[0];
-
                            setFile(i);
                         }
                      }}
