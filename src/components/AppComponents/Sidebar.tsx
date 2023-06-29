@@ -138,7 +138,7 @@ export const Sidebar: React.FC<{
                   />
                </svg>
 
-               <p className=" mt-1">Props</p>
+               <p className=" mt-1">Scenery</p>
                <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p>
             </button>
 
