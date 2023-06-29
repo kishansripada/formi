@@ -8,8 +8,8 @@ export type dancer = {
 };
 
 export type propPosition = {
-   width: number;
-   height: number;
+   // width: number;
+   // height: number;
    position: { x: number; y: number };
    rotation: number;
    id: string;

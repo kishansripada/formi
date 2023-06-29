@@ -133,7 +133,7 @@ export const Props: React.FC<{
                </div>
             )}
 
-            <p className=" font-medium mb-2   px-4 text-sm ">Props</p>
+            <p className=" font-medium mb-2   px-4 text-sm ">Set pieces</p>
 
             <div
                style={{
@@ -178,6 +178,19 @@ export const Props: React.FC<{
                                              };
                                           }
                                           return propx;
+                                       });
+                                    });
+                                 } else {
+                                    setFormations((formations: formation[]) => {
+                                       return formations.map((formation) => {
+                                          const hasProp = (formation.props || []).find((propx) => propx.id === prop.id);
+
+                                          return {
+                                             ...formation,
+                                             props: hasProp
+                                                ? formation.props
+                                                : [...(formation.props || []), { id: prop.id, position: { x: 0, y: 0 } }],
+                                          };
                                        });
                                     });
                                  }
@@ -234,7 +247,7 @@ export const Props: React.FC<{
                                  }}
                                  className="ml-4 mr-1"
                               >
-                                 {!formations[selectedFormation]?.props?.find((p) => p.id === prop.id) ? (
+                                 {/* {!formations[selectedFormation]?.props?.find((p) => p.id === prop.id) ? (
                                     <svg
                                        xmlns="http://www.w3.org/2000/svg"
                                        fill="none"
@@ -256,7 +269,7 @@ export const Props: React.FC<{
                                     >
                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
                                     </svg>
-                                 )}
+                                 )} */}
                               </button>
                            ) : null}
                         </div>
@@ -264,12 +277,12 @@ export const Props: React.FC<{
                   })
                ) : (
                   <>
-                     <p className=" px-4 text-sm">No Props</p>
+                     <p className=" px-4 text-sm">No set pieces</p>
                   </>
                )}
             </div>
 
-            {!viewOnly && (
+            {!viewOnly && propUploads.length ? (
                <>
                   <p className=" font-medium mb-2 mt-6 px-4 text-sm ">Image Uploads</p>
                   <div className=" grid gap-2  grid-cols-2 px-4 overflow-scroll removeScrollBar ">
@@ -369,8 +382,8 @@ export const Props: React.FC<{
                      )}
                   </div>
                </>
-            )}
-            <div className=" p-2">
+            ) : null}
+            <div className=" p-2 mt-auto">
                <div
                   style={{
                      opacity: selectedPropIds.length ? 1 : 0.5,
@@ -395,7 +408,7 @@ export const Props: React.FC<{
                      setSelectedPropIds([]);
                      pushChange();
                   }}
-                  className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-red-500 dark:text-red-400 text-red-600  "
+                  className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-red-500 dark:text-red-400 text-red-600   "
                >
                   Delete Prop
                </div>

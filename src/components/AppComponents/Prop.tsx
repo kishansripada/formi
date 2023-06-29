@@ -100,7 +100,7 @@ export const Prop: React.FC<{
 
    let { left, top } = coordsToPosition(myPosition);
 
-   const session = useSession();
+   // const session = useSession();
 
    return (
       <>
@@ -108,7 +108,7 @@ export const Prop: React.FC<{
             style={{
                left,
                top,
-               width: PIXELS_PER_SQUARE * propPosition.width,
+               width: PIXELS_PER_SQUARE * (prop.static.width || 5),
                //    height: PIXELS_PER_SQUARE * prop.width,
                borderWidth: selectedPropIds.includes(prop.id) && !isPlaying ? 4 / zoom : 0,
                transition: isPlaying ? "width 0.2s ease-in-out" : "",
@@ -125,8 +125,8 @@ export const Prop: React.FC<{
                <>
                   <div
                      style={{
-                        width: 15 / zoom,
-                        height: 15 / zoom,
+                        width: 12 / zoom,
+                        height: 12 / zoom,
                      }}
                      id={prop.id}
                      data-type="prop-resize-top-left"
@@ -134,8 +134,8 @@ export const Prop: React.FC<{
                   ></div>
                   <div
                      style={{
-                        width: 15 / zoom,
-                        height: 15 / zoom,
+                        width: 12 / zoom,
+                        height: 12 / zoom,
                      }}
                      id={prop.id}
                      data-type="prop-resize-top-right"
@@ -143,8 +143,8 @@ export const Prop: React.FC<{
                   ></div>
                   <div
                      style={{
-                        width: 15 / zoom,
-                        height: 15 / zoom,
+                        width: 12 / zoom,
+                        height: 12 / zoom,
                      }}
                      id={prop.id}
                      data-type="prop-resize-bottom-left"
@@ -152,8 +152,8 @@ export const Prop: React.FC<{
                   ></div>
                   <div
                      style={{
-                        width: 15 / zoom,
-                        height: 15 / zoom,
+                        width: 12 / zoom,
+                        height: 12 / zoom,
                      }}
                      id={prop.id}
                      data-type="prop-resize-bottom-right"

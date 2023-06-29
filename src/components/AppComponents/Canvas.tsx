@@ -147,11 +147,17 @@ export const Canvas: React.FC<{
                               ...dancerPosition,
                               controlPointStart: {
                                  x:
-                                    dancerPosition.controlPointStart.x +
-                                    (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                    Math.round(
+                                       (dancerPosition.controlPointStart.x +
+                                          (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio) *
+                                          100
+                                    ) / 100,
                                  y:
-                                    dancerPosition.controlPointStart.y -
-                                    (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                    Math.round(
+                                       (dancerPosition.controlPointStart.y -
+                                          (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio) *
+                                          100
+                                    ) / 100,
                               },
                            };
                         }
@@ -160,11 +166,17 @@ export const Canvas: React.FC<{
                               ...dancerPosition,
                               controlPointEnd: {
                                  x:
-                                    dancerPosition.controlPointEnd.x +
-                                    (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                    Math.round(
+                                       (dancerPosition.controlPointEnd.x +
+                                          (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio) *
+                                          100
+                                    ) / 100,
                                  y:
-                                    dancerPosition.controlPointEnd.y -
-                                    (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                    Math.round(
+                                       (dancerPosition.controlPointEnd.y -
+                                          (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio) *
+                                          100
+                                    ) / 100,
                               },
                            };
                         }
@@ -290,11 +302,17 @@ export const Canvas: React.FC<{
                               },
                               controlPointEnd: {
                                  x:
-                                    dancerPosition.controlPointEnd.x +
-                                    (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                    Math.round(
+                                       (dancerPosition.controlPointEnd.x +
+                                          (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio) *
+                                          100
+                                    ) / 100,
                                  y:
-                                    dancerPosition.controlPointEnd.y -
-                                    (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                    Math.round(
+                                       (dancerPosition.controlPointEnd.y -
+                                          (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio) *
+                                          100
+                                    ) / 100,
                               },
                            };
                         }
@@ -338,8 +356,14 @@ export const Canvas: React.FC<{
                            return {
                               ...comment,
                               position: {
-                                 x: comment.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
-                                 y: comment.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio,
+                                 x:
+                                    Math.round(
+                                       (comment.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio) * 100
+                                    ) / 100,
+                                 y:
+                                    Math.round(
+                                       (comment.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom / devicePixelRatio) * 100
+                                    ) / 100,
                               },
                            };
                         }
@@ -405,64 +429,68 @@ export const Canvas: React.FC<{
 
       if (resizingPropId) {
          if (viewOnly) return;
+         console.log(props.find((prop: prop) => prop.id === resizingPropId));
          let devicePixelRatio = getDevicePixelRatio();
-         if (props.find((prop: prop) => prop.id === resizingPropId)?.type === "static") {
-            // console.log("test");
-            setProps((props: prop[]) => {
-               return props.map((prop: prop) => {
-                  if (prop.id === resizingPropId) {
-                     let deltaX = (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio;
-                     if (resizingPropType === "prop-resize-top-left" || resizingPropType === "prop-resize-bottom-left") {
-                        return {
-                           ...prop,
-                           static: {
-                              ...prop.static,
-                              width: Math.max(prop.static.width - deltaX, 1),
-                           },
-                        };
-                     } else {
-                        return {
-                           ...prop,
-                           static: {
-                              ...prop.static,
-                              width: Math.max(prop.static.width + deltaX, 1),
-                           },
-                        };
-                     }
-                  }
-                  return prop;
-               });
-            });
-         } else {
-            setFormations((formations: formation[]) => {
-               return formations.map((formation, index: number) => {
-                  if (index === selectedFormation) {
+         setProps((props: prop[]) => {
+            return props.map((prop: prop) => {
+               if (prop.id === resizingPropId) {
+                  let deltaX = (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio;
+                  // console.log(resizingPropType);
+                  if (resizingPropType === "prop-resize-top-left" || resizingPropType === "prop-resize-bottom-left") {
                      return {
-                        ...formation,
-                        props: (formation.props || []).map((prop: propPosition) => {
-                           if (prop.id === resizingPropId) {
-                              let deltaX = (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio;
-                              if (resizingPropType === "prop-resize-top-left" || resizingPropType === "prop-resize-bottom-left") {
-                                 return {
-                                    ...prop,
-                                    width: Math.max(prop.width - deltaX, 1),
-                                 };
-                              } else {
-                                 return {
-                                    ...prop,
-                                    width: Math.max(prop.width + deltaX, 1),
-                                 };
-                              }
-                           }
-                           return prop;
-                        }),
+                        ...prop,
+                        static: {
+                           ...prop.static,
+                           width: Math.max((prop.static.width || 5) - deltaX, 1),
+                        },
+                     };
+                  } else {
+                     return {
+                        ...prop,
+                        static: {
+                           ...prop.static,
+                           width: Math.max((prop.static.width || 5) + deltaX, 1),
+                        },
                      };
                   }
-
-                  return formation;
-               });
+               }
+               return prop;
             });
-         }
+         });
+
+         // if (props.find((prop: prop) => prop.id === resizingPropId)?.type === "static") {
+         //    // console.log("test");
+
+         // } else {
+         //    setFormations((formations: formation[]) => {
+         //       return formations.map((formation, index: number) => {
+         //          if (index === selectedFormation) {
+         //             return {
+         //                ...formation,
+         //                props: (formation.props || []).map((prop: propPosition) => {
+         //                   if (prop.id === resizingPropId) {
+         //                      let deltaX = (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio;
+         //                      if (resizingPropType === "prop-resize-top-left" || resizingPropType === "prop-resize-bottom-left") {
+         //                         return {
+         //                            ...prop,
+         //                            width: Math.max(prop.width - deltaX, 1),
+         //                         };
+         //                      } else {
+         //                         return {
+         //                            ...prop,
+         //                            width: Math.max(prop.width + deltaX, 1),
+         //                         };
+         //                      }
+         //                   }
+         //                   return prop;
+         //                }),
+         //             };
+         //          }
+
+         //          return formation;
+         //       });
+         //    });
+         // }
       }
    };
 
@@ -635,6 +663,37 @@ export const Canvas: React.FC<{
          pushChange();
       }
       if (draggingPropId) {
+         setFormations((formations: formation[]) => {
+            return formations.map((formation) => {
+               return {
+                  ...formation,
+                  props: (formation.props || []).map((prop: propPosition) => {
+                     return {
+                        ...prop,
+                        position: {
+                           x: Math.round(prop.position.x * gridSnap) / gridSnap,
+                           y: Math.round(prop.position.y * gridSnap) / gridSnap,
+                        },
+                     };
+                  }),
+               };
+            });
+         });
+         setProps((props: prop[]) => {
+            return props.map((prop) => {
+               return {
+                  ...prop,
+                  static: {
+                     ...prop.static,
+                     position: {
+                        x: Math.round(prop.static.position.x * gridSnap) / gridSnap,
+                        y: Math.round(prop.static.position.y * gridSnap) / gridSnap,
+                     },
+                  },
+               };
+            });
+         });
+
          pushChange();
       }
       // if (rotatingDancerId) {

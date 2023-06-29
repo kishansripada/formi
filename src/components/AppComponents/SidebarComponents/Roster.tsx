@@ -3,7 +3,11 @@ import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Dancer } from "../Dancer";
-import { CirclePicker } from "react-color";
+import dynamic from "next/dynamic";
+const CirclePicker = dynamic(() => import("react-color").then((module) => module.CirclePicker), {
+   loading: () => <p>Loading color picker...</p>,
+});
+
 import { v4 as uuidv4 } from "uuid";
 
 export const Roster: React.FC<{
