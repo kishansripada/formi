@@ -62,14 +62,14 @@ export const Formation: React.FC<{
             duration={formation.durationSeconds}
             style={{
                ...style,
-               zIndex: activeId === formation.id ? 999 : 0,
+               zIndex: activeId === formation.id ? 10 : 0,
                width: myWidth,
                minWidth: myWidth,
                // borderColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "transparent",
                // marginLeft: 2 / pixelsPerSecond,
                // marginRight: 2 / pixelsPerSecond,
             }}
-            className="relative  border-2 border-transparent  rounded-lg overflow-hidden group   "
+            className="relative  border-2 border-transparent  rounded-lg overflow-hidden group  bg-neutral-100 dark:bg-neutral-800  "
             ref={setNodeRef}
          >
             {/* <div className=" absolute z-[50] bottom-[-30px] whitespace-nowrap text-xs -translate-x-1/2 left-1/2 group bg-neutral-800/90 p-1 rounded-md text-white">
@@ -123,7 +123,9 @@ export const Formation: React.FC<{
                   // subtract 4 to account for the mx-[2px]
                }}
             >
-               <p className="text-[10px]  p-1 font-semibold  relative whitespace-nowrap">{formation.name}</p>
+               <p {...attributes} {...listeners} className="text-[10px]  p-1 font-semibold  relative whitespace-nowrap focus:outline-none">
+                  {formation.name}
+               </p>
                {/* {firstNamesOnThisFormation.length && myWidth > 100 ? (
                      <div
                         // opacity-0 group-hover:opacity-100
@@ -136,7 +138,7 @@ export const Formation: React.FC<{
 
                {/* drag handle */}
 
-               <div
+               {/* <div
                   data-type="drag-handle"
                   // onClick={() => {
                   //    addToStack();
@@ -148,7 +150,7 @@ export const Formation: React.FC<{
                   {...attributes}
                   {...listeners}
                   className="w-full opacity-0 absolute top-[-12px] h-[12px]  cursor-move lg:pointer-events-auto pointer-events-none	z-[99999]"
-               ></div>
+               ></div> */}
 
                {/* 6 dots on drag handle */}
                {/* <div className=" absolute top-[-18px] -translate-x-1/2 left-1/2 h-[8px] select-none   cursor-move lg:pointer-events-auto pointer-events-none	z-[99999]">

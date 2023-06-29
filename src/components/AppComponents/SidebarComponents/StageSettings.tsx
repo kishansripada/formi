@@ -296,34 +296,36 @@ export const StageSettings: React.FC<{
             </div>
 
             {cloudSettings.stageBackground === "custom" ? (
-               <button className="relative border border-dashed border-neutral-300 h-24 w-full rounded-xl bg-neutral-50 mt-4 pointer-events-none ">
-                  <input
-                     accept="image/png, image/gif, image/jpeg"
-                     type="file"
-                     autoComplete="off"
-                     tabIndex={-1}
-                     className="cursor-pointer relative block opacity-0 w-full h-full p-20 z-0 pointer-events-auto"
-                     onChange={(event) => {
-                        if (event.target.files && event.target.files[0]) {
-                           const i = event.target.files[0];
-                           setFile(i);
-                        }
-                     }}
-                  />
-                  <div className=" w-full h-full rounded-xl absolute top-0 right-0 left-0 m-auto  flex flex-col items-center justify-center">
-                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" width="24" height="24" color="#5D647B">
-                        <path d="M16 16l-4-4-4 4M12 12v9" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
-                        <path
-                           d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"
-                           stroke="currentColor"
-                           strokeLinecap="round"
-                           strokeLinejoin="round"
-                        ></path>
-                        <path d="M16 16l-4-4-4 4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
-                     </svg>
-                     <p className="text-sm">Upload A Stage Background</p>
-                  </div>
-               </button>
+               <div className="px-3">
+                  <button className="relative border border-dashed border-neutral-300 h-24 w-full rounded-xl bg-neutral-50 mt-4 pointer-events-none ">
+                     <input
+                        accept="image/png, image/gif, image/jpeg"
+                        type="file"
+                        autoComplete="off"
+                        tabIndex={-1}
+                        className="cursor-pointer relative block opacity-0 w-full h-full p-20 z-0 pointer-events-auto"
+                        onChange={(event) => {
+                           if (event.target.files && event.target.files[0]) {
+                              const i = event.target.files[0];
+                              setFile(i);
+                           }
+                        }}
+                     />
+                     <div className=" w-full h-full rounded-xl absolute top-0 right-0 left-0 m-auto  flex flex-col items-center justify-center">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" width="24" height="24" color="#5D647B">
+                           <path d="M16 16l-4-4-4 4M12 12v9" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
+                           <path
+                              d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                           ></path>
+                           <path d="M16 16l-4-4-4 4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
+                        </svg>
+                        <p className="text-sm">Upload A Stage Background</p>
+                     </div>
+                  </button>
+               </div>
             ) : null}
          </div>
       </>

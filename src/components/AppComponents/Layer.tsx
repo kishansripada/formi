@@ -59,7 +59,24 @@ export const Layer: React.FC<{
       })
    );
    function handleDragStart(event) {
-      // addToStack();
+      const index = event?.active?.data?.current?.sortable?.index || 0;
+      // setSelectedFormation();
+
+      if (selectedFormation !== index) {
+         setSelectedDancers([]);
+      }
+      // if (isPlaying) {
+      let position = formations
+         .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
+         .slice(0, index)
+         .reduce((a, b) => a + b, 0);
+      // position = position + formations[index]?.transition.durationSeconds;
+      // console.log(position);
+      setPosition(position);
+      setSelectedFormation(index);
+      if (!(songDuration && player)) return;
+
+      player.seekTo(position / (songDuration / 1000));
       setActiveId(event.active.id);
    }
 

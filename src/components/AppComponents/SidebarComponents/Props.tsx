@@ -204,7 +204,7 @@ export const Props: React.FC<{
                            {prop.type !== "static" ? (
                               <button
                                  onClick={() => {
-                                    if (formations[selectedFormation].props?.find((p) => p.id === prop.id)) {
+                                    if ((formations[selectedFormation].props || [])?.find((p) => p.id === prop.id)) {
                                        setFormations((formations: formation[]) => {
                                           return formations.map((formation, i) => {
                                              if (i === selectedFormation) {
@@ -234,7 +234,7 @@ export const Props: React.FC<{
                                  }}
                                  className="ml-4 mr-1"
                               >
-                                 {!formations[selectedFormation].props?.find((p) => p.id === prop.id) ? (
+                                 {!formations[selectedFormation]?.props?.find((p) => p.id === prop.id) ? (
                                     <svg
                                        xmlns="http://www.w3.org/2000/svg"
                                        fill="none"
