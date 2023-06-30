@@ -26,7 +26,7 @@ export function ThreeSetPiece({
    const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
    useEffect(() => {
-      calculateImageDimensions(prop.static.width, url, (width, height) => {
+      calculateImageDimensions(prop?.static?.width || 5, url, (width, height) => {
          setDimensions({ width, height });
       });
    }, [cloudSettings, url]);

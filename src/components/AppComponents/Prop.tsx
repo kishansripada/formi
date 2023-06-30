@@ -108,7 +108,7 @@ export const Prop: React.FC<{
             style={{
                left,
                top,
-               width: PIXELS_PER_SQUARE * (prop.static.width || 5),
+               width: PIXELS_PER_SQUARE * (prop?.static?.width || 5),
                //    height: PIXELS_PER_SQUARE * prop.width,
                borderWidth: selectedPropIds.includes(prop.id) && !isPlaying ? 4 / zoom : 0,
                transition: isPlaying ? "width 0.2s ease-in-out" : "",
