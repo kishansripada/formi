@@ -663,36 +663,39 @@ export const Canvas: React.FC<{
          pushChange();
       }
       if (draggingPropId) {
-         setFormations((formations: formation[]) => {
-            return formations.map((formation) => {
-               return {
-                  ...formation,
-                  props: (formation.props || []).map((prop: propPosition) => {
-                     return {
-                        ...prop,
+         if (props.find((prop: prop) => prop.id === draggingPropId)?.type === "static") {
+            setProps((props: prop[]) => {
+               return props.map((prop) => {
+                  return {
+                     ...prop,
+                     static: {
+                        ...prop.static,
                         position: {
-                           x: Math.round(prop.position.x * gridSnap) / gridSnap,
-                           y: Math.round(prop.position.y * gridSnap) / gridSnap,
+                           x: Math.round(prop.static.position.x * gridSnap) / gridSnap,
+                           y: Math.round(prop.static.position.y * gridSnap) / gridSnap,
                         },
-                     };
-                  }),
-               };
-            });
-         });
-         setProps((props: prop[]) => {
-            return props.map((prop) => {
-               return {
-                  ...prop,
-                  static: {
-                     ...prop.static,
-                     position: {
-                        x: Math.round(prop.static.position.x * gridSnap) / gridSnap,
-                        y: Math.round(prop.static.position.y * gridSnap) / gridSnap,
                      },
-                  },
-               };
+                  };
+               });
             });
-         });
+         } else {
+            setFormations((formations: formation[]) => {
+               return formations.map((formation) => {
+                  return {
+                     ...formation,
+                     props: (formation.props || []).map((prop: propPosition) => {
+                        return {
+                           ...prop,
+                           position: {
+                              x: Math.round(prop.position.x * gridSnap) / gridSnap,
+                              y: Math.round(prop.position.y * gridSnap) / gridSnap,
+                           },
+                        };
+                     }),
+                  };
+               });
+            });
+         }
 
          pushChange();
       }
