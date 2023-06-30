@@ -151,7 +151,7 @@ export const Props: React.FC<{
                            }}
                            className={`  ${
                               selectedPropIds.includes(prop.id) ? "bg-pink-200 dark:bg-pink-600" : " hover:bg-neutral-100 dark:hover:bg-neutral-700"
-                           }  w-full h-[55px] min-h-[55px] relative  group  px-2   flex flex-row items-center  whitespace-nowrap  `}
+                           }  w-full h-[55px] min-h-[55px] relative  group cursor-pointer  px-2   flex flex-row items-center  whitespace-nowrap  `}
                         >
                            <img
                               className="h-[55px] w-[55px]  object-contain  cursor-pointer  z-10 "
@@ -214,7 +214,7 @@ export const Props: React.FC<{
                               <option value="static">Static</option>
                            </select>
 
-                           {prop.type !== "static" ? (
+                           {/* {prop.type !== "static" ? (
                               <button
                                  onClick={() => {
                                     if ((formations[selectedFormation].props || [])?.find((p) => p.id === prop.id)) {
@@ -247,7 +247,7 @@ export const Props: React.FC<{
                                  }}
                                  className="ml-4 mr-1"
                               >
-                                 {/* {!formations[selectedFormation]?.props?.find((p) => p.id === prop.id) ? (
+                                 {!formations[selectedFormation]?.props?.find((p) => p.id === prop.id) ? (
                                     <svg
                                        xmlns="http://www.w3.org/2000/svg"
                                        fill="none"
@@ -269,9 +269,9 @@ export const Props: React.FC<{
                                     >
                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
                                     </svg>
-                                 )} */}
+                                 )}
                               </button>
-                           ) : null}
+                           ) : null} */}
                         </div>
                      );
                   })

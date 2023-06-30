@@ -119,9 +119,9 @@ export const Sidebar: React.FC<{
                </svg>
                <p className=" mt-1">Collisions</p>
             </button>
-            <button
+            {/* <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
-               onClick={() => setMenuOpen("props")}
+               onClick={() => setMenuOpen("items")}
             >
                <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -129,13 +129,37 @@ export const Sidebar: React.FC<{
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className={`w-7 h-7 ${menuOpen === "props" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
+                  className={`w-7 h-7 ${menuOpen === "items" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
                >
                   <path
                      strokeLinecap="round"
                      strokeLinejoin="round"
                      d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
                   />
+               </svg>
+
+               <p className=" mt-1">Props</p>
+               <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p>
+            </button> */}
+            <button
+               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
+               onClick={() => setMenuOpen("props")}
+            >
+               {/* <svg
+                  className={`w-7 h-7 ${menuOpen === "props" ? "fill-pink-600" : "dark:fill-neutral-300 fill-neutral-400"} `}
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 -960 960 960"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+               >
+                  <path d="M303-80v-149H0l189-274H94l266-377 120 170 120-170 266 377h-94l188 274H658v149H543v-149H418v149H303Zm377-209h165L656-563h89L600-769l-80 115 106 151h-94l148 214Zm-564 0h489L416-563h89L360-769 215-563h90L116-289Zm0 0h189-90 290-89 189-489Zm564 0H532h94-106 225-89 189-165Zm-137 60h115-115Zm178 0Z" />
+               </svg> */}
+               <svg
+                  className={`w-8 h-8 ${menuOpen === "props" ? "fill-pink-600" : "dark:fill-neutral-300 fill-neutral-400"} `}
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 -960 960 960"
+               >
+                  <path d="M230-80v-60h220v-180h-90q-83 0-141.5-58.5T160-520q0-60 33-110.5t89-73.5q9-75 65.5-125.5T480-880q76 0 132.5 50.5T678-704q56 23 89 73.5T800-520q0 83-58.5 141.5T600-320h-90v180h230v60H230Zm130-300h240q58.333 0 99.167-40.833Q740-461.667 740-520q0-42-24-76.5T654-648l-32-14-4-35q-7-53-46.183-88T480-820q-52.634 0-91.817 35Q349-750 342-697l-4 35-32 14q-38 17-62 51.726t-24 76.397Q220-462 260.833-421q40.834 41 99.167 41Zm120-220Z" />
                </svg>
 
                <p className=" mt-1">Scenery</p>

@@ -8,6 +8,7 @@ import {
    cloudSettings,
    localSettings,
    initials,
+   prop,
 } from "../../types/types";
 import dynamic from "next/dynamic";
 import { useState } from "react";
@@ -17,6 +18,7 @@ import { Canvas } from "@react-three/fiber";
 import { Grid, OrbitControls, Text } from "@react-three/drei";
 
 import { ThreeDancer } from "./ThreeDComponents/ThreeDancer";
+import { ThreeSetPiece } from "./ThreeDComponents/ThreeSetPiece";
 // import { ThreeComment } from "./ThreeDComponents/ThreeComment";
 
 const CheerLines = dynamic(() => import("./ThreeDComponents/CheerLines").then((mod) => mod.CheerLines));
@@ -59,6 +61,7 @@ export const ThreeD: React.FC<{
    percentThroughTransition: number;
    dancers: dancer[];
    position: number;
+   props: prop[];
    // comments: comment[];
 }> = ({
    player,
@@ -96,6 +99,7 @@ export const ThreeD: React.FC<{
    percentThroughTransition,
    dancers,
    position,
+   props,
    // comments,
 }) => {
    const { gridSnap } = localSettings;
@@ -174,6 +178,20 @@ export const ThreeD: React.FC<{
          {cloudSettings?.backgroundUrl && cloudSettings.stageBackground === "custom" ? (
             <StageBackground cloudSettings={cloudSettings} url={cloudSettings.backgroundUrl}></StageBackground>
          ) : null}
+
+         {props.map((prop: prop) => {
+            return (
+               <ThreeSetPiece
+                  selectedFormation={selectedFormation}
+                  isPlaying={isPlaying}
+                  position={position}
+                  currentFormationIndex={currentFormationIndex}
+                  percentThroughTransition={percentThroughTransition}
+                  prop={prop}
+                  formations={formations}
+               ></ThreeSetPiece>
+            );
+         })}
 
          <directionalLight position={[0, 10, 5]} intensity={1} />
          {selectedFormation !== null

@@ -300,7 +300,9 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                   { formations: previousFormation, dancers: previousDancers, props: previousProps },
                   { formations, dancers, props }
                );
+
                setDeltas((deltas) => {
+                  if (!delta) return deltas;
                   return [...deltas, delta];
                });
                return props;
@@ -1032,6 +1034,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
                      {localSettings.viewingThree ? (
                         <ThreeD
+                           props={props}
                            setIsThreeDancerDragging={setIsThreeDancerDragging}
                            isThreeDancerDragging={isThreeDancerDragging}
                            isPlaying={isPlaying}
