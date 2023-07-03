@@ -138,14 +138,25 @@ export const FormationControls: React.FC<{
             <button
                onClick={() => {
                   if (selectedFormation === null) return;
-
+                  const lastIsSelected = selectedFormation === formations.length - 1;
                   setFormations((formations: formation[]) => {
                      return [
-                        ...formations.slice(0, selectedFormation + 1),
+                        ...formations.slice(0, selectedFormation),
+                        {
+                           ...formations[selectedFormation],
+                           durationSeconds: formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
+                           transition: {
+                              durationSeconds: formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2),
+                           },
+                        },
                         {
                            ...formations[selectedFormation],
                            id: uuidv4(),
                            name: formations[selectedFormation].name + " copy",
+                           durationSeconds: formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
+                           transition: {
+                              durationSeconds: formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2),
+                           },
                         },
                         ...formations.slice(selectedFormation + 1),
                      ];
