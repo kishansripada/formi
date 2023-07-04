@@ -169,6 +169,7 @@ export const Formation: React.FC<{
                <div
                   data-type="formation-resize"
                   id={formation.id}
+                  onMouseDown={(e) => e.preventDefault()}
                   className="h-[60%] top-0 absolute right-[0px] flex flex-row items-center bg-black/50 justify-between    opacity-0 group-hover:opacity-100 transition lg:pointer-events-auto pointer-events-none w-[7px] cursor-col-resize	z-[99]"
                >
                   <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none">
@@ -209,6 +210,7 @@ export const Formation: React.FC<{
                            <div
                               data-type="transition-resize"
                               id={formation.id}
+                              onMouseDown={(e) => e.preventDefault()}
                               className="h-full absolute right-[7px]  flex flex-row items-center bg-black/50 justify-between  opacity-0 group-hover:opacity-100 transition lg:pointer-events-auto pointer-events-none w-[7px] cursor-col-resize	z-[99]"
                            >
                               <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none">

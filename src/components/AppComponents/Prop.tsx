@@ -119,6 +119,7 @@ export const Prop: React.FC<{
             }}
             data-type="prop"
             id={prop.id}
+            onMouseDown={(e) => e.preventDefault()}
             className="absolute z-20  -translate-x-1/2 -translate-y-1/2 box-content  h-auto   border-pink-600 "
          >
             {selectedPropIds.includes(prop.id) && !isPlaying && (
