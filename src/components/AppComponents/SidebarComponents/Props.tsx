@@ -27,6 +27,7 @@ export const Props: React.FC<{
    pushChange: Function;
    viewOnly: boolean;
    formations: formation[];
+   setHelpUrl: Function;
 }> = ({
    audioFiles,
    setSoundCloudTrackId,
@@ -48,6 +49,7 @@ export const Props: React.FC<{
    pushChange,
    viewOnly,
    formations,
+   setHelpUrl,
 }) => {
    const [file, setFile] = useState<File | null>();
    const router = useRouter();
@@ -93,60 +95,25 @@ export const Props: React.FC<{
    return (
       <>
          <div className="lg:flex hidden  w-[260px]  min-w-[260px] h-full  flex-col   bg-white  overflow-scroll dark:bg-neutral-800 dark:text-white  pt-6 ">
-            {!viewOnly && (
-               <div className="flex flex-row items-start justify-between">
-                  <div className="flex flex-col mb-6  px-4 ">
-                     <div className="text-xl font-medium   flex flex-row justify-between items-center">
-                        <button className="text-sm w-30 font-normal relative cursor-pointer">
-                           <input
-                              accept="image/jpeg, image/png, image/webp, image/bmp, image/tiff"
-                              type="file"
-                              autoComplete="off"
-                              tabIndex={-1}
-                              className="cursor-pointer absolute w-32 left-0 opacity-0 z-50"
-                              onChange={(event) => {
-                                 if (event.target.files && event.target.files[0]) {
-                                    const i = event.target.files[0];
-                                    setFile(i);
-                                 }
-                              }}
-                           />
-                           <div className="flex flex-row items-center cursor-pointer">
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth={1.5}
-                                 stroke="currentColor"
-                                 className="w-4 h-4 mr-2"
-                              >
-                                 <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                                 />
-                              </svg>
-
-                              <p className="relative cursor-pointer ">Upload Photo</p>
-                           </div>
-                        </button>
-                     </div>
-                  </div>
-                  <a target="_blank" href="https://0chaw7ccq54.typeform.com/to/OIYy7Tle" className="text-xs mr-3 text-pink-600 mt-1">
-                     Leave feedback
-                  </a>
-               </div>
-            )}
-
             <div className=" font-medium mb-2 flex flex-row   px-4 text-sm ">
                <p> Set pieces </p>
-               <span className="ml-2 relative group">
-                  <p className="cursor-pointer">ℹ︎</p>
-                  <div className="bg-black/70 pointer-events-none absolute opacity-0 group-hover:opacity-100 transition text-white text-xs p-2 rounded-xl font-normal z-50 w-[200px]  -translate-x-11">
-                     Set pieces are larger stage elements that persist throughout the performance. These items can be static, remaining in one place,
-                     or dynamic, moving across the stage as required.
-                  </div>
-               </span>
+               <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-5 h-5 ml-1 cursor-pointer"
+                  onClick={() => {
+                     setHelpUrl("https://www.youtube.com/shorts/DF_TWIDcVDk");
+                  }}
+               >
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+                  />
+               </svg>
             </div>
 
             <div
@@ -298,7 +265,50 @@ export const Props: React.FC<{
 
             {!viewOnly && propUploads.length ? (
                <>
-                  <p className=" font-medium mb-2 mt-6 px-4 text-sm ">Image Uploads</p>
+                  <div className=" font-medium mb-2 mt-6 px-4 text-sm flex flex-row  justify-between ">
+                     <p>Image Uploads</p>{" "}
+                     {!viewOnly && (
+                        <div className="flex flex-row items-center cursor-pointer justify-between">
+                           <div className="flex flex-col  cursor-pointer  ">
+                              <div className="text-xl font-medium  cursor-pointer flex flex-row justify-between items-center">
+                                 <button className="text-xs w-30 font-normal relative cursor-pointer">
+                                    <input
+                                       accept="image/jpeg, image/png, image/webp, image/bmp, image/tiff"
+                                       type="file"
+                                       autoComplete="off"
+                                       tabIndex={-1}
+                                       className="cursor-pointer  absolute w-32 left-0 opacity-0 z-50"
+                                       onChange={(event) => {
+                                          if (event.target.files && event.target.files[0]) {
+                                             const i = event.target.files[0];
+                                             setFile(i);
+                                          }
+                                       }}
+                                    />
+                                    <div className="flex flex-row items-center cursor-pointer">
+                                       <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          strokeWidth={1.5}
+                                          stroke="currentColor"
+                                          className="w-4 h-4 mr-2"
+                                       >
+                                          <path
+                                             strokeLinecap="round"
+                                             strokeLinejoin="round"
+                                             d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                                          />
+                                       </svg>
+
+                                       <p className="relative cursor-pointer ">Upload</p>
+                                    </div>
+                                 </button>
+                              </div>
+                           </div>
+                        </div>
+                     )}
+                  </div>
                   <div className=" grid gap-2  grid-cols-2 px-4 overflow-scroll removeScrollBar ">
                      {propUploads.length ? (
                         [...propUploads].reverse().map((propUpload) => {

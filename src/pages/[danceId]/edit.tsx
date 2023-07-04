@@ -167,7 +167,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [props, setProps] = useState<prop[]>(initialData.props);
    const [previousProps, setPreviousProps] = useState(initialData.props);
    const [propUploads, setPropUploads] = useState([]);
-
+   const [helpUrl, setHelpUrl] = useState(null);
    const [resizingPropId, setResizingPropId] = useState(null);
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
    const [videoPosition, setVideoPosition] = useState<"top-left" | "top-right" | "bottom-left" | "bottom-right">("top-right");
@@ -844,6 +844,48 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
             />
          ) : null}
 
+         {helpUrl && (
+            <div
+               onClick={() => {
+                  setHelpUrl(null);
+               }}
+               className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
+            >
+               <div className="w-2/3 h-[560px]  flex flex-row items-center justify-center">
+                  <div className="w-full"></div>
+                  <iframe
+                     src={`https://www.youtube.com/embed/${helpUrl.match(/\/shorts\/([a-zA-Z0-9_-]{11})/)[1]}`}
+                     title="YouTube video player"
+                     width="315"
+                     height="560"
+                     allow="accelerometer; autoplay; clipboard-write; encrypted-media;
+gyroscope; picture-in-picture;
+web-share"
+                     className="rounded-xl"
+                  ></iframe>
+                  <div className="w-full flex flex-col h-full">
+                     <button
+                        onClick={() => {
+                           setHelpUrl(null);
+                        }}
+                        className="mb-auto ml-2"
+                     >
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
+                           stroke="currentColor"
+                           className="w-7 h-7 text-white"
+                        >
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                     </button>
+                  </div>
+               </div>
+            </div>
+         )}
+
          {pdfLoading ? (
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] bg-black/80 text-white border border-neutral-600  rounded-xl h-[100px] bg-white z-50 grid place-items-center">
                <p className="text-center">Loading, pdf. This may take a sec. lol</p>
@@ -1019,6 +1061,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                               ></Collisions>
                            ) : menuOpen === "props" ? (
                               <Props
+                                 setHelpUrl={setHelpUrl}
                                  formations={formations}
                                  viewOnly={viewOnly}
                                  pushChange={pushChange}
@@ -1042,6 +1085,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                               ></Props>
                            ) : menuOpen === "items" ? (
                               <Items
+                                 setHelpUrl={setHelpUrl}
                                  formations={formations}
                                  viewOnly={viewOnly}
                                  pushChange={pushChange}
