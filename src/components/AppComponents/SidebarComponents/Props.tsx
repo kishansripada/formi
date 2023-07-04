@@ -263,7 +263,7 @@ export const Props: React.FC<{
                )}
             </div>
 
-            {!viewOnly && propUploads.length ? (
+            {!viewOnly ? (
                <>
                   <div className=" font-medium mb-2 mt-6 px-4 text-sm flex flex-row  justify-between ">
                      <p>Image Uploads</p>{" "}
@@ -401,7 +401,7 @@ export const Props: React.FC<{
                         })
                      ) : (
                         <>
-                           <p className=" text-sm">No Uploaded Images</p>
+                           <p className=" text-sm ">No Uploaded Images</p>
                         </>
                      )}
                   </div>

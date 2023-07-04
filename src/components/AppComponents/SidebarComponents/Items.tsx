@@ -202,7 +202,7 @@ export const Items: React.FC<{
                )}
             </div>
 
-            {!viewOnly && propUploads.length ? (
+            {!viewOnly ? (
                <>
                   <div className=" font-medium mb-2 mt-6 px-4 text-sm flex flex-row  justify-between ">
                      <p>Image Uploads</p>{" "}
