@@ -28,6 +28,7 @@ export const Items: React.FC<{
    viewOnly: boolean;
    formations: formation[];
    setHelpUrl: Function;
+   setAssetsOpen: Function;
 }> = ({
    audioFiles,
    setSoundCloudTrackId,
@@ -50,48 +51,9 @@ export const Items: React.FC<{
    viewOnly,
    formations,
    setHelpUrl,
+   setAssetsOpen,
 }) => {
-   const [file, setFile] = useState<File | null>();
-   const router = useRouter();
-   let session = useSession();
    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
-   const supabase = useSupabaseClient();
-   //    const selectedPropIds = [];
-   useEffect(() => {
-      if (!file?.name) return;
-      if (!isValidKey(file.name)) {
-         toast.error("Remove special characters from file name");
-         setFile(null);
-         return;
-      }
-
-      const body = new FormData();
-
-      const reader = new FileReader();
-
-      reader.readAsDataURL(file);
-
-      body.append("file", file);
-
-      let userId = session?.user?.id;
-      // ?q=${Math.floor(Math.random() * 10000)}
-      toast
-         .promise(
-            supabase.storage.from("props").upload(`${userId}/${file.name}`, body, {
-               cacheControl: "no-cache",
-               upsert: true,
-            }),
-            {
-               loading: "Uploading file...",
-               success: <b>File uploaded!</b>,
-               error: <b>Could not upload file.</b>,
-            }
-         )
-         .then((data) => {
-            invalidatePropUploads();
-         });
-   }, [file]);
-   //    console.log(propUploads);
 
    return (
       <>
@@ -116,13 +78,6 @@ export const Items: React.FC<{
                   />
                </svg>
 
-               {/* <span className="ml-2 relative group">
-                  <p className="cursor-pointer">ℹ︎</p>
-                  <div className="bg-black/70 pointer-events-none absolute opacity-0 group-hover:opacity-100 transition text-white text-xs p-2 rounded-xl font-normal z-50 w-[200px]  -translate-x-20">
-                     Props are small, portable items assignable to performers in various formations. Props can be assigned to performers in the
-                     formation tab.
-                  </div>
-               </span> */}
                <button
                   onClick={() => {
                      let newId = uuidv4();
@@ -131,6 +86,7 @@ export const Items: React.FC<{
                      });
 
                      setSelectedItemId(newId);
+                     setAssetsOpen(newId);
                   }}
                   className="ml-auto text-xs flex flex-row items-center"
                >
@@ -152,7 +108,7 @@ export const Items: React.FC<{
                style={{
                   pointerEvents: viewOnly ? "none" : "all",
                }}
-               className=" flex flex-col overflow-scroll removeScrollBar  h-1/2 "
+               className=" flex flex-col overflow-scroll removeScrollBar   "
             >
                {items.length ? (
                   [...items].reverse().map((item: item) => {
@@ -187,11 +143,36 @@ export const Items: React.FC<{
                            />
                            {item.url ? (
                               <img
+                                 onClick={() => {
+                                    setAssetsOpen(item.id);
+                                 }}
                                  className="h-[55px] w-[55px] ml-auto  object-contain  cursor-pointer  z-10 "
                                  src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item.url}`}
                                  alt=""
                               />
-                           ) : null}
+                           ) : (
+                              <div
+                                 onClick={() => {
+                                    setAssetsOpen(item.id);
+                                 }}
+                                 className="h-[55px] w-[55px] grid place-items-center  cursor-pointer  z-10 "
+                              >
+                                 <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-6 h-6"
+                                 >
+                                    <path
+                                       strokeLinecap="round"
+                                       strokeLinejoin="round"
+                                       d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                                    />
+                                 </svg>
+                              </div>
+                           )}
                         </div>
                      );
                   })
@@ -202,7 +183,7 @@ export const Items: React.FC<{
                )}
             </div>
 
-            {!viewOnly ? (
+            {/* {!viewOnly ? (
                <>
                   <div className=" font-medium mb-2 mt-6 px-4 text-sm flex flex-row  justify-between ">
                      <p>Image Uploads</p>{" "}
@@ -272,11 +253,6 @@ export const Items: React.FC<{
                                           return item;
                                        });
                                     });
-                                    // } else {
-                                    // setItems((items: item[]) => {
-                                    //    return [...items, { id: newId, user_id: session?.user.id, url: propUpload.name, name: "New prop" }];
-                                    // });
-                                    // }
 
                                     pushChange();
                                  }}
@@ -290,9 +266,6 @@ export const Items: React.FC<{
                                  {selectedItemId ? (
                                     <div className="w-full h-full absolute top-0 left-0 bg-black/50 opacity-0 group-hover:opacity-100 text-white   transition z-20 flex flex-row items-center justify-center flex-wrap ">
                                        <p className="text-xs  text-center whitespace-pre-wrap ">Set prop image</p>
-                                       {/* ) : ( */}
-                                       {/* <p className="text-xs  text-center whitespace-pre-wrap ">New Prop From Image</p> */}
-                                       {/* )} */}
                                     </div>
                                  ) : null}
                               </div>
@@ -305,7 +278,7 @@ export const Items: React.FC<{
                      )}
                   </div>
                </>
-            ) : null}
+            ) : null} */}
             <div className=" p-2 mt-auto">
                <div
                   style={{
@@ -347,27 +320,3 @@ export const Items: React.FC<{
       </>
    );
 };
-
-function isValidKey(key: string): boolean {
-   // only allow s3 safe characters and characters which require special handling for now
-   // https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html
-   return /^(\w|\/|!|-|\.|\*|'|\(|\)| |&|\$|@|=|;|:|\+|,|\?)*$/.test(key);
-}
-
-function getExtension(filename: string) {
-   var parts = filename.split(".");
-   return parts[parts.length - 1];
-}
-function isVideo(filename: string) {
-   if (!filename) return false;
-   var ext = getExtension(filename);
-   switch (ext.toLowerCase()) {
-      case "m4v":
-      case "avi":
-      case "mpg":
-      case "mp4":
-         // etc
-         return true;
-   }
-   return false;
-}

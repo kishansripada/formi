@@ -44,7 +44,7 @@ import { Timeline } from "../../components/AppComponents/Timeline";
 import { FormationControls } from "../../components/AppComponents/FormationControls";
 import { EventHandler } from "../../components/AppComponents/EventHandler";
 import { Items } from "../../components/AppComponents/SidebarComponents/Items";
-
+import { Assets } from "../../components/AppComponents/Modals/Assets";
 // could be dynamic imports
 import { Prop } from "../../components/AppComponents/Prop";
 import { Comment } from "../../components/AppComponents/Comment";
@@ -72,7 +72,7 @@ const useDidMountEffect = (func, deps) => {
 
 const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnly: boolean }) => {
    const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
-
+   viewOnlyInitial = false;
    const supabase = useSupabaseClient();
    let session = useSession();
    const router = useRouter();
@@ -158,6 +158,8 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [isChangingZoom, setIsChangingZoom] = useState(false);
    const [isThreeDancerDragging, setIsThreeDancerDragging] = useState(false);
    const [pdfLoading, setPdfLoading] = useState(false);
+
+   const [assetsOpen, setAssetsOpen] = useState(false);
 
    const [onlineUsers, setOnlineUsers] = useState({});
    const [userPositions, setUserPositions] = useState({});
@@ -854,7 +856,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                <div className="w-2/3 h-[560px]  flex flex-row items-center justify-center">
                   <div className="w-full"></div>
                   <iframe
-                     src={`https://www.youtube.com/embed/${helpUrl.match(/\/shorts\/([a-zA-Z0-9_-]{11})/)[1]}`}
+                     src={`https://www.youtube.com/embed/${helpUrl.match(/\/shorts\/([a-zA-Z0-9_-]{11})/)[1]}?autoplay=1`}
                      title="YouTube video player"
                      width="315"
                      height="560"
@@ -876,7 +878,7 @@ web-share"
                            viewBox="0 0 24 24"
                            strokeWidth={1.5}
                            stroke="currentColor"
-                           className="w-7 h-7 text-white"
+                           className="w-7 h-7 dark:text-white"
                         >
                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -911,6 +913,19 @@ web-share"
                </div>
             </>
          ) : null} */}
+
+         {assetsOpen ? (
+            <Assets
+               setProps={setProps}
+               menuOpen={menuOpen}
+               pushChange={pushChange}
+               setItems={setItems}
+               assetsOpen={assetsOpen}
+               invalidatePropUploads={invalidatePropUploads}
+               propUploads={propUploads}
+               setAssetsOpen={setAssetsOpen}
+            ></Assets>
+         ) : null}
 
          <div
             // style={{
@@ -1030,6 +1045,7 @@ web-share"
                               ></ChooseAudioSource>
                            ) : menuOpen === "settings" ? (
                               <Settings
+                                 setHelpUrl={setHelpUrl}
                                  dropDownToggle={dropDownToggle}
                                  setLocalSettings={setLocalSettings}
                                  localSettings={localSettings}
@@ -1061,6 +1077,7 @@ web-share"
                               ></Collisions>
                            ) : menuOpen === "props" ? (
                               <Props
+                                 setAssetsOpen={setAssetsOpen}
                                  setHelpUrl={setHelpUrl}
                                  formations={formations}
                                  viewOnly={viewOnly}
@@ -1085,6 +1102,7 @@ web-share"
                               ></Props>
                            ) : menuOpen === "items" ? (
                               <Items
+                                 setAssetsOpen={setAssetsOpen}
                                  setHelpUrl={setHelpUrl}
                                  formations={formations}
                                  viewOnly={viewOnly}
