@@ -163,8 +163,8 @@ export function ThreeDancer({
    const thisItem = items.find((item) => item.id === dancerPosition?.itemId) || null;
 
    // const outerMaterial = new MeshStandardMaterial({ color: 0x00ff00 });
-   const url = thisItem ? `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${thisItem?.url}` : null;
-   const texture = thisItem ? useLoader(TextureLoader, url) : null;
+   const url = thisItem?.url ? `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${thisItem?.url}` : null;
+   const texture = thisItem?.url ? useLoader(TextureLoader, url) : null;
 
    const [itemDimensions, setItemDimensions] = useState({ width: 0, height: 0 });
    // const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
