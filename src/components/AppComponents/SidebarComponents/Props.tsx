@@ -143,8 +143,8 @@ export const Props: React.FC<{
                <span className="ml-2 relative group">
                   <p className="cursor-pointer">ℹ︎</p>
                   <div className="bg-black/70 pointer-events-none absolute opacity-0 group-hover:opacity-100 transition text-white text-xs p-2 rounded-xl font-normal z-50 w-[200px]  -translate-x-11">
-                     Set pieces are generally larger items on stage that are not carried by a particular performer. They can stay in the same place
-                     (static) or move throughout the performance (dynamic).
+                     Set pieces are larger stage elements that persist throughout the performance. These items can be static, remaining in one place,
+                     or dynamic, moving across the stage as required.
                   </div>
                </span>
             </div>
@@ -309,7 +309,7 @@ export const Props: React.FC<{
                                     let newId = uuidv4();
                                     if (!selectedPropIds.length) {
                                        setProps((props: prop[]) => {
-                                          return [...props, { id: newId, user_id: session?.user.id, url: propUpload.name, type: "static" }];
+                                          return [...props, { id: newId, url: `${propUpload.name}`, user_id: session?.user.id, type: "static" }];
                                        });
                                        setProps((props: prop[]) => {
                                           return props.map((propx) => {
@@ -332,7 +332,7 @@ export const Props: React.FC<{
                                        setProps((props: prop[]) => {
                                           return props.map((prop) => {
                                              if (selectedPropIds.includes(prop.id)) {
-                                                return { ...prop, url: propUpload.name, user_id: session?.user.id };
+                                                return { ...prop, url: `${propUpload.name}`, user_id: session?.user.id };
                                              }
                                              return prop;
                                           });
@@ -349,9 +349,9 @@ export const Props: React.FC<{
                                  />
                                  <div className="w-full h-full absolute top-0 left-0 bg-black/50 opacity-0 group-hover:opacity-100 text-white   transition z-20 flex flex-row items-center justify-center flex-wrap ">
                                     {selectedPropIds.length ? (
-                                       <p className="text-xs  text-center whitespace-pre-wrap ">Replace Prop Image</p>
+                                       <p className="text-xs  text-center whitespace-pre-wrap ">Replace Set Piece Image</p>
                                     ) : (
-                                       <p className="text-xs  text-center whitespace-pre-wrap ">New Prop From Image</p>
+                                       <p className="text-xs  text-center whitespace-pre-wrap ">New Set Piece From Image</p>
                                     )}
                                  </div>
                                  {/* <button

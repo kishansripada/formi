@@ -1,4 +1,4 @@
-import { cloudSettings, dancer, dancerPosition, formation, stageDimensions, PIXELS_PER_SQUARE, localSettings } from "../../types/types";
+import { cloudSettings, dancer, dancerPosition, formation, stageDimensions, PIXELS_PER_SQUARE, localSettings, item } from "../../types/types";
 
 export const DancerAlias: React.FC<{
    dancer: dancer;
@@ -22,6 +22,7 @@ export const DancerAlias: React.FC<{
    index: number;
    collisions: any;
    isChangingCollisionRadius: boolean;
+   items: item[];
 }> = ({
    dancer,
    currentFormationIndex,
@@ -44,6 +45,7 @@ export const DancerAlias: React.FC<{
    collisions,
    index,
    isChangingCollisionRadius,
+   items,
 }) => {
    let { stageDimensions } = cloudSettings;
    let { dancerStyle, collisionRadius } = localSettings;
@@ -60,13 +62,14 @@ export const DancerAlias: React.FC<{
    //         .flat(Infinity)
    //         .includes(dancer.id)
    //    : false;
-
+   if (selectedFormation === null) return <></>;
+   const dancerPos = formations[selectedFormation]?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id);
    let myPosition;
    // if the track is playing then  return with the animation function
    if (isPlaying && position !== null) {
       myPosition = animate(formations, dancer.id, currentFormationIndex, percentThroughTransition, coordsToPosition, stageDimensions);
    } else {
-      myPosition = formations[selectedFormation]?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id)?.position;
+      myPosition = dancerPos?.position;
    }
    // if there is no formation selected and the track is not playing, then just return nothing
    if (selectedFormation === null) return <></>;
@@ -82,6 +85,8 @@ export const DancerAlias: React.FC<{
 
    // let color = onlineUsers?.[idSelectingMe]?.[0]?.color || dancer.color;
    let name = onlineUsers?.[idSelectingMe]?.[0]?.name;
+
+   const thisItem = items.find((item) => item.id === dancerPos?.itemId) || null;
 
    // console.log(color);
    // let firstNamesOnThisFormation = idsOnThisFormation.map((id) => onlineUsers[id][0].name).map((name) => name.split(" ")[0]);
@@ -114,8 +119,18 @@ export const DancerAlias: React.FC<{
             onMouseDown={(e) => e.preventDefault()}
             id={dancer.id}
             data-type={"dancer"}
-            className={` w-[35px] h-[35px]  group select-none  lg:pointer-events-auto pointer-events-none flex  -translate-y-1/2 -translate-x-1/2 flex-row justify-center items-center absolute z-[30] mr-auto ml-auto cursor-default `}
+            className={` w-[40px] h-[40px]  group select-none  lg:pointer-events-auto pointer-events-none flex  -translate-y-1/2 -translate-x-1/2 flex-row justify-center items-center absolute z-[30] mr-auto ml-auto cursor-default `}
          >
+            {thisItem && (
+               <div className="absolute z-[99]  -translate-y-full  top-0 pointer-events-none w-12 ">
+                  <img
+                     className="w-full h-full"
+                     src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${thisItem?.url}`}
+                     alt=""
+                  />
+               </div>
+            )}
+
             {dancer.shape === "square" ? (
                <svg
                   className={` w-full h-full select-none   pointer-events-none flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}

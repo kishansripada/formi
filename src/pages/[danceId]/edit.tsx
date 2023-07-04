@@ -10,7 +10,18 @@ import debounce from "lodash.debounce";
 import toast, { Toaster } from "react-hot-toast";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { comment, dancer, dancerPosition, formation, PIXELS_PER_SQUARE, localSettings, cloudSettings, formationGroup, prop } from "../../types/types";
+import {
+   comment,
+   dancer,
+   dancerPosition,
+   formation,
+   PIXELS_PER_SQUARE,
+   localSettings,
+   cloudSettings,
+   formationGroup,
+   prop,
+   item,
+} from "../../types/types";
 import { AudioControls } from "../../components/AppComponents/AudioControls";
 import { Header } from "../../components/AppComponents/Header";
 import { DancerAlias } from "../../components/AppComponents/DancerAlias";
@@ -32,6 +43,7 @@ import { Props } from "../../components/AppComponents/SidebarComponents/Props";
 import { Timeline } from "../../components/AppComponents/Timeline";
 import { FormationControls } from "../../components/AppComponents/FormationControls";
 import { EventHandler } from "../../components/AppComponents/EventHandler";
+import { Items } from "../../components/AppComponents/SidebarComponents/Items";
 
 // could be dynamic imports
 import { Prop } from "../../components/AppComponents/Prop";
@@ -150,9 +162,12 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    const [onlineUsers, setOnlineUsers] = useState({});
    const [userPositions, setUserPositions] = useState({});
    const [channelGlobal, setChannelGlobal] = useState<RealtimeChannel>();
-   const [props, setProps] = useState(initialData.props);
+
+   const [items, setItems] = useState<item[]>(initialData.items);
+   const [props, setProps] = useState<prop[]>(initialData.props);
    const [previousProps, setPreviousProps] = useState(initialData.props);
    const [propUploads, setPropUploads] = useState([]);
+
    const [resizingPropId, setResizingPropId] = useState(null);
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
    const [videoPosition, setVideoPosition] = useState<"top-left" | "top-right" | "bottom-left" | "bottom-right">("top-right");
@@ -736,7 +751,29 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          uploadProps(props);
       }
    }, [props]);
-   ////////////////////////
+
+   let uploadItems = useCallback(
+      debounce(async (items) => {
+         console.log("uploading items");
+         const { data, error } = await supabase.from("dances").update({ items: items, last_edited: new Date() }).eq("id", router.query.danceId);
+         console.log({ data });
+         console.log({ error });
+
+         setSaved(true);
+      }, 1000),
+      [router.query.danceId]
+   );
+
+   useDidMountEffect(() => {
+      if (!session && router.query.danceId !== "207") {
+         router.push("/login");
+      }
+      if (router.isReady) {
+         setSaved(false);
+         uploadItems(items);
+      }
+   }, [items]);
+   //////////////////////
    let flippedFormations = formations.map((formation: formation) => {
       let flippedPositions = formation.positions.map((position) => {
          if (position.controlPointEnd && position.controlPointStart) {
@@ -950,10 +987,10 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                                  setLocalSource={setLocalSource}
                               ></ChooseAudioSource>
                            ) : menuOpen === "settings" ? (
-                              <Settings dropDownToggle={dropDownToggle} setLocalSettings={setLocalSettings} localSettings={localSettings}></Settings>
-                           ) : menuOpen === "stageSettings" ? (
-                              <StageSettings
+                              <Settings
                                  dropDownToggle={dropDownToggle}
+                                 setLocalSettings={setLocalSettings}
+                                 localSettings={localSettings}
                                  pushChange={pushChange}
                                  formations={formations}
                                  pricingTier={pricingTier}
@@ -961,7 +998,19 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                                  setCloudSettings={setCloudSettings}
                                  setFormations={setFormations}
                                  setUpgradeIsOpen={setUpgradeIsOpen}
-                              ></StageSettings>
+                              ></Settings>
+                           ) : menuOpen === "stageSettings" ? (
+                              // <StageSettings
+                              //    dropDownToggle={dropDownToggle}
+                              //    pushChange={pushChange}
+                              //    formations={formations}
+                              //    pricingTier={pricingTier}
+                              //    cloudSettings={cloudSettings}
+                              //    setCloudSettings={setCloudSettings}
+                              //    setFormations={setFormations}
+                              //    setUpgradeIsOpen={setUpgradeIsOpen}
+                              // ></StageSettings>
+                              <></>
                            ) : menuOpen === "collisions" ? (
                               <Collisions
                                  dropDownToggle={dropDownToggle}
@@ -991,6 +1040,29 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                                  setLocalSource={setLocalSource}
                                  setFormations={setFormations}
                               ></Props>
+                           ) : menuOpen === "items" ? (
+                              <Items
+                                 formations={formations}
+                                 viewOnly={viewOnly}
+                                 pushChange={pushChange}
+                                 setSelectedPropIds={setSelectedPropIds}
+                                 invalidatePropUploads={invalidatePropUploads}
+                                 // selectedPropIds={selectedPropIds}
+                                 propUploads={propUploads}
+                                 selectedFormation={selectedFormation}
+                                 items={items}
+                                 setItems={setItems}
+                                 pricingTier={pricingTier}
+                                 setUpgradeIsOpen={setUpgradeIsOpen}
+                                 player={player}
+                                 setIsPlaying={setIsPlaying}
+                                 soundCloudTrackId={soundCloudTrackId}
+                                 setSoundCloudTrackId={setSoundCloudTrackId}
+                                 audioFiles={audioFiles}
+                                 setAudiofiles={setAudiofiles}
+                                 setLocalSource={setLocalSource}
+                                 setFormations={setFormations}
+                              ></Items>
                            ) : (
                               <CurrentFormation
                                  viewOnly={viewOnly}
@@ -1012,6 +1084,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                                  formations={formations}
                                  selectedFormation={selectedFormation}
                                  setUpgradeIsOpen={setUpgradeIsOpen}
+                                 items={items}
                               />
                            )}
                         </div>
@@ -1034,6 +1107,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
                      {localSettings.viewingThree ? (
                         <ThreeD
+                           items={items}
                            props={props}
                            setIsThreeDancerDragging={setIsThreeDancerDragging}
                            isThreeDancerDragging={isThreeDancerDragging}
@@ -1157,6 +1231,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                                  isPlaying={isPlaying}
                                  collisions={collisions}
                                  isChangingCollisionRadius={isChangingCollisionRadius}
+                                 items={items}
                               />
                            ))}
 

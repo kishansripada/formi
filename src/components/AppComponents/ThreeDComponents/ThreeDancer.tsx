@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useGLTF } from "@react-three/drei";
-import { dancerPosition, dancer, formation, localSettings } from "../../../types/types";
+import { dancerPosition, dancer, formation, localSettings, item } from "../../../types/types";
 import { Text, Cylinder, RoundedBox } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 import { useDrag } from "@use-gesture/react";
 import { useThree, useFrame } from "@react-three/fiber";
-
-import * as THREE from "three";
-
+import { TextureLoader, DoubleSide, Vector3, Plane } from "three";
+import { useLoader } from "@react-three/fiber";
 export function ThreeDancer({
    dancerPosition,
    dancers,
@@ -27,6 +26,7 @@ export function ThreeDancer({
    isThreeDancerDragging,
    selectedDancers,
    setSelectedDancers,
+   items,
 }: {
    dancerPosition: dancerPosition;
    dancers: dancer[];
@@ -46,6 +46,7 @@ export function ThreeDancer({
    isThreeDancerDragging: boolean;
    selectedDancers: string[];
    setSelectedDancers: Function;
+   items: item[];
 }) {
    /**
     * Text always looks at the camera
@@ -60,23 +61,89 @@ export function ThreeDancer({
          // bgRef.current.lookAt(state.camera.position);
       }
    });
-   let dancer = dancers?.find((dancer) => dancer.id === dancerPosition.id);
 
+   let dancer = dancers?.find((dancer) => dancer.id === dancerPosition.id);
+   let planeIntersectPoint = new Vector3();
+   const floorPlane = new Plane(new Vector3(0, 1, 0), 0);
+
+   const bind = useDrag(
+      ({ active, movement: [x, y], timeStamp, event }) => {
+         if (viewOnly || isPlaying) return;
+         event.stopPropagation();
+
+         if (active) {
+            document.body.style.cursor = "grabbing";
+            event.ray.intersectPlane(floorPlane, planeIntersectPoint);
+            // setPos([-dancerPosition.position.x / 2 + planeIntersectPoint.x, 0, dancerPosition.position.y / 2 + planeIntersectPoint.z]);
+            // console.log(planeIntersectPoint.x);
+            setFormations((formations: formation[]) => {
+               return formations.map((formation, index: number) => {
+                  if (index === selectedFormation) {
+                     return {
+                        ...formation,
+                        positions: formation.positions.map((dancerPosition) => {
+                           if (dancerPosition.id === dancer.id && dancerPosition.transitionType === "cubic") {
+                              return {
+                                 ...dancerPosition,
+                                 position: {
+                                    x: planeIntersectPoint.x,
+                                    y: -planeIntersectPoint.z,
+                                 },
+
+                                 // THIS NEEDS TO BE FIXED
+                                 controlPointEnd: {
+                                    x: planeIntersectPoint.x,
+                                    y: -planeIntersectPoint.z,
+                                 },
+                              };
+                           }
+                           if (dancerPosition.id === dancer.id && (dancerPosition.transitionType === "linear" || !dancerPosition.transitionType)) {
+                              return {
+                                 ...dancerPosition,
+                                 position: {
+                                    x: planeIntersectPoint.x,
+                                    y: -planeIntersectPoint.z,
+                                 },
+                              };
+                           }
+                           return dancerPosition;
+                        }),
+                     };
+                  }
+
+                  return formation;
+               });
+            });
+         } else {
+            document.body.style.cursor = "default";
+         }
+         setIsThreeDancerDragging(active);
+
+         // api.start({
+         //    position: [dancerPosition.position.x, dancerPosition.position.y],
+         // });
+         return timeStamp;
+      },
+      { delay: true }
+   );
    const { nodes, materials } = useGLTF("/roblox.glb");
 
    let dancerPos;
    let textPos;
-   // let selectedPos;
    let bgPos;
+   let itemPos;
+
    dancerPos = useSpring({ position: [dancerPosition.position.x, 0, -dancerPosition.position.y] });
    textPos = useSpring({ position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28, -dancerPosition.position.y] });
    bgPos = useSpring({ position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28, -dancerPosition.position.y - 0.02] });
+   itemPos = useSpring({ position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28 / 2, -dancerPosition.position.y + 0.5] });
 
    // selectedPos = useSpring({ position: [dancerPosition.position.x, 0, -dancerPosition.position.y] });
    if (isThreeDancerDragging) {
       dancerPos = { position: [dancerPosition.position.x, 0, -dancerPosition.position.y] };
       textPos = { position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28, -dancerPosition.position.y] };
       bgPos = { position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28, -dancerPosition.position.y - 0.02] };
+      itemPos = { position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28 / 2, -dancerPosition.position.y + 0.5] };
       // selectedPos = { position: [dancerPosition.position.x, 0, -dancerPosition.position.y] };
    }
 
@@ -90,9 +157,24 @@ export function ThreeDancer({
       textPos = { position: [x, (dancer?.height || 182.88) / 28, y] };
       // selectedPos = { position: [x, 0, y] };
       bgPos = { position: [x, (dancer?.height || 182.88) / 28, y] };
+      itemPos = { position: [x, (dancer?.height || 182.88) / 28, y] };
+      itemPos = { position: [x, (dancer?.height || 182.88) / 28 / 2, y + 0.5] };
    }
-   // const outerMaterial = new MeshStandardMaterial({ color: 0x00ff00 });
+   const thisItem = items.find((item) => item.id === dancerPosition?.itemId) || null;
 
+   // const outerMaterial = new MeshStandardMaterial({ color: 0x00ff00 });
+   const url = thisItem ? `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${thisItem?.url}` : null;
+   const texture = thisItem ? useLoader(TextureLoader, url) : null;
+
+   const [itemDimensions, setItemDimensions] = useState({ width: 0, height: 0 });
+   // const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
+
+   useEffect(() => {
+      if (!thisItem || !url) return;
+      calculateImageDimensions(2, url, (width, height) => {
+         setItemDimensions({ width, height });
+      });
+   }, [url]);
    return (
       <>
          {/* <animated.mesh position={bgPos.position}>
@@ -102,7 +184,7 @@ export function ThreeDancer({
                   color={selectedDancers.includes(dancer.id) ? "#db2777" : localSettings.isDarkMode ? "white" : "#3f3f46"}
                />
             </RoundedBox>
-         </animated.mesh> */}
+         </animated.mesh>  */}
 
          <animated.mesh position={textPos.position}>
             <Text ref={textRef} scale={[0.4, 0.4, 0.4]} color={`${localSettings.isDarkMode ? "white" : "black"}`} anchorX="center" anchorY="middle">
@@ -110,9 +192,18 @@ export function ThreeDancer({
             </Text>
          </animated.mesh>
 
+         {thisItem && (
+            <animated.mesh position={itemPos.position}>
+               <mesh rotation={[0, 0, 0]}>
+                  <planeBufferGeometry attach="geometry" args={[itemDimensions.width, itemDimensions.height]} />
+                  <meshBasicMaterial opacity={0.8} transparent={true} attach="material" map={texture} side={DoubleSide} />
+               </mesh>
+            </animated.mesh>
+         )}
+
          <animated.mesh
             // {...spring}
-            // {...bind()}
+            {...bind()}
             scale={[0.6, (dancer?.height || 182.88) / 156, 0.7]}
             // scale={[0.25, ((dancer.height || 182.88) / maxHeight) * 0.35, 0.3]}
             // rotation={[Math.PI / 2, 0, Math.PI / 2]}
@@ -130,9 +221,9 @@ export function ThreeDancer({
                               name="RootNode"
                               onPointerDown={(e) => {
                                  if (viewOnly) return;
-                                 e.stopPropagation();
+                                 // e.stopPropagation();
                                  setSelectedDancers([dancer.id]);
-                                 setIsThreeDancerDragging(true);
+                                 // setIsThreeDancerDragging(true);
                                  // addToStack();
                               }}
                               onPointerEnter={() => {
@@ -144,35 +235,35 @@ export function ThreeDancer({
                                  document.body.style.cursor = "default";
                               }}
                            >
-                              <group name="vecto">
+                              <group castShadow name="vecto">
                                  <group name="Model9">
-                                    <mesh name="Model9_b0b0b0_0" geometry={nodes.Model9_b0b0b0_0.geometry} material={materials.b0b0b0}>
+                                    <mesh castShadow name="Model9_b0b0b0_0" geometry={nodes.Model9_b0b0b0_0.geometry} material={materials.b0b0b0}>
                                        <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
                                     </mesh>
                                  </group>
                                  <group scale={[0.7, 1, 1]}>
                                     <group name="Model5">
-                                       <mesh name="Model5_b0b0b0_0" geometry={nodes.Model5_b0b0b0_0.geometry} material={materials.b0b0b0}>
+                                       <mesh castShadow name="Model5_b0b0b0_0" geometry={nodes.Model5_b0b0b0_0.geometry} material={materials.b0b0b0}>
                                           <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
                                        </mesh>
                                     </group>
                                     <group name="Model7">
-                                       <mesh name="Model7_b0b0b0_0" geometry={nodes.Model7_b0b0b0_0.geometry} material={materials.b0b0b0}>
+                                       <mesh castShadow name="Model7_b0b0b0_0" geometry={nodes.Model7_b0b0b0_0.geometry} material={materials.b0b0b0}>
                                           <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
                                        </mesh>
                                     </group>
                                     <group name="Model6">
-                                       <mesh name="Model6_b0b0b0_0" geometry={nodes.Model6_b0b0b0_0.geometry} material={materials.b0b0b0}>
+                                       <mesh castShadow name="Model6_b0b0b0_0" geometry={nodes.Model6_b0b0b0_0.geometry} material={materials.b0b0b0}>
                                           <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
                                        </mesh>
                                     </group>
                                     <group name="Model4">
-                                       <mesh name="Model4_b0b0b0_0" geometry={nodes.Model4_b0b0b0_0.geometry} material={materials.b0b0b0}>
+                                       <mesh castShadow name="Model4_b0b0b0_0" geometry={nodes.Model4_b0b0b0_0.geometry} material={materials.b0b0b0}>
                                           <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
                                        </mesh>
                                     </group>
                                     <group name="Model8">
-                                       <mesh name="Model8_b0b0b0_0" geometry={nodes.Model8_b0b0b0_0.geometry} material={materials.b0b0b0}>
+                                       <mesh castShadow name="Model8_b0b0b0_0" geometry={nodes.Model8_b0b0b0_0.geometry} material={materials.b0b0b0}>
                                           <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
                                        </mesh>
                                     </group>
@@ -293,3 +384,23 @@ const animate = (
    }
    return { x: from.x + (to.x - from.x) * percentThroughTransition, y: from.y + (to.y - from.y) * percentThroughTransition };
 };
+
+function calculateImageDimensions(height: number, url: string, callback: (newWidth: number, newHeight: number) => void): void {
+   // Create a new image object
+   let img = new Image();
+
+   // Define the onload function
+   img.onload = function () {
+      // Get the actual width and height of the image
+      const imgWidth: number = this.width;
+      const imgHeight: number = this.height;
+
+      let newImgWidth = (imgWidth / imgHeight) * height;
+
+      // Return the new width and height
+      callback(newImgWidth, height);
+   };
+
+   // Set the src attribute to start loading the image
+   img.src = url;
+}

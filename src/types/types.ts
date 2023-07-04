@@ -17,6 +17,7 @@ export type propPosition = {
 export type prop = {
    url: string;
    id: string;
+   user_id: string;
    type: "static" | "dynamic";
    static: {
       width: number;
@@ -26,12 +27,20 @@ export type prop = {
    };
 };
 
+export type item = {
+   url: string;
+   id: string;
+   user_id: string;
+   name: string;
+};
+
 export type dancerPosition = {
    id: string;
    position: { x: number; y: number };
    transitionType?: "linear" | "cubic" | "teleport";
    controlPointStart?: { x: number; y: number };
    controlPointEnd?: { x: number; y: number };
+   itemId?: string | null;
 };
 
 export type formation = {

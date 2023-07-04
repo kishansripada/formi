@@ -119,7 +119,7 @@ export const Sidebar: React.FC<{
                </svg>
                <p className=" mt-1">Collisions</p>
             </button>
-            {/* <button
+            <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
                onClick={() => setMenuOpen("items")}
             >
@@ -140,7 +140,7 @@ export const Sidebar: React.FC<{
 
                <p className=" mt-1">Props</p>
                <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p>
-            </button> */}
+            </button>
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
                onClick={() => setMenuOpen("props")}
@@ -189,7 +189,7 @@ export const Sidebar: React.FC<{
                <p className=" mt-1">Collisions</p>
             </button> */}
 
-            <button
+            {/* <button
                className="flex flex-col mt-auto mb-2 items-center dark:text-neutral-300 font-semibold text-neutral-600   "
                onClick={() => setMenuOpen("stageSettings")}
             >
@@ -210,9 +210,9 @@ export const Sidebar: React.FC<{
                   />
                </svg>
                <p className=" mt-1">Stage</p>
-            </button>
+            </button> */}
             <button
-               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
+               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600 mt-auto   "
                onClick={() => setMenuOpen("settings")}
             >
                <svg
