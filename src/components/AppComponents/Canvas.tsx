@@ -774,6 +774,7 @@ export const Canvas: React.FC<{
                return Math.min(Math.max(0.1, newZoom), 4);
             });
          } else {
+            event.preventDefault();
             setScrollOffset((scrollOffset) => ({
                x: scrollOffset.x - event.deltaX / zoom / 1.5,
                y: scrollOffset.y - event.deltaY / zoom / 1.5,
