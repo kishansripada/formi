@@ -850,22 +850,29 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
             <div
                onClick={() => {
                   setHelpUrl(null);
+                  // setLocalSettings({ ...localSettings, hasNotSeenIntroVid: false });
                }}
-               className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
+               className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center "
             >
-               <div className="w-2/3 h-[560px]  flex flex-row items-center justify-center">
-                  <div className="w-full"></div>
+               <div className="  flex flex-row items-center justify-center">
+                  {/* <div className="w-full"></div> */}
                   <iframe
-                     src={`https://www.youtube.com/embed/${helpUrl.match(/\/shorts\/([a-zA-Z0-9_-]{11})/)[1]}?autoplay=1`}
+                     src={`https://www.youtube.com/embed/${
+                        helpUrl.url.match(/\/shorts\/([a-zA-Z0-9_-]{11})/)[1]
+                     }?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=0`}
                      title="YouTube video player"
                      width="315"
                      height="560"
                      allow="accelerometer; autoplay; clipboard-write; encrypted-media;
 gyroscope; picture-in-picture;
 web-share"
-                     className="rounded-xl"
+                     style={{
+                        left: helpUrl.event ? helpUrl.event.clientX : "unset",
+                        top: helpUrl.event ? helpUrl.event.clientY : "unset",
+                     }}
+                     className="rounded-xl absolute "
                   ></iframe>
-                  <div className="w-full flex flex-col h-full">
+                  {/* <div className="w-full flex flex-col h-full">
                      <button
                         onClick={() => {
                            setHelpUrl(null);
@@ -883,7 +890,7 @@ web-share"
                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                      </button>
-                  </div>
+                  </div> */}
                </div>
             </div>
          )}

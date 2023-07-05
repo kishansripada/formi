@@ -53,10 +53,10 @@ export const Layer: React.FC<{
    };
 
    const sensors = useSensors(
-      useSensor(PointerSensor),
-      useSensor(KeyboardSensor, {
-         coordinateGetter: sortableKeyboardCoordinates,
-      })
+      useSensor(PointerSensor)
+      // useSensor(KeyboardSensor, {
+      //    coordinateGetter: sortableKeyboardCoordinates,
+      // })
    );
    function handleDragStart(event) {
       const index = event?.active?.data?.current?.sortable?.index || 0;

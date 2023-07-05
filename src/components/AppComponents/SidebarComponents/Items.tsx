@@ -67,8 +67,8 @@ export const Items: React.FC<{
                   strokeWidth={1.5}
                   stroke="currentColor"
                   className="w-5 h-5 ml-1  cursor-pointer"
-                  onClick={() => {
-                     setHelpUrl("https://www.youtube.com/shorts/DF_TWIDcVDk");
+                  onClick={(e) => {
+                     setHelpUrl({ url: "https://www.youtube.com/shorts/DF_TWIDcVDk", event: e });
                   }}
                >
                   <path
