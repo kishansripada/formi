@@ -123,9 +123,8 @@ export const Formation: React.FC<{
                   // subtract 4 to account for the mx-[2px]
                }}
             >
-               <p {...attributes} {...listeners} className="text-[10px]  p-1 font-semibold  relative whitespace-nowrap focus:outline-none">
-                  {formation.name}
-               </p>
+               {/* {...attributes} {...listeners} */}
+               <p className="text-[10px]  p-1 font-semibold  relative whitespace-nowrap focus:outline-none">{formation.name}</p>
                {/* {firstNamesOnThisFormation.length && myWidth > 100 ? (
                      <div
                         // opacity-0 group-hover:opacity-100
@@ -135,9 +134,7 @@ export const Formation: React.FC<{
                         <p>{formatNames(firstNamesOnThisFormation)}</p>
                      </div>
                   ) : null} */}
-
                {/* drag handle */}
-
                {/* <div
                   data-type="drag-handle"
                   // onClick={() => {
@@ -151,7 +148,6 @@ export const Formation: React.FC<{
                   {...listeners}
                   className="w-full opacity-0 absolute top-[-12px] h-[12px]  cursor-move lg:pointer-events-auto pointer-events-none	z-[99999]"
                ></div> */}
-
                {/* 6 dots on drag handle */}
                {/* <div className=" absolute top-[-18px] -translate-x-1/2 left-1/2 h-[8px] select-none   cursor-move lg:pointer-events-auto pointer-events-none	z-[99999]">
                <svg
@@ -165,7 +161,6 @@ export const Formation: React.FC<{
                   <path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
                </svg>
             </div> */}
-
                <div
                   data-type="formation-resize"
                   id={formation.id}
@@ -176,13 +171,11 @@ export const Formation: React.FC<{
                      <div className="w-[2px] h-[15px] rounded-full bg-neutral-300 dark:bg-neutral-300"></div>
                   </div>
                </div>
-
                {/* <div
                   className={` h-[17px]  px-1  overflow-hidden text-ellipsis whitespace-nowrap   border-b border-neutral-200 dark:border-neutral-600`}
                >
                   <p className={`text-[11px] pointer-events-none select-none  font-medium text-ellipsis text-center`}>{formation.name}</p>
                </div> */}
-
                {/* formation group color bar */}
                {/* <div
                   style={{
@@ -190,7 +183,6 @@ export const Formation: React.FC<{
                   }}
                   className="absolute w-full h-[4px] bottom-[0px] rounded-full"
                ></div> */}
-
                <div
                   duration={formation.transition.durationSeconds}
                   className={` flex flex-row border-t dark:border-neutral-600  box-border h-[40%] mt-auto   `}
