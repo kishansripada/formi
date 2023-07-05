@@ -188,19 +188,21 @@ export const ThreeD: React.FC<{
             <StageBackground cloudSettings={cloudSettings} url={cloudSettings.backgroundUrl}></StageBackground>
          ) : null}
 
-         {props.map((prop: prop) => {
-            return (
-               <ThreeSetPiece
-                  selectedFormation={selectedFormation}
-                  isPlaying={isPlaying}
-                  position={position}
-                  currentFormationIndex={currentFormationIndex}
-                  percentThroughTransition={percentThroughTransition}
-                  prop={prop}
-                  formations={formations}
-               ></ThreeSetPiece>
-            );
-         })}
+         {props
+            .filter((prop) => prop.url)
+            .map((prop: prop) => {
+               return (
+                  <ThreeSetPiece
+                     selectedFormation={selectedFormation}
+                     isPlaying={isPlaying}
+                     position={position}
+                     currentFormationIndex={currentFormationIndex}
+                     percentThroughTransition={percentThroughTransition}
+                     prop={prop}
+                     formations={formations}
+                  ></ThreeSetPiece>
+               );
+            })}
 
          {/* <color attach="background" args={["#09090b"]} /> */}
          {/* <fog attach="fog" args={["#202020", 5, 20]} /> */}
