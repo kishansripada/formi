@@ -142,7 +142,7 @@ export const EventHandler: React.FC<{
       if (e.key === "ArrowRight") {
          if (selectedFormation === null) return;
          e.preventDefault();
-         let index = selectedFormation + 1;
+         let index = selectedFormation === formations.length - 1 ? selectedFormation : selectedFormation + 1;
 
          // if (isPlaying) {
          let position = formations
@@ -164,7 +164,7 @@ export const EventHandler: React.FC<{
       if (e.key === "ArrowLeft") {
          if (selectedFormation === null) return;
          e.preventDefault();
-         let index = selectedFormation - 1;
+         let index = selectedFormation === 0 ? 0 : selectedFormation - 1;
 
          // if (isPlaying) {
          let position = formations
