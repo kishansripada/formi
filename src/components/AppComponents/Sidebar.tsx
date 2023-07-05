@@ -6,7 +6,8 @@ export const Sidebar: React.FC<{
    setMenuOpen: Function;
    menuOpen: string;
    viewOnly: boolean;
-}> = ({ setMenuOpen, menuOpen, viewOnly }) => {
+   setHelpUrl: Function;
+}> = ({ setMenuOpen, menuOpen, viewOnly, setHelpUrl }) => {
    return (
       <>
          <div className="lg:flex hidden flex-col  h-full  items-center  text-[10px] dark:bg-black  text-black bg-neutral-100  child:mb-5   w-20 min-w-20 border-r border-neutral-300 dark:border-neutral-700">
@@ -211,8 +212,34 @@ export const Sidebar: React.FC<{
                </svg>
                <p className=" mt-1">Stage</p>
             </button> */}
+
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600 mt-auto   "
+               onClick={(e) => {
+                  setHelpUrl({ url: "https://www.youtube.com/shorts/uiTwpkpsL1E", event: e });
+               }}
+            >
+               <svg
+                  className={`w-7 h-7 transition duration-300  ml-auto mr-auto ${
+                     menuOpen === "settings" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"
+                  }`}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+               >
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+                  />
+               </svg>
+
+               <p className=" mt-1">Tutorial</p>
+            </button>
+            <button
+               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600    "
                onClick={() => setMenuOpen("settings")}
             >
                <svg

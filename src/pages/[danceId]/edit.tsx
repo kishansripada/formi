@@ -846,54 +846,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
             />
          ) : null}
 
-         {helpUrl && (
-            <div
-               onClick={() => {
-                  setHelpUrl(null);
-                  // setLocalSettings({ ...localSettings, hasNotSeenIntroVid: false });
-               }}
-               className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center "
-            >
-               <div className="  flex flex-row items-center justify-center">
-                  {/* <div className="w-full"></div> */}
-                  <iframe
-                     src={`https://www.youtube.com/embed/${
-                        helpUrl.url.match(/\/shorts\/([a-zA-Z0-9_-]{11})/)[1]
-                     }?autoplay=1&rel=0&modestbranding=1&showinfo=0&controls=0`}
-                     title="YouTube video player"
-                     width="315"
-                     height="560"
-                     allow="accelerometer; autoplay; clipboard-write; encrypted-media;
-gyroscope; picture-in-picture;
-web-share"
-                     style={{
-                        left: helpUrl.event ? helpUrl.event.clientX : "unset",
-                        top: helpUrl.event ? helpUrl.event.clientY : "unset",
-                     }}
-                     className="rounded-xl absolute "
-                  ></iframe>
-                  {/* <div className="w-full flex flex-col h-full">
-                     <button
-                        onClick={() => {
-                           setHelpUrl(null);
-                        }}
-                        className="mb-auto ml-2"
-                     >
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-7 h-7 dark:text-white"
-                        >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                     </button>
-                  </div> */}
-               </div>
-            </div>
-         )}
+         {helpUrl && <HelpUrl helpUrl={helpUrl} setHelpUrl={setHelpUrl}></HelpUrl>}
 
          {pdfLoading ? (
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] bg-black/80 text-white border border-neutral-600  rounded-xl h-[100px] bg-white z-50 grid place-items-center">
@@ -1021,7 +974,7 @@ web-share"
                {!localSettings.fullScreen ? (
                   <>
                      <div className="flex flex-row ">
-                        <Sidebar viewOnly={viewOnly} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
+                        <Sidebar setHelpUrl={setHelpUrl} viewOnly={viewOnly} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
                         <div className="border-r border-neutral-300 dark:border-neutral-700">
                            {menuOpen === "dancers" ? (
                               <Roster
