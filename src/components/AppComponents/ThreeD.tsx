@@ -111,14 +111,13 @@ export const ThreeD: React.FC<{
    let planeIntersectPoint = new Vector3();
    const floorPlane = new Plane(new Vector3(0, 1, 0), 0);
    // const depthBuffer = useDepthBuffer({ frames: 1 });
-   const [dragOffset, setDragOffset] = useState(null);
 
    return (
       <Canvas
          onPointerUp={() => {
             if (viewOnly) return;
             setIsThreeDancerDragging(false);
-            setDragOffset(null);
+
             setFormations((formations: formation[]) => {
                return formations.map((formation) => {
                   return {
@@ -365,73 +364,73 @@ export const ThreeD: React.FC<{
 
 const lightHeight = 20;
 
-export function LightArray({ cloudSettings }) {
-   const gridRows = 4;
-   const gridColumns = 4;
+// export function LightArray({ cloudSettings }) {
+//    const gridRows = 4;
+//    const gridColumns = 4;
 
-   // Color palette
-   const colors = ["#00ff00", "#0000ff", "#800080", "#ff4500"];
-   const [colorIndex, setColorIndex] = useState(0);
+//    // Color palette
+//    const colors = ["#00ff00", "#0000ff", "#800080", "#ff4500"];
+//    // const [colorIndex, setColorIndex] = useState(0);
 
-   // useEffect(() => {
-   //    const intervalId = setInterval(() => {
-   //       setColorIndex((prevIndex) => (prevIndex + 1) % colors.length);
-   //    }, 200); // Change color every 1 second
+//    // useEffect(() => {
+//    //    const intervalId = setInterval(() => {
+//    //       setColorIndex((prevIndex) => (prevIndex + 1) % colors.length);
+//    //    }, 200); // Change color every 1 second
 
-   //    return () => {
-   //       clearInterval(intervalId); // Clean up on unmount
-   //    };
-   // }, [colors.length]);
+//    //    return () => {
+//    //       clearInterval(intervalId); // Clean up on unmount
+//    //    };
+//    // }, [colors.length]);
 
-   // Calculate distances between lights based on stage size and grid dimensions
-   const xSpacing = cloudSettings.stageDimensions.width / (gridColumns + 1);
-   const ySpacing = cloudSettings.stageDimensions.height / (gridRows + 1);
+//    // Calculate distances between lights based on stage size and grid dimensions
+//    const xSpacing = cloudSettings.stageDimensions.width / (gridColumns + 1);
+//    const ySpacing = cloudSettings.stageDimensions.height / (gridRows + 1);
 
-   const positions = useMemo(() => {
-      const pos = [];
-      for (let i = 0; i < gridRows; i++) {
-         for (let j = 0; j < gridColumns; j++) {
-            pos.push([
-               (j + 1) * xSpacing - cloudSettings.stageDimensions.width / 2,
-               lightHeight,
-               (i + 1) * ySpacing - cloudSettings.stageDimensions.height / 2,
-            ]);
-         }
-      }
-      return pos;
-   }, [gridRows, gridColumns, xSpacing, ySpacing, lightHeight]);
+//    const positions = useMemo(() => {
+//       const pos = [];
+//       for (let i = 0; i < gridRows; i++) {
+//          for (let j = 0; j < gridColumns; j++) {
+//             pos.push([
+//                (j + 1) * xSpacing - cloudSettings.stageDimensions.width / 2,
+//                lightHeight,
+//                (i + 1) * ySpacing - cloudSettings.stageDimensions.height / 2,
+//             ]);
+//          }
+//       }
+//       return pos;
+//    }, [gridRows, gridColumns, xSpacing, ySpacing, lightHeight]);
 
-   return (
-      <>
-         {positions.map((position, i) => {
-            const targetRef = useRef();
+//    return (
+//       <>
+//          {positions.map((position, i) => {
+//             const targetRef = useRef();
 
-            const lightPosition = [position[0], position[1], position[2]];
-            const targetPosition = [position[0], 0, position[2]]; // The position right beneath the light
+//             const lightPosition = [position[0], position[1], position[2]];
+//             const targetPosition = [position[0], 0, position[2]]; // The position right beneath the light
 
-            useLayoutEffect(() => {
-               if (targetRef.current) {
-                  targetRef.current.position.set(...targetPosition);
-               }
-            }, [targetPosition]);
+//             useLayoutEffect(() => {
+//                if (targetRef.current) {
+//                   targetRef.current.position.set(...targetPosition);
+//                }
+//             }, [targetPosition]);
 
-            return (
-               <group key={i}>
-                  <SpotLight
-                     position={lightPosition}
-                     color={colors[colorIndex]}
-                     castShadow
-                     penumbra={1}
-                     distance={25}
-                     angle={1}
-                     decay={2}
-                     intensity={3}
-                     target={targetRef.current}
-                  />
-                  <object3D ref={targetRef} />
-               </group>
-            );
-         })}
-      </>
-   );
-}
+//             return (
+//                <group key={i}>
+//                   <SpotLight
+//                      position={lightPosition}
+//                      color={colors[colorIndex]}
+//                      castShadow
+//                      penumbra={1}
+//                      distance={25}
+//                      angle={1}
+//                      decay={2}
+//                      intensity={3}
+//                      target={targetRef.current}
+//                   />
+//                   <object3D ref={targetRef} />
+//                </group>
+//             );
+//          })}
+//       </>
+//    );
+// }

@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useGLTF } from "@react-three/drei";
 import { dancerPosition, dancer, formation, localSettings, item } from "../../../types/types";
-import { Text, Cylinder, RoundedBox } from "@react-three/drei";
+import { Text } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 import { useDrag } from "@use-gesture/react";
-import { useThree, useFrame } from "@react-three/fiber";
-import { TextureLoader, DoubleSide, Vector3, Plane } from "three";
-import { useLoader } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
+import { Vector3, Plane } from "three";
+import { ThreeItem } from "./ThreeItem";
 export function ThreeDancer({
    dancerPosition,
    dancers,
@@ -53,7 +53,7 @@ export function ThreeDancer({
     */
    const textRef = useRef();
    const bgRef = useRef();
-
+   const [itemDimensions, setItemDimensions] = useState({ width: 0, height: 0 });
    // const changeStateDancerDragging = useDancerDragging((state) => state.changeStateDancerDragging);
    useFrame((state, dt) => {
       if (textRef?.current != null) {
@@ -162,19 +162,6 @@ export function ThreeDancer({
    }
    const thisItem = items.find((item) => item.id === dancerPosition?.itemId) || null;
 
-   // const outerMaterial = new MeshStandardMaterial({ color: 0x00ff00 });
-   const url = thisItem?.url ? `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${thisItem?.url}` : null;
-   const texture = thisItem?.url ? useLoader(TextureLoader, url) : null;
-
-   const [itemDimensions, setItemDimensions] = useState({ width: 0, height: 0 });
-   // const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
-
-   useEffect(() => {
-      if (!thisItem || !url) return;
-      calculateImageDimensions(2, url, (width, height) => {
-         setItemDimensions({ width, height });
-      });
-   }, [url]);
    return (
       <>
          {/* <animated.mesh position={bgPos.position}>
@@ -192,14 +179,7 @@ export function ThreeDancer({
             </Text>
          </animated.mesh>
 
-         {thisItem && (
-            <animated.mesh position={itemPos.position}>
-               <mesh rotation={[0, 0, 0]}>
-                  <planeBufferGeometry attach="geometry" args={[itemDimensions.width, itemDimensions.height]} />
-                  <meshBasicMaterial opacity={0.8} transparent={true} attach="material" map={texture} side={DoubleSide} />
-               </mesh>
-            </animated.mesh>
-         )}
+         {thisItem?.url && <ThreeItem itemPos={itemPos} thisItem={thisItem}></ThreeItem>}
 
          <animated.mesh
             // {...spring}
@@ -384,23 +364,3 @@ const animate = (
    }
    return { x: from.x + (to.x - from.x) * percentThroughTransition, y: from.y + (to.y - from.y) * percentThroughTransition };
 };
-
-function calculateImageDimensions(height: number, url: string, callback: (newWidth: number, newHeight: number) => void): void {
-   // Create a new image object
-   let img = new Image();
-
-   // Define the onload function
-   img.onload = function () {
-      // Get the actual width and height of the image
-      const imgWidth: number = this.width;
-      const imgHeight: number = this.height;
-
-      let newImgWidth = (imgWidth / imgHeight) * height;
-
-      // Return the new width and height
-      callback(newImgWidth, height);
-   };
-
-   // Set the src attribute to start loading the image
-   img.src = url;
-}

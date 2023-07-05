@@ -950,6 +950,7 @@ web-share"
                `}
             </style>
             <EventHandler
+               setPosition={setPosition}
                selectedPropIds={selectedPropIds}
                setIsChangingZoom={setIsChangingZoom}
                setIsScrollingTimeline={setIsScrollingTimeline}

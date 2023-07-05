@@ -36,6 +36,7 @@ export const EventHandler: React.FC<{
    selectedPropIds: string[];
    setIsScrollingTimeline: Function;
    setIsChangingZoom: Function;
+   setPosition: Function;
 }> = ({
    player,
    children,
@@ -71,6 +72,7 @@ export const EventHandler: React.FC<{
    setIsScrollingTimeline,
    setIsChangingZoom,
    selectedPropIds,
+   setPosition,
 }) => {
    const [commandHeld, setCommandHeld] = useState(false);
    const [copiedPositions, setCopiedPositions] = useState([]);
@@ -140,12 +142,46 @@ export const EventHandler: React.FC<{
       if (e.key === "ArrowRight") {
          if (selectedFormation === null) return;
          e.preventDefault();
-         setSelectedFormation((i) => (i === formations.length - 1 ? i : i + 1));
+         let index = selectedFormation + 1;
+
+         // if (isPlaying) {
+         let position = formations
+            .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
+            .slice(0, index)
+            .reduce((a, b) => a + b, 0);
+
+         // if (songDuration && player) {
+         //    console.log(position / (songDuration / 1000));
+         // }
+         // position = position + formations[index]?.transition.durationSeconds;
+         // console.log(position);
+         setPosition(position);
+         setSelectedFormation(index);
+         if (!(songDuration && player)) return;
+
+         player.seekTo(position / (songDuration / 1000));
       }
       if (e.key === "ArrowLeft") {
          if (selectedFormation === null) return;
          e.preventDefault();
-         setSelectedFormation((i) => (i === 0 ? 0 : i - 1));
+         let index = selectedFormation - 1;
+
+         // if (isPlaying) {
+         let position = formations
+            .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
+            .slice(0, index)
+            .reduce((a, b) => a + b, 0);
+
+         // if (songDuration && player) {
+         //    console.log(position / (songDuration / 1000));
+         // }
+         // position = position + formations[index]?.transition.durationSeconds;
+         // console.log(position);
+         setPosition(position);
+         setSelectedFormation(index);
+         if (!(songDuration && player)) return;
+
+         player.seekTo(position / (songDuration / 1000));
       }
       if (e.key === "Meta" || e.key === "Control") {
          setCommandHeld(true);
