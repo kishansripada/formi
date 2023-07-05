@@ -8,10 +8,11 @@ export const HelpUrl: React.FC<{
    //    console.log(helpUrl.event.clientY);
    const [translateYFull, setTranslateYFull] = useState(false);
    useEffect(() => {
+      if (!helpUrl?.event?.clientY) return;
       // get window height
       const windowHeight = window.innerHeight;
       setTranslateYFull(windowHeight - helpUrl.event.clientY < 560);
-   }, []);
+   }, [helpUrl]);
    return (
       <div
          onClick={() => {
