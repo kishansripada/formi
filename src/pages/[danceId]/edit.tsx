@@ -943,6 +943,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                dancers={dancers}
             ></EventHandler>
             <Header
+               folderName={initialData?.project_id?.name}
                exportPdf={exportPdf}
                dropDownToggle={dropDownToggle}
                formations={formations}
@@ -1379,6 +1380,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
 
             <div className=" overscroll-contain bg-black">
                <AudioControls
+                  setHelpUrl={setHelpUrl}
                   setIsChangingZoom={setIsChangingZoom}
                   isChangingZoom={isChangingZoom}
                   localSettings={localSettings}
@@ -1504,7 +1506,7 @@ export const getServerSideProps = async (ctx) => {
    // }
 
    let [{ data: dance }, { data: permissions }] = await Promise.all([
-      supabase.from("dances").select("*").eq("id", ctx.query.danceId).single(),
+      supabase.from("dances").select("*, project_id(name)").eq("id", ctx.query.danceId).single(),
       supabase.from("permissions").select("*").eq("performance_id", ctx.query.danceId),
    ]);
 

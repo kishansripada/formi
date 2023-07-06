@@ -9,30 +9,59 @@ import "@typeform/embed/build/css/widget.css";
 
 import { useSupabaseClient, useSession, Session } from "@supabase/auth-helpers-react";
 import { MyDances } from "../components/DashboardComponents/MyDances";
-import { Rosters } from "../components/DashboardComponents/Rosters";
-import { AudioFiles } from "../components/DashboardComponents/AudioFiles";
 import { Trash } from "../components/DashboardComponents/Trash";
 import { grandfatheredEmails } from "../../public/grandfathered";
-
+import { PerformancePreview } from "../components/DashboardComponents/PerformancePreview";
 import { Dropdown } from "../components/DashboardComponents/Dropdown";
-const Dashboard = ({ dances, userData, sharedWithMe }: {}) => {
+import { MyFiles } from "../components/DashboardComponents/Tabs/MyFiles";
+import { Sidebar } from "../components/DashboardComponents/Sidebar";
+import { NewFolderModel } from "../components/DashboardComponents/NewFolderModel";
+const Dashboard = ({ dances, userData, sharedWithMe, projects: initialProjects }: {}) => {
    let session = useSession();
 
    const supabase = useSupabaseClient();
-   const [importIsOpen, setImportIsOpen] = useState(!dances.length);
-   const [danceAppLink, setDanceAppLink] = useState("");
-   const [formOpen, setFormOpen] = useState(!userData);
    const router = useRouter();
-   const [myDances, setMyDances] = useState(dances);
-   const [menuOpen, setMenuOpen] = useState<"mydances" | "sharedWithMe" | "trash">("mydances");
+   const [myDances, setMyDances] = useState(dances); //dances
+   const [projects, setProjects] = useState(initialProjects); //dances
+   const [menuOpen, setMenuOpen] = useState<"home" | "shared" | "myfiles">("home");
+
+   const [newFolderOpen, setNewFolderOpen] = useState(false);
+   const [newFolderName, setNewFolderName] = useState("");
+   let [openPerformanceMenu, setOpenPerformanceMenu] = useState<string | null>(null);
+   const videos = [
+      { url: "uiTwpkpsL1E", title: "Tutorial/Demo" },
+      { url: "JRS1tPHJKAI", title: "Welcome to FORMI" },
+      { url: "pY0IUM1ebHE", title: "Previous formation settings" },
+      { url: "rhGn486vJJc", title: "What's a set piece?" },
+   ];
+   const clickHandler = (e) => {
+      let isDropdown = e
+         .composedPath()
+         .map((elem) => elem.id)
+         .includes("dropdown");
+
+      if (!isDropdown) {
+         setOpenPerformanceMenu(null);
+      }
+   };
+
+   useEffect(() => {
+      window.addEventListener("click", clickHandler);
+
+      return () => {
+         window.removeEventListener("click", clickHandler);
+      };
+   }, [openPerformanceMenu]);
 
    const removeFromTrash = async (id: string) => {
-      console.log(id);
       const { data, error } = await supabase.from("dances").update({ isInTrash: false }).eq("id", id);
-      console.log(error);
       invalidateDances();
       toast.success("Removed from trash");
    };
+   async function invalidateProjects() {
+      let data = await supabase.from("projects").select("*").eq("parent_id", session.user.id);
+      setProjects(data?.data || []);
+   }
 
    const invalidateDances = async () => {
       let data = await supabase
@@ -47,15 +76,25 @@ const Dashboard = ({ dances, userData, sharedWithMe }: {}) => {
          last_edited,
          settings,
          isInTrash,
-         dancers`
+         dancers,
+         project_id
+         `
          )
          .eq("user", session.user.id);
 
       setMyDances(data?.data);
    };
 
+   const deleteProject = async (id: number) => {
+      const { data, error } = await supabase.from("projects").delete().eq("id", id);
+      if (error) {
+         toast.error("there was an issue deleting your dance");
+         return;
+      }
+      toast.success("Deleted project");
+      invalidateProjects();
+   };
    const deleteDance = async (id: number) => {
-      console.log(id);
       const { data, error } = await supabase.from("dances").delete().eq("id", id);
       if (error) {
          toast.error("there was an issue deleting your dance");
@@ -81,173 +120,173 @@ const Dashboard = ({ dances, userData, sharedWithMe }: {}) => {
       router.push(`/${data.id}/edit`);
    }
 
-   async function importFromDanceApp() {
+   async function createNewProject() {
+      setMenuOpen("myfiles");
       if (session === null) {
          router.push(`/login`);
          return;
       }
-      const { dancers, formations } = await fetch(`/api/importFromDanceApp?url=${danceAppLink}`).then((r) => r.json());
 
       const { data, error } = await supabase
-         .from("dances")
-         .insert([{ user: session.user.id, last_edited: new Date(), dancers, formations, name: "New import from danceapp" }])
+         .from("projects")
+         .insert([{ parent_id: session.user.id, name: newFolderName }])
          .select("id")
          .single();
 
-      if (!data?.id) return;
-      router.push(`/${data.id}/edit`);
+      invalidateProjects();
+      // if (!data?.id) return;
+      // router.push(`/${data.id}/edit`);
    }
 
    return (
       <>
-         <>
-            <Toaster></Toaster>
-            <style>
-               {`
+         <Toaster></Toaster>
+         <style>
+            {`
                body {
                   overscroll-behavior: none;
                   user-select: none;
               }
                `}
-            </style>
-            {/* <div className="h-10 bg-pink-600 w-full grid place-items-center text-white">
-               Our servers our currently down for maintenance. We'll be back up shortly!
-            </div> */}
-            {/* {!userData ? <TypeFromEmbed user_id={session?.user?.id}></TypeFromEmbed> : null} */}
-            {/* {formOpen && session ? (
-               <Widget
-                  hidden={{
-                     user_id: session?.user?.id,
-                  }}
-                  onSubmit={() => setFormOpen(false)}
-                  id="cq9sssDy"
-                  style={{
-                     borderRadius: "0",
-                  }}
-                  className="absolute top-0 left-0 w-full h-full z-50 rounded-none"
-               />
-            ) : null} */}
-            <div className="h-screen flex flex-row font-inter overscroll-none overflow-hidden">
-               <Toaster></Toaster>
-               {/* <Header></Header> */}
-               {/* {JSON.stringify(userData)} */}
-               <div className="min-w-[240px] w-[240px]  py-4 h-screen lg:flex hidden flex-col box-border border-r-neutral-200 text-sm border ">
-                  {/* <img className="w-44" src="/logos/logo_light.svg" alt="" /> */}
+         </style>
+         {newFolderOpen ? (
+            <NewFolderModel
+               createNewProject={createNewProject}
+               setNewFolderName={setNewFolderName}
+               setNewFolderOpen={setNewFolderOpen}
+               newFolderName={newFolderName}
+            ></NewFolderModel>
+         ) : null}
 
-                  <div className="flex flex-row mt-3 ml-2  ">
-                     <img
-                        referrerPolicy="no-referrer"
-                        className="rounded-md w-16 pointer-events-none select-none mr-3"
-                        src={
-                           session?.user.user_metadata.avatar_url ||
-                           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjof8tQrQxYWAJQ7ICx4AaaN9rZK_bfgKsFuqssREfxA&s"
-                        }
-                        alt=""
-                     />
+         <Toaster></Toaster>
+         <div className="h-screen flex flex-row font-inter overscroll-none overflow-hidden bg-[#09090b] text-white">
+            <Sidebar
+               setNewFolderOpen={setNewFolderOpen}
+               setMenuOpen={setMenuOpen}
+               menuOpen={menuOpen}
+               createNewDance={createNewDance}
+               createNewProject={createNewProject}
+            ></Sidebar>
 
-                     <div className="flex flex-col items-start justify-center w-full">
-                        <p className="font-semibold">{session?.user.user_metadata?.full_name}</p>
-                        <div className="text-neutral-500 text-sm flex flex-row items-center justify-between w-full">
-                           {/* {subscription.plan.product === "legacy" ? <p>Early Adopter</p> : subscription.plan.product ? <p>FORMI Pro </p> : <p> </p>} */}
-                        </div>
-                     </div>
+            <div className="flex flex-col bg-neutral h-screen   overflow-hidden  w-full justify-start  ">
+               <div className="flex flex-row items-center  px-6 py-4 text-neutral-200 ml-auto w-full mt-3">
+                  <div className="mr-4 flex flex-row items-center">
+                     {menuOpen === "home" ? (
+                        <p>Home</p>
+                     ) : menuOpen === "myfiles" ? (
+                        <p>My files</p>
+                     ) : menuOpen === "shared" ? (
+                        <p>Shared With Me</p>
+                     ) : menuOpen === "trash" ? (
+                        <p>Trash</p>
+                     ) : null}
                   </div>
 
                   <button
-                     className={`flex flex-row justify-between mt-4 items-center ${menuOpen === "mydances" ? "bg-pink-200" : ""}   w-full h-9 px-3`}
-                     onClick={() => setMenuOpen("mydances")}
+                     onClick={() => {
+                        supabase.auth.signOut().then((r) => {
+                           router.push("/login");
+                        });
+                     }}
+                     className="mr-5 ml-auto text-xs"
                   >
-                     <p>My Performances</p>
-                  </button>
-                  <button
-                     className={`flex flex-row justify-between items-center ${menuOpen === "sharedWithMe" ? "bg-pink-200" : ""}   w-full h-9 px-3`}
-                     onClick={() => setMenuOpen("sharedWithMe")}
-                  >
-                     <p>Shared With Me</p>
-                  </button>
-
-                  <button
-                     className={`flex flex-row justify-between items-center mt-auto  ${
-                        menuOpen === "trash" ? "bg-neutral-200" : ""
-                     } text-black  font-medium  w-full py-3 px-3 rounded-lg mt-2`}
-                     onClick={() => setMenuOpen("trash")}
-                  >
-                     <p>Trash</p>
+                     Sign Out
                   </button>
                </div>
 
-               <div className="flex flex-col bg-neutral    w-full justify-start items-center ">
-                  <div className="flex flex-row items-center justify-end px-6 py-4 text-neutral-500 ml-auto border-b border-b-neutral-200 w-full">
-                     <div className="flex flex-row items-center text-neutral-900">
-                        {/* {subscription.plan.product && subscription.plan.product !== "legacy" ? (
-                           <>
-                              {subscription.cancel_at ? (
-                                 <p className="mr-4 text-neutral-600 text-sm">{daysLeft(subscription.cancel_at)} days remaining </p>
-                              ) : null}
-
+               {menuOpen === "home" ? (
+                  <>
+                     <div className="px-4 pb-10 h-full flex flex-col overflow-hidden">
+                        <div className="h-[310px] min-h-[310px] overflow-scroll bg-neutral-900 rounded-xl mt-5">
+                           <div className="flex flex-row items-center justify-between p-5">
+                              <p className=" text-sm">Recents</p>
                               <button
                                  onClick={() => {
-                                    router.push("/api/customerportal");
+                                    setMenuOpen("myfiles");
                                  }}
-                                 className="mr-5 "
+                                 className="flex flex-row items-center text-xs border border-neutral-700 px-3 py-1 rounded-full"
                               >
-                                 Manage Subscription
+                                 <p>All my files</p>
+                                 <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-4 h-4 ml-2"
+                                 >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                 </svg>
                               </button>
-                           </>
-                        ) : (
-                           <></>
-                           <button
-                              onClick={() => {
-                                 router.push("/pricing");
-                              }}
-                              className="mr-5"
-                           >
-                              Upgrade
-                           </button>
-                        )} */}
+                           </div>
+                           <div className="flex flex-row px-5">
+                              {myDances.length ? (
+                                 [...myDances.filter((dance) => !dance.isInTrash), ...sharedWithMe.filter((dance) => !dance.isInTrash)]
+                                    .sort((a, b) => new Date(b.last_edited) - new Date(a.last_edited))
+                                    .slice(0, 4)
+                                    ?.map((dance) => {
+                                       return (
+                                          <>
+                                             <div className="w-full mr-5">
+                                                <PerformancePreview
+                                                   invalidateDances={invalidateDances}
+                                                   dance={dance}
+                                                   openPerformanceMenu={openPerformanceMenu}
+                                                   setOpenPerformanceMenu={setOpenPerformanceMenu}
+                                                ></PerformancePreview>
+                                             </div>
+                                          </>
+                                       );
+                                    })
+                              ) : (
+                                 <p className="text-sm">Click new performance to create your first performance</p>
+                              )}
+                           </div>
+                        </div>
+                        <div className=" h-full bg-neutral-900 mt-10 py-5  rounded-xl">
+                           {/* <p className=" text-sm">Tutorials</p> */}
+                           <div className="flex flex-row  h-full px-6">
+                              {videos.map((video) => {
+                                 return (
+                                    <iframe
+                                       src={`https://www.youtube.com/embed/${video.url}?rel=0&modestbranding=1&showinfo=0&controls=0`}
+                                       title="YouTube video player"
+                                       width="200"
+                                       allow="accelerometer; autoplay; clipboard-write; encrypted-media;
+                     gyroscope; picture-in-picture;
+                     web-share"
+                                       height="100%"
+                                       className=" rounded-xl  mr-6"
+                                    ></iframe>
+                                 );
+                              })}
+                           </div>
+                        </div>
                      </div>
-
-                     <button
-                        onClick={() => {
-                           supabase.auth.signOut().then((r) => {
-                              router.push("/login");
-                           });
-                        }}
-                        className="mr-5"
-                     >
-                        Sign Out
-                     </button>
-                  </div>
-
-                  {menuOpen === "mydances" ? (
-                     <MyDances
-                        // subscription={subscription}
-                        createNewDance={createNewDance}
-                        invalidateDances={invalidateDances}
-                        myDances={[...myDances.filter((dance) => !dance.isInTrash)]}
-                        canCreatePerformance={true}
-                     ></MyDances>
-                  ) : menuOpen === "sharedWithMe" ? (
-                     <MyDances
-                        // subscription={subscription}
-                        createNewDance={createNewDance}
-                        invalidateDances={invalidateDances}
-                        myDances={[...sharedWithMe.filter((dance) => !dance.isInTrash)]}
-                        canCreatePerformance={false}
-                     ></MyDances>
-                  ) : //   <MyDances
-                  //    subscription={subscription}
-                  //    createNewDance={createNewDance}
-                  //    invalidateDances={invalidateDances}
-                  //    myDances={[...sharedWithMe.filter((dance) => !dance.isInTrash)]}
-                  //    canCreatePerformance={false}
-                  // ></MyDances>
-                  menuOpen === "trash" ? (
-                     <Trash removeFromTrash={removeFromTrash} deleteDance={deleteDance} trash={myDances.filter((dance) => dance.isInTrash)}></Trash>
-                  ) : null}
-               </div>
+                  </>
+               ) : menuOpen === "myfiles" ? (
+                  <MyFiles
+                     setMyDances={setMyDances}
+                     projects={projects}
+                     deleteProject={deleteProject}
+                     createNewDance={createNewDance}
+                     invalidateDances={invalidateDances}
+                     myDances={[...myDances.filter((dance) => !dance.isInTrash)]}
+                     openPerformanceMenu={openPerformanceMenu}
+                     setOpenPerformanceMenu={setOpenPerformanceMenu}
+                  ></MyFiles>
+               ) : menuOpen === "shared" ? (
+                  <MyDances
+                     openPerformanceMenu={openPerformanceMenu}
+                     setOpenPerformanceMenu={setOpenPerformanceMenu}
+                     invalidateDances={invalidateDances}
+                     myDances={[...sharedWithMe.filter((dance) => !dance.isInTrash)]}
+                  ></MyDances>
+               ) : menuOpen === "trash" ? (
+                  <Trash removeFromTrash={removeFromTrash} deleteDance={deleteDance} trash={myDances.filter((dance) => dance.isInTrash)}></Trash>
+               ) : null}
             </div>
-         </>
+         </div>
       </>
    );
 };
@@ -290,9 +329,17 @@ export const getServerSideProps = withPageAuth({
                last_edited,
                settings,
                isInTrash,
-               dancers`
+               dancers,
+               project_id
+               `
             )
             .eq("user", session.user.id);
+
+         return data?.data || [];
+      }
+
+      async function getProjects(session: Session) {
+         let data = await supabase.from("projects").select("*").eq("parent_id", session.user.id);
 
          return data?.data || [];
       }
@@ -354,19 +401,21 @@ export const getServerSideProps = withPageAuth({
       //       });
       // }
       // getOrganizationPerformances(session);
-      let [dances, sharedWithMe, userData] = await Promise.all([
+      let [dances, sharedWithMe, userData, projects] = await Promise.all([
          getMyDances(session),
+
          // getSubscriptionPlan(session),
          // getOrganization(session),
          getSharedWithMe(session),
          getUserData(session),
+         getProjects(session),
       ]);
-
+      // console.log(projects);
       // console.log(data);
 
       // const { data } = await supabase.from("dances").select("*").eq("user", user.id);
 
-      return { props: { dances: dances, userData, sharedWithMe } };
+      return { props: { dances: dances, userData, sharedWithMe, projects } };
    },
 });
 
