@@ -76,7 +76,7 @@ export const NoFilePlayer: React.FC<{
                      var x = e.clientX - rect.left; //x position within the element.
                      setPosition(x / pixelsPerSecond);
                   }}
-                  className={` h-[30px]   flex-col justify-end w-full`}
+                  className={` h-[35px]   flex-col justify-end w-full`}
                >
                   {/* <div
                      style={{

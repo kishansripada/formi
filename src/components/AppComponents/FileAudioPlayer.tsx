@@ -108,7 +108,7 @@ export const FileAudioPlayer: React.FC<{
       return (
          <>
             {!ready ? (
-               <div className="h-[30px] flex flex-row items-center justify-center bg-[#fafafa] dark:bg-neutral-800 w-screen">
+               <div className="h-[35px] flex flex-row items-center justify-center bg-[#fafafa] dark:bg-neutral-800 w-screen">
                   <p className="font-semibold text-lg animate-bounce dark:text-white">loading audio...</p>
                </div>
             ) : null}
