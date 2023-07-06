@@ -73,7 +73,7 @@ const useDidMountEffect = (func, deps) => {
 
 const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnly: boolean }) => {
    const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
-   viewOnlyInitial = false;
+   // viewOnlyInitial = false;
    const supabase = useSupabaseClient();
    let session = useSession();
    const router = useRouter();
