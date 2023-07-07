@@ -77,7 +77,6 @@ export const Layers: React.FC<{
       if (resizingFormation === null && resizingTransition === null) return;
 
       if (resizingFormation !== null) {
-         console.log({ movementX: e.movementX });
          setFormations((formations: formation[]) => {
             return formations.map((formation, i) => {
                if (formation.id === resizingFormation) {
