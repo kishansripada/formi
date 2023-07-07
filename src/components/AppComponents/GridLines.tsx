@@ -10,46 +10,18 @@ export const GridLines: React.FC<{
    return (
       <>
          {localSettings ? (
-            <div
-               style={{
-                  bottom: !localSettings.stageFlipped ? 0 : "auto",
-                  top: localSettings.stageFlipped ? 0 : "auto",
-               }}
-               className="absolute w-1/2 right-0 h-10 flex flex-row justify-between pointer-events-none"
-            >
-               {new Array(stageDimensions.width / 2).fill(0).map((_, i) => {
-                  return (
-                     <div
-                        className=" -translate-x-1/2 text-center  font-bold z-20 text-neutral-400 flex flex-col items-center justify-end"
-                        style={{
-                           width: 100 / (stageDimensions.width / 2) + "%",
-                           fontSize: i % 2 === 0 || zoom > 1 ? Math.min(16 / zoom, 30) : 0,
-                           flexDirection: !localSettings.stageFlipped ? "column" : "column-reverse",
-                        }}
-                     >
-                        <p className=""> {i}</p>
-                        {i % 2 === 0 || zoom > 1 ? <div className="h-3 w-[1px] bg-pink-300 dark:bg-pink-600"></div> : null}
-                     </div>
-                  );
-               })}
-            </div>
-         ) : null}
-         {localSettings ? (
-            <div
-               style={{
-                  bottom: !localSettings.stageFlipped ? 0 : "auto",
-                  top: localSettings.stageFlipped ? 0 : "auto",
-               }}
-               className="absolute w-1/2 left-0 h-10 flex justify-between pointer-events-none"
-            >
-               {new Array(stageDimensions.width / 2)
-                  .fill(0)
-
-                  .map((_, i) => {
-                     i = stageDimensions.width / 2 - 1 - i;
+            <>
+               <div
+                  style={{
+                     bottom: !localSettings.stageFlipped ? 0 : "auto",
+                     top: localSettings.stageFlipped ? 0 : "auto",
+                  }}
+                  className="absolute w-1/2 right-0 h-10 flex flex-row justify-between pointer-events-none"
+               >
+                  {new Array(stageDimensions.width / 2).fill(0).map((_, i) => {
                      return (
                         <div
-                           className=" translate-x-1/2 text-center  font-bold z-20 text-neutral-400 flex flex-col items-center justify-end"
+                           className=" -translate-x-1/2 text-center  font-bold z-20 text-neutral-400 flex flex-col items-center justify-end"
                            style={{
                               width: 100 / (stageDimensions.width / 2) + "%",
                               fontSize: i % 2 === 0 || zoom > 1 ? Math.min(16 / zoom, 30) : 0,
@@ -61,59 +33,88 @@ export const GridLines: React.FC<{
                         </div>
                      );
                   })}
-            </div>
-         ) : null}
-         <div
-            className="flex flex-row h-full w-full  justify-between rounded-xl absolute z-10  "
-            style={{
-               width: PIXELS_PER_SQUARE * stageDimensions.width,
-               opacity: opacity,
-            }}
-         >
-            {new Array(stageDimensions.width + 1).fill(0).map((_, i) => (
+               </div>
                <div
-                  key={i}
-                  className={`w-full bg-neutral-300  dark:bg-neutral-600 `}
                   style={{
-                     width:
-                        i === stageDimensions.width || i === 0
-                           ? 0
-                           : (i - stageDimensions.width / 2) % cloudSettings.gridSubdivisions === 0
-                           ? 2.5
-                           : 0.5,
-                     // backgroundColor: i === stageDimensions.width / 2 ? "black" : "rgb(209 213 219)",
-                     zIndex: i === stageDimensions.width / 2 ? 1 : 0,
+                     bottom: !localSettings.stageFlipped ? 0 : "auto",
+                     top: localSettings.stageFlipped ? 0 : "auto",
                   }}
-               ></div>
-            ))}
-         </div>
-         <div
-            className="flex flex-col justify-between absolute w-full h-full left-0 top-0 rounded-xl z-10 "
-            style={{
-               height: PIXELS_PER_SQUARE * stageDimensions.height,
-               opacity: opacity,
-               // top: -PIXELS_PER_SQUARE * stageDimensions.height,
-            }}
-         >
-            {new Array(stageDimensions.height + 1).fill(0).map((_, i) => (
-               <div
-                  key={i}
-                  // ${i === stageDimensions.height / 2 ? "bg-neutral-600 dark:bg-neutral-400" : "bg-neutral-300 dark:bg-neutral-600"}
+                  className="absolute w-1/2 left-0 h-10 flex justify-between pointer-events-none"
+               >
+                  {new Array(stageDimensions.width / 2)
+                     .fill(0)
 
-                  className={`w-full bg-neutral-300  dark:bg-neutral-600   `}
-                  style={{
-                     height:
-                        i === stageDimensions.height || i === 0
-                           ? 0
-                           : (i - stageDimensions.height / 2) % cloudSettings.gridSubdivisions === 0
-                           ? (1 / 1) * 2.5
-                           : 0.5,
-                     // backgroundColor: i === stageDimensions.height / 2 ? "black" : "rgb(209 213 219)",
-                     zIndex: i === stageDimensions.height / 2 ? 1 : 0,
-                  }}
-               ></div>
+                     .map((_, i) => {
+                        i = stageDimensions.width / 2 - 1 - i;
+                        return (
+                           <div
+                              className=" translate-x-1/2 text-center  font-bold z-20 text-neutral-400 flex flex-col items-center justify-end"
+                              style={{
+                                 width: 100 / (stageDimensions.width / 2) + "%",
+                                 fontSize: i % 2 === 0 || zoom > 1 ? Math.min(16 / zoom, 30) : 0,
+                                 flexDirection: !localSettings.stageFlipped ? "column" : "column-reverse",
+                              }}
+                           >
+                              <p className=""> {i}</p>
+                              {i % 2 === 0 || zoom > 1 ? <div className="h-3 w-[1px] bg-pink-300 dark:bg-pink-600"></div> : null}
+                           </div>
+                        );
+                     })}
+               </div>
+            </>
+         ) : null}
+
+         <svg
+            style={{
+               // position: "absolute",
+               // bottom: !localSettings.stageFlipped ? 0 : "auto",
+               // top: localSettings.stageFlipped ? 0 : "auto",
+               width: stageDimensions.width * PIXELS_PER_SQUARE,
+               height: stageDimensions.height * PIXELS_PER_SQUARE,
+            }}
+            width="100%"
+            height="100%"
+            viewBox={`0 0 ${stageDimensions.width} ${stageDimensions.height}`}
+         >
+            {/* Horizontal lines */}
+            {new Array(stageDimensions.height + 1).fill(0).map((_, i) => (
+               <line
+                  key={i}
+                  x1="0"
+                  y1={i}
+                  x2={stageDimensions.width}
+                  y2={i}
+                  className="dark:stroke-neutral-600 stroke-neutral-300"
+                  // stroke={i === stageDimensions.height / 2 ? "#525252" : "#d4d4d4"}
+                  strokeWidth={
+                     i === stageDimensions.height || i === 0
+                        ? 0
+                        : (i - stageDimensions.height / 2) % cloudSettings.gridSubdivisions === 0
+                        ? 0.05 * 1.2
+                        : 0.01 * 1.2
+                  }
+               />
             ))}
-         </div>
+            {/* Vertical lines */}
+            {new Array(stageDimensions.width + 1).fill(0).map((_, i) => (
+               <line
+                  key={i}
+                  x1={i}
+                  y1="0"
+                  x2={i}
+                  y2={stageDimensions.height}
+                  // stroke={i === stageDimensions.width / 2 ? "#525252" : "#d4d4d4"}
+                  className="dark:stroke-neutral-600 stroke-neutral-300"
+                  strokeWidth={
+                     i === stageDimensions.width || i === 0
+                        ? 0
+                        : (i - stageDimensions.width / 2) % cloudSettings.gridSubdivisions === 0
+                        ? 0.05 * 1.2
+                        : 0.01 * 1.2
+                  }
+               />
+            ))}
+         </svg>
       </>
    );
 };
