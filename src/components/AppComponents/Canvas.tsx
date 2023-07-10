@@ -429,7 +429,7 @@ export const Canvas: React.FC<{
 
       if (resizingPropId) {
          if (viewOnly) return;
-         console.log(props.find((prop: prop) => prop.id === resizingPropId));
+         // console.log(props.find((prop: prop) => prop.id === resizingPropId));
          let devicePixelRatio = getDevicePixelRatio();
          setProps((props: prop[]) => {
             return props.map((prop: prop) => {

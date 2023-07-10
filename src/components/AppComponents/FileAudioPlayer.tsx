@@ -71,8 +71,10 @@ export const FileAudioPlayer: React.FC<{
                   container: "#wave-timeline",
                   notchPercentHeight: 0,
                   height: 10,
-                  color: "#FFFFFF",
-                  style: {},
+                  primaryFontColor: isDarkMode ? "#FFFFFF" : "#000000",
+                  primaryColor: isDarkMode ? "#FFFFFF" : "#000000",
+                  secondaryColor: isDarkMode ? "#FFFFFF" : "#000000",
+                  secondaryFontColor: isDarkMode ? "#FFFFFF" : "#000000",
                }),
             ],
          });

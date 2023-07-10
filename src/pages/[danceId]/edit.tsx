@@ -51,6 +51,7 @@ import { Comment } from "../../components/AppComponents/Comment";
 
 import * as jsonpatch from "fast-json-patch";
 import { HelpUrl } from "../../components/AppComponents/Modals/HelpUrl";
+import { ObjectControls } from "../../components/AppComponents/ObjectControls";
 const ThreeD = dynamic(() => import("../../components/AppComponents/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => <p>Loading...</p>,
 });
@@ -614,10 +615,12 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    let uploadDancers = useCallback(
       debounce(async (dancers) => {
          console.log("uploading dancers");
-         const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
-
-         console.log({ data });
-         console.log({ error });
+         const [formationsData, dancersData] = await Promise.all([
+            supabase.from("dances").update({ formations: formations, last_edited: new Date() }).eq("id", router.query.danceId),
+            supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId),
+         ]);
+         console.log({ formationsData });
+         console.log({ dancersData });
          setSaved(true);
       }, 2000),
       [router.query.danceId]
@@ -711,12 +714,12 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    let uploadFormations = useCallback(
       debounce(async (formations) => {
          console.log("uploading formations");
-         const { data, error } = await supabase
-            .from("dances")
-            .update({ formations: formations, last_edited: new Date() })
-            .eq("id", router.query.danceId);
-         console.log({ data });
-         console.log({ error });
+         const [formationsData, dancersData] = await Promise.all([
+            supabase.from("dances").update({ formations: formations, last_edited: new Date() }).eq("id", router.query.danceId),
+            supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId),
+         ]);
+         console.log({ formationsData });
+         console.log({ dancersData });
 
          setSaved(true);
       }, 5000),
@@ -1118,6 +1121,35 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                ) : null}
                <DndContext onDragEnd={handleDragEnd}>
                   <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-100 dark:bg-neutral-900 relative `}>
+                     <ObjectControls
+                        zoom={zoom}
+                        setIsChangingZoom={setIsChangingZoom}
+                        isChangingZoom={isChangingZoom}
+                        localSettings={localSettings}
+                        setLocalSettings={setLocalSettings}
+                        setPlaybackRate={setPlaybackRate}
+                        addToStack={addToStack}
+                        pushChange={pushChange}
+                        viewOnly={viewOnly}
+                        selectedFormation={selectedFormation}
+                        songDuration={songDuration}
+                        soundCloudTrackId={soundCloudTrackId}
+                        setSelectedFormation={setSelectedFormation}
+                        player={player}
+                        isPlaying={isPlaying}
+                        setIsPlaying={setIsPlaying}
+                        formations={formations}
+                        position={position}
+                        setFormations={setFormations}
+                        setPixelsPerSecond={setPixelsPerSecond}
+                        pixelsPerSecond={pixelsPerSecond}
+                        localSource={localSource}
+                        selectedDancers={selectedDancers}
+                        cloudSettings={cloudSettings}
+                        dropDownToggle={dropDownToggle}
+                        items={items}
+                        dancers={dancers}
+                     ></ObjectControls>
                      <Video
                         videoPlayer={videoPlayer}
                         soundCloudTrackId={soundCloudTrackId}
