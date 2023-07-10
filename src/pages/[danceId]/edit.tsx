@@ -110,7 +110,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       viewingTwo: true,
       collisionRadius: 0.5,
       fullScreen: false,
-      isDarkMode: false,
+      isDarkMode: true,
       autoScroll: false,
    });
 
@@ -125,7 +125,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
          viewingTwo: true,
          collisionRadius: 0.5,
          fullScreen: false,
-         isDarkMode: false,
+         isDarkMode: true,
          autoScroll: false,
       });
    }
