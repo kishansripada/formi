@@ -615,12 +615,10 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    let uploadDancers = useCallback(
       debounce(async (dancers) => {
          console.log("uploading dancers");
-         const [formationsData, dancersData] = await Promise.all([
-            supabase.from("dances").update({ formations: formations, last_edited: new Date() }).eq("id", router.query.danceId),
-            supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId),
-         ]);
-         console.log({ formationsData });
-         console.log({ dancersData });
+         const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId);
+
+         console.log({ data });
+         console.log({ error });
          setSaved(true);
       }, 2000),
       [router.query.danceId]
@@ -714,12 +712,12 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
    let uploadFormations = useCallback(
       debounce(async (formations) => {
          console.log("uploading formations");
-         const [formationsData, dancersData] = await Promise.all([
-            supabase.from("dances").update({ formations: formations, last_edited: new Date() }).eq("id", router.query.danceId),
-            supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", router.query.danceId),
-         ]);
-         console.log({ formationsData });
-         console.log({ dancersData });
+         const { data, error } = await supabase
+            .from("dances")
+            .update({ formations: formations, last_edited: new Date() })
+            .eq("id", router.query.danceId);
+         console.log({ data });
+         console.log({ error });
 
          setSaved(true);
       }, 5000),
