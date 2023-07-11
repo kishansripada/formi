@@ -189,7 +189,7 @@ export const ThreeD: React.FC<{
          ) : null}
 
          {props
-            .filter((prop) => prop.url)
+            .filter((prop) => prop.url && prop.url !== "null")
             .map((prop: prop) => {
                return (
                   <ThreeSetPiece
