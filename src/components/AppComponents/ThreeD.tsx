@@ -65,6 +65,7 @@ export const ThreeD: React.FC<{
    position: number;
    props: prop[];
    items: item[];
+   isIntro: boolean;
    // comments: comment[];
 }> = ({
    player,
@@ -104,6 +105,7 @@ export const ThreeD: React.FC<{
    position,
    props,
    items,
+   isIntro,
    // comments,
 }) => {
    const { gridSnap } = localSettings;
@@ -218,7 +220,7 @@ export const ThreeD: React.FC<{
             anglePower={10}
             intensity={5}
          /> */}
-         {/* <LightArray cloudSettings={cloudSettings}></LightArray> */}
+         {isIntro ? <LightArray cloudSettings={cloudSettings} /> : null}
          {/* <Scene /> */}
          {/* <SpotLight color={"blue"} castShadow penumbra={1} distance={6} angle={0.35} attenuation={5} anglePower={4} intensity={2} /> */}
          <directionalLight position={[0, 10, 5]} intensity={1} />
@@ -261,9 +263,9 @@ export const ThreeD: React.FC<{
          <OrbitControls
             enableDamping={false}
             // dampingFactor={0.5}
-            // autoRotate
-            // autoRotateSpeed={0}
-            enableZoom={true}
+            autoRotate={isIntro}
+            autoRotateSpeed={1}
+            enableZoom={!isIntro}
             makeDefault
             minPolarAngle={0}
             maxPolarAngle={Math.PI / 2}
@@ -364,75 +366,76 @@ export const ThreeD: React.FC<{
    );
 };
 
-const lightHeight = 20;
+const lightHeight = 13;
 
-// export function LightArray({ cloudSettings }) {
-//    const gridRows = 4;
-//    const gridColumns = 4;
+export function LightArray({ cloudSettings }) {
+   const gridRows = 4;
+   const gridColumns = 4;
 
-//    // Color palette
-//    const colors = ["#00ff00", "#0000ff", "#800080", "#ff4500"];
-//    // const [colorIndex, setColorIndex] = useState(0);
+   // Color palette
+   const colors = ["#db2777", "#0000ff", "#800080", "#ff4500"];
+   const [colorIndex, setColorIndex] = useState(0);
 
-//    // useEffect(() => {
-//    //    const intervalId = setInterval(() => {
-//    //       setColorIndex((prevIndex) => (prevIndex + 1) % colors.length);
-//    //    }, 200); // Change color every 1 second
+   // useEffect(() => {
+   //    const intervalId = setInterval(() => {
+   //       setColorIndex((prevIndex) => (prevIndex + 1) % colors.length);
+   //    }, 500); // Change color every 1 second
 
-//    //    return () => {
-//    //       clearInterval(intervalId); // Clean up on unmount
-//    //    };
-//    // }, [colors.length]);
+   //    return () => {
+   //       clearInterval(intervalId); // Clean up on unmount
+   //    };
+   // }, [colors.length]);
 
-//    // Calculate distances between lights based on stage size and grid dimensions
-//    const xSpacing = cloudSettings.stageDimensions.width / (gridColumns + 1);
-//    const ySpacing = cloudSettings.stageDimensions.height / (gridRows + 1);
+   // Calculate distances between lights based on stage size and grid dimensions
+   const xSpacing = cloudSettings.stageDimensions.width / (gridColumns + 1);
+   const ySpacing = cloudSettings.stageDimensions.height / (gridRows + 1);
 
-//    const positions = useMemo(() => {
-//       const pos = [];
-//       for (let i = 0; i < gridRows; i++) {
-//          for (let j = 0; j < gridColumns; j++) {
-//             pos.push([
-//                (j + 1) * xSpacing - cloudSettings.stageDimensions.width / 2,
-//                lightHeight,
-//                (i + 1) * ySpacing - cloudSettings.stageDimensions.height / 2,
-//             ]);
-//          }
-//       }
-//       return pos;
-//    }, [gridRows, gridColumns, xSpacing, ySpacing, lightHeight]);
+   const positions = useMemo(() => {
+      const pos = [];
+      for (let i = 0; i < gridRows; i++) {
+         for (let j = 0; j < gridColumns; j++) {
+            pos.push([
+               (j + 1) * xSpacing - cloudSettings.stageDimensions.width / 2,
+               lightHeight,
+               (i + 1) * ySpacing - cloudSettings.stageDimensions.height / 2,
+            ]);
+         }
+      }
+      return pos;
+   }, [gridRows, gridColumns, xSpacing, ySpacing, lightHeight]);
 
-//    return (
-//       <>
-//          {positions.map((position, i) => {
-//             const targetRef = useRef();
+   return (
+      <>
+         {positions.map((position, i) => {
+            const targetRef = useRef();
 
-//             const lightPosition = [position[0], position[1], position[2]];
-//             const targetPosition = [position[0], 0, position[2]]; // The position right beneath the light
+            const lightPosition = [position[0], position[1], position[2]];
+            const targetPosition = [position[0], 0, position[2]]; // The position right beneath the light
 
-//             useLayoutEffect(() => {
-//                if (targetRef.current) {
-//                   targetRef.current.position.set(...targetPosition);
-//                }
-//             }, [targetPosition]);
+            useLayoutEffect(() => {
+               if (targetRef.current) {
+                  targetRef.current.position.set(...targetPosition);
+               }
+            }, [targetPosition]);
 
-//             return (
-//                <group key={i}>
-//                   <SpotLight
-//                      position={lightPosition}
-//                      color={colors[colorIndex]}
-//                      castShadow
-//                      penumbra={1}
-//                      distance={25}
-//                      angle={1}
-//                      decay={2}
-//                      intensity={3}
-//                      target={targetRef.current}
-//                   />
-//                   <object3D ref={targetRef} />
-//                </group>
-//             );
-//          })}
-//       </>
-//    );
-// }
+            return (
+               <group key={i}>
+                  <SpotLight
+                     opacity={0.4}
+                     position={lightPosition}
+                     color={colors[colorIndex]}
+                     castShadow
+                     penumbra={0.2}
+                     distance={25}
+                     angle={1}
+                     decay={1}
+                     intensity={1}
+                     target={targetRef.current}
+                  />
+                  <object3D ref={targetRef} />
+               </group>
+            );
+         })}
+      </>
+   );
+}
