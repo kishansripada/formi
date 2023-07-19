@@ -349,7 +349,7 @@ export const Canvas: React.FC<{
                if (index === selectedFormation) {
                   return {
                      ...formation,
-                     comments: formation.comments.map((comment: comment) => {
+                     comments: (formation.comments || []).map((comment: comment) => {
                         // console.log(comment.id);
                         // console.log({ draggingCommentId });
                         if (comment.id === draggingCommentId) {
