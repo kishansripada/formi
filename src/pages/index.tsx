@@ -38,7 +38,7 @@ const home = () => {
             <meta property="og:site_name" content="FORMI: Online stage performance planning software." />
          </Head>
          {/* <Header></Header> */}
-         <div className="bg-neutral-800/50 backdrop-blur-3xl py-1 px-1  w-[66vw] left-1/2 -translate-x-1/2 z-[60] rounded-full h-12 fixed top-[100px] flex flex-row items-center">
+         <div className="bg-neutral-800/50 backdrop-blur-3xl py-1 px-1  w-[66vw] left-1/2 -translate-x-1/2 z-[60] rounded-full h-12 fixed top-[100px] hidden lg:flex flex-row items-center">
             {/* <img src="/logobg.png" className="h-full" alt="" /> */}
             <p className="text-white ml-4 font-bold">FORMI</p>
             <Link href={"/207/edit"} className="">
@@ -70,7 +70,7 @@ const home = () => {
                </div>
 
                {/* <p className=" absolute bottom-12 w-full text-center  text-7xl  ">Choreography has never been easier.</p> */}
-               <div className="w-full h-full pointer-events-auto absolute top-36 z-0 ">
+               <div className="w-full h-full pointer-events-auto absolute top-36 z-0 pointer-events-none lg:pointer-events-auto ">
                   <ThreeD
                      items={[]}
                      props={[]}
