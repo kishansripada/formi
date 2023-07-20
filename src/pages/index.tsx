@@ -58,19 +58,20 @@ const home = () => {
                   {/* <div className="bg-neutral-500/50 w-full rounded-full h-16"></div> */}
                   <p className="  lg:text-5xl  text-2xl font-semibold mt-5  ">FORMI, a place to design and plan stunning choreography.</p>
                   <Link href={"/login"} className="">
-                     <button className="bg-pink-600 px-6 z-50 relative py-3 rounded-md mt-10 pointer-events-auto hidden lg:inline-block">
-                        <a className=" flex flex-row items-center justify-around">
+                     <button className="bg-pink-600 px-6 z-50 relative py-3 rounded-md mt-10 pointer-events-auto ">
+                        <a className=" lg:flex flex-row items-center justify-around hidden">
                            <span className="font-semibold">Get started</span> — it’s free{" "}
                            <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M14 8.5H3m11 0-3 3m3-3-3-3" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"></path>
                            </svg>
                         </a>
+                        <a className=" flex flex-row items-center justify-around lg:hidden flex">Mobile app coming soon</a>
                      </button>
                   </Link>
                </div>
 
                {/* <p className=" absolute bottom-12 w-full text-center  text-7xl  ">Choreography has never been easier.</p> */}
-               <div className="w-full h-full pointer-events-auto absolute top-36 z-0 pointer-events-none lg:pointer-events-auto ">
+               <div className="w-full h-full  absolute top-36 z-0 pointer-events-none lg:pointer-events-auto ">
                   <ThreeD
                      items={[]}
                      props={[]}
