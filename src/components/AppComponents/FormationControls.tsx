@@ -165,13 +165,67 @@ export const FormationControls: React.FC<{
 
                   pushChange();
                }}
-               className="rounded-md  hidden transition duration-300  mr-auto  lg:flex  flex-row items-center    cursor-pointer "
+               className="rounded-md  hidden transition duration-300  lg:flex  flex-row items-center    cursor-pointer "
             >
                <svg className="w-5 h-5 mr-1 dark:fill-neutral-100" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                   <path d="M180 975q-24 0-42-18t-18-42V312h60v603h474v60H180Zm120-120q-24 0-42-18t-18-42V235q0-24 18-42t42-18h440q24 0 42 18t18 42v560q0 24-18 42t-42 18H300Zm0-60h440V235H300v560Zm0 0V235v560Z" />
                </svg>
 
                <p className="text-sm">Duplicate in Place</p>
+            </button>
+            <button
+               onClick={() => {
+                  if (selectedFormation === null) return;
+
+                  setFormations((formations: formation[]) => {
+                     return formations.map((formation) => {
+                        if (formation.id === formations[selectedFormation].id) {
+                           return {
+                              ...formation,
+                              positions: formation.positions.map((position) => {
+                                 return { ...position, position: { x: position.position.x, y: -position.position.y } };
+                              }),
+                           };
+                        }
+                        return formation;
+                     });
+                  });
+
+                  pushChange();
+               }}
+               className="rounded-md  hidden transition duration-300 ml-3 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
+            >
+               <svg className="w-5 h-5 mr-1 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                  <path d="M80 606v-60h800v60H80Zm210-120V386h380v100H290Zm0 280V666h380v100H290Z" />
+               </svg>
+               <p className="text-sm">Flip X</p>
+            </button>
+            <button
+               onClick={() => {
+                  if (selectedFormation === null) return;
+
+                  setFormations((formations: formation[]) => {
+                     return formations.map((formation) => {
+                        if (formation.id === formations[selectedFormation].id) {
+                           return {
+                              ...formation,
+                              positions: formation.positions.map((position) => {
+                                 return { ...position, position: { x: -position.position.x, y: position.position.y } };
+                              }),
+                           };
+                        }
+                        return formation;
+                     });
+                  });
+
+                  pushChange();
+               }}
+               className="rounded-md  hidden transition duration-300 mr-auto    lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
+            >
+               <svg className="w-5 h-5 mr-1 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                  <path d="M450 976V176h60v800h-60Zm120-210V386h100v380H570Zm-280 0V386h100v380H290Z" />
+               </svg>
+               <p className="text-sm">Flip Y</p>
             </button>
 
             {selectedFormation !== null ? (
