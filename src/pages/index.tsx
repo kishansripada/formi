@@ -12,6 +12,15 @@ const ThreeD = dynamic(() => import("../components/AppComponents/ThreeD").then((
    loading: () => <p className="text-black ">Loading...</p>,
 });
 const home = () => {
+   const [selectedFormation, setSelectedFormation] = useState(0);
+   useEffect(() => {
+      const intervalId = setInterval(() => {
+         setSelectedFormation((prevFormation) => (prevFormation < 20 ? prevFormation + 1 : 0));
+      }, 2000);
+
+      // cleanup function
+      return () => clearInterval(intervalId);
+   }, []); // the empty array means this effect runs once on mount and cleanup on unmount
    return (
       <>
          <Head>
@@ -50,8 +59,12 @@ const home = () => {
          </div>
          <div className="overflow-hidden relative flex flex-col items-center ">
             <div className="h-14 w-full border-b border-neutral-800 bg-neutral-900 text-neutral-300 flex flex-row items-center justify-center">
-               Follow <span className="text-pink-300 mx-2 "> @formistudio.app </span> on TikTok{" "}
-               <span className="text-xs text-neutral-500 ml-2 hidden lg:block">and discover what's new on our platform</span>
+               Follow{" "}
+               <a href="https://www.tiktok.com/@formistudio.app/" target="_blank" className="text-pink-300 mx-2 ">
+                  {" "}
+                  @formistudio.app{" "}
+               </a>{" "}
+               on TikTok <span className="text-xs text-neutral-500 ml-2 hidden lg:block">and discover what's new on our platform</span>
             </div>
             <div className="bg-neutral-900 w-full text-white h-screen relative flex flex-col pointer-events-none ">
                <div className=" absolute -translate-x-1/2 left-1/2 top-[170px] text-center w-[full] z-50 ">
@@ -113,7 +126,7 @@ const home = () => {
                      viewOnly={false}
                      setSelectedFormation={() => null}
                      formations={formations}
-                     selectedFormation={6}
+                     selectedFormation={selectedFormation}
                      setFormations={() => null}
                      selectedDancers={[]}
                      setSelectedDancers={() => null}
