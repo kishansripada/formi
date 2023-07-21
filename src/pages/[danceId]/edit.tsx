@@ -1403,6 +1403,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                         setPixelsPerSecond={setPixelsPerSecond}
                         pixelsPerSecond={pixelsPerSecond}
                         localSource={localSource}
+                        selectedDancers={selectedDancers}
                      ></FormationControls>
                   </div>
                </DndContext>

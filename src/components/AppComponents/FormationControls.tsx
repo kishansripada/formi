@@ -26,6 +26,7 @@ export const FormationControls: React.FC<{
    isChangingZoom: boolean;
    setIsChangingZoom: Function;
    zoom: number;
+   selectedDancers: string[];
 }> = ({
    soundCloudTrackId,
    setSelectedFormation,
@@ -49,6 +50,7 @@ export const FormationControls: React.FC<{
    isChangingZoom,
    setIsChangingZoom,
    zoom,
+   selectedDancers,
 }) => {
    //    let MAX_ZOOM = 4;
    //    let MIN_ZOOM = 0.4;
@@ -183,6 +185,7 @@ export const FormationControls: React.FC<{
                            return {
                               ...formation,
                               positions: formation.positions.map((position) => {
+                                 if (selectedDancers.length && !selectedDancers.includes(position.id)) return position;
                                  return { ...position, position: { x: position.position.x, y: -position.position.y } };
                               }),
                            };
@@ -210,6 +213,7 @@ export const FormationControls: React.FC<{
                            return {
                               ...formation,
                               positions: formation.positions.map((position) => {
+                                 if (selectedDancers.length && !selectedDancers.includes(position.id)) return position;
                                  return { ...position, position: { x: -position.position.x, y: position.position.y } };
                               }),
                            };
