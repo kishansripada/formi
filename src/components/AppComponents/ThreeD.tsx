@@ -275,7 +275,7 @@ export const ThreeD: React.FC<{
          />
          <Text
             scale={[1, 1, 1]}
-            position={[0, 0, cloudSettings.stageDimensions.height / 2 + 1]}
+            position={[0, 0, cloudSettings.stageDimensions.height / 2 + 2]}
             rotation={[Math.PI * 1.5, 0, 0]}
             color={`${localSettings.isDarkMode ? "white" : "black"}`}
             anchorX="center"
@@ -313,6 +313,39 @@ export const ThreeD: React.FC<{
          >
             STAGE RIGHT
          </Text>
+
+         {new Array(cloudSettings.stageDimensions.width / 2).fill(0).map((_: number, index: number) => {
+            // index = cloudSettings.stageDimensions.width / 2 - 1 - index;
+            return (
+               <Text
+                  scale={[0.7, 0.7, 0.7]}
+                  position={[index, 0, cloudSettings.stageDimensions.height / 2]}
+                  rotation={[Math.PI * 1.5, 0, 0]}
+                  fillOpacity={0.7}
+                  color={`${localSettings.isDarkMode ? "white" : "black"}`}
+                  anchorX="center"
+                  // anchorY="middle"
+               >
+                  {index % 2 === 0 && index !== 0 ? index : ""}
+               </Text>
+            );
+         })}
+         {new Array(cloudSettings.stageDimensions.width / 2).fill(0).map((_: number, index: number) => {
+            // index = cloudSettings.stageDimensions.width / 2 - index;
+            return (
+               <Text
+                  scale={[0.7, 0.7, 0.7]}
+                  position={[index - cloudSettings.stageDimensions.width / 2 + 1, 0, cloudSettings.stageDimensions.height / 2]}
+                  rotation={[Math.PI * 1.5, 0, 0]}
+                  fillOpacity={0.7}
+                  color={`${localSettings.isDarkMode ? "white" : "black"}`}
+                  anchorX="center"
+                  // anchorY="middle"
+               >
+                  {(cloudSettings.stageDimensions.width / 2 - index - 1) % 2 === 0 ? cloudSettings.stageDimensions.width / 2 - index - 1 : ""}
+               </Text>
+            );
+         })}
 
          {/* <mesh
             rotation={[0, 0, 0]}
