@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { formation, localSettings } from "../../types/types";
+import { formation, localSettings, dancer } from "../../types/types";
 import { useRouter } from "next/router";
 import logo from "../../../public/logo.svg";
 import Image from "next/image";
@@ -37,6 +37,7 @@ export const Header: React.FC<{
    setIsChangingCollisionRadius: Function;
    formations: formation[];
    dropDownToggle: Function;
+   dancers: dancer[];
 }> = ({
    saved,
    danceName,
@@ -65,6 +66,7 @@ export const Header: React.FC<{
    formations,
    dropDownToggle,
    folderName,
+   dancers,
 }) => {
    const router = useRouter();
    let session = useSession();
@@ -80,7 +82,27 @@ export const Header: React.FC<{
          <div className=" min-h-[50px] dark:bg-black bg-neutral-100  flex flex-row items-center w-full text-neutral-800 border-b  dark:text-white  dark:border-neutral-700 border-neutral-300 ">
             <div className="flex flex-row items-center justify-start w-1/3 h-full">
                <div className="w-20 min-w-20 border-r border-neutral-300 h-full dark:border-neutral-700">
-                  <Link className="" href={`/${session ? "dashboard" : "login"}`}>
+                  <button
+                     onClick={async () => {
+                        if (!saved) {
+                           let updateDancers = supabase
+                              .from("dances")
+                              .update({ dancers: dancers, last_edited: new Date() })
+                              .eq("id", router.query.danceId);
+
+                           let updateFormations = supabase
+                              .from("dances")
+                              .update({ formations: formations, last_edited: new Date() })
+                              .eq("id", router.query.danceId);
+                           Promise.all([updateDancers, updateFormations]).then((results) => {
+                              router.push(`/${session ? "dashboard" : "login"}`);
+                           });
+                        } else {
+                           router.push(`/${session ? "dashboard" : "login"}`);
+                        }
+                     }}
+                     className=""
+                  >
                      <svg
                         className="w-10 h-10 ml-5 mr-3 cursor-pointer flex-shrink-0"
                         xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +115,7 @@ export const Header: React.FC<{
                            d="M6.63707 102V25.6364H57.1982v13.3114H22.7823v18.196h31.06v13.3115h-31.06V102H6.63707Z"
                         />
                      </svg>
-                  </Link>
+                  </button>
                </div>
 
                <button

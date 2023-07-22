@@ -971,6 +971,7 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
                setShareIsOpen={setShareIsOpen}
                viewOnly={viewOnly}
                setUpgradeIsOpen={setUpgradeIsOpen}
+               dancers={dancers}
             />
 
             <div className="flex flex-row  overflow-hidden w-screen h-full">
