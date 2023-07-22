@@ -57,7 +57,7 @@ const home = () => {
                <button className="bg-neutral-400/50 h-full rounded-full px-6 text-white transition ml-2">Log In</button>
             </Link>
          </div>
-         <div className="overflow-hidden relative flex flex-col items-center ">
+         <div className="overflow-hidden relative bg-neutral-50 flex flex-col items-center ">
             <div className="h-14 w-full border-b border-neutral-800 bg-neutral-900 text-neutral-300 flex flex-row items-center justify-center">
                Follow{" "}
                <a href="https://www.tiktok.com/@formistudio.app/" target="_blank" className="text-pink-300 mx-2 ">
@@ -144,6 +144,29 @@ const home = () => {
                      isIntro={true}
                   ></ThreeD>
                </div>
+            </div>
+            <p className="text-center font-bold text-3xl mt-12 ">Trusted by</p>
+            <div className="lg:h-40 w-1/4  lg:w-full bg-neutral-50 flex lg:flex-row flex-col justify-center py-10 lg:child:mx-10 child:my-5 lg:child:my-0 ">
+               <img
+                  className="   h-full opacity-80 object-cover"
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Los_Angeles_Lakers_logo.svg/1200px-Los_Angeles_Lakers_logo.svg.png"
+                  alt=""
+               />
+               <img
+                  className="   h-full opacity-80 object-cover"
+                  src="https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Florida_Panthers_2016_logo.svg/1200px-Florida_Panthers_2016_logo.svg.png"
+                  alt=""
+               />
+               <img
+                  className="   h-full opacity-80 object-cover"
+                  src="https://upload.wikimedia.org/wikipedia/en/thumb/f/fb/Miami_Heat_logo.svg/1200px-Miami_Heat_logo.svg.png"
+                  alt=""
+               />
+               <img
+                  className="   h-full opacity-80 object-cover"
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Disney_wordmark.svg/1200px-Disney_wordmark.svg.png"
+                  alt=""
+               />
             </div>
             <div className="bg-neutral-50 dark:bg-neutral-900 lg:px-0 px-7 w-full  font-proxima">
                <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-8 w-full ">
