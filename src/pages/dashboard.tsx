@@ -227,7 +227,7 @@ const Dashboard = ({ dances, userData, sharedWithMe, projects: initialProjects }
                                     ?.map((dance) => {
                                        return (
                                           <>
-                                             <div className="w-full mr-5">
+                                             <div className="w-full mr-5 max-w-[300px]">
                                                 <PerformancePreview
                                                    invalidateDances={invalidateDances}
                                                    dance={dance}
