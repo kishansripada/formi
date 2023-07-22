@@ -80,7 +80,7 @@ export const Comment: React.FC<{
             data-type={"comment"}
             className={`${
                isOpen ? "w-72 rounded-t-xl h-auto py-3 justify-start px-3" : "w-[50px] h-[50px] rounded-br-full rounded-t-full justify-center"
-            }    bg-neutral-800 dark:bg-neutral-200 group select-none shadow-xl  dark:text-black text-white lg:pointer-events-auto pointer-events-none flex    flex-row   items-center absolute z-[300]  cursor-default `}
+            }  border border-neutral-700   bg-neutral-800  group select-none shadow-xl  text-white lg:pointer-events-auto pointer-events-none flex    flex-row   items-center absolute z-[300]  cursor-default `}
          >
             {comment.user.avatar_url ? (
                <img
@@ -101,48 +101,47 @@ export const Comment: React.FC<{
                   <p>{comment.user.name}</p>
                </div>
 
-               <textarea
-                  onFocus={(e) => {
-                     e.target.style.height = "auto";
-                     e.target.style.height = `${e.target.scrollHeight}px`;
-                     setIsEditing(true);
-                     // addToStack();
-                  }}
-                  onBlur={() => {
-                     setIsEditing(false);
-                     setIsOpen(false);
-                     pushChange();
-                  }}
-                  onChange={(e) => {
-                     e.target.style.height = "auto";
-                     e.target.style.height = `${e.target.scrollHeight}px`;
-
-                     setFormations((formations: formation[]) => {
-                        return formations.map((formation, i) => {
-                           if (i === selectedFormation) {
-                              return {
-                                 ...formation,
-                                 comments: formation.comments?.map((commentx) => {
-                                    if (commentx.id === comment.id) {
-                                       return { ...comment, content: e.target.value };
-                                    }
-                                    return commentx;
-                                 }),
-                              };
-                           }
-                           return formation;
+               {isEditing ? (
+                  <textarea
+                     onBlur={() => {
+                        setIsEditing(false);
+                        setIsOpen(false);
+                        pushChange();
+                     }}
+                     autoFocus
+                     onChange={(e) => {
+                        setFormations((formations: formation[]) => {
+                           return formations.map((formation, i) => {
+                              if (i === selectedFormation) {
+                                 return {
+                                    ...formation,
+                                    comments: formation.comments?.map((commentx) => {
+                                       if (commentx.id === comment.id) {
+                                          return { ...comment, content: e.target.value };
+                                       }
+                                       return commentx;
+                                    }),
+                                 };
+                              }
+                              return formation;
+                           });
                         });
-                     });
-                  }}
-                  className="bg-neutral-800 dark:bg-neutral-200 focus:outline-none resize-none pointer-events-auto w-full text-sm font-normal  mt-1 selection:bg-pink-900"
-                  value={comment.content}
-                  ref={textAreaRef}
-                  style={
-                     {
-                        // height: height ? height : "height",
-                     }
-                  }
-               ></textarea>
+                     }}
+                     className="bg-neutral-700 p-2 h-24 border border-pink-600 mt-2 rounded-md focus:outline-none resize-none pointer-events-auto w-full text-sm font-normal  selection:bg-pink-900"
+                     value={comment.content}
+                     ref={textAreaRef}
+                  ></textarea>
+               ) : (
+                  <p
+                     onClick={() => {
+                        setIsEditing(true);
+                        textAreaRef.current?.focus();
+                     }}
+                     className="bg-neutral-700 p-2 rounded-md focus:outline-none resize-none pointer-events-auto w-full text-sm font-normal  mt-1 selection:bg-pink-900"
+                  >
+                     {comment.content}
+                  </p>
+               )}
             </div>
          </div>
       </>
