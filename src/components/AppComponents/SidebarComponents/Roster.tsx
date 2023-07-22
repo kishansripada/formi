@@ -27,7 +27,6 @@ export const Roster: React.FC<{
 }> = ({
    setDancers,
    dancers,
-
    formations,
    selectedFormation,
    cloudSettings,
@@ -44,22 +43,39 @@ export const Roster: React.FC<{
    const [uniqueDancers, setUniqueDancers] = useState<string[]>([]);
    const supabase = useSupabaseClient();
    const session = useSession();
-   useEffect(() => {
-      if (!session) return;
-      supabase
-         .rpc("unique_dancers", {
-            p_user_id: session?.user?.id,
-         })
-         .then((r) => {
-            if (!r?.data?.length) return;
-            setUniqueDancers(r.data?.map((dancer: any) => dancer.dancer_name));
-         });
-   }, []);
+   // useEffect(() => {
+   //    if (!session) return;
+   //    supabase
+   //       .rpc("unique_dancers", {
+   //          p_user_id: session?.user?.id,
+   //       })
+   //       .then((r) => {
+   //          if (!r?.data?.length) return;
+   //          setUniqueDancers(r.data?.map((dancer: any) => dancer.dancer_name));
+   //       });
+   // }, []);
    let height = convertToFeetAndInches(dancers.find((dancer) => dancer.id === selectedDancers[0])?.height || 182.88);
 
-   // const [heightFeet, setHeightFeet] = useState<number>(height.feet);
-   // const [heightIn, setHeightIn] = useState<number>(height.inches);
-   // console.log(heightIn);
+   const [isSavingRoster, setIsSavingRoster] = useState(false);
+   const [rosterName, setRosterName] = useState("");
+
+   const createNewRoster = async () => {
+      const response = await supabase.from("rosters").insert([
+         {
+            name: rosterName,
+            user_id: session?.user?.id,
+            roster: JSON.parse(JSON.stringify(dancers)).map((dancer: any) => {
+               delete dancer.id;
+               return dancer;
+            }),
+         },
+      ]);
+
+      if (!response.error) {
+         toast.success("Roster saved");
+      }
+   };
+
    const createNewDancer = () => {
       let id = uuidv4();
       setDancers((dancers: dancer[]) => {
@@ -113,6 +129,50 @@ export const Roster: React.FC<{
    };
    return (
       <>
+         {isSavingRoster ? (
+            <>
+               <Toaster></Toaster>
+               <div
+                  className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
+                  id="outside"
+                  onClick={(e) => {
+                     if (e.target.id === "outside") {
+                        setIsSavingRoster(false);
+                     }
+                  }}
+               >
+                  <div className="flex  w-[500px] flex-col   bg-neutral-800/90 border border-neutral-500  rounded-xl  text-sm ">
+                     <div className="flex flex-col rounded-xl px-10 pt-5 pb-6 h-full">
+                        <p className="text-white text-lg mb-2 font-semibold">Name your roster</p>
+                        <p className="mb-4 text-xs text-neutral-400">
+                           Save your roster to easily create new performances with an existing roster. Performer height, color, and shape will all be
+                           saved
+                        </p>
+                        <div className="flex flex-row justify-between items-stretch border-neutral-500 overflow-hidden bg-neutral-700 border rounded-md ">
+                           <input
+                              value={rosterName}
+                              onChange={(e) => {
+                                 setRosterName(e.target.value);
+                              }}
+                              className=" bg-transparent   w-full mr-2 h-8 py-4   text-neutral-200 text-sm  px-2 focus:outline-none"
+                              type="text"
+                              placeholder="Roster name"
+                           />
+                           <button
+                              onClick={async (e) => {
+                                 createNewRoster();
+                                 setIsSavingRoster(false);
+                              }}
+                              className="text-sm bg-neutral-600 text-neutral-200 w-14 grid place-items-center  "
+                           >
+                              Save
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </>
+         ) : null}
          <div className="lg:flex hidden w-[260px]  min-w-[260px] flex-col overflow-hidden  bg-white dark:bg-neutral-800 dark:text-white h-full ">
             <div className="flex-grow overflow-y-scroll">
                {dancers.slice().map((dancer, index) => (
@@ -156,24 +216,41 @@ export const Roster: React.FC<{
                            />
                            <p className="text-xs text-neutral-500  mt-2">For profile picture</p>
                         </div> */}
+
                {!viewOnly ? (
                   <>
-                     <button
-                        onClick={createNewDancer}
-                        className="  flex flex-row items-center text-sm justify-center py-2 border-y border-neutral-200 dark:border-neutral-700"
-                     >
-                        <p className="ml-auto mr-2">New Dancer</p>
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-6 h-6 mr-2"
-                        >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                     </button>
+                     <div className="flex flex-row items-center text-xs justify-between py-2 border-y border-neutral-200 dark:border-neutral-700 px-2">
+                        <button onClick={() => setIsSavingRoster(true)} className=" flex flex-row items-center ">
+                           <p className="ml-auto mr-2">Save Roster</p>
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-5 h-5"
+                           >
+                              <path
+                                 strokeLinecap="round"
+                                 strokeLinejoin="round"
+                                 d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+                              />
+                           </svg>
+                        </button>
+                        <button onClick={createNewDancer} className=" flex flex-row items-center ">
+                           <p className="ml-auto mr-2">New Dancer</p>
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-5 h-5"
+                           >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                           </svg>
+                        </button>
+                     </div>
                   </>
                ) : null}
 

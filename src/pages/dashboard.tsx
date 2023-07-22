@@ -6,7 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { Widget } from "@typeform/embed-react";
 import "@typeform/embed/build/css/widget.css";
-
+import { v4 as uuidv4 } from "uuid";
 import { useSupabaseClient, useSession, Session } from "@supabase/auth-helpers-react";
 import { MyDances } from "../components/DashboardComponents/MyDances";
 import { Trash } from "../components/DashboardComponents/Trash";
@@ -16,7 +16,7 @@ import { Dropdown } from "../components/DashboardComponents/Dropdown";
 import { MyFiles } from "../components/DashboardComponents/Tabs/MyFiles";
 import { Sidebar } from "../components/DashboardComponents/Sidebar";
 import { NewFolderModel } from "../components/DashboardComponents/NewFolderModel";
-const Dashboard = ({ dances, userData, sharedWithMe, projects: initialProjects }: {}) => {
+const Dashboard = ({ dances, sharedWithMe, projects: initialProjects, rosters }: {}) => {
    let session = useSession();
 
    const supabase = useSupabaseClient();
@@ -104,12 +104,41 @@ const Dashboard = ({ dances, userData, sharedWithMe, projects: initialProjects }
       invalidateDances();
    };
 
-   async function createNewDance() {
+   async function createNewDance(roster) {
       if (session === null) {
          router.push(`/login`);
          return;
       }
-
+      if (roster?.roster?.length) {
+         roster.roster = roster.roster.map((dancer) => {
+            return { ...dancer, id: uuidv4() };
+         });
+         const { data, error } = await supabase
+            .from("dances")
+            .insert([
+               {
+                  user: session.user.id,
+                  last_edited: new Date(),
+                  dancers: roster.roster,
+                  formations: [
+                     {
+                        name: "First formation",
+                        id: uuidv4(),
+                        positions: roster.roster.map((dancer, index) => {
+                           return { id: dancer.id, position: { x: index - 18, y: 0 } };
+                        }),
+                        durationSeconds: 3,
+                        transition: { durationSeconds: 3 },
+                     },
+                  ],
+               },
+            ])
+            .select("id")
+            .single();
+         if (!data?.id) return;
+         router.push(`/${data.id}/edit`);
+         return;
+      }
       const { data, error } = await supabase
          .from("dances")
          .insert([{ user: session.user.id, last_edited: new Date() }])
@@ -166,6 +195,7 @@ const Dashboard = ({ dances, userData, sharedWithMe, projects: initialProjects }
                menuOpen={menuOpen}
                createNewDance={createNewDance}
                createNewProject={createNewProject}
+               rosters={rosters}
             ></Sidebar>
 
             <div className="flex flex-col bg-neutral h-screen   overflow-hidden  w-full justify-start  ">
@@ -368,10 +398,15 @@ export const getServerSideProps = withPageAuth({
          return data?.data?.map((x) => x?.performance_id) || [];
       }
 
-      async function getUserData(session: Session) {
-         let data = await supabase.from("user_data").select("*").eq("user_id", session.user.id).maybeSingle();
-         return data?.data || null;
+      async function getRosters(session: Session) {
+         let data = await supabase.from("rosters").select("*").eq("user_id", session.user.id);
+
+         return data?.data || [];
       }
+      // async function getUserData(session: Session) {
+      //    let data = await supabase.from("user_data").select("*").eq("user_id", session.user.id).maybeSingle();
+      //    return data?.data || null;
+      // }
 
       // async function getSubscriptionPlan(session: Session) {
       //    if (!session?.user?.email) {
@@ -401,21 +436,22 @@ export const getServerSideProps = withPageAuth({
       //       });
       // }
       // getOrganizationPerformances(session);
-      let [dances, sharedWithMe, userData, projects] = await Promise.all([
+      let [dances, sharedWithMe, projects, rosters] = await Promise.all([
          getMyDances(session),
 
          // getSubscriptionPlan(session),
          // getOrganization(session),
          getSharedWithMe(session),
-         getUserData(session),
+         // getUserData(session),
          getProjects(session),
+         getRosters(session),
       ]);
       // console.log(projects);
       // console.log(data);
 
       // const { data } = await supabase.from("dances").select("*").eq("user", user.id);
 
-      return { props: { dances: dances, userData, sharedWithMe, projects } };
+      return { props: { dances: dances, sharedWithMe, projects, rosters } };
    },
 });
 

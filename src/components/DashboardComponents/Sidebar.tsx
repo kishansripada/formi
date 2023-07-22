@@ -13,7 +13,8 @@ export const Sidebar: React.FC<{
    createNewDance: Function;
    createNewProject: Function;
    setNewFolderOpen: Function;
-}> = ({ setMenuOpen, menuOpen, createNewDance, createNewProject, setNewFolderOpen }) => {
+   rosters: any;
+}> = ({ setMenuOpen, menuOpen, createNewDance, createNewProject, setNewFolderOpen, rosters }) => {
    const session = useSession();
 
    return (
@@ -63,23 +64,45 @@ export const Sidebar: React.FC<{
                   <p>Shared With Me</p>
                </button>
             </div>
-
-            <button
-               onClick={() => {
-                  createNewDance();
-               }}
-               className="bg-pink-600 mt-5 w-full text-white text-xs py-2 px-4  rounded-lg mr-auto "
-            >
-               New performance
-            </button>
             <button
                onClick={() => {
                   setNewFolderOpen(true);
                }}
-               className=" border border-neutral-800 mt-3 w-full text-white text-xs py-2 px-4 rounded-lg mr-auto "
+               className=" border border-neutral-800 mt-5 w-full text-white text-xs py-2 px-4 rounded-lg mr-auto "
             >
                New folder
             </button>
+            <button
+               onClick={() => {
+                  createNewDance();
+               }}
+               className="bg-pink-600  mt-3 w-full text-white text-xs py-2 px-4  rounded-lg mr-auto "
+            >
+               New performance
+            </button>
+            {rosters.length ? <p className=" text-neutral-300 text-sm mt-5">New performance from roster:</p> : null}
+            {rosters.map((roster: any) => {
+               return (
+                  <button
+                     onClick={() => {
+                        createNewDance(roster);
+                     }}
+                     className="flex flex-row items-center mt-3 justify-between w-full text-neutral-400 px-1 hover:text-white transition "
+                  >
+                     <p className=" text-sm  ">{roster.name} </p>
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                     >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                     </svg>
+                  </button>
+               );
+            })}
             <button
                className={`flex flex-row mt-auto justify-between rounded-xl items-center ${
                   menuOpen === "trash" ? "bg-neutral-700" : ""

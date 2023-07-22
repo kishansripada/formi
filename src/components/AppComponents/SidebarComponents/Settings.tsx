@@ -362,7 +362,7 @@ export const Settings: React.FC<{
 
             {cloudSettings.stageBackground === "custom" ? (
                <div className="px-3">
-                  <button className="relative border border-dashed border-neutral-300 h-24 w-full rounded-xl bg-neutral-50 mt-4 pointer-events-none ">
+                  <button className="relative border border-dashed border-neutral-300 h-24 w-full rounded-xl bg-transparent mt-4 pointer-events-none ">
                      <input
                         accept="image/png, image/gif, image/jpeg"
                         type="file"
