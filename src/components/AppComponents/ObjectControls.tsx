@@ -268,7 +268,7 @@ export const ObjectControls: React.FC<{
                               });
                            });
                         }}
-                        className="flex flex-row justify-between text-neutral-300 hover:text-white transition items-center px-5"
+                        className="flex flex-row justify-between dark:text-neutral-300 text-neutral-500 hover:text-black dark:hover:text-white transition items-center px-5"
                      >
                         <p className="text-xs font-semibold mr-3">Swap 2 Positions</p>
                         <svg
