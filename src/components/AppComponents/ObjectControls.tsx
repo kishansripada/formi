@@ -26,7 +26,7 @@ export const ObjectControls: React.FC<{
    isChangingZoom: boolean;
    setIsChangingZoom: Function;
    zoom: number;
-   selectedDancers: dancer[];
+   selectedDancers: string[];
    cloudSettings: cloudSettings;
    dropDownToggle: boolean;
    items: item[];
@@ -232,13 +232,61 @@ export const ObjectControls: React.FC<{
          <div className="w-full h-12 border-b-neutral-300 border-b bg-white flex flex-row items-center  px-3 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white">
             <p className="text-sm mr-auto font-bold">
                {selectedDancers.length === 1
-                  ? dancers.find((dancer) => dancer.id === selectedDancers[0]).name
+                  ? dancers.find((dancer) => dancer.id === selectedDancers[0])?.name
                   : selectedDancers.length === 0
                   ? ""
-                  : "Many dancers"}
+                  : "Multiple dancers selected"}
             </p>
-            {selectedDancers.length ? (
+            {selectedDancers.length && selectedFormation !== null ? (
                <>
+                  {selectedDancers.length === 2 ? (
+                     <button
+                        onClick={() => {
+                           // swap the positions of the two dancers
+                           const positions = selectedDancers.map((dancerId) => {
+                              return formations[selectedFormation]?.positions.find((dancerPosition: dancerPosition) => dancerPosition.id === dancerId)
+                                 .position;
+                           });
+
+                           setFormations((formations: formation[]) => {
+                              return formations.map((formation, index: number) => {
+                                 if (index === selectedFormation) {
+                                    return {
+                                       ...formation,
+                                       positions: formation.positions.map((dancerPosition) => {
+                                          if (selectedDancers.includes(dancerPosition.id)) {
+                                             return {
+                                                ...dancerPosition,
+                                                position: positions[0] === dancerPosition.position ? positions[1] : positions[0],
+                                             };
+                                          }
+                                          return dancerPosition;
+                                       }),
+                                    };
+                                 }
+                                 return formation;
+                              });
+                           });
+                        }}
+                        className="flex flex-row justify-between text-neutral-300 hover:text-white transition items-center px-5"
+                     >
+                        <p className="text-xs font-semibold mr-3">Swap 2 Positions</p>
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
+                           stroke="currentColor"
+                           className="w-5 h-5"
+                        >
+                           <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
+                           />
+                        </svg>
+                     </button>
+                  ) : null}
                   <div
                      style={{
                         pointerEvents: selectedFormation === 0 ? "none" : "auto",
