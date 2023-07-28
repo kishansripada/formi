@@ -264,11 +264,10 @@ const Edit = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnl
       });
    };
 
-   function handleBeforeUnload(event) {
+   async function handleBeforeUnload(event) {
       if (!saved) {
          // Prompt the user before closing the tab
          event.preventDefault();
-         event.returnValue = "Please wait a few more seconds before closing the tab, your changes are still being saved";
       }
    }
 

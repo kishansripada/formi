@@ -14,6 +14,7 @@ export type propPosition = {
    rotation: number;
    id: string;
 };
+
 export type prop = {
    url: string;
    id: string;
@@ -104,6 +105,8 @@ export const PIXELS_PER_SECOND = 15;
 export const PIXELS_PER_SQUARE = 40;
 export const GRID_WIDTH = 26;
 export const GRID_HEIGHT = 20;
+
+export const MAX_PIXELS_PER_SECOND = 120;
 
 export const initials = (name: string) => {
    if (!name) return "";

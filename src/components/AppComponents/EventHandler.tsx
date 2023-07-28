@@ -1,5 +1,14 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { dancer, dancerPosition, formation, dragBoxCoords, PIXELS_PER_SQUARE, comment, cloudSettings } from "../../types/types";
+import {
+   dancer,
+   dancerPosition,
+   formation,
+   dragBoxCoords,
+   PIXELS_PER_SQUARE,
+   comment,
+   cloudSettings,
+   MAX_PIXELS_PER_SECOND,
+} from "../../types/types";
 
 export const EventHandler: React.FC<{
    children: React.ReactNode;
@@ -268,7 +277,6 @@ export const EventHandler: React.FC<{
    }
 
    const handleScroll = (e) => {
-      let MAX_PIXELS_PER_SECOND = 55;
       let minPixelsPerSecond = songDuration ? ((window.screen.width - 10) * 1000) / songDuration : 10;
 
       if (
@@ -280,7 +288,7 @@ export const EventHandler: React.FC<{
       ) {
          e.preventDefault();
          setPixelsPerSecond((pixelsPerSecond: number) => {
-            let newPixelsPerSecond = pixelsPerSecond - e.deltaY / 25;
+            let newPixelsPerSecond = pixelsPerSecond - e.deltaY / 10;
 
             if (newPixelsPerSecond < minPixelsPerSecond) return pixelsPerSecond;
             if (newPixelsPerSecond > MAX_PIXELS_PER_SECOND) {
