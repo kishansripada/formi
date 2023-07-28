@@ -148,7 +148,10 @@ export const FormationControls: React.FC<{
                            ...formations[selectedFormation],
                            durationSeconds: formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
                            transition: {
-                              durationSeconds: formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2),
+                              durationSeconds:
+                                 formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2) > 0.5
+                                    ? formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2)
+                                    : formations[selectedFormation].transition.durationSeconds,
                            },
                         },
                         {
@@ -157,7 +160,10 @@ export const FormationControls: React.FC<{
                            name: formations[selectedFormation].name + " copy",
                            durationSeconds: formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
                            transition: {
-                              durationSeconds: formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2),
+                              durationSeconds:
+                                 formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2) > 0.5
+                                    ? formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2)
+                                    : formations[selectedFormation].transition.durationSeconds,
                            },
                         },
                         ...formations.slice(selectedFormation + 1),
