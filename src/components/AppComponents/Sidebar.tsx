@@ -213,7 +213,7 @@ export const Sidebar: React.FC<{
                <p className=" mt-1">Stage</p>
             </button> */}
 
-            <button
+{/*             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600 mt-auto   "
                onClick={(e) => {
                   setHelpUrl({ url: "https://www.youtube.com/shorts/uiTwpkpsL1E", event: e });
@@ -237,7 +237,7 @@ export const Sidebar: React.FC<{
                </svg>
 
                <p className=" mt-1">Tutorial</p>
-            </button>
+            </button> */}
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600    "
                onClick={() => setMenuOpen("settings")}
