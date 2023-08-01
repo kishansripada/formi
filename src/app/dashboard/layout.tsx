@@ -52,7 +52,6 @@ const getServerSideProps = async (projectId: string) => {
    return { rosters, session, project };
 };
 export default async function RootLayout({ children, params }: { children: React.ReactNode; params: { projectId: string } }) {
-   console.log(params);
    const { rosters, session, project } = await getServerSideProps(params.projectId);
    return (
       <div>
