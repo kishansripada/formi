@@ -107,7 +107,8 @@ export const Sidebar: React.FC<{
             </div>
             <div className="bg-neutral-800 rounded-xl px-3 py-3 mt-7 text-xs ">
                <Link
-                  href={"/dashboard"}
+                  href="/dashboard"
+                  prefetch={true}
                   className={`flex flex-row justify-between  items-center rounded-xl ${
                      pathname === "/dashboard" ? "bg-neutral-700" : ""
                   }   w-full h-9 px-3`}
@@ -115,7 +116,8 @@ export const Sidebar: React.FC<{
                   <p>Home</p>
                </Link>
                <Link
-                  href={"/dashboard/myperformances"}
+                  href="/dashboard/myperformances"
+                  prefetch={true}
                   className={`flex flex-row justify-between rounded-xl items-center ${
                      pathname === "/dashboard/myperformances" ? "bg-neutral-700" : ""
                   }   w-full h-9 px-3`}
@@ -123,7 +125,8 @@ export const Sidebar: React.FC<{
                   <p>My files</p>
                </Link>
                <Link
-                  href={"/dashboard/sharedwithme"}
+                  href="/dashboard/sharedwithme"
+                  prefetch={true}
                   className={`flex flex-row justify-between rounded-xl items-center ${
                      pathname === "/dashboard/sharedwithme" ? "bg-neutral-700" : ""
                   }   w-full h-9 px-3`}
@@ -131,7 +134,8 @@ export const Sidebar: React.FC<{
                   <p>Shared With Me</p>
                </Link>
                <Link
-                  href={"/dashboard/rosters"}
+                  href="/dashboard/rosters"
+                  prefetch={true}
                   className={`flex flex-row justify-between rounded-xl items-center ${
                      pathname === "/dashboard/rosters" ? "bg-neutral-700" : ""
                   }   w-full h-9 px-3`}
