@@ -12,21 +12,21 @@ function MyApp({
 }: AppProps<{
    initialSession: Session;
 }>) {
-   const [supabaseClient] = useState(() =>
-      createBrowserSupabaseClient({
-         supabaseKey:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4dHhieGtrdm9zbGNyc3hiZmFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjE0NjM3NDYsImV4cCI6MTk3NzAzOTc0Nn0.caFbFV4Ck7MrTSwsPXyIifjeKWYJWXisKR9-zFA33Ng",
-         supabaseUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co",
-         options: {
-            realtime: {
-               params: {
-                  eventsPerSecond: -1,
-                  log_level: "debug",
-               },
-            },
-         },
-      })
-   );
+   // const [supabaseClient] = useState(() =>
+   //    createBrowserSupabaseClient({
+   //       supabaseKey:
+   //          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4dHhieGtrdm9zbGNyc3hiZmFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjE0NjM3NDYsImV4cCI6MTk3NzAzOTc0Nn0.caFbFV4Ck7MrTSwsPXyIifjeKWYJWXisKR9-zFA33Ng",
+   //       supabaseUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co",
+   //       options: {
+   //          realtime: {
+   //             params: {
+   //                eventsPerSecond: -1,
+   //                log_level: "debug",
+   //             },
+   //          },
+   //       },
+   //    })
+   // );
 
    const [loading, setLoading] = useState(false);
    useEffect(() => {
@@ -47,7 +47,10 @@ function MyApp({
    }, []);
 
    return (
-      <SessionContextProvider supabaseClient={supabaseClient} initialSession={pageProps.initialSession}>
+      // <SessionContextProvider supabaseClient={supabaseClient} initialSession={pageProps.initialSession}>
+
+      // </SessionContextProvider>
+      <>
          {loading ? (
             <>
                <div className="flex items-center justify-center h-screen dark:bg-neutral-900 ">
@@ -84,7 +87,7 @@ function MyApp({
                <Analytics />
             </>
          )}
-      </SessionContextProvider>
+      </>
    );
 }
 
