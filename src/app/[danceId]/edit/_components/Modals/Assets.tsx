@@ -1,15 +1,9 @@
-import Script from "next/script";
 import { useEffect, useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { memo } from "react";
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
-import { useRouter } from "next/router";
-import { item, prop } from "../../../../../types/types";
+import { cloudSettings, item, prop } from "../../../../../types/types";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-type permission = {
-   email: string;
-   role: "view" | "edit";
-};
+import { AuthSession } from "@supabase/supabase-js";
+
 export const Assets: React.FC<{
    setAssetsOpen: Function;
    propUploads: any[];
@@ -19,10 +13,10 @@ export const Assets: React.FC<{
    assetsOpen: false | string;
    menuOpen: string;
    setProps: Function;
-}> = ({ setAssetsOpen, propUploads, invalidatePropUploads, pushChange, setItems, assetsOpen, menuOpen, setProps }) => {
+   session: AuthSession | null;
+   setCloudSettings: Function;
+}> = ({ setAssetsOpen, propUploads, invalidatePropUploads, pushChange, setItems, assetsOpen, menuOpen, setProps, session, setCloudSettings }) => {
    const [file, setFile] = useState<File | null>();
-   const router = useRouter();
-   let session = useSession();
    const [selectedAsset, setSelectedAsset] = useState(null);
    const supabase = createClientComponentClient();
 
@@ -65,6 +59,18 @@ export const Assets: React.FC<{
    }, [file]);
 
    const assignAsset = (e, id) => {
+      if (assetsOpen === "stagebackground") {
+         setCloudSettings((cloudSettings: cloudSettings) => {
+            return {
+               ...cloudSettings,
+               backgroundUrl: `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${session?.user.id}/${id || selectedAsset}`,
+            };
+         });
+
+         // https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/f30197ba-cf06-4234-bcdb-5d40d83c7999/9f329a54be612ce08547a650ddb05424651c24f4-5102x2487.webp
+         // https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/stagebackgrounds/f30197ba-cf06-4234-bcdb-5d40d83c7999/demoFigma.png
+      }
+
       if (menuOpen === "props") {
          setProps((props: item[]) => {
             return props.map((prop: prop) => {
@@ -78,7 +84,9 @@ export const Assets: React.FC<{
                return prop;
             });
          });
-      } else {
+      }
+
+      if (menuOpen === "items") {
          setItems((items: item[]) => {
             return items.map((item: item) => {
                if (item.id === assetsOpen) {
@@ -97,6 +105,7 @@ export const Assets: React.FC<{
    };
    return (
       <>
+         <Toaster></Toaster>
          <div
             onClick={(e) => {
                if (e.target.id === "outside") {

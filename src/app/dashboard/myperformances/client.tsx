@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 // import { Dropdown } from "./Dropdown";
 import { useSupabaseClient, useSession, Session } from "@supabase/auth-helpers-react";
-import { useRouter } from "next/router";
 import { ProjectPreview } from "./ProjectPreview";
 import { PerformancePreview } from "../_components/PerformancePreview";
 import dynamic from "next/dynamic";

@@ -4,7 +4,8 @@ import { PerformancePreview } from "../_components/PerformancePreview";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { revalidatePath } from "next/cache";
-export default function PageClient({ trash }) {
+import { Dance } from "../../../types/supabase";
+export default function PageClient({ trash }: { trash: Dance[] }) {
    const supabase = createClientComponentClient();
    const router = useRouter();
    const removeFromTrash = async (id: string) => {
@@ -18,7 +19,7 @@ export default function PageClient({ trash }) {
       }
    };
 
-   const deleteDance = async (id: number) => {
+   const deleteDance = async (id: string) => {
       const { data, error } = await supabase.from("dances").delete().eq("id", id);
       if (error) {
          toast.error("There was an issue deleting your dance");
@@ -48,7 +49,7 @@ export default function PageClient({ trash }) {
                                  <div
                                     onClick={(e) => {
                                        e.stopPropagation();
-                                       removeFromTrash(dance.id);
+                                       removeFromTrash(dance.id.toString());
                                     }}
                                     className="h-1/2 border border-white rounded-md mb-1 hover:bg-white/20 grid place-items-center transition"
                                  >
@@ -57,7 +58,7 @@ export default function PageClient({ trash }) {
                                  <div
                                     onClick={(e) => {
                                        e.stopPropagation();
-                                       deleteDance(dance.id);
+                                       deleteDance(dance.id.toString());
                                     }}
                                     className="h-1/2 border border-red-600 rounded-md mt-1 hover:bg-red-600/20 grid place-items-center transition"
                                  >

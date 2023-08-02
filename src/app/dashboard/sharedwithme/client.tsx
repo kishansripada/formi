@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 // import { Dropdown } from "./Dropdown";
 import { useSupabaseClient, useSession, Session } from "@supabase/auth-helpers-react";
-import { useRouter } from "next/router";
 import { ProjectPreview } from "../myperformances/ProjectPreview";
 import { PerformancePreview } from "../_components/PerformancePreview";
 import { DndContext, useDroppable, MouseSensor, useSensors, useSensor } from "@dnd-kit/core";
@@ -17,6 +16,7 @@ export default function PageClient({ sharedWithMe }) {
          {sharedWithMe.length ? (
             sharedWithMe
                .sort((a, b) => new Date(b.last_edited) - new Date(a.last_edited))
+               .filter((dance) => !dance.isInTrash)
                ?.map((dance) => {
                   return (
                      <>

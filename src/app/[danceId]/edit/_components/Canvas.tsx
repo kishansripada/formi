@@ -105,7 +105,7 @@ export const Canvas: React.FC<{
    const [isDragging, setIsDragging] = useState(false);
    const [rotatingDancerId, setRotatingDancerId] = useState(null);
    const [draggingPropId, setDraggingPropId] = useState(null);
-   console.log(roundToNearestEven(stageDimensions.width + 30));
+
    const selectedDancersBoundingBox = useMemo(() => {
       function findBoundingBox(
          points: { x: number; y: number }[]

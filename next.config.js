@@ -8,8 +8,6 @@ const { withSentryConfig } = require('@sentry/nextjs');
 //   enabled: process.env.ANALYZE === 'true',
 // })
 const moduleExports = {
-
-  removeConsole: process.env.NODE_ENV === "production",
   reactStrictMode: false,
   swcMinify: true,
   typescript: {

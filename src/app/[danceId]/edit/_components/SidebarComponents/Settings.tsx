@@ -15,7 +15,8 @@ export const Settings: React.FC<{
    setCloudSettings: Function;
    setFormations: Function;
    setHelpUrl: Function;
-}> = ({ setLocalSettings, localSettings, dropDownToggle, pushChange, cloudSettings, setCloudSettings, setFormations, setHelpUrl }) => {
+   setAssetsOpen: Function;
+}> = ({ setLocalSettings, localSettings, dropDownToggle, pushChange, cloudSettings, setCloudSettings, setFormations, setHelpUrl, setAssetsOpen }) => {
    let { previousFormationView, gridSnap, dancerStyle } = localSettings;
    let { stageBackground, stageDimensions } = cloudSettings;
    const [newWidth, setNewWidth] = useState(stageDimensions.width.toString());
@@ -102,53 +103,6 @@ export const Settings: React.FC<{
       });
       pushChange();
    };
-
-   const [file, setFile] = useState<File | null>();
-
-   let session = useSession();
-
-   const supabase = createClientComponentClient();
-
-   useEffect(() => {
-      if (!file?.name) return;
-      if (!isValidKey(file.name)) {
-         toast.error("remove special characters from file name");
-         setFile(null);
-         return;
-      }
-
-      const body = new FormData();
-
-      const reader = new FileReader();
-
-      reader.readAsDataURL(file);
-
-      body.append("file", file);
-
-      let userId = session?.user?.id;
-      // ?q=${Math.floor(Math.random() * 10000)}
-      toast
-         .promise(
-            supabase.storage.from("stagebackgrounds").upload(`${userId}/${file.name}`, body, {
-               cacheControl: "no-cache",
-               upsert: true,
-            }),
-            {
-               loading: "Uploading file...",
-               success: <b>File uploaded!</b>,
-               error: <b>Could not upload file.</b>,
-            }
-         )
-         .then((data) => {
-            // setAudiofiles(r);
-            setCloudSettings((cloudSettings: cloudSettings) => {
-               return {
-                  ...cloudSettings,
-                  backgroundUrl: `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/stagebackgrounds/${data.data.path}`,
-               };
-            });
-         });
-   }, [file]);
 
    const setStageBackground = (val: string) => {
       if (val === "cheer9") {
@@ -366,9 +320,8 @@ export const Settings: React.FC<{
                   ]}
                ></Dropdown>
             </div>
-
-            <div className="relative  text-left p-4  ">
-               {stageBackground === "grid" ? (
+            {stageBackground === "grid" ? (
+               <div className="relative  text-left p-4  ">
                   <>
                      <p className="text-neutral-800 font-medium text-sm dark:text-neutral-200 mb-3">Grid Subdivisions</p>
                      <div className=" flex flex-row w-min items-center border border-neutral-200 dark:border-neutral-700  ">
@@ -417,40 +370,35 @@ export const Settings: React.FC<{
                         </button>
                      </div>
                   </>
-               ) : null}
-            </div>
+               </div>
+            ) : null}
 
             {cloudSettings.stageBackground === "custom" ? (
-               <div className="px-3">
-                  <button className="relative border border-dashed border-neutral-300 h-24 w-full rounded-xl bg-transparent mt-4 pointer-events-none ">
-                     <input
-                        accept="image/png, image/gif, image/jpeg"
-                        type="file"
-                        autoComplete="off"
-                        tabIndex={-1}
-                        className="cursor-pointer relative block opacity-0 w-full h-full p-20 z-0 pointer-events-auto"
-                        onChange={(event) => {
-                           if (event.target.files && event.target.files[0]) {
-                              const i = event.target.files[0];
-                              setFile(i);
-                           }
-                        }}
-                     />
-                     <div className=" w-full h-full rounded-xl absolute top-0 right-0 left-0 m-auto  flex flex-col items-center justify-center">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" width="24" height="24" color="#5D647B">
-                           <path d="M16 16l-4-4-4 4M12 12v9" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
-                           <path
-                              d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                           ></path>
-                           <path d="M16 16l-4-4-4 4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path>
-                        </svg>
-                        <p className="text-sm">Upload A Stage Background</p>
+               <>
+                  {cloudSettings.backgroundUrl ? (
+                     <div className=" mx-auto border  border-solid   relative">
+                        <div
+                           onClick={() => {
+                              setAssetsOpen("stagebackground");
+                           }}
+                           className="opacity-0  hover:opacity-100  cursor-pointer transition left-0 top-0 absolute h-full w-full bg-black/40 grid place-items-center"
+                        >
+                           Replace
+                        </div>
+                        <img className="w-full " src={cloudSettings.backgroundUrl} alt="" />
                      </div>
-                  </button>
-               </div>
+                  ) : (
+                     <div className="grid place-items-center">
+                        <button
+                           onClick={() => {
+                              setAssetsOpen("stagebackground");
+                           }}
+                        >
+                           Upload image
+                        </button>
+                     </div>
+                  )}
+               </>
             ) : null}
          </div>
       </>

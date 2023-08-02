@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Head from "next/head";
 import { useRef, useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import { Header } from "../components/NonAppComponents/Header";
 import { Footer } from "../components/NonAppComponents/Footer";
 import Image from "next/image";

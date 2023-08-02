@@ -2,8 +2,7 @@ import Script from "next/script";
 import { useEffect, useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
-import { useRouter } from "next/router";
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { formation, item, prop } from "../../../../../types/types";
 import { v4 as uuidv4 } from "uuid";
 export const Items: React.FC<{

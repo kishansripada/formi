@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 // import { Dropdown } from "./Dropdown";
 import { useSupabaseClient, useSession, Session } from "@supabase/auth-helpers-react";
-import { useRouter } from "next/router";
 import { ProjectPreview } from "../myperformances/ProjectPreview";
 import { PerformancePreview } from "../_components/PerformancePreview";
 import { DndContext, useDroppable, MouseSensor, useSensors, useSensor } from "@dnd-kit/core";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import PageClient from "./client";
+import { redirect } from "next/navigation";
 async function getServerSideProps() {
    // Create authenticated Supabase Client
    // const supabase = createServerSupabaseClient(ctx, {
@@ -37,9 +37,8 @@ async function getServerSideProps() {
       throw error;
    }
    if (!session) {
-      return { props: {} };
+      redirect("/login");
    }
-
    async function getRosters(session: Session) {
       let data = await supabase.from("rosters").select("*").eq("user_id", session.user.id);
 

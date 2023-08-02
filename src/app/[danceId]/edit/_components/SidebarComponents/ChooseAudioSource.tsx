@@ -1,10 +1,7 @@
-import Script from "next/script";
 import { useEffect, useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { memo } from "react";
-import { useRouter } from "next/navigation";
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { AuthSession } from "@supabase/supabase-js";
 
 export const ChooseAudioSource: React.FC<{
    audioFiles: any;
@@ -16,6 +13,7 @@ export const ChooseAudioSource: React.FC<{
    setLocalSource: Function;
    setUpgradeIsOpen: Function;
    pricingTier: string;
+   session: AuthSession | null;
 }> = ({
    audioFiles,
    setSoundCloudTrackId,
@@ -26,10 +24,9 @@ export const ChooseAudioSource: React.FC<{
    setLocalSource,
    setUpgradeIsOpen,
    pricingTier,
+   session,
 }) => {
    const [file, setFile] = useState<File | null>();
-   const router = useRouter();
-   let session = useSession();
 
    const supabase = createClientComponentClient();
 

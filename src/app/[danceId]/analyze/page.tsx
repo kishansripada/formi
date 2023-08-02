@@ -4,7 +4,6 @@
 
 import { formation, dancer } from "../../../types/types";
 // import { useSupabaseClient } from "@supabase/auth-helpers-react";
-// import { useRouter } from "next/router";
 
 const Analyze = ({ initialData, viewOnly: viewOnlyInitial, pricingTier }: { viewOnly: boolean }) => {
    // const supabase = useSupabaseClient();

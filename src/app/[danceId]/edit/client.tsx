@@ -81,17 +81,15 @@ const Edit = ({
 }: {
    initialData: any;
    viewOnly: boolean;
+   pricingTier: string;
    params: { danceId: string };
    session: AuthSession | null;
    permissions: string[];
 }) => {
    const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
-   // viewOnlyInitial = false;
 
    const supabase = createClientComponentClient<Database>();
-
    const router = useRouter();
-
    const videoPlayer = useRef();
 
    // cloud
@@ -892,6 +890,8 @@ const Edit = ({
                invalidatePropUploads={invalidatePropUploads}
                propUploads={propUploads}
                setAssetsOpen={setAssetsOpen}
+               session={session}
+               setCloudSettings={setCloudSettings}
             ></Assets>
          ) : null}
 
@@ -1006,6 +1006,7 @@ const Edit = ({
                               ></Roster>
                            ) : menuOpen === "audio" ? (
                               <ChooseAudioSource
+                                 session={session}
                                  pricingTier={pricingTier}
                                  setUpgradeIsOpen={setUpgradeIsOpen}
                                  player={player}
@@ -1029,6 +1030,7 @@ const Edit = ({
                                  setCloudSettings={setCloudSettings}
                                  setFormations={setFormations}
                                  setUpgradeIsOpen={setUpgradeIsOpen}
+                                 setAssetsOpen={setAssetsOpen}
                               ></Settings>
                            ) : menuOpen === "stageSettings" ? (
                               // <StageSettings
