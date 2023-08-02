@@ -12,15 +12,6 @@ const ThreeD = dynamic(() => import("./[danceId]/edit/_components/ThreeD").then(
    loading: () => <p className="text-black ">Loading...</p>,
 });
 const home = () => {
-   const [selectedFormation, setSelectedFormation] = useState(0);
-   useEffect(() => {
-      const intervalId = setInterval(() => {
-         setSelectedFormation((prevFormation) => (prevFormation < 20 ? prevFormation + 1 : 0));
-      }, 2000);
-
-      // cleanup function
-      return () => clearInterval(intervalId);
-   }, []); // the empty array means this effect runs once on mount and cleanup on unmount
    return (
       <>
          <Head>
@@ -47,7 +38,7 @@ const home = () => {
             <meta property="og:site_name" content="FORMI: Online stage performance planning software." />
          </Head>
          {/* <Header></Header> */}
-         <div className="bg-neutral-800/50 backdrop-blur-3xl py-1 px-1  w-[66vw] left-1/2 -translate-x-1/2 z-[60] rounded-full h-12 fixed top-[100px] hidden lg:flex flex-row items-center">
+         <div className="bg-neutral-800/50 backdrop-blur-3xl py-1 px-1  w-[90vw] left-1/2 -translate-x-1/2 z-[60] rounded-full h-12 fixed top-[100px] hidden lg:flex flex-row items-center">
             {/* <img src="/logobg.png" className="h-full" alt="" /> */}
             <p className="text-white ml-4 font-bold">FORMI</p>
 
@@ -72,7 +63,7 @@ const home = () => {
                on TikTok <span className="text-xs text-neutral-500 ml-2 hidden lg:block">and discover what's new on our platform</span>
             </div>
             <div className="bg-black w-full text-white  relative flex flex-col pointer-events-none ">
-               <div className=" mt-[150px] top-[170px] text-center flex flex-col items-center justify-center z-50 ">
+               <div className=" mt-[120px] top-[170px] text-center flex flex-col items-center justify-center z-50 ">
                   {/* <div className="bg-neutral-500/50 w-full rounded-full h-16"></div> */}
                   <p className="  lg:text-6xl  text-2xl font-semibold mt-5 w-2/3  ">FORMI, a place to design and plan stunning choreography.</p>
 
