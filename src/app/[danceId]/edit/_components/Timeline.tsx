@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { dancer, dancerPosition, formation, formationGroup, localSettings } from "../../../../types/types";
+import { dancer, dancerPosition, formation, formationGroup, localSettings, MAX_PIXELS_PER_SECOND } from "../../../../types/types";
 import { useHorizontalScrollInfo } from "../../../../hooks";
 import { Layer } from "./Layer";
 import { Layers } from "./Layers";
+
 import dynamic from "next/dynamic";
 import { NoFilePlayer } from "./NoFilePlayer";
 const FileAudioPlayer = dynamic<{
@@ -96,6 +97,7 @@ export const Timeline: React.FC<{
    }, [soundCloudTrackId, songDuration]);
 
    const [scrollRef, scrollInfo] = useHorizontalScrollInfo(pixelsPerSecond);
+   // console.log(scrollInfo);
    const handleMouseMove = (e: MouseEvent) => {
       if (isScrollingTimeline) {
          scrollRef.current.scrollLeft = scrollRef.current.scrollLeft + (e.movementX * scrollInfo.scrollWidth) / scrollInfo.clientWidth;
@@ -126,8 +128,55 @@ export const Timeline: React.FC<{
       }
    }, [position, pixelsPerSecond]); // This effect runs every time the posi
 
+   useEffect(() => {
+      window.addEventListener("wheel", handleScroll, { passive: false });
+
+      return () => {
+         window.removeEventListener("wheel", handleScroll);
+      };
+   }, [selectedFormation, formations, songDuration, scrollInfo, position, pixelsPerSecond]);
+   // console.log(position);
+   const handleScroll = (e) => {
+      let minPixelsPerSecond = songDuration ? ((window.screen.width - 10) * 1000) / songDuration : 10;
+
+      if (
+         e
+            .composedPath()
+            .map((elem) => elem.id)
+            .includes("layers") &&
+         e.ctrlKey === true
+      ) {
+         e.preventDefault();
+         const scrollElement = scrollRef.current;
+         if (scrollElement) {
+            setPixelsPerSecond((pixelsPerSecond: number) => {
+               let newPixelsPerSecond = pixelsPerSecond - e.deltaY / 10;
+
+               if (newPixelsPerSecond < minPixelsPerSecond || newPixelsPerSecond > MAX_PIXELS_PER_SECOND) return pixelsPerSecond;
+
+               const oldCursorPosition = (position || 0) * pixelsPerSecond + 32;
+               const newCursorPosition = (position || 0) * newPixelsPerSecond + 32;
+               const delta = newCursorPosition - oldCursorPosition;
+
+               // delay the scroll left update until next repaint
+               requestAnimationFrame(() => {
+                  scrollElement.scrollLeft += delta;
+               });
+
+               return newPixelsPerSecond;
+            });
+         }
+      }
+   }; // adjust throttle time as needed
    return (
       <>
+         <style jsx>
+            {`
+               .removeScrollBar::-webkit-scrollbar {
+                  display: none;
+               }
+            `}
+         </style>
          <div className="w-full h-[10px] bg-neutral-100 dark:bg-black select-none ">
             <div
                onMouseDown={() => {

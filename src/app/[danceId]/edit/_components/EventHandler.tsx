@@ -89,13 +89,11 @@ export const EventHandler: React.FC<{
    useEffect(() => {
       window.addEventListener("keydown", downHandler);
       window.addEventListener("keyup", upHandler);
-      window.addEventListener("wheel", handleScroll, { passive: false });
       window.addEventListener("pointerdown", pointerDown);
       window.addEventListener("pointerup", pointerUp);
       return () => {
          window.removeEventListener("keydown", downHandler);
          window.removeEventListener("keyup", upHandler);
-         window.removeEventListener("wheel", handleScroll);
          window.removeEventListener("pointerdown", pointerDown);
          window.removeEventListener("pointerup", pointerUp);
       };
@@ -275,29 +273,6 @@ export const EventHandler: React.FC<{
          setCommandHeld(false);
       }
    }
-
-   const handleScroll = (e) => {
-      let minPixelsPerSecond = songDuration ? ((window.screen.width - 10) * 1000) / songDuration : 10;
-
-      if (
-         e
-            .composedPath()
-            .map((elem) => elem.id)
-            .includes("layers") &&
-         e.ctrlKey === true
-      ) {
-         e.preventDefault();
-         setPixelsPerSecond((pixelsPerSecond: number) => {
-            let newPixelsPerSecond = pixelsPerSecond - e.deltaY / 10;
-
-            if (newPixelsPerSecond < minPixelsPerSecond) return pixelsPerSecond;
-            if (newPixelsPerSecond > MAX_PIXELS_PER_SECOND) {
-               return pixelsPerSecond;
-            }
-            return newPixelsPerSecond;
-         });
-      }
-   };
 
    return <></>;
 };

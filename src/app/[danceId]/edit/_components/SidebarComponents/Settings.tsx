@@ -1,10 +1,7 @@
 import { cloudSettings, dancer, dancerPosition, formation, localSettings, stageDimensions } from "../../../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
-
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import Dropdown from "../Dropdown";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 export const Settings: React.FC<{
    setLocalSettings: Function;
    localSettings: any;
@@ -106,7 +103,7 @@ export const Settings: React.FC<{
 
    const setStageBackground = (val: string) => {
       if (val === "cheer9") {
-         setCloudSettings((s) => {
+         setCloudSettings((s: cloudSettings) => {
             return { ...s, stageDimensions: { width: 36, height: 28 } };
          });
       }
@@ -404,9 +401,3 @@ export const Settings: React.FC<{
       </>
    );
 };
-
-function isValidKey(key: string): boolean {
-   // only allow s3 safe characters and characters which require special handling for now
-   // https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html
-   return /^(\w|\/|!|-|\.|\*|'|\(|\)| |&|\$|@|=|;|:|\+|,|\?)*$/.test(key);
-}
