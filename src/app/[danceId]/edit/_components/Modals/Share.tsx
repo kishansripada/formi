@@ -182,6 +182,26 @@ export const Share: React.FC<{
                      })}
                   </div>
 
+                  <div className="flex flex-row items-center mt-5">
+                     <div className="flex flex-row  w-full justify-between items-stretch border-neutral-500 overflow-hidden bg-neutral-700 border rounded-md ">
+                        <input
+                           value={`https://formistudio.app/${danceId}/edit`}
+                           className=" bg-transparent   w-full mr-2 h-8 py-4    text-neutral-200 text-xs  px-2 focus:outline-none"
+                           type="text"
+                        />
+                     </div>
+
+                     <button
+                        onClick={() => {
+                           navigator.clipboard.writeText(`https://formistudio.app/${danceId}/edit`);
+                           toast.success("Copied to clipboard");
+                        }}
+                        className=" w-24 grid place-items-center text-white h-8 ml-1  border-neutral-500 overflow-hidden bg-neutral-700 border rounded-md "
+                     >
+                        Copy Link
+                     </button>
+                  </div>
+
                   <p className="text-neutral-400 text-xs mt-4 ">Collaborative Editing is Coming Soon</p>
                </div>
             </div>

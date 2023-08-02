@@ -54,7 +54,7 @@ export const Canvas: React.FC<{
    resizingPropId: string | null;
    setResizingPropId: Function;
    setProps: Function;
-   selectedFormations: number[];
+   // selectedFormations: number[];
 }> = ({
    player,
    children,
@@ -91,7 +91,7 @@ export const Canvas: React.FC<{
    resizingPropId,
    setResizingPropId,
    setProps,
-   selectedFormations,
+   // selectedFormations,
 }) => {
    let { stageDimensions, stageBackground } = cloudSettings;
    let { gridSnap } = localSettings;
@@ -763,7 +763,7 @@ export const Canvas: React.FC<{
 
          setFormations((formations: formation[]) => {
             return formations.map((formation, index) => {
-               if (!selectedFormations.includes(index)) return formation;
+               if (!(selectedFormation === index)) return formation;
                return {
                   ...formation,
                   positions: formation.positions.map((position) => {

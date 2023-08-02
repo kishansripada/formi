@@ -23,8 +23,8 @@ export const Layers: React.FC<{
    player: any;
    localSettings: localSettings;
    shiftHeld: boolean;
-   setSelectedFormations: Function;
-   selectedFormations: number[];
+   // setSelectedFormations: Function;
+   // selectedFormations: number[];
 }> = ({
    formations,
    selectedFormation,
@@ -46,8 +46,8 @@ export const Layers: React.FC<{
    player,
    localSettings,
    shiftHeld,
-   setSelectedFormations,
-   selectedFormations,
+   // setSelectedFormations,
+   // selectedFormations,
 }) => {
    const [resizingTransition, setResizingTransition] = useState<string | null>(null);
    const [resizingFormation, setResizingFormation] = useState<string | null>(null);
@@ -209,8 +209,8 @@ export const Layers: React.FC<{
             formationGroups={formationGroups}
             localSettings={localSettings}
             shiftHeld={shiftHeld}
-            setSelectedFormations={setSelectedFormations}
-            selectedFormations={selectedFormations}
+            // setSelectedFormations={setSelectedFormations}
+            // selectedFormations={selectedFormations}
          />
       </div>
    );

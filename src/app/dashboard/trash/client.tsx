@@ -31,7 +31,7 @@ export default function PageClient({ trash }) {
    return (
       <>
          <Toaster></Toaster>
-         <div className="w-full grid grid-cols-1 gap-[32px] overflow-scroll h-full  rounded-xl sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 col-span-4   overscroll-contain items-center">
+         <div className="w-full grid grid-cols-1 gap-[32px] overflow-scroll   rounded-xl sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 col-span-4   overscroll-contain items-center">
             {trash.length ? (
                trash
                   .sort((a, b) => new Date(b.last_edited) - new Date(a.last_edited))

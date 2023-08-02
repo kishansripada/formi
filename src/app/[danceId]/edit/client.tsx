@@ -126,7 +126,6 @@ const Edit = ({
       fullScreen: false,
       isDarkMode: true,
       autoScroll: false,
-      hasNotSeenIntroVid: true,
    });
 
    if (localSettings.viewingTwo === undefined || localSettings.isDarkMode === undefined || localSettings.autoScroll === undefined) {
@@ -187,7 +186,7 @@ const Edit = ({
    const [previousProps, setPreviousProps] = useState(initialData.props);
    const [propUploads, setPropUploads] = useState([]);
    const [helpUrl, setHelpUrl] = useState(null);
-   const [selectedFormations, setSelectedFormations] = useState<number[]>([]);
+   // const [selectedFormations, setSelectedFormations] = useState<number[]>([]);
    const [resizingPropId, setResizingPropId] = useState(null);
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
    const [videoPosition, setVideoPosition] = useState<"top-left" | "top-right" | "bottom-left" | "bottom-right">("top-right");
@@ -222,14 +221,7 @@ const Edit = ({
             setPropUploads(r?.data);
          });
    };
-   // useEffect(() => {
-   //    console.log({ localSettings });
-   //    if (localSettings.hasNotSeenIntroVid) {
-   //       setHelpUrl({ url: "https://www.youtube.com/shorts/JRS1tPHJKAI" });
-   //    } else {
-   //       setHelpUrl(null);
-   //    }
-   // }, [localSettings]);
+
    useEffect(() => {
       if (!isPlaying) return;
       setSelectedFormation(currentFormationIndex);
@@ -997,6 +989,7 @@ const Edit = ({
                         <div className="border-r border-neutral-300 dark:border-neutral-700">
                            {menuOpen === "dancers" ? (
                               <Roster
+                                 session={session}
                                  removeDancer={removeDancer}
                                  setSelectedDancers={setSelectedDancers}
                                  addToStack={addToStack}
@@ -1223,7 +1216,7 @@ const Edit = ({
 
                      {localSettings.viewingTwo ? (
                         <Canvas
-                           selectedFormations={selectedFormations}
+                           // selectedFormations={selectedFormations}
                            setProps={setProps}
                            resizingPropId={resizingPropId}
                            setResizingPropId={setResizingPropId}
@@ -1454,8 +1447,8 @@ const Edit = ({
                ></AudioControls>
 
                <Timeline
-                  selectedFormations={selectedFormations}
-                  setSelectedFormations={setSelectedFormations}
+                  // selectedFormations={selectedFormations}
+                  // setSelectedFormations={setSelectedFormations}
                   shiftHeld={shiftHeld}
                   playbackRate={playbackRate}
                   setIsScrollingTimeline={setIsScrollingTimeline}

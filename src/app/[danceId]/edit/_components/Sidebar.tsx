@@ -140,7 +140,7 @@ export const Sidebar: React.FC<{
                </svg>
 
                <p className=" mt-1">Props</p>
-               <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p>
+               {/* <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p> */}
             </button>
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
@@ -164,7 +164,7 @@ export const Sidebar: React.FC<{
                </svg>
 
                <p className=" mt-1">Scenery</p>
-               <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p>
+               {/* <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p> */}
             </button>
 
             {/* <button
@@ -213,7 +213,7 @@ export const Sidebar: React.FC<{
                <p className=" mt-1">Stage</p>
             </button> */}
 
-            <button
+            {/* <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600 mt-auto   "
                onClick={(e) => {
                   setHelpUrl({ url: "https://www.youtube.com/shorts/uiTwpkpsL1E", event: e });
@@ -237,9 +237,9 @@ export const Sidebar: React.FC<{
                </svg>
 
                <p className=" mt-1">Tutorial</p>
-            </button>
+            </button> */}
             <button
-               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600    "
+               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600  mt-auto   "
                onClick={() => setMenuOpen("settings")}
             >
                <svg

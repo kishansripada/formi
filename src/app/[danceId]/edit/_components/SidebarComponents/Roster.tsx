@@ -1,15 +1,14 @@
 import { dancer, dancerPosition, formation, localSettings, stageDimensions } from "../../../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Dancer } from "../Dancer";
 import dynamic from "next/dynamic";
 const CirclePicker = dynamic(() => import("react-color").then((module) => module.CirclePicker), {
    loading: () => <p>Loading color picker...</p>,
 });
-
 import { v4 as uuidv4 } from "uuid";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { AuthSession } from "@supabase/supabase-js";
 
 export const Roster: React.FC<{
    setDancers: Function;
@@ -25,6 +24,7 @@ export const Roster: React.FC<{
    removeDancer: Function;
    setSelectedDancers: Function;
    localSettings: localSettings;
+   session: AuthSession | null;
 }> = ({
    setDancers,
    dancers,
@@ -39,28 +39,18 @@ export const Roster: React.FC<{
    setSelectedDancers,
    viewOnly,
    localSettings,
+   session,
 }) => {
    let { stageDimensions } = cloudSettings;
-   const [uniqueDancers, setUniqueDancers] = useState<string[]>([]);
    const supabase = createClientComponentClient();
-   const session = useSession();
-   // useEffect(() => {
-   //    if (!session) return;
-   //    supabase
-   //       .rpc("unique_dancers", {
-   //          p_user_id: session?.user?.id,
-   //       })
-   //       .then((r) => {
-   //          if (!r?.data?.length) return;
-   //          setUniqueDancers(r.data?.map((dancer: any) => dancer.dancer_name));
-   //       });
-   // }, []);
+
    let height = convertToFeetAndInches(dancers.find((dancer) => dancer.id === selectedDancers[0])?.height || 182.88);
 
    const [isSavingRoster, setIsSavingRoster] = useState(false);
    const [rosterName, setRosterName] = useState("");
 
    const createNewRoster = async () => {
+      if (!session) return;
       const response = await supabase.from("rosters").insert([
          {
             name: rosterName,
@@ -179,7 +169,7 @@ export const Roster: React.FC<{
                {dancers.slice().map((dancer, index) => (
                   <Dancer
                      viewOnly={viewOnly}
-                     uniqueDancers={uniqueDancers}
+                     // uniqueDancers={uniqueDancers}
                      pushChange={pushChange}
                      setSelectedDancers={setSelectedDancers}
                      selectedDancers={selectedDancers}
@@ -410,7 +400,7 @@ export const Roster: React.FC<{
                         }}
                         className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-red-500 dark:text-red-400 text-red-600  "
                      >
-                        Delete Dancer
+                        {selectedDancers.length > 1 ? "Delete Dancers" : "Delete Dancer"}
                      </div>
                   </div>
                ) : null}

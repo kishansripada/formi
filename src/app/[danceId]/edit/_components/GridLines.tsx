@@ -39,9 +39,9 @@ export const GridLines: React.FC<{
                      strokeWidth={
                         differenceFromCenter % cloudSettings.gridSubdivisions === 0
                            ? 0.05 * 1.2
-                           : zoom < 0.6 && differenceFromCenter % 2 === 0
-                           ? 0
-                           : 0.01 * 1.2
+                           : // : zoom < 0.6 && differenceFromCenter % 2 === 0
+                             // ? 0
+                             0.01 * 1.2
                      }
                   />
                );
@@ -64,9 +64,9 @@ export const GridLines: React.FC<{
                         strokeWidth={
                            differenceFromCenter % cloudSettings.gridSubdivisions === 0
                               ? 0.05 * 1.2
-                              : zoom < 0.6 && differenceFromCenter % 2 === 0
-                              ? 0
-                              : 0.01 * 1.2
+                              : // : zoom < 0.6 && differenceFromCenter % 2 === 0
+                                // ? 0
+                                0.01 * 1.2
                         }
                      />
                      {localSettings ? (

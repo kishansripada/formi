@@ -51,8 +51,8 @@ export const Timeline: React.FC<{
    localSettings: localSettings;
    playbackRate: number;
    shiftHeld: boolean;
-   setSelectedFormations: Function;
-   selectedFormations: number[];
+   // setSelectedFormations: Function;
+   // selectedFormations: number[];
 }> = ({
    formations,
    selectedFormation,
@@ -83,8 +83,8 @@ export const Timeline: React.FC<{
    localSettings,
    playbackRate,
    shiftHeld,
-   setSelectedFormations,
-   selectedFormations,
+   // setSelectedFormations,
+   // selectedFormations,
 }) => {
    useEffect(() => {
       if (!songDuration) return;
@@ -215,8 +215,8 @@ export const Timeline: React.FC<{
                player={player}
                localSettings={localSettings}
                shiftHeld={shiftHeld}
-               setSelectedFormations={setSelectedFormations}
-               selectedFormations={selectedFormations}
+               // setSelectedFormations={setSelectedFormations}
+               // selectedFormations={selectedFormations}
             />
 
             {soundCloudTrackId || localSource ? (

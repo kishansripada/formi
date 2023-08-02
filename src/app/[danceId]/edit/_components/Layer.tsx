@@ -26,8 +26,8 @@ export const Layer: React.FC<{
    localSettings: localSettings;
    setPosition: Function;
    shiftHeld: boolean;
-   setSelectedFormations: Function;
-   selectedFormations: number[];
+   // setSelectedFormations: Function;
+   // selectedFormations: number[];
 }> = ({
    formations,
    selectedFormation,
@@ -48,8 +48,8 @@ export const Layer: React.FC<{
    setPosition,
    localSettings,
    shiftHeld,
-   setSelectedFormations,
-   selectedFormations,
+   // setSelectedFormations,
+   // selectedFormations,
 }) => {
    const [activeId, setActiveId] = useState(null);
    // const keyboardCodes = {
@@ -157,18 +157,18 @@ export const Layer: React.FC<{
                            if (selectedFormation !== index) {
                               setSelectedDancers([]);
                            }
-                           if (shiftHeld && selectedFormation !== null) {
-                              setSelectedFormations((selectedFormations: number[]) => {
-                                 let start = Math.min(index, selectedFormation);
-                                 let end = Math.max(index, selectedFormation);
+                           // if (shiftHeld && selectedFormation !== null) {
+                           //    setSelectedFormations((selectedFormations: number[]) => {
+                           //       let start = Math.min(index, selectedFormation);
+                           //       let end = Math.max(index, selectedFormation);
 
-                                 let newFormations = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+                           //       let newFormations = Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
-                                 return newFormations;
-                              });
+                           //       return newFormations;
+                           //    });
 
-                              return;
-                           }
+                           //    return;
+                           // }
 
                            // setFormations((formations: formation[]) => {
                            //    return formations.map((formation, i) => {
@@ -186,7 +186,7 @@ export const Layer: React.FC<{
                            //    });
                            // });
 
-                           setSelectedFormations([index]);
+                           setSelectedFormation(index);
                            // if (isPlaying) {
                            let position = formations
                               .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))

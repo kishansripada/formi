@@ -77,22 +77,25 @@ const home = () => {
                   {/* <div className="bg-neutral-500/50 w-full rounded-full h-16"></div> */}
                   <p className="  lg:text-6xl  text-2xl font-semibold mt-5 w-2/3  ">FORMI, a place to design and plan stunning choreography.</p>
 
-                  <div className="bg-pink-600 w-[250px]   px-6 z-50 relative py-3 rounded-md mt-10 pointer-events-auto">
+                  <div className=" bg-white text-black w-[250px]   px-6 z-50 relative py-3 rounded-md mt-10 pointer-events-auto">
                      <Link href={"/login"} className=" ">
                         <div className=" lg:flex flex-row items-center justify-around hidden">
                            <span className="font-semibold">Get started</span> — it’s free{" "}
-                           <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M14 8.5H3m11 0-3 3m3-3-3-3" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"></path>
+                           <svg className="stroke-black" width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M14 8.5H3m11 0-3 3m3-3-3-3" stroke-linecap="round" stroke-linejoin="round"></path>
                            </svg>
                         </div>
-                        {/* <div className="  flex-row items-center justify-around lg:hidden flex">Mobile app coming soon</div> */}
+                        <div className="  flex-row items-center justify-around lg:hidden flex">Mobile app coming soon</div>
                      </Link>
                   </div>
                </div>
                <div className="w-full flex flex-row justify-center mt-[100px] relative ">
-                  <img className="w-2/3 z-10 relative " src="/desktop.png" alt="" />
+                  <div className=" lg:h-[800px] h-[200px]  ">
+                     <Image fill={true} objectFit="contain" className="w-2/3 z-10 relative " src="/desktop.png" alt="" />
+                  </div>
+
                   <div
-                     className="pointer-events-none absolute left-1/2  -translate-x-1/2  h-[1000px] w-[1700px]"
+                     className="pointer-events-none absolute left-1/2 hidden lg:block  -translate-x-1/2  h-[1000px] w-[1700px]"
                      style={{
                         //    backgroundImage: "-o-radial-gradient(47.64% 52.94%, 37.66% 48.2%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
                         backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",

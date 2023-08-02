@@ -12,7 +12,7 @@ export const Dancer: React.FC<{
    index: number;
    setSelectedDancers: Function;
    pushChange: Function;
-   uniqueDancers: string[];
+   // uniqueDancers: string[];
    viewOnly: boolean;
    localSettings: localSettings;
 }> = ({
@@ -27,16 +27,16 @@ export const Dancer: React.FC<{
    index,
    setSelectedDancers,
    pushChange,
-   uniqueDancers,
+   // uniqueDancers,
    viewOnly,
    localSettings,
 }) => {
    let { name, id, instagramUsername, color } = dancer;
    const { isDarkMode } = localSettings;
    let amSelected = selectedDancers.includes(id);
-   let suggestedDancer = uniqueDancers.find((dancer: string) => {
-      return dancer.toLowerCase().startsWith(name.toLowerCase());
-   });
+   // let suggestedDancer = uniqueDancers.find((dancer: string) => {
+   //    return dancer.toLowerCase().startsWith(name.toLowerCase());
+   // });
 
    let canBeAddedToStage =
       // there is a formation select
