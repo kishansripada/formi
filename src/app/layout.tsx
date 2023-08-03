@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import "./globals.css";
 
-export const metadata: Metadata = {
-   title: "Home",
-   description: "Welcome to Next.js",
-};
+// export const metadata: Metadata = {
+//    title: "Home",
+//    description: "Welcome to Next.js",
+// };
 
 export default function RootLayout({
    // Layouts must accept a children prop.

@@ -21,7 +21,10 @@ const Client = () => {
    };
 
    async function signInWithEmail() {
-      console.log(`${window.location.origin}/auth/callback`);
+      if (!isValidEmail(email)) {
+         toast.error("Invalid email");
+         return;
+      }
       const { data, error } = await supabase.auth.signInWithOtp({
          email,
          options: {
@@ -30,9 +33,11 @@ const Client = () => {
       });
       if (!error) {
          router.push("/login/emailsent");
+         return;
       }
       if (error) {
          toast("Too many links requested");
+         return;
       }
    }
 
@@ -76,34 +81,26 @@ const Client = () => {
          <div className="flex  flex-row  h-screen overflow-hidden relative font-inter">
             <Toaster></Toaster>
             <div className="flex flex-col items-center w-full lg:w-[40%] justify-center">
-               <div className="flex flex-col items-center w-80">
-                  <Link href={"/"}>
-                     <div className="w-[150px] cursor-pointer">
-                        {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
-                     <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
-                        <h1 className="text-4xl font-bold z-10 dark:text-neutral-200 relative">FORMI</h1>
-
-                        <div className="bg-[#E7ADC5] dark:bg-pink-600 relative h-2  top-[-12px] mr-auto w-[100%]"></div>
-                     </div>
-                  </Link>
-
-                  <p className="text-2xl  font-bold">Welcome back to FORMI</p>
-                  <p className=" ">Log in to your account and start creating</p>
+               <div className="flex flex-col items-center w-96">
+                  <p className="text-5xl w-full mb-6 font-bold">Welcome back!</p>
+                  {/* <p className=" ">Log in to your account and start creating</p> */}
 
                   <button
-                     className="flex flex-row items-center text-black border-gray-300 shadow-sm border w-80 h-16 rounded-md bg-white mt-5 "
+                     className="flex flex-row items-center text-black border-gray-300 shadow-sm border w-full h-14 rounded-md bg-white mt-5  justify-center "
                      onClick={(e) => {
                         handleLogin();
                      }}
                   >
-                     <svg className="fill-black mr-12 ml-6" xmlns="http://www.w3.org/2000/svg" width="30" height="30">
-                        <path d="M15.003906 3C8.3749062 3 3 8.373 3 15s5.3749062 12 12.003906 12c10.01 0 12.265172-9.293 11.326172-14H15v4h7.738281C21.848702 20.448251 18.725955 23 15 23c-4.418 0-8-3.582-8-8s3.582-8 8-8c2.009 0 3.839141.74575 5.244141 1.96875l2.841797-2.8398438C20.951937 4.1849063 18.116906 3 15.003906 3z" />
-                     </svg>
-                     <p className="mr-3">Continue with Google</p>
+                     <img
+                        className="w-6 h-6 mr-3"
+                        src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-icon-png-transparent-background-osteopathy-16.png"
+                        alt=""
+                     />
+                     <p className="mr-3 text-sm font-bold">Continue with Google</p>
                   </button>
-                  <div className="flex flex-row items-center justify-center w-full">
+                  <div className="flex flex-row items-center justify-center py-4 w-full">
                      <div className="w-full h-[1px] bg-neutral-200 my-5"></div>
-                     <p className="mx-5">OR</p>
+                     <p className="mx-5  text-neutral-600">or</p>
                      <div className="w-full h-[1px] bg-neutral-200"></div>
                   </div>
                   <input
@@ -112,15 +109,18 @@ const Client = () => {
                      }}
                      type="text"
                      placeholder="Enter your email address here"
-                     className="w-full px-3 h-12 border border-nuetral-200 rounded-md"
+                     style={{
+                        borderColor: isValidEmail(email) ? "green" : "black",
+                     }}
+                     className="w-full px-3 h-12 border-2 border-neutral-200 focus:outline-none  rounded-md placeholder:text-neutral-400 placeholder:text-sm text-sm"
                   />
                   <button
                      onClick={(e) => {
                         signInWithEmail();
                      }}
-                     className="w-full h-12 bg-pink-600 text-white rounded-md mt-2"
+                     className="w-full h-12 bg-black text-white rounded-md mt-4 text-sm"
                   >
-                     Sign in with email{" "}
+                     Continue with email
                   </button>
                   <div className=" text-center">
                      <p className="text-xs mt-5 ">
@@ -138,15 +138,25 @@ const Client = () => {
                </div>
             </div>
 
-            <div className="lg:w-[60%] w-0 lg:visible invisible bg-[#fafafa] flex flex-col justify-center ">
-               <img
-                  className="rounded-xl pointer-events-none select-none relative -right-24 shadow-md border-gray-300 border "
-                  src="curveDemo.png"
-                  alt=""
-               />
+            <div className="lg:w-[60%] w-0 lg:visible invisible max-h-full relative flex flex-col justify-center">
+               <div className="p-4 w-full max-h-full h-full">
+                  <div
+                     className="h-full w-full rounded-tl-[100px] rounded-br-[100px] bg-cover bg-center	"
+                     style={{
+                        backgroundImage:
+                           "url(https://images.unsplash.com/photo-1604954055722-7f80571fbfc3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80)",
+                     }}
+                  ></div>
+                  {/* <img className="rounded-xl pointer-events-none select-none w-full object-cover" src="" alt="" /> */}
+               </div>
             </div>
          </div>
       </>
    );
 };
 export default Client;
+
+function isValidEmail(email: string): boolean {
+   let re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+   return re.test(email);
+}

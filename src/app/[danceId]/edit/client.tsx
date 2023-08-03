@@ -78,6 +78,7 @@ const Edit = ({
    params: { danceId },
    session,
    permissions: initialPermissions,
+   hasVisited,
 }: {
    initialData: any;
    viewOnly: boolean;
@@ -85,6 +86,7 @@ const Edit = ({
    params: { danceId: string };
    session: AuthSession | null;
    permissions: string[];
+   hasVisited: boolean;
 }) => {
    const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
 
@@ -183,7 +185,7 @@ const Edit = ({
    const [props, setProps] = useState<prop[]>(initialData.props);
    const [previousProps, setPreviousProps] = useState(initialData.props);
    const [propUploads, setPropUploads] = useState([]);
-   const [helpUrl, setHelpUrl] = useState(null);
+   const [helpUrl, setHelpUrl] = useState(hasVisited ? null : { url: "https://www.youtube.com/shorts/JRS1tPHJKAI" });
    // const [selectedFormations, setSelectedFormations] = useState<number[]>([]);
    const [resizingPropId, setResizingPropId] = useState(null);
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
@@ -818,7 +820,11 @@ const Edit = ({
          setVideoPosition(over.id);
       }
    }
-
+   useEffect(() => {
+      if (typeof window !== "undefined") {
+         document.cookie = "hasVisited=true; expires=" + new Date(new Date().getTime() + 86409000).toUTCString() + "; path=/";
+      }
+   }, []);
    return (
       <>
          <Toaster></Toaster>
@@ -840,6 +846,8 @@ const Edit = ({
             <meta property="og:site_name" content="FORMI — Online performance planning software." />
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
          </Head>
+
+         {/* {!hasVisited ? <div className="fixed w-[500px] h-[200px] bg-black">warning</div> : null} */}
 
          {shareIsOpen ? (
             <Share
@@ -1480,6 +1488,7 @@ const Edit = ({
                   videoPlayer={videoPlayer}
                   localSource={localSource}
                   localSettings={localSettings}
+                  hasVisited={hasVisited}
                ></Timeline>
             </div>
          </div>

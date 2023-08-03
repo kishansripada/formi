@@ -106,41 +106,41 @@ export const Canvas: React.FC<{
    const [rotatingDancerId, setRotatingDancerId] = useState(null);
    const [draggingPropId, setDraggingPropId] = useState(null);
 
-   const selectedDancersBoundingBox = useMemo(() => {
-      function findBoundingBox(
-         points: { x: number; y: number }[]
-      ): { start: { left: number; top: number }; end: { left: number; top: number } } | null {
-         if (points.length === 0) {
-            throw new Error("Points array must not be empty");
-         }
-         const buffer = 0.6;
+   // const selectedDancersBoundingBox = useMemo(() => {
+   //    function findBoundingBox(
+   //       points: { x: number; y: number }[]
+   //    ): { start: { left: number; top: number }; end: { left: number; top: number } } | null {
+   //       if (points.length === 0) {
+   //          throw new Error("Points array must not be empty");
+   //       }
+   //       const buffer = 0.6;
 
-         let minX = points[0].x;
-         let minY = points[0].y;
-         let maxX = points[0].x;
-         let maxY = points[0].y;
+   //       let minX = points[0].x;
+   //       let minY = points[0].y;
+   //       let maxX = points[0].x;
+   //       let maxY = points[0].y;
 
-         for (let i = 1; i < points.length; i++) {
-            const point = points[i];
-            minX = Math.min(minX, point.x);
-            minY = Math.min(minY, point.y);
-            maxX = Math.max(maxX, point.x);
-            maxY = Math.max(maxY, point.y);
-         }
+   //       for (let i = 1; i < points.length; i++) {
+   //          const point = points[i];
+   //          minX = Math.min(minX, point.x);
+   //          minY = Math.min(minY, point.y);
+   //          maxX = Math.max(maxX, point.x);
+   //          maxY = Math.max(maxY, point.y);
+   //       }
 
-         return {
-            start: coordsToPosition({ x: minX - buffer, y: maxY + buffer }), // In graphical representation, the top left point has the smallest x and the largest y
-            end: coordsToPosition({ x: maxX + buffer, y: minY - buffer }), // Similarly, the bottom right point has the largest x and the smallest y
-         };
-      }
-      if (selectedFormation === null) return null;
-      if (selectedDancers.length < 2) return null;
-      const positions = formations[selectedFormation]?.positions
-         .filter((position: dancerPosition) => selectedDancers.includes(position.id))
-         .map((position) => position.position);
-      if (!positions?.length) return null;
-      return findBoundingBox(positions);
-   }, [selectedDancers, formations, selectedFormation]);
+   //       return {
+   //          start: coordsToPosition({ x: minX - buffer, y: maxY + buffer }), // In graphical representation, the top left point has the smallest x and the largest y
+   //          end: coordsToPosition({ x: maxX + buffer, y: minY - buffer }), // Similarly, the bottom right point has the largest x and the smallest y
+   //       };
+   //    }
+   //    if (selectedFormation === null) return null;
+   //    if (selectedDancers.length < 2) return null;
+   //    const positions = formations[selectedFormation]?.positions
+   //       .filter((position: dancerPosition) => selectedDancers.includes(position.id))
+   //       .map((position) => position.position);
+   //    if (!positions?.length) return null;
+   //    return findBoundingBox(positions);
+   // }, [selectedDancers, formations, selectedFormation]);
 
    const [resizingPropType, setResizingPropType] = useState(null);
    const positionToCoords = (position: { left: number; top: number }) => {
@@ -959,7 +959,7 @@ export const Canvas: React.FC<{
                      <></>
                   )}
 
-                  {selectedDancersBoundingBox && !isPlaying ? (
+                  {/* {selectedDancersBoundingBox && !isPlaying ? (
                      <>
                         <div
                            className="absolute  z-20 cursor-default border-2 border-blue-600 "
@@ -990,7 +990,7 @@ export const Canvas: React.FC<{
                      </>
                   ) : (
                      <></>
-                  )}
+                  )} */}
                </div>
             </div>
          </div>

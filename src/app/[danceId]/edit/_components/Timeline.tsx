@@ -52,6 +52,7 @@ export const Timeline: React.FC<{
    localSettings: localSettings;
    playbackRate: number;
    shiftHeld: boolean;
+   hasVisited: boolean;
    // setSelectedFormations: Function;
    // selectedFormations: number[];
 }> = ({
@@ -84,6 +85,7 @@ export const Timeline: React.FC<{
    localSettings,
    playbackRate,
    shiftHeld,
+   hasVisited,
    // setSelectedFormations,
    // selectedFormations,
 }) => {
@@ -264,6 +266,7 @@ export const Timeline: React.FC<{
                player={player}
                localSettings={localSettings}
                shiftHeld={shiftHeld}
+               hasVisited={hasVisited}
                // setSelectedFormations={setSelectedFormations}
                // selectedFormations={selectedFormations}
             />

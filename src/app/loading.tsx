@@ -10,7 +10,7 @@ export default function Loading() {
               width: 0;
             }
             100% {
-              width: 150px;
+              width: 300px;
             }
           }
           
@@ -20,12 +20,12 @@ export default function Loading() {
           }
           `}
             </style>
-            <div className="w-[150px] cursor-pointer">
+            <div className="w-[300px] cursor-pointer">
                {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
           <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
-               <h1 className="text-4xl font-bold z-10 text-neutral-200 relative">FORMI</h1>
+               <h1 className="text-4xl font-bold z-10 text-center text-neutral-200 relative">FORMI</h1>
 
-               <div className="bg-pink-600 relative h-2  top-[-10px] mr-auto animate-width"></div>
+               <div className="bg-pink-600 relative h-1 mt-3 rounded-full animate-width"></div>
             </div>
          </div>
       </>

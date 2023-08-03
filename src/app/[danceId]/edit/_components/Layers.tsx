@@ -23,6 +23,7 @@ export const Layers: React.FC<{
    player: any;
    localSettings: localSettings;
    shiftHeld: boolean;
+   hasVisited: boolean;
    // setSelectedFormations: Function;
    // selectedFormations: number[];
 }> = ({
@@ -46,12 +47,13 @@ export const Layers: React.FC<{
    player,
    localSettings,
    shiftHeld,
+   hasVisited,
    // setSelectedFormations,
    // selectedFormations,
 }) => {
    const [resizingTransition, setResizingTransition] = useState<string | null>(null);
    const [resizingFormation, setResizingFormation] = useState<string | null>(null);
-
+   const [showTutorial, setShowTutorial] = useState<boolean | "shown">(false);
    const pointerUp = (e: PointerEvent) => {
       if (resizingFormation === null && resizingTransition === null) return;
       setFormations((formations: formation[]) => {
@@ -85,6 +87,7 @@ export const Layers: React.FC<{
       if (resizingFormation === null && resizingTransition === null) return;
 
       if (resizingFormation !== null) {
+         if (!hasVisited && showTutorial !== "shown") setShowTutorial(true);
          setFormations((formations: formation[]) => {
             return formations.map((formation, i) => {
                if (formation.id === resizingFormation) {
@@ -189,6 +192,25 @@ export const Layers: React.FC<{
          onPointerMove={pointerMove}
          id="layers"
       >
+         <>
+            <div
+               style={{
+                  opacity: showTutorial === true ? 1 : 0,
+                  pointerEvents: showTutorial === true ? "all" : "none",
+               }}
+               className="fixed flex flex-row items-center w-[600px] text-neutral-200 px-4 text-sm h-[50px] bg-black/80 rounded-xl -translate-x-1/2 left-1/2 transition opacity-0 bottom-[150px] "
+            >
+               <p className="mr-3">Hold shift when changing formation duration to move all future formations</p>
+               <button
+                  onClick={() => {
+                     setShowTutorial("shown");
+                  }}
+                  className="bg-white px-3 py-2 text-black rounded-md ml-auto"
+               >
+                  Ok
+               </button>
+            </div>
+         </>
          <Layer
             setPosition={setPosition}
             player={player}

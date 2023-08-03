@@ -11,6 +11,9 @@ const getServerSideProps = async (danceId: string) => {
    //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4dHhieGtrdm9zbGNyc3hiZmFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjE0NjM3NDYsImV4cCI6MTk3NzAzOTc0Nn0.caFbFV4Ck7MrTSwsPXyIifjeKWYJWXisKR9-zFA33Ng",
    //    supabaseUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co",
    // });
+   const cookieStore = cookies();
+   const hasVisited = cookieStore.get("hasVisited");
+   // cookies().set("hasVisited", "true");
    const supabase = createServerComponentClient<Database>(
       { cookies },
       {
@@ -69,6 +72,7 @@ const getServerSideProps = async (danceId: string) => {
       pricingTier: "legacy",
       session,
       permissions,
+      hasVisited,
       // },
    };
 };
@@ -86,6 +90,7 @@ export default async function Page({ params }: { params: { danceId: string } }) 
          permissions={data.permissions}
          viewOnly={data.viewOnly}
          pricingTier={data.pricingTier}
+         hasVisited={data.hasVisited}
       />
    );
 }

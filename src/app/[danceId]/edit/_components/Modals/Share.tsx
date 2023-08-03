@@ -38,15 +38,15 @@ export const Share: React.FC<{
          .upsert({ email: newUserEmail, performance_id: danceId }, { onConflict: "email, performance_id" })
          .eq("id", danceId);
 
-      await fetch("/api/sendshareemail", {
-         method: "POST",
-         body: JSON.stringify({
-            email: newUserEmail,
-            performance_id: danceId,
-         }),
-      })
-         .then((r) => r.json())
-         .then((r) => console.log(r));
+      // await fetch("/api/sendshareemail", {
+      //    method: "POST",
+      //    body: JSON.stringify({
+      //       email: newUserEmail,
+      //       performance_id: danceId,
+      //    }),
+      // })
+      //    .then((r) => r.json())
+      //    .then((r) => console.log(r));
       setNewUserEmail("");
 
       setPermissions([...permissions, { email: newUserEmail, role: "view" }]);
