@@ -53,7 +53,19 @@ export const Items: React.FC<{
    setAssetsOpen,
 }) => {
    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+   const thisItem = items.find((item) => item.id === selectedItemId);
 
+   const setPropSide = (side: string) => {
+      setItems((items: item[]) => {
+         return items.map((item) => {
+            if (selectedItemId === item.id) {
+               return { ...item, side };
+            }
+            return item;
+         });
+      });
+      pushChange();
+   };
    return (
       <>
          <div className="lg:flex hidden  w-[260px]  min-w-[260px] h-full  flex-col   bg-white  overflow-scroll dark:bg-neutral-800 dark:text-white  pt-6 ">
@@ -182,103 +194,138 @@ export const Items: React.FC<{
                )}
             </div>
 
-            {/* {!viewOnly ? (
-               <>
-                  <div className=" font-medium mb-2 mt-6 px-4 text-sm flex flex-row  justify-between ">
-                     <p>Image Uploads</p>{" "}
-                     {!viewOnly && (
-                        <div className="flex flex-row items-center cursor-pointer justify-between">
-                           <div className="flex flex-col  cursor-pointer  ">
-                              <div className="text-xl font-medium  cursor-pointer flex flex-row justify-between items-center">
-                                 <button className="text-xs w-30 font-normal relative cursor-pointer">
-                                    <input
-                                       accept="image/jpeg, image/png, image/webp, image/bmp, image/tiff"
-                                       type="file"
-                                       autoComplete="off"
-                                       tabIndex={-1}
-                                       className="cursor-pointer  absolute w-32 left-0 opacity-0 z-50"
-                                       onChange={(event) => {
-                                          if (event.target.files && event.target.files[0]) {
-                                             const i = event.target.files[0];
-                                             setFile(i);
-                                          }
-                                       }}
-                                    />
-                                    <div className="flex flex-row items-center cursor-pointer">
-                                       <svg
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          strokeWidth={1.5}
-                                          stroke="currentColor"
-                                          className="w-4 h-4 mr-2"
-                                       >
-                                          <path
-                                             strokeLinecap="round"
-                                             strokeLinejoin="round"
-                                             d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                                          />
-                                       </svg>
+            <div className="border-neutral-200 dark:border-neutral-700 border-t h-[250px] max-h-[250px] min-h-[250px] mt-auto">
+               {selectedItemId ? (
+                  <div
+                     className="px-3 mt-3 "
+                     style={{
+                        pointerEvents: viewOnly ? "none" : "auto",
+                     }}
+                  >
+                     <div className="flex flex-col   w-full  ">
+                        <p className="   text-sm mb-2 font-medium">Width</p>
+                        <div className="flex flex-row items-center border border-neutral-200 dark:border-neutral-700">
+                           <input
+                              // onBlur={pushChange}
+                              defaultValue={thisItem.width || 1}
+                              type="number"
+                              onBlur={(e) => {
+                                 // check to make sure it's a number
+                                 if (isNaN(parseFloat(e.target.value))) {
+                                    toast.error("Not a valid number");
+                                 }
 
-                                       <p className="relative cursor-pointer ">Upload</p>
-                                    </div>
-                                 </button>
-                              </div>
-                           </div>
-                        </div>
-                     )}
-                  </div>
-                  <div className=" grid gap-2  grid-cols-2 px-4 overflow-scroll removeScrollBar ">
-                     {propUploads.length ? (
-                        [...propUploads].reverse().map((propUpload) => {
-                           return (
-                              <div
-                                 style={{
-                                    opacity: selectedItemId ? 1 : 0.5,
-                                    pointerEvents: selectedItemId ? "all" : "none",
-                                 }}
-                                 key={propUpload.name}
-                                 onClick={() => {
-                                    let newId = uuidv4();
-                                    // if (selectedItemId) {
-                                    setItems((items: item[]) => {
-                                       return items.map((item: item) => {
-                                          if (item.id === selectedItemId) {
-                                             return {
-                                                ...item,
-                                                url: `${session?.user.id}/${propUpload.name}`,
-                                             };
-                                          }
-                                          return item;
-                                       });
+                                 setItems((items: item[]) => {
+                                    return items.map((itemx) => {
+                                       if (itemx.id === selectedItemId) {
+                                          return {
+                                             ...itemx,
+                                             width: parseFloat(e.target.value),
+                                          };
+                                       }
+                                       return itemx;
                                     });
-
-                                    pushChange();
-                                 }}
-                                 className={` rounded-md  px-2 w-full h-[90px] relative  group  cursor-pointer   flex flex-row items-center  whitespace-nowrap  `}
+                                 });
+                              }}
+                              style={{
+                                 borderRadius: 0,
+                              }}
+                              className="w-[45px] p-1 focus:outline-none rounded-none text-center dark:bg-neutral-800   "
+                           />
+                           <p className="mx-1 text-sm">squares</p>
+                        </div>
+                        <p className="   text-sm mb-2 font-medium mt-3">Side</p>
+                        <div className="w-[100px] h-[100px]   grid grid-cols-3 grid-rows-3">
+                           <div></div>
+                           <div className="grid place-items-center">
+                              <svg
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 strokeWidth={1.5}
+                                 stroke="currentColor"
+                                 className={`w-6 h-6 cursor-pointer transition ${
+                                    thisItem.side === "top" || !thisItem.side ? "dark:stroke-white " : "stroke-neutral-400 dark:stroke-neutral-600"
+                                 }`}
+                                 onClick={() => setPropSide("top")}
                               >
-                                 <img
-                                    className="h-full w-full absolute object-contain left-0 top-0 z-10"
-                                    src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${session?.user.id}/${propUpload.name}`}
-                                    alt=""
+                                 <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
                                  />
-                                 {selectedItemId ? (
-                                    <div className="w-full h-full absolute top-0 left-0 bg-black/50 opacity-0 group-hover:opacity-100 text-white   transition z-20 flex flex-row items-center justify-center flex-wrap ">
-                                       <p className="text-xs  text-center whitespace-pre-wrap ">Set prop image</p>
-                                    </div>
-                                 ) : null}
-                              </div>
-                           );
-                        })
-                     ) : (
-                        <>
-                           <p className=" text-sm">No Uploaded Images</p>
-                        </>
-                     )}
+                              </svg>
+                           </div>
+                           <div></div>
+                           <div className="grid place-items-center">
+                              <svg
+                                 className={`w-6 h-6 cursor-pointer transition ${
+                                    thisItem.side === "left" ? "dark:stroke-white stroke-black" : "stroke-neutral-400 dark:stroke-neutral-600"
+                                 }`}
+                                 onClick={() => setPropSide("left")}
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 strokeWidth={1.5}
+                                 stroke="currentColor"
+                              >
+                                 <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
+                                 />
+                              </svg>
+                           </div>
+                           <div className="rounded-full w-1/2 h-1/2 m-auto bg-pink-600"></div>
+                           <div className="grid place-items-center">
+                              <svg
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 strokeWidth={1.5}
+                                 stroke="currentColor"
+                                 className={`w-6 h-6 cursor-pointer transition ${
+                                    thisItem.side === "right" ? "dark:stroke-white stroke-black" : "stroke-neutral-400 dark:stroke-neutral-600"
+                                 }`}
+                                 onClick={() => setPropSide("right")}
+                              >
+                                 <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
+                                 />
+                              </svg>
+                           </div>
+                           <div></div>
+                           <div className="grid place-items-center">
+                              <svg
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 strokeWidth={1.5}
+                                 stroke="currentColor"
+                                 className={`w-6 h-6 cursor-pointer transition ${
+                                    thisItem.side === "bottom" ? "dark:stroke-white stroke-black" : "stroke-neutral-400 dark:stroke-neutral-600"
+                                 }`}
+                                 onClick={() => setPropSide("bottom")}
+                              >
+                                 <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
+                                 />
+                              </svg>
+                           </div>
+                           <div></div>
+                        </div>
+                     </div>
                   </div>
-               </>
-            ) : null} */}
-            <div className=" p-2 mt-auto">
+               ) : (
+                  <p className="h-full w-full grid place-items-center">No Props Selected</p>
+               )}
+            </div>
+
+            <div className=" p-2 ">
                <div
                   style={{
                      opacity: selectedItemId ? 1 : 0.5,
@@ -308,7 +355,7 @@ export const Items: React.FC<{
                      setSelectedItemId(null);
                      pushChange();
                   }}
-                  className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-red-500 dark:text-red-400 text-red-600   "
+                  className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 hover:bg-opacity-50 transition py-2 bg-red-500 dark:text-red-400 text-red-600   "
                >
                   Delete Prop
                </div>

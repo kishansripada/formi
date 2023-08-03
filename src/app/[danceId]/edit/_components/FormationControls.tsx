@@ -80,7 +80,7 @@ export const FormationControls: React.FC<{
 
    return (
       <>
-         <div className="w-full h-12 border-t-neutral-300 border-t bg-white flex flex-row items-center justify-end px-3 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white">
+         <div className="w-full h-[40px] min-h-[40px] max-h-[40px]  border-t-neutral-300 border-t bg-white flex flex-row items-center justify-end px-3 dark:bg-neutral-800 mt-auto dark:border-neutral-700 dark:text-white">
             <button
                onClick={() => {
                   if (selectedFormation === null) return;

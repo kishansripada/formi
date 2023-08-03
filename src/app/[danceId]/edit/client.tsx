@@ -51,8 +51,37 @@ import * as jsonpatch from "fast-json-patch";
 import { HelpUrl } from "./_components/Modals/HelpUrl";
 import { ObjectControls } from "./_components/ObjectControls";
 import { Database } from "../../../types/supabase";
+import Loading from "../../loading";
 const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.ThreeD), {
-   loading: () => <p>Loading...</p>,
+   loading: () => (
+      <div className="flex items-center justify-center h-screen bg-neutral-100 dark:bg-neutral-900  w-full">
+         <style>
+            {`
+               /* Define the keyframes for the animation */
+               @keyframes width-animation {
+                  0% {
+                     width: 0;
+                  }
+                  100% {
+                     width: 300px;
+                  }
+               }
+
+               /* Create a CSS class that applies the animation */
+               .animate-width {
+                  animation: width-animation 0.5s linear forwards;
+               }
+            `}
+         </style>
+         <div className="w-[300px] cursor-pointer ">
+            {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
+ <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
+            <h1 className="text-4xl font-bold z-10 text-center text-neutral-200 relative">FORMI</h1>
+
+            <div className="bg-pink-600 relative h-1 mt-3 rounded-full animate-width"></div>
+         </div>
+      </div>
+   ),
 });
 
 var jsondiffpatch = require("jsondiffpatch").create({

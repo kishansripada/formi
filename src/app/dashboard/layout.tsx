@@ -3,8 +3,7 @@ import { Metadata } from "next";
 
 import { createClientComponentClient, Session } from "@supabase/auth-helpers-nextjs";
 export const metadata: Metadata = {
-   title: "Home",
-   description: "Welcome to Next.js",
+   title: "Dashboard",
 };
 import { redirect } from "next/navigation";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";

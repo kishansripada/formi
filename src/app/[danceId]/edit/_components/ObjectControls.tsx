@@ -235,7 +235,7 @@ export const ObjectControls: React.FC<{
             style={{
                pointerEvents: viewOnlyInitial ? "none" : "auto",
             }}
-            className="w-full h-12 border-b-neutral-300 border-b bg-white flex flex-row items-center  px-3 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
+            className="w-full h-[40px] min-h-[40px] max-h-[40px] border-b-neutral-300 border-b bg-white flex flex-row items-center  px-3 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
          >
             <p className="text-sm mr-auto font-bold">
                {selectedDancers.length === 1

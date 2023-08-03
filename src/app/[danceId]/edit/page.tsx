@@ -4,6 +4,9 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Edit from "./client";
 import { Database } from "../../../types/supabase";
+export const metadata: Metadata = {
+   title: "Edit Performance",
+};
 const getServerSideProps = async (danceId: string) => {
    // Create authenticated Supabase Client
    // const supabase = createServerSupabaseClient(ctx, {

@@ -122,8 +122,31 @@ export const DancerAlias: React.FC<{
             className={` w-[40px] h-[40px]  group select-none  lg:pointer-events-auto pointer-events-none flex  -translate-y-1/2 -translate-x-1/2 flex-row justify-center items-center absolute z-[30] mr-auto ml-auto cursor-default `}
          >
             {thisItem && (
-               <div className="absolute z-[99]  -translate-y-full  top-0 pointer-events-none w-12 ">
+               <div
+                  style={{
+                     transform:
+                        thisItem.side === "bottom"
+                           ? "translateY(50%)"
+                           : thisItem.side === "right"
+                           ? "translateY(0%) translateX(50%)"
+                           : thisItem.side === "left"
+                           ? "translateY(0%) translateX(-50%)"
+                           : "translateY(-50%)",
+                     width: PIXELS_PER_SQUARE * (thisItem.width || 1),
+                  }}
+                  className="absolute z-[99]  pointer-events-none  "
+               >
                   <img
+                     style={{
+                        transform:
+                           thisItem.side === "bottom"
+                              ? `translateY(${PIXELS_PER_SQUARE / 2}px)`
+                              : thisItem.side === "right"
+                              ? `translateX(${PIXELS_PER_SQUARE / 2}px)`
+                              : thisItem.side === "left"
+                              ? `translateX(${-PIXELS_PER_SQUARE / 2}px)`
+                              : `translateY(${-PIXELS_PER_SQUARE / 2}px)`,
+                     }}
                      className="w-full h-full"
                      src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${thisItem?.url}`}
                      alt=""
@@ -199,7 +222,13 @@ export const DancerAlias: React.FC<{
             )}
 
             {dancerStyle !== "initials" ? (
-               <p className="absolute -bottom-6 text-center select-none pointer-events-none dark:text-white  rounded-full px-1">
+               <p
+                  style={{
+                     bottom: thisItem?.side === "bottom" ? null : -24,
+                     top: thisItem?.side === "bottom" ? -24 : null,
+                  }}
+                  className="absolute  text-center select-none pointer-events-none dark:text-white  rounded-full px-1"
+               >
                   {dancer.name.split(" ")[0]}
                </p>
             ) : null}
