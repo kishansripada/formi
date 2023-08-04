@@ -89,6 +89,12 @@ export const Timeline: React.FC<{
    // setSelectedFormations,
    // selectedFormations,
 }) => {
+   const totalDurationOfFormations = formations
+      .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
+      .reduce((a, b) => a + b, 0);
+
+   const timelineWidth = (songDuration ? Math.max(totalDurationOfFormations, songDuration / 1000) : totalDurationOfFormations) * pixelsPerSecond;
+
    useEffect(() => {
       if (!songDuration) return;
 
@@ -179,7 +185,7 @@ export const Timeline: React.FC<{
                }
             `}
          </style>
-         <div className="w-full h-[10px] bg-neutral-100 dark:bg-black select-none ">
+         <div className="w-full h-[10px] bg-neutral-100 dark:bg-black select-none  ">
             <div
                onMouseDown={() => {
                   setIsScrollingTimeline(true);
@@ -196,45 +202,64 @@ export const Timeline: React.FC<{
             </div>
          </div>
 
-         <div ref={scrollRef} className=" overflow-y-visible overflow-x-scroll  removeScrollBar bg-neutral-100 dark:bg-black  overscroll-contain ">
+         <div
+            ref={scrollRef}
+            className=" overflow-y-hidden overflow-x-scroll   removeScrollBar bg-neutral-100 dark:bg-black  overscroll-contain pl-3 "
+            // style={{
+            //    width: timelineWidth,
+            // }}
+         >
             <div
                style={{
-                  width: songDuration
-                     ? Math.max(
-                          formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0) *
-                             pixelsPerSecond,
-                          (songDuration / 1000) * pixelsPerSecond
-                       )
-                     : formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0) *
-                       pixelsPerSecond,
+                  width: timelineWidth,
+               }}
+               onClick={(e) => {
+                  // var rect = e.currentTarget.getBoundingClientRect();
+                  // var x = e.clientX - rect.left; //x position within the element.
+                  // if (x < 0) return;
+
+                  // setPosition(x / pixelsPerSecond);
+
+                  // if (!(songDuration && player)) return;
+
+                  // player.seekTo(x / pixelsPerSecond / (songDuration / 1000));
+                  e.preventDefault();
+                  var rect = e.currentTarget.getBoundingClientRect();
+                  var x = e.clientX - rect.left; //x position within the element.
+
+                  songDuration = (songDuration || 0) / 1000;
+                  const clickEventSeconds = x / pixelsPerSecond;
+
+                  setPosition(clickEventSeconds);
+
+                  if (clickEventSeconds < songDuration) {
+                     player.seekTo(Math.min(1, clickEventSeconds / songDuration));
+                  }
+
+                  if (isPlaying) {
+                     if (clickEventSeconds < songDuration && position > songDuration) {
+                        player.play();
+                     }
+
+                     if (clickEventSeconds > songDuration && position < songDuration) {
+                        player.pause();
+                     }
+                  }
                }}
                className=" relative  "
-               // id="wave-timeline"
             >
                <div
-                  onClick={(e) => {
-                     var rect = e.currentTarget.getBoundingClientRect();
-                     var x = e.clientX - rect.left; //x position within the element.
-                     if (x < 0) return;
-
-                     setPosition(x / pixelsPerSecond);
-
-                     if (!(songDuration && player)) return;
-
-                     player.seekTo(x / pixelsPerSecond / (songDuration / 1000));
-                  }}
                   style={{
                      width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
                   }}
-                  className={` relative  left-[40px] py-1 ${!soundCloudTrackId ? "h-[15px]" : ""} `}
+                  className={` relative   py-1 ${!soundCloudTrackId ? "h-[15px]" : ""} `}
                   id="wave-timeline"
                ></div>
 
-               {/* <div title="Loop" className="w-[200px] bg-neutral-300  cursor-pointer left-[40px] h-[15px] relative bottom-[1px]"></div> */}
                <div
                   style={{
                      // add 40 but subract 9 to account for the width of the svg
-                     left: (position || 0) * pixelsPerSecond + 31,
+                     left: (position || 0) * pixelsPerSecond - 9,
                   }}
                   className="absolute z-[999] top-[0px] pointer-events-none   left-0"
                >
@@ -275,7 +300,7 @@ export const Timeline: React.FC<{
                <div
                   className="relative "
                   style={{
-                     left: 40,
+                     // left: 40,
                      borderColor: "#404040",
                      width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
                   }}
@@ -295,6 +320,9 @@ export const Timeline: React.FC<{
                      viewOnly={viewOnly}
                      pixelsPerSecond={pixelsPerSecond}
                      localSettings={localSettings}
+                     formations={formations}
+                     isPlaying={isPlaying}
+                     position={position}
                   ></FileAudioPlayer>
                </div>
             ) : (

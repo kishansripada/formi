@@ -157,34 +157,6 @@ export const Layer: React.FC<{
                            if (selectedFormation !== index) {
                               setSelectedDancers([]);
                            }
-                           // if (shiftHeld && selectedFormation !== null) {
-                           //    setSelectedFormations((selectedFormations: number[]) => {
-                           //       let start = Math.min(index, selectedFormation);
-                           //       let end = Math.max(index, selectedFormation);
-
-                           //       let newFormations = Array.from({ length: end - start + 1 }, (_, i) => start + i);
-
-                           //       return newFormations;
-                           //    });
-
-                           //    return;
-                           // }
-
-                           // setFormations((formations: formation[]) => {
-                           //    return formations.map((formation, i) => {
-                           //       if (i === index) {
-                           //          return {
-                           //             ...formation,
-                           //             durationSeconds: formation.durationSeconds - 0.5,
-                           //             transition: {
-                           //                durationSeconds: 0.5,
-                           //             },
-                           //          };
-                           //       } else {
-                           //          return formation;
-                           //       }
-                           //    });
-                           // });
 
                            setSelectedFormation(index);
                            // if (isPlaying) {
@@ -198,11 +170,7 @@ export const Layer: React.FC<{
                            setSelectedFormation(index);
                            if (!(songDuration && player)) return;
 
-                           player.seekTo(position / (songDuration / 1000));
-
-                           // } else {
-
-                           // }
+                           player.seekTo(Math.min(1, position / (songDuration / 1000)));
                         }}
                      >
                         <Formation

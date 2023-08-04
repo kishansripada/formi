@@ -10,7 +10,7 @@ export const Sidebar: React.FC<{
 }> = ({ setMenuOpen, menuOpen, viewOnly, setHelpUrl }) => {
    return (
       <>
-         <div className="lg:flex hidden flex-col  h-full  items-center  text-[10px] dark:bg-black  text-black bg-neutral-100  child:mb-5   w-20 min-w-20 border-r border-neutral-300 dark:border-neutral-700">
+         <div className="lg:flex hidden flex-col  h-full  items-center  text-[10px] dark:bg-black  text-black bg-neutral-100  child:mb-5   w-20 min-w-[80px] border-r border-neutral-300 dark:border-neutral-700">
             {/* <button onClick={() => setMenuOpen("formations")}>
                <svg
                   className={` ${
@@ -213,16 +213,17 @@ export const Sidebar: React.FC<{
                <p className=" mt-1">Stage</p>
             </button> */}
 
-            {/* <button
+            <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600 mt-auto   "
                onClick={(e) => {
                   setHelpUrl({ url: "https://www.youtube.com/shorts/uiTwpkpsL1E", event: e });
                }}
             >
                <svg
-                  className={`w-7 h-7 transition duration-300  ml-auto mr-auto ${
-                     menuOpen === "settings" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"
-                  }`}
+                  className={`w-7 h-7 transition duration-300  ml-auto mr-auto dark:stroke-neutral-300 stroke-neutral-400
+                  
+                 
+                  `}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -237,9 +238,9 @@ export const Sidebar: React.FC<{
                </svg>
 
                <p className=" mt-1">Tutorial</p>
-            </button> */}
+            </button>
             <button
-               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600  mt-auto   "
+               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600    "
                onClick={() => setMenuOpen("settings")}
             >
                <svg

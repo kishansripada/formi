@@ -46,6 +46,7 @@ export const EventHandler: React.FC<{
    setIsScrollingTimeline: Function;
    setIsChangingZoom: Function;
    setPosition: Function;
+   position: number | null;
 }> = ({
    player,
    children,
@@ -82,6 +83,7 @@ export const EventHandler: React.FC<{
    setIsChangingZoom,
    selectedPropIds,
    setPosition,
+   position,
 }) => {
    const [commandHeld, setCommandHeld] = useState(false);
    const [copiedPositions, setCopiedPositions] = useState([]);
@@ -97,7 +99,7 @@ export const EventHandler: React.FC<{
          window.removeEventListener("pointerdown", pointerDown);
          window.removeEventListener("pointerup", pointerUp);
       };
-   }, [selectedFormation, commandHeld, selectedDancers, formations, copiedPositions, songDuration]);
+   }, [selectedFormation, commandHeld, selectedDancers, formations, copiedPositions, songDuration, position]);
 
    const pointerUp = (e: PointerEvent) => {
       setIsScrollingTimeline(false);
@@ -120,13 +122,26 @@ export const EventHandler: React.FC<{
 
       // console.log(e.key);
       if (e.key === " ") {
-         e.preventDefault();
-         if (player && player.isReady) {
-            player.playPause();
-            setIsPlaying((isPlaying: boolean) => !isPlaying);
+         // e.preventDefault();
+         // if (player && player.isReady) {
+         //    player.playPause();
+         //    setIsPlaying((isPlaying: boolean) => !isPlaying);
+         // } else {
+         //    setIsPlaying((isPlaying: boolean) => !isPlaying);
+         // }
+         // const playPause = () => {
+         if (player) {
+            if (player.isReady) {
+               if (songDuration && position < songDuration / 1000) {
+                  player.playPause();
+               }
+
+               setIsPlaying((isPlaying: boolean) => !isPlaying);
+            }
          } else {
             setIsPlaying((isPlaying: boolean) => !isPlaying);
          }
+         // };
       }
 
       // on delete, check the selectedPropIds array to see if any props are selected. If so, delete them. Otherwise, delete the selected dancers

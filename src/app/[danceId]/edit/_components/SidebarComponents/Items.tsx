@@ -209,6 +209,24 @@ export const Items: React.FC<{
                               // onBlur={pushChange}
                               defaultValue={thisItem.width || 1}
                               type="number"
+                              onChange={(e) => {
+                                 // check to make sure it's a number
+                                 if (isNaN(parseFloat(e.target.value))) {
+                                    toast.error("Not a valid number");
+                                 }
+
+                                 setItems((items: item[]) => {
+                                    return items.map((itemx) => {
+                                       if (itemx.id === selectedItemId) {
+                                          return {
+                                             ...itemx,
+                                             width: parseFloat(e.target.value),
+                                          };
+                                       }
+                                       return itemx;
+                                    });
+                                 });
+                              }}
                               onBlur={(e) => {
                                  // check to make sure it's a number
                                  if (isNaN(parseFloat(e.target.value))) {

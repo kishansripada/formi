@@ -19,12 +19,15 @@ export const FileAudioPlayer: React.FC<{
    setPlayer: Function;
    localSettings: localSettings;
    videoPlayer: any;
+   formations: formation[];
+   isPlaying: boolean;
+   position: number;
 }> = memo(
    ({
       setPosition,
       setIsPlaying,
       setSongDuration,
-      songDuration,
+      // songDuration,
       soundCloudTrackId,
       setFormations,
       setSelectedFormation,
@@ -34,8 +37,14 @@ export const FileAudioPlayer: React.FC<{
       setPlayer,
       videoPlayer,
       localSettings,
+      formations,
+      isPlaying,
+      songDuration,
+      position,
    }) => {
       const [ready, setReady] = useState(false);
+      const [isInBonus, setIsInBonus] = useState(false);
+      const [movePlayhead, setMovePlayhead] = useState(false);
       const { isDarkMode } = localSettings;
 
       useEffect(() => {
@@ -93,48 +102,108 @@ export const FileAudioPlayer: React.FC<{
             wavesurfer.zoom(pixelsPerSecond);
          });
          wavesurfer.on("play", function (e) {
-            setIsPlaying(true);
+            // setIsPlaying(true);
          });
 
-         wavesurfer.on("pause", function (e) {
-            setIsPlaying(false);
-         });
+         wavesurfer.on("pause", function (e) {});
 
          wavesurfer.on("finish", function (e) {
-            setIsPlaying(false);
+            // console.log("finish");
+            // setIsPlaying(false);
+            // setIsInBonus(true);
          });
 
          setPlayer(wavesurfer);
       }, [videoPlayer.current]);
+      const totalDurationOfFormations = formations
+         .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
+         .reduce((a, b) => a + b, 0);
 
+      const timelineWidth = (songDuration ? Math.max(totalDurationOfFormations, songDuration / 1000) : totalDurationOfFormations) * pixelsPerSecond;
+      const formationsAreLongerThanAudio = totalDurationOfFormations > (songDuration || 0) / 1000;
+      useEffect(() => {
+         let interval;
+         if (isPlaying && position > (songDuration || 0) / 1000 && formationsAreLongerThanAudio) {
+            interval = setInterval(() => {
+               setPosition((prevTime: number) => {
+                  if (prevTime < (songDuration || 0)) {
+                     //  console.log("adding 0.5 sec");
+                     return prevTime + 0.02;
+                     // playbackRate
+                  } else {
+                     setIsPlaying(false);
+                     return 0;
+                  }
+               });
+            }, 20);
+         }
+         return () => clearInterval(interval);
+      }, [isPlaying, songDuration, position]);
+      // playbackRate
       return (
          <>
             {!ready ? (
                <div className="h-[35px] flex flex-row items-center justify-center bg-[#fafafa] dark:bg-black w-screen">
-                  <p className="font-semibold text-lg animate-bounce dark:text-white">loading audio...</p>
+                  <p className="font-semibold text-lg  dark:text-white">loading audio...</p>
                </div>
             ) : null}
-
             <div
                style={{
-                  display: ready ? "flex" : "none",
+                  width: timelineWidth,
                }}
-               id="layers"
-               className={`flex-col justify-end w-full`}
+               onClick={(e) => {
+                  e.preventDefault();
+                  var rect = e.currentTarget.getBoundingClientRect();
+                  var x = e.clientX - rect.left; //x position within the element.
+
+                  songDuration = (songDuration || 0) / 1000;
+                  const clickEventSeconds = x / pixelsPerSecond;
+
+                  setPosition(clickEventSeconds);
+
+                  if (clickEventSeconds < songDuration) {
+                     player.seekTo(Math.min(1, clickEventSeconds / songDuration));
+                  }
+
+                  if (isPlaying) {
+                     if (clickEventSeconds < songDuration && position > songDuration) {
+                        player.play();
+                     }
+
+                     if (clickEventSeconds > songDuration && position < songDuration) {
+                        setMovePlayhead(clickEventSeconds);
+                        player.pause();
+                     }
+                  }
+               }}
+               className="flex flex-row items-center"
             >
                <div
-                  onClick={(e) => {
-                     e.preventDefault();
-                     var rect = e.target.getBoundingClientRect();
-                     var x = e.clientX - rect.left; //x position within the element.
-                     setPosition(x / pixelsPerSecond);
-                  }}
-                  id="waveform"
-                  className="py-[10px] dark:bg-black"
+                  /** THE FILE AUDIO PART */
                   style={{
-                     overflowX: "hidden",
+                     display: ready ? "flex" : "none",
+                     width: ((songDuration || 0) / 1000) * pixelsPerSecond,
                   }}
-               ></div>
+                  id="layers"
+                  className={`flex-col justify-end w-full`}
+               >
+                  <div
+                     id="waveform"
+                     className="py-[10px] dark:bg-black pointer-events-none"
+                     style={{
+                        overflowX: "hidden",
+                     }}
+                  ></div>
+               </div>
+               <div
+                  /** THE PART WHERE THERE IS NO AUDIO, but the length of formations exceeds audio lenght */
+                  className="relative"
+                  style={{
+                     width: timelineWidth - ((songDuration || 0) / 1000) * pixelsPerSecond,
+                  }}
+               >
+                  <div className={` h-[35px]   flex-col justify-end w-full`}></div>
+               </div>
             </div>
          </>
       );

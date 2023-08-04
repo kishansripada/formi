@@ -108,6 +108,7 @@ export const PIXELS_PER_SQUARE = 40;
 export const GRID_WIDTH = 26;
 export const GRID_HEIGHT = 20;
 
+/** The max zoom level of the timeline */
 export const MAX_PIXELS_PER_SECOND = 120;
 
 export const initials = (name: string) => {

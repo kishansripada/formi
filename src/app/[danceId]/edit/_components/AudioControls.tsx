@@ -99,11 +99,18 @@ export const AudioControls: React.FC<{
       setSelectedFormation(formations.length);
       pushChange();
    };
+   const totalDurationOfFormations = formations
+      .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
+      .reduce((a, b) => a + b, 0);
+   // const timelineWidth = (songDuration ? Math.max(totalDurationOfFormations, songDuration / 1000) : totalDurationOfFormations) * pixelsPerSecond;
 
    const playPause = () => {
       if (player) {
          if (player.isReady) {
-            player.playPause();
+            if (position < songDuration / 1000) {
+               player.playPause();
+            }
+
             setIsPlaying(!isPlaying);
          }
       } else {

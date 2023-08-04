@@ -165,18 +165,17 @@ export const Layers: React.FC<{
          });
       }
    };
+   const totalDurationOfFormations = formations
+      .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
+      .reduce((a, b) => a + b, 0);
+
+   const timelineWidth = (songDuration ? Math.max(totalDurationOfFormations, songDuration / 1000) : totalDurationOfFormations) * pixelsPerSecond;
 
    return (
       <div
          className="flex flex-col   select-none"
          style={{
-            width: songDuration
-               ? Math.max(
-                    formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0) *
-                       pixelsPerSecond,
-                    (songDuration / 1000) * pixelsPerSecond
-                 )
-               : "100%",
+            width: timelineWidth + 1000,
 
             // width: "100%",
             // width: songDuration
@@ -185,7 +184,7 @@ export const Layers: React.FC<{
             //         (songDuration / 1000) * pixelsPerSecond
             //      )
             //    : "100%",
-            marginLeft: 40,
+            // marginLeft: 40,
          }}
          onPointerUp={pointerUp}
          onPointerDown={pointerDown}

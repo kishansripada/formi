@@ -62,9 +62,8 @@ export const NoFilePlayer: React.FC<{
       return (
          <>
             <div
-               className="relative"
+               className="relative "
                style={{
-                  left: 39,
                   width:
                      formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0) *
                      pixelsPerSecond,
