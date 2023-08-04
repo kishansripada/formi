@@ -969,8 +969,9 @@ const Edit = ({
          >
             <style>
                {`
-               body {
+               html, body {
                   overscroll-behavior: none;
+                  // overscroll-behavior-x: none;
               }
                `}
             </style>
@@ -1449,7 +1450,7 @@ const Edit = ({
                      </DndContext>
                   </div>
 
-                  <div className=" overscroll-contain bg-black">
+                  <div className="  bg-black">
                      <AudioControls
                         setHelpUrl={setHelpUrl}
                         setIsChangingZoom={setIsChangingZoom}

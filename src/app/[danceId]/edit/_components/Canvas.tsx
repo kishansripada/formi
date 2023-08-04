@@ -847,7 +847,7 @@ export const Canvas: React.FC<{
          </style> */}
          <div
             // flex
-            className="  relative  bg-neutral-100  dark:bg-neutral-900  h-full  w-full overflow-scroll  overscroll-contain  flex flex-row items-center justify-center "
+            className="  relative  bg-neutral-100  dark:bg-neutral-900  h-full  w-full overflow-scroll  overscroll-none  flex flex-row items-center justify-center "
             id="stage"
             ref={container}
             onPointerUp={pointerUp}

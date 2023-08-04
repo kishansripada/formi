@@ -204,7 +204,10 @@ export const Timeline: React.FC<{
 
          <div
             ref={scrollRef}
-            className=" overflow-y-hidden overflow-x-scroll   removeScrollBar bg-neutral-100 dark:bg-black  overscroll-contain pl-3 "
+            className=" overflow-y-hidden overflow-x-scroll  removeScrollBar bg-neutral-100 dark:bg-black   pl-3 "
+            style={{
+               overscrollBehavior: "none",
+            }}
             // style={{
             //    width: timelineWidth,
             // }}

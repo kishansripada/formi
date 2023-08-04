@@ -39,24 +39,24 @@ const getServerSideProps = async (projectId: string) => {
       return data?.data || [];
    }
 
-   async function getProject(session: Session) {
-      if (!projectId) return;
-      let data = await supabase.from("projects").select("*").eq("user_id", session.user.id).eq("id", projectId).single();
+   // async function getProject(session: Session) {
+   //    if (!projectId) return;
+   //    let data = await supabase.from("projects").select("*").eq("user_id", session.user.id).eq("id", projectId).single();
 
-      return data?.data || [];
-   }
+   //    return data?.data || [];
+   // }
 
-   let [rosters, project] = await Promise.all([getRosters(session), getProject(session)]);
+   let [rosters] = await Promise.all([getRosters(session)]);
 
-   return { rosters, session, project };
+   return { rosters, session };
 };
 export default async function RootLayout({ children, params }: { children: React.ReactNode; params: { projectId: string } }) {
-   const { rosters, session, project } = await getServerSideProps(params.projectId);
+   const { rosters, session } = await getServerSideProps(params.projectId);
    return (
       <div>
          <style>
             {`
-             body {
+             html, body {
                 overscroll-behavior: none;
                 user-select: none;
              }
@@ -65,7 +65,7 @@ export default async function RootLayout({ children, params }: { children: React
 
          <div className="h-screen flex flex-row font-inter overscroll-none overflow-hidden bg-[#09090b] text-white">
             <Sidebar session={session} rosters={rosters}></Sidebar>
-            {JSON.stringify(project)}
+            {/* {JSON.stringify(project)} */}
             <div className="flex flex-col bg-neutral  h-full  overflow-hidden  w-full justify-start  ">
                <Header></Header>
                <div className="px-6 pt-5 w-full h-full overflow-hidden">{children}</div>
