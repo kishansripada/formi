@@ -122,7 +122,7 @@ export const EventHandler: React.FC<{
 
       // console.log(e.key);
       if (e.key === " ") {
-         // e.preventDefault();
+         e.preventDefault();
          // if (player && player.isReady) {
          //    player.playPause();
          //    setIsPlaying((isPlaying: boolean) => !isPlaying);

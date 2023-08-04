@@ -48,7 +48,7 @@ export const PerformancePreview = ({ dance }: { dance: Dance }) => {
          .single();
 
       if (!newDance?.id) return;
-
+      router.refresh();
       router.push(`/${newDance.id}/edit`);
    };
 
