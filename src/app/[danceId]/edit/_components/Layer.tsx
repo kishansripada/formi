@@ -170,7 +170,7 @@ export const Layer: React.FC<{
                            setSelectedFormation(index);
                            if (!(songDuration && player)) return;
 
-                           player.seekTo(Math.min(1, position / (songDuration / 1000)));
+                           player.seekTo(Math.min(Math.max(0, position / (songDuration / 1000)), 1));
                         }}
                      >
                         <Formation

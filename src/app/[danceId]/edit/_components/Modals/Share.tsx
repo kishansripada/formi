@@ -28,6 +28,11 @@ export const Share: React.FC<{
    const addNewEmail = async (e) => {
       e.preventDefault();
 
+      if (newUserEmail === "error") {
+         throw new Error("this is a test error");
+         return;
+      }
+
       if (!validateEmail(newUserEmail)) {
          toast.error("please enter a valid email");
          return;

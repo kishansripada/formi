@@ -240,7 +240,7 @@ export const Timeline: React.FC<{
                   setPosition(clickEventSeconds);
 
                   if (clickEventSeconds < songDuration) {
-                     player.seekTo(Math.min(1, clickEventSeconds / songDuration));
+                     player.seekTo(Math.max(Math.min(1, clickEventSeconds / songDuration), 0));
                   }
 
                   if (isPlaying) {

@@ -180,8 +180,9 @@ export const EventHandler: React.FC<{
          setPosition(position);
          setSelectedFormation(index);
          if (!(songDuration && player)) return;
+         Math.min(Math.max(0, position / (songDuration / 1000)), 1);
 
-         player.seekTo(position / (songDuration / 1000));
+         player.seekTo(Math.min(Math.max(0, position / (songDuration / 1000)), 1));
       }
       if (e.key === "ArrowLeft") {
          if (selectedFormation === null) return;
@@ -203,7 +204,7 @@ export const EventHandler: React.FC<{
          setSelectedFormation(index);
          if (!(songDuration && player)) return;
 
-         player.seekTo(position / (songDuration / 1000));
+         player.seekTo(Math.min(Math.max(0, position / (songDuration / 1000)), 1));
       }
       if (e.key === "Meta" || e.key === "Control") {
          setCommandHeld(true);
