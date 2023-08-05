@@ -56,6 +56,7 @@ export const Sidebar: React.FC<{
             .select("id")
             .single();
          if (!data?.id) return;
+         router.refresh();
          router.push(`/${data.id}/edit`);
          return;
       }
