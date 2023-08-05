@@ -4,6 +4,7 @@ import { memo } from "react";
 import { formation, localSettings } from "../../../../types/types";
 import TimelinePlugin from "../../../../timeline-plugin";
 import WaveSurfer from "../../../../Wavesurfer"; // Importing local Wavesurfer
+import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
 
 export const FileAudioPlayer: React.FC<{
    setPosition: Function;
@@ -43,8 +44,8 @@ export const FileAudioPlayer: React.FC<{
       position,
    }) => {
       const [ready, setReady] = useState(false);
-      const [isInBonus, setIsInBonus] = useState(false);
-      const [movePlayhead, setMovePlayhead] = useState(false);
+      // const [isInBonus, setIsInBonus] = useState(false);
+      // const [movePlayhead, setMovePlayhead] = useState(false);
       const { isDarkMode } = localSettings;
 
       useEffect(() => {
@@ -63,7 +64,7 @@ export const FileAudioPlayer: React.FC<{
 
       useEffect(() => {
          if (document.getElementById("waveform")?.innerHTML) return;
-         var wavesurfer = WaveSurfer.create({
+         const options = {
             container: "#waveform",
             waveColor: "#a3a3a3",
             progressColor: "#db2777",
@@ -74,7 +75,7 @@ export const FileAudioPlayer: React.FC<{
             cursorWidth: 2,
             height: 15,
             barGap: 2,
-            backend: "MediaElement",
+            partialRender: true,
             plugins: [
                TimelinePlugin.create({
                   container: "#wave-timeline",
@@ -86,7 +87,13 @@ export const FileAudioPlayer: React.FC<{
                   secondaryFontColor: isDarkMode ? "#FFFFFF" : "#000000",
                }),
             ],
-         });
+         };
+
+         if (soundCloudTrackId?.endsWith(".mp4")) {
+            options.backend = "MediaElement";
+         }
+
+         var wavesurfer = WaveSurfer.create(options);
 
          wavesurfer.load(videoPlayer.current);
 
@@ -108,12 +115,14 @@ export const FileAudioPlayer: React.FC<{
          wavesurfer.on("pause", function (e) {});
 
          wavesurfer.on("finish", function (e) {
+            setPosition(wavesurfer.getDuration());
             // console.log("finish");
             // setIsPlaying(false);
             // setIsInBonus(true);
          });
 
          setPlayer(wavesurfer);
+         return () => wavesurfer.destroy();
       }, [videoPlayer.current]);
       const totalDurationOfFormations = formations
          .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
@@ -123,10 +132,11 @@ export const FileAudioPlayer: React.FC<{
       const formationsAreLongerThanAudio = totalDurationOfFormations > (songDuration || 0) / 1000;
       useEffect(() => {
          let interval;
-         if (isPlaying && position > (songDuration || 0) / 1000 && formationsAreLongerThanAudio) {
+
+         if (isPlaying && position >= (songDuration || 0) / 1000 && formationsAreLongerThanAudio) {
             interval = setInterval(() => {
                setPosition((prevTime: number) => {
-                  if (prevTime < (songDuration || 0)) {
+                  if (prevTime < totalDurationOfFormations) {
                      //  console.log("adding 0.5 sec");
                      return prevTime + 0.02;
                      // playbackRate
@@ -138,7 +148,7 @@ export const FileAudioPlayer: React.FC<{
             }, 20);
          }
          return () => clearInterval(interval);
-      }, [isPlaying, songDuration, position]);
+      }, [isPlaying, songDuration, position, totalDurationOfFormations]);
       // playbackRate
       return (
          <>
@@ -171,7 +181,7 @@ export const FileAudioPlayer: React.FC<{
                      }
 
                      if (clickEventSeconds > songDuration && position < songDuration) {
-                        setMovePlayhead(clickEventSeconds);
+                        // setMovePlayhead(clickEventSeconds);
                         player.pause();
                      }
                   }
@@ -184,7 +194,7 @@ export const FileAudioPlayer: React.FC<{
                      display: ready ? "flex" : "none",
                      width: ((songDuration || 0) / 1000) * pixelsPerSecond,
                   }}
-                  id="layers"
+                  // id="layers"
                   className={`flex-col justify-end w-full`}
                >
                   <div

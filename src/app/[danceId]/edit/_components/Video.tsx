@@ -37,6 +37,7 @@ export function Video({ videoPosition, videoPlayer, localSource, soundCloudTrack
          <video
             tabIndex={-1}
             playsInline
+            preload="auto"
             className=" pointer-events-none rounded-xl focus:outline-none focus-visible:outline-none"
             ref={videoPlayer}
             src={localSource || soundCloudTrackId}

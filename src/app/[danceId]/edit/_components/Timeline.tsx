@@ -182,6 +182,9 @@ export const Timeline: React.FC<{
             {`
                .removeScrollBar::-webkit-scrollbar {
                   display: none;
+                  -webkit-appearance: none;
+                  width: 0;
+                  height: 0;
                }
             `}
          </style>
@@ -204,10 +207,11 @@ export const Timeline: React.FC<{
 
          <div
             ref={scrollRef}
-            className=" overflow-y-hidden overflow-x-scroll  removeScrollBar bg-neutral-100 dark:bg-black   pl-3 "
+            className=" overflow-y-hidden overflow-x-scroll   removeScrollBar bg-neutral-100 dark:bg-black   pl-3 "
             style={{
                overscrollBehavior: "none",
             }}
+            id="layers"
             // style={{
             //    width: timelineWidth,
             // }}
