@@ -9,11 +9,12 @@ import { PerformancePreview } from "../_components/PerformancePreview";
 import { DndContext, useDroppable, MouseSensor, useSensors, useSensor } from "@dnd-kit/core";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import dynamic from "next/dynamic";
+import { default as nextDynamic } from "next/dynamic";
+
 export const dynamic = "force-dynamic";
 import { Database } from "../../../types/supabase";
 
-const PageClient = dynamic(() => import("./client"), {
+const PageClient = nextDynamic(() => import("./client"), {
    ssr: false,
 });
 
