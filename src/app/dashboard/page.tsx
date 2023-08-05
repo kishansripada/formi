@@ -11,8 +11,9 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import Client from "./client";
-import PageClient from "./myperformances/client";
+
 async function getServerSideProps() {
    const supabase = createServerComponentClient(
       { cookies },
@@ -83,7 +84,7 @@ async function getServerSideProps() {
 
    let [dances, sharedWithMe] = await Promise.all([getMyDances(session), getSharedWithMe(session)]);
 
-   return { dances: dances, sharedWithMe, session };
+   return { dances, sharedWithMe, session };
 }
 
 export default async function Page({}) {

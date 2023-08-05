@@ -11,6 +11,7 @@ import { cookies } from "next/headers";
 import { Sidebar } from "./_components/Sidebar";
 import Header from "./_components/Header";
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 const getServerSideProps = async (projectId: string) => {
    const supabase = createServerComponentClient(
       { cookies },

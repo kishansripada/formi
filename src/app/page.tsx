@@ -10,7 +10,7 @@ const home = () => {
 };
 
 export const metadata: Metadata = {
-   title: "FORMI: the collaborative whiteboard for choreographers.",
+   title: "FORMI: design and plan stunning choreography",
    description:
       "Revolutionize your performance planning with our choreography and stage management app. Perfect for choreographers, cheerleaders, and stage managers seeking an easy way to create and visualize formations.",
    keywords: [
