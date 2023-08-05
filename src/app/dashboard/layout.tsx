@@ -10,6 +10,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { Sidebar } from "./_components/Sidebar";
 import Header from "./_components/Header";
+export const dynamic = "force-dynamic";
 const getServerSideProps = async (projectId: string) => {
    const supabase = createServerComponentClient(
       { cookies },

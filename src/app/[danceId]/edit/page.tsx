@@ -7,6 +7,8 @@ import { Database } from "../../../types/supabase";
 export const metadata: Metadata = {
    title: "Edit Performance",
 };
+export const dynamic = "force-dynamic";
+
 const getServerSideProps = async (danceId: string) => {
    // Create authenticated Supabase Client
    // const supabase = createServerSupabaseClient(ctx, {

@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-
+export const dynamic = "force-dynamic";
 import Client from "./client";
 import { AuthSession } from "@supabase/supabase-js";
 async function getServerSideProps(projectId: string) {

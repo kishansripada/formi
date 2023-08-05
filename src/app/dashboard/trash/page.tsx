@@ -10,6 +10,7 @@ import { DndContext, useDroppable, MouseSensor, useSensors, useSensor } from "@d
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import PageClient from "./client";
+export const dynamic = "force-dynamic";
 import { redirect } from "next/navigation";
 async function getServerSideProps() {
    const supabase = createServerComponentClient(

@@ -11,6 +11,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import PageClient from "./client";
 import { redirect } from "next/navigation";
+export const dynamic = "force-dynamic";
 async function getServerSideProps() {
    // Create authenticated Supabase Client
    // const supabase = createServerSupabaseClient(ctx, {
