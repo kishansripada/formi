@@ -145,7 +145,9 @@ export const Timeline: React.FC<{
    }, [selectedFormation, formations, songDuration, scrollInfo, position, pixelsPerSecond]);
    // console.log(position);
    const handleScroll = (e) => {
-      let minPixelsPerSecond = songDuration ? ((window.screen.width - 10) * 1000) / songDuration : 10;
+      let minPixelsPerSecond = Math.max((songDuration || 0) / 1000, totalDurationOfFormations)
+         ? (window.screen.width - 90) / Math.max((songDuration || 0) / 1000, totalDurationOfFormations)
+         : 10;
 
       if (
          e
