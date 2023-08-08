@@ -48,7 +48,9 @@ const Dropdown: React.FC<Props> = ({ options, icons, actions, value, icon, dropD
          {isDropdownOpen && (
             <div
                id="dropdown-menu"
-               className="absolute z-10 border border-neutral-700  top-full mt-2 w-[200px] py-1 bg-neutral-800  shadow-lg  ring-1 ring-black ring-opacity-5"
+               className={`absolute z-10  border border-neutral-700   top-full mt-2 w-[200px] py-1 bg-neutral-800 ${
+                  options.length > 10 ? "grid grid-cols-2" : ""
+               } shadow-lg  ring-1 ring-black ring-opacity-5`}
             >
                {options.map((option, i) => (
                   <div key={option} className=" px-4 py-1  text-xs text-white hover:bg-pink-600   flex flex-row items-center" onClick={actions[i]}>
