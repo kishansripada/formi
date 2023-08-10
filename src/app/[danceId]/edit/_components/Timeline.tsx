@@ -346,52 +346,54 @@ export const Timeline: React.FC<{
                // setSelectedFormations={setSelectedFormations}
                // selectedFormations={selectedFormations}
             />
-            <div
-               style={{
-                  width: timelineWidth,
-               }}
-               className=" h-[20px] bg-neutral-500 dark:bg-black relative  overflow-hidden  flex flex-row justify-start  "
-            >
-               {segments.map((section, index) => {
-                  return (
-                     <div
-                        className="h-full border-2  grid rounded-md place-items-center text-white text-[10px] relative cursor-pointer "
-                        onClick={(e: any) => {
-                           if (menuOpen === "segments") return;
+            {segments.length ? (
+               <div
+                  style={{
+                     width: timelineWidth,
+                  }}
+                  className=" h-[20px] bg-neutral-500 dark:bg-black relative  overflow-hidden  flex flex-row justify-start  "
+               >
+                  {segments.map((section, index) => {
+                     return (
+                        <div
+                           className="h-full border-2  grid rounded-md place-items-center text-white text-[10px] relative cursor-pointer "
+                           onClick={(e: any) => {
+                              if (menuOpen === "segments") return;
 
-                           // if (isPlaying) {
-                           let position = segments
-                              .map((segment, i) => segment.duration)
-                              .slice(0, index)
-                              .reduce((a, b) => a + b, 0);
+                              // if (isPlaying) {
+                              let position = segments
+                                 .map((segment, i) => segment.duration)
+                                 .slice(0, index)
+                                 .reduce((a, b) => a + b, 0);
 
-                           setPosition(position);
+                              setPosition(position);
 
-                           if (!(songDuration && player)) return;
-                           player.seekTo(Math.min(Math.max(0, position / (songDuration / 1000)), 1));
-                        }}
-                        style={{
-                           width: section.duration * pixelsPerSecond - 4,
-                           marginRight: 4,
-                           minWidth: section.duration * pixelsPerSecond,
-                           borderColor: section.color,
-                        }}
-                     >
-                        {section.name} - ({Math.round(section.duration)}s)
-                        {menuOpen === "segments" ? (
-                           <div
-                              className="h-full  w-[15px] right-0 absolute cursor-ew-resize flex flex-row justify-center"
-                              data-type="segment-resize"
-                              id={section.id}
-                           >
-                              <div className="h-full bg-white pointer-events-none rounded-full w-[2px] mr-1"></div>
-                              <div className="h-full bg-white pointer-events-none rounded-full w-[2px]"></div>
-                           </div>
-                        ) : null}
-                     </div>
-                  );
-               })}
-            </div>
+                              if (!(songDuration && player)) return;
+                              player.seekTo(Math.min(Math.max(0, position / (songDuration / 1000)), 1));
+                           }}
+                           style={{
+                              width: section.duration * pixelsPerSecond - 4,
+                              marginRight: 4,
+                              minWidth: section.duration * pixelsPerSecond,
+                              borderColor: section.color,
+                           }}
+                        >
+                           {section.name} - ({Math.round(section.duration)}s)
+                           {menuOpen === "segments" ? (
+                              <div
+                                 className="h-full  w-[15px] right-0 absolute cursor-ew-resize flex flex-row justify-center"
+                                 data-type="segment-resize"
+                                 id={section.id}
+                              >
+                                 <div className="h-full bg-white pointer-events-none rounded-full w-[2px] mr-1"></div>
+                                 <div className="h-full bg-white pointer-events-none rounded-full w-[2px]"></div>
+                              </div>
+                           ) : null}
+                        </div>
+                     );
+                  })}
+               </div>
+            ) : null}
             {soundCloudTrackId || localSource ? (
                <div
                   className="relative "
