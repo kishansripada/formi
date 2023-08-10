@@ -271,32 +271,57 @@ const Edit = ({
    const exportPdf = async () => {
       setPdfLoading(true);
       setLocalSettings({ ...localSettings, viewingTwo: true, viewingThree: false });
-      const parentContainer = document.createElement("div");
+      const parentContainer = document.createElement("p");
+      const extendedFormations = [...formations, { name: "", notes: "" }];
 
-      for (let index = 0; index < formations.length; index++) {
+      for (let index = 0; index < extendedFormations.length; index++) {
          setSelectedFormation(index); // Assuming this function sets the formation
 
          // Wait for the formation to be rendered in the DOM
-         await sleep(100); // Delay in milliseconds. Adjust as needed.
+         await sleep(500); // Delay in milliseconds. Adjust as needed.
 
-         const stageElement = document.getElementById("stage");
+         const stageElement = document.getElementById("stage-cutout");
          const clonedElement = stageElement.cloneNode(true); // Clone the element with its children
 
          // Add each stage to the parentContainer
          const label = document.createElement("p");
-         label.textContent = `${formations[index].name} (${index + 1} of ${formations.length})`;
+         label.textContent = `${extendedFormations[index].name} (${index + 1} of ${formations.length})`;
          label.style.textAlign = "center";
          label.style.width = "100%";
 
          const notes = document.createElement("p");
-         notes.textContent = `${formations[index].notes || ""}`;
+         notes.textContent = `${extendedFormations[index].notes || ""}`;
          notes.style.textAlign = "left";
          notes.style.width = "100%";
-         // Add the label and formation to the parentContainer
 
-         parentContainer.appendChild(clonedElement);
-         parentContainer.appendChild(label);
-         parentContainer.appendChild(notes);
+         // Create a container for the current formation to force a new page
+         const formationContainer = document.createElement("div");
+         formationContainer.style.pageBreakInside = "avoid";
+
+         formationContainer.style.transform = "rotate(90deg)"; // Rotate the content 90 degrees
+         formationContainer.style.transformOrigin = "center"; // Rotate from the bottom left corner
+         formationContainer.style.textAlign = "center";
+         stageElement.style.textAlign = "center";
+         // const pageBreak = document.createElement("div");
+         // pageBreak.style.pageBreakBefore = "always";
+         // if (index < formations.length - 1) {
+         //    parentContainer.appendChild(pageBreak);
+         // }
+         // formationContainer.style.width = "297mm"; // Approx width for an A4 page in landscape
+         // formationContainer.style.height = "210mm"; // Approx height for an A4 page in landscape
+         // formationContainer.style.display = "flex"; // Use flexbox
+         // formationContainer.style.flexDirection = "column"; // Stack children vertically
+         // formationContainer.style.alignItems = "center"; // Center children horizontally
+         // formationContainer.style.justifyContent = "center"; // Center children vertically
+         // formationContainer.style.overflow = "hidden"; // Hide any overflow
+
+         // Add the label, formation, and notes to the formationContainer
+         formationContainer.appendChild(clonedElement);
+         formationContainer.appendChild(label);
+         formationContainer.appendChild(notes);
+
+         // Add the formationContainer to the parentContainer
+         parentContainer.appendChild(formationContainer);
       }
 
       var options = {
