@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { dancer, dancerPosition, formation, formationGroup, localSettings, MAX_PIXELS_PER_SECOND } from "../../../../types/types";
+import { dancer, dancerPosition, formation, formationGroup, localSettings, MAX_PIXELS_PER_SECOND, segment } from "../../../../types/types";
 import { useHorizontalScrollInfo } from "../../../../hooks";
 import { Layer } from "./Layer";
 import { Layers } from "./Layers";
@@ -53,8 +53,9 @@ export const Timeline: React.FC<{
    playbackRate: number;
    shiftHeld: boolean;
    hasVisited: boolean;
-   // setSelectedFormations: Function;
-   // selectedFormations: number[];
+   segments: segment[];
+   setSegments: Function;
+   menuOpen: string;
 }> = ({
    formations,
    selectedFormation,
@@ -86,9 +87,12 @@ export const Timeline: React.FC<{
    playbackRate,
    shiftHeld,
    hasVisited,
-   // setSelectedFormations,
-   // selectedFormations,
+   segments,
+   setSegments,
+   menuOpen,
 }) => {
+   const [resizingSegment, setResizingSegment] = useState<string | null>(null);
+
    const totalDurationOfFormations = formations
       .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
       .reduce((a, b) => a + b, 0);
@@ -110,13 +114,28 @@ export const Timeline: React.FC<{
       if (isScrollingTimeline) {
          scrollRef.current.scrollLeft = scrollRef.current.scrollLeft + (e.movementX * scrollInfo.scrollWidth) / scrollInfo.clientWidth;
       }
+
+      if (viewOnly) return;
+
+      if (resizingSegment !== null) {
+         setSegments((segments: segment[]) => {
+            return segments.map((segment, i) => {
+               if (segment.id === resizingSegment) {
+                  if (segment.duration + e.movementX / pixelsPerSecond >= 0) {
+                     return { ...segment, duration: roundToHundredth(segment.duration + e.movementX / pixelsPerSecond) };
+                  }
+               }
+               return segment;
+            });
+         });
+      }
    };
 
    useEffect(() => {
       window.addEventListener("mousemove", handleMouseMove);
 
       return () => window.removeEventListener("mousemove", handleMouseMove);
-   }, [isScrollingTimeline]);
+   }, [isScrollingTimeline, resizingSegment, pixelsPerSecond]);
 
    useEffect(() => {
       if (!scrollRef.current || !isPlaying || !localSettings.autoScroll) return;
@@ -177,7 +196,30 @@ export const Timeline: React.FC<{
             });
          }
       }
-   }; // adjust throttle time as needed
+   };
+
+   const handlePointerUp = (event) => {
+      setResizingSegment(null);
+   };
+
+   const handlePointerDown = (event) => {
+      if (event.target.dataset.type === "segment-resize") {
+         setResizingSegment(event.target.id);
+      }
+   };
+
+   useEffect(() => {
+      // Attach the event listeners
+      window.addEventListener("pointerup", handlePointerUp);
+      window.addEventListener("pointerdown", handlePointerDown);
+
+      // Return a cleanup function to remove the listeners when the component is unmounted
+      return () => {
+         window.removeEventListener("pointerup", handlePointerUp);
+         window.removeEventListener("pointerdown", handlePointerDown);
+      };
+   }, [segments, resizingSegment]); // The empty dependency array ensures that the effect only runs once, similar to componentDidMount.
+
    return (
       <>
          <style jsx>
@@ -304,7 +346,52 @@ export const Timeline: React.FC<{
                // setSelectedFormations={setSelectedFormations}
                // selectedFormations={selectedFormations}
             />
+            <div
+               style={{
+                  width: timelineWidth,
+               }}
+               className=" h-[20px] bg-neutral-500 dark:bg-black relative  overflow-hidden  flex flex-row justify-start  "
+            >
+               {segments.map((section, index) => {
+                  return (
+                     <div
+                        className="h-full border-2  grid rounded-md place-items-center text-white text-[10px] relative cursor-pointer "
+                        onClick={(e: any) => {
+                           if (menuOpen === "segments") return;
 
+                           // if (isPlaying) {
+                           let position = segments
+                              .map((segment, i) => segment.duration)
+                              .slice(0, index)
+                              .reduce((a, b) => a + b, 0);
+
+                           setPosition(position);
+
+                           if (!(songDuration && player)) return;
+                           player.seekTo(Math.min(Math.max(0, position / (songDuration / 1000)), 1));
+                        }}
+                        style={{
+                           width: section.duration * pixelsPerSecond - 4,
+                           marginRight: 4,
+                           minWidth: section.duration * pixelsPerSecond,
+                           borderColor: section.color,
+                        }}
+                     >
+                        {section.name} - ({Math.round(section.duration)}s)
+                        {menuOpen === "segments" ? (
+                           <div
+                              className="h-full  w-[15px] right-0 absolute cursor-ew-resize flex flex-row justify-center"
+                              data-type="segment-resize"
+                              id={section.id}
+                           >
+                              <div className="h-full bg-white pointer-events-none rounded-full w-[2px] mr-1"></div>
+                              <div className="h-full bg-white pointer-events-none rounded-full w-[2px]"></div>
+                           </div>
+                        ) : null}
+                     </div>
+                  );
+               })}
+            </div>
             {soundCloudTrackId || localSource ? (
                <div
                   className="relative "
@@ -358,12 +445,16 @@ export const Timeline: React.FC<{
                </>
             )}
          </div>
-         <div
+
+         {/* <div
             style={{
                width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
             }}
             className="w-full h-[5px] bg-neutral-500 dark:bg-neutral-700 "
-         ></div>
+         ></div> */}
       </>
    );
 };
+function roundToHundredth(value: number): number {
+   return Math.round(value * 100) / 100;
+}

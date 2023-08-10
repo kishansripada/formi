@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation } from "../../../../types/types";
+import { dancer, dancerPosition, formation, localSettings } from "../../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 
@@ -7,10 +7,11 @@ export const Sidebar: React.FC<{
    menuOpen: string;
    viewOnly: boolean;
    setHelpUrl: Function;
-}> = ({ setMenuOpen, menuOpen, viewOnly, setHelpUrl }) => {
+   setLocalSettings: Function;
+}> = ({ setMenuOpen, menuOpen, viewOnly, setHelpUrl, setLocalSettings }) => {
    return (
       <>
-         <div className="lg:flex hidden flex-col  h-full  items-center  text-[10px] dark:bg-black  text-black bg-neutral-100  child:mb-5   w-20 min-w-[80px] border-r border-neutral-300 dark:border-neutral-700">
+         <div className="lg:flex hidden flex-col  h-full  items-center  text-[10px] dark:bg-black  text-black bg-neutral-100  child:mb-5   w-20 min-w-[80px] border-r border-neutral-300 dark:border-neutral-700 overflow-y-scroll">
             {/* <button onClick={() => setMenuOpen("formations")}>
                <svg
                   className={` ${
@@ -37,7 +38,12 @@ export const Sidebar: React.FC<{
 
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
-               onClick={() => setMenuOpen("formations")}
+               onClick={() => {
+                  setMenuOpen("formations");
+                  setLocalSettings((localSettings: localSettings) => {
+                     return { ...localSettings, fullScreen: false };
+                  });
+               }}
             >
                <svg
                   className={` ${
@@ -60,7 +66,12 @@ export const Sidebar: React.FC<{
 
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
-               onClick={() => setMenuOpen("dancers")}
+               onClick={() => {
+                  setMenuOpen("dancers");
+                  setLocalSettings((localSettings: localSettings) => {
+                     return { ...localSettings, fullScreen: false };
+                  });
+               }}
             >
                <svg
                   className={` ${
@@ -82,7 +93,12 @@ export const Sidebar: React.FC<{
             </button>
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
-               onClick={() => setMenuOpen("audio")}
+               onClick={() => {
+                  setMenuOpen("audio");
+                  setLocalSettings((localSettings: localSettings) => {
+                     return { ...localSettings, fullScreen: false };
+                  });
+               }}
             >
                <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +138,12 @@ export const Sidebar: React.FC<{
             </button>
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
-               onClick={() => setMenuOpen("items")}
+               onClick={() => {
+                  setMenuOpen("items");
+                  setLocalSettings((localSettings: localSettings) => {
+                     return { ...localSettings, fullScreen: false };
+                  });
+               }}
             >
                <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -144,7 +165,12 @@ export const Sidebar: React.FC<{
             </button>
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
-               onClick={() => setMenuOpen("props")}
+               onClick={() => {
+                  setMenuOpen("props");
+                  setLocalSettings((localSettings: localSettings) => {
+                     return { ...localSettings, fullScreen: false };
+                  });
+               }}
             >
                {/* <svg
                   className={`w-7 h-7 ${menuOpen === "props" ? "fill-pink-600" : "dark:fill-neutral-300 fill-neutral-400"} `}
@@ -165,6 +191,44 @@ export const Sidebar: React.FC<{
 
                <p className=" mt-1">Scenery</p>
                {/* <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p> */}
+            </button>
+
+            <button
+               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
+               onClick={() => {
+                  setMenuOpen("segments");
+                  setLocalSettings((localSettings: localSettings) => {
+                     return { ...localSettings, fullScreen: false };
+                  });
+               }}
+            >
+               {/* <svg
+                  className={`w-7 h-7 ${menuOpen === "props" ? "fill-pink-600" : "dark:fill-neutral-300 fill-neutral-400"} `}
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 -960 960 960"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+               >
+                  <path d="M303-80v-149H0l189-274H94l266-377 120 170 120-170 266 377h-94l188 274H658v149H543v-149H418v149H303Zm377-209h165L656-563h89L600-769l-80 115 106 151h-94l148 214Zm-564 0h489L416-563h89L360-769 215-563h90L116-289Zm0 0h189-90 290-89 189-489Zm564 0H532h94-106 225-89 189-165Zm-137 60h115-115Zm178 0Z" />
+               </svg> */}
+
+               <svg
+                  className={`w-8 h-8 ${menuOpen === "segments" ? "stroke-pink-600" : "dark:strok-neutral-300 strok-neutral-400"} `}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+               >
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.004 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z"
+                  />
+               </svg>
+
+               <p className=" mt-1">Segments</p>
+               <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p>
             </button>
 
             {/* <button
@@ -241,7 +305,12 @@ export const Sidebar: React.FC<{
             </button>
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600    "
-               onClick={() => setMenuOpen("settings")}
+               onClick={() => {
+                  setMenuOpen("settings");
+                  setLocalSettings((localSettings: localSettings) => {
+                     return { ...localSettings, fullScreen: false };
+                  });
+               }}
             >
                <svg
                   xmlns="http://www.w3.org/2000/svg"

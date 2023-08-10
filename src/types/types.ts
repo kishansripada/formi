@@ -99,6 +99,13 @@ export type comment = {
    position: { x: number; y: number };
 };
 
+export type segment = {
+   id: string;
+   name: string;
+   duration: number;
+   color: string;
+};
+
 export type dragBoxCoords = { start: { x: number | null; y: number | null }; end: { x: number | null; y: number | null } };
 export type stageDimensions = { width: number; height: number };
 

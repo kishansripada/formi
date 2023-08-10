@@ -51,6 +51,7 @@ import { HelpUrl } from "./_components/Modals/HelpUrl";
 import { ObjectControls } from "./_components/ObjectControls";
 import { Database } from "../../../types/supabase";
 import Loading from "../../loading";
+import { Segments } from "./_components/SidebarComponents/Segments";
 const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => (
       <div className="flex items-center justify-center h-screen bg-neutral-100 dark:bg-neutral-900  w-full">
@@ -121,7 +122,7 @@ const Edit = ({
    const supabase = createClientComponentClient<Database>();
    const router = useRouter();
    const videoPlayer = useRef();
-
+   const [segments, setSegments] = useState(initialData.segments);
    // cloud
    const [cloudSettings, setCloudSettings] = useState<cloudSettings>({
       ...initialData.settings,
@@ -810,6 +811,29 @@ const Edit = ({
       uploadItems(items);
       //   }
    }, [items]);
+
+   let uploadSegments = useCallback(
+      debounce(async (segments) => {
+         console.log("uploading segments");
+         const { data, error } = await supabase.from("dances").update({ segments: segments, last_edited: new Date() }).eq("id", danceId);
+         console.log({ data });
+         console.log({ error });
+
+         setSaved(true);
+      }, 1000),
+      [danceId]
+   );
+
+   useDidMountEffect(() => {
+      if (!session && danceId !== "207") {
+         router.push("/login");
+      }
+      //   if (router.isReady) {
+      setSaved(false);
+      uploadSegments(segments);
+      //   }
+   }, [segments]);
+
    //////////////////////
    let flippedFormations = formations.map((formation: formation) => {
       let flippedPositions = formation.positions.map((position) => {
@@ -1018,9 +1042,15 @@ const Edit = ({
                dancers={dancers}
             />
             <div className="flex flex-row overflow-hidden w-screen h-full">
-               <Sidebar setHelpUrl={setHelpUrl} viewOnly={viewOnly} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
+               <Sidebar
+                  setLocalSettings={setLocalSettings}
+                  setHelpUrl={setHelpUrl}
+                  viewOnly={viewOnly}
+                  setMenuOpen={setMenuOpen}
+                  menuOpen={menuOpen}
+               ></Sidebar>
                <div className="flex flex-col w-full h-full overflow-hidden">
-                  <div className="flex flex-row  overflow-hidden w-full h-full">
+                  <div className="flex flex-row   overflow-hidden w-full h-full">
                      {!localSettings.fullScreen ? (
                         <>
                            <div className="flex flex-row ">
@@ -1138,6 +1168,8 @@ const Edit = ({
                                        setLocalSource={setLocalSource}
                                        setFormations={setFormations}
                                     ></Items>
+                                 ) : menuOpen === "segments" ? (
+                                    <Segments setSegments={setSegments} segments={segments} pushChange={pushChange} viewOnly={viewOnly}></Segments>
                                  ) : (
                                     <CurrentFormation
                                        viewOnly={viewOnly}
@@ -1166,7 +1198,7 @@ const Edit = ({
                            </div>
                         </>
                      ) : null}
-                     <DndContext onDragEnd={handleDragEnd}>
+                     <DndContext id="1" onDragEnd={handleDragEnd}>
                         <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-100 dark:bg-neutral-900 relative `}>
                            <ObjectControls
                               zoom={zoom}
@@ -1519,6 +1551,9 @@ const Edit = ({
                         localSource={localSource}
                         localSettings={localSettings}
                         hasVisited={hasVisited}
+                        segments={segments}
+                        setSegments={setSegments}
+                        menuOpen={menuOpen}
                      ></Timeline>
                   </div>
                </div>

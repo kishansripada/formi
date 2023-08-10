@@ -63,7 +63,7 @@ const Client = () => {
                         <div className=" lg:flex flex-row items-center justify-around hidden">
                            <span className="font-semibold">Get started</span> — it’s free{" "}
                            <svg className="stroke-black" width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M14 8.5H3m11 0-3 3m3-3-3-3" stroke-linecap="round" stroke-linejoin="round"></path>
+                              <path d="M14 8.5H3m11 0-3 3m3-3-3-3" strokeLinecap="round" strokeLinejoin="round"></path>
                            </svg>
                         </div>
                         <div className="  flex-row items-center justify-around lg:hidden flex">Mobile app coming soon</div>
