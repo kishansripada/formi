@@ -51,6 +51,7 @@ import { HelpUrl } from "./_components/Modals/HelpUrl";
 import { ObjectControls } from "./_components/ObjectControls";
 import { Database } from "../../../types/supabase";
 import Loading from "../../loading";
+import { StageSettings } from "./_components/SidebarComponents/StageSettings";
 import { Segments } from "./_components/SidebarComponents/Segments";
 const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => (
@@ -119,23 +120,36 @@ const Edit = ({
 }) => {
    const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
    // viewOnlyInitial = false;
+
    const supabase = createClientComponentClient<Database>();
    const router = useRouter();
    const videoPlayer = useRef();
    const [segments, setSegments] = useState(initialData.segments);
    // cloud
+
+   // gridSystem === "fluid"
+   // ? roundDownToEven(initialData.settings.stageDimensions.width / (initialData.settings.gridSubdivisions || 7))
+   // : initialData.settings.gridSubdivisions || 7,
+
+   // console.log({ settings: initialData.settings });
    const [cloudSettings, setCloudSettings] = useState<cloudSettings>({
       ...initialData.settings,
       stageBackground: initialData.settings.stageBackground || "grid",
-      gridSubdivisions: initialData.settings.gridSubdivisions || 7,
+      gridSubdivisions: initialData.settings.stageBackground === "cheer9" ? 9 : initialData.settings.gridSubdivisions || 8,
+      horizontalFineDivisions: initialData.settings.horizontalFineDivisions || 4,
+      verticalFineDivisions: initialData.settings.verticalFineDivisions || 4,
+      horizontalGridSubdivisions: initialData.settings.horizontalGridSubdivisions || 4,
    });
-
+   // console.log({ cloudSettings });
+   // console.log({ test: cloudSettings });
+   // console.log(initialData.settings);
    const [formations, setFormations] = useState<formation[]>(initialData.formations);
 
    const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
    const [permissions, setPermissions] = useState(initialPermissions);
 
    const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(initialData.soundCloudId);
+
    const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
    const [danceName, setDanceName] = useState<string>(initialData.name);
    const [formationGroups, setFormationGroups] = useState<formationGroup[]>([]);
@@ -1006,6 +1020,7 @@ const Edit = ({
             currentFormationIndex={currentFormationIndex}
             percentThroughTransition={percentThroughTransition}
             dancers={dancers}
+            setLocalSettings={setLocalSettings}
          ></EventHandler>
          <div
             // style={{
@@ -1126,17 +1141,20 @@ const Edit = ({
                                        setAssetsOpen={setAssetsOpen}
                                     ></Settings>
                                  ) : menuOpen === "stageSettings" ? (
-                                    // <StageSettings
-                                    //    dropDownToggle={dropDownToggle}
-                                    //    pushChange={pushChange}
-                                    //    formations={formations}
-                                    //    pricingTier={pricingTier}
-                                    //    cloudSettings={cloudSettings}
-                                    //    setCloudSettings={setCloudSettings}
-                                    //    setFormations={setFormations}
-                                    //    setUpgradeIsOpen={setUpgradeIsOpen}
-                                    // ></StageSettings>
-                                    <></>
+                                    <StageSettings
+                                       setHelpUrl={setHelpUrl}
+                                       dropDownToggle={dropDownToggle}
+                                       setLocalSettings={setLocalSettings}
+                                       localSettings={localSettings}
+                                       pushChange={pushChange}
+                                       formations={formations}
+                                       pricingTier={pricingTier}
+                                       cloudSettings={cloudSettings}
+                                       setCloudSettings={setCloudSettings}
+                                       setFormations={setFormations}
+                                       setUpgradeIsOpen={setUpgradeIsOpen}
+                                       setAssetsOpen={setAssetsOpen}
+                                    ></StageSettings>
                                  ) : menuOpen === "collisions" ? (
                                     <Collisions
                                        dropDownToggle={dropDownToggle}
@@ -1313,6 +1331,7 @@ const Edit = ({
 
                            {localSettings.viewingTwo ? (
                               <Canvas
+                                 menuOpen={menuOpen}
                                  // selectedFormations={selectedFormations}
                                  setProps={setProps}
                                  resizingPropId={resizingPropId}
@@ -1653,4 +1672,16 @@ function BottomRight() {
    });
 
    return <div className="w-1/2 h-1/2 bottom-0 right-0  absolute z-10 opacity-40 pointer-events-none" ref={setNodeRef}></div>;
+}
+
+// function roundDownToEven(n: number): number {
+//    // If the floored number is odd
+//    if (Math.floor(n) % 2 !== 0) {
+//       return Math.floor(n) - 1;
+//    }
+//    // If the floored number is even
+//    return Math.floor(n);
+// }
+function roundDownToEven(value) {
+   return Number.isNaN(value) ? 0.0 : 2 * Math.round(value / 2);
 }

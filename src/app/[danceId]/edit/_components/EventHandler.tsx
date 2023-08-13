@@ -8,6 +8,7 @@ import {
    comment,
    cloudSettings,
    MAX_PIXELS_PER_SECOND,
+   localSettings,
 } from "../../../../types/types";
 
 export const EventHandler: React.FC<{
@@ -47,6 +48,7 @@ export const EventHandler: React.FC<{
    setIsChangingZoom: Function;
    setPosition: Function;
    position: number | null;
+   setLocalSettings: Function;
 }> = ({
    player,
    children,
@@ -84,6 +86,7 @@ export const EventHandler: React.FC<{
    selectedPropIds,
    setPosition,
    position,
+   setLocalSettings,
 }) => {
    const [commandHeld, setCommandHeld] = useState(false);
    const [copiedPositions, setCopiedPositions] = useState([]);
@@ -144,6 +147,25 @@ export const EventHandler: React.FC<{
          // };
       }
 
+      if (e.key === "2") {
+         setLocalSettings((localSettings: localSettings) => {
+            return {
+               ...localSettings,
+               viewingTwo: true,
+               viewingThree: false,
+            };
+         });
+      }
+
+      if (e.key === "3") {
+         setLocalSettings((localSettings: localSettings) => {
+            return {
+               ...localSettings,
+               viewingTwo: false,
+               viewingThree: true,
+            };
+         });
+      }
       // on delete, check the selectedPropIds array to see if any props are selected. If so, delete them. Otherwise, delete the selected dancers
       if (e.key === "Backspace" || e.key === "Delete") {
          e.preventDefault();

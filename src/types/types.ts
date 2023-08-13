@@ -81,9 +81,22 @@ export type localSettings = {
 };
 
 export type cloudSettings = {
-   stageBackground: "none" | "grid" | "cheer9" | "custom";
+   stageBackground: "none" | "grid" | "cheer9" | "custom" | "gridfluid";
    stageDimensions: { width: number; height: number };
+
+   // stage lines
+
+   // vertical large lines
    gridSubdivisions: number;
+   // horizontal large lines
+   horizontalGridSubdivisions?: number;
+
+   // places where dancers can snap to
+   // vertical small lines
+   verticalFineDivisions?: number;
+   // horizontal small lines
+   horizontalFineDivisions?: number;
+
    backgroundUrl: string;
    collisionRadius: number;
 };

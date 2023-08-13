@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { GridLines } from "./GridLines";
-import { CheerLines } from "./CheerLines";
+
 import {
    dancer,
    dancerPosition,
@@ -17,6 +17,8 @@ import {
 import { toast, Toaster } from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 import { Prop } from "./Prop";
+import { StageLines } from "./StageLines";
+import { OldGridLines } from "./OldGridLines";
 
 export const Canvas: React.FC<{
    children: React.ReactNode;
@@ -54,6 +56,7 @@ export const Canvas: React.FC<{
    resizingPropId: string | null;
    setResizingPropId: Function;
    setProps: Function;
+   menuOpen: string;
    // selectedFormations: number[];
 }> = ({
    player,
@@ -91,9 +94,13 @@ export const Canvas: React.FC<{
    resizingPropId,
    setResizingPropId,
    setProps,
+   menuOpen,
+
    // selectedFormations,
 }) => {
-   let { stageDimensions, stageBackground } = cloudSettings;
+   let { stageDimensions, stageBackground, gridSubdivisions, verticalFineDivisions, horizontalFineDivisions, horizontalGridSubdivisions } =
+      cloudSettings;
+
    let { gridSnap } = localSettings;
 
    const stageFlippedFactor = stageFlipped ? -1 : 1;
@@ -106,6 +113,8 @@ export const Canvas: React.FC<{
    const [rotatingDancerId, setRotatingDancerId] = useState(null);
    const [draggingPropId, setDraggingPropId] = useState(null);
 
+   const horizontalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
+   const verticalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
    // const selectedDancersBoundingBox = useMemo(() => {
    //    function findBoundingBox(
    //       points: { x: number; y: number }[]
@@ -156,31 +165,44 @@ export const Canvas: React.FC<{
    const stage = useRef();
    const session = useSession();
 
-   const fitStageToScreen = () => {
+   const fitStageToScreen = (buffer?: number) => {
       if (!container.current) return;
       if (!stage.current) return;
 
-      let heightPercentage = (container.current.clientHeight - 75) / stage.current.clientHeight;
-      let widthPercentage = (container.current.clientWidth - 75) / stage.current.clientWidth;
+      let heightPercentage = (container.current.clientHeight - (buffer || 75)) / stage.current.clientHeight;
+      let widthPercentage = (container.current.clientWidth - (buffer || 75)) / stage.current.clientWidth;
       // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
       // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
       setZoom(Math.min(heightPercentage, widthPercentage));
    };
 
    useEffect(() => {
+      if (menuOpen === "stageSettings") {
+         fitStageToScreen(150);
+         setScrollOffset({ x: 0, y: 0 });
+         return;
+      }
       fitStageToScreen();
    }, [container?.current?.clientHeight, stage?.current?.clientHeight, stageDimensions]);
 
+   useEffect(() => {
+      if (menuOpen === "stageSettings") {
+         fitStageToScreen(150);
+         setScrollOffset({ x: 0, y: 0 });
+      }
+   }, [menuOpen]);
+
    const handleDragMove = (e: any) => {
       if (selectedFormation === null || isPlaying) return;
-
-      const target = e.currentTarget;
-      const stage = target.querySelector("#stage-cutout");
+      const movementX = e.movementX * horizontalScalar;
+      const movementY = e.movementY * verticalScalar;
+      // const target = e.currentTarget;
+      // const stage = target.querySelector("#stage-cutout");
 
       // Get the bounding rectangle of target
-      const rect = stage.getBoundingClientRect();
+      // const rect = stage.getBoundingClientRect();
 
-      const { x, y } = positionToCoords({ left: (e.clientX - rect.left) / zoom, top: (e.clientY - rect.top) / zoom });
+      // const { x, y } = positionToCoords({ left: (e.clientX - rect.left) / zoom, top: (e.clientY - rect.top) / zoom });
 
       if (changingControlId) {
          if (viewOnly) return;
@@ -194,14 +216,8 @@ export const Canvas: React.FC<{
                            return {
                               ...dancerPosition,
                               controlPointStart: {
-                                 x:
-                                    Math.round(
-                                       (dancerPosition.controlPointStart.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom) * 100
-                                    ) / 100,
-                                 y:
-                                    Math.round(
-                                       (dancerPosition.controlPointStart.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom) * 100
-                                    ) / 100,
+                                 x: roundToHundredth(dancerPosition.controlPointStart.x + movementX),
+                                 y: roundToHundredth(dancerPosition.controlPointStart.y - movementY),
                               },
                            };
                         }
@@ -209,14 +225,8 @@ export const Canvas: React.FC<{
                            return {
                               ...dancerPosition,
                               controlPointEnd: {
-                                 x:
-                                    Math.round(
-                                       (dancerPosition.controlPointEnd.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom) * 100
-                                    ) / 100,
-                                 y:
-                                    Math.round(
-                                       (dancerPosition.controlPointEnd.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom) * 100
-                                    ) / 100,
+                                 x: roundToHundredth(dancerPosition.controlPointEnd.x + movementX),
+                                 y: roundToHundredth(dancerPosition.controlPointEnd.y - movementY),
                               },
                            };
                         }
@@ -316,6 +326,7 @@ export const Canvas: React.FC<{
             );
          }
       }
+
       if (draggingDancerId) {
          if (viewOnly) return;
          setFormations((formations: formation[]) => {
@@ -335,18 +346,12 @@ export const Canvas: React.FC<{
                            return {
                               ...dancerPosition,
                               position: {
-                                 x: dancerPosition.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
-                                 y: dancerPosition.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
+                                 x: dancerPosition.position.x + movementX,
+                                 y: dancerPosition.position.y - movementY,
                               },
                               controlPointEnd: {
-                                 x:
-                                    Math.round(
-                                       (dancerPosition.controlPointEnd.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom) * 100
-                                    ) / 100,
-                                 y:
-                                    Math.round(
-                                       (dancerPosition.controlPointEnd.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom) * 100
-                                    ) / 100,
+                                 x: roundToHundredth(dancerPosition.controlPointEnd.x + movementX),
+                                 y: roundToHundredth(dancerPosition.controlPointEnd.y - movementY),
                               },
                            };
                         }
@@ -359,8 +364,8 @@ export const Canvas: React.FC<{
                            return {
                               ...dancerPosition,
                               position: {
-                                 x: dancerPosition.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
-                                 y: dancerPosition.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
+                                 x: dancerPosition.position.x + movementX,
+                                 y: dancerPosition.position.y - movementY,
                               },
                            };
                         }
@@ -382,14 +387,12 @@ export const Canvas: React.FC<{
                   return {
                      ...formation,
                      comments: (formation.comments || []).map((comment: comment) => {
-                        // console.log(comment.id);
-                        // console.log({ draggingCommentId });
                         if (comment.id === draggingCommentId) {
                            return {
                               ...comment,
                               position: {
-                                 x: Math.round((comment.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom) * 100) / 100,
-                                 y: Math.round((comment.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom) * 100) / 100,
+                                 x: comment.position.x + movementX,
+                                 y: comment.position.y - movementY,
                               },
                            };
                         }
@@ -416,8 +419,8 @@ export const Canvas: React.FC<{
                         static: {
                            ...prop.static,
                            position: {
-                              x: prop.static.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
-                              y: prop.static.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
+                              x: prop.static.position.x + movementX,
+                              y: prop.static.position.y - movementY,
                            },
                         },
                      };
@@ -436,8 +439,8 @@ export const Canvas: React.FC<{
                               return {
                                  ...prop,
                                  position: {
-                                    x: prop.position.x + (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom,
-                                    y: prop.position.y - (stageFlippedFactor * e.movementY) / PIXELS_PER_SQUARE / zoom,
+                                    x: prop.position.x + movementX,
+                                    y: prop.position.y - movementY,
                                  },
                               };
                            }
@@ -457,14 +460,14 @@ export const Canvas: React.FC<{
          setProps((props: prop[]) => {
             return props.map((prop: prop) => {
                if (prop.id === resizingPropId) {
-                  let deltaX = (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom;
+                  // let deltaX = (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom;
                   // console.log(resizingPropType);
                   if (resizingPropType === "prop-resize-top-left" || resizingPropType === "prop-resize-bottom-left") {
                      return {
                         ...prop,
                         static: {
                            ...prop.static,
-                           width: Math.max((prop.static.width || 5) - deltaX, 1),
+                           width: Math.max((prop.static.width || 5) - movementX, 1),
                         },
                      };
                   } else {
@@ -472,7 +475,7 @@ export const Canvas: React.FC<{
                         ...prop,
                         static: {
                            ...prop.static,
-                           width: Math.max((prop.static.width || 5) + deltaX, 1),
+                           width: Math.max((prop.static.width || 5) + movementX, 1),
                         },
                      };
                   }
@@ -746,14 +749,41 @@ export const Canvas: React.FC<{
       if (isDragging) {
          setFormations((formations: formation[]) => {
             return formations.map((formation) => {
+               let gridSizeX = 1;
+               let gridSizeY = 1;
+               let verticalOffset = 0;
+               let horizontalOffset = 0;
+               if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
+                  // Determine the total number of divisions along each axis.
+                  const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
+                  const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
+
+                  // Calculate the width and height of each grid cell.
+                  gridSizeX = stageDimensions.width / totalVerticalDivisions / gridSnap;
+                  gridSizeY = stageDimensions.height / totalHorizontalDivisions / gridSnap;
+                  let isOddVerticalDivisions = (gridSubdivisions * verticalFineDivisions) % 2 !== 0;
+                  let isOddHorizontalDivisions = (horizontalGridSubdivisions * horizontalFineDivisions) % 2 !== 0;
+
+                  verticalOffset = isOddVerticalDivisions ? gridSizeX / 2 : 0;
+                  horizontalOffset = isOddHorizontalDivisions ? gridSizeY / 2 : 0;
+                  if (gridSnap % 2 === 0) {
+                     verticalOffset = 0;
+                     horizontalOffset = 0;
+                  }
+               } else {
+                  gridSizeX = 1 / gridSnap;
+                  gridSizeY = 1 / gridSnap;
+               }
+
+               // Use the grid cell dimensions to round the dancer positions to the nearest grid position.
                return {
                   ...formation,
                   positions: formation.positions.map((position) => {
                      return {
                         ...position,
                         position: {
-                           x: Math.round(position.position.x * gridSnap) / gridSnap,
-                           y: Math.round(position.position.y * gridSnap) / gridSnap,
+                           x: roundToHundredth(Math.round((position.position.x - verticalOffset) / gridSizeX) * gridSizeX + verticalOffset),
+                           y: roundToHundredth(Math.round((position.position.y - horizontalOffset) / gridSizeY) * gridSizeY + horizontalOffset),
                         },
                      };
                   }),
@@ -867,7 +897,8 @@ export const Canvas: React.FC<{
                   // transform: `scale(${zoom})`,
                }}
                // style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0, transform: `scale(${zoom})`, transformOrigin: "center" }}
-               className=" flex flex-row items-center justify-center  "
+               className=" flex flex-row items-center justify-center   "
+               // transition-[transform]
             >
                <div
                   className=" absolute opacity-50  "
@@ -881,13 +912,13 @@ export const Canvas: React.FC<{
                      // transformOrigin: "center",
                   }}
                >
-                  <GridLines
+                  {/* <GridLines
                      cloudSettings={cloudSettings}
                      stageDimensions={{
                         width: roundToNearestEven(stageDimensions.width + 30),
                         height: roundToNearestEven(stageDimensions.height + 10),
                      }}
-                  />
+                  /> */}
                </div>
                <div
                   onPointerDown={pointerDown}
@@ -929,11 +960,75 @@ export const Canvas: React.FC<{
                      />
                   ) : null}
 
-                  {stageBackground === "grid" ? (
-                     <GridLines localSettings={localSettings} zoom={zoom} cloudSettings={cloudSettings} stageDimensions={stageDimensions} />
-                  ) : null}
+                  <div className="transition duration-300">
+                     {cloudSettings.stageBackground === "gridfluid" || stageBackground === "cheer9" ? (
+                        <>
+                           <GridLines localSettings={localSettings} zoom={zoom} cloudSettings={cloudSettings} stageDimensions={stageDimensions} />
+                           <StageLines
+                              localSettings={localSettings}
+                              divisions={{ y: 4, x: 8 }}
+                              zoom={zoom}
+                              cloudSettings={cloudSettings}
+                              stageDimensions={stageDimensions}
+                           />
+                        </>
+                     ) : null}
 
-                  {stageBackground === "cheer9" ? <CheerLines stageDimensions={stageDimensions}></CheerLines> : null}
+                     {stageBackground === "grid" ? (
+                        <>
+                           <OldGridLines localSettings={localSettings} zoom={zoom} cloudSettings={cloudSettings} stageDimensions={stageDimensions} />
+                        </>
+                     ) : null}
+                  </div>
+
+                  {menuOpen === "stageSettings" ? (
+                     <>
+                        <div className="absolute bottom-0 text-7xl font-bold -translate-x-1/2 left-1/2 dark:text-white  translate-y-[150%]  ">
+                           {cloudSettings.stageDimensions.width} <span className="text-xl">feet</span>
+                        </div>
+
+                        <div className="absolute right-0 text-7xl font-bold -translate-y-1/2 top-1/2 dark:text-white  translate-x-[150%] ">
+                           {cloudSettings.stageDimensions.height} <span className="text-xl">feet</span>
+                        </div>
+
+                        {stageBackground === "gridfluid" ? (
+                           <>
+                              <div
+                                 className="bg-pink-600 absolute top-[-50px] left-0 rounded-full"
+                                 style={{
+                                    width: `${(stageDimensions.width / cloudSettings.gridSubdivisions) * PIXELS_PER_SQUARE}px`,
+                                    height: 3,
+                                 }}
+                              >
+                                 <div className="absolute bottom-5 text-7xl font-bold -translate-x-1/2 left-1/2 dark:text-white  whitespace-nowrap  ">
+                                    {Math.round((stageDimensions.width / cloudSettings.gridSubdivisions) * 100) / 100}{" "}
+                                    <span className="text-xl">feet</span>
+                                 </div>
+                              </div>
+
+                              <div
+                                 className="bg-pink-600 absolute top-[0px] left-[-50px] rounded-full"
+                                 style={{
+                                    height: `${
+                                       (stageDimensions.height / (cloudSettings.horizontalGridSubdivisions || cloudSettings.gridSubdivisions)) *
+                                       PIXELS_PER_SQUARE
+                                    }px`,
+                                    width: 3,
+                                 }}
+                              >
+                                 <div className="absolute right-5 text-7xl font-bold -translate-y-1/2 top-1/2 dark:text-white whitespace-nowrap ">
+                                    {Math.round(
+                                       (cloudSettings.stageDimensions.height /
+                                          (cloudSettings.horizontalGridSubdivisions || cloudSettings.gridSubdivisions)) *
+                                          100
+                                    ) / 100}{" "}
+                                    <span className="text-xl">feet</span>
+                                 </div>
+                              </div>
+                           </>
+                        ) : null}
+                     </>
+                  ) : null}
 
                   {!isPlaying && !localSettings.stageFlipped && (
                      <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
@@ -1023,4 +1118,7 @@ function roundToNearestEven(n: number): number {
    } else {
       return n + 1;
    }
+}
+function roundToHundredth(value: number): number {
+   return Math.round(value * 100) / 100;
 }

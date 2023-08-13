@@ -21,6 +21,7 @@ import { Grid, OrbitControls, Text } from "@react-three/drei";
 
 import { ThreeDancer } from "./ThreeDComponents/ThreeDancer";
 import { ThreeSetPiece } from "./ThreeDComponents/ThreeSetPiece";
+import { ThreeGrid } from "./ThreeDComponents/ThreeGrid";
 // import { ThreeComment } from "./ThreeDComponents/ThreeComment";
 
 const CheerLines = dynamic(() => import("./ThreeDComponents/CheerLines").then((mod) => mod.CheerLines));
@@ -109,10 +110,13 @@ export const ThreeD: React.FC<{
    // comments,
 }) => {
    const { gridSnap } = localSettings;
-   const { stageBackground, stageDimensions } = cloudSettings;
+   const { stageBackground, stageDimensions, gridSubdivisions, horizontalGridSubdivisions, verticalFineDivisions, horizontalFineDivisions } =
+      cloudSettings;
    let planeIntersectPoint = new Vector3();
    const floorPlane = new Plane(new Vector3(0, 1, 0), 0);
    // const depthBuffer = useDepthBuffer({ frames: 1 });
+   const squareWidthFeet = cloudSettings.stageDimensions.width / cloudSettings.gridSubdivisions / cloudSettings.verticalFineDivisions;
+   const squareHeightFeet = cloudSettings.stageDimensions.height / cloudSettings.horizontalGridSubdivisions / cloudSettings.horizontalFineDivisions;
 
    return (
       <Canvas
@@ -120,16 +124,59 @@ export const ThreeD: React.FC<{
             if (viewOnly) return;
             setIsThreeDancerDragging(false);
 
+            // setFormations((formations: formation[]) => {
+            //    return formations.map((formation) => {
+            //       return {
+            //          ...formation,
+            //          positions: formation.positions.map((position) => {
+            //             return {
+            //                ...position,
+            //                position: {
+            //                   x: Math.round(position.position.x * gridSnap) / gridSnap,
+            //                   y: Math.round(position.position.y * gridSnap) / gridSnap,
+            //                },
+            //             };
+            //          }),
+            //       };
+            //    });
+            // });
             setFormations((formations: formation[]) => {
                return formations.map((formation) => {
+                  let gridSizeX = 1;
+                  let gridSizeY = 1;
+                  let verticalOffset = 0;
+                  let horizontalOffset = 0;
+                  if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
+                     // Determine the total number of divisions along each axis.
+                     const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
+                     const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
+
+                     // Calculate the width and height of each grid cell.
+                     gridSizeX = stageDimensions.width / totalVerticalDivisions / gridSnap;
+                     gridSizeY = stageDimensions.height / totalHorizontalDivisions / gridSnap;
+                     let isOddVerticalDivisions = (gridSubdivisions * verticalFineDivisions) % 2 !== 0;
+                     let isOddHorizontalDivisions = (horizontalGridSubdivisions * horizontalFineDivisions) % 2 !== 0;
+
+                     verticalOffset = isOddVerticalDivisions ? gridSizeX / 2 : 0;
+                     horizontalOffset = isOddHorizontalDivisions ? gridSizeY / 2 : 0;
+                     if (gridSnap % 2 === 0) {
+                        verticalOffset = 0;
+                        horizontalOffset = 0;
+                     }
+                  } else {
+                     gridSizeX = 1 / gridSnap;
+                     gridSizeY = 1 / gridSnap;
+                  }
+
+                  // Use the grid cell dimensions to round the dancer positions to the nearest grid position.
                   return {
                      ...formation,
                      positions: formation.positions.map((position) => {
                         return {
                            ...position,
                            position: {
-                              x: Math.round(position.position.x * gridSnap) / gridSnap,
-                              y: Math.round(position.position.y * gridSnap) / gridSnap,
+                              x: roundToHundredth(Math.round((position.position.x - verticalOffset) / gridSizeX) * gridSizeX + verticalOffset),
+                              y: roundToHundredth(Math.round((position.position.y - horizontalOffset) / gridSizeY) * gridSizeY + horizontalOffset),
                            },
                         };
                      }),
@@ -157,35 +204,186 @@ export const ThreeD: React.FC<{
                ></ThreeComment>
             );
          })} */}
-         {stageBackground === "cheer9" ? (
-            <CheerLines
-               localSettings={localSettings}
-               stageWidth={cloudSettings.stageDimensions.width}
-               stageHeight={cloudSettings.stageDimensions.height}
-            />
-         ) : stageBackground === "grid" || stageBackground === "custom" ? (
-            <Grid
-               receiveShadow
-               castShadow
-               onPointerDown={(e) => {
-                  setSelectedDancers([]);
-               }}
-               renderOrder={-1}
-               position={[0, 0, 0]}
-               args={[cloudSettings.stageDimensions.width, cloudSettings.stageDimensions.height]}
-               cellSize={1}
-               cellThickness={0.5}
-               sectionSize={8}
-               sectionThickness={1.5}
-               cellColor={`${localSettings.isDarkMode ? "white" : "black"}`}
-               sectionColor={"#737373"}
-            />
+
+         {stageBackground === "gridfluid" || stageBackground === "cheer9" ? (
+            <>
+               <ThreeGrid localSettings={localSettings} cloudSettings={cloudSettings}></ThreeGrid>
+
+               {stageBackground === "gridfluid" ? (
+                  <>
+                     {new Array(Math.floor((cloudSettings.gridSubdivisions * cloudSettings.verticalFineDivisions) / 2))
+                        .fill(0)
+                        .map((_: number, index: number) => {
+                           return (
+                              <Text
+                                 scale={[0.7, 0.7, 0.7]}
+                                 position={[index * squareWidthFeet, 0, cloudSettings.stageDimensions.height / 2]}
+                                 rotation={[Math.PI * 1.5, 0, 0]}
+                                 fillOpacity={0.7}
+                                 color={`${localSettings.isDarkMode ? "white" : "black"}`}
+                                 anchorX="center"
+                              >
+                                 {index % 2 === 0 && index !== 0 ? index : ""}
+                              </Text>
+                           );
+                        })}
+                     {new Array(Math.floor((cloudSettings.gridSubdivisions * cloudSettings.verticalFineDivisions) / 2))
+                        .fill(0)
+                        .map((_: number, index: number) => {
+                           return (
+                              <Text
+                                 scale={[0.7, 0.7, 0.7]}
+                                 position={[-(index * squareWidthFeet), 0, cloudSettings.stageDimensions.height / 2]}
+                                 rotation={[Math.PI * 1.5, 0, 0]}
+                                 fillOpacity={0.7}
+                                 color={`${localSettings.isDarkMode ? "white" : "black"}`}
+                                 anchorX="center"
+                              >
+                                 {index % 2 === 0 && index !== 0 ? index : ""}
+                              </Text>
+                           );
+                        })}
+                     <Text
+                        scale={[0.7, 0.7, 0.7]}
+                        position={[0, 0, cloudSettings.stageDimensions.height / 2]}
+                        rotation={[Math.PI * 1.5, 0, 0]}
+                        fillOpacity={0.7}
+                        color={`${localSettings.isDarkMode ? "white" : "black"}`}
+                        anchorX="center"
+                        // anchorY="middle"
+                     >
+                        0
+                     </Text>
+                  </>
+               ) : null}
+            </>
          ) : null}
+
+         {stageBackground === "cheer9" ? (
+            <>
+               {new Array(Math.floor(cloudSettings.gridSubdivisions)).fill(0).map((_: number, index: number) => {
+                  // index = cloudSettings.stageDimensions.width / 2 - index;
+                  return (
+                     <Text
+                        scale={[0.7, 0.7, 0.7]}
+                        position={[
+                           index * cloudSettings.verticalFineDivisions * squareWidthFeet -
+                              stageDimensions.width / 2 +
+                              (cloudSettings.verticalFineDivisions * squareWidthFeet) / 2,
+                           0,
+                           cloudSettings.stageDimensions.height / 2,
+                        ]}
+                        rotation={[Math.PI * 1.5, 0, 0]}
+                        fillOpacity={0.7}
+                        color={`${localSettings.isDarkMode ? "white" : "black"}`}
+                        anchorX="center"
+                        // anchorY="middle"
+                     >
+                        {/* {index % 2 === 0 && index !== 0 ? index : ""} */}
+                        {index + 1}
+                        {/* {(Math.floor(stageDimensions.width / 2) - index - 1) % 2 === 0 ? Math.floor(stageDimensions.width / 2) - index - 1 : ""} */}
+                     </Text>
+                  );
+               })}
+            </>
+         ) : null}
+
+         {/* {cloudSettings.gridSystem === "fixed" ? ( */}
+
+         {stageBackground === "custom" || stageBackground === "grid" ? (
+            <>
+               <Grid
+                  receiveShadow
+                  castShadow
+                  onPointerDown={(e) => {
+                     setSelectedDancers([]);
+                  }}
+                  renderOrder={-1}
+                  position={[0, 0, 0]}
+                  args={[cloudSettings.stageDimensions.width, cloudSettings.stageDimensions.height]}
+                  cellSize={1}
+                  cellThickness={0.5}
+                  sectionSize={8}
+                  sectionThickness={1.5}
+                  cellColor={`${localSettings.isDarkMode ? "white" : "black"}`}
+                  sectionColor={"#737373"}
+               />
+               {new Array(Math.floor(stageDimensions.width / 2)).fill(0).map((_: number, index: number) => {
+                  // index = cloudSettings.stageDimensions.width / 2 - 1 - index;
+                  return (
+                     <Text
+                        scale={[0.7, 0.7, 0.7]}
+                        position={[index, 0, cloudSettings.stageDimensions.height / 2]}
+                        rotation={[Math.PI * 1.5, 0, 0]}
+                        fillOpacity={0.7}
+                        color={`${localSettings.isDarkMode ? "white" : "black"}`}
+                        anchorX="center"
+                        // anchorY="middle"
+                     >
+                        {index % 2 === 0 && index !== 0 ? index : ""}
+                     </Text>
+                  );
+               })}
+               {new Array(Math.floor(stageDimensions.width / 2)).fill(0).map((_: number, index: number) => {
+                  // index = cloudSettings.stageDimensions.width / 2 - index;
+                  return (
+                     <Text
+                        scale={[0.7, 0.7, 0.7]}
+                        position={[-index, 0, cloudSettings.stageDimensions.height / 2]}
+                        rotation={[Math.PI * 1.5, 0, 0]}
+                        fillOpacity={0.7}
+                        color={`${localSettings.isDarkMode ? "white" : "black"}`}
+                        anchorX="center"
+                        // anchorY="middle"
+                     >
+                        {index % 2 === 0 && index !== 0 ? index : ""}
+                        {/* {(Math.floor(stageDimensions.width / 2) - index - 1) % 2 === 0 ? Math.floor(stageDimensions.width / 2) - index - 1 : ""} */}
+                     </Text>
+                  );
+               })}
+            </>
+         ) : null}
+
+         {/* {stageBackground === "cheer9" ? (
+            <>
+               <CheerLines
+                  localSettings={localSettings}
+                  stageWidth={cloudSettings.stageDimensions.width}
+                  stageHeight={cloudSettings.stageDimensions.height}
+               />
+               {new Array(Math.floor(cloudSettings.gridSubdivisions)).fill(0).map((_: number, index: number) => {
+                  // index = cloudSettings.stageDimensions.width / 2 - index;
+                  return (
+                     <Text
+                        scale={[0.7, 0.7, 0.7]}
+                        position={[
+                           (index * stageDimensions.width) / cloudSettings.gridSubdivisions -
+                              stageDimensions.width / 2 +
+                              stageDimensions.width / cloudSettings.gridSubdivisions / 2,
+                           0,
+                           cloudSettings.stageDimensions.height / 2,
+                        ]}
+                        rotation={[Math.PI * 1.5, 0, 0]}
+                        fillOpacity={0.7}
+                        color={`${localSettings.isDarkMode ? "white" : "black"}`}
+                        anchorX="center"
+                        // anchorY="middle"
+                     >
+                        {index + 1}
+                     </Text>
+                  );
+               })}
+            </>
+         ) : null} */}
+
+         {/* ) : null} */}
+
          {/* <mesh receiveShadow castShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
             <planeBufferGeometry attach="geometry" args={[cloudSettings.stageDimensions.width, cloudSettings.stageDimensions.height]} />
             <meshStandardMaterial attach="material" color={`${localSettings.isDarkMode ? "white" : "black"}`} />
          </mesh> */}
 
+         {/* <ThreeGrid localSettings={localSettings} cloudSettings={cloudSettings}></ThreeGrid> */}
          {cloudSettings?.backgroundUrl && cloudSettings.stageBackground === "custom" ? (
             <StageBackground cloudSettings={cloudSettings} url={cloudSettings.backgroundUrl}></StageBackground>
          ) : null}
@@ -220,7 +418,7 @@ export const ThreeD: React.FC<{
             anglePower={10}
             intensity={5}
          /> */}
-         {isIntro ? <LightArray cloudSettings={cloudSettings} /> : null}
+
          {/* <Scene /> */}
          {/* <SpotLight color={"blue"} castShadow penumbra={1} distance={6} angle={0.35} attenuation={5} anglePower={4} intensity={2} /> */}
          <directionalLight position={[0, 10, 5]} intensity={1} />
@@ -314,39 +512,6 @@ export const ThreeD: React.FC<{
             STAGE RIGHT
          </Text>
 
-         {new Array(Math.floor(stageDimensions.width / 2)).fill(0).map((_: number, index: number) => {
-            // index = cloudSettings.stageDimensions.width / 2 - 1 - index;
-            return (
-               <Text
-                  scale={[0.7, 0.7, 0.7]}
-                  position={[index, 0, cloudSettings.stageDimensions.height / 2]}
-                  rotation={[Math.PI * 1.5, 0, 0]}
-                  fillOpacity={0.7}
-                  color={`${localSettings.isDarkMode ? "white" : "black"}`}
-                  anchorX="center"
-                  // anchorY="middle"
-               >
-                  {index % 2 === 0 && index !== 0 ? index : ""}
-               </Text>
-            );
-         })}
-         {new Array(Math.floor(stageDimensions.width / 2)).fill(0).map((_: number, index: number) => {
-            // index = cloudSettings.stageDimensions.width / 2 - index;
-            return (
-               <Text
-                  scale={[0.7, 0.7, 0.7]}
-                  position={[index - Math.floor(stageDimensions.width / 2) + 1, 0, cloudSettings.stageDimensions.height / 2]}
-                  rotation={[Math.PI * 1.5, 0, 0]}
-                  fillOpacity={0.7}
-                  color={`${localSettings.isDarkMode ? "white" : "black"}`}
-                  anchorX="center"
-                  // anchorY="middle"
-               >
-                  {(Math.floor(stageDimensions.width / 2) - index - 1) % 2 === 0 ? Math.floor(stageDimensions.width / 2) - index - 1 : ""}
-               </Text>
-            );
-         })}
-
          {/* <mesh
             rotation={[0, 0, 0]}
             position={[0, -1, 0]}
@@ -399,76 +564,6 @@ export const ThreeD: React.FC<{
    );
 };
 
-const lightHeight = 13;
-
-export function LightArray({ cloudSettings }) {
-   const gridRows = 4;
-   const gridColumns = 4;
-
-   // Color palette
-   const colors = ["#db2777", "#0000ff", "#800080", "#ff4500"];
-   const [colorIndex, setColorIndex] = useState(0);
-
-   // useEffect(() => {
-   //    const intervalId = setInterval(() => {
-   //       setColorIndex((prevIndex) => (prevIndex + 1) % colors.length);
-   //    }, 500); // Change color every 1 second
-
-   //    return () => {
-   //       clearInterval(intervalId); // Clean up on unmount
-   //    };
-   // }, [colors.length]);
-
-   // Calculate distances between lights based on stage size and grid dimensions
-   const xSpacing = cloudSettings.stageDimensions.width / (gridColumns + 1);
-   const ySpacing = cloudSettings.stageDimensions.height / (gridRows + 1);
-
-   const positions = useMemo(() => {
-      const pos = [];
-      for (let i = 0; i < gridRows; i++) {
-         for (let j = 0; j < gridColumns; j++) {
-            pos.push([
-               (j + 1) * xSpacing - cloudSettings.stageDimensions.width / 2,
-               lightHeight,
-               (i + 1) * ySpacing - cloudSettings.stageDimensions.height / 2,
-            ]);
-         }
-      }
-      return pos;
-   }, [gridRows, gridColumns, xSpacing, ySpacing, lightHeight]);
-
-   return (
-      <>
-         {positions.map((position, i) => {
-            const targetRef = useRef();
-
-            const lightPosition = [position[0], position[1], position[2]];
-            const targetPosition = [position[0], 0, position[2]]; // The position right beneath the light
-
-            useLayoutEffect(() => {
-               if (targetRef.current) {
-                  targetRef.current.position.set(...targetPosition);
-               }
-            }, [targetPosition]);
-
-            return (
-               <group key={i}>
-                  <SpotLight
-                     opacity={0.4}
-                     position={lightPosition}
-                     color={colors[colorIndex]}
-                     castShadow
-                     penumbra={0.2}
-                     distance={25}
-                     angle={1}
-                     decay={1}
-                     intensity={1}
-                     target={targetRef.current}
-                  />
-                  <object3D ref={targetRef} />
-               </group>
-            );
-         })}
-      </>
-   );
+function roundToHundredth(value: number): number {
+   return Math.round(value * 100) / 100;
 }

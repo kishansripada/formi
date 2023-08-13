@@ -45,10 +45,11 @@ const getServerSideProps = async (danceId: string) => {
       redirect("/login");
    }
    let viewOnly = true;
+   const DEMO_DANCE_ID = 207;
 
    if (
       // they can edit if its the demo
-      dance.id === 207 ||
+      dance.id === DEMO_DANCE_ID ||
       // if it's their own
       dance?.user === session?.user?.id ||
       // if they have edit permissions

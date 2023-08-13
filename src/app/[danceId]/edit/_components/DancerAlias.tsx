@@ -91,6 +91,8 @@ export const DancerAlias: React.FC<{
    // console.log(color);
    // let firstNamesOnThisFormation = idsOnThisFormation.map((id) => onlineUsers[id][0].name).map((name) => name.split(" ")[0]);
    // console.log(idSelectingMe);
+
+   const HUMAN_WIDTH_FEET = 1.5;
    return (
       <>
          <div
@@ -101,6 +103,8 @@ export const DancerAlias: React.FC<{
                MozUserSelect: "none",
                msUserSelect: "none",
                userSelect: "none",
+               width: PIXELS_PER_SQUARE * HUMAN_WIDTH_FEET,
+               height: PIXELS_PER_SQUARE * HUMAN_WIDTH_FEET,
                // borderRadius: dancer?.shape === "square" ? 0 : "50%",
                // pointerEvents: idSelectingMe ? "none" : "auto",
                // transform: `scale(${(1 / zoom) * 0.66}) translate(-${50 * zoom * (1 / 0.6)}%, -${50 * zoom * (1 / 0.66)}%)`,
@@ -119,7 +123,7 @@ export const DancerAlias: React.FC<{
             onMouseDown={(e) => e.preventDefault()}
             id={dancer.id}
             data-type={"dancer"}
-            className={` w-[40px] h-[40px]  group select-none  lg:pointer-events-auto pointer-events-none flex  -translate-y-1/2 -translate-x-1/2 flex-row justify-center items-center absolute z-[30] mr-auto ml-auto cursor-default `}
+            className={`   group select-none  lg:pointer-events-auto pointer-events-none flex  -translate-y-1/2 -translate-x-1/2 flex-row justify-center items-center absolute z-[30] mr-auto ml-auto cursor-default `}
          >
             {thisItem && (
                <div
@@ -216,7 +220,7 @@ export const DancerAlias: React.FC<{
                               : "#404040"
                            : hexToRGBA(dancer?.color || "#db2777", 0.5)
                      }
-                     stroke-width="8"
+                     strokeWidth="8"
                   />
                </svg>
             )}

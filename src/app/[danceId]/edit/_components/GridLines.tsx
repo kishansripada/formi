@@ -7,7 +7,6 @@ export const GridLines: React.FC<{
    zoom: number;
    localSettings: localSettings;
 }> = ({ stageDimensions, cloudSettings, zoom, localSettings, opacity }) => {
-   // console.log({ zoom });
    return (
       <>
          <svg
@@ -23,10 +22,12 @@ export const GridLines: React.FC<{
             viewBox={`0 0 ${stageDimensions.width} ${stageDimensions.height}`}
          >
             {/* Horizontal lines */}
-            {new Array(stageDimensions.height).fill(0).map((_, i) => {
-               const centerPos = stageDimensions.height / 2;
-               const myYOffset = centerPos + (i > centerPos ? i - Math.floor(centerPos) : -i);
-               const differenceFromCenter = Math.round(Math.abs(myYOffset - centerPos));
+            {new Array(Math.floor(cloudSettings.horizontalGridSubdivisions * cloudSettings.horizontalFineDivisions)).fill(0).map((_, i) => {
+               // const centerPos = stageDimensions.height / 2;
+               // const myYOffset = centerPos + (i > centerPos ? i - Math.floor(centerPos) : -i);
+               // const differenceFromCenter = Math.round(Math.abs(myYOffset - centerPos));
+               const spaceBeteenLines = stageDimensions.height / cloudSettings.horizontalGridSubdivisions / cloudSettings.horizontalFineDivisions;
+               const myYOffset = i * spaceBeteenLines;
 
                return (
                   <line
@@ -37,21 +38,20 @@ export const GridLines: React.FC<{
                      y2={myYOffset}
                      className="dark:stroke-neutral-600 stroke-neutral-300"
                      strokeWidth={
-                        differenceFromCenter % cloudSettings.gridSubdivisions === 0
-                           ? 0.05 * 1.2
-                           : // : zoom < 0.6 && differenceFromCenter % 2 === 0
-                             // ? 0
-                             0.01 * 1.2
+                        // differenceFromCenter % cloudSettings.gridSubdivisions === 0
+                        //    ? 0.05 * 1.2
+                        //    : // : zoom < 0.6 && differenceFromCenter % 2 === 0
+                        //      // ? 0
+                        0.01 * 1.2
                      }
                   />
                );
             })}
             {/* Vertical lines */}
-            {new Array(Math.floor(stageDimensions.width)).fill(0).map((_, i) => {
-               const centerPos = stageDimensions.width / 2;
-               const myXOffset = centerPos + (i > centerPos ? i - Math.floor(centerPos) : -i);
-               const differenceFromCenter = Math.round(Math.abs(myXOffset - centerPos));
-
+            {new Array(Math.floor(cloudSettings.gridSubdivisions * cloudSettings.verticalFineDivisions)).fill(0).map((_, i) => {
+               const spaceBeteenLines = stageDimensions.width / cloudSettings.gridSubdivisions / cloudSettings.verticalFineDivisions;
+               const myXOffset = i * spaceBeteenLines;
+               const center = stageDimensions.width / 2;
                return (
                   <>
                      <line
@@ -62,27 +62,68 @@ export const GridLines: React.FC<{
                         y2={stageDimensions.height}
                         className="dark:stroke-neutral-600 stroke-neutral-300"
                         strokeWidth={
-                           differenceFromCenter % cloudSettings.gridSubdivisions === 0
-                              ? 0.05 * 1.2
-                              : // : zoom < 0.6 && differenceFromCenter % 2 === 0
-                                // ? 0
-                                0.01 * 1.2
+                           // differenceFromCenter % cloudSettings.gridSubdivisions === 0
+                           //    ? 0.05 * 1.2
+                           //    : // : zoom < 0.6 && differenceFromCenter % 2 === 0
+                           //      // ? 0
+                           0.01 * 1.2
                         }
                      />
-                     {localSettings ? (
-                        <text
-                           style={{
-                              fontSize:
-                                 differenceFromCenter % 2 === 0 ? (zoom < 0.4 && differenceFromCenter % 4 === 0 ? 0 : Math.min(0.3 / zoom, 30)) : 0,
-                           }}
-                           opacity={0.8}
-                           x={myXOffset}
-                           y={localSettings.stageFlipped ? 0.7 : stageDimensions.height - 0.2}
-                           textAnchor="middle"
-                           className="dark:fill-neutral-400 fill-neutral-600 font-bold"
-                        >
-                           {differenceFromCenter}
-                        </text>
+
+                     {cloudSettings.stageBackground === "gridfluid" ? (
+                        <>
+                           {" "}
+                           {localSettings ? (
+                              <text
+                                 style={{
+                                    fontSize: i % 2 === 0 ? (zoom < 0.2 && i % 4 === 0 ? 0 : Math.min(0.3 / zoom, 30)) : 0,
+                                 }}
+                                 opacity={0.8}
+                                 x={myXOffset + center}
+                                 y={localSettings.stageFlipped ? 0.7 : stageDimensions.height - 0.4}
+                                 textAnchor="middle"
+                                 className="dark:fill-neutral-400 fill-neutral-600 font-bold z-10"
+                              >
+                                 {i}
+                              </text>
+                           ) : null}
+                           {localSettings ? (
+                              <text
+                                 style={{
+                                    fontSize: i % 2 === 0 ? (zoom < 0.2 && i % 4 === 0 ? 0 : Math.min(0.3 / zoom, 30)) : 0,
+                                 }}
+                                 opacity={0.8}
+                                 x={center - myXOffset}
+                                 y={localSettings.stageFlipped ? 0.7 : stageDimensions.height - 0.4}
+                                 textAnchor="middle"
+                                 className="dark:fill-neutral-400 fill-neutral-600 font-bold z-10"
+                              >
+                                 {i}
+                              </text>
+                           ) : null}
+                        </>
+                     ) : null}
+
+                     {cloudSettings.stageBackground === "cheer9" ? (
+                        <>
+                           {localSettings ? (
+                              <text
+                                 style={{
+                                    fontSize: zoom < 0.2 && i % 4 === 0 ? 0 : Math.min(0.3 / zoom, 30),
+                                 }}
+                                 opacity={0.8}
+                                 x={
+                                    (i - 1) * (stageDimensions.width / cloudSettings.gridSubdivisions) +
+                                    stageDimensions.width / cloudSettings.gridSubdivisions / 2
+                                 }
+                                 y={localSettings.stageFlipped ? 0.7 : stageDimensions.height - 0.4}
+                                 textAnchor="middle"
+                                 className="dark:fill-neutral-400 fill-neutral-600 font-bold"
+                              >
+                                 {i}
+                              </text>
+                           ) : null}
+                        </>
                      ) : null}
                   </>
                );
