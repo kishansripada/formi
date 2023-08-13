@@ -158,6 +158,19 @@ export const Layer: React.FC<{
                               setSelectedDancers([]);
                            }
 
+                           // setFormations((formations: formation[]) => {
+                           //    return formations.map((formationx) => {
+                           //       if (formationx.id === formation.id) {
+                           //          return {
+                           //             ...formation,
+                           //             durationSeconds: formationx.durationSeconds - 1,
+                           //             transition: { ...formationx.transition, durationSeconds: formationx.transition.durationSeconds + 1 },
+                           //          };
+                           //       }
+                           //       return formationx;
+                           //    });
+                           // });
+
                            setSelectedFormation(index);
                            // if (isPlaying) {
                            let position = formations

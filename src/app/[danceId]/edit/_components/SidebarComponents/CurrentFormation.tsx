@@ -61,12 +61,7 @@ export const CurrentFormation: React.FC<{
 
    return (
       <>
-         <div
-            className=" lg:flex hidden  w-[260px] bg-white  min-w-[260px] flex-col h-full  dark:bg-neutral-800 dark:text-neutral-100  "
-            style={{
-               pointerEvents: viewOnly ? "none" : "auto",
-            }}
-         >
+         <div className=" lg:flex hidden  w-[260px] bg-white  min-w-[260px] flex-col h-full  dark:bg-neutral-800 dark:text-neutral-100  ">
             {selectedFormation !== null && formations[selectedFormation] ? (
                <>
                   {/* <div className="px-6">
@@ -206,6 +201,7 @@ export const CurrentFormation: React.FC<{
                               });
                            })
                         }
+                        disabled={viewOnly}
                         value={formations[selectedFormation]?.name || ""}
                      />
                   </div>
@@ -233,6 +229,7 @@ export const CurrentFormation: React.FC<{
                                  </div>
                                  <button
                                     onClick={() => {
+                                       if (viewOnly) return;
                                        // addToStack();
                                        deleteComment(comment.id);
                                        pushChange();
@@ -272,6 +269,7 @@ export const CurrentFormation: React.FC<{
                               });
                            });
                         }}
+                        disabled={viewOnly}
                         className="dark:bg-neutral-700 transition bg-neutral-100  w-full focus:outline-none p-3 text-sm border-2 border-neutral-300 focus:border-pink-300 dark:border-neutral-600 dark:focus:border-pink-600 resize-none rounded-md"
                         cols={30}
                         rows={13}

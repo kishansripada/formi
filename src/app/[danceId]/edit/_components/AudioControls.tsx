@@ -93,6 +93,7 @@ export const AudioControls: React.FC<{
                      transitionType: "linear",
                   };
                }),
+               notes: "",
             },
          ];
       });

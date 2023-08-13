@@ -59,7 +59,7 @@ export const ChooseAudioSource: React.FC<{
       toast
          .promise(
             supabase.storage.from("audiofiles").upload(`${userId}/${file.name}`, body, {
-               cacheControl: "no-cache",
+               cacheControl: "3600",
                upsert: true,
             }),
             {
