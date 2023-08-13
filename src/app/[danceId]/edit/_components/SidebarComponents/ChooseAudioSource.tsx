@@ -14,6 +14,7 @@ export const ChooseAudioSource: React.FC<{
    setUpgradeIsOpen: Function;
    pricingTier: string;
    session: AuthSession | null;
+   viewOnly: boolean;
 }> = ({
    audioFiles,
    setSoundCloudTrackId,
@@ -25,6 +26,7 @@ export const ChooseAudioSource: React.FC<{
    setUpgradeIsOpen,
    pricingTier,
    session,
+   viewOnly,
 }) => {
    const [file, setFile] = useState<File | null>();
 
@@ -182,6 +184,7 @@ export const ChooseAudioSource: React.FC<{
                            <div
                               key={audiofile.name}
                               onClick={() => {
+                                 if (viewOnly) return;
                                  player ? player.pause() : null;
                                  setIsPlaying(false);
                                  setSoundCloudTrackId(

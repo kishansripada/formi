@@ -1124,6 +1124,7 @@ const Edit = ({
                                        audioFiles={audioFiles}
                                        setAudiofiles={setAudiofiles}
                                        setLocalSource={setLocalSource}
+                                       viewOnly={viewOnly}
                                     ></ChooseAudioSource>
                                  ) : menuOpen === "settings" ? (
                                     <Settings
@@ -1154,6 +1155,7 @@ const Edit = ({
                                        setFormations={setFormations}
                                        setUpgradeIsOpen={setUpgradeIsOpen}
                                        setAssetsOpen={setAssetsOpen}
+                                       viewOnly={viewOnly}
                                     ></StageSettings>
                                  ) : menuOpen === "collisions" ? (
                                     <Collisions

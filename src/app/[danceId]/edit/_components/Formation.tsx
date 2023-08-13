@@ -35,7 +35,11 @@ export const Formation: React.FC<{
    selectedFormation,
 }) => {
    // console.log(onlineUsers);
-   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: formation.id, attributes: { tabIndex: -1 } });
+   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+      id: formation.id,
+      attributes: { tabIndex: -1 },
+      disabled: viewOnly,
+   });
    const style = {
       transform: CSS.Translate.toString(transform),
       transition,
@@ -178,16 +182,18 @@ export const Formation: React.FC<{
                </svg>
             </div> */}
 
-               <div
-                  data-type="formation-resize"
-                  id={formation.id}
-                  onMouseDown={(e) => e.preventDefault()}
-                  className="h-[60%] top-0 absolute right-[0px] flex flex-row items-center bg-black/50 justify-between    opacity-0 group-hover:opacity-100 transition lg:pointer-events-auto pointer-events-none w-[7px] cursor-col-resize	z-[99]"
-               >
-                  <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none">
-                     <div className="w-[2px] h-[15px] rounded-full bg-neutral-300 dark:bg-neutral-300"></div>
+               {!viewOnly ? (
+                  <div
+                     data-type="formation-resize"
+                     id={formation.id}
+                     onMouseDown={(e) => e.preventDefault()}
+                     className="h-[60%] top-0 absolute right-[0px] flex flex-row items-center bg-black/50 justify-between    opacity-0 group-hover:opacity-100 transition lg:pointer-events-auto pointer-events-none w-[7px] cursor-col-resize	z-[99]"
+                  >
+                     <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none">
+                        <div className="w-[2px] h-[15px] rounded-full bg-neutral-300 dark:bg-neutral-300"></div>
+                     </div>
                   </div>
-               </div>
+               ) : null}
 
                {/* <div
                   className={` h-[17px]  px-1  overflow-hidden text-ellipsis whitespace-nowrap   border-b border-neutral-200 dark:border-neutral-600`}
@@ -219,16 +225,18 @@ export const Formation: React.FC<{
                            {/* <svg className="" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
                                  <polygon className="fill-neutral-300 dark:fill-neutral-500" strokeWidth={0} points="0,0 0,20 10,10" />
                               </svg> */}
-                           <div
-                              data-type="transition-resize"
-                              id={formation.id}
-                              onMouseDown={(e) => e.preventDefault()}
-                              className="h-full absolute right-[7px]  flex flex-row items-center bg-black/50 justify-between  opacity-0 group-hover:opacity-100 transition lg:pointer-events-auto pointer-events-none w-[7px] cursor-col-resize	z-[99]"
-                           >
-                              <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none">
-                                 <div className="w-[2px] h-[10px] rounded-full bg-neutral-300 dark:bg-neutral-300"></div>
+                           {!viewOnly ? (
+                              <div
+                                 data-type="transition-resize"
+                                 id={formation.id}
+                                 onMouseDown={(e) => e.preventDefault()}
+                                 className="h-full absolute right-[7px]  flex flex-row items-center bg-black/50 justify-between  opacity-0 group-hover:opacity-100 transition lg:pointer-events-auto pointer-events-none w-[7px] cursor-col-resize	z-[99]"
+                              >
+                                 <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none">
+                                    <div className="w-[2px] h-[10px] rounded-full bg-neutral-300 dark:bg-neutral-300"></div>
+                                 </div>
                               </div>
-                           </div>
+                           ) : null}
                            {/* <svg
                                  className="w-1/2 relative h-full"
                                  preserveAspectRatio="none"

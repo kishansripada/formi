@@ -13,7 +13,19 @@ export const StageSettings: React.FC<{
    setFormations: Function;
    setHelpUrl: Function;
    setAssetsOpen: Function;
-}> = ({ setLocalSettings, localSettings, dropDownToggle, pushChange, cloudSettings, setCloudSettings, setFormations, setHelpUrl, setAssetsOpen }) => {
+   viewOnly: boolean;
+}> = ({
+   setLocalSettings,
+   localSettings,
+   dropDownToggle,
+   pushChange,
+   cloudSettings,
+   setCloudSettings,
+   setFormations,
+   setHelpUrl,
+   setAssetsOpen,
+   viewOnly,
+}) => {
    let { stageBackground, stageDimensions } = cloudSettings;
    const [newWidth, setNewWidth] = useState(stageDimensions.width.toString());
    const [newHeight, setNewHeight] = useState(stageDimensions.height.toString());
@@ -109,7 +121,12 @@ export const StageSettings: React.FC<{
             `}
          </style>
          <Toaster></Toaster>
-         <div className=" w-[260px]  min-w-[260px] hidden lg:block bg-white dark:bg-neutral-800 dark:text-white h-full  py-4 overflow-y-scroll overflow-x-hidden">
+         <div
+            style={{
+               pointerEvents: viewOnly ? "none" : "all",
+            }}
+            className=" w-[260px]  min-w-[260px] hidden lg:block bg-white dark:bg-neutral-800 dark:text-white h-full  py-4 overflow-y-scroll overflow-x-hidden"
+         >
             <div className=" px-4">
                <p className="text-sm font-medium">Stage Dimensions (feet)</p>
                <div className="flex flex-col   ">

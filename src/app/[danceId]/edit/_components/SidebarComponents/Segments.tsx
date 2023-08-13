@@ -128,6 +128,9 @@ export const Segments: React.FC<{
                            </svg>
                         </button> */}
                      <button
+                        style={{
+                           pointerEvents: viewOnly ? "none" : "all",
+                        }}
                         onClick={() => {
                            setSegments((segments: segment[]) => {
                               return [

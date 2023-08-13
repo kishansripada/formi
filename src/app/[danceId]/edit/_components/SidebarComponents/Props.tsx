@@ -54,7 +54,12 @@ export const Props: React.FC<{
 }) => {
    return (
       <>
-         <div className="lg:flex hidden  w-[260px]  min-w-[260px] h-full  flex-col   bg-white  overflow-scroll dark:bg-neutral-800 dark:text-white  pt-6 ">
+         <div
+            style={{
+               pointerEvents: viewOnly ? "none" : "all",
+            }}
+            className="lg:flex hidden  w-[260px]  min-w-[260px] h-full  flex-col   bg-white  overflow-scroll dark:bg-neutral-800 dark:text-white  pt-6 "
+         >
             <div className=" font-medium mb-2 flex flex-row  items-center  px-4 text-sm ">
                <p>Set pieces</p>
                <svg
