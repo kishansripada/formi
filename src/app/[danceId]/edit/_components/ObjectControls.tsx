@@ -3,6 +3,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Dropdown from "./Dropdown";
+import { PopoverPicker } from "./ColorPicker";
 export const ObjectControls: React.FC<{
    soundCloudTrackId: string | null;
    setSelectedFormation: Function;
@@ -62,6 +63,7 @@ export const ObjectControls: React.FC<{
    dancers,
    viewOnlyInitial,
 }) => {
+   if (selectedFormation === null) return null;
    const setLinear = () => {
       setFormations((formations: formation[]) => {
          return formations.map((formation, index: number) => {
@@ -229,6 +231,29 @@ export const ObjectControls: React.FC<{
       pushChange();
    };
 
+   const setColor = (color: string) => {
+      setFormations((formations: formation[]) => {
+         return formations.map((formation, index: number) => {
+            if (index === selectedFormation) {
+               return {
+                  ...formation,
+                  positions: formation.positions.map((dancerPosition) => {
+                     if (selectedDancers.includes(dancerPosition.id)) {
+                        return {
+                           ...dancerPosition,
+                           color,
+                        };
+                     }
+                     return dancerPosition;
+                  }),
+               };
+            }
+            return formation;
+         });
+      });
+      pushChange();
+   };
+
    return (
       <>
          <div
@@ -330,7 +355,7 @@ export const ObjectControls: React.FC<{
                            // opacity: selectedFormation === 0 ? 0.5 : 1,
                         }
                      }
-                     className="flex flex-row justify-between items-center px-5 "
+                     className="flex flex-row justify-between items-center px-3 "
                   >
                      <p className="text-xs font-semibold mr-3">Prop</p>
                      {/* <select onChange={(e) => {}} value={itemSelectionDropdownValue()} className=" focus:outline-none text-sm mr-3">
@@ -361,6 +386,53 @@ export const ObjectControls: React.FC<{
                         options={[...items.map((item) => item.name), "No prop"]}
                         actions={[...items.map((item: item) => () => setDancerItem(item.id)), () => setDancerItem(null)]}
                      ></Dropdown>
+
+                     <div className="px-3">
+                        <PopoverPicker
+                           dancers={dancers}
+                           color={
+                              formations[selectedFormation]?.positions.find(
+                                 (dancerPosition: dancerPosition) => dancerPosition.id === selectedDancers[0]
+                              )?.color || dancers.find((dancer: dancer) => dancer.id === selectedDancers[0])?.color
+                           }
+                           selectedDancers={selectedDancers}
+                           setColor={setColor}
+                           position="bottom"
+                           text="Color only applies to this formation"
+                        ></PopoverPicker>
+                     </div>
+                     {formations[selectedFormation]?.positions
+                        .filter((dancerPosition: dancerPosition) => selectedDancers.includes(dancerPosition.id) && dancerPosition.color)
+                        ?.map((dancerPosition: dancerPosition) => dancerPosition.color).length ? (
+                        <button
+                           onClick={() => {
+                              setFormations((formations: formation[]) => {
+                                 return formations.map((formation: formation, index: number) => {
+                                    // remove color from dancer position
+                                    if (index === selectedFormation) {
+                                       return {
+                                          ...formation,
+                                          positions: formation.positions.map((dancerPosition: dancerPosition) => {
+                                             if (selectedDancers.includes(dancerPosition.id)) {
+                                                return {
+                                                   ...dancerPosition,
+                                                   color: null,
+                                                };
+                                             } else {
+                                                return dancerPosition;
+                                             }
+                                          }),
+                                       };
+                                    }
+                                    return formation;
+                                 });
+                              });
+                           }}
+                           className="bg-white rounded-md text-black text-xs py-2 px-3"
+                        >
+                           Remove color override
+                        </button>
+                     ) : null}
                   </div>
                </>
             ) : null}

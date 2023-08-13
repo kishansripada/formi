@@ -44,6 +44,7 @@ export type dancerPosition = {
    controlPointStart?: { x: number; y: number };
    controlPointEnd?: { x: number; y: number };
    itemId?: string | null;
+   color?: string | null;
 };
 
 export type formation = {

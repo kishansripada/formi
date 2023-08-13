@@ -51,6 +51,8 @@ export function ThreeDancer({
    /**
     * Text always looks at the camera
     */
+   if (selectedFormation === null) return null;
+
    const textRef = useRef();
    const bgRef = useRef();
    const [itemDimensions, setItemDimensions] = useState({ width: 0, height: 0 });
@@ -218,33 +220,63 @@ export function ThreeDancer({
                               <group castShadow name="vecto">
                                  <group name="Model9">
                                     <mesh castShadow name="Model9_b0b0b0_0" geometry={nodes.Model9_b0b0b0_0.geometry} material={materials.b0b0b0}>
-                                       <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
+                                       <meshStandardMaterial
+                                          opacity={opacity}
+                                          attach="material"
+                                          color={dancerPosition.color || dancer?.color || "#db2777"}
+                                          transparent
+                                       />
                                     </mesh>
                                  </group>
                                  <group scale={[0.7, 1, 1]}>
                                     <group name="Model5">
                                        <mesh castShadow name="Model5_b0b0b0_0" geometry={nodes.Model5_b0b0b0_0.geometry} material={materials.b0b0b0}>
-                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
+                                          <meshStandardMaterial
+                                             opacity={opacity}
+                                             attach="material"
+                                             color={dancerPosition.color || dancer?.color || "#db2777"}
+                                             transparent
+                                          />
                                        </mesh>
                                     </group>
                                     <group name="Model7">
                                        <mesh castShadow name="Model7_b0b0b0_0" geometry={nodes.Model7_b0b0b0_0.geometry} material={materials.b0b0b0}>
-                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
+                                          <meshStandardMaterial
+                                             opacity={opacity}
+                                             attach="material"
+                                             color={dancerPosition.color || dancer?.color || "#db2777"}
+                                             transparent
+                                          />
                                        </mesh>
                                     </group>
                                     <group name="Model6">
                                        <mesh castShadow name="Model6_b0b0b0_0" geometry={nodes.Model6_b0b0b0_0.geometry} material={materials.b0b0b0}>
-                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
+                                          <meshStandardMaterial
+                                             opacity={opacity}
+                                             attach="material"
+                                             color={dancerPosition.color || dancer?.color || "#db2777"}
+                                             transparent
+                                          />
                                        </mesh>
                                     </group>
                                     <group name="Model4">
                                        <mesh castShadow name="Model4_b0b0b0_0" geometry={nodes.Model4_b0b0b0_0.geometry} material={materials.b0b0b0}>
-                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
+                                          <meshStandardMaterial
+                                             opacity={opacity}
+                                             attach="material"
+                                             color={dancerPosition.color || dancer?.color || "#db2777"}
+                                             transparent
+                                          />
                                        </mesh>
                                     </group>
                                     <group name="Model8">
                                        <mesh castShadow name="Model8_b0b0b0_0" geometry={nodes.Model8_b0b0b0_0.geometry} material={materials.b0b0b0}>
-                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancer?.color || "#db2777"} transparent />
+                                          <meshStandardMaterial
+                                             opacity={opacity}
+                                             attach="material"
+                                             color={dancerPosition.color || dancer?.color || "#db2777"}
+                                             transparent
+                                          />
                                        </mesh>
                                     </group>
                                  </group>

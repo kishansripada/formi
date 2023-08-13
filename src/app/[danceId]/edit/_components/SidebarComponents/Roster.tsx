@@ -3,12 +3,11 @@ import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { Dancer } from "../Dancer";
 import dynamic from "next/dynamic";
-const CirclePicker = dynamic(() => import("react-color").then((module) => module.CirclePicker), {
-   loading: () => <p>Loading color picker...</p>,
-});
+
 import { v4 as uuidv4 } from "uuid";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AuthSession } from "@supabase/supabase-js";
+import { PopoverPicker } from "../ColorPicker";
 
 export const Roster: React.FC<{
    setDancers: Function;
@@ -118,6 +117,18 @@ export const Roster: React.FC<{
          });
       });
    };
+
+   const setColor = (color: string) => {
+      //   console.log(color);
+      setDancers((dancers: dancer[]) => {
+         return dancers.map((dancer) => {
+            if (selectedDancers.includes(dancer.id)) {
+               return { ...dancer, color };
+            }
+            return dancer;
+         });
+      });
+   };
    return (
       <>
          {isSavingRoster ? (
@@ -164,7 +175,7 @@ export const Roster: React.FC<{
                </div>
             </>
          ) : null}
-         <div className="lg:flex hidden w-[260px]  min-w-[260px] flex-col overflow-hidden  bg-white dark:bg-neutral-800 dark:text-white h-full ">
+         <div className="lg:flex hidden w-[260px]  min-w-[260px] flex-col   bg-white dark:bg-neutral-800 dark:text-white h-full ">
             <div className="flex-grow overflow-y-scroll">
                {dancers.slice().map((dancer, index) => (
                   <Dancer
@@ -187,7 +198,7 @@ export const Roster: React.FC<{
             </div>
             {/* <div className="bg-blue-200 flex-grow  overflow-y-auto"></div> */}
 
-            <div className=" min-h-[350px] h-[350px]  flex flex-col   ">
+            <div className=" min-h-[250px] h-[250px]  flex flex-col   ">
                {/* <div className="flex flex-col items-start mr-5">
                            <input
                               defaultValue={dancers.find((dancer) => dancer.id === editingDancer)?.instagramUsername || ""}
@@ -303,66 +314,54 @@ export const Roster: React.FC<{
                            <p className="mx-1">in</p>
                         </div>
                      </div>
-                     <p className=" text-neutral-800 dark:text-white  text-sm mb-2 mt-2 font-medium">Shape</p>
+                     <div className="flex flex-row items-center justify-between">
+                        <div className="flex flex-col ">
+                           <p className=" text-neutral-800 dark:text-white  text-sm mb-2 mt-2 font-medium">Shape</p>
 
-                     <div className="w-full flex flex-row items-center child:mr-2">
-                        <button
-                           onClick={() => {
-                              setDancerShape("circle");
-                           }}
-                        >
-                           <svg className="w-8 h-8 dark:fill-white  " xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-                              <path d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-156t86-127Q252-817 325-848.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82-31.5 155T763-197.5q-54 54.5-127 86T480-80Zm0-60q142 0 241-99.5T820-480q0-142-99-241t-241-99q-141 0-240.5 99T140-480q0 141 99.5 240.5T480-140Zm0-340Z" />
-                           </svg>
-                        </button>
+                           <div className="w-full flex flex-row items-center child:mr-2">
+                              <button
+                                 onClick={() => {
+                                    setDancerShape("circle");
+                                 }}
+                              >
+                                 <svg className="w-8 h-8 dark:fill-white  " xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                                    <path d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-156t86-127Q252-817 325-848.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82-31.5 155T763-197.5q-54 54.5-127 86T480-80Zm0-60q142 0 241-99.5T820-480q0-142-99-241t-241-99q-141 0-240.5 99T140-480q0 141 99.5 240.5T480-140Zm0-340Z" />
+                                 </svg>
+                              </button>
 
-                        <button
-                           onClick={() => {
-                              setDancerShape("square");
-                           }}
-                        >
-                           <svg className="w-8 h-8 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-                              <path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600v-600H180v600Z" />
-                           </svg>
-                        </button>
-                        <button
-                           onClick={() => {
-                              setDancerShape("triangle");
-                           }}
-                        >
-                           <svg className="w-8 h-8 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-                              <path d="m80-160 401-640 399 640H80Zm107-60h586L481-685 187-220Zm293-233Z" />
-                           </svg>
-                        </button>
+                              <button
+                                 onClick={() => {
+                                    setDancerShape("square");
+                                 }}
+                              >
+                                 <svg className="w-8 h-8 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                                    <path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600v-600H180v600Z" />
+                                 </svg>
+                              </button>
+                              <button
+                                 onClick={() => {
+                                    setDancerShape("triangle");
+                                 }}
+                              >
+                                 <svg className="w-8 h-8 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                                    <path d="m80-160 401-640 399 640H80Zm107-60h586L481-685 187-220Zm293-233Z" />
+                                 </svg>
+                              </button>
+                           </div>
+                           {/* <p className=" text-neutral-800  text-sm mb-2 mt-2 font-medium">Color</p> */}
+                        </div>
+
+                        <div className="flex flex-col justify-end">
+                           <p className=" text-neutral-800 dark:text-white  text-sm mb-2 mt-2 font-medium">Color</p>
+                           <PopoverPicker
+                              dancers={dancers}
+                              color={dancers.find((dancer) => dancer.id === selectedDancers[0])?.color}
+                              selectedDancers={selectedDancers}
+                              setColor={setColor}
+                              position="top"
+                           ></PopoverPicker>
+                        </div>
                      </div>
-                     <p className=" text-neutral-800  text-sm mb-2 mt-2 font-medium">Color</p>
-
-                     <CirclePicker
-                        colors={[
-                           "#0074D9", // bright blue
-                           "#FF4136", // bright red
-                           "#2ECC40", // bright green
-                           "#FF851B", // bright orange
-                           "#7FDBFF", // sky blue
-                           "#B10DC9", // bright purple
-                           "#FFDC00", // bright yellow
-                           "#001f3f", // navy blue
-                           "#DB2777", // pink
-                           "#3D9970", // muted green
-                        ]}
-                        color={dancers.find((dancer) => dancer.id === selectedDancers[0])?.color}
-                        onChangeComplete={(color, event) => {
-                           setDancers((dancers: dancer[]) => {
-                              return dancers.map((dancer) => {
-                                 if (selectedDancers.includes(dancer.id)) {
-                                    return { ...dancer, color: color.hex };
-                                 }
-                                 return dancer;
-                              });
-                           });
-                           pushChange();
-                        }}
-                     />
                   </div>
                ) : (
                   <p className="h-full w-full grid place-items-center">No Dancers Selected</p>

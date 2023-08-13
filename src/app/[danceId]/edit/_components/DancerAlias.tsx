@@ -166,14 +166,17 @@ export const DancerAlias: React.FC<{
                   viewBox="0 0 140 140"
                >
                   <path
+                     style={{
+                        transition: "fill 0.5s ease",
+                     }}
                      className="group-hover:stroke-[20px]"
-                     fill={dancer?.color || "#db2777"}
+                     fill={dancerPos?.color || dancer?.color || "#db2777"}
                      stroke={
                         selectedDancers.includes(dancer.id) && !isPlaying
                            ? localSettings.isDarkMode
                               ? "white"
                               : "#404040"
-                           : hexToRGBA(dancer?.color || "#db2777", 0.5)
+                           : hexToRGBA(dancerPos?.color || dancer?.color || "#db2777", 0.5)
                      }
                      // stroke-width="8"
                      d="M3.5 3.5h133v133H3.5z"
@@ -187,14 +190,17 @@ export const DancerAlias: React.FC<{
                   viewBox="0 0 134 116"
                >
                   <path
+                     style={{
+                        transition: "fill 0.5s ease",
+                     }}
                      className="group-hover:stroke-[20px]"
-                     fill={dancer?.color || "#db2777"}
+                     fill={dancerPos?.color || dancer?.color || "#db2777"}
                      stroke={
                         selectedDancers.includes(dancer.id) && !isPlaying
                            ? localSettings.isDarkMode
                               ? "white"
                               : "#404040"
-                           : hexToRGBA(dancer?.color || "#db2777", 0.5)
+                           : hexToRGBA(dancerPos?.color || dancer?.color || "#db2777", 0.5)
                      }
                      stroke-width="8"
                      d="M8.9763 110.5L67 10L125.024 110.5H8.9763Z"
@@ -211,14 +217,17 @@ export const DancerAlias: React.FC<{
                      cx="77"
                      cy="77"
                      r="65"
-                     className="group-hover:stroke-[20px]"
-                     fill={dancer?.color || "#db2777"}
+                     style={{
+                        transition: "fill 0.5s ease",
+                     }}
+                     className="group-hover:stroke-[20px] "
+                     fill={dancerPos?.color || dancer?.color || "#db2777"}
                      stroke={
                         selectedDancers.includes(dancer.id) && !isPlaying
                            ? localSettings.isDarkMode
                               ? "white"
                               : "#404040"
-                           : hexToRGBA(dancer?.color || "#db2777", 0.5)
+                           : hexToRGBA(dancerPos?.color || dancer?.color || "#db2777", 0.5)
                      }
                      strokeWidth="8"
                   />
