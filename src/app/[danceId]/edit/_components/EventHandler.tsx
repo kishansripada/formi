@@ -10,17 +10,18 @@ import {
    MAX_PIXELS_PER_SECOND,
    localSettings,
 } from "../../../../types/types";
+import { useStore } from "../store";
 
 export const EventHandler: React.FC<{
    children: React.ReactNode;
-   setFormations: Function;
+   // setFormations: Function;
    selectedFormation: number | null;
-   formations: formation[];
+   // formations: formation[];
    selectedDancers: string[];
    setSelectedDancers: Function;
    setSelectedFormation: Function;
    setIsPlaying: Function;
-   viewOnly: boolean;
+   // viewOnly: boolean;
    setPixelsPerSecond: Function;
    songDuration: number | null;
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
@@ -35,8 +36,7 @@ export const EventHandler: React.FC<{
    setIsCommenting: Function;
    zoom: number;
    setZoom: Function;
-   soundCloudTrackId: string | null;
-   cloudSettings: cloudSettings;
+
    stageFlipped: boolean;
    shiftHeld: boolean;
    setShiftHeld: Function;
@@ -52,17 +52,16 @@ export const EventHandler: React.FC<{
 }> = ({
    player,
    children,
-   setFormations,
+   // setFormations,
    selectedFormation,
-   formations,
+   // formations,
    setSelectedDancers,
    selectedDancers,
    setSelectedFormation,
    setIsPlaying,
-   viewOnly,
+   // viewOnly,
    setPixelsPerSecond,
    songDuration,
-   cloudSettings,
    coordsToPosition,
    draggingDancerId,
    setDraggingDancerId,
@@ -74,7 +73,6 @@ export const EventHandler: React.FC<{
    setIsCommenting,
    zoom,
    setZoom,
-   soundCloudTrackId,
    stageFlipped,
    shiftHeld,
    setShiftHeld,
@@ -88,6 +86,8 @@ export const EventHandler: React.FC<{
    position,
    setLocalSettings,
 }) => {
+   const { formations, setFormations } = useStore();
+
    const [commandHeld, setCommandHeld] = useState(false);
    const [copiedPositions, setCopiedPositions] = useState([]);
 
@@ -170,8 +170,8 @@ export const EventHandler: React.FC<{
       if (e.key === "Backspace" || e.key === "Delete") {
          e.preventDefault();
          if (selectedPropIds.length) {
-            setFormations((formations: formation[]) => {
-               return formations.map((formation, i) => {
+            setFormations(
+               formations.map((formation, i) => {
                   if (i === selectedFormation) {
                      return {
                         ...formation,
@@ -179,8 +179,8 @@ export const EventHandler: React.FC<{
                      };
                   }
                   return formation;
-               });
-            });
+               })
+            );
          }
       }
       if (e.key === "ArrowRight") {
@@ -254,8 +254,8 @@ export const EventHandler: React.FC<{
 
       // on paste, filter out all of the dancers that are being pasted before splicing them into the array of positions
       if (e.key === "v" && copiedPositions.length) {
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, i) => {
+         setFormations(
+            formations.map((formation, i) => {
                if (i === selectedFormation) {
                   return {
                      ...formation,
@@ -268,9 +268,9 @@ export const EventHandler: React.FC<{
                   };
                }
                return formation;
-            });
-         });
-         pushChange();
+            })
+         );
+         // pushChange();
       }
       if (e.key === "a") {
          e.preventDefault();
@@ -279,16 +279,16 @@ export const EventHandler: React.FC<{
 
       if (e.key === "b") {
          e.preventDefault();
-         setFormations((formations: formation[]) => {
-            return formations.map((formation) => {
+         setFormations(
+            formations.map((formation) => {
                return {
                   ...formation,
                   positions: formation.positions.filter((position) => {
                      return dancers.map((dancer) => dancer.id).includes(position.id);
                   }),
                };
-            });
-         });
+            })
+         );
       }
 
       if (e.key === "c" && selectedDancers.length) {

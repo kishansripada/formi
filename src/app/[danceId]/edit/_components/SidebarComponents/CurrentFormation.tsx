@@ -1,53 +1,54 @@
 import { dancer, dancerPosition, formation, formationGroup, initials, item } from "../../../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { SyntheticEvent, useEffect, useState } from "react";
+import { useStore } from "../../store";
 
 export const CurrentFormation: React.FC<{
    selectedFormation: number | null;
-   formations: formation[];
-   setFormations: Function;
+   // formations: formation[];
+   // setFormations: Function;
    dancers: dancer[];
    setSelectedFormation: Function;
    selectedDancers: string[];
    setSelectedDancers: Function;
    cloudSettings: any;
-   pricingTier: string;
+
    addToStack: Function;
    pushChange: Function;
    isCommenting: boolean;
    setIsCommenting: Function;
-   setUpgradeIsOpen: Function;
+
    formationGroups: formationGroup[];
-   setIsEditingFormationGroup: Function;
    setFormationGroups: Function;
    dropDownToggle: boolean;
-   viewOnly: boolean;
-   items: item[];
+
+   // items: item[];
 }> = ({
-   formations,
+   // formations,
    selectedFormation,
-   setFormations,
+   // setFormations,
    dancers,
    setSelectedFormation,
    selectedDancers,
    setSelectedDancers,
    cloudSettings,
-   pricingTier,
+
    addToStack,
    pushChange,
    isCommenting,
    setIsCommenting,
-   setUpgradeIsOpen,
+
    formationGroups,
-   setIsEditingFormationGroup,
+
    setFormationGroups,
    dropDownToggle,
-   viewOnly,
-   items,
+
+   // items,
 }) => {
+   const { formations, setFormations, viewOnly } = useStore();
    const deleteComment = (id: string) => {
-      setFormations((formations: formation[]) => {
-         return formations.map((formation, i) => {
+      setFormations(
+         formations.map((formation, i) => {
             if (i === selectedFormation) {
                return {
                   ...formation,
@@ -55,8 +56,8 @@ export const CurrentFormation: React.FC<{
                };
             }
             return formation;
-         });
-      });
+         })
+      );
    };
 
    return (
@@ -188,18 +189,17 @@ export const CurrentFormation: React.FC<{
                         onBlur={pushChange}
                         className="font-medium w-full bg rounded-md  h-6 text-xl dark:bg-neutral-800 dark:text-white   text-neutral-800  outline-none cursor-pointer "
                         onChange={(e) =>
-                           setFormations((formations: formation[]) => {
-                              return formations.map((formation, i) => {
+                           setFormations(
+                              formations.map((formation, i) => {
                                  if (i === selectedFormation) {
                                     return {
                                        ...formation,
                                        name: e.target.value,
                                     };
                                  }
-
                                  return formation;
-                              });
-                           })
+                              })
+                           )
                         }
                         disabled={viewOnly}
                         value={formations[selectedFormation]?.name || ""}
@@ -257,8 +257,8 @@ export const CurrentFormation: React.FC<{
                      <textarea
                         value={formations[selectedFormation]?.notes || ""}
                         onChange={(e) => {
-                           setFormations((formations: formation[]) => {
-                              return formations.map((formation, i) => {
+                           setFormations(
+                              formations.map((formation, i) => {
                                  if (i === selectedFormation) {
                                     return {
                                        ...formation,
@@ -266,8 +266,8 @@ export const CurrentFormation: React.FC<{
                                     };
                                  }
                                  return formation;
-                              });
-                           });
+                              })
+                           );
                         }}
                         disabled={viewOnly}
                         className="dark:bg-neutral-700 transition bg-neutral-100  w-full focus:outline-none p-3 text-sm border-2 border-neutral-300 focus:border-pink-300 dark:border-neutral-600 dark:focus:border-pink-600 resize-none rounded-md"

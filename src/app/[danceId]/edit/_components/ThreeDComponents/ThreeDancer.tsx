@@ -7,6 +7,7 @@ import { useDrag } from "@use-gesture/react";
 import { useFrame } from "@react-three/fiber";
 import { Vector3, Plane } from "three";
 import { ThreeItem } from "./ThreeItem";
+import { useStore } from "../../store";
 export function ThreeDancer({
    dancerPosition,
    dancers,
@@ -14,40 +15,41 @@ export function ThreeDancer({
    currentFormationIndex,
    percentThroughTransition,
    isPlaying,
-   formations,
+   // formations,
    opacity,
-   setFormations,
+   // setFormations,
    selectedFormation,
    localSettings,
-   viewOnly,
+
    pushChange,
    addToStack,
    setIsThreeDancerDragging,
    isThreeDancerDragging,
    selectedDancers,
    setSelectedDancers,
-   items,
-}: {
+}: // items,
+{
    dancerPosition: dancerPosition;
    dancers: dancer[];
    position: number | null;
    currentFormationIndex: number | null;
    percentThroughTransition: number;
    isPlaying: boolean;
-   formations: formation[];
+   // formations: formation[];
    opacity: number;
-   setFormations: Function;
+   // setFormations: Function;
    selectedFormation: number | null;
    localSettings: localSettings;
-   viewOnly: boolean;
+
    pushChange: Function;
    addToStack: Function;
    setIsThreeDancerDragging: Function;
    isThreeDancerDragging: boolean;
    selectedDancers: string[];
    setSelectedDancers: Function;
-   items: item[];
+   // items: item[];
 }) {
+   const { formations, setFormations, get, viewOnly, items } = useStore();
    /**
     * Text always looks at the camera
     */
@@ -78,8 +80,8 @@ export function ThreeDancer({
             event.ray.intersectPlane(floorPlane, planeIntersectPoint);
             // setPos([-dancerPosition.position.x / 2 + planeIntersectPoint.x, 0, dancerPosition.position.y / 2 + planeIntersectPoint.z]);
             // console.log(planeIntersectPoint.x);
-            setFormations((formations: formation[]) => {
-               return formations.map((formation, index: number) => {
+            setFormations(
+               get().formations.map((formation, index: number) => {
                   if (index === selectedFormation) {
                      return {
                         ...formation,
@@ -114,8 +116,8 @@ export function ThreeDancer({
                   }
 
                   return formation;
-               });
-            });
+               })
+            );
          } else {
             document.body.style.cursor = "default";
          }

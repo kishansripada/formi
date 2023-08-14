@@ -4,20 +4,19 @@ import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
 import { formation } from "../../../../types/types";
 import TimelinePlugin from "../../../../timeline-plugin";
+import { useStore } from "../store";
 
 export const NoFilePlayer: React.FC<{
    setPosition: Function;
    setIsPlaying: Function;
    setSongDuration: Function;
 
-   soundCloudTrackId: string | null;
    setSelectedFormation: Function;
-   setFormations: Function;
-   viewOnly: boolean;
+
    pixelsPerSecond: number;
    player: any;
    setPlayer: Function;
-   formations: formation[];
+   // formations: formation[];
    videoPlayer: any;
    isPlaying: boolean;
    position: number;
@@ -27,19 +26,19 @@ export const NoFilePlayer: React.FC<{
       setPosition,
       setIsPlaying,
       setSongDuration,
-      soundCloudTrackId,
-      setFormations,
+
       setSelectedFormation,
-      viewOnly,
+
       pixelsPerSecond,
       player,
       setPlayer,
       videoPlayer,
-      formations,
+      // formations,
       isPlaying,
       position,
       playbackRate,
    }) => {
+      const { formations } = useStore();
       let songDuration = formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0);
       // console.log({ playbackRate });
       useEffect(() => {

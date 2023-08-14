@@ -8,15 +8,11 @@ import { v4 as uuidv4 } from "uuid";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AuthSession } from "@supabase/supabase-js";
 import { PopoverPicker } from "../ColorPicker";
+import { useStore } from "../../store";
 
 export const Roster: React.FC<{
-   setDancers: Function;
-   dancers: dancer[];
-   formations: formation[];
+   // formations: formation[];
    selectedFormation: number | null;
-   viewOnly: boolean;
-   cloudSettings: any;
-   setFormations: Function;
    addToStack: Function;
    pushChange: Function;
    selectedDancers: string[];
@@ -25,21 +21,19 @@ export const Roster: React.FC<{
    localSettings: localSettings;
    session: AuthSession | null;
 }> = ({
-   setDancers,
-   dancers,
-   formations,
    selectedFormation,
-   cloudSettings,
-   setFormations,
    pushChange,
    addToStack,
    selectedDancers,
    removeDancer,
    setSelectedDancers,
-   viewOnly,
+
    localSettings,
    session,
 }) => {
+   const { formations, setFormations, cloudSettings, pauseHistory, resumeHistory } = useStore();
+
+   const { dancers, setDancers, viewOnly } = useStore();
    let { stageDimensions } = cloudSettings;
    const supabase = createClientComponentClient();
 
@@ -67,20 +61,19 @@ export const Roster: React.FC<{
    };
 
    const createNewDancer = () => {
+      pauseHistory();
       let id = uuidv4();
-      setDancers((dancers: dancer[]) => {
-         return [
-            ...dancers,
-            {
-               name: "New dancer",
-               id,
-               instagramUsername: null,
-            },
-         ];
-      });
+      setDancers([
+         ...dancers,
+         {
+            name: "New dancer",
+            id,
+            instagramUsername: null,
+         },
+      ]);
 
-      setFormations((formations: formation[]) => {
-         return formations.map((formation, index) => {
+      setFormations(
+         formations.map((formation, index) => {
             let position = { x: 0, y: 0 };
             for (let y = Math.floor(stageDimensions.height / 2) - 1; y >= -(Math.floor(stageDimensions.height / 2) - 1); y--) {
                let leftSide = formation.positions.find(
@@ -101,33 +94,33 @@ export const Roster: React.FC<{
             }
 
             return { ...formation, positions: [...formation.positions, { id, position }] };
-         });
-      });
-
+         })
+      );
+      resumeHistory();
       pushChange();
    };
 
    const setDancerShape = (shape: string) => {
-      setDancers((dancers: dancer[]) => {
-         return dancers.map((dancer) => {
+      setDancers(
+         dancers.map((dancer) => {
             if (selectedDancers.includes(dancer.id)) {
                return { ...dancer, shape: shape };
             }
             return dancer;
-         });
-      });
+         })
+      );
    };
 
    const setColor = (color: string) => {
       //   console.log(color);
-      setDancers((dancers: dancer[]) => {
-         return dancers.map((dancer) => {
+      setDancers(
+         dancers.map((dancer) => {
             if (selectedDancers.includes(dancer.id)) {
                return { ...dancer, color };
             }
             return dancer;
-         });
-      });
+         })
+      );
    };
    return (
       <>
@@ -179,15 +172,11 @@ export const Roster: React.FC<{
             <div className="flex-grow overflow-y-scroll">
                {dancers.slice().map((dancer, index) => (
                   <Dancer
-                     viewOnly={viewOnly}
                      // uniqueDancers={uniqueDancers}
                      pushChange={pushChange}
                      setSelectedDancers={setSelectedDancers}
                      selectedDancers={selectedDancers}
-                     setFormations={setFormations}
-                     formations={formations}
                      selectedFormation={selectedFormation}
-                     setDancers={setDancers}
                      dancer={dancer}
                      key={dancer.id}
                      dancers={dancers}
@@ -199,26 +188,6 @@ export const Roster: React.FC<{
             {/* <div className="bg-blue-200 flex-grow  overflow-y-auto"></div> */}
 
             <div className=" min-h-[250px] h-[250px]  flex flex-col   ">
-               {/* <div className="flex flex-col items-start mr-5">
-                           <input
-                              defaultValue={dancers.find((dancer) => dancer.id === editingDancer)?.instagramUsername || ""}
-                              onBlur={(e) => {
-                                 setDancers((dancers: dancer[]) => {
-                                    return dancers.map((dancer) => {
-                                       if (dancer.id === editingDancer) {
-                                          return { ...dancer, instagramUsername: e.target.value };
-                                       }
-                                       return dancer;
-                                    });
-                                 });
-                              }}
-                              placeholder="Image URL"
-                              className=" border-neutral-300 border rounded-md focus:outline-none px-2 h-8  grow text-sm "
-                              type="text"
-                           />
-                           <p className="text-xs text-neutral-500  mt-2">For profile picture</p>
-                        </div> */}
-
                {!viewOnly ? (
                   <>
                      <div className="flex flex-row items-center text-xs justify-between py-2 border-y border-neutral-200 dark:border-neutral-700 px-2">
@@ -273,14 +242,14 @@ export const Roster: React.FC<{
                               onChange={(e) => {
                                  // setHeightFeet(parseInt(e.target.value));
                                  if (height.feet === null || height.feet === undefined) return;
-                                 setDancers((dancers: dancer[]) => {
-                                    return dancers.map((dancer) => {
+                                 setDancers(
+                                    dancers.map((dancer) => {
                                        if (selectedDancers.includes(dancer.id)) {
                                           return { ...dancer, height: convertToCentimeters(parseInt(e.target.value), height.inches) };
                                        }
                                        return dancer;
-                                    });
-                                 });
+                                    })
+                                 );
                               }}
                               style={{
                                  borderRadius: 0,
@@ -297,14 +266,14 @@ export const Roster: React.FC<{
                               onChange={(e) => {
                                  // setHeightIn(parseInt(e.target.value));
                                  if (height.inches === null || height.inches === undefined) return;
-                                 setDancers((dancers: dancer[]) => {
-                                    return dancers.map((dancer) => {
+                                 setDancers(
+                                    dancers.map((dancer) => {
                                        if (selectedDancers.includes(dancer.id)) {
                                           return { ...dancer, height: convertToCentimeters(height.feet, parseInt(e.target.value)) };
                                        }
                                        return dancer;
-                                    });
-                                 });
+                                    })
+                                 );
                               }}
                               style={{
                                  borderRadius: 0,
@@ -388,10 +357,12 @@ export const Roster: React.FC<{
                            pointerEvents: selectedDancers.length ? "all" : "none",
                         }}
                         onClick={() => {
+                           pauseHistory();
                            setSelectedDancers([]);
                            selectedDancers.forEach((dancerId) => {
                               removeDancer(dancerId);
                            });
+                           resumeHistory();
                            // setSelectedDancers([]);
                            // setSelectedDancers([dancers[dancers.length - 1]?.id || ""]);
                            // console.log(selectedDancers);

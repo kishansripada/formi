@@ -2,20 +2,26 @@ import { cloudSettings, dancer, dancerPosition, formation, localSettings, stageD
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import Dropdown from "../Dropdown";
+import { useStore } from "../../store";
 export const Settings: React.FC<{
    setLocalSettings: Function;
    localSettings: any;
    dropDownToggle: boolean;
    pushChange: Function;
-   formations: formation[];
-   cloudSettings: cloudSettings;
-   setCloudSettings: Function;
-   setFormations: Function;
+   // formations: formation[];
+   // cloudSettings: cloudSettings;
+   // setCloudSettings: Function;
+   // setFormations: Function;
    setHelpUrl: Function;
-   setAssetsOpen: Function;
-}> = ({ setLocalSettings, localSettings, dropDownToggle, pushChange, cloudSettings, setCloudSettings, setFormations, setHelpUrl, setAssetsOpen }) => {
+}> = ({ setLocalSettings, localSettings, dropDownToggle, pushChange, setHelpUrl }) => {
+   const {
+      formations,
+      cloudSettings: { stageBackground, stageDimensions },
+      setCloudSettings,
+      cloudSettings,
+   } = useStore();
    let { previousFormationView, gridSnap, dancerStyle } = localSettings;
-   let { stageBackground, stageDimensions } = cloudSettings;
+   // let { stageBackground, stageDimensions } = cloudSettings;
    const [newWidth, setNewWidth] = useState(stageDimensions.width.toString());
    const [newHeight, setNewHeight] = useState(stageDimensions.height.toString());
 
@@ -73,9 +79,7 @@ export const Settings: React.FC<{
       //    });
       // });
 
-      setCloudSettings((cloudSettings: cloudSettings) => {
-         return { ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width + amount } };
-      });
+      setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width + amount } });
 
       pushChange();
    };
@@ -95,23 +99,17 @@ export const Settings: React.FC<{
       //    }
       // }
 
-      setCloudSettings((cloudSettings: cloudSettings) => {
-         return { ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height + amount } };
-      });
+      setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height + amount } });
       pushChange();
    };
 
    const setStageBackground = (val: string) => {
       if (val === "cheer9") {
-         setCloudSettings((s: cloudSettings) => {
-            return { ...s, stageDimensions: { width: 36, height: 28 } };
-         });
+         setCloudSettings({ ...cloudSettings, stageDimensions: { width: 36, height: 28 } });
       }
-      setCloudSettings((cloudSettings: cloudSettings) => {
-         return {
-            ...cloudSettings,
-            stageBackground: val,
-         };
+      setCloudSettings({
+         ...cloudSettings,
+         stageBackground: val,
       });
    };
 

@@ -3,19 +3,18 @@ import toast, { Toaster } from "react-hot-toast";
 import { cloudSettings, item, prop } from "../../../../../types/types";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AuthSession } from "@supabase/supabase-js";
+import { useStore } from "../../store";
 
 export const Assets: React.FC<{
    setAssetsOpen: Function;
    propUploads: any[];
    invalidatePropUploads: Function;
    pushChange: Function;
-   setItems: Function;
    assetsOpen: false | string;
    menuOpen: string;
-   setProps: Function;
    session: AuthSession | null;
-   setCloudSettings: Function;
-}> = ({ setAssetsOpen, propUploads, invalidatePropUploads, pushChange, setItems, assetsOpen, menuOpen, setProps, session, setCloudSettings }) => {
+}> = ({ setAssetsOpen, propUploads, invalidatePropUploads, pushChange, assetsOpen, menuOpen, session }) => {
+   const { setProps, props, setItems, items, setCloudSettings, cloudSettings } = useStore();
    const [file, setFile] = useState<File | null>();
    const [selectedAsset, setSelectedAsset] = useState(null);
    const supabase = createClientComponentClient();
@@ -60,11 +59,9 @@ export const Assets: React.FC<{
 
    const assignAsset = (e, id) => {
       if (assetsOpen === "stagebackground") {
-         setCloudSettings((cloudSettings: cloudSettings) => {
-            return {
-               ...cloudSettings,
-               backgroundUrl: `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${session?.user.id}/${id || selectedAsset}`,
-            };
+         setCloudSettings({
+            ...cloudSettings,
+            backgroundUrl: `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${session?.user.id}/${id || selectedAsset}`,
          });
 
          // https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/f30197ba-cf06-4234-bcdb-5d40d83c7999/9f329a54be612ce08547a650ddb05424651c24f4-5102x2487.webp
@@ -72,8 +69,8 @@ export const Assets: React.FC<{
       }
 
       if (menuOpen === "props") {
-         setProps((props: item[]) => {
-            return props.map((prop: prop) => {
+         setProps(
+            props.map((prop: prop) => {
                if (prop.id === assetsOpen) {
                   return {
                      ...prop,
@@ -82,13 +79,13 @@ export const Assets: React.FC<{
                   };
                }
                return prop;
-            });
-         });
+            })
+         );
       }
 
       if (menuOpen === "items") {
-         setItems((items: item[]) => {
-            return items.map((item: item) => {
+         setItems(
+            items.map((item: item) => {
                if (item.id === assetsOpen) {
                   return {
                      ...item,
@@ -96,8 +93,8 @@ export const Assets: React.FC<{
                   };
                }
                return item;
-            });
-         });
+            })
+         );
       }
 
       pushChange();

@@ -22,6 +22,7 @@ import { Grid, OrbitControls, Text } from "@react-three/drei";
 import { ThreeDancer } from "./ThreeDComponents/ThreeDancer";
 import { ThreeSetPiece } from "./ThreeDComponents/ThreeSetPiece";
 import { ThreeGrid } from "./ThreeDComponents/ThreeGrid";
+import { useStore } from "../store";
 // import { ThreeComment } from "./ThreeDComponents/ThreeComment";
 
 const CheerLines = dynamic(() => import("./ThreeDComponents/CheerLines").then((mod) => mod.CheerLines));
@@ -30,14 +31,14 @@ const StageBackground = dynamic(() => import("./ThreeDComponents/StageBackground
 
 export const ThreeD: React.FC<{
    children: React.ReactNode;
-   setFormations: Function;
+   // setFormations: Function;
    selectedFormation: number | null;
-   formations: formation[];
+   // formations: formation[];
    selectedDancers: string[];
    setSelectedDancers: Function;
    setSelectedFormation: Function;
    setIsPlaying: Function;
-   viewOnly: boolean;
+
    setPixelsPerSecond: Function;
    songDuration: number | null;
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
@@ -52,8 +53,8 @@ export const ThreeD: React.FC<{
    setIsCommenting: Function;
    zoom: number;
    setZoom: Function;
-   soundCloudTrackId: string | null;
-   cloudSettings: cloudSettings;
+
+   // cloudSettings: cloudSettings;
    stageFlipped: boolean;
    shiftHeld: boolean;
    setShiftHeld: Function;
@@ -64,24 +65,24 @@ export const ThreeD: React.FC<{
    percentThroughTransition: number;
    dancers: dancer[];
    position: number;
-   props: prop[];
-   items: item[];
+   // props: prop[];
+   // items: item[];
    isIntro: boolean;
    // comments: comment[];
 }> = ({
    player,
    children,
-   setFormations,
+   // setFormations,
    selectedFormation,
-   formations,
+   // formations,
    setSelectedDancers,
    selectedDancers,
    setSelectedFormation,
    setIsPlaying,
-   viewOnly,
+
    setPixelsPerSecond,
    songDuration,
-   cloudSettings,
+   // cloudSettings,
    coordsToPosition,
    draggingDancerId,
    setDraggingDancerId,
@@ -93,7 +94,6 @@ export const ThreeD: React.FC<{
    setIsCommenting,
    zoom,
    setZoom,
-   soundCloudTrackId,
    stageFlipped,
    shiftHeld,
    setShiftHeld,
@@ -104,14 +104,29 @@ export const ThreeD: React.FC<{
    percentThroughTransition,
    dancers,
    position,
-   props,
-   items,
+   // props,
+   // items,
    isIntro,
    // comments,
 }) => {
+   const {
+      formations,
+      setFormations,
+      viewOnly,
+      props,
+      items,
+      cloudSettings,
+      cloudSettings: {
+         stageBackground,
+         stageDimensions,
+         gridSubdivisions,
+         horizontalGridSubdivisions,
+         verticalFineDivisions,
+         horizontalFineDivisions,
+      },
+   } = useStore();
    const { gridSnap } = localSettings;
-   const { stageBackground, stageDimensions, gridSubdivisions, horizontalGridSubdivisions, verticalFineDivisions, horizontalFineDivisions } =
-      cloudSettings;
+
    let planeIntersectPoint = new Vector3();
    const floorPlane = new Plane(new Vector3(0, 1, 0), 0);
    // const depthBuffer = useDepthBuffer({ frames: 1 });
@@ -140,34 +155,33 @@ export const ThreeD: React.FC<{
             //       };
             //    });
             // });
-            setFormations((formations: formation[]) => {
-               return formations.map((formation) => {
-                  let gridSizeX = 1;
-                  let gridSizeY = 1;
-                  let verticalOffset = 0;
-                  let horizontalOffset = 0;
-                  if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
-                     // Determine the total number of divisions along each axis.
-                     const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
-                     const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
+            let gridSizeX = 1;
+            let gridSizeY = 1;
+            let verticalOffset = 0;
+            let horizontalOffset = 0;
+            if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
+               // Determine the total number of divisions along each axis.
+               const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
+               const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
 
-                     // Calculate the width and height of each grid cell.
-                     gridSizeX = stageDimensions.width / totalVerticalDivisions / gridSnap;
-                     gridSizeY = stageDimensions.height / totalHorizontalDivisions / gridSnap;
-                     let isOddVerticalDivisions = (gridSubdivisions * verticalFineDivisions) % 2 !== 0;
-                     let isOddHorizontalDivisions = (horizontalGridSubdivisions * horizontalFineDivisions) % 2 !== 0;
+               // Calculate the width and height of each grid cell.
+               gridSizeX = stageDimensions.width / totalVerticalDivisions / gridSnap;
+               gridSizeY = stageDimensions.height / totalHorizontalDivisions / gridSnap;
+               let isOddVerticalDivisions = (gridSubdivisions * verticalFineDivisions) % 2 !== 0;
+               let isOddHorizontalDivisions = (horizontalGridSubdivisions * horizontalFineDivisions) % 2 !== 0;
 
-                     verticalOffset = isOddVerticalDivisions ? gridSizeX / 2 : 0;
-                     horizontalOffset = isOddHorizontalDivisions ? gridSizeY / 2 : 0;
-                     if (gridSnap % 2 === 0) {
-                        verticalOffset = 0;
-                        horizontalOffset = 0;
-                     }
-                  } else {
-                     gridSizeX = 1 / gridSnap;
-                     gridSizeY = 1 / gridSnap;
-                  }
-
+               verticalOffset = isOddVerticalDivisions ? gridSizeX / 2 : 0;
+               horizontalOffset = isOddHorizontalDivisions ? gridSizeY / 2 : 0;
+               if (gridSnap % 2 === 0) {
+                  verticalOffset = 0;
+                  horizontalOffset = 0;
+               }
+            } else {
+               gridSizeX = 1 / gridSnap;
+               gridSizeY = 1 / gridSnap;
+            }
+            setFormations(
+               formations.map((formation) => {
                   // Use the grid cell dimensions to round the dancer positions to the nearest grid position.
                   return {
                      ...formation,
@@ -181,8 +195,8 @@ export const ThreeD: React.FC<{
                         };
                      }),
                   };
-               });
-            });
+               })
+            );
             pushChange();
          }}
          gl={{ logarithmicDepthBuffer: true }}
@@ -195,11 +209,11 @@ export const ThreeD: React.FC<{
                   // setDraggingCommentId={setDraggingCommentId}
                   setIsThreeDancerDragging={setIsThreeDancerDragging}
                   isThreeDancerDragging={isThreeDancerDragging}
-                  viewOnly={viewOnly}
+                  
                   isPlaying={isPlaying}
                   selectedFormation={selectedFormation}
-                  formations={formations}
-                  setFormations={setFormations}
+                 
+                  
                   comment={comment}
                ></ThreeComment>
             );
@@ -207,7 +221,7 @@ export const ThreeD: React.FC<{
 
          {stageBackground === "gridfluid" || stageBackground === "cheer9" ? (
             <>
-               <ThreeGrid localSettings={localSettings} cloudSettings={cloudSettings}></ThreeGrid>
+               <ThreeGrid localSettings={localSettings}></ThreeGrid>
 
                {stageBackground === "gridfluid" ? (
                   <>
@@ -383,9 +397,9 @@ export const ThreeD: React.FC<{
             <meshStandardMaterial attach="material" color={`${localSettings.isDarkMode ? "white" : "black"}`} />
          </mesh> */}
 
-         {/* <ThreeGrid localSettings={localSettings} cloudSettings={cloudSettings}></ThreeGrid> */}
+         {/* <ThreeGrid localSettings={localSettings} ></ThreeGrid> */}
          {cloudSettings?.backgroundUrl && cloudSettings.stageBackground === "custom" ? (
-            <StageBackground cloudSettings={cloudSettings} url={cloudSettings.backgroundUrl}></StageBackground>
+            <StageBackground url={cloudSettings.backgroundUrl}></StageBackground>
          ) : null}
 
          {props
@@ -399,7 +413,6 @@ export const ThreeD: React.FC<{
                      currentFormationIndex={currentFormationIndex}
                      percentThroughTransition={percentThroughTransition}
                      prop={prop}
-                     formations={formations}
                   ></ThreeSetPiece>
                );
             })}
@@ -434,7 +447,6 @@ export const ThreeD: React.FC<{
             ? formations[selectedFormation].positions.map((dancerPosition: dancerPosition) => {
                  return (
                     <ThreeDancer
-                       items={items}
                        setSelectedDancers={setSelectedDancers}
                        key={dancerPosition.id}
                        selectedDancers={selectedDancers}
@@ -447,10 +459,7 @@ export const ThreeD: React.FC<{
                        position={position}
                        addToStack={addToStack}
                        pushChange={pushChange}
-                       viewOnly={viewOnly}
                        dancerPosition={dancerPosition}
-                       formations={formations}
-                       setFormations={setFormations}
                        selectedFormation={selectedFormation}
                        localSettings={localSettings}
                     ></ThreeDancer>

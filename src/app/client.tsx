@@ -130,7 +130,7 @@ const Client = () => {
                      songDuration={60}
                      viewOnly={false}
                      setSelectedFormation={() => null}
-                     formations={formations}
+                    
                      selectedFormation={selectedFormation}
                      setFormations={() => null}
                      selectedDancers={[]}

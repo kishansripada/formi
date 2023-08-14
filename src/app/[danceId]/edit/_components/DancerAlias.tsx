@@ -1,52 +1,65 @@
-import { cloudSettings, dancer, dancerPosition, formation, stageDimensions, PIXELS_PER_SQUARE, localSettings, item } from "../../../../types/types";
+import {
+   cloudSettings,
+   dancer,
+   dancerPosition,
+   formation,
+   stageDimensions,
+   PIXELS_PER_SQUARE,
+   localSettings,
+   item,
+   COLORS,
+} from "../../../../types/types";
+import { useStore } from "../store";
 
 export const DancerAlias: React.FC<{
    dancer: dancer;
    currentFormationIndex: number | null;
    percentThroughTransition: number;
-   setDancers: Function;
+
    selectedFormation: number | null;
-   formations: formation[];
+   // formations: formation[];
    isPlaying: boolean;
    position: number | null;
-   setFormations: Function;
+
    selectedDancers: string[];
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
    draggingDancerId: string | null;
-   cloudSettings: cloudSettings;
-   userPositions: any;
-   onlineUsers: any;
+   // cloudSettings: cloudSettings;
+
    zoom: number;
    setZoom: Function;
    localSettings: any;
    index: number;
    collisions: any;
    isChangingCollisionRadius: boolean;
-   items: item[];
+   // items: item[];
 }> = ({
    dancer,
    currentFormationIndex,
    percentThroughTransition,
-   formations,
-   setDancers,
+   // formations,
+
    selectedFormation,
    isPlaying,
    position,
-   setFormations,
+
    selectedDancers,
    coordsToPosition,
    draggingDancerId,
-   cloudSettings,
-   userPositions,
-   onlineUsers,
+   // cloudSettings,
    zoom,
    setZoom,
    localSettings,
    collisions,
    index,
    isChangingCollisionRadius,
-   items,
+   // items,
 }) => {
+   const { formations, items, cloudSettings } = useStore();
+   const others = useStore((state) => state.liveblocks.others);
+
+   const othersOnThisFormation = others.filter((other) => other.presence.selectedFormation === selectedFormation);
+   const othersOnThisDancer = othersOnThisFormation.filter((other) => other.presence.selectedDancers.includes(dancer.id));
    let { stageDimensions } = cloudSettings;
    let { dancerStyle, collisionRadius } = localSettings;
    let initials = dancer.name
@@ -79,18 +92,11 @@ export const DancerAlias: React.FC<{
    let { left, top } = coordsToPosition(myPosition);
 
    // // since only one person should be selecting a single dancer, we just choose the first person that's selecting that dancer
-   let idSelectingMe = Object.keys(userPositions).filter(
-      (id) => userPositions[id].selectedFormation === selectedFormation && userPositions[id].selectedDancers.includes(dancer.id)
-   )?.[0];
-
-   // let color = onlineUsers?.[idSelectingMe]?.[0]?.color || dancer.color;
-   let name = onlineUsers?.[idSelectingMe]?.[0]?.name;
+   // let idSelectingMe = Object.keys(userPositions).filter(
+   //    (id) => userPositions[id].selectedFormation === selectedFormation && userPositions[id].selectedDancers.includes(dancer.id)
+   // )?.[0];
 
    const thisItem = items.find((item) => item.id === dancerPos?.itemId) || null;
-
-   // console.log(color);
-   // let firstNamesOnThisFormation = idsOnThisFormation.map((id) => onlineUsers[id][0].name).map((name) => name.split(" ")[0]);
-   // console.log(idSelectingMe);
 
    const HUMAN_WIDTH_FEET = 1.5;
    return (
@@ -155,6 +161,36 @@ export const DancerAlias: React.FC<{
                      src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${thisItem?.url}`}
                      alt=""
                   />
+               </div>
+            )}
+
+            {othersOnThisDancer.length && (
+               <div
+                  style={
+                     {
+                        // transform:
+                        //    thisItem.side === "bottom"
+                        //       ? "translateY(50%)"
+                        //       : thisItem.side === "right"
+                        //       ? "translateY(0%) translateX(50%)"
+                        //       : thisItem.side === "left"
+                        //       ? "translateY(0%) translateX(-50%)"
+                        //       : "translateY(-50%)",
+                        // width: PIXELS_PER_SQUARE * (thisItem.width || 1),
+                     }
+                  }
+                  className="absolute z-[99]  pointer-events-none  "
+               >
+                  <p
+                     className="px-2 py-1 rounded-full text-white font-bold text-xs whitespace-nowrap -translate-x-full -translate-y-full"
+                     style={{
+                        // transform: `scale(${(1 / zoom) * 0.8}) translate(0%, -${100 * zoom * (1 / 0.8)}%)`,
+                        // transform: `translateX(${-PIXELS_PER_SQUARE / 2}px)`,
+                        background: COLORS[othersOnThisDancer[0]?.connectionId % COLORS.length],
+                     }}
+                  >
+                     {toHumanReadableList(othersOnThisDancer.map((person) => person.presence.nameOrEmail))}
+                  </p>
                </div>
             )}
 
@@ -397,4 +433,21 @@ function hexToRGBA(hex: string, alpha: number) {
    const b = parseInt(hex.slice(5, 7), 16);
 
    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function toHumanReadableList(names: string[]): string {
+   // Extract first names from the list
+   const firstNames = names.map((name) => name.split(" ")[0]);
+
+   // Depending on the length of the names, format the string differently
+   switch (firstNames.length) {
+      case 0:
+         return "";
+      case 1:
+         return firstNames[0];
+      case 2:
+         return `${firstNames[0]} & ${firstNames[1]}`;
+      default:
+         return `${firstNames.slice(0, -1).join(", ")} & ${firstNames[firstNames.length - 1]}`;
+   }
 }

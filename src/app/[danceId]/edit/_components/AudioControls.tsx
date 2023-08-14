@@ -2,19 +2,19 @@ import { dancer, dancerPosition, formation, localSettings, MAX_PIXELS_PER_SECOND
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useStore } from "../store";
 
 export const AudioControls: React.FC<{
-   soundCloudTrackId: string | null;
    setSelectedFormation: Function;
    player: any;
    isPlaying: boolean;
    setIsPlaying: Function;
-   formations: formation[];
+   // formations: formation[];
    position: number | null;
-   setFormations: Function;
+   // setFormations: Function;
    songDuration: number | null;
    selectedFormation: number | null;
-   viewOnly: boolean;
+   // viewOnly: boolean;
    addToStack: Function;
    pushChange: Function;
    setPixelsPerSecond: Function;
@@ -27,17 +27,16 @@ export const AudioControls: React.FC<{
    setIsChangingZoom: Function;
    setHelpUrl: Function;
 }> = ({
-   soundCloudTrackId,
    setSelectedFormation,
    player,
    isPlaying,
    setIsPlaying,
-   formations,
+   // formations,
    position,
-   setFormations,
+   // setFormations,
    songDuration,
    selectedFormation,
-   viewOnly,
+   // viewOnly,
    addToStack,
    pushChange,
    setPixelsPerSecond,
@@ -50,6 +49,8 @@ export const AudioControls: React.FC<{
    setIsChangingZoom,
    setHelpUrl,
 }) => {
+   const { formations, setFormations, viewOnly } = useStore();
+
    const [playbackRateIndex, setPlaybackRateIndex] = useState(2);
    const playbackRates = [0.25, 0.5, 1, 1.5, 2];
 
@@ -80,23 +81,21 @@ export const AudioControls: React.FC<{
 
    const newFormation = () => {
       let id = uuidv4();
-      setFormations((formations: formation[]) => {
-         return [
-            ...formations,
-            {
-               ...formations[formations.length - 1],
-               id,
-               name: `Untitled ${formations.length + 1}`,
-               positions: formations[formations.length - 1]?.positions.map((dancer: dancerPosition) => {
-                  return {
-                     ...dancer,
-                     transitionType: "linear",
-                  };
-               }),
-               notes: "",
-            },
-         ];
-      });
+      setFormations([
+         ...formations,
+         {
+            ...formations[formations.length - 1],
+            id,
+            name: `Untitled ${formations.length + 1}`,
+            positions: formations[formations.length - 1]?.positions.map((dancer: dancerPosition) => {
+               return {
+                  ...dancer,
+                  transitionType: "linear",
+               };
+            }),
+            notes: "",
+         },
+      ]);
       setSelectedFormation(formations.length);
       pushChange();
    };

@@ -1,13 +1,18 @@
 import { cloudSettings, localSettings, PIXELS_PER_SQUARE } from "../../../../types/types";
+import { useStore } from "../store";
 
 export const StageLines: React.FC<{
-   stageDimensions: { width: number; height: number };
-   cloudSettings: cloudSettings;
+   // stageDimensions: { width: number; height: number };
+   // cloudSettings: cloudSettings;
    opacity: number;
    zoom: number;
    localSettings: localSettings;
    //    divisions: { x: number; y: number };
-}> = ({ stageDimensions, cloudSettings, zoom, localSettings, opacity }) => {
+}> = ({ zoom, localSettings, opacity }) => {
+   const {
+      cloudSettings: { stageDimensions },
+      cloudSettings,
+   } = useStore();
    return (
       <>
          <svg

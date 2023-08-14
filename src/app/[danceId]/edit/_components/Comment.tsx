@@ -1,16 +1,18 @@
 import { dancer, dancerPosition, formation, stageDimensions, comment, initials, localSettings } from "../../../../types/types";
 import { useRef, useEffect, useState } from "react";
+import { useStore } from "../store";
 
 export const Comment: React.FC<{
    comment: comment;
    selectedFormation: number | null;
-   setFormations: Function;
+   // setFormations: Function;
    zoom: number;
    coordsToPosition: Function;
    pushChange: Function;
    addToStack: Function;
    localSettings: localSettings;
-}> = ({ comment, selectedFormation, setFormations, coordsToPosition, zoom, addToStack, pushChange, localSettings }) => {
+}> = ({ comment, selectedFormation, coordsToPosition, zoom, addToStack, pushChange, localSettings }) => {
+   const { formations, setFormations } = useStore();
    const { stageFlipped } = localSettings;
    // if there is no formation selected and the track is not playing, then just return nothing
    if (selectedFormation === null) return <></>;
@@ -110,8 +112,8 @@ export const Comment: React.FC<{
                      }}
                      autoFocus
                      onChange={(e) => {
-                        setFormations((formations: formation[]) => {
-                           return formations.map((formation, i) => {
+                        setFormations(
+                           formations.map((formation, i) => {
                               if (i === selectedFormation) {
                                  return {
                                     ...formation,
@@ -124,8 +126,8 @@ export const Comment: React.FC<{
                                  };
                               }
                               return formation;
-                           });
-                        });
+                           })
+                        );
                      }}
                      className="bg-neutral-700 p-2 h-24 border border-pink-600 mt-2 rounded-md focus:outline-none resize-none pointer-events-auto w-full text-sm font-normal  selection:bg-pink-900"
                      value={comment.content}

@@ -1,8 +1,10 @@
 import { Vector3 } from "three";
 import { Line } from "@react-three/drei";
 import { cloudSettings, localSettings } from "../../../../../types/types";
+import { useStore } from "../../store";
 
-export const ThreeGrid = ({ localSettings, cloudSettings }: { localSettings: localSettings; cloudSettings: cloudSettings }) => {
+export const ThreeGrid = ({ localSettings }: { localSettings: localSettings }) => {
+   const { cloudSettings } = useStore();
    const { stageDimensions, gridSubdivisions, horizontalGridSubdivisions } = cloudSettings;
    const lines = [];
 

@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AuthSession } from "@supabase/supabase-js";
+import { useStore } from "../../store";
 
 export const ChooseAudioSource: React.FC<{
    audioFiles: any;
@@ -11,10 +12,8 @@ export const ChooseAudioSource: React.FC<{
    player: any;
    setIsPlaying: Function;
    setLocalSource: Function;
-   setUpgradeIsOpen: Function;
-   pricingTier: string;
+
    session: AuthSession | null;
-   viewOnly: boolean;
 }> = ({
    audioFiles,
    setSoundCloudTrackId,
@@ -23,11 +22,10 @@ export const ChooseAudioSource: React.FC<{
    setIsPlaying,
    player,
    setLocalSource,
-   setUpgradeIsOpen,
-   pricingTier,
+
    session,
-   viewOnly,
 }) => {
+   const { viewOnly } = useStore();
    const [file, setFile] = useState<File | null>();
 
    const supabase = createClientComponentClient();
@@ -39,12 +37,7 @@ export const ChooseAudioSource: React.FC<{
          setFile(null);
          return;
       }
-      if (isVideo(file.name) && pricingTier === "basic") {
-         toast("Uploading videos is a premium feature");
-         setFile(null);
-         setUpgradeIsOpen(true);
-         return;
-      }
+
       const body = new FormData();
 
       const reader = new FileReader();
@@ -86,17 +79,7 @@ export const ChooseAudioSource: React.FC<{
          <div className="lg:flex hidden overflow-y-scroll w-[260px]  min-w-[260px] h-full  flex-col   bg-white   dark:bg-neutral-800 dark:text-white  px-4 py-6 overflow-hidden">
             <div className="flex flex-col ">
                <div className="text-xl font-medium   flex flex-row justify-between items-center">
-                  <button
-                     onClick={(e) => {
-                        if (pricingTier === "basic" && audioFiles?.data?.length) {
-                           e.preventDefault();
-                           toast("Upgrade to upload more than one audio file");
-                           setUpgradeIsOpen(true);
-                           return;
-                        }
-                     }}
-                     className="text-sm w-30 font-normal relative cursor-pointer"
-                  >
+                  <button onClick={(e) => {}} className="text-sm w-30 font-normal relative cursor-pointer">
                      <input
                         accept="audio/mp3, audio/wav, video/mp4, video/avi"
                         type="file"
@@ -185,7 +168,11 @@ export const ChooseAudioSource: React.FC<{
                               key={audiofile.name}
                               onClick={() => {
                                  if (viewOnly) return;
-                                 player ? player.pause() : null;
+                                 try {
+                                    player ? player.pause() : null;
+                                 } catch {
+                                    console.log("player not found");
+                                 }
                                  setIsPlaying(false);
                                  setSoundCloudTrackId(
                                     `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/audiofiles/${session?.user.id}/${audiofile.name}`

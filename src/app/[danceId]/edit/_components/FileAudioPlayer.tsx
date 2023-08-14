@@ -5,6 +5,7 @@ import { formation, localSettings } from "../../../../types/types";
 import TimelinePlugin from "../../../../timeline-plugin";
 import WaveSurfer from "../../../../Wavesurfer"; // Importing local Wavesurfer
 import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
+import { useStore } from "../store";
 
 export const FileAudioPlayer: React.FC<{
    setPosition: Function;
@@ -13,14 +14,14 @@ export const FileAudioPlayer: React.FC<{
    songDuration: number | null;
    soundCloudTrackId: string | null;
    setSelectedFormation: Function;
-   setFormations: Function;
-   viewOnly: boolean;
+
+   // viewOnly: boolean;
    pixelsPerSecond: number;
    player: any;
    setPlayer: Function;
    localSettings: localSettings;
    videoPlayer: any;
-   formations: formation[];
+   // formations: formation[];
    isPlaying: boolean;
    position: number;
 }> = memo(
@@ -30,19 +31,19 @@ export const FileAudioPlayer: React.FC<{
       setSongDuration,
       // songDuration,
       soundCloudTrackId,
-      setFormations,
       setSelectedFormation,
-      viewOnly,
+      // viewOnly,
       pixelsPerSecond,
       player,
       setPlayer,
       videoPlayer,
       localSettings,
-      formations,
+      // formations,
       isPlaying,
       songDuration,
       position,
    }) => {
+      const { formations } = useStore();
       const [ready, setReady] = useState(false);
       // const [isInBonus, setIsInBonus] = useState(false);
       // const [movePlayhead, setMovePlayhead] = useState(false);

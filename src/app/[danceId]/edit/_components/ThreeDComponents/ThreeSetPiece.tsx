@@ -2,10 +2,11 @@ import { useLoader } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 import { TextureLoader, DoubleSide } from "three";
 import { cloudSettings, formation, prop, propPosition } from "../../../../../types/types";
+import { useStore } from "../../store";
 export function ThreeSetPiece({
    cloudSettings,
    prop,
-   formations,
+   // formations,
    selectedFormation,
    isPlaying,
    position,
@@ -14,13 +15,14 @@ export function ThreeSetPiece({
 }: {
    cloudSettings: cloudSettings;
    prop: prop;
-   formations: formation[];
+   // formations: formation[];
    selectedFormation: number | null;
    isPlaying: boolean;
    position: number | null;
    currentFormationIndex: number;
    percentThroughTransition: number;
 }) {
+   const { formations } = useStore();
    const url = `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${prop.user_id}/${prop?.url}`;
    const texture = useLoader(TextureLoader, url);
    const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });

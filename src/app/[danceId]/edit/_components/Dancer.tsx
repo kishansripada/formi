@@ -1,39 +1,36 @@
 import { dancer, dancerPosition, formation, localSettings } from "../../../../types/types";
+import { useStore } from "../store";
 
 export const Dancer: React.FC<{
-   setDancers: Function;
-   dancers: dancer[];
    selectedFormation: number | null;
    formations: formation[];
    dancer: dancer;
-
-   setFormations: Function;
+   // setFormations: Function;
    selectedDancers: string[];
    index: number;
    setSelectedDancers: Function;
    pushChange: Function;
    // uniqueDancers: string[];
-   viewOnly: boolean;
+   // viewOnly: boolean;
    localSettings: localSettings;
 }> = ({
-   setDancers,
-   dancers,
    selectedFormation,
-   formations,
-
+   // formations,
    dancer,
-   setFormations,
+   // setFormations,
    selectedDancers,
    index,
    setSelectedDancers,
    pushChange,
    // uniqueDancers,
-   viewOnly,
+   // viewOnly,
    localSettings,
 }) => {
+   const { setFormations, formations, viewOnly } = useStore();
    let { name, id, instagramUsername, color } = dancer;
    const { isDarkMode } = localSettings;
    let amSelected = selectedDancers.includes(id);
+   const { dancers, setDancers } = useStore();
    // let suggestedDancer = uniqueDancers.find((dancer: string) => {
    //    return dancer.toLowerCase().startsWith(name.toLowerCase());
    // });
@@ -52,8 +49,8 @@ export const Dancer: React.FC<{
       .toUpperCase();
 
    const addDancerToStage = () => {
-      setFormations((formations: formation[]) => {
-         return formations.map((formation, i) => {
+      setFormations(
+         formations.map((formation, i) => {
             if (i === selectedFormation) {
                return {
                   ...formation,
@@ -71,8 +68,8 @@ export const Dancer: React.FC<{
                };
             }
             return formation;
-         });
-      });
+         })
+      );
    };
 
    return (
@@ -102,9 +99,7 @@ export const Dancer: React.FC<{
                   disabled={viewOnly}
                   onChange={(e) => {
                      if (viewOnly) return;
-                     setDancers((dancers: dancer[]) => {
-                        return dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer));
-                     });
+                     setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)));
                   }}
                />
                {/* <p className="absolute z-[50] left-[16px] top-[6.5px] text-neutral-500 text-sm">{suggestedDancer}</p> */}

@@ -1,13 +1,16 @@
 import { cloudSettings, localSettings, PIXELS_PER_SQUARE } from "../../../../types/types";
+import { useStore } from "../store";
 
 export const OldGridLines: React.FC<{
-   stageDimensions: { width: number; height: number };
-   cloudSettings: cloudSettings;
    opacity: number;
    zoom: number;
    localSettings: localSettings;
-}> = ({ stageDimensions, cloudSettings, zoom, localSettings, opacity }) => {
-   // console.log({ zoom });
+}> = ({ zoom, localSettings, opacity }) => {
+   const {
+      cloudSettings: { stageDimensions },
+      cloudSettings,
+   } = useStore();
+
    return (
       <>
          <svg

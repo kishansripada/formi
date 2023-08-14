@@ -2,19 +2,19 @@ import { dancer, dancerPosition, formation, localSettings, PIXELS_PER_SECOND } f
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useStore } from "../store";
 
 export const FormationControls: React.FC<{
-   soundCloudTrackId: string | null;
    setSelectedFormation: Function;
    player: any;
    isPlaying: boolean;
    setIsPlaying: Function;
-   formations: formation[];
+   // formations: formation[];
    position: number | null;
-   setFormations: Function;
+   // setFormations: Function;
    songDuration: number | null;
    selectedFormation: number | null;
-   viewOnly: boolean;
+   // viewOnly: boolean;
    addToStack: Function;
    pushChange: Function;
    setPixelsPerSecond: Function;
@@ -28,17 +28,16 @@ export const FormationControls: React.FC<{
    zoom: number;
    selectedDancers: string[];
 }> = ({
-   soundCloudTrackId,
    setSelectedFormation,
    player,
    isPlaying,
    setIsPlaying,
-   formations,
+   // formations,
    position,
-   setFormations,
+   // setFormations,
    songDuration,
    selectedFormation,
-   viewOnly,
+   // viewOnly,
    addToStack,
    pushChange,
    setPixelsPerSecond,
@@ -78,6 +77,7 @@ export const FormationControls: React.FC<{
    //       };
    //    }, [isChangingZoom, pixelsPerSecond, MAX_ZOOM]);
 
+   const { formations, setFormations } = useStore();
    return (
       <>
          <div className="w-full h-[40px] min-h-[40px] max-h-[40px]  border-t-neutral-300 border-t bg-white flex flex-row items-center justify-end px-3 dark:bg-neutral-800 mt-auto dark:border-neutral-700 dark:text-white">
@@ -90,12 +90,9 @@ export const FormationControls: React.FC<{
                      return;
                   }
 
-                  setFormations((formations: formation[]) => {
-                     if (selectedFormation === formations.length - 1) {
-                        return formations;
-                     }
-                     if (selectedFormation === 0) {
-                        return formations.map((formation, index) => {
+                  if (selectedFormation === 0) {
+                     setFormations(
+                        formations.map((formation, index) => {
                            if (index === 1) {
                               return {
                                  ...formation,
@@ -103,9 +100,11 @@ export const FormationControls: React.FC<{
                               };
                            }
                            return formation;
-                        });
-                     } else {
-                        return formations.map((formation, index) => {
+                        })
+                     );
+                  } else if (selectedFormation !== formations.length - 1) {
+                     setFormations(
+                        formations.map((formation, index) => {
                            if (index === selectedFormation - 1) {
                               return {
                                  ...formation,
@@ -116,22 +115,22 @@ export const FormationControls: React.FC<{
                               };
                            }
                            return formation;
-                        });
-                     }
-                  });
+                        })
+                     );
+                  }
 
                   if (selectedFormation === formations.length - 1) {
                      setSelectedFormation(selectedFormation - 1);
                   }
 
                   // remove the formation
-                  setFormations((formations: formation[]) => {
-                     return formations.filter((formation, index) => {
+                  setFormations(
+                     formations.filter((formation, index) => {
                         return index !== selectedFormation;
-                     });
-                  });
+                     })
+                  );
 
-                  pushChange();
+                  // pushChange();
                }}
                className="   text-sm shadow-sm   cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-1 px-3 mr-4 bg-red-500 dark:text-red-400 text-red-600  "
             >
@@ -141,34 +140,32 @@ export const FormationControls: React.FC<{
                onClick={() => {
                   if (selectedFormation === null) return;
                   const lastIsSelected = selectedFormation === formations.length - 1;
-                  setFormations((formations: formation[]) => {
-                     return [
-                        ...formations.slice(0, selectedFormation),
-                        {
-                           ...formations[selectedFormation],
-                           durationSeconds: formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
-                           transition: {
-                              durationSeconds:
-                                 formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2) > 0.5
-                                    ? formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2)
-                                    : formations[selectedFormation].transition.durationSeconds,
-                           },
+                  setFormations([
+                     ...formations.slice(0, selectedFormation),
+                     {
+                        ...formations[selectedFormation],
+                        durationSeconds: formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
+                        transition: {
+                           durationSeconds:
+                              formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2) > 0.5
+                                 ? formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2)
+                                 : formations[selectedFormation].transition.durationSeconds,
                         },
-                        {
-                           ...formations[selectedFormation],
-                           id: uuidv4(),
-                           name: formations[selectedFormation].name + " copy",
-                           durationSeconds: formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
-                           transition: {
-                              durationSeconds:
-                                 formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2) > 0.5
-                                    ? formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2)
-                                    : formations[selectedFormation].transition.durationSeconds,
-                           },
+                     },
+                     {
+                        ...formations[selectedFormation],
+                        id: uuidv4(),
+                        name: formations[selectedFormation].name + " copy",
+                        durationSeconds: formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
+                        transition: {
+                           durationSeconds:
+                              formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2) > 0.5
+                                 ? formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2)
+                                 : formations[selectedFormation].transition.durationSeconds,
                         },
-                        ...formations.slice(selectedFormation + 1),
-                     ];
-                  });
+                     },
+                     ...formations.slice(selectedFormation + 1),
+                  ]);
                   setSelectedFormation((i: number) => i + 1);
 
                   pushChange();
@@ -185,8 +182,8 @@ export const FormationControls: React.FC<{
                onClick={() => {
                   if (selectedFormation === null) return;
 
-                  setFormations((formations: formation[]) => {
-                     return formations.map((formation) => {
+                  setFormations(
+                     formations.map((formation) => {
                         if (formation.id === formations[selectedFormation].id) {
                            return {
                               ...formation,
@@ -197,8 +194,8 @@ export const FormationControls: React.FC<{
                            };
                         }
                         return formation;
-                     });
-                  });
+                     })
+                  );
 
                   pushChange();
                }}
@@ -213,8 +210,8 @@ export const FormationControls: React.FC<{
                onClick={() => {
                   if (selectedFormation === null) return;
 
-                  setFormations((formations: formation[]) => {
-                     return formations.map((formation) => {
+                  setFormations(
+                     formations.map((formation) => {
                         if (formation.id === formations[selectedFormation].id) {
                            return {
                               ...formation,
@@ -225,8 +222,8 @@ export const FormationControls: React.FC<{
                            };
                         }
                         return formation;
-                     });
-                  });
+                     })
+                  );
 
                   pushChange();
                }}

@@ -12,24 +12,24 @@ import {
 import { useEffect, useState } from "react";
 import { Dropdown } from "../../app/dashboard/_components/Dropdown";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
+import { useStore } from "../store";
 
 export const Prop: React.FC<{
    prop: prop;
-   props: prop[];
+   // props: prop[];
    currentFormationIndex: number | null;
    percentThroughTransition: number;
-   setDancers: Function;
+
    selectedFormation: number | null;
-   formations: formation[];
+
    isPlaying: boolean;
    position: number | null;
-   setFormations: Function;
+
    selectedDancers: string[];
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
    draggingDancerId: string | null;
    cloudSettings: cloudSettings;
-   userPositions: any;
-   onlineUsers: any;
+
    zoom: number;
    setZoom: Function;
    localSettings: any;
@@ -39,25 +39,23 @@ export const Prop: React.FC<{
    selectedPropIds: string[];
    setResizingPropId: Function;
    dropDownToggle: boolean;
-   setProps: Function;
+   // setProps: Function;
    pushChange: Function;
 }> = ({
    prop,
-   props,
+   // props,
    currentFormationIndex,
    percentThroughTransition,
-   formations,
-   setDancers,
+
    selectedFormation,
    isPlaying,
    position,
-   setFormations,
+
    selectedDancers,
    coordsToPosition,
    draggingDancerId,
    cloudSettings,
-   userPositions,
-   onlineUsers,
+
    zoom,
    setZoom,
    localSettings,
@@ -67,9 +65,11 @@ export const Prop: React.FC<{
    selectedPropIds,
    setResizingPropId,
    dropDownToggle,
-   setProps,
+   // setProps,
    pushChange,
 }) => {
+   const { formations, setFormations, setProps, props } = useStore();
+
    const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
    useEffect(() => {
       setIsDropdownOpen(false);
@@ -179,8 +179,8 @@ export const Prop: React.FC<{
                   {prop.type !== "static" && (
                      <div
                         onClick={() => {
-                           setFormations((formations: formation[]) => {
-                              return formations.map((formation, i) => {
+                           setFormations(
+                              formations.map((formation, i) => {
                                  if (i === selectedFormation) {
                                     return {
                                        ...formation,
@@ -188,8 +188,8 @@ export const Prop: React.FC<{
                                     };
                                  }
                                  return formation;
-                              });
-                           });
+                              })
+                           );
                            pushChange();
                         }}
                         className=" px-4 py-1  text-xs text-white hover:bg-pink-600   flex flex-row items-center"
@@ -201,8 +201,8 @@ export const Prop: React.FC<{
                      onClick={() => {
                         if (prop?.type === "dynamic" || !prop.type) {
                            // add this prop to every single formation in the position it is in this formation, defined in propPosition, replace existing prop positions where the id of that prop is the same as the prop we are moving
-                           setProps((props: prop[]) => {
-                              return props.map((propx: prop) => {
+                           setProps(
+                              props.map((propx: prop) => {
                                  if (propx.id === prop.id) {
                                     return {
                                        ...propx,
@@ -213,11 +213,11 @@ export const Prop: React.FC<{
                                     };
                                  }
                                  return propx;
-                              });
-                           });
+                              })
+                           );
                         }
-                        setProps((props: prop[]) => {
-                           return props.map((propx: prop) => {
+                        setProps(
+                           props.map((propx: prop) => {
                               if (propx.id === prop.id) {
                                  return {
                                     ...propx,
@@ -225,8 +225,8 @@ export const Prop: React.FC<{
                                  };
                               }
                               return propx;
-                           });
-                        });
+                           })
+                        );
                      }}
                      className=" px-4 py-1  text-xs text-white hover:bg-pink-600   flex flex-row items-center"
                   >

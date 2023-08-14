@@ -5,20 +5,19 @@ import { dancer, dancerPosition, formation, formationGroup, localSettings } from
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay, MouseSensor } from "@dnd-kit/core";
 import { SortableContext, sortableKeyboardCoordinates, horizontalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import { v4 as uuidv4 } from "uuid";
+import { useStore } from "../store";
 
 export const Layer: React.FC<{
-   formations: formation[];
+   // formations: formation[];
    selectedFormation: number | null;
    setSelectedFormation: Function;
-   setFormations: Function;
+   // setFormations: Function;
    songDuration: number | null;
    position: number | null;
    isPlaying: boolean;
-   viewOnly: boolean;
+
    pixelsPerSecond: number;
    setSelectedDancers: Function;
-   userPositions: any;
-   onlineUsers: any;
    addToStack: Function;
    pushChange: Function;
    formationGroups: formationGroup;
@@ -29,18 +28,16 @@ export const Layer: React.FC<{
    // setSelectedFormations: Function;
    // selectedFormations: number[];
 }> = ({
-   formations,
+   // formations,
    selectedFormation,
    setSelectedFormation,
-   setFormations,
+   // setFormations,
    songDuration,
    position,
    isPlaying,
-   viewOnly,
+
    pixelsPerSecond,
    setSelectedDancers,
-   userPositions,
-   onlineUsers,
    pushChange,
    addToStack,
    formationGroups,
@@ -51,6 +48,7 @@ export const Layer: React.FC<{
    // setSelectedFormations,
    // selectedFormations,
 }) => {
+   const { formations, setFormations, viewOnly } = useStore();
    const [activeId, setActiveId] = useState(null);
    // const keyboardCodes = {
    //    start: ["$"],
@@ -108,12 +106,10 @@ export const Layer: React.FC<{
 
       if (!over?.id) return;
       if (active.id !== over?.id) {
-         setFormations((formations: formation[]) => {
-            const oldIndex = formations.findIndex((formation) => formation.id === active.id);
-            const newIndex = formations.findIndex((formation) => formation.id === over.id);
+         const oldIndex = formations.findIndex((formation) => formation.id === active.id);
+         const newIndex = formations.findIndex((formation) => formation.id === over.id);
 
-            return arrayMove(formations, oldIndex, newIndex);
-         });
+         setFormations(arrayMove(formations, oldIndex, newIndex));
       }
       pushChange();
       setActiveId(null);
@@ -121,22 +117,20 @@ export const Layer: React.FC<{
 
    const newFormation = () => {
       let id = uuidv4();
-      setFormations((formations: formation[]) => {
-         return [
-            ...formations,
-            {
-               ...formations[formations.length - 1],
-               id,
-               name: `Untitled ${formations.length + 1}`,
-               positions: formations[formations.length - 1]?.positions.map((dancer: dancerPosition) => {
-                  return {
-                     ...dancer,
-                     transitionType: "linear",
-                  };
-               }),
-            },
-         ];
-      });
+      setFormations([
+         ...formations,
+         {
+            ...formations[formations.length - 1],
+            id,
+            name: `Untitled ${formations.length + 1}`,
+            positions: formations[formations.length - 1]?.positions.map((dancer: dancerPosition) => {
+               return {
+                  ...dancer,
+                  transitionType: "linear",
+               };
+            }),
+         },
+      ]);
       setSelectedFormation(formations.length);
       pushChange();
    };
@@ -187,11 +181,7 @@ export const Layer: React.FC<{
                         }}
                      >
                         <Formation
-                           userPositions={userPositions}
-                           onlineUsers={onlineUsers}
-                           viewOnly={viewOnly}
                            setSelectedFormation={setSelectedFormation}
-                           setFormations={setFormations}
                            formation={formation}
                            index={index}
                            amSelected={index === selectedFormation}

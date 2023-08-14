@@ -8,26 +8,24 @@ import { useThree, useFrame } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 
 import * as THREE from "three";
+import { useStore } from "../../store";
 
 export function ThreeComment({
    comment,
-   formations,
-   setFormations,
+
    selectedFormation,
    isPlaying,
-   viewOnly,
+
    setIsThreeDancerDragging,
-   isThreeDancerDragging,
 }: {
    comment: comment;
-   formations: formation[];
-   setFormations: Function;
+
    selectedFormation: number | null;
    isPlaying: boolean;
-   viewOnly: boolean;
+
    setIsThreeDancerDragging: Function;
-   isThreeDancerDragging: boolean;
 }) {
+   const { formations, setFormations, get, viewOnly } = useStore();
    //    let { gridSnap } = localSettings;
 
    //    let dancer = dancers?.find((dancer) => dancer.id === dancerPosition.id);
@@ -48,8 +46,8 @@ export function ThreeComment({
             // setPos([-dancerPosition.position.x / 2 + planeIntersectPoint.x, 0, dancerPosition.position.y / 2 + planeIntersectPoint.z]);
             // console.log(planeIntersectPoint.x);
             console.log(planeIntersectPoint);
-            setFormations((formations: formation[]) => {
-               return formations.map((formation, index: number) => {
+            setFormations(
+               get().formations.map((formation, index: number) => {
                   if (index === selectedFormation) {
                      return {
                         ...formation,
@@ -69,8 +67,8 @@ export function ThreeComment({
                   }
 
                   return formation;
-               });
-            });
+               })
+            );
          } else {
             document.body.style.cursor = "default";
          }
@@ -163,27 +161,27 @@ export function ThreeComment({
                            setIsOpen(false);
                            //    pushChange();
                         }}
-                        onChange={(e) => {
-                           e.target.style.height = "auto";
-                           e.target.style.height = `${e.target.scrollHeight}px`;
+                        // onChange={(e) => {
+                        //    e.target.style.height = "auto";
+                        //    e.target.style.height = `${e.target.scrollHeight}px`;
 
-                           setFormations((formations: formation[]) => {
-                              return formations.map((formation, i) => {
-                                 if (i === selectedFormation) {
-                                    return {
-                                       ...formation,
-                                       comments: formation.comments?.map((commentx) => {
-                                          if (commentx.id === comment.id) {
-                                             return { ...comment, content: e.target.value };
-                                          }
-                                          return commentx;
-                                       }),
-                                    };
-                                 }
-                                 return formation;
-                              });
-                           });
-                        }}
+                        //    setFormations(
+                        //        formations.map((formation, i) => {
+                        //          if (i === selectedFormation) {
+                        //             return {
+                        //                ...formation,
+                        //                comments: formation.comments?.map((commentx) => {
+                        //                   if (commentx.id === comment.id) {
+                        //                      return { ...comment, content: e.target.value };
+                        //                   }
+                        //                   return commentx;
+                        //                }),
+                        //             };
+                        //          }
+                        //          return formation;
+                        //       });
+                        //    })
+                        // }
                         className="bg-neutral-800 dark:bg-neutral-200 focus:outline-none resize-none pointer-events-auto w-full text-sm font-normal  mt-1 selection:bg-pink-900"
                         value={comment.content}
                         // ref={textAreaRef}

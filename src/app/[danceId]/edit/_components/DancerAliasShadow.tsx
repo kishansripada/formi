@@ -1,13 +1,15 @@
 import { dancer, dancerPosition, formation } from "../../../../types/types";
+import { useStore } from "../store";
 
 export const DancerAliasShadow: React.FC<{
    dancer: dancer;
    selectedFormation: number | null;
-   formations: formation[];
+   // formations: formation[];
    isPlaying: boolean;
    currentFormationIndex: number | null;
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
-}> = ({ dancer, formations, selectedFormation, isPlaying, currentFormationIndex, coordsToPosition }) => {
+}> = ({ dancer, selectedFormation, isPlaying, currentFormationIndex, coordsToPosition }) => {
+   const { formations } = useStore();
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])

@@ -10,18 +10,7 @@ import { useLocalStorage } from "../../../hooks";
 import debounce from "lodash.debounce";
 import toast, { Toaster } from "react-hot-toast";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import {
-   comment,
-   dancer,
-   dancerPosition,
-   formation,
-   PIXELS_PER_SQUARE,
-   localSettings,
-   cloudSettings,
-   formationGroup,
-   prop,
-   item,
-} from "../../../types/types";
+import { comment, dancer, dancerPosition, formation, PIXELS_PER_SQUARE, localSettings, cloudSettings, prop, item } from "../../../types/types";
 import { AudioControls } from "./_components/AudioControls";
 import { Header } from "./_components/Header";
 import { DancerAlias } from "./_components/DancerAlias";
@@ -53,6 +42,9 @@ import { Database } from "../../../types/supabase";
 import Loading from "../../loading";
 import { StageSettings } from "./_components/SidebarComponents/StageSettings";
 import { Segments } from "./_components/SidebarComponents/Segments";
+import { create } from "zustand";
+import { useStore } from "./store";
+
 const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => (
       <div className="flex items-center justify-center h-screen bg-neutral-100 dark:bg-neutral-900  w-full">
@@ -118,44 +110,73 @@ const Edit = ({
    permissions: string[];
    hasVisited: boolean;
 }) => {
-   const colors = ["#e6194B", "#4363d8", "#f58231", "#800000", "#469990", "#3cb44b"];
-   // viewOnlyInitial = false;
+   const {
+      segments,
+      setSegments,
+      dancers,
+      setDancers,
+      selectedFormation,
+      setSelectedFormation,
+      formations,
+      setFormations,
+      viewOnly,
+      setViewOnly,
+      setDanceName,
+      danceName,
+      props,
+      setProps,
+      items,
+      setItems,
+      setNameOrEmail,
+      setCloudSettings,
+      cloudSettings,
+      setSoundCloudTrackId,
+      soundCloudTrackId,
+      selectedDancers,
+      setSelectedDancers,
+      liveblocks,
+   } = useStore();
+
+   // console.log({ liveStatus });
+   useEffect(() => {
+      setSegments(initialData.segments);
+      setDancers(initialData.dancers);
+      setFormations(initialData.formations);
+      setViewOnly(viewOnlyInitial);
+      setDanceName(initialData.name);
+      setProps(initialData.props);
+      setItems(initialData.items);
+      setCloudSettings({
+         ...initialData.settings,
+         stageBackground: initialData.settings.stageBackground || "grid",
+         gridSubdivisions: initialData.settings.stageBackground === "cheer9" ? 9 : initialData.settings.gridSubdivisions || 8,
+         horizontalFineDivisions: initialData.settings.horizontalFineDivisions || 4,
+         verticalFineDivisions: initialData.settings.verticalFineDivisions || 4,
+         horizontalGridSubdivisions: initialData.settings.horizontalGridSubdivisions || 4,
+      });
+      setNameOrEmail(session?.user.user_metadata.full_name || session?.user.email || "");
+      setSoundCloudTrackId(initialData.soundCloudId);
+   }, []);
+
+   const enterRoom = useStore((state) => state.liveblocks.enterRoom);
+   const leaveRoom = useStore((state) => state.liveblocks.leaveRoom);
+   // const isLoading = useStore((state) => state.liveblocks.isStorageLoading);
+   const undo = useStore((state) => state.liveblocks.room?.history.undo);
+   // const redo = useStore((state) => state.liveblocks.room?.history.redo);
+   useEffect(() => {
+      enterRoom(danceId);
+      return () => {
+         leaveRoom(danceId);
+      };
+   }, [enterRoom, leaveRoom]);
 
    const supabase = createClientComponentClient<Database>();
    const router = useRouter();
    const videoPlayer = useRef();
-   const [segments, setSegments] = useState(initialData.segments);
-   // cloud
-
-   // gridSystem === "fluid"
-   // ? roundDownToEven(initialData.settings.stageDimensions.width / (initialData.settings.gridSubdivisions || 7))
-   // : initialData.settings.gridSubdivisions || 7,
-
-   // console.log({ settings: initialData.settings });
-   const [cloudSettings, setCloudSettings] = useState<cloudSettings>({
-      ...initialData.settings,
-      stageBackground: initialData.settings.stageBackground || "grid",
-      gridSubdivisions: initialData.settings.stageBackground === "cheer9" ? 9 : initialData.settings.gridSubdivisions || 8,
-      horizontalFineDivisions: initialData.settings.horizontalFineDivisions || 4,
-      verticalFineDivisions: initialData.settings.verticalFineDivisions || 4,
-      horizontalGridSubdivisions: initialData.settings.horizontalGridSubdivisions || 4,
-   });
-   // console.log({ cloudSettings });
-   // console.log({ test: cloudSettings });
-   // console.log(initialData.settings);
-   const [formations, setFormations] = useState<formation[]>(initialData.formations);
 
    const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
    const [permissions, setPermissions] = useState(initialPermissions);
-
-   const [soundCloudTrackId, setSoundCloudTrackId] = useState<string | null>(initialData.soundCloudId);
-
-   const [dancers, setDancers] = useState<dancer[]>(initialData.dancers);
-   const [danceName, setDanceName] = useState<string>(initialData.name);
-   const [formationGroups, setFormationGroups] = useState<formationGroup[]>([]);
-   const [shiftHeld, setShiftHeld] = useState(false);
-   const [playbackRate, setPlaybackRate] = useState(1);
-   const [selectedPropIds, setSelectedPropIds] = useState<string[]>([]);
+   // const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
    // local
    const [localSettings, setLocalSettings] = useLocalStorage<localSettings>("localSettings", {
       gridSnap: 1,
@@ -186,13 +207,11 @@ const Edit = ({
          autoScroll: false,
       });
    }
-
+   const [shiftHeld, setShiftHeld] = useState(false);
+   const [playbackRate, setPlaybackRate] = useState(1);
+   const [selectedPropIds, setSelectedPropIds] = useState<string[]>([]);
    const [dropDownToggle, setDropDownToggle] = useState<boolean>(false);
-   const [viewOnly, setViewOnly] = useState(viewOnlyInitial);
-
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
-   const [upgradeIsOpen, setUpgradeIsOpen] = useState<boolean>(false);
-   const [deltas, setDeltas] = useState([]);
    const [localSource, setLocalSource] = useState(null);
    const [songDuration, setSongDuration] = useState<number | null>(null);
    const [zoom, setZoom] = useState(1);
@@ -200,39 +219,26 @@ const Edit = ({
    const [isCommenting, setIsCommenting] = useState<boolean>(false);
    const [position, setPosition] = useState<number>(0);
    const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(35);
-   const [selectedFormation, setSelectedFormation] = useState<number | null>(0);
-   const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
+
    const [isScrollingTimeline, setIsScrollingTimeline] = useState(false);
-   const [previousFormation, setPreviousFormation] = useState<formation[]>(initialData.formations);
-   const [previousDancers, setPreviousDancers] = useState<formation[]>(initialData.dancers);
-   const [previousCloudSettings, setPreviousCloudSettings] = useState<formation[]>(initialData.settings);
    const [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
    const [menuOpen, setMenuOpen] = useState<string>("formations");
    const [player, setPlayer] = useState(null);
    const [saved, setSaved] = useState<boolean>(true);
    const [shareIsOpen, setShareIsOpen] = useState(false);
    const [isChangingCollisionRadius, setIsChangingCollisionRadius] = useState(false);
-   const [isEditingFormationGroup, setIsEditingFormationGroup] = useState(false);
-   const [subscriptionStatus, setSubscriptionStatus] = useState("NOT SUBSCRIBED");
+   // const [subscriptionStatus, setSubscriptionStatus] = useState("NOT SUBSCRIBED");
    const [isChangingZoom, setIsChangingZoom] = useState(false);
    const [isThreeDancerDragging, setIsThreeDancerDragging] = useState(false);
    const [pdfLoading, setPdfLoading] = useState(false);
-
    const [assetsOpen, setAssetsOpen] = useState(false);
 
-   const [onlineUsers, setOnlineUsers] = useState({});
-   const [userPositions, setUserPositions] = useState({});
-   const [channelGlobal, setChannelGlobal] = useState<RealtimeChannel>();
-
-   const [items, setItems] = useState<item[]>(initialData.items);
-   const [props, setProps] = useState<prop[]>(initialData.props);
-   const [previousProps, setPreviousProps] = useState(initialData.props);
    const [propUploads, setPropUploads] = useState([]);
    const [helpUrl, setHelpUrl] = useState(hasVisited ? null : { url: "https://www.youtube.com/shorts/JRS1tPHJKAI" });
-   // const [selectedFormations, setSelectedFormations] = useState<number[]>([]);
    const [resizingPropId, setResizingPropId] = useState(null);
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
    const [videoPosition, setVideoPosition] = useState<"top-left" | "top-right" | "bottom-left" | "bottom-right">("top-right");
+
    const coordsToPosition = (coords: { x: number; y: number }) => {
       if (!coords) return null;
       let { x, y } = coords;
@@ -317,17 +323,6 @@ const Edit = ({
          formationContainer.style.textAlign = "center";
          stageElement.style.textAlign = "center";
          // const pageBreak = document.createElement("div");
-         // pageBreak.style.pageBreakBefore = "always";
-         // if (index < formations.length - 1) {
-         //    parentContainer.appendChild(pageBreak);
-         // }
-         // formationContainer.style.width = "297mm"; // Approx width for an A4 page in landscape
-         // formationContainer.style.height = "210mm"; // Approx height for an A4 page in landscape
-         // formationContainer.style.display = "flex"; // Use flexbox
-         // formationContainer.style.flexDirection = "column"; // Stack children vertically
-         // formationContainer.style.alignItems = "center"; // Center children horizontally
-         // formationContainer.style.justifyContent = "center"; // Center children vertically
-         // formationContainer.style.overflow = "hidden"; // Hide any overflow
 
          // Add the label, formation, and notes to the formationContainer
          formationContainer.appendChild(clonedElement);
@@ -354,318 +349,29 @@ const Edit = ({
       }
    }
 
+   const pushChange = () => {
+      return;
+   };
    const removeDancer = (id: string) => {
       // remove dancer and all their positions
-      setFormations((formations) => {
-         return formations.map((formation) => {
+      setFormations(
+         formations.map((formation) => {
             return { ...formation, positions: formation.positions.filter((dancerPosition) => dancerPosition.id !== id) };
-         });
-      });
-      setDancers((dancers: dancer[]) => {
-         return dancers.filter((dancer) => dancer.id !== id);
-      });
-      pushChange();
+         })
+      );
+      setDancers(dancers.filter((dancer) => dancer.id !== id));
+      // pushChange();
    };
 
-   const undo = () => {
-      // console.log("undo");
-      if (!deltas.length) return;
-      // setSaved(false);
+   // const undo = () => {
+   //    return;
 
-      let reverseDelta = jsondiffpatch.reverse(deltas[deltas.length - 1]);
-      setDeltas((deltas) => {
-         return [...deltas].slice(0, -1);
-      });
-      // console.log(reverseDelta);
-      setFormations((formations: formation[]) => {
-         let reversed = jsondiffpatch.patch({ formations, dancers, props }, reverseDelta);
-         setDancers(reversed.dancers ? reversed.dancers : dancers);
-         setProps(reversed.props ? reversed.props : props);
-         return [...reversed.formations];
-      });
-   };
+   // };
 
    const addToStack = () => {
       return;
       // setPreviousFormation(formations);
    };
-
-   const pushChange = () => {
-      setDeltas((deltas) => {
-         return deltas.slice(-40);
-      });
-      setFormations((formations: formation[]) => {
-         setDancers((dancers: dancer[]) => {
-            setProps((props: prop[]) => {
-               let delta = jsondiffpatch.diff(
-                  { formations: previousFormation, dancers: previousDancers, props: previousProps },
-                  { formations, dancers, props }
-               );
-
-               setDeltas((deltas) => {
-                  if (!delta) return deltas;
-                  return [...deltas, delta];
-               });
-               return props;
-            });
-            return dancers;
-         });
-         return formations;
-      });
-
-      // console.log({ deltas });
-
-      // setCloudSettings((cloudSettings) => {
-      //    setPreviousCloudSettings((previousCloudSettings: dancer[]) => {
-      //       if (!previousCloudSettings) return cloudSettings;
-      //       var delta = jsonpatch.compare(previousCloudSettings, JSON.parse(JSON.stringify(cloudSettings)));
-      //       if (!delta.length) return cloudSettings;
-      //       console.log({ settings: delta });
-
-      //       setSaved(false);
-      //       try {
-      //          supabase
-      //             .from("dances")
-      //             .update({ settings: cloudSettings, last_edited: new Date() })
-      //             .eq("id", router.query.danceId)
-      //             .then((r) => {
-      //                console.log("pushed new settings to db");
-      //                setSaved(true);
-      //             });
-      //          if (Object.keys(onlineUsers).length > 1) {
-      //             console.log("sending settings update to clients");
-      //             channelGlobal.send({
-      //                type: "broadcast",
-      //                event: "settings-update",
-      //                payload: cloudSettings,
-      //             });
-      //          }
-      //       } catch (error) {
-      //          setSaved(true);
-      //          toast.error("Error saving changes. Please refresh the page.");
-      //       }
-
-      //       // if (delta) {
-      //       //    setDeltas((deltas) => [...deltas, delta]);
-      //       // }
-
-      //       return cloudSettings;
-      //    });
-      //    return cloudSettings;
-      // });
-      setDancers((dancers) => {
-         setPreviousDancers((previousDancers: dancer[]) => {
-            // if (!previousDancers) return dancers;
-            // var delta = jsonpatch.compare(previousDancers, dancers);
-
-            // if (!delta.length) return dancers;
-            // console.log({ dancers: delta });
-            // setSaved(false);
-            // try {
-            //    supabase
-            //       .from("dances")
-            //       .update({ dancers: dancers, last_edited: new Date() })
-            //       .eq("id", router.query.danceId)
-            //       .then((r) => {
-            //          console.log("pushed new dancers to db");
-            //          setSaved(true);
-            //       });
-            //    if (Object.keys(onlineUsers).length > 1) {
-            //       console.log("sending dancers update to clients");
-            //       channelGlobal.send({
-            //          type: "broadcast",
-            //          event: "dancers-update",
-            //          payload: dancers,
-            //       });
-            //    }
-            // } catch (error) {
-            //    setSaved(true);
-            //    toast.error("Error saving changes. Please refresh the page.");
-            // }
-
-            // if (delta) {
-            //    setDeltas((deltas) => [...deltas, delta]);
-            // }
-
-            return dancers;
-         });
-         return dancers;
-      });
-      setFormations((formations) => {
-         setPreviousFormation((previousFormations: formation[]) => {
-            // if (!previousFormations) return formations;
-            // var delta = jsonpatch.compare([...previousFormations], JSON.parse(JSON.stringify(formations)));
-
-            // if (!delta.length) return formations;
-            // console.log({ formations: delta });
-            // setSaved(false);
-            // try {
-            //    supabase
-            //       .rpc("apply_json_patch_operations", {
-            //          operations: delta,
-            //          dance_id: router.query.danceId,
-            //       })
-            //       .then((r) => {
-            //          setSaved(true);
-            //          console.log("pushed new formations to db");
-            //          if (r.error) {
-            //             toast.error("Error saving changes. Please refresh the page.");
-            //          }
-            //       });
-            //    if (Object.keys(onlineUsers).length > 1) {
-            //       console.log("sending formation update to clients");
-            //       channelGlobal.send({
-            //          type: "broadcast",
-            //          event: "formation-update",
-            //          payload: delta,
-            //       });
-            //    }
-            // } catch (error) {
-            //    setSaved(true);
-            //    toast.error("Error saving changes. Please refresh the page.");
-            // }
-
-            return formations;
-         });
-         return formations;
-      });
-      setProps((props: prop[]) => {
-         setPreviousProps((previousProps: prop[]) => {
-            return props;
-         });
-         return props;
-      });
-   };
-
-   // useEffect(() => {
-   //    if (!channelGlobal) return;
-   //    if (!session) return;
-   //    channelGlobal.send({
-   //       type: "broadcast",
-   //       event: "user-position-update",
-   //       payload: {
-   //          [session?.user?.id]: {
-   //             selectedFormation,
-   //             selectedDancers,
-   //          },
-   //       },
-   //    });
-   // }, [selectedFormation, selectedDancers, channelGlobal]);
-
-   // useEffect(() => {
-   // if (!session || !router?.query?.danceId) return;
-
-   // let channel = supabase.channel(router.query.danceId, {
-   //    config: {
-   //       presence: {
-   //          key: session?.user.id,
-   //       },
-   //    },
-   // });
-
-   // setChannelGlobal(channel);
-
-   // recieve presence data
-   // channel.on("presence", { event: "sync" }, () => {
-   //    let state = channel.presenceState();
-   //    // console.log(state);
-   //    Object.keys(state).forEach((id, index) => {
-   //       state[id][0].color = colors[index];
-   //    });
-   //    setUserPositions((userPositions) => {
-   //       let filteredKeys = Object.keys(userPositions).filter((position) => Object.keys(state).includes(position));
-   //       const filteredObject = filteredKeys.reduce((obj, key) => {
-   //          obj[key] = userPositions[key];
-   //          return obj;
-   //       }, {});
-
-   //       return filteredObject;
-   //    });
-
-   //    setOnlineUsers({ ...state });
-   // });
-
-   // send presence data
-   // channel.subscribe(async (status) => {
-   //    console.log(status);
-   //    setSubscriptionStatus(status);
-   //    if (status === "SUBSCRIBED") {
-   //       const resp = await channel.track({
-   //          name: session?.user.user_metadata.full_name,
-   //          profilePicUrl: session?.user.user_metadata.avatar_url,
-   //       });
-   //       console.log({ resp });
-   //    }
-   // }, 20000);
-
-   // receive broadcasted data
-   //    const formsChannel = channel
-   //       .on("broadcast", { event: "user-position-update" }, ({ payload }) => {
-   //          // console.log(payload);
-   //          setUserPositions((userPositions) => {
-   //             return { ...userPositions, ...payload };
-   //          });
-   //       })
-   //       .on("broadcast", { event: "formation-update" }, ({ payload }) => {
-   //          console.log("recieved formation update");
-   //          // if the formation you are viewing is deleted, reset the selected formation to 0
-   //          payload.forEach((patch: any) => {
-   //             if (patch.path.split("/").length === 2 && patch.op === "remove") {
-   //                setSelectedFormation((selectedFormation) => {
-   //                   if (parseInt(patch.path.split("/")[1]) === selectedFormation) {
-   //                      toast("The formation you were viewing was deleted.");
-   //                      return 0;
-   //                   } else {
-   //                      return selectedFormation;
-   //                   }
-   //                });
-   //             }
-   //          });
-   //          try {
-   //             setFormations((formations: formation[]) => {
-   //                let newForms = jsonpatch.applyPatch(formations, payload).newDocument;
-   //                return [...newForms];
-   //             });
-   //          } catch (error) {
-   //             toast.error("Error saving changes. Please refresh the page.");
-   //          }
-   //       })
-   //       .on("broadcast", { event: "dancers-update" }, ({ payload }) => {
-   //          console.log("recieved dancers update");
-   //          try {
-   //             setDancers((dancers) => {
-   //                var delta = jsonpatch.compare(dancers, JSON.parse(JSON.stringify(payload)));
-   //                if (delta.length) {
-   //                   return payload;
-   //                } else {
-   //                   return dancers;
-   //                }
-   //             });
-   //          } catch (error) {
-   //             toast.error("Error saving changes. Please refresh the page.");
-   //          }
-   //       })
-   //       .on("broadcast", { event: "settings-update" }, ({ payload }) => {
-   //          console.log("recieved settings update");
-   //          try {
-   //             setCloudSettings((cloudSettings) => {
-   //                var delta = jsonpatch.compare(cloudSettings, JSON.parse(JSON.stringify(payload)));
-   //                if (delta.length) {
-   //                   return payload;
-   //                } else {
-   //                   return cloudSettings;
-   //                }
-   //             });
-   //          } catch (error) {
-   //             toast.error("Error saving changes. Please refresh the page.");
-   //          }
-   //       });
-
-   //    return () => {
-   //       supabase.removeChannel(formsChannel);
-   //       supabase.removeChannel(channel);
-   //    };
-   // }, [router.query.danceId, session]);
 
    ////////////////////////////////////////
    let uploadSettings = useCallback(
@@ -713,33 +419,6 @@ const Edit = ({
       //   }
    }, [dancers]);
 
-   //////////////////////////////////////
-   // let uploadGroups = useCallback(
-   //    debounce(async (formationGroups) => {
-   //       console.log("uploading dancers");
-   //       const { data, error } = await supabase
-   //          .from("dances")
-   //          .update({ formation_groups: formationGroups, last_edited: new Date() })
-   //          .eq("id", router.query.danceId);
-
-   //       console.log({ data });
-
-   //       console.log({ error });
-   //       setSaved(true);
-   //    }, 5000),
-   //    [router.query.danceId]
-   // );
-
-   // useDidMountEffect(() => {
-   //    if (!session && router.query.danceId !== "207") {
-   //       router.push("/login");
-   //    }
-   //    if (router.isReady) {
-   //       setSaved(false);
-   //       uploadGroups(formationGroups);
-   //    }
-   // }, [formationGroups]);
-   // // // // // // // // // // // //
    let uploadSoundCloudId = useCallback(
       debounce(async (soundCloudTrackId) => {
          console.log("uploading formations");
@@ -959,6 +638,12 @@ const Edit = ({
             </div>
          ) : null}
 
+         {/* {isLoading ? (
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] bg-black/80 text-white border border-neutral-600  rounded-xl h-[100px] bg-white z-50 grid place-items-center">
+               <p className="text-center">Connected</p>
+            </div>
+         ) : null} */}
+
          {isCommenting ? (
             <>
                <div className="fixed left-1/2 -translate-x-1/2 w-60 h-12 select-none rounded-full shadow-xl bottom-6 bg-black  z-[9999] opacity-70 grid place-items-center">
@@ -969,16 +654,13 @@ const Edit = ({
 
          {assetsOpen ? (
             <Assets
-               setProps={setProps}
                menuOpen={menuOpen}
                pushChange={pushChange}
-               setItems={setItems}
                assetsOpen={assetsOpen}
                invalidatePropUploads={invalidatePropUploads}
                propUploads={propUploads}
                setAssetsOpen={setAssetsOpen}
                session={session}
-               setCloudSettings={setCloudSettings}
             ></Assets>
          ) : null}
          <EventHandler
@@ -1006,16 +688,12 @@ const Edit = ({
             draggingDancerId={draggingDancerId}
             setDraggingDancerId={setDraggingDancerId}
             songDuration={songDuration}
-            viewOnly={viewOnly}
             setSelectedFormation={setSelectedFormation}
-            formations={formations}
             selectedFormation={selectedFormation}
-            setFormations={setFormations}
             selectedDancers={selectedDancers}
             setSelectedDancers={setSelectedDancers}
             setIsPlaying={setIsPlaying}
             setPixelsPerSecond={setPixelsPerSecond}
-            cloudSettings={cloudSettings}
             coordsToPosition={coordsToPosition}
             currentFormationIndex={currentFormationIndex}
             percentThroughTransition={percentThroughTransition}
@@ -1055,7 +733,6 @@ const Edit = ({
                folder={initialData?.project_id}
                exportPdf={exportPdf}
                dropDownToggle={dropDownToggle}
-               formations={formations}
                isChangingCollisionRadius={isChangingCollisionRadius}
                setIsChangingCollisionRadius={setIsChangingCollisionRadius}
                isCommenting={isCommenting}
@@ -1064,31 +741,16 @@ const Edit = ({
                selectedDancers={selectedDancers}
                setIsCommenting={setIsCommenting}
                viewOnlyInitial={viewOnlyInitial}
-               setViewOnly={setViewOnly}
                setSelectedFormation={setSelectedFormation}
-               userPositions={userPositions}
-               pricingTier={pricingTier}
-               onlineUsers={onlineUsers}
-               setFormations={setFormations}
                localSettings={localSettings}
                setLocalSettings={setLocalSettings}
                undo={undo}
                saved={saved}
-               danceName={danceName}
-               setDanceName={setDanceName}
                setShareIsOpen={setShareIsOpen}
-               viewOnly={viewOnly}
-               setUpgradeIsOpen={setUpgradeIsOpen}
                dancers={dancers}
             />
             <div className="flex flex-row overflow-hidden w-screen h-full">
-               <Sidebar
-                  setLocalSettings={setLocalSettings}
-                  setHelpUrl={setHelpUrl}
-                  viewOnly={viewOnly}
-                  setMenuOpen={setMenuOpen}
-                  menuOpen={menuOpen}
-               ></Sidebar>
+               <Sidebar setLocalSettings={setLocalSettings} setHelpUrl={setHelpUrl} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
                <div className="flex flex-col w-full h-full overflow-hidden">
                   <div className="flex flex-row   overflow-hidden w-full h-full">
                      {!localSettings.fullScreen ? (
@@ -1102,21 +764,14 @@ const Edit = ({
                                        setSelectedDancers={setSelectedDancers}
                                        addToStack={addToStack}
                                        pushChange={pushChange}
-                                       setDancers={setDancers}
                                        dancers={dancers}
-                                       formations={formations}
                                        selectedFormation={selectedFormation}
-                                       cloudSettings={cloudSettings}
-                                       setFormations={setFormations}
                                        selectedDancers={selectedDancers}
-                                       viewOnly={viewOnly}
                                        localSettings={localSettings}
                                     ></Roster>
                                  ) : menuOpen === "audio" ? (
                                     <ChooseAudioSource
                                        session={session}
-                                       pricingTier={pricingTier}
-                                       setUpgradeIsOpen={setUpgradeIsOpen}
                                        player={player}
                                        setIsPlaying={setIsPlaying}
                                        soundCloudTrackId={soundCloudTrackId}
@@ -1124,7 +779,6 @@ const Edit = ({
                                        audioFiles={audioFiles}
                                        setAudiofiles={setAudiofiles}
                                        setLocalSource={setLocalSource}
-                                       viewOnly={viewOnly}
                                     ></ChooseAudioSource>
                                  ) : menuOpen === "settings" ? (
                                     <Settings
@@ -1133,12 +787,6 @@ const Edit = ({
                                        setLocalSettings={setLocalSettings}
                                        localSettings={localSettings}
                                        pushChange={pushChange}
-                                       formations={formations}
-                                       pricingTier={pricingTier}
-                                       cloudSettings={cloudSettings}
-                                       setCloudSettings={setCloudSettings}
-                                       setFormations={setFormations}
-                                       setUpgradeIsOpen={setUpgradeIsOpen}
                                        setAssetsOpen={setAssetsOpen}
                                     ></Settings>
                                  ) : menuOpen === "stageSettings" ? (
@@ -1148,14 +796,7 @@ const Edit = ({
                                        setLocalSettings={setLocalSettings}
                                        localSettings={localSettings}
                                        pushChange={pushChange}
-                                       formations={formations}
-                                       pricingTier={pricingTier}
-                                       cloudSettings={cloudSettings}
-                                       setCloudSettings={setCloudSettings}
-                                       setFormations={setFormations}
-                                       setUpgradeIsOpen={setUpgradeIsOpen}
                                        setAssetsOpen={setAssetsOpen}
-                                       viewOnly={viewOnly}
                                     ></StageSettings>
                                  ) : menuOpen === "collisions" ? (
                                     <Collisions
@@ -1167,18 +808,12 @@ const Edit = ({
                                     <Props
                                        setAssetsOpen={setAssetsOpen}
                                        setHelpUrl={setHelpUrl}
-                                       formations={formations}
-                                       viewOnly={viewOnly}
                                        pushChange={pushChange}
                                        setSelectedPropIds={setSelectedPropIds}
                                        invalidatePropUploads={invalidatePropUploads}
                                        selectedPropIds={selectedPropIds}
                                        propUploads={propUploads}
                                        selectedFormation={selectedFormation}
-                                       props={props}
-                                       setProps={setProps}
-                                       pricingTier={pricingTier}
-                                       setUpgradeIsOpen={setUpgradeIsOpen}
                                        player={player}
                                        setIsPlaying={setIsPlaying}
                                        soundCloudTrackId={soundCloudTrackId}
@@ -1186,24 +821,17 @@ const Edit = ({
                                        audioFiles={audioFiles}
                                        setAudiofiles={setAudiofiles}
                                        setLocalSource={setLocalSource}
-                                       setFormations={setFormations}
                                     ></Props>
                                  ) : menuOpen === "items" ? (
                                     <Items
                                        setAssetsOpen={setAssetsOpen}
                                        setHelpUrl={setHelpUrl}
-                                       formations={formations}
-                                       viewOnly={viewOnly}
                                        pushChange={pushChange}
                                        setSelectedPropIds={setSelectedPropIds}
                                        invalidatePropUploads={invalidatePropUploads}
                                        // selectedPropIds={selectedPropIds}
                                        propUploads={propUploads}
                                        selectedFormation={selectedFormation}
-                                       items={items}
-                                       setItems={setItems}
-                                       pricingTier={pricingTier}
-                                       setUpgradeIsOpen={setUpgradeIsOpen}
                                        player={player}
                                        setIsPlaying={setIsPlaying}
                                        soundCloudTrackId={soundCloudTrackId}
@@ -1211,32 +839,21 @@ const Edit = ({
                                        audioFiles={audioFiles}
                                        setAudiofiles={setAudiofiles}
                                        setLocalSource={setLocalSource}
-                                       setFormations={setFormations}
                                     ></Items>
                                  ) : menuOpen === "segments" ? (
-                                    <Segments setSegments={setSegments} segments={segments} pushChange={pushChange} viewOnly={viewOnly}></Segments>
+                                    <Segments pushChange={pushChange}></Segments>
                                  ) : (
                                     <CurrentFormation
-                                       viewOnly={viewOnly}
                                        dropDownToggle={dropDownToggle}
-                                       setIsEditingFormationGroup={setIsEditingFormationGroup}
-                                       formationGroups={formationGroups}
-                                       setFormationGroups={setFormationGroups}
                                        isCommenting={isCommenting}
                                        setIsCommenting={setIsCommenting}
                                        addToStack={addToStack}
                                        pushChange={pushChange}
-                                       pricingTier={pricingTier}
-                                       cloudSettings={cloudSettings}
                                        selectedDancers={selectedDancers}
                                        setSelectedDancers={setSelectedDancers}
                                        setSelectedFormation={setSelectedFormation}
                                        dancers={dancers}
-                                       setFormations={setFormations}
-                                       formations={formations}
                                        selectedFormation={selectedFormation}
-                                       setUpgradeIsOpen={setUpgradeIsOpen}
-                                       items={items}
                                     />
                                  )}
                               </div>
@@ -1254,7 +871,6 @@ const Edit = ({
                               setPlaybackRate={setPlaybackRate}
                               addToStack={addToStack}
                               pushChange={pushChange}
-                              viewOnly={viewOnly}
                               selectedFormation={selectedFormation}
                               songDuration={songDuration}
                               soundCloudTrackId={soundCloudTrackId}
@@ -1262,16 +878,12 @@ const Edit = ({
                               player={player}
                               isPlaying={isPlaying}
                               setIsPlaying={setIsPlaying}
-                              formations={formations}
                               position={position}
-                              setFormations={setFormations}
                               setPixelsPerSecond={setPixelsPerSecond}
                               pixelsPerSecond={pixelsPerSecond}
                               localSource={localSource}
                               selectedDancers={selectedDancers}
-                              cloudSettings={cloudSettings}
                               dropDownToggle={dropDownToggle}
-                              items={items}
                               dancers={dancers}
                               viewOnlyInitial={viewOnlyInitial}
                            ></ObjectControls>
@@ -1289,8 +901,6 @@ const Edit = ({
 
                            {localSettings.viewingThree ? (
                               <ThreeD
-                                 items={items}
-                                 props={props}
                                  setIsThreeDancerDragging={setIsThreeDancerDragging}
                                  isThreeDancerDragging={isThreeDancerDragging}
                                  isPlaying={isPlaying}
@@ -1301,7 +911,6 @@ const Edit = ({
                                  shiftHeld={shiftHeld}
                                  setShiftHeld={setShiftHeld}
                                  stageFlipped={localSettings.stageFlipped}
-                                 soundCloudTrackId={soundCloudTrackId}
                                  zoom={zoom}
                                  setZoom={setZoom}
                                  isCommenting={isCommenting}
@@ -1314,16 +923,12 @@ const Edit = ({
                                  draggingDancerId={draggingDancerId}
                                  setDraggingDancerId={setDraggingDancerId}
                                  songDuration={songDuration}
-                                 viewOnly={viewOnly}
                                  setSelectedFormation={setSelectedFormation}
-                                 formations={formations}
                                  selectedFormation={selectedFormation}
-                                 setFormations={setFormations}
                                  selectedDancers={selectedDancers}
                                  setSelectedDancers={setSelectedDancers}
                                  setIsPlaying={setIsPlaying}
                                  setPixelsPerSecond={setPixelsPerSecond}
-                                 cloudSettings={cloudSettings}
                                  coordsToPosition={coordsToPosition}
                                  currentFormationIndex={currentFormationIndex}
                                  percentThroughTransition={percentThroughTransition}
@@ -1335,17 +940,15 @@ const Edit = ({
                               <Canvas
                                  menuOpen={menuOpen}
                                  // selectedFormations={selectedFormations}
-                                 setProps={setProps}
+                                 session={session}
                                  resizingPropId={resizingPropId}
                                  setResizingPropId={setResizingPropId}
                                  setSelectedPropIds={setSelectedPropIds}
                                  selectedPropIds={selectedPropIds}
-                                 props={props}
                                  isPlaying={isPlaying}
                                  shiftHeld={shiftHeld}
                                  setShiftHeld={setShiftHeld}
                                  stageFlipped={localSettings.stageFlipped}
-                                 soundCloudTrackId={soundCloudTrackId}
                                  zoom={zoom}
                                  setZoom={setZoom}
                                  isCommenting={isCommenting}
@@ -1358,16 +961,12 @@ const Edit = ({
                                  draggingDancerId={draggingDancerId}
                                  setDraggingDancerId={setDraggingDancerId}
                                  songDuration={songDuration}
-                                 viewOnly={viewOnly}
                                  setSelectedFormation={setSelectedFormation}
-                                 formations={formations}
                                  selectedFormation={selectedFormation}
-                                 setFormations={setFormations}
                                  selectedDancers={selectedDancers}
                                  setSelectedDancers={setSelectedDancers}
                                  setIsPlaying={setIsPlaying}
                                  setPixelsPerSecond={setPixelsPerSecond}
-                                 cloudSettings={cloudSettings}
                                  coordsToPosition={coordsToPosition}
                                  currentFormationIndex={currentFormationIndex}
                                  percentThroughTransition={percentThroughTransition}
@@ -1394,20 +993,15 @@ const Edit = ({
                                     <DancerAlias
                                        zoom={zoom}
                                        setZoom={setZoom}
-                                       cloudSettings={cloudSettings}
                                        coordsToPosition={coordsToPosition}
                                        selectedDancers={selectedDancers}
                                        isPlaying={isPlaying}
                                        position={position}
                                        selectedFormation={selectedFormation}
-                                       setDancers={setDancers}
                                        key={dancer.id}
                                        dancer={dancer}
                                        formations={localSettings.stageFlipped ? flippedFormations : formations}
-                                       setFormations={setFormations}
                                        draggingDancerId={draggingDancerId}
-                                       userPositions={userPositions}
-                                       onlineUsers={onlineUsers}
                                        currentFormationIndex={currentFormationIndex}
                                        percentThroughTransition={percentThroughTransition}
                                        localSettings={localSettings}
@@ -1415,7 +1009,6 @@ const Edit = ({
                                        isPlaying={isPlaying}
                                        collisions={collisions}
                                        isChangingCollisionRadius={isChangingCollisionRadius}
-                                       items={items}
                                     />
                                  ))}
 
@@ -1429,16 +1022,12 @@ const Edit = ({
                                                selectedPropIds={selectedPropIds}
                                                coordsToPosition={coordsToPosition}
                                                prop={prop}
-                                               props={props}
                                                percentThroughTransition={percentThroughTransition}
                                                selectedFormation={selectedFormation}
                                                isPlaying={isPlaying}
                                                position={position}
-                                               formations={formations}
                                                currentFormationIndex={currentFormationIndex}
                                                zoom={zoom}
-                                               setFormations={setFormations}
-                                               setProps={setProps}
                                             ></Prop>
                                          );
                                       })
@@ -1458,7 +1047,6 @@ const Edit = ({
                                                    zoom={zoom}
                                                    localSettings={localSettings}
                                                    coordsToPosition={coordsToPosition}
-                                                   setFormations={setFormations}
                                                    selectedFormation={selectedFormation}
                                                    key={comment.id}
                                                    comment={comment}
@@ -1518,17 +1106,13 @@ const Edit = ({
                               setPlaybackRate={setPlaybackRate}
                               addToStack={addToStack}
                               pushChange={pushChange}
-                              viewOnly={viewOnly}
                               selectedFormation={selectedFormation}
                               songDuration={songDuration}
-                              soundCloudTrackId={soundCloudTrackId}
                               setSelectedFormation={setSelectedFormation}
                               player={player}
                               isPlaying={isPlaying}
                               setIsPlaying={setIsPlaying}
-                              formations={formations}
                               position={position}
-                              setFormations={setFormations}
                               setPixelsPerSecond={setPixelsPerSecond}
                               pixelsPerSecond={pixelsPerSecond}
                               localSource={localSource}
@@ -1548,17 +1132,13 @@ const Edit = ({
                         setPlaybackRate={setPlaybackRate}
                         addToStack={addToStack}
                         pushChange={pushChange}
-                        viewOnly={viewOnly}
                         selectedFormation={selectedFormation}
                         songDuration={songDuration}
-                        soundCloudTrackId={soundCloudTrackId}
                         setSelectedFormation={setSelectedFormation}
                         player={player}
                         isPlaying={isPlaying}
                         setIsPlaying={setIsPlaying}
-                        formations={formations}
                         position={position}
-                        setFormations={setFormations}
                         setPixelsPerSecond={setPixelsPerSecond}
                         pixelsPerSecond={pixelsPerSecond}
                         localSource={localSource}
@@ -1572,16 +1152,10 @@ const Edit = ({
                         setIsScrollingTimeline={setIsScrollingTimeline}
                         isScrollingTimeline={isScrollingTimeline}
                         setPixelsPerSecond={setPixelsPerSecond}
-                        formationGroups={formationGroups}
-                        userPositions={userPositions}
-                        onlineUsers={onlineUsers}
                         addToStack={addToStack}
                         pushChange={pushChange}
                         setSelectedDancers={setSelectedDancers}
-                        viewOnly={viewOnly}
                         songDuration={songDuration}
-                        setFormations={setFormations}
-                        formations={formations}
                         selectedFormation={selectedFormation}
                         setSelectedFormation={setSelectedFormation}
                         isPlaying={isPlaying}
@@ -1597,8 +1171,6 @@ const Edit = ({
                         localSource={localSource}
                         localSettings={localSettings}
                         hasVisited={hasVisited}
-                        segments={segments}
-                        setSegments={setSegments}
                         menuOpen={menuOpen}
                      ></Timeline>
                   </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { formation, localSettings, dancer } from "../../../../types/types";
+import { formation, localSettings, dancer, initials, COLORS } from "../../../../types/types";
 import { useRouter } from "next/navigation";
 import logo from "../../../public/logo.svg";
 import Image from "next/image";
@@ -9,25 +9,21 @@ import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import Dropdown from "./Dropdown";
 import { DarkModeSwitch } from "react-toggle-dark-mode";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-
+import { useStore } from "../store";
+import styles from "./Status.module.css";
 export const Header: React.FC<{
    saved: boolean;
-   danceName: string;
-   setDanceName: Function;
+
    undo: Function;
    setShareIsOpen: Function;
-   viewOnly: boolean;
-   setFormations: Function;
-   onlineUsers: any;
+   // viewOnly: boolean;
    folder: any;
    exportPdf: Function;
-   pricingTier: string;
-   setUpgradeIsOpen: Function;
+
    localSettings: localSettings;
    setLocalSettings: Function;
-   userPositions: any;
    setSelectedFormation: Function;
-   setViewOnly: Function;
+
    viewOnlyInitial: boolean;
    setIsCommenting: Function;
    selectedDancers: string[];
@@ -36,27 +32,22 @@ export const Header: React.FC<{
    isCommenting: boolean;
    isChangingCollisionRadius: boolean;
    setIsChangingCollisionRadius: Function;
-   formations: formation[];
+   // formations: formation[];
    dropDownToggle: Function;
    dancers: dancer[];
    danceId: string;
 }> = ({
    saved,
-   danceName,
-   setDanceName,
+
    setShareIsOpen,
-   viewOnly,
-   setFormations,
-   onlineUsers,
+   // viewOnly,
+
    undo,
    exportPdf,
-   pricingTier,
-   setUpgradeIsOpen,
+
    localSettings,
    setLocalSettings,
-   userPositions,
    setSelectedFormation,
-   setViewOnly,
    viewOnlyInitial,
    setIsCommenting,
    selectedDancers,
@@ -65,17 +56,25 @@ export const Header: React.FC<{
    isCommenting,
    isChangingCollisionRadius,
    setIsChangingCollisionRadius,
-   formations,
+   // formations,
    dropDownToggle,
    folder,
    dancers,
    danceId,
 }) => {
    const router = useRouter();
-
+   const {
+      formations,
+      viewOnly,
+      danceName,
+      setDanceName,
+      liveblocks: { status },
+   } = useStore();
+   // console.log(status);
    const supabase = createClientComponentClient();
    const [templatesIsOpen, setTemplatesIsOpen] = useState(false);
-
+   const others = useStore((state) => state.liveblocks.others);
+   // const otherInitials = others.map((other) => initials(other.presence.nameOrEmail));
    useEffect(() => {
       setTemplatesIsOpen(false);
    }, [dropDownToggle]);
@@ -401,22 +400,29 @@ export const Header: React.FC<{
                   Socials / Contact Us
                </a>
 
-               {onlineUsers
-                  ? Object.keys(onlineUsers).map((id, i) => {
+               <div className="px-3">
+                  <div className={styles.status} data-status={status}>
+                     <div className={styles.statusCircle} />
+                     <div className={styles.statusText}>{status}</div>
+                  </div>
+               </div>
+               {others.length
+                  ? others.map((person, i) => {
                        return (
                           <>
                              <div
-                                key={id}
-                                onClick={() => {
-                                   setSelectedFormation(userPositions?.[id]?.selectedFormation || 0);
-                                }}
+                                key={person.connectionId}
+                                //   onClick={() => {
+                                //      setSelectedFormation(userPositions?.[id]?.selectedFormation || 0);
+                                //   }}
                                 style={{
-                                   border: "3px solid",
-                                   borderColor: onlineUsers[id][0].color,
+                                   border: "2px solid white",
+                                   backgroundColor: COLORS[person.connectionId % COLORS.length],
                                 }}
-                                className="bg-white grid place-items-center w-9 select-none cursor-pointer  h-9 rounded-full mr-2"
+                                className=" grid place-items-center w-9 select-none cursor-pointer  h-9 rounded-full mr-2"
                              >
-                                <img className="rounded-full" src={onlineUsers[id][0]?.profilePicUrl} alt="" />{" "}
+                                {/* <img className="rounded-full" src={otherInitials} alt="" />{" "} */}
+                                <p className="text-white text-xs font-bold">{initials(person.presence.nameOrEmail)}</p>
                              </div>
                           </>
                        );

@@ -1,23 +1,22 @@
 import { useState } from "react";
 import { dancer, dancerPosition, formation, formationGroup, localSettings } from "../../../../types/types";
 import { Layer } from "./Layer";
+import { useStore } from "../store";
 
 export const Layers: React.FC<{
-   formations: formation[];
+   // formations: formation[];
    selectedFormation: number | null;
    setSelectedFormation: Function;
-   setFormations: Function;
+   // setFormations: Function;
    songDuration: number | null;
    position: number | null;
    isPlaying: boolean;
-   soundCloudTrackId: string | null;
-   viewOnly: boolean;
+
    pixelsPerSecond: number;
    setSelectedDancers: Function;
    addToStack: Function;
    pushChange: Function;
-   userPositions: any;
-   onlineUsers: any;
+
    formationGroups: formationGroup[];
    setPosition: Function;
    player: any;
@@ -27,21 +26,18 @@ export const Layers: React.FC<{
    // setSelectedFormations: Function;
    // selectedFormations: number[];
 }> = ({
-   formations,
+   // formations,
    selectedFormation,
    setSelectedFormation,
-   setFormations,
+   // setFormations,
    songDuration,
    position,
    isPlaying,
-   soundCloudTrackId,
-   viewOnly,
+
    pixelsPerSecond,
    setSelectedDancers,
    pushChange,
    addToStack,
-   userPositions,
-   onlineUsers,
    formationGroups,
    setPosition,
    player,
@@ -51,26 +47,29 @@ export const Layers: React.FC<{
    // setSelectedFormations,
    // selectedFormations,
 }) => {
+   const { formations, setFormations, get, viewOnly, pauseHistory, resumeHistory } = useStore();
    const [resizingTransition, setResizingTransition] = useState<string | null>(null);
    const [resizingFormation, setResizingFormation] = useState<string | null>(null);
    const [showTutorial, setShowTutorial] = useState<boolean | "shown">(false);
    const pointerUp = (e: PointerEvent) => {
       if (resizingFormation === null && resizingTransition === null) return;
-      setFormations((formations: formation[]) => {
-         return formations.map((formation, i) => {
+      setFormations(
+         formations.map((formation, i) => {
             return {
                ...formation,
                durationSeconds: Math.round(formation.durationSeconds * 100) / 100,
                transition: { durationSeconds: Math.round(formation.transition.durationSeconds * 100) / 100 },
             };
-         });
-      });
+         })
+      );
 
       setResizingTransition(null);
       setResizingFormation(null);
-      pushChange();
+      // pushChange();
+      resumeHistory();
    };
    const pointerDown = (e) => {
+      pauseHistory();
       if (e.target.dataset.type === "transition-resize") {
          // addToStack();
          setResizingTransition(e.target.id);
@@ -88,10 +87,10 @@ export const Layers: React.FC<{
 
       if (resizingFormation !== null) {
          if (!hasVisited && showTutorial !== "shown") setShowTutorial(true);
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, i) => {
+         setFormations(
+            get().formations.map((formation, i) => {
                if (formation.id === resizingFormation) {
-                  console.log(formation);
+                  // console.log(formation);
                   if (formation.durationSeconds + e.movementX / pixelsPerSecond >= 0) {
                      return { ...formation, durationSeconds: formation.durationSeconds + e.movementX / pixelsPerSecond };
                   } else {
@@ -140,13 +139,13 @@ export const Layers: React.FC<{
                }
 
                return formation;
-            });
-         });
+            })
+         );
       }
 
       if (resizingTransition !== null) {
-         setFormations((formations: formation[]) => {
-            return formations.map((formation) => {
+         setFormations(
+            get().formations.map((formation) => {
                if (
                   formation.id === resizingTransition &&
                   // transition should be longer than 0.5 seconds
@@ -161,8 +160,8 @@ export const Layers: React.FC<{
                   };
                }
                return formation;
-            });
-         });
+            })
+         );
       }
    };
    const totalDurationOfFormations = formations
@@ -213,13 +212,8 @@ export const Layers: React.FC<{
          <Layer
             setPosition={setPosition}
             player={player}
-            userPositions={userPositions}
-            onlineUsers={onlineUsers}
             setSelectedDancers={setSelectedDancers}
-            viewOnly={viewOnly}
             songDuration={songDuration}
-            setFormations={setFormations}
-            formations={formations}
             selectedFormation={selectedFormation}
             setSelectedFormation={setSelectedFormation}
             isPlaying={isPlaying}

@@ -1,8 +1,9 @@
 import { dancer, dancerPosition, formation } from "../../../../types/types";
+import { useStore } from "../store";
 
 export const PathEditor: React.FC<{
    selectedFormation: number | null;
-   formations: formation[];
+   // formations: formation[];
    selectedDancers: string[];
    isPlaying: boolean;
    currentFormationIndex: number | null;
@@ -13,7 +14,7 @@ export const PathEditor: React.FC<{
    zoom: number;
 }> = ({
    selectedFormation,
-   formations,
+   // formations,
    selectedDancers,
    isPlaying,
    currentFormationIndex,
@@ -23,6 +24,7 @@ export const PathEditor: React.FC<{
    collisions,
    zoom,
 }) => {
+   const { formations } = useStore();
    if (isPlaying || selectedFormation === null) return;
    let { previousFormationView } = localSettings;
    // let dancersToRender = previousFormationView === "ghostDancersAndPaths" ? formations?.[selectedFormation - 1]?.positions

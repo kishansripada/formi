@@ -141,3 +141,5 @@ export const initials = (name: string) => {
       .join("")
       .toUpperCase();
 };
+
+export const COLORS = ["#DC2626", "#D97706", "#059669", "#7C3AED", "#3A70ED"];

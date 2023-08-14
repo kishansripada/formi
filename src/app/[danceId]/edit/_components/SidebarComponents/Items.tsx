@@ -5,65 +5,64 @@ import { memo } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { formation, item, prop } from "../../../../../types/types";
 import { v4 as uuidv4 } from "uuid";
+import { useStore } from "../../store";
 export const Items: React.FC<{
    audioFiles: any;
-   soundCloudTrackId: string | null;
-   setSoundCloudTrackId: Function;
+
    setAudiofiles: Function;
    player: any;
    setIsPlaying: Function;
    setLocalSource: Function;
-   setUpgradeIsOpen: Function;
-   pricingTier: string;
-   items: item[];
-   setFormations: Function;
+
+   // items: item[];
+   // setFormations: Function;
    selectedFormation: number | null;
    propUploads: any;
-   setItems: Function;
+   // setItems: Function;
    selectedPropIds: string[];
    invalidatePropUploads: Function;
    setSelectedPropIds: Function;
    pushChange: Function;
-   viewOnly: boolean;
-   formations: formation[];
+
+   // formations: formation[];
    setHelpUrl: Function;
    setAssetsOpen: Function;
 }> = ({
    audioFiles,
-   setSoundCloudTrackId,
-   soundCloudTrackId,
+
    setAudiofiles,
    setIsPlaying,
    player,
    setLocalSource,
-   setUpgradeIsOpen,
-   pricingTier,
-   items,
-   setFormations,
+
+   // items,
+   // setFormations,
    selectedFormation,
    propUploads,
-   setItems,
+   // setItems,
    selectedPropIds,
    invalidatePropUploads,
    setSelectedPropIds,
    pushChange,
-   viewOnly,
-   formations,
+
+   // formations,
    setHelpUrl,
    setAssetsOpen,
 }) => {
+   const { setFormations, formations, viewOnly, items, setItems, pauseHistory, resumeHistory } = useStore();
+
    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
    const thisItem = items.find((item) => item.id === selectedItemId);
 
    const setPropSide = (side: string) => {
-      setItems((items: item[]) => {
-         return items.map((item) => {
+      setItems(
+         items.map((item) => {
             if (selectedItemId === item.id) {
                return { ...item, side };
             }
             return item;
-         });
-      });
+         })
+      );
       pushChange();
    };
    return (
@@ -97,9 +96,7 @@ export const Items: React.FC<{
                <button
                   onClick={() => {
                      let newId = uuidv4();
-                     setItems((items: item[]) => {
-                        return [...items, { id: newId, name: "New prop" }];
-                     });
+                     setItems([...items, { id: newId, name: "New prop" }]);
 
                      setSelectedItemId(newId);
                      setAssetsOpen(newId);
@@ -142,8 +139,8 @@ export const Items: React.FC<{
                            <input
                               className="text-sm px-1 focus:outline-none bg-transparent"
                               onChange={(e) => {
-                                 setItems((items: item[]) => {
-                                    return items.map((itemx) => {
+                                 setItems(
+                                    items.map((itemx) => {
                                        if (itemx.id === item.id) {
                                           return {
                                              ...itemx,
@@ -151,8 +148,8 @@ export const Items: React.FC<{
                                           };
                                        }
                                        return itemx;
-                                    });
-                                 });
+                                    })
+                                 );
                               }}
                               value={item.name}
                               type="text"
@@ -212,7 +209,7 @@ export const Items: React.FC<{
                         <div className="flex flex-row items-center border border-neutral-200 dark:border-neutral-700">
                            <input
                               // onBlur={pushChange}
-                              defaultValue={thisItem.width || 1}
+                              defaultValue={thisItem?.width || 1}
                               type="number"
                               onChange={(e) => {
                                  // check to make sure it's a number
@@ -220,8 +217,8 @@ export const Items: React.FC<{
                                     toast.error("Not a valid number");
                                  }
 
-                                 setItems((items: item[]) => {
-                                    return items.map((itemx) => {
+                                 setItems(
+                                    items.map((itemx) => {
                                        if (itemx.id === selectedItemId) {
                                           return {
                                              ...itemx,
@@ -229,8 +226,8 @@ export const Items: React.FC<{
                                           };
                                        }
                                        return itemx;
-                                    });
-                                 });
+                                    })
+                                 );
                               }}
                               onBlur={(e) => {
                                  // check to make sure it's a number
@@ -238,8 +235,8 @@ export const Items: React.FC<{
                                     toast.error("Not a valid number");
                                  }
 
-                                 setItems((items: item[]) => {
-                                    return items.map((itemx) => {
+                                 setItems(
+                                    items.map((itemx) => {
                                        if (itemx.id === selectedItemId) {
                                           return {
                                              ...itemx,
@@ -247,8 +244,8 @@ export const Items: React.FC<{
                                           };
                                        }
                                        return itemx;
-                                    });
-                                 });
+                                    })
+                                 );
                               }}
                               style={{
                                  borderRadius: 0,
@@ -268,7 +265,7 @@ export const Items: React.FC<{
                                  strokeWidth={1.5}
                                  stroke="currentColor"
                                  className={`w-6 h-6 cursor-pointer transition ${
-                                    thisItem.side === "top" || !thisItem.side ? "dark:stroke-white " : "stroke-neutral-400 dark:stroke-neutral-600"
+                                    thisItem?.side === "top" || !thisItem?.side ? "dark:stroke-white " : "stroke-neutral-400 dark:stroke-neutral-600"
                                  }`}
                                  onClick={() => setPropSide("top")}
                               >
@@ -283,7 +280,7 @@ export const Items: React.FC<{
                            <div className="grid place-items-center">
                               <svg
                                  className={`w-6 h-6 cursor-pointer transition ${
-                                    thisItem.side === "left" ? "dark:stroke-white stroke-black" : "stroke-neutral-400 dark:stroke-neutral-600"
+                                    thisItem?.side === "left" ? "dark:stroke-white stroke-black" : "stroke-neutral-400 dark:stroke-neutral-600"
                                  }`}
                                  onClick={() => setPropSide("left")}
                                  xmlns="http://www.w3.org/2000/svg"
@@ -308,7 +305,7 @@ export const Items: React.FC<{
                                  strokeWidth={1.5}
                                  stroke="currentColor"
                                  className={`w-6 h-6 cursor-pointer transition ${
-                                    thisItem.side === "right" ? "dark:stroke-white stroke-black" : "stroke-neutral-400 dark:stroke-neutral-600"
+                                    thisItem?.side === "right" ? "dark:stroke-white stroke-black" : "stroke-neutral-400 dark:stroke-neutral-600"
                                  }`}
                                  onClick={() => setPropSide("right")}
                               >
@@ -328,7 +325,7 @@ export const Items: React.FC<{
                                  strokeWidth={1.5}
                                  stroke="currentColor"
                                  className={`w-6 h-6 cursor-pointer transition ${
-                                    thisItem.side === "bottom" ? "dark:stroke-white stroke-black" : "stroke-neutral-400 dark:stroke-neutral-600"
+                                    thisItem?.side === "bottom" ? "dark:stroke-white stroke-black" : "stroke-neutral-400 dark:stroke-neutral-600"
                                  }`}
                                  onClick={() => setPropSide("bottom")}
                               >
@@ -356,10 +353,11 @@ export const Items: React.FC<{
                   }}
                   onClick={(e) => {
                      // Remove prop
+                     pauseHistory();
                      e.stopPropagation();
                      // remove prop from all formations
-                     setFormations((formations: formation[]) => {
-                        return formations.map((formation, i) => {
+                     setFormations(
+                        formations.map((formation, i) => {
                            return {
                               ...formation,
                               positions: formation.positions.map((position) => {
@@ -369,13 +367,12 @@ export const Items: React.FC<{
                                  };
                               }),
                            };
-                        });
-                     });
+                        })
+                     );
                      //  // remove prop from props
-                     setItems((items: item[]) => {
-                        return items.filter((p) => p.id !== selectedItemId);
-                     });
+                     setItems(items.filter((p) => p.id !== selectedItemId));
                      setSelectedItemId(null);
+                     resumeHistory();
                      pushChange();
                   }}
                   className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 hover:bg-opacity-50 transition py-2 bg-red-500 dark:text-red-400 text-red-600   "

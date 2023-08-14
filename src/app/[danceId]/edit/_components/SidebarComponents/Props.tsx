@@ -5,53 +5,52 @@ import { memo } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { formation, prop } from "../../../../../types/types";
 import { v4 as uuidv4 } from "uuid";
+import { useStore } from "../../store";
 export const Props: React.FC<{
    audioFiles: any;
-   soundCloudTrackId: string | null;
-   setSoundCloudTrackId: Function;
+
    setAudiofiles: Function;
    player: any;
    setIsPlaying: Function;
    setLocalSource: Function;
-   setUpgradeIsOpen: Function;
-   pricingTier: string;
-   props: prop[];
-   setFormations: Function;
+
+   // props: prop[];
+   // setFormations: Function;
    selectedFormation: number | null;
    propUploads: any;
-   setProps: Function;
+   // setProps: Function;
    selectedPropIds: string[];
    invalidatePropUploads: Function;
    setSelectedPropIds: Function;
    pushChange: Function;
-   viewOnly: boolean;
-   formations: formation[];
+
+   // formations: formation[];
    setHelpUrl: Function;
    setAssetsOpen: Function;
 }> = ({
    audioFiles,
-   setSoundCloudTrackId,
-   soundCloudTrackId,
+
    setAudiofiles,
    setIsPlaying,
    player,
    setLocalSource,
-   setUpgradeIsOpen,
-   pricingTier,
-   props,
-   setFormations,
+
+   // props,
+   // setFormations,
    selectedFormation,
    propUploads,
-   setProps,
+   // setProps,
    selectedPropIds,
    invalidatePropUploads,
    setSelectedPropIds,
    pushChange,
-   viewOnly,
-   formations,
+
+   // formations,
    setHelpUrl,
    setAssetsOpen,
 }) => {
+   const { formations, setFormations, viewOnly, props, setProps } = useStore();
+
    return (
       <>
          <div
@@ -83,11 +82,9 @@ export const Props: React.FC<{
                <button
                   onClick={() => {
                      let newId = uuidv4();
-                     setProps((props: prop[]) => {
-                        return [...props, { id: newId, type: "static" }];
-                     });
-                     setProps((props: prop[]) => {
-                        return props.map((propx) => {
+                     setProps([...props, { id: newId, type: "static" }]);
+                     setProps(
+                        props.map((propx) => {
                            if (propx.id === newId) {
                               return {
                                  ...propx,
@@ -101,8 +98,8 @@ export const Props: React.FC<{
                               };
                            }
                            return propx;
-                        });
-                     });
+                        })
+                     );
 
                      // setSelectedItemId(newId);
                      setAssetsOpen(newId);
@@ -154,8 +151,8 @@ export const Props: React.FC<{
                               onChange={(event) => {
                                  // if you make a prop static just place it in the middle of the stage
                                  if (event.target.value === "static") {
-                                    setProps((props: prop[]) => {
-                                       return props.map((propx) => {
+                                    setProps(
+                                       props.map((propx) => {
                                           if (propx.id === prop.id) {
                                              return {
                                                 ...propx,
@@ -169,11 +166,11 @@ export const Props: React.FC<{
                                              };
                                           }
                                           return propx;
-                                       });
-                                    });
+                                       })
+                                    );
                                  } else {
-                                    setFormations((formations: formation[]) => {
-                                       return formations.map((formation) => {
+                                    setFormations(
+                                       formations.map((formation) => {
                                           const hasProp = (formation.props || []).find((propx) => propx.id === prop.id);
 
                                           return {
@@ -182,12 +179,12 @@ export const Props: React.FC<{
                                                 ? formation.props
                                                 : [...(formation.props || []), { id: prop.id, position: { x: 0, y: 0 } }],
                                           };
-                                       });
-                                    });
+                                       })
+                                    );
                                  }
 
-                                 setProps((props: prop[]) => {
-                                    return props.map((propx) => {
+                                 setProps(
+                                    props.map((propx) => {
                                        if (propx.id === prop.id) {
                                           return {
                                              ...propx,
@@ -195,8 +192,8 @@ export const Props: React.FC<{
                                           };
                                        }
                                        return propx;
-                                    });
-                                 });
+                                    })
+                                 );
                               }}
                               className="text-xs ml-auto bg-transparent"
                               value={prop.type}
@@ -283,18 +280,16 @@ export const Props: React.FC<{
                      // Remove prop
                      e.stopPropagation();
                      // remove prop from all formations
-                     setFormations((formations: formation[]) => {
-                        return formations.map((formation, i) => {
+                     setFormations(
+                        formations.map((formation, i) => {
                            return {
                               ...formation,
                               props: formation.props?.filter((p) => !selectedPropIds.includes(p.id)),
                            };
-                        });
-                     });
+                        })
+                     );
                      // remove prop from props
-                     setProps((props: prop[]) => {
-                        return props.filter((p) => !selectedPropIds.includes(p.id));
-                     });
+                     setProps(props.filter((p) => !selectedPropIds.includes(p.id)));
                      setSelectedPropIds([]);
                      pushChange();
                   }}

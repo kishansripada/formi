@@ -6,6 +6,8 @@ import { Layers } from "./Layers";
 
 import dynamic from "next/dynamic";
 import { NoFilePlayer } from "./NoFilePlayer";
+import { useStore } from "../store";
+
 const FileAudioPlayer = dynamic<{
    setPosition: Function;
    setIsPlaying: Function;
@@ -23,21 +25,20 @@ const FileAudioPlayer = dynamic<{
 });
 
 export const Timeline: React.FC<{
-   formations: formation[];
+   // formations: formation[];
    selectedFormation: number | null;
    setSelectedFormation: Function;
-   setFormations: Function;
+   // setFormations: Function;
    songDuration: number | null;
    position: number | null;
    isPlaying: boolean;
    soundCloudTrackId: string | null;
-   viewOnly: boolean;
+
    pixelsPerSecond: number;
    setSelectedDancers: Function;
    addToStack: Function;
    pushChange: Function;
-   userPositions: any;
-   onlineUsers: any;
+
    formationGroups: formationGroup[];
    player: any;
    setPlayer: Function;
@@ -53,25 +54,22 @@ export const Timeline: React.FC<{
    playbackRate: number;
    shiftHeld: boolean;
    hasVisited: boolean;
-   segments: segment[];
-   setSegments: Function;
    menuOpen: string;
 }> = ({
-   formations,
+   // formations,
    selectedFormation,
    setSelectedFormation,
-   setFormations,
+   // setFormations,
    songDuration,
    position,
    isPlaying,
    soundCloudTrackId,
-   viewOnly,
+
    pixelsPerSecond,
    setSelectedDancers,
    pushChange,
    addToStack,
-   userPositions,
-   onlineUsers,
+
    formationGroups,
    player,
    setPlayer,
@@ -87,10 +85,11 @@ export const Timeline: React.FC<{
    playbackRate,
    shiftHeld,
    hasVisited,
-   segments,
-   setSegments,
+
    menuOpen,
 }) => {
+   const { segments, setSegments, get, formations, setFormations, viewOnly, resumeHistory, pauseHistory } = useStore();
+
    const [resizingSegment, setResizingSegment] = useState<string | null>(null);
 
    const totalDurationOfFormations = formations
@@ -118,16 +117,16 @@ export const Timeline: React.FC<{
       if (viewOnly) return;
 
       if (resizingSegment !== null) {
-         setSegments((segments: segment[]) => {
-            return segments.map((segment, i) => {
+         setSegments(
+            get().segments.map((segment, i) => {
                if (segment.id === resizingSegment) {
                   if (segment.duration + e.movementX / pixelsPerSecond >= 0) {
                      return { ...segment, duration: roundToHundredth(segment.duration + e.movementX / pixelsPerSecond) };
                   }
                }
                return segment;
-            });
-         });
+            })
+         );
       }
    };
 
@@ -199,10 +198,12 @@ export const Timeline: React.FC<{
    };
 
    const handlePointerUp = (event) => {
+      resumeHistory();
       setResizingSegment(null);
    };
 
    const handlePointerDown = (event) => {
+      pauseHistory();
       if (event.target.dataset.type === "segment-resize") {
          setResizingSegment(event.target.id);
       }
@@ -323,15 +324,10 @@ export const Timeline: React.FC<{
 
             <Layers
                formationGroups={formationGroups}
-               userPositions={userPositions}
-               onlineUsers={onlineUsers}
                addToStack={addToStack}
                pushChange={pushChange}
                setSelectedDancers={setSelectedDancers}
-               viewOnly={viewOnly}
                songDuration={songDuration}
-               setFormations={setFormations}
-               formations={formations}
                selectedFormation={selectedFormation}
                setSelectedFormation={setSelectedFormation}
                isPlaying={isPlaying}
@@ -351,12 +347,12 @@ export const Timeline: React.FC<{
                   style={{
                      width: timelineWidth,
                   }}
-                  className=" h-[20px] bg-neutral-500 dark:bg-black relative  overflow-hidden  flex flex-row justify-start  "
+                  className=" h-[20px] bg-white dark:bg-black relative  overflow-hidden  flex flex-row justify-start  "
                >
                   {segments.map((section, index) => {
                      return (
                         <div
-                           className="h-full border-2  grid rounded-md place-items-center text-white text-[10px] relative cursor-pointer "
+                           className="h-full border-2  grid rounded-md place-items-center dark:text-white text-[10px] relative cursor-pointer "
                            onClick={(e: any) => {
                               if (menuOpen === "segments") return;
 
@@ -385,8 +381,8 @@ export const Timeline: React.FC<{
                                  data-type="segment-resize"
                                  id={section.id}
                               >
-                                 <div className="h-full bg-white pointer-events-none rounded-full w-[2px] mr-1"></div>
-                                 <div className="h-full bg-white pointer-events-none rounded-full w-[2px]"></div>
+                                 <div className="h-full dark:bg-white bg-black pointer-events-none rounded-full w-[2px] mr-1"></div>
+                                 <div className="h-full dark:bg-white bg-black pointer-events-none rounded-full w-[2px]"></div>
                               </div>
                            ) : null}
                         </div>
@@ -406,7 +402,6 @@ export const Timeline: React.FC<{
                   <FileAudioPlayer
                      key={localSource || soundCloudTrackId}
                      setSelectedFormation={setSelectedFormation}
-                     setFormations={setFormations}
                      soundCloudTrackId={localSource || soundCloudTrackId}
                      player={player}
                      setPlayer={setPlayer}
@@ -415,10 +410,8 @@ export const Timeline: React.FC<{
                      setPosition={setPosition}
                      songDuration={songDuration}
                      videoPlayer={videoPlayer}
-                     viewOnly={viewOnly}
                      pixelsPerSecond={pixelsPerSecond}
                      localSettings={localSettings}
-                     formations={formations}
                      isPlaying={isPlaying}
                      position={position}
                   ></FileAudioPlayer>
@@ -432,16 +425,13 @@ export const Timeline: React.FC<{
                      setPlayer={setPlayer}
                      key={localSource || soundCloudTrackId}
                      setSelectedFormation={setSelectedFormation}
-                     setFormations={setFormations}
                      soundCloudTrackId={localSource || soundCloudTrackId}
                      setSongDuration={setSongDuration}
                      songDuration={songDuration}
                      setIsPlaying={setIsPlaying}
                      setPosition={setPosition}
-                     viewOnly={viewOnly}
                      pixelsPerSecond={pixelsPerSecond}
                      videoPlayer={videoPlayer}
-                     formations={formations}
                      position={position}
                   ></NoFilePlayer>
                </>

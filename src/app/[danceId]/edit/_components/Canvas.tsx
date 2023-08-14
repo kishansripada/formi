@@ -19,17 +19,19 @@ import { v4 as uuidv4 } from "uuid";
 import { Prop } from "./Prop";
 import { StageLines } from "./StageLines";
 import { OldGridLines } from "./OldGridLines";
+import { useStore } from "../store";
+import { AuthSession } from "@supabase/supabase-js";
 
 export const Canvas: React.FC<{
    children: React.ReactNode;
-   setFormations: Function;
+   // setFormations: Function;
    selectedFormation: number | null;
-   formations: formation[];
+   // formations: formation[];
    selectedDancers: string[];
    setSelectedDancers: Function;
    setSelectedFormation: Function;
    setIsPlaying: Function;
-   viewOnly: boolean;
+   // viewOnly: boolean;
    setPixelsPerSecond: Function;
    songDuration: number | null;
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
@@ -44,34 +46,33 @@ export const Canvas: React.FC<{
    setIsCommenting: Function;
    zoom: number;
    setZoom: Function;
-   soundCloudTrackId: string | null;
-   cloudSettings: cloudSettings;
+   // cloudSettings: cloudSettings;
    stageFlipped: boolean;
    shiftHeld: boolean;
    setShiftHeld: Function;
    isPlaying: boolean;
-   props: any;
+
    setSelectedPropIds: Function;
    selectedPropIds: string[];
    resizingPropId: string | null;
    setResizingPropId: Function;
-   setProps: Function;
+   session: AuthSession | null;
    menuOpen: string;
    // selectedFormations: number[];
 }> = ({
    player,
    children,
-   setFormations,
+   // setFormations,
    selectedFormation,
-   formations,
+   // formations,
    setSelectedDancers,
    selectedDancers,
    setSelectedFormation,
    setIsPlaying,
-   viewOnly,
+
    setPixelsPerSecond,
    songDuration,
-   cloudSettings,
+   // cloudSettings,
    coordsToPosition,
    draggingDancerId,
    setDraggingDancerId,
@@ -83,23 +84,39 @@ export const Canvas: React.FC<{
    setIsCommenting,
    zoom,
    setZoom,
-   soundCloudTrackId,
    stageFlipped,
    shiftHeld,
    setShiftHeld,
    isPlaying,
-   props,
+   session,
    setSelectedPropIds,
    selectedPropIds,
    resizingPropId,
    setResizingPropId,
-   setProps,
+
    menuOpen,
 
    // selectedFormations,
 }) => {
-   let { stageDimensions, stageBackground, gridSubdivisions, verticalFineDivisions, horizontalFineDivisions, horizontalGridSubdivisions } =
-      cloudSettings;
+   const {
+      formations,
+      setFormations,
+      get,
+      viewOnly,
+      setProps,
+      props,
+      pauseHistory,
+      resumeHistory,
+      cloudSettings,
+      cloudSettings: {
+         stageDimensions,
+         stageBackground,
+         gridSubdivisions,
+         verticalFineDivisions,
+         horizontalFineDivisions,
+         horizontalGridSubdivisions,
+      },
+   } = useStore();
 
    let { gridSnap } = localSettings;
 
@@ -163,7 +180,6 @@ export const Canvas: React.FC<{
 
    const container = useRef();
    const stage = useRef();
-   const session = useSession();
 
    const fitStageToScreen = (buffer?: number) => {
       if (!container.current) return;
@@ -206,8 +222,8 @@ export const Canvas: React.FC<{
 
       if (changingControlId) {
          if (viewOnly) return;
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, index: number) => {
+         setFormations(
+            get().formations.map((formation, index: number) => {
                if (index === selectedFormation) {
                   return {
                      ...formation,
@@ -235,8 +251,8 @@ export const Canvas: React.FC<{
                   };
                }
                return formation;
-            });
-         });
+            })
+         );
       }
 
       if (e.target.dataset.type === "dancer" && !dragBoxCoords.start.x) {
@@ -329,8 +345,8 @@ export const Canvas: React.FC<{
 
       if (draggingDancerId) {
          if (viewOnly) return;
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, index: number) => {
+         setFormations(
+            get().formations.map((formation, index: number) => {
                if (index === selectedFormation) {
                   return {
                      ...formation,
@@ -375,14 +391,14 @@ export const Canvas: React.FC<{
                }
 
                return formation;
-            });
-         });
+            })
+         );
       }
 
       if (draggingCommentId) {
          if (viewOnly) return;
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, index: number) => {
+         setFormations(
+            get().formations.map((formation, index: number) => {
                if (index === selectedFormation) {
                   return {
                      ...formation,
@@ -402,8 +418,8 @@ export const Canvas: React.FC<{
                }
 
                return formation;
-            });
-         });
+            })
+         );
       }
 
       if (draggingPropId) {
@@ -411,8 +427,8 @@ export const Canvas: React.FC<{
          if (props.find((prop: prop) => prop.id === draggingPropId)?.type === "static") {
             // const prop = props.find((prop: prop) => prop.id === draggingPropId);
 
-            setProps((props: prop[]) => {
-               return props.map((prop: prop) => {
+            setProps(
+               get().props.map((prop: prop) => {
                   if (prop.id === draggingPropId) {
                      return {
                         ...prop,
@@ -426,11 +442,11 @@ export const Canvas: React.FC<{
                      };
                   }
                   return prop;
-               });
-            });
+               })
+            );
          } else {
-            setFormations((formations: formation[]) => {
-               return formations.map((formation, index: number) => {
+            setFormations(
+               get().formations.map((formation, index: number) => {
                   if (index === selectedFormation) {
                      return {
                         ...formation,
@@ -449,16 +465,16 @@ export const Canvas: React.FC<{
                      };
                   }
                   return formation;
-               });
-            });
+               })
+            );
          }
       }
 
       if (resizingPropId) {
          if (viewOnly) return;
          // console.log(props.find((prop: prop) => prop.id === resizingPropId));
-         setProps((props: prop[]) => {
-            return props.map((prop: prop) => {
+         setProps(
+            get().props.map((prop: prop) => {
                if (prop.id === resizingPropId) {
                   // let deltaX = (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom;
                   // console.log(resizingPropType);
@@ -481,8 +497,8 @@ export const Canvas: React.FC<{
                   }
                }
                return prop;
-            });
-         });
+            })
+         );
 
          // if (props.find((prop: prop) => prop.id === resizingPropId)?.type === "static") {
          //    // console.log("test");
@@ -522,6 +538,7 @@ export const Canvas: React.FC<{
 
    const pointerDown = (e: any) => {
       if (isPlaying) return;
+      pauseHistory();
       if (isCommenting) {
          if (viewOnly) return;
          if (!session) {
@@ -548,8 +565,8 @@ export const Canvas: React.FC<{
          if (stageFlipped) {
             newCommentCoords = { x: -newCommentCoords?.x, y: -newCommentCoords?.y };
          }
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, i) => {
+         setFormations(
+            formations.map((formation, i) => {
                if (i === selectedFormation) {
                   if (formation?.comments?.length) {
                      return {
@@ -587,8 +604,8 @@ export const Canvas: React.FC<{
                   }
                }
                return formation;
-            });
-         });
+            })
+         );
          pushChange();
          setIsCommenting(false);
       }
@@ -693,8 +710,8 @@ export const Canvas: React.FC<{
 
       if (draggingPropId) {
          // if (props.find((prop: prop) => prop.id === draggingPropId)?.type === "static") {
-         setProps((props: prop[]) => {
-            return props.map((prop) => {
+         setProps(
+            props.map((prop) => {
                if (prop.type === "static")
                   return {
                      ...prop,
@@ -707,11 +724,11 @@ export const Canvas: React.FC<{
                      },
                   };
                return prop;
-            });
-         });
+            })
+         );
          // } else {
-         setFormations((formations: formation[]) => {
-            return formations.map((formation) => {
+         setFormations(
+            get().formations.map((formation) => {
                return {
                   ...formation,
                   props: (formation.props || []).map((prop: propPosition) => {
@@ -724,8 +741,8 @@ export const Canvas: React.FC<{
                      };
                   }),
                };
-            });
-         });
+            })
+         );
          // }
 
          pushChange();
@@ -747,34 +764,35 @@ export const Canvas: React.FC<{
       }
       // if a dancer was dragged (moved), then update round the formations to the nearest whole (persists to database)
       if (isDragging) {
-         setFormations((formations: formation[]) => {
-            return formations.map((formation) => {
-               let gridSizeX = 1;
-               let gridSizeY = 1;
-               let verticalOffset = 0;
-               let horizontalOffset = 0;
-               if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
-                  // Determine the total number of divisions along each axis.
-                  const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
-                  const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
+         let gridSizeX = 1;
+         let gridSizeY = 1;
+         let verticalOffset = 0;
+         let horizontalOffset = 0;
+         if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
+            // Determine the total number of divisions along each axis.
+            const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
+            const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
 
-                  // Calculate the width and height of each grid cell.
-                  gridSizeX = stageDimensions.width / totalVerticalDivisions / gridSnap;
-                  gridSizeY = stageDimensions.height / totalHorizontalDivisions / gridSnap;
-                  let isOddVerticalDivisions = (gridSubdivisions * verticalFineDivisions) % 2 !== 0;
-                  let isOddHorizontalDivisions = (horizontalGridSubdivisions * horizontalFineDivisions) % 2 !== 0;
+            // Calculate the width and height of each grid cell.
+            gridSizeX = stageDimensions.width / totalVerticalDivisions / gridSnap;
+            gridSizeY = stageDimensions.height / totalHorizontalDivisions / gridSnap;
+            let isOddVerticalDivisions = (gridSubdivisions * verticalFineDivisions) % 2 !== 0;
+            let isOddHorizontalDivisions = (horizontalGridSubdivisions * horizontalFineDivisions) % 2 !== 0;
 
-                  verticalOffset = isOddVerticalDivisions ? gridSizeX / 2 : 0;
-                  horizontalOffset = isOddHorizontalDivisions ? gridSizeY / 2 : 0;
-                  if (gridSnap % 2 === 0) {
-                     verticalOffset = 0;
-                     horizontalOffset = 0;
-                  }
-               } else {
-                  gridSizeX = 1 / gridSnap;
-                  gridSizeY = 1 / gridSnap;
-               }
+            verticalOffset = isOddVerticalDivisions ? gridSizeX / 2 : 0;
+            horizontalOffset = isOddHorizontalDivisions ? gridSizeY / 2 : 0;
+            if (gridSnap % 2 === 0) {
+               verticalOffset = 0;
+               horizontalOffset = 0;
+            }
+         } else {
+            gridSizeX = 1 / gridSnap;
+            gridSizeY = 1 / gridSnap;
+         }
 
+         // console.log(gridSizeX);
+         setFormations(
+            formations.map((formation) => {
                // Use the grid cell dimensions to round the dancer positions to the nearest grid position.
                return {
                   ...formation,
@@ -788,34 +806,35 @@ export const Canvas: React.FC<{
                      };
                   }),
                };
-            });
-         });
+            })
+         );
 
-         setFormations((formations: formation[]) => {
-            return formations.map((formation, index) => {
-               if (!(selectedFormation === index)) return formation;
-               return {
-                  ...formation,
-                  positions: formation.positions.map((position) => {
-                     if (selectedDancers.includes(position.id)) {
-                        return {
-                           ...position,
-                           position: {
-                              x: formations[selectedFormation].positions.find((pos) => pos.id === position.id).position.x,
-                              y: formations[selectedFormation].positions.find((pos) => pos.id === position.id).position.y,
-                           },
-                        };
-                     }
-                     return position;
-                  }),
-               };
-            });
-         });
+         // setFormations(
+         //    formations.map((formation, index) => {
+         //       if (!(selectedFormation === index)) return formation;
+         //       return {
+         //          ...formation,
+         //          positions: formation.positions.map((position) => {
+         //             if (selectedDancers.includes(position.id)) {
+         //                return {
+         //                   ...position,
+         //                   position: {
+         //                      x: formations[selectedFormation].positions.find((pos) => pos.id === position.id).position.x,
+         //                      y: formations[selectedFormation].positions.find((pos) => pos.id === position.id).position.y,
+         //                   },
+         //                };
+         //             }
+         //             return position;
+         //          }),
+         //       };
+         //    })
+         // );
          pushChange();
       }
 
       setDraggingDancerId(null);
       setIsDragging(false);
+      resumeHistory();
    };
 
    const [scrollOffset, setScrollOffset] = useState({ x: 0, y: 0 });
@@ -913,7 +932,7 @@ export const Canvas: React.FC<{
                   }}
                >
                   {/* <GridLines
-                     cloudSettings={cloudSettings}
+                     
                      stageDimensions={{
                         width: roundToNearestEven(stageDimensions.width + 30),
                         height: roundToNearestEven(stageDimensions.height + 10),
@@ -963,20 +982,14 @@ export const Canvas: React.FC<{
                   <div className="transition duration-300">
                      {cloudSettings.stageBackground === "gridfluid" || stageBackground === "cheer9" ? (
                         <>
-                           <GridLines localSettings={localSettings} zoom={zoom} cloudSettings={cloudSettings} stageDimensions={stageDimensions} />
-                           <StageLines
-                              localSettings={localSettings}
-                              divisions={{ y: 4, x: 8 }}
-                              zoom={zoom}
-                              cloudSettings={cloudSettings}
-                              stageDimensions={stageDimensions}
-                           />
+                           <GridLines localSettings={localSettings} zoom={zoom} stageDimensions={stageDimensions} />
+                           <StageLines localSettings={localSettings} divisions={{ y: 4, x: 8 }} zoom={zoom} stageDimensions={stageDimensions} />
                         </>
                      ) : null}
 
                      {stageBackground === "grid" ? (
                         <>
-                           <OldGridLines localSettings={localSettings} zoom={zoom} cloudSettings={cloudSettings} stageDimensions={stageDimensions} />
+                           <OldGridLines localSettings={localSettings} zoom={zoom} stageDimensions={stageDimensions} />
                         </>
                      ) : null}
                   </div>

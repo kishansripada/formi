@@ -2,31 +2,31 @@ import { cloudSettings, dancer, dancerPosition, formation, localSettings, stageD
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import Dropdown from "../Dropdown";
+import { useStore } from "../../store";
 export const StageSettings: React.FC<{
    setLocalSettings: Function;
    localSettings: any;
    dropDownToggle: boolean;
    pushChange: Function;
-   formations: formation[];
-   cloudSettings: cloudSettings;
-   setCloudSettings: Function;
-   setFormations: Function;
+
    setHelpUrl: Function;
    setAssetsOpen: Function;
-   viewOnly: boolean;
 }> = ({
    setLocalSettings,
    localSettings,
    dropDownToggle,
    pushChange,
-   cloudSettings,
-   setCloudSettings,
-   setFormations,
+
    setHelpUrl,
    setAssetsOpen,
-   viewOnly,
 }) => {
-   let { stageBackground, stageDimensions } = cloudSettings;
+   const {
+      viewOnly,
+      cloudSettings: { stageBackground, stageDimensions },
+      cloudSettings,
+      setCloudSettings,
+   } = useStore();
+
    const [newWidth, setNewWidth] = useState(stageDimensions.width.toString());
    const [newHeight, setNewHeight] = useState(stageDimensions.height.toString());
 
@@ -67,9 +67,7 @@ export const StageSettings: React.FC<{
       //    });
       // });
 
-      setCloudSettings((cloudSettings: cloudSettings) => {
-         return { ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width + amount } };
-      });
+      setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width + amount } });
 
       pushChange();
    };
@@ -89,23 +87,17 @@ export const StageSettings: React.FC<{
       //    }
       // }
 
-      setCloudSettings((cloudSettings: cloudSettings) => {
-         return { ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height + amount } };
-      });
+      setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height + amount } });
       pushChange();
    };
 
    const setStageBackground = (val: string) => {
       if (val === "cheer9") {
-         setCloudSettings((s: cloudSettings) => {
-            return { ...s, stageDimensions: { width: 36, height: 28 }, gridSubdivisions: 9 };
-         });
+         setCloudSettings({ ...cloudSettings, stageDimensions: { width: 36, height: 28 }, gridSubdivisions: 9 });
       }
-      setCloudSettings((cloudSettings: cloudSettings) => {
-         return {
-            ...cloudSettings,
-            stageBackground: val,
-         };
+      setCloudSettings({
+         ...cloudSettings,
+         stageBackground: val,
       });
    };
 
@@ -153,9 +145,7 @@ export const StageSettings: React.FC<{
                         onChange={(e) => {
                            setNewWidth(e.target.value);
                            if (parseFloat(e.target.value) > 5) {
-                              setCloudSettings((cloudSettings: cloudSettings) => {
-                                 return { ...cloudSettings, stageDimensions: { ...stageDimensions, width: parseFloat(e.target.value) } };
-                              });
+                              setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, width: parseFloat(e.target.value) } });
                            }
                         }}
                         onBlur={() => {
@@ -165,9 +155,7 @@ export const StageSettings: React.FC<{
                               setNewWidth(stageDimensions.width.toString());
                               return;
                            }
-                           setCloudSettings((cloudSettings: cloudSettings) => {
-                              return { ...cloudSettings, stageDimensions: { ...stageDimensions, width: newValue } };
-                           });
+                           setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, width: newValue } });
                         }}
                      />
 
@@ -211,9 +199,7 @@ export const StageSettings: React.FC<{
                         onChange={(e) => {
                            setNewHeight(e.target.value);
                            if (parseFloat(e.target.value) > 5) {
-                              setCloudSettings((cloudSettings: cloudSettings) => {
-                                 return { ...cloudSettings, stageDimensions: { ...stageDimensions, height: parseFloat(e.target.value) } };
-                              });
+                              setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, height: parseFloat(e.target.value) } });
                            }
                         }}
                         onBlur={() => {
@@ -223,9 +209,7 @@ export const StageSettings: React.FC<{
                               setNewHeight(stageDimensions.height.toString());
                               return;
                            }
-                           setCloudSettings((cloudSettings: cloudSettings) => {
-                              return { ...cloudSettings, stageDimensions: { ...stageDimensions, height: newValue } };
-                           });
+                           setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, height: newValue } });
                         }}
                      />
 
@@ -284,9 +268,7 @@ export const StageSettings: React.FC<{
                               className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
                               onClick={() => {
                                  if (cloudSettings.gridSubdivisions === 1) return;
-                                 setCloudSettings((cloudSettings: cloudSettings) => {
-                                    return { ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions - 1 };
-                                 });
+                                 setCloudSettings({ ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions - 1 });
                               }}
                            >
                               <svg
@@ -306,9 +288,7 @@ export const StageSettings: React.FC<{
                               className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
                               onClick={() => {
                                  if (cloudSettings.gridSubdivisions === 15) return;
-                                 setCloudSettings((cloudSettings: cloudSettings) => {
-                                    return { ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions + 1 };
-                                 });
+                                 setCloudSettings({ ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions + 1 });
                               }}
                            >
                               <svg
@@ -330,9 +310,7 @@ export const StageSettings: React.FC<{
                               className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
                               onClick={() => {
                                  if (cloudSettings.horizontalGridSubdivisions === 1) return;
-                                 setCloudSettings((cloudSettings: cloudSettings) => {
-                                    return { ...cloudSettings, horizontalGridSubdivisions: cloudSettings.horizontalGridSubdivisions - 1 };
-                                 });
+                                 setCloudSettings({ ...cloudSettings, horizontalGridSubdivisions: cloudSettings.horizontalGridSubdivisions - 1 });
                               }}
                            >
                               <svg
@@ -352,9 +330,7 @@ export const StageSettings: React.FC<{
                               className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
                               onClick={() => {
                                  if (cloudSettings.gridSubdivisions === 15) return;
-                                 setCloudSettings((cloudSettings: cloudSettings) => {
-                                    return { ...cloudSettings, horizontalGridSubdivisions: cloudSettings.horizontalGridSubdivisions + 1 };
-                                 });
+                                 setCloudSettings({ ...cloudSettings, horizontalGridSubdivisions: cloudSettings.horizontalGridSubdivisions + 1 });
                               }}
                            >
                               <svg
@@ -378,9 +354,7 @@ export const StageSettings: React.FC<{
                               className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
                               onClick={() => {
                                  if (cloudSettings.verticalFineDivisions === 1) return;
-                                 setCloudSettings((cloudSettings: cloudSettings) => {
-                                    return { ...cloudSettings, verticalFineDivisions: cloudSettings.verticalFineDivisions - 1 };
-                                 });
+                                 setCloudSettings({ ...cloudSettings, verticalFineDivisions: cloudSettings.verticalFineDivisions - 1 });
                               }}
                            >
                               <svg
@@ -400,9 +374,7 @@ export const StageSettings: React.FC<{
                               className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
                               onClick={() => {
                                  if (cloudSettings.verticalFineDivisions === 15) return;
-                                 setCloudSettings((cloudSettings: cloudSettings) => {
-                                    return { ...cloudSettings, verticalFineDivisions: cloudSettings.verticalFineDivisions + 1 };
-                                 });
+                                 setCloudSettings({ ...cloudSettings, verticalFineDivisions: cloudSettings.verticalFineDivisions + 1 });
                               }}
                            >
                               <svg
@@ -424,9 +396,7 @@ export const StageSettings: React.FC<{
                               className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
                               onClick={() => {
                                  if (cloudSettings.horizontalFineDivisions === 1) return;
-                                 setCloudSettings((cloudSettings: cloudSettings) => {
-                                    return { ...cloudSettings, horizontalFineDivisions: cloudSettings.horizontalFineDivisions - 1 };
-                                 });
+                                 setCloudSettings({ ...cloudSettings, horizontalFineDivisions: cloudSettings.horizontalFineDivisions - 1 });
                               }}
                            >
                               <svg
@@ -446,9 +416,7 @@ export const StageSettings: React.FC<{
                               className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
                               onClick={() => {
                                  if (cloudSettings.horizontalFineDivisions === 15) return;
-                                 setCloudSettings((cloudSettings: cloudSettings) => {
-                                    return { ...cloudSettings, horizontalFineDivisions: cloudSettings.horizontalFineDivisions + 1 };
-                                 });
+                                 setCloudSettings({ ...cloudSettings, horizontalFineDivisions: cloudSettings.horizontalFineDivisions + 1 });
                               }}
                            >
                               <svg
@@ -476,9 +444,7 @@ export const StageSettings: React.FC<{
                         className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
                         onClick={() => {
                            if (cloudSettings.gridSubdivisions === 1) return;
-                           setCloudSettings((cloudSettings: cloudSettings) => {
-                              return { ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions - 1 };
-                           });
+                           setCloudSettings({ ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions - 1 });
                         }}
                      >
                         <svg
@@ -498,9 +464,7 @@ export const StageSettings: React.FC<{
                         className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
                         onClick={() => {
                            if (cloudSettings.gridSubdivisions === 15) return;
-                           setCloudSettings((cloudSettings: cloudSettings) => {
-                              return { ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions + 1 };
-                           });
+                           setCloudSettings({ ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions + 1 });
                         }}
                      >
                         <svg
