@@ -208,47 +208,45 @@ export const CurrentFormation: React.FC<{
                   <div className="overflow-y-scroll  px-3 mt-4 flex-grow">
                      {formations[selectedFormation]?.comments?.map((comment) => {
                         return (
-                           <>
-                              <div key={comment.id} className="flex flex-row group items-start w-full  mb-6">
-                                 {comment.user.avatar_url ? (
-                                    <img
-                                       referrerPolicy="no-referrer"
-                                       //   id={dancer.id}
-                                       //   data-type={"dancer"}
-                                       className="w-[32px] h-[32px] rounded-full select-none pointer-events-none mr-3"
-                                       src={comment.user.avatar_url}
-                                    />
-                                 ) : (
-                                    <div className="bg-purple-500 text-white mr-3  rounded-full  min-w-[32px] font-semibold min-h-[32px] grid place-items-center select-none cursor-default pointer-events-none  ">
-                                       {initials(comment.user.name)}
-                                    </div>
-                                 )}
-                                 <div className=" overflow-hidden">
-                                    <p className=" text-neutral-500 dark:text-neutral-300 text-xs font-medium">{comment.user.name}</p>
-                                    <p className="mr-2 mt-1 w-full text-xs ">{comment.content}</p>
+                           <div key={comment.id} className="flex flex-row group items-start w-full  mb-6">
+                              {comment.user.avatar_url ? (
+                                 <img
+                                    referrerPolicy="no-referrer"
+                                    //   id={dancer.id}
+                                    //   data-type={"dancer"}
+                                    className="w-[32px] h-[32px] rounded-full select-none pointer-events-none mr-3"
+                                    src={comment.user.avatar_url}
+                                 />
+                              ) : (
+                                 <div className="bg-purple-500 text-white mr-3  rounded-full  min-w-[32px] font-semibold min-h-[32px] grid place-items-center select-none cursor-default pointer-events-none  ">
+                                    {initials(comment.user.name)}
                                  </div>
-                                 <button
-                                    onClick={() => {
-                                       if (viewOnly) return;
-                                       // addToStack();
-                                       deleteComment(comment.id);
-                                       pushChange();
-                                    }}
-                                    className="ml-auto mt-auto mb-auto p-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition duration-300 rounded-xl group-hover:opacity-100 opacity-0"
-                                 >
-                                    <svg
-                                       xmlns="http://www.w3.org/2000/svg"
-                                       fill="none"
-                                       viewBox="0 0 24 24"
-                                       strokeWidth={1.5}
-                                       stroke="currentColor"
-                                       className="w-5 h-5 stroke-neutral-600 dark:stroke-neutral-300 shrink-0  "
-                                    >
-                                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                    </svg>
-                                 </button>
+                              )}
+                              <div className=" overflow-hidden">
+                                 <p className=" text-neutral-500 dark:text-neutral-300 text-xs font-medium">{comment.user.name}</p>
+                                 <p className="mr-2 mt-1 w-full text-xs ">{comment.content}</p>
                               </div>
-                           </>
+                              <button
+                                 onClick={() => {
+                                    if (viewOnly) return;
+                                    // addToStack();
+                                    deleteComment(comment.id);
+                                    pushChange();
+                                 }}
+                                 className="ml-auto mt-auto mb-auto p-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition duration-300 rounded-xl group-hover:opacity-100 opacity-0"
+                              >
+                                 <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-5 h-5 stroke-neutral-600 dark:stroke-neutral-300 shrink-0  "
+                                 >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                 </svg>
+                              </button>
+                           </div>
                         );
                      })}
                   </div>

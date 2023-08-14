@@ -1,6 +1,6 @@
 import { cloudSettings, localSettings, PIXELS_PER_SQUARE } from "../../../../types/types";
 import { useStore } from "../store";
-
+import { Fragment } from "react";
 export const GridLines: React.FC<{
    // stageDimensions: { width: number; height: number };
    // cloudSettings: cloudSettings;
@@ -58,7 +58,7 @@ export const GridLines: React.FC<{
                const myXOffset = i * spaceBeteenLines;
                const center = stageDimensions.width / 2;
                return (
-                  <>
+                  <Fragment key={i}>
                      <line
                         key={i}
                         x1={myXOffset}
@@ -130,7 +130,7 @@ export const GridLines: React.FC<{
                            ) : null}
                         </>
                      ) : null}
-                  </>
+                  </Fragment>
                );
             })}
          </svg>

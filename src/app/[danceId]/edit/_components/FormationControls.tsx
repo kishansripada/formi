@@ -13,7 +13,7 @@ export const FormationControls: React.FC<{
    position: number | null;
    // setFormations: Function;
    songDuration: number | null;
-   selectedFormation: number | null;
+   // selectedFormation: number | null;
    // viewOnly: boolean;
    addToStack: Function;
    pushChange: Function;
@@ -36,7 +36,7 @@ export const FormationControls: React.FC<{
    position,
    // setFormations,
    songDuration,
-   selectedFormation,
+   // selectedFormation,
    // viewOnly,
    addToStack,
    pushChange,
@@ -77,12 +77,13 @@ export const FormationControls: React.FC<{
    //       };
    //    }, [isChangingZoom, pixelsPerSecond, MAX_ZOOM]);
 
-   const { formations, setFormations } = useStore();
+   const { formations, setFormations, pauseHistory, resumeHistory, selectedFormation } = useStore();
    return (
       <>
          <div className="w-full h-[40px] min-h-[40px] max-h-[40px]  border-t-neutral-300 border-t bg-white flex flex-row items-center justify-end px-3 dark:bg-neutral-800 mt-auto dark:border-neutral-700 dark:text-white">
             <button
                onClick={() => {
+                  pauseHistory();
                   if (selectedFormation === null) return;
 
                   if (formations.length === 1) {
@@ -129,7 +130,7 @@ export const FormationControls: React.FC<{
                         return index !== selectedFormation;
                      })
                   );
-
+                  resumeHistory();
                   // pushChange();
                }}
                className="   text-sm shadow-sm   cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-1 px-3 mr-4 bg-red-500 dark:text-red-400 text-red-600  "
@@ -166,7 +167,7 @@ export const FormationControls: React.FC<{
                      },
                      ...formations.slice(selectedFormation + 1),
                   ]);
-                  setSelectedFormation((i: number) => i + 1);
+                  setSelectedFormation(selectedFormation + 1);
 
                   pushChange();
                }}

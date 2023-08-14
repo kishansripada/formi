@@ -1016,6 +1016,7 @@ const Edit = ({
                                     ? props.map((prop: prop) => {
                                          return (
                                             <Prop
+                                               key={prop.id}
                                                pushChange={pushChange}
                                                dropDownToggle={dropDownToggle}
                                                setResizingPropId={setResizingPropId}
@@ -1033,8 +1034,8 @@ const Edit = ({
                                       })
                                     : null}
                                  {localSettings.viewCollisions && selectedFormation !== null
-                                    ? collisions.map((collision) => {
-                                         return <Collision coordsToPosition={coordsToPosition} collision={collision}></Collision>;
+                                    ? collisions.map((collision, i) => {
+                                         return <Collision key={i} coordsToPosition={coordsToPosition} collision={collision}></Collision>;
                                       })
                                     : null}
 
@@ -1042,18 +1043,16 @@ const Edit = ({
                                     <>
                                        {(formations[selectedFormation]?.comments || []).map((comment: comment) => {
                                           return (
-                                             <>
-                                                <Comment
-                                                   zoom={zoom}
-                                                   localSettings={localSettings}
-                                                   coordsToPosition={coordsToPosition}
-                                                   selectedFormation={selectedFormation}
-                                                   key={comment.id}
-                                                   comment={comment}
-                                                   addToStack={addToStack}
-                                                   pushChange={pushChange}
-                                                />
-                                             </>
+                                             <Comment
+                                                zoom={zoom}
+                                                localSettings={localSettings}
+                                                coordsToPosition={coordsToPosition}
+                                                selectedFormation={selectedFormation}
+                                                key={comment.id}
+                                                comment={comment}
+                                                addToStack={addToStack}
+                                                pushChange={pushChange}
+                                             />
                                           );
                                        })}
 
@@ -1064,7 +1063,7 @@ const Edit = ({
                                                   currentFormationIndex={currentFormationIndex}
                                                   isPlaying={isPlaying}
                                                   selectedFormation={selectedFormation}
-                                                  key={dancer.id}
+                                                  key={"shadow" + dancer.id}
                                                   dancer={dancer}
                                                   formations={localSettings.stageFlipped ? flippedFormations : formations}
                                                />
@@ -1087,7 +1086,7 @@ const Edit = ({
                                                         currentFormationIndex={currentFormationIndex}
                                                         isPlaying={isPlaying}
                                                         selectedFormation={selectedFormation}
-                                                        key={dancer.id}
+                                                        key={"shadow" + dancer.id}
                                                         dancer={dancer}
                                                         formations={localSettings.stageFlipped ? flippedFormations : formations}
                                                      />

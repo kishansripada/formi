@@ -25,6 +25,7 @@ export const StageSettings: React.FC<{
       cloudSettings: { stageBackground, stageDimensions },
       cloudSettings,
       setCloudSettings,
+      get,
    } = useStore();
 
    const [newWidth, setNewWidth] = useState(stageDimensions.width.toString());
@@ -96,7 +97,7 @@ export const StageSettings: React.FC<{
          setCloudSettings({ ...cloudSettings, stageDimensions: { width: 36, height: 28 }, gridSubdivisions: 9 });
       }
       setCloudSettings({
-         ...cloudSettings,
+         ...get().cloudSettings,
          stageBackground: val,
       });
    };

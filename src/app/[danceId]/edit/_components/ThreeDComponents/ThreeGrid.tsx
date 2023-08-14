@@ -22,7 +22,7 @@ export const ThreeGrid = ({ localSettings }: { localSettings: localSettings }) =
             color={localSettings.isDarkMode ? "#52525b" : "#d4d4d4"}
             lineWidth={1} // You can adjust the line width
             renderOrder={-1}
-            key={i}
+            key={"vert" + i.toString()}
          />
       );
    }
@@ -42,7 +42,7 @@ export const ThreeGrid = ({ localSettings }: { localSettings: localSettings }) =
             color={localSettings.isDarkMode ? "#52525b" : "#d4d4d4"}
             lineWidth={1} // You can adjust the line width
             renderOrder={-1}
-            key={i}
+            key={"hor" + i.toString()}
          />
       );
    }

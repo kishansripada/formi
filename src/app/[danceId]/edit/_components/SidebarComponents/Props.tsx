@@ -49,7 +49,7 @@ export const Props: React.FC<{
    setHelpUrl,
    setAssetsOpen,
 }) => {
-   const { formations, setFormations, viewOnly, props, setProps } = useStore();
+   const { formations, setFormations, viewOnly, props, setProps, get } = useStore();
 
    return (
       <>
@@ -84,7 +84,7 @@ export const Props: React.FC<{
                      let newId = uuidv4();
                      setProps([...props, { id: newId, type: "static" }]);
                      setProps(
-                        props.map((propx) => {
+                        get().props.map((propx) => {
                            if (propx.id === newId) {
                               return {
                                  ...propx,

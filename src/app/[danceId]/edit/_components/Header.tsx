@@ -70,7 +70,7 @@ export const Header: React.FC<{
       setDanceName,
       liveblocks: { status },
    } = useStore();
-   // console.log(status);
+
    const supabase = createClientComponentClient();
    const [templatesIsOpen, setTemplatesIsOpen] = useState(false);
    const others = useStore((state) => state.liveblocks.others);
@@ -409,22 +409,20 @@ export const Header: React.FC<{
                {others.length
                   ? others.map((person, i) => {
                        return (
-                          <>
-                             <div
-                                key={person.connectionId}
-                                //   onClick={() => {
-                                //      setSelectedFormation(userPositions?.[id]?.selectedFormation || 0);
-                                //   }}
-                                style={{
-                                   border: "2px solid white",
-                                   backgroundColor: COLORS[person.connectionId % COLORS.length],
-                                }}
-                                className=" grid place-items-center w-9 select-none cursor-pointer  h-9 rounded-full mr-2"
-                             >
-                                {/* <img className="rounded-full" src={otherInitials} alt="" />{" "} */}
-                                <p className="text-white text-xs font-bold">{initials(person.presence.nameOrEmail)}</p>
-                             </div>
-                          </>
+                          <div
+                             key={person.connectionId}
+                             //   onClick={() => {
+                             //      setSelectedFormation(userPositions?.[id]?.selectedFormation || 0);
+                             //   }}
+                             style={{
+                                border: "2px solid white",
+                                backgroundColor: COLORS[person.connectionId % COLORS.length],
+                             }}
+                             className=" grid place-items-center w-9 select-none cursor-pointer  h-9 rounded-full mr-2"
+                          >
+                             {/* <img className="rounded-full" src={otherInitials} alt="" />{" "} */}
+                             <p className="text-white text-xs font-bold">{initials(person.presence.nameOrEmail)}</p>
+                          </div>
                        );
                     })
                   : null}

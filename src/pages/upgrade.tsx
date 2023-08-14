@@ -3,10 +3,12 @@ import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import Script from "next/script";
 import { Header } from "../components/NonAppComponents/Header";
+import { PricingTable } from "../components/NonAppComponents/PricingTable";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const Upgrade: NextPage = () => {
-   const session = useSession();
-   const supabase = useSupabaseClient();
+   // const session = useSession();
+   const supabase = createClientComponentClient();
 
    return (
       <div className="h-screen font-proxima  ">
@@ -25,11 +27,7 @@ const Upgrade: NextPage = () => {
          <Script strategy="lazyOnload" src="https://js.stripe.com/v3/pricing-table.js" />
 
          <div className="flex flex-col justify-center mt-16 ">
-            <stripe-pricing-table
-               client_reference_id="cus_NDuxAz3F5rTnmI"
-               pricing-table-id="prctbl_1M45ACHvC3w6e8fcZrfIEjeZ"
-               publishable-key="pk_live_51Laj5tHvC3w6e8fcTNgLYosshdlXBG9tELw1GacJuZQwzb7DwGSCRv8jx1pbJtf6jOR16cSb5it0Jk7Js2TSd03y00uKhclRcz"
-            ></stripe-pricing-table>
+            <PricingTable session={supabase.auth.getSession()}></PricingTable>
          </div>
       </div>
    );

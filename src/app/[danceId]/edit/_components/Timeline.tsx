@@ -352,6 +352,7 @@ export const Timeline: React.FC<{
                   {segments.map((section, index) => {
                      return (
                         <div
+                           key={section.id}
                            className="h-full border-2  grid rounded-md place-items-center dark:text-white text-[10px] relative cursor-pointer "
                            onClick={(e: any) => {
                               if (menuOpen === "segments") return;

@@ -52,6 +52,7 @@ interface Store {
 const PUBLIC_KEY = "pk_dev_Tj6498ayxCG_YGzc7BawbV50IZp-ouOzm1JHemImjmSG2n6T_GMU9OEOQnCH7lB0";
 const client = createClient({
    publicApiKey: PUBLIC_KEY,
+   // throttle: 100,
 });
 
 type Presence = {

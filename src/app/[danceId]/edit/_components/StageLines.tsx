@@ -58,23 +58,21 @@ export const StageLines: React.FC<{
                const spaceBeteenLines = stageDimensions.width / cloudSettings.gridSubdivisions;
                const myXOffset = i * spaceBeteenLines;
                return (
-                  <>
-                     <line
-                        key={i}
-                        x1={myXOffset}
-                        y1="0"
-                        x2={myXOffset}
-                        y2={stageDimensions.height}
-                        className="dark:stroke-neutral-600 stroke-neutral-300"
-                        strokeWidth={
-                           // differenceFromCenter % cloudSettings.gridSubdivisions === 0
-                           //    ? 0.05 * 1.2
-                           //    : // : zoom < 0.6 && differenceFromCenter % 2 === 0
-                           //      // ? 0
-                           0.05 * 1.2
-                        }
-                     />
-                  </>
+                  <line
+                     key={i}
+                     x1={myXOffset}
+                     y1="0"
+                     x2={myXOffset}
+                     y2={stageDimensions.height}
+                     className="dark:stroke-neutral-600 stroke-neutral-300"
+                     strokeWidth={
+                        // differenceFromCenter % cloudSettings.gridSubdivisions === 0
+                        //    ? 0.05 * 1.2
+                        //    : // : zoom < 0.6 && differenceFromCenter % 2 === 0
+                        //      // ? 0
+                        0.05 * 1.2
+                     }
+                  />
                );
             })}
          </svg>

@@ -207,7 +207,7 @@ export const Share: React.FC<{
                      </button>
                   </div>
 
-                  <p className="text-neutral-400 text-xs mt-4 ">Collaborative Editing is Coming Soon</p>
+                  <p className="text-neutral-400 text-xs mt-4 ">Edit in real-time with your other choreographers</p>
                </div>
             </div>
          </div>

@@ -238,7 +238,7 @@ export const DancerAlias: React.FC<{
                               : "#404040"
                            : hexToRGBA(dancerPos?.color || dancer?.color || "#db2777", 0.5)
                      }
-                     stroke-width="8"
+                     strokeWidth="8"
                      d="M8.9763 110.5L67 10L125.024 110.5H8.9763Z"
                   />
                </svg>
@@ -281,9 +281,9 @@ export const DancerAlias: React.FC<{
                   {dancer.name.split(" ")[0]}
                </p>
             ) : null}
-            <p className="select-none font-semibold cursor-default  relative  pointer-events-none text-white z-50 ">
-               {dancerStyle === "numbered" ? <>{index + 1}</> : dancerStyle === "initials" ? <> {initials}</> : <></>}
-            </p>
+            <div className="select-none w-full h-full font-semibold cursor-default text-center absolute top-0 left-0 grid place-items-center  pointer-events-none text-white z-50 ">
+               <p> {dancerStyle === "numbered" ? <>{index + 1}</> : dancerStyle === "initials" ? <> {initials}</> : <></>}</p>
+            </div>
 
             {/* <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
                {dancerStyle === "numbered" ? <>{index + 1}</> : dancerStyle === "initials" ? <> {initials}</> : <></>}
