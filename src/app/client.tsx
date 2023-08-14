@@ -32,10 +32,13 @@ const Client = () => {
          <div className="bg-neutral-800/50 backdrop-blur-3xl py-1 px-1  w-[90vw] left-1/2 -translate-x-1/2 z-[60] rounded-full h-12 fixed top-[100px] hidden lg:flex flex-row items-center">
             {/* <img src="/logobg.png" className="h-full" alt="" /> */}
             <p className="text-white ml-4 font-bold">FORMI</p>
+            <Link href={"/upgrade"} className="px-6 text-neutral-300 hover:text-white ml-auto">
+               Pricing
+            </Link>
 
             <Link
                href={"/207/edit"}
-               className="bg-neutral-700/50 h-full rounded-full px-6 hover:text-white transition grid place-items-center text-neutral-400 ml-auto"
+               className="bg-neutral-700/50 h-full rounded-full px-6 hover:text-white transition grid place-items-center text-neutral-400 "
             >
                View Demo
             </Link>
@@ -87,68 +90,6 @@ const Client = () => {
                      }}
                   ></div>
                </div>
-               {/* <p className=" absolute bottom-12 w-full text-center  text-7xl  ">Choreography has never been easier.</p> */}
-
-               {/* <div className="w-full h-full  absolute top-36 z-0 pointer-events-none lg:pointer-events-auto ">
-                  <ThreeD
-                     items={[]}
-                     props={[]}
-                     setIsThreeDancerDragging={() => null}
-                     isThreeDancerDragging={false}
-                     isPlaying={false}
-                     currentFormationIndex={0}
-                     percentThroughTransition={0}
-                     dancers={dancers}
-                     position={0}
-                     shiftHeld={false}
-                     setShiftHeld={() => null}
-                     stageFlipped={false}
-                     soundCloudTrackId={null}
-                     zoom={1}
-                     setZoom={() => null}
-                     isCommenting={false}
-                     setIsCommenting={() => null}
-                     localSettings={{
-                        gridSnap: 1,
-                        previousFormationView: "ghostDancersAndPaths",
-                        dancerStyle: "solid",
-                        viewCollisions: false,
-                        stageFlipped: false,
-                        viewingThree: true,
-                        viewingTwo: false,
-                        collisionRadius: 1,
-                        fullScreen: false,
-                        isDarkMode: true,
-                        autoScroll: false,
-                     }}
-                     pushChange={() => null}
-                     undo={() => null}
-                     addToStack={() => null}
-                     player={null}
-                     draggingDancerId={null}
-                     setDraggingDancerId={() => null}
-                     songDuration={60}
-                     viewOnly={false}
-                     setSelectedFormation={() => null}
-                    
-                     selectedFormation={selectedFormation}
-                     setFormations={() => null}
-                     selectedDancers={[]}
-                     setSelectedDancers={() => null}
-                     setIsPlaying={() => null}
-                     setPixelsPerSecond={() => null}
-                     cloudSettings={{
-                        backgroundUrl:
-                           "https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/stagebackgrounds/f30197ba-cf06-4234-bcdb-5d40d83c7999/IMG_6842-removebg-preview.png",
-                        collisionRadius: 0.49640000000005985,
-                        stageBackground: "grid",
-                        stageDimensions: { width: 36, height: 18 },
-                        gridSubdivisions: 7,
-                     }}
-                     coordsToPosition={coordsToPosition}
-                     isIntro={true}
-                  ></ThreeD>
-               </div> */}
             </div>
 
             <p className="text-center font-bold text-3xl mt-12 ">Trusted by</p>
