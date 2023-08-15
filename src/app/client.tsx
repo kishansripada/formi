@@ -35,13 +35,13 @@ const Client = () => {
             <div className="h-full p-1 ml-3">
                <img className="h-full" src="/logo.png" alt="" />
             </div>
-            <Link href={"/upgrade"} className="px-6 text-neutral-300 hover:text-white ml-auto">
+            {/* <Link href={"/upgrade"} className="px-6 text-neutral-300 hover:text-white ml-auto">
                Pricing
-            </Link>
+            </Link> */}
 
             <Link
                href={"/207/edit"}
-               className="bg-neutral-700/50 h-full rounded-full px-6 hover:text-white transition grid place-items-center text-neutral-400 "
+               className="bg-neutral-700/50 h-full rounded-full px-6 hover:text-white transition grid place-items-center text-neutral-400 ml-auto "
             >
                View Demo
             </Link>
