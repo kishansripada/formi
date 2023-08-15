@@ -134,7 +134,11 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
       }),
       {
          client,
-         presenceMapping: { selectedFormation: true, nameOrEmail: true, selectedDancers: true },
+         presenceMapping: {
+            selectedFormation: true,
+            nameOrEmail: true,
+            selectedDancers: true,
+         },
          storageMapping: {
             formations: true,
             segments: true,

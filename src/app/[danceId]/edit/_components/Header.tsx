@@ -83,7 +83,7 @@ export const Header: React.FC<{
       <>
          <div className=" min-h-[50px] dark:bg-black bg-neutral-100  flex flex-row items-center w-full text-neutral-800 border-b  dark:text-white  dark:border-neutral-700 border-neutral-300 ">
             <div className="flex flex-row items-center justify-start w-1/3 h-full">
-               <div className="w-20 min-w-20 border-r border-neutral-300 h-full dark:border-neutral-700">
+               <div className="w-20 min-w-20 border-r border-neutral-300 h-full dark:border-neutral-700 grid place-items-center">
                   <button
                      onClick={async () => {
                         if (!saved) {
@@ -102,7 +102,7 @@ export const Header: React.FC<{
                      }}
                      className=""
                   >
-                     <svg
+                     {/* <svg
                         className="w-10 h-10 ml-5 mr-3 cursor-pointer flex-shrink-0"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -113,7 +113,8 @@ export const Header: React.FC<{
                            className="fill-neutral-700 dark:fill-white"
                            d="M6.63707 102V25.6364H57.1982v13.3114H22.7823v18.196h31.06v13.3115h-31.06V102H6.63707Z"
                         />
-                     </svg>
+                     </svg> */}
+                     <img className="  w-6" src="/logo.png" alt="" />
                   </button>
                </div>
 

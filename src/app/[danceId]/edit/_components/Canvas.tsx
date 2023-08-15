@@ -687,9 +687,9 @@ export const Canvas: React.FC<{
 
          if (shiftHeld) {
             if (!selectedDancers.includes(e.target.id)) {
-               setSelectedDancers((selectedDancers: string[]) => [...selectedDancers, e.target.id]);
+               setSelectedDancers([...selectedDancers, e.target.id]);
             } else {
-               setSelectedDancers((selectedDancers: string[]) => selectedDancers.filter((id) => id !== e.target.id));
+               setSelectedDancers(selectedDancers.filter((id) => id !== e.target.id));
             }
          }
       }

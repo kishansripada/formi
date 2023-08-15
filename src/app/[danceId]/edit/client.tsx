@@ -136,7 +136,7 @@ const Edit = ({
       setSelectedDancers,
       liveblocks,
    } = useStore();
-
+   // console.log(liveblocks);
    // console.log({ liveStatus });
    useEffect(() => {
       setSegments(initialData.segments);

@@ -101,6 +101,29 @@ export const DancerAlias: React.FC<{
    const HUMAN_WIDTH_FEET = 1.5;
    return (
       <>
+         {othersOnThisDancer.length && !isPlaying ? (
+            <div
+               style={{
+                  transform: `scale(${(1 / zoom) * 0.8}) `,
+                  transformOrigin: "bottom right",
+                  left: left - PIXELS_PER_SQUARE * HUMAN_WIDTH_FEET * 1.3,
+                  top: top - PIXELS_PER_SQUARE * HUMAN_WIDTH_FEET * 0.8,
+                  transition: !draggingDancerId && !isPlaying ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",
+               }}
+               className="absolute z-[99]  pointer-events-none  "
+            >
+               <p
+                  className="px-2 py-1 rounded-full text-white font-bold text-xs whitespace-nowrap "
+                  style={{
+                     // transform: `scale(${(1 / zoom) * 0.8}) translate(0%, -${100 * zoom * (1 / 0.8)}%)`,
+                     // transform: `translateX(${-PIXELS_PER_SQUARE / 2}px)`,
+                     background: COLORS[othersOnThisDancer[0]?.connectionId % COLORS.length],
+                  }}
+               >
+                  {toHumanReadableList(othersOnThisDancer.map((person) => person.presence.nameOrEmail))}
+               </p>
+            </div>
+         ) : null}
          <div
             style={{
                left: left,
@@ -161,36 +184,6 @@ export const DancerAlias: React.FC<{
                      src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${thisItem?.url}`}
                      alt=""
                   />
-               </div>
-            )}
-
-            {othersOnThisDancer.length && (
-               <div
-                  style={
-                     {
-                        // transform:
-                        //    thisItem.side === "bottom"
-                        //       ? "translateY(50%)"
-                        //       : thisItem.side === "right"
-                        //       ? "translateY(0%) translateX(50%)"
-                        //       : thisItem.side === "left"
-                        //       ? "translateY(0%) translateX(-50%)"
-                        //       : "translateY(-50%)",
-                        // width: PIXELS_PER_SQUARE * (thisItem.width || 1),
-                     }
-                  }
-                  className="absolute z-[99]  pointer-events-none  "
-               >
-                  <p
-                     className="px-2 py-1 rounded-full text-white font-bold text-xs whitespace-nowrap -translate-x-full -translate-y-full"
-                     style={{
-                        // transform: `scale(${(1 / zoom) * 0.8}) translate(0%, -${100 * zoom * (1 / 0.8)}%)`,
-                        // transform: `translateX(${-PIXELS_PER_SQUARE / 2}px)`,
-                        background: COLORS[othersOnThisDancer[0]?.connectionId % COLORS.length],
-                     }}
-                  >
-                     {toHumanReadableList(othersOnThisDancer.map((person) => person.presence.nameOrEmail))}
-                  </p>
                </div>
             )}
 

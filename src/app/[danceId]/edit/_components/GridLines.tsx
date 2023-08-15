@@ -77,7 +77,6 @@ export const GridLines: React.FC<{
 
                      {cloudSettings.stageBackground === "gridfluid" ? (
                         <>
-                           {" "}
                            {localSettings ? (
                               <text
                                  style={{

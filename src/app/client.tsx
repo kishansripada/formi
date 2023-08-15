@@ -31,7 +31,10 @@ const Client = () => {
          {/* <Header></Header> */}
          <div className="bg-neutral-800/50 backdrop-blur-3xl py-1 px-1  w-[90vw] left-1/2 -translate-x-1/2 z-[60] rounded-full h-12 fixed top-[100px] hidden lg:flex flex-row items-center">
             {/* <img src="/logobg.png" className="h-full" alt="" /> */}
-            <p className="text-white ml-4 font-bold">FORMI</p>
+            {/* <p className="text-white ml-4 font-bold">FORMI</p> */}
+            <div className="h-full p-1 ml-3">
+               <img className="h-full" src="/logo.png" alt="" />
+            </div>
             <Link href={"/upgrade"} className="px-6 text-neutral-300 hover:text-white ml-auto">
                Pricing
             </Link>

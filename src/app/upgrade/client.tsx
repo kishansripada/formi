@@ -64,7 +64,7 @@ const Client = () => {
                         <p className="text-4xl mt-3 font-medium">Free</p>
                         <p className="text-sm mt-1 font-medium">no credit card required</p>
                         <div className="mt-3">
-                           {["Three performances", "Access to all features"].map((text) => {
+                           {["Five performances", "Access to all features"].map((text) => {
                               return (
                                  <div className="flex flex-row items-center mt-3">
                                     <svg
