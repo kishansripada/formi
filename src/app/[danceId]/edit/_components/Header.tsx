@@ -82,8 +82,8 @@ export const Header: React.FC<{
    return (
       <>
          <div className=" min-h-[50px] dark:bg-black bg-neutral-100  flex flex-row items-center w-full text-neutral-800 border-b  dark:text-white  dark:border-neutral-700 border-neutral-300 ">
-            <div className="flex flex-row items-center justify-start w-1/3 h-full">
-               <div className="w-20 min-w-20 border-r border-neutral-300 h-full dark:border-neutral-700 grid place-items-center">
+            <div className="flex flex-row items-center justify-start w-2/5 h-full">
+               <div className="w-20 min-w-[80px] border-r border-neutral-300 h-full dark:border-neutral-700 grid place-items-center">
                   <button
                      onClick={async () => {
                         if (!saved) {
@@ -114,7 +114,12 @@ export const Header: React.FC<{
                            d="M6.63707 102V25.6364H57.1982v13.3114H22.7823v18.196h31.06v13.3115h-31.06V102H6.63707Z"
                         />
                      </svg> */}
-                     <img className="  w-6" src="/logo.png" alt="" />
+                     {/* <img className="  w-6" src="/logo.png" alt="" /> */}
+                     <svg className="w-6 fill-neutral-700 dark:fill-neutral-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 387 516">
+                        <path d="M0 130C0 58.203 58.203 0 130 0v386c0 71.797-58.203 130-130 130V130Z" />
+                        <path d="M114 130V0l272.355-.0000119C386.355 71.797 328.152 130 256.355 130H114Z" />
+                        <circle cx="248.301" cy="259.94" r="77.594" />
+                     </svg>
                   </button>
                </div>
 
@@ -276,6 +281,13 @@ export const Header: React.FC<{
                      size={120}
                   />
                </div>
+               <a
+                  href="https://linktr.ee/formistudio.app"
+                  target={"_blank"}
+                  className="text-xs mr-6  whitespace-nowrap ml-3  hidden lg:block border-pink-600 border p-2 rounded-md"
+               >
+                  Contact Us
+               </a>
 
                {/* {!viewOnlyInitial ? (
                   <button
@@ -366,7 +378,7 @@ export const Header: React.FC<{
                   <p className="dark:text-neutral-300 text-neutral-700 text-xs  ml-3">Viewing</p>
                )}
             </div>
-            <div className="w-1/3">
+            <div className="w-1/5">
                <input
                   value={danceName}
                   onChange={(e) => setDanceName(e.target.value)}
@@ -374,13 +386,13 @@ export const Header: React.FC<{
                      e.target.select();
                   }}
                   placeholder={"Performance name"}
-                  className={`h-6 text-center  px-3 py-4 w-1/3  mx-auto text-sm hidden bg-transparent rounded-md  lg:block   outline-none  ${
+                  className={`h-6 text-center  px-3 py-4 w-full  mx-auto text-sm hidden bg-transparent rounded-md  lg:block   outline-none  ${
                      viewOnly ? "pointer-events-none" : ""
                   } `}
                />
             </div>
 
-            <div className=" flex flex-row items-center justify-end mr-3 w-1/3 ">
+            <div className=" flex flex-row items-center justify-end mr-3 w-2/5 ">
                {folder?.name && (
                   <Link
                      href={`/dashboard/project/${folder.id}`}
@@ -393,13 +405,6 @@ export const Header: React.FC<{
                      <p>{folder?.name}</p>
                   </Link>
                )}
-               <a
-                  href="https://linktr.ee/formistudio.app"
-                  target={"_blank"}
-                  className="text-xs mr-6  hidden lg:block border-pink-600 border p-2 rounded-md"
-               >
-                  Socials / Contact Us
-               </a>
 
                <div className="px-3">
                   <div className={styles.status} data-status={status}>

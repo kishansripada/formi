@@ -93,6 +93,10 @@ const Client = () => {
                      }}
                   ></div>
                </div>
+               <div className="flex flex-col justify-center items-center py-40">
+                  <p className="lg:text-7xl text-3xl mb-24 font-light">Collaborate in real-time</p>
+                  <img className="rounded-xl xl:max-w-4xl max-w-md" src="/realtime.png" alt="" />
+               </div>
             </div>
 
             <p className="text-center font-bold text-3xl mt-12 ">Trusted by</p>
