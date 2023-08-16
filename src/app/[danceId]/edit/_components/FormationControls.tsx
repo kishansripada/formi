@@ -77,10 +77,15 @@ export const FormationControls: React.FC<{
    //       };
    //    }, [isChangingZoom, pixelsPerSecond, MAX_ZOOM]);
 
-   const { formations, setFormations, pauseHistory, resumeHistory, selectedFormation, get } = useStore();
+   const { formations, setFormations, pauseHistory, resumeHistory, selectedFormation, get, viewOnly } = useStore();
    return (
       <>
-         <div className="w-full h-[40px] min-h-[40px] max-h-[40px]  border-t-neutral-300 border-t bg-white flex flex-row items-center justify-end px-3 dark:bg-neutral-800 mt-auto dark:border-neutral-700 dark:text-white">
+         <div
+            style={{
+               pointerEvents: viewOnly ? "none" : "all",
+            }}
+            className="w-full h-[40px] min-h-[40px] max-h-[40px]  border-t-neutral-300 border-t bg-white flex flex-row items-center justify-end px-3 dark:bg-neutral-800 mt-auto dark:border-neutral-700 dark:text-white"
+         >
             <button
                onClick={() => {
                   pauseHistory();
@@ -138,6 +143,7 @@ export const FormationControls: React.FC<{
             >
                Delete Formation
             </button>
+
             <button
                onClick={() => {
                   if (selectedFormation === null) return;

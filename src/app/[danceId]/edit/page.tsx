@@ -49,7 +49,7 @@ const getServerSideProps = async (danceId: string) => {
 
    if (
       // they can edit if its the demo
-      dance.id === DEMO_DANCE_ID ||
+      // dance.id === DEMO_DANCE_ID ||
       // if it's their own
       dance?.user === session?.user?.id ||
       // if they have edit permissions

@@ -255,7 +255,7 @@ export const StageSettings: React.FC<{
                <div className="mb-3"></div>
             </div>
 
-            <hr className=" border-neutral-700" />
+            <hr className=" dark:border-neutral-700 border-neutral-200" />
 
             {stageBackground === "gridfluid" || stageBackground === "cheer9" ? (
                <>

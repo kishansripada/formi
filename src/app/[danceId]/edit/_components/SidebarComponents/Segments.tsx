@@ -31,10 +31,7 @@ export const Segments: React.FC<{
                      <p className="font-semibold   text-sm "> {index + 1}</p>
                      <div className="relative">
                         <input
-                           style={{
-                              backgroundColor: selectedSegment === segment.id ? (true ? "#db2777" : "#fbcfe8") : "transparent",
-                           }}
-                           className="h-6 w-full    px-2 py-4  text-sm rounded-md  ml-2    outline-none cursor-default"
+                           className="h-6 w-full  bg-transparent   px-2 py-4  text-sm rounded-md  ml-2    outline-none cursor-default"
                            value={segment.name}
                            onChange={(e) => {
                               updateSegmentProperty(segment.id, "name", e.target.value);
@@ -109,7 +106,7 @@ export const Segments: React.FC<{
                   <div
                      style={{
                         opacity: selectedSegment ? 1 : 0.5,
-                        pointerEvents: selectedSegment ? "all" : "none",
+                        pointerEvents: selectedSegment && !viewOnly ? "all" : "none",
                      }}
                      onClick={() => {
                         setSelectedSegment(null);
