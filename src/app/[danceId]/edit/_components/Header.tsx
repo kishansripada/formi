@@ -427,7 +427,7 @@ export const Header: React.FC<{
                              className=" grid place-items-center w-9 select-none cursor-pointer  h-9 rounded-full mr-2"
                           >
                              {/* <img className="rounded-full" src={otherInitials} alt="" />{" "} */}
-                             <p className="text-white text-xs font-bold">{initials(person.presence.nameOrEmail)}</p>
+                             <p className="text-white text-xs font-bold">{initials(person.presence.nameOrEmail) || "An"}</p>
                           </div>
                        );
                     })

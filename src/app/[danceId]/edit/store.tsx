@@ -49,10 +49,10 @@ interface Store {
    get: () => Store; // For direct state retrieval
 }
 
-const PUBLIC_KEY = "pk_dev_Tj6498ayxCG_YGzc7BawbV50IZp-ouOzm1JHemImjmSG2n6T_GMU9OEOQnCH7lB0";
+const PUBLIC_KEY = "pk_prod_3E8sI-8PR2FYB3__NcQ9YdEwhDyOKWvtC317Wo-fRSOQBCJBD4cmubrnKN8NE4bI";
 const client = createClient({
    publicApiKey: PUBLIC_KEY,
-   // throttle: 100,
+   // authEndpoint: "/api/liveblocks-auth",
 });
 
 type Presence = {

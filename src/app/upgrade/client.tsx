@@ -87,7 +87,7 @@ const Client = () => {
                      </div>
                      <div className=" border-2 border-pink-500 rounded-xl w-1/3 mx-3 py-5 px-6  flex flex-col  ">
                         <div className="flex flex-row justify-between items-center">
-                           <p className="text-pink-500 font-medium ">Pro</p>
+                           <p className="text-pink-500 font-medium ">Choreographer</p>
                         </div>
                         <p className="text-4xl mt-3 font-medium">$12</p>
                         <p className="text-sm mt-1 font-medium">per month</p>
@@ -128,9 +128,9 @@ const Client = () => {
                      </div>
                      <div className=" border border-neutral-800 rounded-xl w-1/3 mx-3 py-5 px-6  flex flex-col  ">
                         <div className="flex flex-row justify-between items-center">
-                           <p className="text-blue-300 font-medium ">Enterprise</p>
+                           <p className="text-blue-300 font-medium ">Professional</p>
                         </div>
-                        <p className="text-4xl mt-3 font-medium">$99</p>
+                        <p className="text-4xl mt-3 font-medium">$40</p>
                         <p className="text-sm mt-1 font-medium">per month</p>
                         <div className="mt-3">
                            {["Collaborative editing", "FORMI Teams", "Custom watermark", "Custom branding", "Priority support"].map((text) => {

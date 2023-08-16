@@ -101,12 +101,13 @@ export const DancerAlias: React.FC<{
    const HUMAN_WIDTH_FEET = 1.5;
    return (
       <>
-         {othersOnThisDancer.length && !isPlaying ? (
+         {/* {othersOnThisDancer.length && !isPlaying ? (
             <div
                style={{
                   transform: `scale(${(1 / zoom) * 0.8}) `,
                   transformOrigin: "bottom right",
-                  left: left - PIXELS_PER_SQUARE * HUMAN_WIDTH_FEET * 1.3,
+                  // left: left - PIXELS_PER_SQUARE * HUMAN_WIDTH_FEET * 1.3,
+                  left,
                   top: top - PIXELS_PER_SQUARE * HUMAN_WIDTH_FEET * 0.8,
                   transition: !draggingDancerId && !isPlaying ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",
                }}
@@ -120,10 +121,10 @@ export const DancerAlias: React.FC<{
                      background: COLORS[othersOnThisDancer[0]?.connectionId % COLORS.length],
                   }}
                >
-                  {toHumanReadableList(othersOnThisDancer.map((person) => person.presence.nameOrEmail))}
+                  {toHumanReadableList(othersOnThisDancer.map((person) => person.presence.nameOrEmail || "kishansripada@gmail.com"))}
                </p>
             </div>
-         ) : null}
+         ) : null} */}
          <div
             style={{
                left: left,
@@ -186,6 +187,42 @@ export const DancerAlias: React.FC<{
                   />
                </div>
             )}
+            {othersOnThisDancer.length && !isPlaying ? (
+               <div
+                  style={{
+                     // // transform: `scale(${(1 / zoom) * 0.8})`,
+                     // // transformOrigin: "bottom right",
+                     // transform: `scale(${(1 / zoom) * 0.8}) translate(0%, -${100 * zoom * (1 / 0.8)}%)`,
+                     // transformOrigin: "bottom right",
+                     // // left: left - PIXELS_PER_SQUARE * HUMAN_WIDTH_FEET * 1.3,
+                     // // left,
+                     // // top: top - PIXELS_PER_SQUARE * HUMAN_WIDTH_FEET * 0.8,
+                     // left: 0,
+                     // top: 0,
+
+                     // transform: `scale(${(1 / zoom) * 0.8})`,
+                     transformOrigin: "bottom right",
+                     left: 0,
+                     top: 0,
+                     transform: `translate(calc(-50% - ${(PIXELS_PER_SQUARE * HUMAN_WIDTH_FEET) / 2}px), -100%)`,
+                     transition: !draggingDancerId && !isPlaying ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",
+                  }}
+                  className="relative z-[99]  pointer-events-none    -translate-y-full"
+               >
+                  <p
+                     className="px-2 py-1 rounded-full text-white font-bold text-xs whitespace-nowrap "
+                     style={{
+                        // transform: "translate(-100%, 0%) ",
+
+                        // transform: `scale(${(1 / zoom) * 0.8}) translate(0%, -${100 * zoom * (1 / 0.8)}%)`,
+                        // transform: `translateX(${-PIXELS_PER_SQUARE / 2}px)`,
+                        background: COLORS[othersOnThisDancer[0]?.connectionId % COLORS.length],
+                     }}
+                  >
+                     {toHumanReadableList(othersOnThisDancer.map((person) => person.presence.nameOrEmail || "Anonymous"))}
+                  </p>
+               </div>
+            ) : null}
 
             {dancer.shape === "square" ? (
                <svg

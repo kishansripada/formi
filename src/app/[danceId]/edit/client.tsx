@@ -35,7 +35,7 @@ import { Assets } from "./_components/Modals/Assets";
 // could be dynamic imports
 import { Prop } from "./_components/Prop";
 import { Comment } from "./_components/Comment";
-import * as jsonpatch from "fast-json-patch";
+// import * as jsonpatch from "fast-json-patch";
 import { HelpUrl } from "./_components/Modals/HelpUrl";
 import { ObjectControls } from "./_components/ObjectControls";
 import { Database } from "../../../types/supabase";
@@ -77,11 +77,11 @@ const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.Th
    ),
 });
 
-var jsondiffpatch = require("jsondiffpatch").create({
-   objectHash: function (obj) {
-      return obj.id;
-   },
-});
+// var jsondiffpatch = require("jsondiffpatch").create({
+//    objectHash: function (obj) {
+//       return obj.id;
+//    },
+// });
 
 // use effect, but not on initial render
 const useDidMountEffect = (func, deps) => {
@@ -100,7 +100,7 @@ const Edit = ({
    params: { danceId },
    session,
    permissions: initialPermissions,
-   hasVisited,
+   hasSeenCollab: hasSeenCollabInitial,
 }: {
    initialData: any;
    viewOnly: boolean;
@@ -108,7 +108,7 @@ const Edit = ({
    params: { danceId: string };
    session: AuthSession | null;
    permissions: string[];
-   hasVisited: boolean;
+   hasSeenCollab: boolean;
 }) => {
    const {
       segments,
@@ -207,6 +207,7 @@ const Edit = ({
          autoScroll: false,
       });
    }
+   const hasVisited = true;
    const [shiftHeld, setShiftHeld] = useState(false);
    const [playbackRate, setPlaybackRate] = useState(1);
    const [selectedPropIds, setSelectedPropIds] = useState<string[]>([]);
@@ -234,7 +235,9 @@ const Edit = ({
    const [assetsOpen, setAssetsOpen] = useState(false);
 
    const [propUploads, setPropUploads] = useState([]);
-   const [helpUrl, setHelpUrl] = useState(hasVisited ? null : { url: "https://www.youtube.com/shorts/JRS1tPHJKAI" });
+   // hasVisited ? null : { url: "https://www.youtube.com/shorts/JRS1tPHJKAI" }
+   const [helpUrl, setHelpUrl] = useState(null);
+   const [collabOpen, setCollabOpen] = useState(!hasSeenCollabInitial);
    const [resizingPropId, setResizingPropId] = useState(null);
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
    const [videoPosition, setVideoPosition] = useState<"top-left" | "top-right" | "bottom-left" | "bottom-right">("top-right");
@@ -592,7 +595,7 @@ const Edit = ({
    }
    useEffect(() => {
       if (typeof window !== "undefined") {
-         document.cookie = "hasVisited=true; expires=" + new Date(new Date().getTime() + 86409000).toUTCString() + "; path=/";
+         document.cookie = "hasSeenCollab=true; expires=" + new Date(new Date().getTime() + 86409000).toUTCString() + "; path=/";
       }
    }, []);
    return (
@@ -643,6 +646,28 @@ const Edit = ({
                <p className="text-center">Connected</p>
             </div>
          ) : null} */}
+
+         {collabOpen ? (
+            <div
+               className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
+               id="outside"
+               onClick={(e) => {
+                  if (e.target.id === "outside") {
+                     setCollabOpen(false);
+                  }
+               }}
+            >
+               <div className="flex  w-2/3 flex-col   bg-neutral-800/90 text-white  rounded-xl  text-sm ">
+                  <div className="flex flex-col rounded-xl px-10 pt-10 pb-6 h-full ">
+                     <div className="flex flex-row items-center justify-between">
+                        <p className="text-4xl font-medium ">What's new 🎉</p>
+                     </div>
+                     <p className="mt-5 text-xl">Collaborate in real-time just like Google Docs by sharing your performance with your friends!</p>
+                     <img src="/colab.png" className="w-full rounded-xl mt-5" alt="" />
+                  </div>
+               </div>
+            </div>
+         ) : null}
 
          {isCommenting ? (
             <>
@@ -700,6 +725,7 @@ const Edit = ({
             dancers={dancers}
             setLocalSettings={setLocalSettings}
          ></EventHandler>
+
          <div
             // style={{
             //    pointerEvents: subscriptionStatus === "SUBSCRIBED" ? "none" : "auto",

@@ -17,7 +17,7 @@ const getServerSideProps = async (danceId: string) => {
    //    supabaseUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co",
    // });
    const cookieStore = cookies();
-   const hasVisited = cookieStore.get("hasVisited");
+   const hasSeenCollab = cookieStore.get("hasSeenCollab");
    // cookies().set("hasVisited", "true");
    const supabase = createServerComponentClient<Database>(
       { cookies },
@@ -78,7 +78,8 @@ const getServerSideProps = async (danceId: string) => {
       pricingTier: "legacy",
       session,
       permissions,
-      hasVisited,
+      hasSeenCollab,
+
       // },
    };
 };
@@ -96,7 +97,7 @@ export default async function Page({ params }: { params: { danceId: string } }) 
          permissions={data.permissions}
          viewOnly={data.viewOnly}
          pricingTier={data.pricingTier}
-         hasVisited={data.hasVisited}
+         hasSeenCollab={data.hasSeenCollab}
       />
    );
 }
