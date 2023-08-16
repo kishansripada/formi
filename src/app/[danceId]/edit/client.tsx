@@ -661,6 +661,22 @@ const Edit = ({
                   <div className="flex flex-col rounded-xl px-10 pt-10 pb-6 h-full ">
                      <div className="flex flex-row items-center justify-between">
                         <p className="text-4xl font-medium ">What's new 🎉</p>
+                        <button
+                           onClick={() => {
+                              setCollabOpen(false);
+                           }}
+                        >
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-6 h-6"
+                           >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                           </svg>
+                        </button>
                      </div>
                      <p className="mt-5 text-xl">Collaborate in real-time just like Google Docs by sharing your performance with your friends!</p>
                      <img src="/colab.png" className="w-full rounded-xl mt-5" alt="" />

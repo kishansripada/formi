@@ -375,7 +375,7 @@ export const Header: React.FC<{
                      )}
                   </>
                ) : (
-                  <p className="dark:text-neutral-300 text-neutral-700 text-xs  ml-3">Viewing</p>
+                  <p className="dark:text-neutral-300 text-neutral-700 text-sm  ml-3">View only</p>
                )}
             </div>
             <div className="w-1/5">
