@@ -5,7 +5,7 @@ import type { WithLiveblocks } from "@liveblocks/zustand";
 import { Status, createClient } from "@liveblocks/client";
 interface Store {
    selectedFormation: number | null;
-   setSelectedFormation: (index: number) => void;
+   setSelectedFormation: (index: number | null) => void;
 
    // segment
    segments: segment[];
