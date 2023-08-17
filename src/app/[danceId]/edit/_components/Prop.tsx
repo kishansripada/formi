@@ -32,7 +32,7 @@ export const Prop: React.FC<{
 
    zoom: number;
    setZoom: Function;
-   localSettings: any;
+   localSettings: localSettings;
    index: number;
    collisions: any;
    isChangingCollisionRadius: boolean;
@@ -68,9 +68,30 @@ export const Prop: React.FC<{
    // setProps,
    pushChange,
 }) => {
-   const { formations, setFormations, setProps, props } = useStore();
-
+   let { formations, setFormations, setProps, props } = useStore();
+   const { stageFlipped } = localSettings;
    const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+   // if (stageFlipped) {
+   //    formations = formations.map((formation: formation) => {
+   //       let flippedPositions = formation.positions.map((position) => {
+   //          if (position.controlPointEnd && position.controlPointStart) {
+   //             return {
+   //                ...position,
+   //                position: { x: -position.position.x, y: -position.position.y },
+   //                controlPointEnd: { x: -position.controlPointEnd.x, y: -position.controlPointEnd.y },
+   //                controlPointStart: { x: -position.controlPointStart.x, y: -position.controlPointStart.y },
+   //             };
+   //          } else {
+   //             return {
+   //                ...position,
+   //                position: { x: -position.position.x, y: -position.position.y },
+   //             };
+   //          }
+   //       });
+
+   //       return { ...formation, positions: flippedPositions };
+   //    });
+   // }
    useEffect(() => {
       setIsDropdownOpen(false);
    }, [dropDownToggle]);
@@ -78,11 +99,16 @@ export const Prop: React.FC<{
 
    let myPosition;
    // if the track is playing then  return with the animation function
-   const propPosition =
+   let propPosition =
       prop.type === "static"
          ? prop.static
          : (formations[selectedFormation]?.props || [])?.find((propPosition: propPosition) => propPosition.id === prop.id);
+
    if (!propPosition) return <></>;
+   if (stageFlipped) {
+      propPosition = { ...propPosition, position: { x: -propPosition?.position.x, y: -propPosition?.position.y } };
+   }
+
    if (prop.type === "static") {
       myPosition = propPosition.position;
    } else if (isPlaying && position !== null) {

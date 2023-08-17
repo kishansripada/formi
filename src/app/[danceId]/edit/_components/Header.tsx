@@ -206,7 +206,9 @@ export const Header: React.FC<{
                         return { ...localSettings, stageFlipped: !localSettings.stageFlipped };
                      })
                   }
-                  className=" hidden lg:block h-full text-xs  min-w-[48px]  py-2 "
+                  className={` ${
+                     localSettings.stageFlipped ? "dark:bg-pink-600 bg-pink-300" : ""
+                  } group grid h-full  text-sm  font-bold  place-items-center min-w-[48px] `}
                >
                   <div className="flex flex-row items-center justify-center ">
                      <svg className="w-6 h-6 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">

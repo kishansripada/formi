@@ -47,7 +47,7 @@ export const Canvas: React.FC<{
    zoom: number;
    setZoom: Function;
    // cloudSettings: cloudSettings;
-   stageFlipped: boolean;
+   // stageFlipped: boolean;
    shiftHeld: boolean;
    setShiftHeld: Function;
    isPlaying: boolean;
@@ -58,6 +58,7 @@ export const Canvas: React.FC<{
    setResizingPropId: Function;
    session: AuthSession | null;
    menuOpen: string;
+   // formations: formation[];
    // selectedFormations: number[];
 }> = ({
    player,
@@ -84,7 +85,7 @@ export const Canvas: React.FC<{
    setIsCommenting,
    zoom,
    setZoom,
-   stageFlipped,
+   // stageFlipped,
    shiftHeld,
    setShiftHeld,
    isPlaying,
@@ -93,14 +94,14 @@ export const Canvas: React.FC<{
    selectedPropIds,
    resizingPropId,
    setResizingPropId,
-
+   // formations,
    menuOpen,
 
    // selectedFormations,
 }) => {
    const {
-      formations,
       setFormations,
+      formations,
       get,
       viewOnly,
       setProps,
@@ -118,9 +119,13 @@ export const Canvas: React.FC<{
       },
    } = useStore();
 
-   let { gridSnap } = localSettings;
+   // let { formations } = useStore();
 
+   let { gridSnap, stageFlipped } = localSettings;
+   // console.log({ stageFlipped });
    const stageFlippedFactor = stageFlipped ? -1 : 1;
+   // const stageFlippedFactor = 1;
+   // console.log({ stageFlipped });
 
    const [draggingCommentId, setDraggingCommentId] = useState<string | null>();
    const [changingControlId, setChangingControlId] = useState<null | string>(null);
@@ -132,6 +137,7 @@ export const Canvas: React.FC<{
 
    const horizontalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
    const verticalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
+
    // const selectedDancersBoundingBox = useMemo(() => {
    //    function findBoundingBox(
    //       points: { x: number; y: number }[]
@@ -258,50 +264,6 @@ export const Canvas: React.FC<{
       if (e.target.dataset.type === "dancer" && !dragBoxCoords.start.x) {
          setIsDragging(true);
       }
-
-      // if (rotatingDancerId) {
-      //    const target = e.currentTarget;
-
-      //    // Get the bounding rectangle of target
-      //    const rect = target.getBoundingClientRect();
-
-      //    // Mouse position
-      //    const left = e.clientX - rect.left;
-      //    const top = e.clientY - rect.top;
-
-      //    let dancerPos = coordsToPosition(formations[selectedFormation]?.positions.find((position) => position.id === rotatingDancerId)?.position);
-      //    dancerPos = { left: dancerPos.left * zoom, top: dancerPos.top * zoom };
-      //    function getAngle(pointA, pointB): number {
-      //       const angleRad = Math.atan2(pointB.top - pointA.top, pointB.left - pointA.left);
-      //       let angleDeg = (angleRad * 180) / Math.PI - 90;
-      //       angleDeg = angleDeg >= 0 ? angleDeg : 360 + angleDeg;
-      //       return angleDeg;
-      //    }
-
-      //    let angle = getAngle(dancerPos, { left, top });
-
-      //    setFormations((formations: formation[]) => {
-      //       return formations.map((formation, index: number) => {
-      //          if (index === selectedFormation) {
-      //             return {
-      //                ...formation,
-      //                positions: formation.positions.map((dancerPosition) => {
-      //                   if (selectedDancers.length ? selectedDancers.includes(dancerPosition.id) : dancerPosition.id === rotatingDancerId) {
-      //                      return {
-      //                         ...dancerPosition,
-      //                         rotation: {
-      //                            angle: Math.round(angle / 45) * 45 === 360 ? 0 : Math.round(angle / 45) * 45,
-      //                         },
-      //                      };
-      //                   }
-      //                   return dancerPosition;
-      //                }),
-      //             };
-      //          }
-      //          return formation;
-      //       });
-      //    });
-      // }
 
       if (dragBoxCoords.start.x && dragBoxCoords.start.y) {
          const target = e.currentTarget;

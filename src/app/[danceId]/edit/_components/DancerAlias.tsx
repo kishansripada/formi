@@ -55,20 +55,40 @@ export const DancerAlias: React.FC<{
    isChangingCollisionRadius,
    // items,
 }) => {
-   const { formations, items, cloudSettings } = useStore();
+   let { formations, items, cloudSettings } = useStore();
    const others = useStore((state) => state.liveblocks.others);
 
    const othersOnThisFormation = others.filter((other) => other.presence.selectedFormation === selectedFormation);
    const othersOnThisDancer = othersOnThisFormation.filter((other) => other.presence.selectedDancers.includes(dancer.id));
    let { stageDimensions } = cloudSettings;
-   let { dancerStyle, collisionRadius } = localSettings;
+   let { dancerStyle, collisionRadius, stageFlipped } = localSettings;
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])
       .slice(0, 3)
       .join("")
       .toUpperCase();
+   if (stageFlipped) {
+      formations = formations.map((formation: formation) => {
+         let flippedPositions = formation.positions.map((position) => {
+            if (position.controlPointEnd && position.controlPointStart) {
+               return {
+                  ...position,
+                  position: { x: -position.position.x, y: -position.position.y },
+                  controlPointEnd: { x: -position.controlPointEnd.x, y: -position.controlPointEnd.y },
+                  controlPointStart: { x: -position.controlPointStart.x, y: -position.controlPointStart.y },
+               };
+            } else {
+               return {
+                  ...position,
+                  position: { x: -position.position.x, y: -position.position.y },
+               };
+            }
+         });
 
+         return { ...formation, positions: flippedPositions };
+      });
+   }
    // let isInCollision = selectedFormation
    //    ? collisions
    //         ?.map((collision) => collision.dancers)
@@ -76,7 +96,10 @@ export const DancerAlias: React.FC<{
    //         .includes(dancer.id)
    //    : false;
    if (selectedFormation === null) return <></>;
-   const dancerPos = formations[selectedFormation]?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id);
+   let dancerPos = formations[selectedFormation]?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id);
+
+   if (!dancerPos) return <></>;
+
    let myPosition;
    // if the track is playing then  return with the animation function
    if (isPlaying && position !== null) {

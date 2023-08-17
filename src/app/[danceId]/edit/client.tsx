@@ -1071,6 +1071,7 @@ const Edit = ({
                                                position={position}
                                                currentFormationIndex={currentFormationIndex}
                                                zoom={zoom}
+                                               localSettings={localSettings}
                                             ></Prop>
                                          );
                                       })
@@ -1107,7 +1108,8 @@ const Edit = ({
                                                   selectedFormation={selectedFormation}
                                                   key={"shadow" + dancer.id}
                                                   dancer={dancer}
-                                                  formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                                  //   formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                                  localSettings={localSettings}
                                                />
                                             ))
                                           : dancers
@@ -1130,7 +1132,8 @@ const Edit = ({
                                                         selectedFormation={selectedFormation}
                                                         key={"shadow" + dancer.id}
                                                         dancer={dancer}
-                                                        formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                                        //   formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                                        localSettings={localSettings}
                                                      />
                                                   );
                                                })}

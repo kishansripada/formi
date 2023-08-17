@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation } from "../../../../types/types";
+import { dancer, dancerPosition, formation, localSettings } from "../../../../types/types";
 import { useStore } from "../store";
 
 export const DancerAliasShadow: React.FC<{
@@ -8,7 +8,9 @@ export const DancerAliasShadow: React.FC<{
    isPlaying: boolean;
    currentFormationIndex: number | null;
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
-}> = ({ dancer, selectedFormation, isPlaying, currentFormationIndex, coordsToPosition }) => {
+   localSettings: localSettings;
+}> = ({ dancer, selectedFormation, isPlaying, currentFormationIndex, coordsToPosition, localSettings }) => {
+   const { stageFlipped } = localSettings;
    const { formations } = useStore();
    let initials = dancer.name
       .split(" ")
@@ -21,8 +23,12 @@ export const DancerAliasShadow: React.FC<{
    if (isPlaying) return;
    if (selectedFormation === null) return;
    currentCoords = formations[selectedFormation - 1]?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id)?.position;
+   if (!currentCoords) return <></>;
 
-   if (!currentCoords) return;
+   if (stageFlipped) {
+      currentCoords = { x: -currentCoords.x, y: -currentCoords?.y };
+   }
+
    let { left, top } = coordsToPosition(currentCoords);
 
    return (

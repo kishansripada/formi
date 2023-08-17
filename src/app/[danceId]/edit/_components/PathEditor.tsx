@@ -1,4 +1,4 @@
-import { dancer, dancerPosition, formation } from "../../../../types/types";
+import { dancer, dancerPosition, formation, localSettings } from "../../../../types/types";
 import { useStore } from "../store";
 
 export const PathEditor: React.FC<{
@@ -8,7 +8,7 @@ export const PathEditor: React.FC<{
    isPlaying: boolean;
    currentFormationIndex: number | null;
    dancers: dancer[];
-   localSettings: any;
+   localSettings: localSettings;
    collisions: any;
    coordsToPosition: (coords: { x: number; y: number } | null | undefined) => { left: number; top: number } | null;
    zoom: number;
@@ -24,10 +24,32 @@ export const PathEditor: React.FC<{
    collisions,
    zoom,
 }) => {
-   const { formations } = useStore();
+   let { formations } = useStore();
    if (isPlaying || selectedFormation === null) return;
-   let { previousFormationView } = localSettings;
+   let { previousFormationView, stageFlipped } = localSettings;
    // let dancersToRender = previousFormationView === "ghostDancersAndPaths" ? formations?.[selectedFormation - 1]?.positions
+   if (stageFlipped) {
+      formations = formations.map((formation: formation) => {
+         let flippedPositions = formation.positions.map((position) => {
+            if (position.controlPointEnd && position.controlPointStart) {
+               return {
+                  ...position,
+                  position: { x: -position.position.x, y: -position.position.y },
+                  controlPointEnd: { x: -position.controlPointEnd.x, y: -position.controlPointEnd.y },
+                  controlPointStart: { x: -position.controlPointStart.x, y: -position.controlPointStart.y },
+               };
+            } else {
+               return {
+                  ...position,
+                  position: { x: -position.position.x, y: -position.position.y },
+               };
+            }
+         });
+
+         return { ...formation, positions: flippedPositions };
+      });
+   }
+
    return (
       <>
          <svg className="absolute pointer-events-none w-full h-full z-40 overflow-visible" xmlns="http://www.w3.org/2000/svg">
