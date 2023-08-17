@@ -165,14 +165,7 @@ export const AudioControls: React.FC<{
             </div>
 
             <div className={`flex flex-row items-center justify-center w-[10%] `}>
-               <button
-                  onClick={() =>
-                     setSelectedFormation((i: number | null) => {
-                        if (i === null) return 0;
-                        return i === 0 ? 0 : i - 1;
-                     })
-                  }
-               >
+               <button onClick={() => setSelectedFormation(selectedFormation === null ? 0 : selectedFormation === 0 ? 0 : selectedFormation - 1)}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
                   </svg>
@@ -214,7 +207,7 @@ export const AudioControls: React.FC<{
                      </svg>
                   </div>
                )}
-               <button onClick={() => setSelectedFormation((i) => (i === formations.length - 1 ? i : i + 1))}>
+               <button onClick={() => setSelectedFormation(selectedFormation === formations.length - 1 ? selectedFormation : selectedFormation + 1)}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
                   </svg>
