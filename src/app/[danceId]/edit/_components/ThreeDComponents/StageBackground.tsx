@@ -2,8 +2,10 @@ import { useLoader } from "@react-three/fiber";
 import { useEffect, useState } from "react";
 import { TextureLoader, DoubleSide } from "three";
 import { cloudSettings } from "../../../../../types/types";
-export function StageBackground({ url, cloudSettings }: { url: string; cloudSettings: cloudSettings }) {
+import { useStore } from "../../store";
+export function StageBackground({ url }: { url: string }) {
    const texture = useLoader(TextureLoader, url);
+   const { cloudSettings } = useStore();
    const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
    useEffect(() => {
