@@ -40,7 +40,7 @@ export const Assets: React.FC<{
       toast
          .promise(
             supabase.storage.from("props").upload(`${userId}/${file.name}`, body, {
-               cacheControl: "no-cache",
+               // cacheControl: "no-cache",
                upsert: true,
             }),
             {
