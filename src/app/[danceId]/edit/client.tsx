@@ -301,7 +301,7 @@ const Edit = ({
          setSelectedFormation(index); // Assuming this function sets the formation
 
          // Wait for the formation to be rendered in the DOM
-         await sleep(500); // Delay in milliseconds. Adjust as needed.
+         await sleep(1000); // Delay in milliseconds. Adjust as needed.
 
          const stageElement = document.getElementById("stage-cutout");
          const clonedElement = stageElement.cloneNode(true); // Clone the element with its children
