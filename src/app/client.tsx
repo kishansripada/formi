@@ -5,53 +5,8 @@ import { Footer } from "../components/NonAppComponents/Footer";
 const Client = () => {
    return (
       <>
-         {/* <Head>
-            <title>FORMI: the collaborative whiteboard for choreographers.</title>
-            <meta
-               name="description"
-               content="Dance formation and choreography app. Easily build, create and visualize your dance and cheer formations synced to music. FORMI is the ultimate choreographer formation tool."
-            />
-            <meta
-               name="keywords"
-               content="dance, choreography, choreographer, formations, cheer, cheerleading, formation building tool, dance formation app, color guard, color guard app, dance formation maker, app for dance formations, formation app for dance"
-            />
-            <meta name="twitter:card" content="summary" />
-            <meta name="twitter:title" content="FORMI: Online stage performance planning software." />
-            <meta name="twitter:image" content="https://i.imgur.com/83VsfSG.png" />
-            <meta property="og:type" content="song" />
-            <meta property="og:title" content="FORMI: Online stage performance planning software." />
-            <meta
-               property="og:description"
-               content="Easily build, create and visualize your dance and cheer formations synced to music. Formi is the ultimate choreographer formation tool."
-            />
-            <meta property="og:image" content="https://i.imgur.com/83VsfSG.png" />
-
-            <meta property="og:site_name" content="FORMI: Online stage performance planning software." />
-         </Head> */}
-         {/* <Header></Header> */}
-         <div className="bg-neutral-800/50 backdrop-blur-3xl py-1 px-1  w-[90vw] left-1/2 -translate-x-1/2 z-[60] rounded-full h-12 fixed top-[100px] hidden lg:flex flex-row items-center">
-            {/* <img src="/logobg.png" className="h-full" alt="" /> */}
-            {/* <p className="text-white ml-4 font-bold">FORMI</p> */}
-            <div className="h-full p-1 ml-3">
-               <img className="h-full" src="/logo.png" alt="" />
-            </div>
-            {/* <Link href={"/upgrade"} className="px-6 text-neutral-300 hover:text-white ml-auto">
-               Pricing
-            </Link> */}
-
-            <Link
-               href={"/207/edit"}
-               className="bg-neutral-700/50 h-full rounded-full px-6 hover:text-white transition grid place-items-center text-neutral-400 ml-auto "
-            >
-               View Demo
-            </Link>
-
-            <Link href={"/login"} className="bg-neutral-400/50 grid place-items-center h-full rounded-full px-6 text-white transition ml-2">
-               Log In
-            </Link>
-         </div>
          <div className="overflow-hidden relative bg-neutral-50 flex flex-col items-center ">
-            <div className="h-14 w-full border-b border-neutral-800 bg-black text-neutral-300 flex flex-row items-center justify-center">
+            <div className="h-12 w-full border-b border-neutral-800 bg-black text-neutral-300 flex flex-row items-center justify-center">
                Follow{" "}
                <a href="https://www.tiktok.com/@formistudio.app/" target="_blank" className="text-pink-300 mx-2 ">
                   {" "}
@@ -59,11 +14,35 @@ const Client = () => {
                </a>{" "}
                on TikTok <span className="text-xs text-neutral-500 ml-2 hidden lg:block">and discover what's new on our platform</span>
             </div>
-            <div className="bg-black w-full text-white  relative flex flex-col pointer-events-none ">
-               <div className=" mt-[120px] top-[170px] text-center flex flex-col items-center justify-center z-50 ">
-                  {/* <div className="bg-neutral-500/50 w-full rounded-full h-16"></div> */}
-                  <p className="  lg:text-6xl  text-2xl font-semibold mt-5 w-2/3  ">FORMI, a place to design and plan stunning choreography.</p>
+            <div className="bg-black  py-5 px-24  w-full     hidden lg:flex flex-row items-center">
+               {/* <img src="/logobg.png" className="h-full" alt="" /> */}
+               {/* <p className="text-white ml-4 font-bold">FORMI</p> */}
+               <div className="h-full p-1 ml-3">
+                  <img className="h-12" src="/logo.png" alt="" />
+               </div>
+               {/* <Link href={"/upgrade"} className="px-6 text-neutral-300 hover:text-white ml-auto">
+               Pricing
+            </Link> */}
 
+               <Link
+                  href={"/207/edit"}
+                  className="bg-neutral-700/50 h-full rounded-full py-2 px-6 hover:text-white transition grid place-items-center text-neutral-400 ml-auto "
+               >
+                  View Demo
+               </Link>
+
+               <Link href={"/login"} className="bg-neutral-400/50  py-2 grid place-items-center h-full rounded-full px-6 text-white transition ml-2">
+                  Log In
+               </Link>
+            </div>
+            <div className="bg-black w-full text-white  relative flex flex-col pointer-events-none ">
+               <div className=" mt-[50px] top-[170px] text-center flex flex-col items-center justify-center z-50 ">
+                  {/* <div className="bg-neutral-500/50 w-full rounded-full h-16"></div> */}
+                  <div className="rounded-full  px-4 text-sm text-neutral-200 py-2 border border-pink-600/50">
+                     <p>Join 5000+ dancers and choreographers just like you</p>
+                  </div>
+                  <p className="  lg:text-7xl  text-2xl font-semibold mt-5 w-2/3  ">The collaborative choreography design tool</p>
+                  <p className="text-neutral-300 mt-5">Realtime collaboration. Three Dimensional. </p>
                   <div className=" bg-white text-black w-[250px]   px-6 z-50 relative py-3 rounded-md mt-10 pointer-events-auto">
                      <Link href={"/login"} className=" ">
                         <div className=" lg:flex flex-row items-center justify-around hidden">
@@ -76,10 +55,16 @@ const Client = () => {
                      </Link>
                   </div>
                </div>
+
                <div className="w-full flex flex-row justify-center mt-[100px] relative ">
-                  <div className=" lg:h-[800px] h-[200px]  ">
-                     <Image fill={true} objectFit="contain" className="w-2/3 z-10 relative " src="/desktop.png" alt="" />
-                  </div>
+                  {/* <div className=" lg:h-[800px] h-[200px] text-center  "> */}
+                  <img
+                     className="z-10 w-2/3 relative"
+                     src="https://res.cloudinary.com/dxavpfwki/image/upload/q_auto:low/v1692624978/desktop_j7aonq.webp"
+                     alt=""
+                  />
+                  {/* <Image fill={true} objectFit="contain" className="w-2/3 z-10 relative " src="/desktop.png" alt="" /> */}
+                  {/* </div> */}
 
                   <div
                      className="pointer-events-none absolute left-1/2 hidden lg:block  -translate-x-1/2  h-[1000px] w-[1700px]"
@@ -96,6 +81,10 @@ const Client = () => {
                <div className="flex flex-col justify-center items-center py-40">
                   <p className="lg:text-7xl text-3xl mb-24 font-light">Collaborate in real-time</p>
                   <img className="rounded-xl xl:max-w-4xl max-w-md" src="/realtime.png" alt="" />
+               </div>
+               <div className="flex flex-col justify-center items-center py-40">
+                  <p className="lg:text-7xl text-3xl mb-24 font-light">Remember your choreography</p>
+                  <img className="rounded-xl xl:max-w-4xl max-w-md" src="/vinny.png" alt="" />
                </div>
             </div>
 
@@ -217,21 +206,7 @@ const Client = () => {
                   />
                </div>
             </div>
-            {/* <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div> */}
 
-            {/* <div className="bg-neutral-50  flex flex-row justify-center items-center font-proxima py-10 dark:bg-neutral-900  ">
-               <div className="text-white  bg-pink-600 py-10 rounded-xl w-[70%]">
-                  <p className="text-3xl text-center">Build Your First Performance Free</p>
-                  <Link href={"/login"} className="">
-                     <button className="  flex-row items-center mx-auto  text-neutral-100 px-4 py-2 border border-white  hidden lg:flex rounded-full mt-8 text-xl group">
-                        <span className="mr-2 text-white ">Get Started</span>
-                     </button>
-                  </Link>
-               </div>
-            </div> */}
-            {/* <div className="lg:w-1/2 w-[90%] flex flex-row justify-center items-center "></div> */}
-
-            {/* FOOTER */}
             <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
             <Footer></Footer>
          </div>
