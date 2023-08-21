@@ -353,7 +353,7 @@ export const Timeline: React.FC<{
                      return (
                         <div
                            key={section.id}
-                           className="h-full border-2  grid rounded-md place-items-center dark:text-white text-[10px] relative cursor-pointer "
+                           className="h-full border-2 box-border  grid rounded-md place-items-center dark:text-white text-[10px] relative cursor-pointer "
                            onClick={(e: any) => {
                               if (menuOpen === "segments") return;
 
@@ -371,7 +371,7 @@ export const Timeline: React.FC<{
                            style={{
                               width: section.duration * pixelsPerSecond - 4,
                               marginRight: 4,
-                              minWidth: section.duration * pixelsPerSecond,
+                              minWidth: section.duration * pixelsPerSecond - 4,
                               borderColor: section.color,
                            }}
                         >
