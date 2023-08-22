@@ -57,6 +57,16 @@ export const Assets: React.FC<{
          });
    }, [file]);
 
+   const deleteAsset = async () => {
+      if (!selectedAsset) return;
+      const { data, error } = await supabase.storage.from("props").remove([`${session?.user?.id}/${selectedAsset}`]);
+      if (!error) {
+         toast.success("Deleted file");
+         // setAssetsOpen(false);
+      }
+      invalidatePropUploads();
+   };
+
    const assignAsset = (e, id) => {
       if (assetsOpen === "stagebackground") {
          setCloudSettings({
@@ -253,9 +263,20 @@ export const Assets: React.FC<{
                   )}
                </div>
                <div className="w-full border-t border-neutral-500 mt-auto h-12 flex flex-row items-center px-4">
-                  <button onClick={assignAsset} className="bg-pink-600 px-3 ml-auto py-2 text-white rounded-md text-sm">
-                     Use image
-                  </button>
+                  <div
+                     style={{
+                        opacity: selectedAsset ? 1 : 0.7,
+                        pointerEvents: selectedAsset ? "auto" : "none",
+                     }}
+                     className="w-full flex flex-row"
+                  >
+                     <button onClick={deleteAsset} className="bg-pink-600 px-3 py-2 text-white rounded-md text-sm">
+                        Delete image
+                     </button>
+                     <button onClick={assignAsset} className="bg-pink-600 px-3 ml-auto py-2 text-white rounded-md text-sm">
+                        Use image
+                     </button>
+                  </div>
                </div>
             </div>
          </div>
