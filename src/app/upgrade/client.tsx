@@ -92,7 +92,7 @@ const Client = () => {
                         <p className="text-4xl mt-3 font-medium">$12</p>
                         <p className="text-sm mt-1 font-medium">per month</p>
                         <div className="mt-3">
-                           {["Unlimited performances", "Unlimited media uploads"].map((text) => {
+                           {["Collaborative editing", "Unlimited performances", "Unlimited media uploads"].map((text) => {
                               return (
                                  <div className="flex flex-row items-center mt-3">
                                     <svg
@@ -130,10 +130,17 @@ const Client = () => {
                         <div className="flex flex-row justify-between items-center">
                            <p className="text-blue-300 font-medium ">Professional</p>
                         </div>
-                        <p className="text-4xl mt-3 font-medium">$40</p>
+                        <p className="text-4xl mt-3 font-medium">$99</p>
                         <p className="text-sm mt-1 font-medium">per month</p>
                         <div className="mt-3">
-                           {["Collaborative editing", "FORMI Teams", "Custom watermark", "Custom branding", "Priority support"].map((text) => {
+                           {[
+                              "Everything in choreographer",
+                              "Shared performances and assets",
+                              "Accounts for you and 10 others",
+                              "Custom watermark",
+                              "Custom branding",
+                              "Priority support",
+                           ].map((text) => {
                               return (
                                  <div className="flex flex-row items-center mt-3">
                                     <svg

@@ -22,19 +22,18 @@ export type prop = {
    type: "static" | "dynamic";
    static: {
       width: number;
-      height: number;
+      // height: number;
       position: { x: number; y: number };
-      rotation: number;
+      // rotation: number;
    };
 };
 
 export type item = {
    url: string;
    id: string;
-   user_id: string;
    name: string;
-   width: number;
-   side: "left" | "right" | "top" | "bottom";
+   width?: number;
+   side?: "left" | "right" | "top" | "bottom";
 };
 
 export type dancerPosition = {
@@ -79,6 +78,7 @@ export type localSettings = {
    fullScreen: boolean;
    isDarkMode: boolean;
    autoScroll: boolean;
+   videoPlacement: "pip" | "left" | "above" | "hidden";
 };
 
 export type cloudSettings = {

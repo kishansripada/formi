@@ -211,7 +211,6 @@ export const Share: React.FC<{
                </div>
             </div>
          </div>
-         <Toaster />
       </>
    );
 };

@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import Link from "next/link";
 import Image from "next/image";
 import { Footer } from "../components/NonAppComponents/Footer";
@@ -8,9 +8,9 @@ const Client = () => {
          <div className="overflow-hidden relative bg-neutral-50 flex flex-col items-center ">
             <div className="h-12 w-full border-b border-neutral-800 bg-black text-neutral-300 flex flex-row items-center justify-center">
                Follow{" "}
-               <a href="https://www.tiktok.com/@formistudio.app/" target="_blank" className="text-pink-300 mx-2 ">
+               <a href="https://www.tiktok.com/@formi.dance/" target="_blank" className="text-pink-300 mx-2 ">
                   {" "}
-                  @formistudio.app{" "}
+                  @formi.dance{" "}
                </a>{" "}
                on TikTok <span className="text-xs text-neutral-500 ml-2 hidden lg:block">and discover what's new on our platform</span>
             </div>
@@ -42,7 +42,7 @@ const Client = () => {
                      <p>Join 5000+ dancers and choreographers just like you</p>
                   </div>
                   <p className="  lg:text-7xl  text-2xl font-semibold mt-5 w-2/3  ">The collaborative choreography design tool</p>
-                  <p className="text-neutral-300 mt-5">Realtime collaboration. Three Dimensional. </p>
+                  <p className="text-neutral-300 mt-5">Realtime collaboration. Three Dimensional. Synced to Audio. </p>
                   <div className=" bg-white text-black w-[250px]   px-6 z-50 relative py-3 rounded-md mt-10 pointer-events-auto">
                      <Link href={"/login"} className=" ">
                         <div className=" lg:flex flex-row items-center justify-around hidden">

@@ -30,11 +30,15 @@ export async function POST(request: Request) {
    //    }
 
    // Start an auth session inside your endpoint
-   const blockssession = liveblocks.prepareSession(
-      session?.user.id
-      //   { userInfo: session } // Optional
-   );
+   const blockssession = liveblocks.prepareSession(session?.user?.id || "Anonymous");
    const { room } = await request.json();
+
+   // if (session?.user.id === "f30197ba-cf06-4234-bcdb-5d40d83c7999") {
+   //    blockssession.allow(room, blockssession.FULL_ACCESS);
+   //    const { status, body } = await blockssession.authorize();
+   //    return new Response(body, { status });
+   // }
+
    if (session?.user.id === "f30197ba-cf06-4234-bcdb-5d40d83c7999") {
       blockssession.allow(room, blockssession.FULL_ACCESS);
       const { status, body } = await blockssession.authorize();
@@ -45,17 +49,12 @@ export async function POST(request: Request) {
       supabase.from("dances").select("user, anyonecanview").eq("id", room).single(),
       supabase.from("permissions").select("*").eq("performance_id", room),
    ]);
+
    if (session?.user.id === dance?.user || permissions?.find((permission) => permission.email === session?.user?.email)?.role === "edit") {
       blockssession.allow(room, blockssession.FULL_ACCESS);
       const { status, body } = await blockssession.authorize();
       return new Response(body, { status });
    }
-
-   //    Implement your own security, and give the user access to the room
-
-   //    if (room && __shouldUserHaveAccess__(user, room)) {
-   //       blockssession.allow(room, blockssession.FULL_ACCESS);
-   //    }
 
    blockssession.allow(room, blockssession.READ_ACCESS);
    // Authorize the user and return the result
