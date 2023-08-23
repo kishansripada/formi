@@ -2,7 +2,7 @@ import { COLORS, dancer, dancerPosition, formation, formationGroup, localSetting
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useStore } from "../store";
 export const Formation: React.FC<{
    formation: formation;
@@ -46,6 +46,7 @@ export const Formation: React.FC<{
       transition,
    };
 
+   const [editingName, setEditingName] = useState(false);
    let myWidth = ((index === 0 ? 0 : formation.transition.durationSeconds) + formation.durationSeconds) * pixelsPerSecond;
    return (
       <>
@@ -118,7 +119,7 @@ export const Formation: React.FC<{
                   // subtract 4 to account for the mx-[2px]
                }}
             >
-               <p
+               <input
                   id="drag-handle"
                   {...attributes}
                   // onKeyDown={(e) => {
@@ -127,10 +128,26 @@ export const Formation: React.FC<{
                   //    }
                   // }}
                   {...listeners}
-                  className="text-[10px]  p-1 font-semibold  relative whitespace-nowrap  focus:outline-none  "
-               >
-                  {formation.name}
-               </p>
+                  readOnly={!editingName}
+                  onBlur={(e) => {
+                     setEditingName(false);
+                  }}
+                  onDoubleClick={(e) => {
+                     setEditingName(true);
+                  }}
+                  value={formation.name || ""}
+                  onChange={(e) => {
+                     setFormations(
+                        formations.map((f: formation) => {
+                           if (f.id === formation.id) {
+                              return { ...f, name: e.target.value };
+                           }
+                           return f;
+                        })
+                     );
+                  }}
+                  className="text-[10px] select-none bg-transparent cursor-pointer p-1 font-semibold  relative whitespace-nowrap  focus:outline-none  "
+               />
 
                {!viewOnly ? (
                   <div
