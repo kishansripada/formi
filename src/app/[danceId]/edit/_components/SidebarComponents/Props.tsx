@@ -82,27 +82,27 @@ export const Props: React.FC<{
                <button
                   onClick={() => {
                      let newId = uuidv4();
-                     setProps([...props, { id: newId, type: "static" }]);
-                     setProps(
-                        get().props.map((propx) => {
-                           if (propx.id === newId) {
-                              return {
-                                 ...propx,
-                                 static: {
-                                    width: 5,
-                                    position: {
-                                       x: 0,
-                                       y: 0,
-                                    },
-                                 },
-                              };
-                           }
-                           return propx;
-                        })
-                     );
+
+                     // setProps(
+                     //    get().props.map((propx) => {
+                     //       if (propx.id === newId) {
+                     //          return {
+                     //             ...propx,
+                     //             static: {
+                     //                width: 5,
+                     //                position: {
+                     //                   x: 0,
+                     //                   y: 0,
+                     //                },
+                     //             },
+                     //          };
+                     //       }
+                     //       return propx;
+                     //    })
+                     // );
 
                      // setSelectedItemId(newId);
-                     setAssetsOpen(newId);
+                     setAssetsOpen("newProp");
                   }}
                   className="ml-auto text-xs flex flex-row items-center"
                >

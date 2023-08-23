@@ -4,7 +4,7 @@ import { cloudSettings, item, prop } from "../../../../../types/types";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AuthSession } from "@supabase/supabase-js";
 import { useStore } from "../../store";
-
+import { v4 as uuidv4 } from "uuid";
 export const Assets: React.FC<{
    setAssetsOpen: Function;
    propUploads: any[];
@@ -79,32 +79,56 @@ export const Assets: React.FC<{
       }
 
       if (menuOpen === "props") {
-         setProps(
-            props.map((prop: prop) => {
-               if (prop.id === assetsOpen) {
-                  return {
-                     ...prop,
-                     url: `${id || selectedAsset}`,
-                     user_id: session?.user.id,
-                  };
-               }
-               return prop;
-            })
-         );
+         if (!session?.user.id) return;
+         if (assetsOpen === "newProp") {
+            setProps([
+               ...props,
+               {
+                  id: uuidv4(),
+                  type: "static",
+                  url: `${id || selectedAsset}`,
+                  user_id: session?.user?.id,
+                  static: {
+                     width: 5,
+                     position: {
+                        x: 0,
+                        y: 0,
+                     },
+                  },
+               },
+            ]);
+         } else {
+            setProps(
+               props.map((prop: prop) => {
+                  if (prop.id === assetsOpen) {
+                     return {
+                        ...prop,
+                        url: `${id || selectedAsset}`,
+                        user_id: session?.user.id,
+                     };
+                  }
+                  return prop;
+               })
+            );
+         }
       }
 
       if (menuOpen === "items") {
-         setItems(
-            items.map((item: item) => {
-               if (item.id === assetsOpen) {
-                  return {
-                     ...item,
-                     url: `${session?.user.id}/${id || selectedAsset}`,
-                  };
-               }
-               return item;
-            })
-         );
+         if (assetsOpen === "newItem") {
+            setItems([...items, { id: uuidv4(), name: "New prop", url: `${session?.user.id}/${id || selectedAsset}` }]);
+         } else {
+            setItems(
+               items.map((item: item) => {
+                  if (item.id === assetsOpen) {
+                     return {
+                        ...item,
+                        url: `${session?.user.id}/${id || selectedAsset}`,
+                     };
+                  }
+                  return item;
+               })
+            );
+         }
       }
 
       pushChange();

@@ -96,10 +96,10 @@ export const Items: React.FC<{
                <button
                   onClick={() => {
                      let newId = uuidv4();
-                     setItems([...items, { id: newId, name: "New prop" }]);
+                     // setItems([...items, { id: newId, name: "New prop" }]);
 
-                     setSelectedItemId(newId);
-                     setAssetsOpen(newId);
+                     // setSelectedItemId(newId);
+                     setAssetsOpen("newItem");
                   }}
                   className="ml-auto text-xs flex flex-row items-center"
                >
