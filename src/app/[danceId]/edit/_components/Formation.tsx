@@ -131,8 +131,18 @@ export const Formation: React.FC<{
                   onBlur={(e) => {
                      setEditingName(false);
                   }}
+                  onClick={(e) => {
+                     e.preventDefault();
+                     // e.stopPropagation();
+                  }}
                   onDoubleClick={(e) => {
+                     if (viewOnly) return;
                      setEditingName(true);
+                  }}
+                  onFocus={(e) => {
+                     if (!editingName) {
+                        e.target.blur();
+                     }
                   }}
                   value={formation.name || ""}
                   onChange={(e) => {
