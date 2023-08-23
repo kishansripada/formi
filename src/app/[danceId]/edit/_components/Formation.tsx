@@ -32,7 +32,7 @@ export const Formation: React.FC<{
    localSettings,
    selectedFormation,
 }) => {
-   const { viewOnly, setFormations } = useStore();
+   const { viewOnly, setFormations, formations } = useStore();
    const others = useStore((state) => state.liveblocks.others);
    const othersOnThisFormation = others.filter((other) => other.presence.selectedFormation === index);
    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
