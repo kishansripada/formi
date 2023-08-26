@@ -4,33 +4,26 @@ import { useStore } from "../store";
 
 export const Comment: React.FC<{
    comment: comment;
-   selectedFormation: number | null;
-   // setFormations: Function;
+
    zoom: number;
    coordsToPosition: Function;
    pushChange: Function;
    addToStack: Function;
    localSettings: localSettings;
-}> = ({ comment, selectedFormation, coordsToPosition, zoom, addToStack, pushChange, localSettings }) => {
-   const { formations, setFormations } = useStore();
+}> = ({ comment, coordsToPosition, zoom, addToStack, pushChange, localSettings }) => {
+   let textAreaRef = useRef<HTMLTextAreaElement>(null);
+   const [isOpen, setIsOpen] = useState(false);
+   const [height, setHeight] = useState(false);
+   const [isEditing, setIsEditing] = useState(false);
+   const { formations, setFormations, selectedFormations } = useStore();
    const { stageFlipped } = localSettings;
    // if there is no formation selected and the track is not playing, then just return nothing
-   if (selectedFormation === null) return <></>;
+   if (!selectedFormations.length) return <></>;
 
    // if the dancer does not have any coordinates right now, return nothing since it shouln't be displayed
    let { left, top } = coordsToPosition({ x: (stageFlipped ? -1 : 1) * comment.position.x, y: (stageFlipped ? -1 : 1) * comment.position.y });
    if (!left || !top) return <></>;
 
-   let textAreaRef = useRef<HTMLTextAreaElement>(null);
-
-   // useEffect(() => {
-   //    console.log(textAreaRef.current?.scrollHeight);
-   //    setHeight(textAreaRef.current?.scrollHeight);
-   // }, [textAreaRef.current?.scrollHeight]);
-
-   const [isOpen, setIsOpen] = useState(false);
-   const [height, setHeight] = useState(false);
-   const [isEditing, setIsEditing] = useState(false);
    return (
       <>
          <style jsx>{`
@@ -113,8 +106,8 @@ export const Comment: React.FC<{
                      autoFocus
                      onChange={(e) => {
                         setFormations(
-                           formations.map((formation, i) => {
-                              if (i === selectedFormation) {
+                           formations.map((formation) => {
+                              if (selectedFormations.includes(formation.id)) {
                                  return {
                                     ...formation,
                                     comments: formation.comments?.map((commentx) => {

@@ -20,7 +20,7 @@ export const Settings: React.FC<{
       setCloudSettings,
       cloudSettings,
    } = useStore();
-   let { previousFormationView, gridSnap, dancerStyle } = localSettings;
+   let { previousFormationView, gridSnap, dancerStyle, videoPlacement } = localSettings;
    // let { stageBackground, stageDimensions } = cloudSettings;
    const [newWidth, setNewWidth] = useState(stageDimensions.width.toString());
    const [newHeight, setNewHeight] = useState(stageDimensions.height.toString());
@@ -44,6 +44,12 @@ export const Settings: React.FC<{
    const setDancerStyle = (val: string) => {
       setLocalSettings((settings: localSettings) => {
          return { ...settings, dancerStyle: val };
+      });
+   };
+
+   const setVideoPlacement = (val: string) => {
+      setLocalSettings((settings: localSettings) => {
+         return { ...settings, videoPlacement: val };
       });
    };
 
@@ -174,9 +180,34 @@ export const Settings: React.FC<{
             <p className="  pl-3 font-medium mb-1 text-sm mt-4">Dancer Style</p>
             <Dropdown
                dropDownToggle={dropDownToggle}
-               value={dancerStyle === "initials" ? "Initials" : dancerStyle === "numbered" ? "Numbered" : "Solid"}
-               actions={[() => setDancerStyle("initials"), () => setDancerStyle("numbered"), () => setDancerStyle("solid")]}
-               options={["Initials", "Numbered", "Solid"]}
+               value={
+                  dancerStyle === "initials"
+                     ? "Initials"
+                     : dancerStyle === "numbered"
+                     ? "Numbered"
+                     : dancerStyle === "initialsAndName"
+                     ? "Intiials and Name"
+                     : "Solid"
+               }
+               actions={[
+                  () => setDancerStyle("initials"),
+                  () => setDancerStyle("numbered"),
+                  () => setDancerStyle("solid"),
+                  () => setDancerStyle("initialsAndName"),
+               ]}
+               options={["Initials", "Numbered", "Solid", "Initials and Name"]}
+            ></Dropdown>
+            <p className="  pl-3 font-medium mb-1 text-sm mt-4">Video Position</p>
+            <Dropdown
+               dropDownToggle={dropDownToggle}
+               value={videoPlacement === "left" ? "Left" : videoPlacement === "hidden" ? "Hidden" : videoPlacement === "above" ? "Above" : "PIP"}
+               actions={[
+                  () => setVideoPlacement("pip"),
+                  () => setVideoPlacement("left"),
+                  () => setVideoPlacement("above"),
+                  () => setVideoPlacement("hidden"),
+               ]}
+               options={["PIP", "Left", "Above", "Hidden"]}
             ></Dropdown>
          </div>
       </>

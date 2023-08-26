@@ -20,7 +20,6 @@ export const Layer: React.FC<{
    setSelectedDancers: Function;
    addToStack: Function;
    pushChange: Function;
-   formationGroups: formationGroup;
    player: any;
    localSettings: localSettings;
    setPosition: Function;
@@ -40,7 +39,6 @@ export const Layer: React.FC<{
    setSelectedDancers,
    pushChange,
    addToStack,
-   formationGroups,
    player,
    setPosition,
    localSettings,
@@ -48,7 +46,7 @@ export const Layer: React.FC<{
    // setSelectedFormations,
    // selectedFormations,
 }) => {
-   const { formations, setFormations, viewOnly } = useStore();
+   const { formations, setFormations, viewOnly, selectedFormations, setSelectedFormations, commandHeld } = useStore();
    const [activeId, setActiveId] = useState(null);
    // const keyboardCodes = {
    //    start: ["$"],
@@ -59,7 +57,7 @@ export const Layer: React.FC<{
    const clickOutsideFormations = (e: any) => {
       if (e.target.id !== "outside") return;
       e.stopPropagation();
-      setSelectedFormation(null);
+      setSelectedFormations([]);
    };
    const mouseSensor = useSensor(MouseSensor, {
       // Require the mouse to move by 10 pixels before activating
@@ -78,9 +76,9 @@ export const Layer: React.FC<{
       const index = event?.active?.data?.current?.sortable?.index || 0;
       // setSelectedFormation();
 
-      if (selectedFormation !== index) {
-         setSelectedDancers([]);
-      }
+      // if (selectedFormation !== index) {
+      //    setSelectedDancers([]);
+      // }
 
       // if (isPlaying) {
       // let position = formations
@@ -94,7 +92,7 @@ export const Layer: React.FC<{
       // position = position + formations[index]?.transition.durationSeconds;
       // console.log(position);
       // setPosition(position);
-      setSelectedFormation(index);
+      // setSelectedFormation(index);
       // if (!(songDuration && player)) return;
 
       // player.seekTo(position / (songDuration / 1000));
@@ -115,25 +113,25 @@ export const Layer: React.FC<{
       setActiveId(null);
    }
 
-   const newFormation = () => {
-      let id = uuidv4();
-      setFormations([
-         ...formations,
-         {
-            ...formations[formations.length - 1],
-            id,
-            name: `Untitled ${formations.length + 1}`,
-            positions: formations[formations.length - 1]?.positions.map((dancer: dancerPosition) => {
-               return {
-                  ...dancer,
-                  transitionType: "linear",
-               };
-            }),
-         },
-      ]);
-      setSelectedFormation(formations.length);
-      pushChange();
-   };
+   // const newFormation = () => {
+   //    let id = uuidv4();
+   //    setFormations([
+   //       ...formations,
+   //       {
+   //          ...formations[formations.length - 1],
+   //          id,
+   //          name: `Untitled ${formations.length + 1}`,
+   //          positions: formations[formations.length - 1]?.positions.map((dancer: dancerPosition) => {
+   //             return {
+   //                ...dancer,
+   //                transitionType: "linear",
+   //             };
+   //          }),
+   //       },
+   //    ]);
+   //    setSelectedFormation(formations.length);
+   //    pushChange();
+   // };
    return (
       <>
          <div
@@ -148,9 +146,9 @@ export const Layer: React.FC<{
                         key={formation.id}
                         id={formation.id}
                         onClick={(e: any) => {
-                           if (selectedFormation !== index) {
-                              setSelectedDancers([]);
-                           }
+                           // if (!selectedFormations.includes(formation.id)) {
+                           //    setSelectedDancers([]);
+                           // }
 
                            // setFormations((formations: formation[]) => {
                            //    return formations.map((formationx) => {
@@ -164,8 +162,35 @@ export const Layer: React.FC<{
                            //       return formationx;
                            //    });
                            // });
+                           if (shiftHeld) {
+                              if (selectedFormations.includes(formation.id)) {
+                                 setSelectedFormations(selectedFormations.filter((id) => id !== formation.id));
+                              } else {
+                                 if (selectedFormations.length) {
+                                    const firstSelectedFormation = Math.min(
+                                       ...selectedFormations.map((id) => formations.findIndex((formation) => formation.id === id))
+                                    );
+                                    const numbersToSelect = numbersBetween(firstSelectedFormation, index);
+                                    // console.log(numbersToSelect);
+                                    setSelectedFormations([...numbersToSelect.map((i) => formations[i].id)]);
+                                 } else {
+                                    setSelectedFormations([formation.id]);
+                                 }
 
-                           setSelectedFormation(index);
+                                 // setSelectedFormations()
+                                 // setSelectedFormations([...selectedFormations, formation.id]);
+                              }
+                           } else if (commandHeld) {
+                              if (selectedFormations.includes(formation.id)) {
+                                 setSelectedFormations(selectedFormations.filter((id) => id !== formation.id));
+                              } else {
+                                 setSelectedFormations([...selectedFormations, formation.id]);
+                              }
+                           } else {
+                              setSelectedFormations([formation.id]);
+                           }
+
+                           // setSelectedFormation(index);
                            // if (isPlaying) {
                            let position = formations
                               .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
@@ -174,23 +199,20 @@ export const Layer: React.FC<{
                            // position = position + formations[index]?.transition.durationSeconds;
                            // console.log(position);
                            setPosition(position);
-                           setSelectedFormation(index);
+                           // setSelectedFormation(index);
                            if (!(songDuration && player)) return;
 
                            player.seekTo(Math.min(Math.max(0, position / (songDuration / 1000)), 1));
                         }}
                      >
                         <Formation
-                           setSelectedFormation={setSelectedFormation}
                            formation={formation}
                            index={index}
                            amSelected={index === selectedFormation}
                            pixelsPerSecond={pixelsPerSecond}
                            addToStack={addToStack}
                            activeId={activeId}
-                           formationGroups={formationGroups}
                            localSettings={localSettings}
-                           selectedFormation={selectedFormation}
                         />
                      </div>
                   ))}
@@ -215,3 +237,16 @@ export const Layer: React.FC<{
       </>
    );
 };
+
+function numbersBetween(a: number, b: number): number[] {
+   const start = Math.min(a, b);
+   const end = Math.max(a, b);
+
+   const result: number[] = [];
+
+   for (let i = start; i <= end; i++) {
+      result.push(i);
+   }
+
+   return result;
+}

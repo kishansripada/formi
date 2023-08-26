@@ -6,13 +6,13 @@ import Dropdown from "./Dropdown";
 import { PopoverPicker } from "./ColorPicker";
 import { useStore } from "../store";
 export const ObjectControls: React.FC<{
-   setSelectedFormation: Function;
+   // setSelectedFormation: Function;
    player: any;
    isPlaying: boolean;
    setIsPlaying: Function;
    position: number | null;
    songDuration: number | null;
-   selectedFormation: number | null;
+   // selectedFormation: number | null;
 
    addToStack: Function;
    pushChange: Function;
@@ -31,7 +31,7 @@ export const ObjectControls: React.FC<{
    // items: item[];
    dancers: dancer[];
 }> = ({
-   setSelectedFormation,
+   // setSelectedFormation,
    player,
    isPlaying,
    setIsPlaying,
@@ -39,7 +39,7 @@ export const ObjectControls: React.FC<{
    position,
 
    songDuration,
-   selectedFormation,
+   // selectedFormation,
 
    addToStack,
    pushChange,
@@ -59,13 +59,13 @@ export const ObjectControls: React.FC<{
    dancers,
    // viewOnlyInitial,
 }) => {
-   const { formations, setFormations, viewOnly, items } = useStore();
+   const { formations, setFormations, viewOnly, items, selectedFormations, getFirstSelectedFormation, get } = useStore();
 
-   if (selectedFormation === null) return null;
+   if (!selectedFormations.length) return null;
    const setLinear = () => {
       setFormations(
-         formations.map((formation, index: number) => {
-            if (index === selectedFormation) {
+         formations.map((formation) => {
+            if (selectedFormations.includes(formation.id)) {
                return {
                   ...formation,
                   positions: formation.positions.map((dancerPosition) => {
@@ -88,7 +88,7 @@ export const ObjectControls: React.FC<{
    const setTeleport = () => {
       setFormations(
          formations.map((formation, index: number) => {
-            if (index === selectedFormation) {
+            if (selectedFormations.includes(formation.id)) {
                return {
                   ...formation,
                   positions: formation.positions.map((dancerPosition) => {
@@ -109,97 +109,102 @@ export const ObjectControls: React.FC<{
    };
 
    const setCurved = () => {
-      selectedDancers.forEach((selectedDancer) => {
-         let start = formations[selectedFormation - 1]?.positions.find((dancerPosition) => dancerPosition.id === selectedDancer)?.position;
+      selectedFormations.forEach((selectedFormation: string) => {
+         const formationIndex = formations.findIndex((formation) => formation.id === selectedFormation);
+         // console.log({ formationIndex });
+         selectedDancers.forEach((selectedDancer) => {
+            let start = formations[formationIndex - 1]?.positions.find((dancerPosition) => dancerPosition.id === selectedDancer)?.position;
 
-         let end = formations[selectedFormation]?.positions.find((dancerPosition) => dancerPosition.id === selectedDancer)?.position;
-         if (!start || !end) return;
+            let end = formations[formationIndex]?.positions.find((dancerPosition) => dancerPosition.id === selectedDancer)?.position;
+            if (!start || !end) return;
 
-         const getMidpoint = (x1: number, y1: number, x2: number, y2: number) => ({
-            x: (x1 + x2) / 2,
-            y: (y1 + y2) / 2,
-         });
-         const getSlope = (x1: number, y1: number, x2: number, y2: number) => {
-            if (x2 === x1) {
-               return undefined;
-            }
-            if (y2 === y1) {
-               return 0;
-            }
-            return (y2 - y1) / (x2 - x1);
-         };
-
-         let midpoint = getMidpoint(start.x, start.y, end.x, end.y);
-         let slope = getSlope(start.x, start.y, end.x, end.y);
-         let controlPointStart = (() => {
-            if (slope === undefined) {
-               return { x: midpoint.x + 0.25, y: midpoint.y };
-            }
-            if (slope === 0) {
-               return { x: midpoint.x, y: midpoint.y + 0.25 };
-            }
-            return { x: midpoint.x + slope / 4, y: midpoint.y + 1 / slope / 4 };
-         })();
-         let controlPointEnd = (() => {
-            if (slope === undefined) {
-               return { x: midpoint.x - 0.25, y: midpoint.y };
-            }
-            if (slope === 0) {
-               return { x: midpoint.x, y: midpoint.y - 0.25 };
-            }
-            return { x: midpoint.x - slope / 4, y: midpoint.y - 1 / slope / 4 };
-         })();
-         setFormations(
-            formations.map((formation, index: number) => {
-               if (index === selectedFormation) {
-                  return {
-                     ...formation,
-
-                     positions: formation.positions.map((dancerPosition) => {
-                        if (dancerPosition.id === selectedDancer) {
-                           return {
-                              ...dancerPosition,
-                              transitionType: "cubic",
-                              controlPointStart,
-                              controlPointEnd,
-                           };
-                        }
-                        return dancerPosition;
-                     }),
-                  };
+            const getMidpoint = (x1: number, y1: number, x2: number, y2: number) => ({
+               x: (x1 + x2) / 2,
+               y: (y1 + y2) / 2,
+            });
+            const getSlope = (x1: number, y1: number, x2: number, y2: number) => {
+               if (x2 === x1) {
+                  return undefined;
                }
-               return formation;
-            })
-         );
+               if (y2 === y1) {
+                  return 0;
+               }
+               return (y2 - y1) / (x2 - x1);
+            };
+
+            let midpoint = getMidpoint(start.x, start.y, end.x, end.y);
+            let slope = getSlope(start.x, start.y, end.x, end.y);
+            let controlPointStart = (() => {
+               if (slope === undefined) {
+                  return { x: midpoint.x + 0.25, y: midpoint.y };
+               }
+               if (slope === 0) {
+                  return { x: midpoint.x, y: midpoint.y + 0.25 };
+               }
+               return { x: midpoint.x + slope / 4, y: midpoint.y + 1 / slope / 4 };
+            })();
+            let controlPointEnd = (() => {
+               if (slope === undefined) {
+                  return { x: midpoint.x - 0.25, y: midpoint.y };
+               }
+               if (slope === 0) {
+                  return { x: midpoint.x, y: midpoint.y - 0.25 };
+               }
+               return { x: midpoint.x - slope / 4, y: midpoint.y - 1 / slope / 4 };
+            })();
+
+            setFormations(
+               get().formations.map((formation, index: number) => {
+                  if (formation.id === selectedFormation) {
+                     return {
+                        ...formation,
+                        positions: formation.positions.map((dancerPosition) => {
+                           if (dancerPosition.id === selectedDancer) {
+                              return {
+                                 ...dancerPosition,
+                                 transitionType: "cubic",
+                                 controlPointStart,
+                                 controlPointEnd,
+                              };
+                           }
+                           return dancerPosition;
+                        }),
+                     };
+                  }
+                  return formation;
+               })
+            );
+         });
       });
-      pushChange();
+      // da8d50fe-02d8-4274-aad7-39a0e8eed5f7
+      console.log(formations);
    };
 
    const pathSelectionDropdownValue = () => {
-      if (selectedFormation === null || !selectedDancers.length) return "";
-      let dancers = formations[selectedFormation]?.positions.filter((position) => selectedDancers.includes(position.id));
+      if (!selectedFormations.length || !selectedDancers.length) return "";
+      let dancers = getFirstSelectedFormation()?.positions.filter((position: dancerPosition) => selectedDancers.includes(position.id));
       if (!dancers?.length) return "";
 
-      if (dancers.every((position) => position.transitionType === "linear" || !position.transitionType)) {
+      if (dancers.every((position: dancerPosition) => position.transitionType === "linear" || !position.transitionType)) {
          return "Straight";
       }
-      if (dancers.every((position) => position.transitionType === "teleport" || !position.transitionType)) {
+      if (dancers.every((position: dancerPosition) => position.transitionType === "teleport" || !position.transitionType)) {
          return "Teleport";
       }
-      if (dancers.every((position) => position.transitionType === "cubic")) {
+      if (dancers.every((position: dancerPosition) => position.transitionType === "cubic")) {
          return "Curved";
       }
       return "Mixed";
    };
 
    const itemSelectionDropdownValue = () => {
-      if (selectedFormation === null || !selectedDancers.length) return "";
-      let dancers = formations[selectedFormation]?.positions.filter((position) => selectedDancers.includes(position.id));
+      if (!selectedFormations.length || !selectedDancers.length) return "";
+      let dancers = getFirstSelectedFormation()?.positions.filter((position: dancerPosition) => selectedDancers.includes(position.id));
       if (!dancers?.length) return "";
-      if (dancers.every((dancer) => !dancer.itemId)) {
+      if (dancers.every((dancer: dancerPosition) => !dancer.itemId)) {
          return "No prop";
       }
-      if (dancers.every((dancer) => dancer.itemId === dancers[0].itemId)) {
+      if (dancers.every((dancer: dancerPosition) => dancer.itemId === dancers[0].itemId)) {
          return items.find((item) => item.id === dancers[0].itemId)?.name || "";
       }
       return "Mixed";
@@ -208,7 +213,7 @@ export const ObjectControls: React.FC<{
    const setDancerItem = (itemId: string | null) => {
       setFormations(
          formations.map((formation, index: number) => {
-            if (index === selectedFormation) {
+            if (selectedFormations.includes(formation.id)) {
                return {
                   ...formation,
                   positions: formation.positions.map((dancerPosition) => {
@@ -231,7 +236,7 @@ export const ObjectControls: React.FC<{
    const setColor = (color: string) => {
       setFormations(
          formations.map((formation, index: number) => {
-            if (index === selectedFormation) {
+            if (selectedFormations.includes(formation.id)) {
                return {
                   ...formation,
                   positions: formation.positions.map((dancerPosition) => {
@@ -266,36 +271,40 @@ export const ObjectControls: React.FC<{
                   ? ""
                   : "Multiple dancers selected"}
             </p>
-            {selectedDancers.length && selectedFormation !== null ? (
+
+            {selectedDancers.length && selectedFormations.length ? (
                <>
                   {selectedDancers.length === 2 ? (
                      <button
                         onClick={() => {
-                           // swap the positions of the two dancers
-                           const positions = selectedDancers.map((dancerId) => {
-                              return formations[selectedFormation]?.positions.find((dancerPosition: dancerPosition) => dancerPosition.id === dancerId)
-                                 .position;
-                           });
+                           selectedFormations.forEach((selectedFormation: string) => {
+                              const positions = selectedDancers.map((dancerId) => {
+                                 return formations
+                                    .find((formation) => formation.id === selectedFormation)
+                                    ?.positions.find((dancerPosition: dancerPosition) => dancerPosition.id === dancerId).position;
+                              });
 
-                           setFormations(
-                              formations.map((formation, index: number) => {
-                                 if (index === selectedFormation) {
-                                    return {
-                                       ...formation,
-                                       positions: formation.positions.map((dancerPosition) => {
-                                          if (selectedDancers.includes(dancerPosition.id)) {
-                                             return {
-                                                ...dancerPosition,
-                                                position: positions[0] === dancerPosition.position ? positions[1] : positions[0],
-                                             };
-                                          }
-                                          return dancerPosition;
-                                       }),
-                                    };
-                                 }
-                                 return formation;
-                              })
-                           );
+                              setFormations(
+                                 get().formations.map((formation, index: number) => {
+                                    if (formation.id === selectedFormation) {
+                                       return {
+                                          ...formation,
+                                          positions: formation.positions.map((dancerPosition) => {
+                                             if (selectedDancers.includes(dancerPosition.id)) {
+                                                return {
+                                                   ...dancerPosition,
+                                                   position: positions[0] === dancerPosition.position ? positions[1] : positions[0],
+                                                };
+                                             }
+                                             return dancerPosition;
+                                          }),
+                                       };
+                                    }
+                                    return formation;
+                                 })
+                              );
+                           });
+                           // swap the positions of the two dancers
                         }}
                         className="flex flex-row justify-between dark:text-neutral-300 text-neutral-500 hover:text-black dark:hover:text-white transition items-center px-5"
                      >
@@ -317,10 +326,12 @@ export const ObjectControls: React.FC<{
                      </button>
                   ) : null}
                   <div
-                     style={{
-                        pointerEvents: selectedFormation === 0 ? "none" : "auto",
-                        opacity: selectedFormation === 0 ? 0.5 : 1,
-                     }}
+                     style={
+                        {
+                           // pointerEvents: selectedFormation === 0 ? "none" : "auto",
+                           // opacity: selectedFormation === 0 ? 0.5 : 1,
+                        }
+                     }
                      className="flex flex-row justify-between items-center px-5"
                   >
                      <p className="text-xs font-semibold mr-3">Path</p>
@@ -388,7 +399,7 @@ export const ObjectControls: React.FC<{
                         <PopoverPicker
                            dancers={dancers}
                            color={
-                              formations[selectedFormation]?.positions.find(
+                              getFirstSelectedFormation()?.positions.find(
                                  (dancerPosition: dancerPosition) => dancerPosition.id === selectedDancers[0]
                               )?.color || dancers.find((dancer: dancer) => dancer.id === selectedDancers[0])?.color
                            }
@@ -398,7 +409,10 @@ export const ObjectControls: React.FC<{
                            text="Color only applies to this formation"
                         ></PopoverPicker>
                      </div>
-                     {formations[selectedFormation]?.positions
+                     {formations
+                        .filter((formation: formation) => selectedFormations.includes(formation.id))
+                        .map((formation: formation) => formation.positions)
+                        .flat()
                         .filter((dancerPosition: dancerPosition) => selectedDancers.includes(dancerPosition.id) && dancerPosition.color)
                         ?.map((dancerPosition: dancerPosition) => dancerPosition.color).length ? (
                         <button
@@ -406,7 +420,7 @@ export const ObjectControls: React.FC<{
                               setFormations(
                                  formations.map((formation: formation, index: number) => {
                                     // remove color from dancer position
-                                    if (index === selectedFormation) {
+                                    if (selectedFormations.includes(formation.id)) {
                                        return {
                                           ...formation,
                                           positions: formation.positions.map((dancerPosition: dancerPosition) => {

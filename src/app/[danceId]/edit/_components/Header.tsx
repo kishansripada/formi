@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import logo from "../../../public/logo.svg";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import Dropdown from "./Dropdown";
 import { DarkModeSwitch } from "react-toggle-dark-mode";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useStore } from "../store";
 import styles from "./Status.module.css";
+import { AuthSession } from "@supabase/supabase-js";
 export const Header: React.FC<{
    saved: boolean;
 
@@ -36,6 +36,7 @@ export const Header: React.FC<{
    dropDownToggle: Function;
    dancers: dancer[];
    danceId: string;
+   session: AuthSession | null;
 }> = ({
    saved,
 
@@ -61,6 +62,7 @@ export const Header: React.FC<{
    folder,
    dancers,
    danceId,
+   session,
 }) => {
    const router = useRouter();
    const {
@@ -86,6 +88,14 @@ export const Header: React.FC<{
                <div className="w-20 min-w-[80px] border-r border-neutral-300 h-full dark:border-neutral-700 grid place-items-center">
                   <button
                      onClick={async () => {
+                        if (!session) {
+                           router.push("/login");
+                           return;
+                        }
+                        if (viewOnly && session) {
+                           router.push("/dashboard");
+                           return;
+                        }
                         if (!saved) {
                            let updateDancers = supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", danceId);
 
@@ -415,24 +425,26 @@ export const Header: React.FC<{
                   </div>
                </div>
                {others.length
-                  ? others.map((person, i) => {
-                       return (
-                          <div
-                             key={person.connectionId}
-                             //   onClick={() => {
-                             //      setSelectedFormation(userPositions?.[id]?.selectedFormation || 0);
-                             //   }}
-                             style={{
-                                border: "2px solid white",
-                                backgroundColor: COLORS[person.connectionId % COLORS.length],
-                             }}
-                             className=" grid place-items-center w-9 select-none cursor-pointer  h-9 rounded-full mr-2"
-                          >
-                             {/* <img className="rounded-full" src={otherInitials} alt="" />{" "} */}
-                             <p className="text-white text-xs font-bold">{initials(person.presence.nameOrEmail) || "An"}</p>
-                          </div>
-                       );
-                    })
+                  ? others
+                       .filter((other) => other.presence.nameOrEmail)
+                       .map((person, i) => {
+                          return (
+                             <div
+                                key={person.connectionId}
+                                //   onClick={() => {
+                                //      setSelectedFormation(userPositions?.[id]?.selectedFormation || 0);
+                                //   }}
+                                style={{
+                                   border: "2px solid white",
+                                   backgroundColor: COLORS[person.connectionId % COLORS.length],
+                                }}
+                                className=" grid place-items-center w-9 select-none cursor-pointer  h-9 rounded-full mr-2"
+                             >
+                                {/* <img className="rounded-full" src={otherInitials} alt="" />{" "} */}
+                                <p className="text-white text-xs font-bold">{initials(person.presence.nameOrEmail) || "An"}</p>
+                             </div>
+                          );
+                       })
                   : null}
                <button title="Export pdf" onClick={exportPdf} className=" hidden lg:block h-full text-xs  min-w-[48px]  py-2 ">
                   <div className="flex flex-row items-center justify-center ">

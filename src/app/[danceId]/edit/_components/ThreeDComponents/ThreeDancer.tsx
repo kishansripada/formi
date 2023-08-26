@@ -18,7 +18,6 @@ export function ThreeDancer({
    // formations,
    opacity,
    // setFormations,
-   selectedFormation,
    localSettings,
 
    pushChange,
@@ -38,7 +37,6 @@ export function ThreeDancer({
    // formations: formation[];
    opacity: number;
    // setFormations: Function;
-   selectedFormation: number | null;
    localSettings: localSettings;
 
    pushChange: Function;
@@ -49,11 +47,11 @@ export function ThreeDancer({
    setSelectedDancers: Function;
    // items: item[];
 }) {
-   const { formations, setFormations, get, viewOnly, items } = useStore();
+   const { formations, setFormations, get, viewOnly, items, selectedFormations } = useStore();
    /**
     * Text always looks at the camera
     */
-   if (selectedFormation === null) return null;
+   if (!selectedFormations.length) return null;
 
    const textRef = useRef();
    const bgRef = useRef();
@@ -78,11 +76,10 @@ export function ThreeDancer({
          if (active) {
             document.body.style.cursor = "grabbing";
             event.ray.intersectPlane(floorPlane, planeIntersectPoint);
-            // setPos([-dancerPosition.position.x / 2 + planeIntersectPoint.x, 0, dancerPosition.position.y / 2 + planeIntersectPoint.z]);
-            // console.log(planeIntersectPoint.x);
+
             setFormations(
                get().formations.map((formation, index: number) => {
-                  if (index === selectedFormation) {
+                  if (selectedFormations.includes(formation.id)) {
                      return {
                         ...formation,
                         positions: formation.positions.map((dancerPosition) => {
@@ -164,6 +161,7 @@ export function ThreeDancer({
       itemPos = { position: [x, (dancer?.height || 182.88) / 28, y] };
       itemPos = { position: [x, (dancer?.height || 182.88) / 28 / 2, y + 0.5] };
    }
+
    const thisItem = items.find((item) => item.id === dancerPosition?.itemId) || null;
 
    return (
@@ -190,7 +188,7 @@ export function ThreeDancer({
             {...bind()}
             scale={[0.6, (dancer?.height || 182.88) / 156, 0.7]}
             // scale={[0.25, ((dancer.height || 182.88) / maxHeight) * 0.35, 0.3]}
-            // rotation={[Math.PI / 2, 0, Math.PI / 2]}
+
             // rotation={[0, Math.PI / 2, 0]}
             // rotation={[0, dancerPosition?.rotation?.angle ? dancerPosition?.rotation?.angle * (Math.PI / 180) : 0, 0]}
             position={dancerPos.position}

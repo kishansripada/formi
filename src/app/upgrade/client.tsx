@@ -89,7 +89,7 @@ const Client = () => {
                         <div className="flex flex-row justify-between items-center">
                            <p className="text-pink-500 font-medium ">Choreographer</p>
                         </div>
-                        <p className="text-4xl mt-3 font-medium">$12</p>
+                        <p className="text-4xl mt-3 font-medium">$9</p>
                         <p className="text-sm mt-1 font-medium">per month</p>
                         <div className="mt-3">
                            {["Collaborative editing", "Unlimited performances", "Unlimited media uploads"].map((text) => {
@@ -126,20 +126,55 @@ const Client = () => {
                            Get started
                         </Link>
                      </div>
-                     <div className=" border border-neutral-800 rounded-xl w-1/3 mx-3 py-5 px-6  flex flex-col  ">
+                     {/* <div className=" border border-neutral-800 rounded-xl w-1/3 mx-3 py-5 px-6  flex flex-col  ">
                         <div className="flex flex-row justify-between items-center">
-                           <p className="text-blue-300 font-medium ">Professional</p>
+                           <p className="text-blue-300 font-medium ">Enterprise</p>
                         </div>
-                        <p className="text-4xl mt-3 font-medium">$99</p>
+                        <p className="text-4xl mt-3 font-medium">$49</p>
                         <p className="text-sm mt-1 font-medium">per month</p>
                         <div className="mt-3">
                            {[
                               "Everything in choreographer",
-                              "Shared performances and assets",
+                              // "Shared performances and assets",
                               "Accounts for you and 10 others",
                               "Custom watermark",
                               "Custom branding",
                               "Priority support",
+                           ].map((text) => {
+                              return (
+                                 <div className="flex flex-row items-center mt-3">
+                                    <svg
+                                       xmlns="http://www.w3.org/2000/svg"
+                                       fill="none"
+                                       viewBox="0 0 24 24"
+                                       strokeWidth={1.5}
+                                       stroke="currentColor"
+                                       className="w-4 h-4 mr-2 stroke-blue-300"
+                                    >
+                                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                    </svg>
+
+                                    <p className="text-xs text-neutral-400">{text}</p>
+                                 </div>
+                              );
+                           })}
+                        </div>
+                        <button className="w-full mt-auto bg-neutral-600 py-2 text-sm bg-opacity-30 rounded-md">Contact us</button>
+                     </div> */}
+                     <div className=" border border-neutral-800 rounded-xl w-1/3 mx-3 py-5 px-6  flex flex-col  ">
+                        <div className="flex flex-row justify-between items-center">
+                           <p className="text-blue-300 font-medium ">Get lifetime access</p>
+                        </div>
+                        <p className="text-4xl mt-3 font-medium">Free</p>
+                        <p className="text-sm mt-1 font-medium">Get 5000+ likes</p>
+                        <div className="mt-3">
+                           {[
+                              "Make a post on TikTok or Instagram",
+                              "Promote FORMI in the post",
+                              "Tag @formi.dance",
+                              "Get 5000+ likes",
+                              "Send us a link to your post",
+                              "Get lifetime access to Choreography tier",
                            ].map((text) => {
                               return (
                                  <div className="flex flex-row items-center mt-3">

@@ -11,8 +11,6 @@ import { PopoverPicker } from "../ColorPicker";
 import { useStore } from "../../store";
 
 export const Roster: React.FC<{
-   // formations: formation[];
-   selectedFormation: number | null;
    addToStack: Function;
    pushChange: Function;
    selectedDancers: string[];
@@ -20,17 +18,7 @@ export const Roster: React.FC<{
    setSelectedDancers: Function;
    localSettings: localSettings;
    session: AuthSession | null;
-}> = ({
-   selectedFormation,
-   pushChange,
-   addToStack,
-   selectedDancers,
-   removeDancer,
-   setSelectedDancers,
-
-   localSettings,
-   session,
-}) => {
+}> = ({ pushChange, selectedDancers, removeDancer, setSelectedDancers, localSettings, session }) => {
    const { formations, setFormations, cloudSettings, pauseHistory, resumeHistory } = useStore();
 
    const { dancers, setDancers, viewOnly } = useStore();
@@ -68,7 +56,6 @@ export const Roster: React.FC<{
          {
             name: "New dancer",
             id,
-            instagramUsername: null,
          },
       ]);
 
@@ -101,14 +88,16 @@ export const Roster: React.FC<{
    };
 
    const setDancerShape = (shape: string) => {
-      setDancers(
-         dancers.map((dancer) => {
-            if (selectedDancers.includes(dancer.id)) {
-               return { ...dancer, shape: shape };
-            }
-            return dancer;
-         })
-      );
+      if (shape === "circle" || shape === "square" || shape === "triangle") {
+         setDancers(
+            dancers.map((dancer) => {
+               if (selectedDancers.includes(dancer.id)) {
+                  return { ...dancer, shape: shape };
+               }
+               return dancer;
+            })
+         );
+      }
    };
 
    const setColor = (color: string) => {
@@ -131,7 +120,7 @@ export const Roster: React.FC<{
                   className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
                   id="outside"
                   onClick={(e) => {
-                     if (e.target.id === "outside") {
+                     if ((e.target as HTMLElement).id === "outside") {
                         setIsSavingRoster(false);
                      }
                   }}
@@ -176,10 +165,9 @@ export const Roster: React.FC<{
                      pushChange={pushChange}
                      setSelectedDancers={setSelectedDancers}
                      selectedDancers={selectedDancers}
-                     selectedFormation={selectedFormation}
+                     //
                      dancer={dancer}
                      key={dancer.id}
-                     dancers={dancers}
                      index={index}
                      localSettings={localSettings}
                   />
@@ -236,7 +224,7 @@ export const Roster: React.FC<{
                      <div className="flex flex-row items-center  w-full ">
                         <div className="flex flex-row items-center border border-neutral-200 dark:border-neutral-700">
                            <input
-                              onBlur={pushChange}
+                              // onBlur={pushChange}
                               value={height.feet}
                               type="number"
                               onChange={(e) => {
@@ -260,7 +248,7 @@ export const Roster: React.FC<{
                         </div>
                         <div className="flex flex-row items-center border border-neutral-200 ml-4 dark:border-neutral-700">
                            <input
-                              onBlur={pushChange}
+                              // onBlur={pushChange}
                               type="number"
                               value={height.inches}
                               onChange={(e) => {
@@ -324,7 +312,7 @@ export const Roster: React.FC<{
                            <p className=" text-neutral-800 dark:text-white  text-sm mb-2 mt-2 font-medium">Color</p>
                            <PopoverPicker
                               dancers={dancers}
-                              color={dancers.find((dancer) => dancer.id === selectedDancers[0])?.color}
+                              color={dancers.find((dancer) => dancer.id === selectedDancers[0])?.color || null}
                               selectedDancers={selectedDancers}
                               setColor={setColor}
                               position="top"

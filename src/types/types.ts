@@ -2,14 +2,12 @@ export type dancer = {
    name: string;
    id: string;
    instagramUsername?: string | null;
-   color?: string | null;
-   height: number;
-   shape?: "circle" | "square" | "triangle";
+   color?: string | null; // default #db2777
+   height?: number; // default 183 cm
+   shape?: "circle" | "square" | "triangle"; // default circle
 };
 
 export type propPosition = {
-   // width: number;
-   // height: number;
    position: { x: number; y: number };
    rotation: number;
    id: string;
@@ -69,7 +67,7 @@ export type formationGroup = {
 export type localSettings = {
    gridSnap: 1 | 2 | 100;
    previousFormationView: "none" | "ghostDancers" | "ghostDancersAndPaths";
-   dancerStyle: "initials" | "numbered" | "solid";
+   dancerStyle: "initials" | "numbered" | "solid" | "initialsAndName";
    viewCollisions: boolean;
    stageFlipped: boolean;
    viewingThree: boolean;

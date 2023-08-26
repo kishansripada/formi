@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from "uuid";
 import { useStore } from "../store";
 
 export const AudioControls: React.FC<{
-   setSelectedFormation: Function;
    player: any;
    isPlaying: boolean;
    setIsPlaying: Function;
@@ -13,7 +12,7 @@ export const AudioControls: React.FC<{
    position: number | null;
    // setFormations: Function;
    songDuration: number | null;
-   selectedFormation: number | null;
+
    // viewOnly: boolean;
    addToStack: Function;
    pushChange: Function;
@@ -27,7 +26,6 @@ export const AudioControls: React.FC<{
    setIsChangingZoom: Function;
    setHelpUrl: Function;
 }> = ({
-   setSelectedFormation,
    player,
    isPlaying,
    setIsPlaying,
@@ -35,7 +33,7 @@ export const AudioControls: React.FC<{
    position,
    // setFormations,
    songDuration,
-   selectedFormation,
+
    // viewOnly,
    addToStack,
    pushChange,
@@ -49,7 +47,16 @@ export const AudioControls: React.FC<{
    setIsChangingZoom,
    setHelpUrl,
 }) => {
-   const { formations, setFormations, viewOnly } = useStore();
+   const {
+      formations,
+      setFormations,
+      viewOnly,
+      selectedFormations,
+      setSelectedFormations,
+      get,
+      decrementSelectedFormation,
+      incrementSelectedFormation,
+   } = useStore();
 
    const [playbackRateIndex, setPlaybackRateIndex] = useState(2);
    const playbackRates = [0.25, 0.5, 1, 1.5, 2];
@@ -96,7 +103,7 @@ export const AudioControls: React.FC<{
             notes: "",
          },
       ]);
-      setSelectedFormation(formations.length);
+      setSelectedFormations([get().formations[get().formations.length - 1]?.id]);
       pushChange();
    };
    const totalDurationOfFormations = formations
@@ -111,7 +118,7 @@ export const AudioControls: React.FC<{
                player.playPause();
             }
 
-            setIsPlaying(!isPlaying);
+            setIsPlaying(player.isPlaying());
          }
       } else {
          setIsPlaying(!isPlaying);
@@ -165,7 +172,7 @@ export const AudioControls: React.FC<{
             </div>
 
             <div className={`flex flex-row items-center justify-center w-[10%] `}>
-               <button onClick={() => setSelectedFormation(selectedFormation === null ? 0 : selectedFormation === 0 ? 0 : selectedFormation - 1)}>
+               <button onClick={decrementSelectedFormation}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
                   </svg>
@@ -207,7 +214,7 @@ export const AudioControls: React.FC<{
                      </svg>
                   </div>
                )}
-               <button onClick={() => setSelectedFormation(selectedFormation === formations.length - 1 ? selectedFormation : selectedFormation + 1)}>
+               <button onClick={incrementSelectedFormation}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
                   </svg>

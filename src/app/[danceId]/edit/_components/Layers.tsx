@@ -214,8 +214,6 @@ export const Layers: React.FC<{
             player={player}
             setSelectedDancers={setSelectedDancers}
             songDuration={songDuration}
-            selectedFormation={selectedFormation}
-            setSelectedFormation={setSelectedFormation}
             isPlaying={isPlaying}
             position={position}
             pixelsPerSecond={pixelsPerSecond}

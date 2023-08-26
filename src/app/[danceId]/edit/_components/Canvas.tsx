@@ -24,14 +24,10 @@ import { AuthSession } from "@supabase/supabase-js";
 
 export const Canvas: React.FC<{
    children: React.ReactNode;
-   // setFormations: Function;
-   selectedFormation: number | null;
-   // formations: formation[];
    selectedDancers: string[];
    setSelectedDancers: Function;
    setSelectedFormation: Function;
    setIsPlaying: Function;
-   // viewOnly: boolean;
    setPixelsPerSecond: Function;
    songDuration: number | null;
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
@@ -46,8 +42,6 @@ export const Canvas: React.FC<{
    setIsCommenting: Function;
    zoom: number;
    setZoom: Function;
-   // cloudSettings: cloudSettings;
-   // stageFlipped: boolean;
    shiftHeld: boolean;
    setShiftHeld: Function;
    isPlaying: boolean;
@@ -58,46 +52,28 @@ export const Canvas: React.FC<{
    setResizingPropId: Function;
    session: AuthSession | null;
    menuOpen: string;
-   // formations: formation[];
-   // selectedFormations: number[];
 }> = ({
-   player,
    children,
-   // setFormations,
-   selectedFormation,
-   // formations,
    setSelectedDancers,
    selectedDancers,
-   setSelectedFormation,
-   setIsPlaying,
-
-   setPixelsPerSecond,
-   songDuration,
-   // cloudSettings,
    coordsToPosition,
    draggingDancerId,
    setDraggingDancerId,
    undo,
-   addToStack,
    pushChange,
    localSettings,
    isCommenting,
    setIsCommenting,
    zoom,
    setZoom,
-   // stageFlipped,
    shiftHeld,
-   setShiftHeld,
    isPlaying,
    session,
    setSelectedPropIds,
    selectedPropIds,
    resizingPropId,
    setResizingPropId,
-   // formations,
    menuOpen,
-
-   // selectedFormations,
 }) => {
    const {
       setFormations,
@@ -118,9 +94,10 @@ export const Canvas: React.FC<{
          horizontalGridSubdivisions,
       },
    } = useStore();
-
-   // let { formations } = useStore();
-
+   // const undo = useStore((state) => state.liveblocks.room?.history.undo);
+   let { selectedFormations, getFirstSelectedFormation } = useStore();
+   const [movedOnMultipleFormations, setMovedOnMultipleFormations] = useState(false);
+   const [confirmChange, setConfirmChange] = useState(false);
    let { gridSnap, stageFlipped } = localSettings;
    // console.log({ stageFlipped });
    const stageFlippedFactor = stageFlipped ? -1 : 1;
@@ -215,22 +192,23 @@ export const Canvas: React.FC<{
    }, [menuOpen]);
 
    const handleDragMove = (e: any) => {
-      if (selectedFormation === null || isPlaying) return;
+      if (!selectedFormations.length || isPlaying) return;
       const movementX = e.movementX * horizontalScalar;
       const movementY = e.movementY * verticalScalar;
-      // const target = e.currentTarget;
-      // const stage = target.querySelector("#stage-cutout");
-
+      const target = e.currentTarget;
+      const stage = target.querySelector("#stage-cutout");
+      // const stage = target;
       // Get the bounding rectangle of target
-      // const rect = stage.getBoundingClientRect();
+      const rect = stage.getBoundingClientRect();
 
-      // const { x, y } = positionToCoords({ left: (e.clientX - rect.left) / zoom, top: (e.clientY - rect.top) / zoom });
-
+      const { x, y } = positionToCoords({ left: (e.clientX - rect.left) / zoom, top: (e.clientY - rect.top) / zoom });
+      // console.log(x, y);
       if (changingControlId) {
          if (viewOnly) return;
+
          setFormations(
             get().formations.map((formation, index: number) => {
-               if (index === selectedFormation) {
+               if (selectedFormations.includes(formation.id)) {
                   return {
                      ...formation,
                      positions: formation.positions.map((dancerPosition) => {
@@ -268,7 +246,7 @@ export const Canvas: React.FC<{
       if (dragBoxCoords.start.x && dragBoxCoords.start.y) {
          const target = e.currentTarget;
          const stage = target.querySelector("#stage-cutout");
-
+         // const stage = target;
          // Get the bounding rectangle of target
          const rect = stage.getBoundingClientRect();
 
@@ -284,11 +262,11 @@ export const Canvas: React.FC<{
             dragBoxCoords.end.y !== null &&
             dragBoxCoords.start.y !== null &&
             dragBoxCoords.end.y !== null &&
-            selectedFormation !== null
+            selectedFormations.length
          ) {
             setSelectedDancers(
-               formations?.[selectedFormation]?.positions
-                  .filter((dancerPosition: dancerPosition) => {
+               getFirstSelectedFormation()
+                  ?.positions.filter((dancerPosition: dancerPosition) => {
                      let localDancerPosition = {
                         x: stageFlippedFactor * dancerPosition.position.x,
                         y: stageFlippedFactor * dancerPosition.position.y,
@@ -307,61 +285,79 @@ export const Canvas: React.FC<{
 
       if (draggingDancerId) {
          if (viewOnly) return;
-         setFormations(
-            get().formations.map((formation, index: number) => {
-               if (index === selectedFormation) {
-                  return {
-                     ...formation,
-                     positions: formation.positions.map((dancerPosition) => {
-                        if (
-                           selectedDancers.includes(dancerPosition.id) &&
-                           dancerPosition.transitionType === "cubic" &&
-                           dancerPosition.controlPointEnd &&
-                           dancerPosition.controlPointStart
-                        ) {
-                           // console.log();
-                           // console.log(dancerPosition.controlPointEnd.y);
-                           return {
-                              ...dancerPosition,
-                              position: {
+         if (selectedFormations.length === 1) {
+            setFormations(
+               get().formations.map((formation) => {
+                  if (selectedFormations.includes(formation.id)) {
+                     return {
+                        ...formation,
+                        positions: formation.positions.map((dancerPosition) => {
+                           // Check if the dancerPosition is selected
+                           if (selectedDancers.includes(dancerPosition.id)) {
+                              // Update the position regardless of the transitionType
+                              let updatedPosition = {
                                  x: dancerPosition.position.x + movementX,
                                  y: dancerPosition.position.y - movementY,
-                              },
-                              controlPointEnd: {
-                                 x: roundToHundredth(dancerPosition.controlPointEnd.x + movementX),
-                                 y: roundToHundredth(dancerPosition.controlPointEnd.y - movementY),
-                              },
-                           };
-                        }
-                        if (
-                           selectedDancers.includes(dancerPosition.id) &&
-                           (dancerPosition.transitionType === "linear" ||
-                              !dancerPosition.transitionType ||
-                              dancerPosition.transitionType === "teleport")
-                        ) {
-                           return {
-                              ...dancerPosition,
-                              position: {
-                                 x: dancerPosition.position.x + movementX,
-                                 y: dancerPosition.position.y - movementY,
-                              },
-                           };
-                        }
-                        return dancerPosition;
-                     }),
-                  };
-               }
+                              };
 
-               return formation;
-            })
-         );
+                              // If it's a cubic transition and has control points, update controlPointEnd
+                              let updatedControlPointEnd;
+                              if (dancerPosition.transitionType === "cubic" && dancerPosition.controlPointEnd && dancerPosition.controlPointStart) {
+                                 updatedControlPointEnd = {
+                                    x: roundToHundredth(dancerPosition.controlPointEnd.x + movementX),
+                                    y: roundToHundredth(dancerPosition.controlPointEnd.y - movementY),
+                                 };
+                              }
+
+                              // Return the updated dancerPosition
+                              return {
+                                 ...dancerPosition,
+                                 position: updatedPosition,
+                                 ...(updatedControlPointEnd ? { controlPointEnd: updatedControlPointEnd } : {}),
+                              };
+                           }
+
+                           return dancerPosition;
+                        }),
+                     };
+                  }
+
+                  return formation;
+               })
+            );
+         } else {
+            setMovedOnMultipleFormations(true);
+            setFormations(
+               get().formations.map((formation) => {
+                  if (selectedFormations.includes(formation.id)) {
+                     return {
+                        ...formation,
+                        positions: formation.positions.map((dancerPosition) => {
+                           // Check if the dancerPosition is selected
+                           if (selectedDancers.includes(dancerPosition.id)) {
+                              // Return the updated dancerPosition
+                              return {
+                                 ...dancerPosition,
+                                 position: { x, y },
+                              };
+                           }
+
+                           return dancerPosition;
+                        }),
+                     };
+                  }
+
+                  return formation;
+               })
+            );
+         }
       }
 
       if (draggingCommentId) {
          if (viewOnly) return;
          setFormations(
             get().formations.map((formation, index: number) => {
-               if (index === selectedFormation) {
+               if (selectedFormations.includes(formation.id)) {
                   return {
                      ...formation,
                      comments: (formation.comments || []).map((comment: comment) => {
@@ -407,28 +403,53 @@ export const Canvas: React.FC<{
                })
             );
          } else {
-            setFormations(
-               get().formations.map((formation, index: number) => {
-                  if (index === selectedFormation) {
-                     return {
-                        ...formation,
-                        props: (formation.props || []).map((prop: propPosition) => {
-                           if (prop.id === draggingPropId) {
-                              return {
-                                 ...prop,
-                                 position: {
-                                    x: prop.position.x + movementX,
-                                    y: prop.position.y - movementY,
-                                 },
-                              };
-                           }
-                           return prop;
-                        }),
-                     };
-                  }
-                  return formation;
-               })
-            );
+            if (selectedFormations.length === 1) {
+               setFormations(
+                  get().formations.map((formation) => {
+                     if (selectedFormations.includes(formation.id)) {
+                        return {
+                           ...formation,
+                           props: (formation.props || []).map((prop: propPosition) => {
+                              if (prop.id === draggingPropId) {
+                                 return {
+                                    ...prop,
+                                    position: {
+                                       x: prop.position.x + movementX,
+                                       y: prop.position.y - movementY,
+                                    },
+                                 };
+                              }
+                              return prop;
+                           }),
+                        };
+                     }
+                     return formation;
+                  })
+               );
+            } else {
+               setFormations(
+                  get().formations.map((formation) => {
+                     if (selectedFormations.includes(formation.id)) {
+                        return {
+                           ...formation,
+                           props: (formation.props || []).map((prop: propPosition) => {
+                              if (prop.id === draggingPropId) {
+                                 return {
+                                    ...prop,
+                                    position: {
+                                       x,
+                                       y,
+                                    },
+                                 };
+                              }
+                              return prop;
+                           }),
+                        };
+                     }
+                     return formation;
+                  })
+               );
+            }
          }
       }
 
@@ -461,40 +482,6 @@ export const Canvas: React.FC<{
                return prop;
             })
          );
-
-         // if (props.find((prop: prop) => prop.id === resizingPropId)?.type === "static") {
-         //    // console.log("test");
-
-         // } else {
-         //    setFormations((formations: formation[]) => {
-         //       return formations.map((formation, index: number) => {
-         //          if (index === selectedFormation) {
-         //             return {
-         //                ...formation,
-         //                props: (formation.props || []).map((prop: propPosition) => {
-         //                   if (prop.id === resizingPropId) {
-         //                      let deltaX = (stageFlippedFactor * e.movementX) / PIXELS_PER_SQUARE / zoom / devicePixelRatio;
-         //                      if (resizingPropType === "prop-resize-top-left" || resizingPropType === "prop-resize-bottom-left") {
-         //                         return {
-         //                            ...prop,
-         //                            width: Math.max(prop.width - deltaX, 1),
-         //                         };
-         //                      } else {
-         //                         return {
-         //                            ...prop,
-         //                            width: Math.max(prop.width + deltaX, 1),
-         //                         };
-         //                      }
-         //                   }
-         //                   return prop;
-         //                }),
-         //             };
-         //          }
-
-         //          return formation;
-         //       });
-         //    });
-         // }
       }
    };
 
@@ -529,7 +516,7 @@ export const Canvas: React.FC<{
          }
          setFormations(
             formations.map((formation, i) => {
-               if (i === selectedFormation) {
+               if (selectedFormations.includes(formation.id)) {
                   if (formation?.comments?.length) {
                      return {
                         ...formation,
@@ -654,13 +641,28 @@ export const Canvas: React.FC<{
                setSelectedDancers(selectedDancers.filter((id) => id !== e.target.id));
             }
          }
+
+         // when there is more than one formation selected, you can only move one dancer at a time
+         if (selectedFormations.length > 1) {
+            setSelectedDancers([e.target.id]);
+         }
       }
    };
 
    const pointerUp = (e: any) => {
+      if (movedOnMultipleFormations) {
+         setConfirmChange(true);
+         setMovedOnMultipleFormations(false);
+      }
       if (changingControlId) {
          pushChange();
       }
+
+      // if (draggingDancerId) {
+      //    if (selectedFormations.length > 1) {
+      //       toast("Move across all selected formations");
+      //    }
+      // }
 
       if (draggingCommentId) {
          pushChange();
@@ -771,26 +773,6 @@ export const Canvas: React.FC<{
             })
          );
 
-         // setFormations(
-         //    formations.map((formation, index) => {
-         //       if (!(selectedFormation === index)) return formation;
-         //       return {
-         //          ...formation,
-         //          positions: formation.positions.map((position) => {
-         //             if (selectedDancers.includes(position.id)) {
-         //                return {
-         //                   ...position,
-         //                   position: {
-         //                      x: formations[selectedFormation].positions.find((pos) => pos.id === position.id).position.x,
-         //                      y: formations[selectedFormation].positions.find((pos) => pos.id === position.id).position.y,
-         //                   },
-         //                };
-         //             }
-         //             return position;
-         //          }),
-         //       };
-         //    })
-         // );
          pushChange();
       }
 
@@ -856,6 +838,42 @@ export const Canvas: React.FC<{
 }
 `}
          </style> */}
+         {confirmChange ? (
+            <div
+               className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
+               id="outside"
+               onClick={(e) => {
+                  if (e.target.id === "outside") {
+                     setConfirmChange(false);
+                  }
+               }}
+            >
+               <div className="flex  w-[500px] flex-col   bg-neutral-800/90 border border-neutral-500  rounded-xl  text-sm ">
+                  <div className="flex flex-col text-white rounded-xl px-10 pt-10 pb-6 h-full">
+                     You just moved a dancer across multiple formations. Are you sure you'd like to apply this change to all selected formations?
+                  </div>
+                  <div className="flex flex-row justify-between text-white rounded-xl px-10 pt-10 pb-6 h-full">
+                     <button
+                        onClick={() => {
+                           undo();
+                           setConfirmChange(false);
+                        }}
+                        className=" w-24 grid place-items-center text-white h-8 ml-1  border-neutral-500 overflow-hidden bg-neutral-700 border rounded-md "
+                     >
+                        No, go back
+                     </button>
+                     <button
+                        onClick={() => {
+                           setConfirmChange(false);
+                        }}
+                        className=" px-3 grid place-items-center text-white h-8 ml-1  border-neutral-500 overflow-hidden bg-neutral-700 border rounded-md "
+                     >
+                        Yes, apply changes
+                     </button>
+                  </div>
+               </div>
+            </div>
+         ) : null}
          <div
             // flex
             className="  relative  bg-neutral-100  dark:bg-neutral-900  h-full  w-full overflow-scroll  overscroll-none  flex flex-row items-center justify-center "
@@ -863,7 +881,7 @@ export const Canvas: React.FC<{
             ref={container}
             onPointerUp={pointerUp}
             onPointerMove={handleDragMove}
-            style={{}}
+
             // style={{
             //    width: `${(stageDimensions.width * PIXELS_PER_SQUARE) / zoom}px`,
             //    height: `${(stageDimensions.height * PIXELS_PER_SQUARE) / zoom}px`,
@@ -902,9 +920,9 @@ export const Canvas: React.FC<{
                   /> */}
                </div>
                <div
-                  onPointerDown={pointerDown}
                   ref={stage}
                   id="stage-cutout"
+                  onPointerDown={pointerDown}
                   className="relative  border-2 dark:border-pink-600 border-pink-300 rounded-xl bg-white dark:bg-neutral-800 box-content "
                   // border-pink-600 border-4 box-border
                   style={{
@@ -931,7 +949,19 @@ export const Canvas: React.FC<{
                   }}
                >
                   {children}
-
+                  {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y && !isPlaying ? (
+                     <div
+                        className="absolute bg-pink-200/50 z-20 cursor-default "
+                        style={{
+                           width: Math.abs(dragBoxCoords.end.x - dragBoxCoords.start.x),
+                           height: Math.abs(dragBoxCoords.end.y - dragBoxCoords.start.y),
+                           left: dragBoxCoords.end.x - dragBoxCoords.start.x < 0 ? dragBoxCoords.end.x : dragBoxCoords.start.x,
+                           top: dragBoxCoords.end.y - dragBoxCoords.start.y < 0 ? dragBoxCoords.end.y : dragBoxCoords.start.y,
+                        }}
+                     ></div>
+                  ) : (
+                     <></>
+                  )}
                   {cloudSettings.backgroundUrl && cloudSettings.stageBackground === "custom" ? (
                      <img
                         draggable={false}
@@ -1015,19 +1045,6 @@ export const Canvas: React.FC<{
                         <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
                      </div>
                   )}
-                  {dragBoxCoords.start.x && dragBoxCoords.end.x && dragBoxCoords.start.y && dragBoxCoords.end.y && !isPlaying ? (
-                     <div
-                        className="absolute bg-pink-200/50 z-20 cursor-default "
-                        style={{
-                           width: Math.abs(dragBoxCoords.end.x - dragBoxCoords.start.x),
-                           height: Math.abs(dragBoxCoords.end.y - dragBoxCoords.start.y),
-                           left: dragBoxCoords.end.x - dragBoxCoords.start.x < 0 ? dragBoxCoords.end.x : dragBoxCoords.start.x,
-                           top: dragBoxCoords.end.y - dragBoxCoords.start.y < 0 ? dragBoxCoords.end.y : dragBoxCoords.start.y,
-                        }}
-                     ></div>
-                  ) : (
-                     <></>
-                  )}
 
                   {/* {selectedDancersBoundingBox && !isPlaying ? (
                      <>
@@ -1070,20 +1087,6 @@ export const Canvas: React.FC<{
 function getExtension(filename: string) {
    var parts = filename.split(".");
    return parts[parts.length - 1];
-}
-
-function isVideo(filename: string) {
-   if (!filename) return false;
-   var ext = getExtension(filename);
-   switch (ext.toLowerCase()) {
-      case "m4v":
-      case "avi":
-      case "mpg":
-      case "mp4":
-         // etc
-         return true;
-   }
-   return false;
 }
 
 function roundToNearestEven(n: number): number {

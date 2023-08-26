@@ -2,7 +2,7 @@ import { dancer, dancerPosition, formation, localSettings } from "../../../../ty
 import { useStore } from "../store";
 
 export const PathEditor: React.FC<{
-   selectedFormation: number | null;
+   // selectedFormation: number | null;
    // formations: formation[];
    selectedDancers: string[];
    isPlaying: boolean;
@@ -13,7 +13,7 @@ export const PathEditor: React.FC<{
    coordsToPosition: (coords: { x: number; y: number } | null | undefined) => { left: number; top: number } | null;
    zoom: number;
 }> = ({
-   selectedFormation,
+   // selectedFormation,
    // formations,
    selectedDancers,
    isPlaying,
@@ -24,8 +24,8 @@ export const PathEditor: React.FC<{
    collisions,
    zoom,
 }) => {
-   let { formations } = useStore();
-   if (isPlaying || selectedFormation === null) return;
+   let { formations, getFirstSelectedFormation, getPreviousFormation, selectedFormations } = useStore();
+   if (isPlaying || selectedFormations.length !== 1) return;
    let { previousFormationView, stageFlipped } = localSettings;
    // let dancersToRender = previousFormationView === "ghostDancersAndPaths" ? formations?.[selectedFormation - 1]?.positions
    if (stageFlipped) {
@@ -53,8 +53,8 @@ export const PathEditor: React.FC<{
    return (
       <>
          <svg className="absolute pointer-events-none w-full h-full z-40 overflow-visible" xmlns="http://www.w3.org/2000/svg">
-            {formations?.[selectedFormation]?.positions
-               .filter((position) => {
+            {getFirstSelectedFormation()
+               ?.positions.filter((position) => {
                   if (previousFormationView === "ghostDancersAndPaths") {
                      return true;
                   } else {
@@ -72,7 +72,7 @@ export const PathEditor: React.FC<{
                   // global start and end coords
                   let endCoords = coordsToPosition(dancerPosition.position);
                   let startCoords = coordsToPosition(
-                     formations?.[selectedFormation - 1]?.positions?.find((dancerPosition2) => dancerPosition2.id === dancerPosition.id)?.position
+                     getPreviousFormation()?.positions?.find((dancerPosition2) => dancerPosition2.id === dancerPosition.id)?.position
                   );
                   if (!endCoords || !startCoords) return;
 
@@ -85,7 +85,7 @@ export const PathEditor: React.FC<{
                               // className=" stroke-red-700 "
                               fill="transparent"
                               stroke-linecap="round"
-                              stroke-dasharray={"10, 10"}
+                              strokeDasharray={"10, 10"}
                               stroke={dancer?.color || "#db2777"}
                               strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 3 : 0.5}
                            >
@@ -113,7 +113,7 @@ export const PathEditor: React.FC<{
                               stroke={dancer?.color || "#db2777"}
                               fill="transparent"
                               stroke-linecap="round"
-                              stroke-dasharray={"10, 10"}
+                              strokeDasharray={"10, 10"}
                               strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
                            >
                               {selectedDancers.includes(dancerPosition.id) && (
@@ -202,44 +202,3 @@ export const PathEditor: React.FC<{
       </>
    );
 };
-function cubicBezierSlope(
-   p0: { left: number; top: number },
-   p1: { left: number; top: number },
-   p2: { left: number; top: number },
-   p3: { left: number; top: number },
-   t: number
-): number {
-   // Calculate the derivative of the curve at the point
-   const dx = 3 * (1 - t) ** 2 * (p1.left - p0.left) + 6 * (1 - t) * t * (p2.left - p1.left) + 3 * t ** 2 * (p3.left - p2.left);
-   const dy = 3 * (1 - t) ** 2 * (p1.top - p0.top) + 6 * (1 - t) * t * (p2.top - p1.top) + 3 * t ** 2 * (p3.top - p2.top);
-
-   // Calculate the slope of the point on the curve
-   return (Math.atan2(dy, dx) * 180) / Math.PI;
-}
-
-function cubicBezierMidpoint(
-   start: { top: number; left: number },
-   end: { top: number; left: number },
-   control1: { top: number; left: number },
-   control2: { top: number; left: number }
-): { top: number; left: number } {
-   const mid1 = [(start.left + control1.left) / 2, (start.top + control1.top) / 2];
-   const mid2 = [(control1.left + control2.left) / 2, (control1.top + control2.top) / 2];
-   const mid3 = [(control2.left + end.left) / 2, (control2.top + end.top) / 2];
-   const mid4 = [(mid1[0] + mid2[0]) / 2, (mid1[1] + mid2[1]) / 2];
-   const mid5 = [(mid2[0] + mid3[0]) / 2, (mid2[1] + mid3[1]) / 2];
-   return { left: (mid4[0] + mid5[0]) / 2, top: (mid4[1] + mid5[1]) / 2 };
-}
-
-function lineAngle(point1: { left: number; top: number }, point2: { left: number; top: number }): number {
-   const dx = point2.left - point1.left;
-   const dy = point2.top - point1.top;
-   return (Math.atan2(dy, dx) * 180) / Math.PI;
-}
-
-function findPoint(startingPoint: { left: number; top: number }, angle: number, distance: number): { left: number; top: number } {
-   const theta = (Math.PI / 180) * angle;
-   const dx = Math.cos(theta) * distance;
-   const dy = Math.sin(theta) * distance;
-   return { left: startingPoint.left + dx, top: startingPoint.top + dy };
-}

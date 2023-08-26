@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useStore } from "../store";
 
 export const FormationControls: React.FC<{
-   setSelectedFormation: Function;
+   // setSelectedFormation: Function;
    player: any;
    isPlaying: boolean;
    setIsPlaying: Function;
@@ -28,7 +28,7 @@ export const FormationControls: React.FC<{
    zoom: number;
    selectedDancers: string[];
 }> = ({
-   setSelectedFormation,
+   // setSelectedFormation,
    player,
    isPlaying,
    setIsPlaying,
@@ -77,7 +77,17 @@ export const FormationControls: React.FC<{
    //       };
    //    }, [isChangingZoom, pixelsPerSecond, MAX_ZOOM]);
 
-   const { formations, setFormations, pauseHistory, resumeHistory, selectedFormation, get, viewOnly } = useStore();
+   const {
+      formations,
+      setFormations,
+      pauseHistory,
+      resumeHistory,
+      selectedFormations,
+      setSelectedFormations,
+      get,
+      viewOnly,
+      getFirstSelectedFormation,
+   } = useStore();
    return (
       <>
          <div
@@ -89,51 +99,50 @@ export const FormationControls: React.FC<{
             <button
                onClick={() => {
                   pauseHistory();
-                  if (selectedFormation === null) return;
+                  if (!selectedFormations.length) return;
 
                   if (formations.length === 1) {
                      toast.error("You must have at least one formation");
                      return;
                   }
 
-                  if (selectedFormation === 0) {
-                     setFormations(
-                        formations.map((formation, index) => {
-                           if (index === 1) {
-                              return {
-                                 ...formation,
-                                 durationSeconds: formation.transition.durationSeconds + formation.durationSeconds + formations[0].durationSeconds,
-                              };
-                           }
-                           return formation;
-                        })
-                     );
-                  } else if (selectedFormation !== formations.length - 1) {
-                     // console.log("trigger");
-                     setFormations(
-                        get().formations.map((formation, index) => {
-                           if (index === selectedFormation - 1) {
-                              return {
-                                 ...formation,
-                                 durationSeconds:
-                                    formation.durationSeconds +
-                                    formations[selectedFormation]?.transition.durationSeconds +
-                                    formations[selectedFormation].durationSeconds,
-                              };
-                           }
-                           return formation;
-                        })
-                     );
-                  }
+                  selectedFormations.forEach((selectedFormationId) => {
+                     if (selectedFormationId === get().formations[0].id) {
+                        setFormations(
+                           get().formations.map((formation, index) => {
+                              if (index === 1) {
+                                 return {
+                                    ...formation,
+                                    durationSeconds: formation.transition.durationSeconds + formation.durationSeconds + formations[0].durationSeconds,
+                                 };
+                              }
+                              return formation;
+                           })
+                        );
+                     } else if (selectedFormationId !== get().formations[get().formations.length - 1].id) {
+                        // console.log("trigger");
+                        setFormations(
+                           get().formations.map((formation, index) => {
+                              if (index === formations.findIndex((formation) => formation.id === selectedFormationId) - 1) {
+                                 return {
+                                    ...formation,
+                                    durationSeconds:
+                                       formation.durationSeconds +
+                                       get().formations.find((formation) => formation.id === selectedFormationId)?.transition.durationSeconds +
+                                       get().formations.find((formation) => formation.id === selectedFormationId).durationSeconds,
+                                 };
+                              }
+                              return formation;
+                           })
+                        );
+                     }
+                  });
 
-                  if (selectedFormation === formations.length - 1) {
-                     setSelectedFormation(selectedFormation - 1);
-                  }
-
+                  setSelectedFormations([]);
                   // remove the formation
                   setFormations(
-                     get().formations.filter((formation, index) => {
-                        return index !== selectedFormation;
+                     get().formations.filter((formation) => {
+                        return !selectedFormations.includes(formation.id);
                      })
                   );
                   resumeHistory();
@@ -141,40 +150,44 @@ export const FormationControls: React.FC<{
                }}
                className="   text-sm shadow-sm   cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-1 px-3 mr-4 bg-red-500 dark:text-red-400 text-red-600  "
             >
-               Delete Formation
+               {selectedFormations.length === 1 ? "Delete Formation" : "Delete Formations"}
             </button>
 
             <button
                onClick={() => {
-                  if (selectedFormation === null) return;
-                  const lastIsSelected = selectedFormation === formations.length - 1;
-                  setFormations([
-                     ...formations.slice(0, selectedFormation),
-                     {
-                        ...formations[selectedFormation],
-                        durationSeconds: formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
-                        transition: {
-                           durationSeconds:
-                              formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2) > 0.5
-                                 ? formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2)
-                                 : formations[selectedFormation].transition.durationSeconds,
+                  if (!selectedFormations.length) return;
+
+                  selectedFormations.forEach((selectedFormationId) => {
+                     const selectedFormation = get().formations.findIndex((formation) => formation.id === selectedFormationId);
+                     const lastIsSelected = selectedFormation === get().formations.length - 1;
+                     setFormations([
+                        ...get().formations.slice(0, selectedFormation),
+                        {
+                           ...get().formations[selectedFormation],
+                           durationSeconds: get().formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
+                           transition: {
+                              durationSeconds:
+                                 get().formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2) > 0.5
+                                    ? get().formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2)
+                                    : get().formations[selectedFormation].transition.durationSeconds,
+                           },
                         },
-                     },
-                     {
-                        ...formations[selectedFormation],
-                        id: uuidv4(),
-                        name: formations[selectedFormation].name + " copy",
-                        durationSeconds: formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
-                        transition: {
-                           durationSeconds:
-                              formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2) > 0.5
-                                 ? formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2)
-                                 : formations[selectedFormation].transition.durationSeconds,
+                        {
+                           ...get().formations[selectedFormation],
+                           id: uuidv4(),
+                           name: get().formations[selectedFormation].name + " copy",
+                           durationSeconds: get().formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
+                           transition: {
+                              durationSeconds:
+                                 get().formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2) > 0.5
+                                    ? get().formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2)
+                                    : get().formations[selectedFormation].transition.durationSeconds,
+                           },
                         },
-                     },
-                     ...formations.slice(selectedFormation + 1),
-                  ]);
-                  setSelectedFormation(selectedFormation + 1);
+                        ...get().formations.slice(selectedFormation + 1),
+                     ]);
+                  });
+                  // setSelectedFormation(selectedFormation + 1);
 
                   pushChange();
                }}
@@ -199,11 +212,11 @@ export const FormationControls: React.FC<{
             </button>
             <button
                onClick={() => {
-                  if (selectedFormation === null) return;
+                  if (!selectedFormations.length) return;
 
                   setFormations(
                      formations.map((formation) => {
-                        if (formation.id === formations[selectedFormation].id) {
+                        if (selectedFormations.includes(formation.id)) {
                            return {
                               ...formation,
                               positions: formation.positions.map((position) => {
@@ -227,11 +240,11 @@ export const FormationControls: React.FC<{
             </button>
             <button
                onClick={() => {
-                  if (selectedFormation === null) return;
+                  if (!selectedFormations.length) return;
 
                   setFormations(
                      formations.map((formation) => {
-                        if (formation.id === formations[selectedFormation].id) {
+                        if (selectedFormations.includes(formation.id)) {
                            return {
                               ...formation,
                               positions: formation.positions.map((position) => {
@@ -254,8 +267,10 @@ export const FormationControls: React.FC<{
                <p className="text-sm">Flip Y</p>
             </button>
 
-            {selectedFormation !== null ? (
-               <p className="mr-5 text-sm font-semibold">{`Formation ${selectedFormation + 1}/${formations.length}`}</p>
+            {selectedFormations.length === 1 ? (
+               <p className="mr-5 text-sm font-semibold">{`Formation ${
+                  formations.findIndex((formation) => formation.id === getFirstSelectedFormation()?.id) + 1
+               }/${formations.length}`}</p>
             ) : null}
 
             <div className="w-[1px] bg-neutral-300 dark:bg-neutral-700 h-[70%]"></div>

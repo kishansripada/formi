@@ -14,9 +14,7 @@ import { useStore } from "../store";
 
 export const EventHandler: React.FC<{
    children: React.ReactNode;
-   // setFormations: Function;
-   selectedFormation: number | null;
-   // formations: formation[];
+
    selectedDancers: string[];
    setSelectedDancers: Function;
    setSelectedFormation: Function;
@@ -47,34 +45,17 @@ export const EventHandler: React.FC<{
    setIsScrollingTimeline: Function;
    setIsChangingZoom: Function;
    setPosition: Function;
-   position: number | null;
+   position: number;
    setLocalSettings: Function;
 }> = ({
    player,
-   children,
-   // setFormations,
-   selectedFormation,
-   // formations,
    setSelectedDancers,
    selectedDancers,
-   setSelectedFormation,
    setIsPlaying,
-   // viewOnly,
-   setPixelsPerSecond,
    songDuration,
-   coordsToPosition,
-   draggingDancerId,
-   setDraggingDancerId,
    undo,
-   addToStack,
-   pushChange,
-   localSettings,
-   isCommenting,
    setIsCommenting,
-   zoom,
    setZoom,
-   stageFlipped,
-   shiftHeld,
    setShiftHeld,
    setDropDownToggle,
    dancers,
@@ -85,11 +66,21 @@ export const EventHandler: React.FC<{
    setPosition,
    position,
    setLocalSettings,
+   shiftHeld,
 }) => {
-   const { formations, setFormations } = useStore();
+   const {
+      formations,
+      setFormations,
+      selectedFormations,
+      incrementSelectedFormation,
+      decrementSelectedFormation,
+      getSelectedFormationIndex,
+      getFirstSelectedFormation,
+      commandHeld,
+      setCommandHeld,
+   } = useStore();
 
-   const [commandHeld, setCommandHeld] = useState(false);
-   const [copiedPositions, setCopiedPositions] = useState([]);
+   const [copiedPositions, setCopiedPositions] = useState<dancerPosition[]>([]);
 
    useEffect(() => {
       window.addEventListener("keydown", downHandler);
@@ -102,12 +93,13 @@ export const EventHandler: React.FC<{
          window.removeEventListener("pointerdown", pointerDown);
          window.removeEventListener("pointerup", pointerUp);
       };
-   }, [selectedFormation, commandHeld, selectedDancers, formations, copiedPositions, songDuration, position]);
+   }, [selectedFormations, commandHeld, selectedDancers, formations, copiedPositions, songDuration, position, shiftHeld]);
 
    const pointerUp = (e: PointerEvent) => {
       setIsScrollingTimeline(false);
       setIsChangingZoom(false);
    };
+
    const pointerDown = (e: PointerEvent) => {
       if (
          !e
@@ -126,20 +118,15 @@ export const EventHandler: React.FC<{
       // console.log(e.key);
       if (e.key === " ") {
          e.preventDefault();
-         // if (player && player.isReady) {
-         //    player.playPause();
-         //    setIsPlaying((isPlaying: boolean) => !isPlaying);
-         // } else {
-         //    setIsPlaying((isPlaying: boolean) => !isPlaying);
-         // }
-         // const playPause = () => {
+
          if (player) {
             if (player.isReady) {
-               if (songDuration && position < songDuration / 1000) {
+               if (position < songDuration / 1000) {
                   player.playPause();
+                  setIsPlaying(player.isPlaying());
+               } else {
+                  setIsPlaying((isPlaying: boolean) => !isPlaying);
                }
-
-               setIsPlaying((isPlaying: boolean) => !isPlaying);
             }
          } else {
             setIsPlaying((isPlaying: boolean) => !isPlaying);
@@ -172,7 +159,7 @@ export const EventHandler: React.FC<{
          if (selectedPropIds.length) {
             setFormations(
                formations.map((formation, i) => {
-                  if (i === selectedFormation) {
+                  if (selectedFormations.includes(formation.id)) {
                      return {
                         ...formation,
                         props: (formation.props || []).filter((prop) => !selectedPropIds.includes(prop.id)),
@@ -184,46 +171,40 @@ export const EventHandler: React.FC<{
          }
       }
       if (e.key === "ArrowRight") {
-         if (selectedFormation === null) return;
          e.preventDefault();
-         let index = selectedFormation === formations.length - 1 ? selectedFormation : selectedFormation + 1;
+         const selectedFormationIndex = getSelectedFormationIndex();
+         if (!selectedFormations.length || selectedFormationIndex === formations.length - 1) return;
+
+         // let index = selectedFormation === formations.length - 1 ? selectedFormation : selectedFormation + 1;
 
          // if (isPlaying) {
          let position = formations
             .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
-            .slice(0, index)
+            .slice(0, selectedFormationIndex + 1)
             .reduce((a, b) => a + b, 0);
 
-         // if (songDuration && player) {
-         //    console.log(position / (songDuration / 1000));
-         // }
-         // position = position + formations[index]?.transition.durationSeconds;
-         // console.log(position);
          setPosition(position);
-         setSelectedFormation(index);
+         incrementSelectedFormation();
          if (!(songDuration && player)) return;
-         Math.min(Math.max(0, position / (songDuration / 1000)), 1);
+         // Math.min(Math.max(0, position / (songDuration / 1000)), 1);
 
          player.seekTo(Math.min(Math.max(0, position / (songDuration / 1000)), 1));
       }
       if (e.key === "ArrowLeft") {
-         if (selectedFormation === null) return;
          e.preventDefault();
-         let index = selectedFormation === 0 ? 0 : selectedFormation - 1;
+         const selectedFormationIndex = getSelectedFormationIndex();
+         if (!selectedFormations.length || !selectedFormationIndex) return;
+
+         // let index = selectedFormation === 0 ? 0 : selectedFormation - 1;
 
          // if (isPlaying) {
          let position = formations
             .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
-            .slice(0, index)
+            .slice(0, selectedFormationIndex - 1)
             .reduce((a, b) => a + b, 0);
 
-         // if (songDuration && player) {
-         //    console.log(position / (songDuration / 1000));
-         // }
-         // position = position + formations[index]?.transition.durationSeconds;
-         // console.log(position);
          setPosition(position);
-         setSelectedFormation(index);
+         decrementSelectedFormation();
          if (!(songDuration && player)) return;
 
          player.seekTo(Math.min(Math.max(0, position / (songDuration / 1000)), 1));
@@ -236,10 +217,9 @@ export const EventHandler: React.FC<{
       }
       if (e.key === "Escape") {
          setSelectedDancers([]);
-         //  setDragBoxCoords({ start: { x: null, y: null }, end: { x: null, y: null } });
+
          setIsCommenting(false);
       }
-      if (selectedFormation === null) return;
 
       if (!commandHeld) return;
 
@@ -251,12 +231,13 @@ export const EventHandler: React.FC<{
          e.preventDefault();
          setZoom((zoom: number) => zoom * 0.9);
       }
-
+      // console.log(copiedPositions);
       // on paste, filter out all of the dancers that are being pasted before splicing them into the array of positions
       if (e.key === "v" && copiedPositions.length) {
+         if (!selectedFormations.length) return;
          setFormations(
             formations.map((formation, i) => {
-               if (i === selectedFormation) {
+               if (selectedFormations.includes(formation.id)) {
                   return {
                      ...formation,
                      positions: [
@@ -273,11 +254,13 @@ export const EventHandler: React.FC<{
          // pushChange();
       }
       if (e.key === "a") {
+         if (!selectedFormations.length) return;
          e.preventDefault();
-         setSelectedDancers([...formations[selectedFormation]?.positions.map((position) => position.id)]);
+         setSelectedDancers([...formations?.[0]?.positions?.map((position) => position.id)] || []);
       }
 
       if (e.key === "b") {
+         if (!selectedFormations.length) return;
          e.preventDefault();
          setFormations(
             formations.map((formation) => {
@@ -292,9 +275,10 @@ export const EventHandler: React.FC<{
       }
 
       if (e.key === "c" && selectedDancers.length) {
+         if (!selectedFormations.length) return;
          // addToStack();
          e.preventDefault();
-         setCopiedPositions(formations[selectedFormation].positions.filter((dancerPosition) => selectedDancers.includes(dancerPosition.id)));
+         setCopiedPositions(getFirstSelectedFormation()?.positions?.filter((dancerPosition) => selectedDancers.includes(dancerPosition.id)) || []);
       }
 
       if (e.key === "z") {
@@ -303,7 +287,7 @@ export const EventHandler: React.FC<{
       }
    };
 
-   function upHandler({ key }) {
+   function upHandler({ key }: { key: string }) {
       if (key === "Shift") {
          setShiftHeld(false);
       }

@@ -124,14 +124,15 @@ export const ThreeD: React.FC<{
          verticalFineDivisions,
          horizontalFineDivisions,
       },
+      getFirstSelectedFormation,
    } = useStore();
    const { gridSnap } = localSettings;
 
-   let planeIntersectPoint = new Vector3();
-   const floorPlane = new Plane(new Vector3(0, 1, 0), 0);
+   // let planeIntersectPoint = new Vector3();
+   // const floorPlane = new Plane(new Vector3(0, 1, 0), 0);
    // const depthBuffer = useDepthBuffer({ frames: 1 });
    const squareWidthFeet = cloudSettings.stageDimensions.width / cloudSettings.gridSubdivisions / cloudSettings.verticalFineDivisions;
-   const squareHeightFeet = cloudSettings.stageDimensions.height / cloudSettings.horizontalGridSubdivisions / cloudSettings.horizontalFineDivisions;
+   // const squareHeightFeet = cloudSettings.stageDimensions.height / cloudSettings.horizontalGridSubdivisions / cloudSettings.horizontalFineDivisions;
 
    return (
       <Canvas
@@ -211,7 +212,7 @@ export const ThreeD: React.FC<{
                   isThreeDancerDragging={isThreeDancerDragging}
                   
                   isPlaying={isPlaying}
-                  selectedFormation={selectedFormation}
+                  
                  
                   
                   comment={comment}
@@ -407,7 +408,6 @@ export const ThreeD: React.FC<{
             .map((prop: prop) => {
                return (
                   <ThreeSetPiece
-                     selectedFormation={selectedFormation}
                      isPlaying={isPlaying}
                      position={position}
                      currentFormationIndex={currentFormationIndex}
@@ -444,7 +444,7 @@ export const ThreeD: React.FC<{
          {/* {spotLightRef.current && <SpotLightHelper args={[spotLightRef.current]} />} */}
 
          {selectedFormation !== null
-            ? formations[selectedFormation].positions.map((dancerPosition: dancerPosition) => {
+            ? getFirstSelectedFormation()?.positions.map((dancerPosition: dancerPosition) => {
                  return (
                     <ThreeDancer
                        setSelectedDancers={setSelectedDancers}
@@ -460,7 +460,6 @@ export const ThreeD: React.FC<{
                        addToStack={addToStack}
                        pushChange={pushChange}
                        dancerPosition={dancerPosition}
-                       selectedFormation={selectedFormation}
                        localSettings={localSettings}
                     ></ThreeDancer>
                  );

@@ -16,7 +16,7 @@ export const Items: React.FC<{
 
    // items: item[];
    // setFormations: Function;
-   selectedFormation: number | null;
+
    propUploads: any;
    // setItems: Function;
    selectedPropIds: string[];
@@ -37,7 +37,7 @@ export const Items: React.FC<{
 
    // items,
    // setFormations,
-   selectedFormation,
+
    propUploads,
    // setItems,
    selectedPropIds,

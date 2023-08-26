@@ -4,7 +4,7 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 const liveblocks = new Liveblocks({
-   secret: "sk_dev_WuPCJd_6Tx8xg7mf8yTh7W7EVpSdn_LGuE1h3cguMicT1t_cf2VR31PV5-L4tNy0",
+   secret: "sk_prod_4KyaW_oX6LrE5PlWMvb3S79GNxTyTyBJqgG1g9caEJ_p5gGL4TZw3EDupgNeiDf0",
 });
 
 export async function POST(request: Request) {

@@ -43,7 +43,7 @@ export const FileAudioPlayer: React.FC<{
       songDuration,
       position,
    }) => {
-      const { formations } = useStore();
+      const { formations, get } = useStore();
       const [ready, setReady] = useState(false);
       // const [isInBonus, setIsInBonus] = useState(false);
       // const [movePlayhead, setMovePlayhead] = useState(false);
@@ -116,7 +116,8 @@ export const FileAudioPlayer: React.FC<{
          wavesurfer.on("pause", function (e) {});
 
          wavesurfer.on("finish", function (e) {
-            setPosition(wavesurfer.getDuration());
+            const duration = wavesurfer.getDuration();
+            setPosition(duration);
             // console.log("finish");
             // setIsPlaying(false);
             // setIsInBonus(true);
@@ -136,16 +137,17 @@ export const FileAudioPlayer: React.FC<{
 
          if (isPlaying && position >= (songDuration || 0) / 1000 && formationsAreLongerThanAudio) {
             interval = setInterval(() => {
-               setPosition((prevTime: number) => {
-                  if (prevTime < totalDurationOfFormations) {
-                     //  console.log("adding 0.5 sec");
-                     return prevTime + 0.02;
-                     // playbackRate
-                  } else {
-                     setIsPlaying(false);
-                     return 0;
-                  }
-               });
+               const prevTime = get().position;
+               let newTime = prevTime;
+               if (prevTime < totalDurationOfFormations) {
+                  //  console.log("adding 0.5 sec");
+                  newTime = prevTime + 0.02;
+                  // playbackRate
+               } else {
+                  setIsPlaying(false);
+                  newTime = 0;
+               }
+               setPosition(newTime);
             }, 20);
          }
          return () => clearInterval(interval);

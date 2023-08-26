@@ -1,10 +1,10 @@
-import { dancer, dancerPosition, formation, formationGroup, initials, item } from "../../../../../types/types";
+import { comment, dancer, dancerPosition, formation, formationGroup, initials, item } from "../../../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useStore } from "../../store";
 
 export const CurrentFormation: React.FC<{
-   selectedFormation: number | null;
+   // selectedFormation: number | null;
    // formations: formation[];
    // setFormations: Function;
    dancers: dancer[];
@@ -25,7 +25,7 @@ export const CurrentFormation: React.FC<{
    // items: item[];
 }> = ({
    // formations,
-   selectedFormation,
+   // selectedFormation,
    // setFormations,
    dancers,
    setSelectedFormation,
@@ -45,11 +45,11 @@ export const CurrentFormation: React.FC<{
 
    // items,
 }) => {
-   const { formations, setFormations, viewOnly } = useStore();
+   const { formations, setFormations, viewOnly, getFirstSelectedFormation, selectedFormations } = useStore();
    const deleteComment = (id: string) => {
       setFormations(
-         formations.map((formation, i) => {
-            if (i === selectedFormation) {
+         formations.map((formation) => {
+            if (selectedFormations.includes(formation.id)) {
                return {
                   ...formation,
                   comments: formation.comments?.filter((comment) => comment.id !== id),
@@ -63,7 +63,7 @@ export const CurrentFormation: React.FC<{
    return (
       <>
          <div className=" lg:flex hidden  w-[260px] bg-white  min-w-[260px] flex-col h-full  dark:bg-neutral-800 dark:text-neutral-100  ">
-            {selectedFormation !== null && formations[selectedFormation] ? (
+            {selectedFormations.length && getFirstSelectedFormation() ? (
                <>
                   {/* <div className="px-6">
                      <p className=" mt-5 mb-2 font-medium text-neutral-700">Rotation</p>
@@ -186,12 +186,12 @@ export const CurrentFormation: React.FC<{
                         onClick={(e) => {
                            e.target.select();
                         }}
-                        onBlur={pushChange}
+                        // onBlur={pushChange}
                         className="font-medium w-full bg rounded-md  h-6 text-xl dark:bg-neutral-800 dark:text-white   text-neutral-800  outline-none cursor-pointer "
                         onChange={(e) =>
                            setFormations(
                               formations.map((formation, i) => {
-                                 if (i === selectedFormation) {
+                                 if (selectedFormations.includes(formation.id)) {
                                     return {
                                        ...formation,
                                        name: e.target.value,
@@ -202,11 +202,11 @@ export const CurrentFormation: React.FC<{
                            )
                         }
                         disabled={viewOnly}
-                        value={formations[selectedFormation]?.name || ""}
+                        value={getFirstSelectedFormation().name || ""}
                      />
                   </div>
                   <div className="overflow-y-scroll  px-3 mt-4 flex-grow">
-                     {formations[selectedFormation]?.comments?.map((comment) => {
+                     {getFirstSelectedFormation()?.comments?.map((comment: comment) => {
                         return (
                            <div key={comment.id} className="flex flex-row group items-start w-full  mb-6">
                               {comment.user.avatar_url ? (
@@ -253,11 +253,11 @@ export const CurrentFormation: React.FC<{
 
                   <div className="w-full pb-3 px-3  ">
                      <textarea
-                        value={formations[selectedFormation]?.notes || ""}
+                        value={getFirstSelectedFormation()?.notes || ""}
                         onChange={(e) => {
                            setFormations(
-                              formations.map((formation, i) => {
-                                 if (i === selectedFormation) {
+                              formations.map((formation) => {
+                                 if (selectedFormations.includes(formation.id)) {
                                     return {
                                        ...formation,
                                        notes: e.target.value,

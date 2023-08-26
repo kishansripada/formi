@@ -1,7 +1,9 @@
 import React from "react";
 import { useDraggable } from "@dnd-kit/core";
 
-export function Video({ videoPosition, videoPlayer, localSource, soundCloudTrackId }) {
+export function Video({ videoPosition, videoPlayer, localSource, soundCloudTrackId, localSettings }) {
+   // soundCloudTrackId = "https://res.cloudinary.com/dxavpfwki/video/upload/q_auto:eco,vc_auto/v1692378451/IMG_2428_j6ymhd.mp4";
+   const { videoPlacement } = localSettings;
    const { attributes, listeners, setNodeRef, transform } = useDraggable({
       id: "vid",
       data: {
@@ -25,13 +27,15 @@ export function Video({ videoPosition, videoPlayer, localSource, soundCloudTrack
 
    return (
       <div
-         className={`absolute ${classList} z-50 lg:block hidden pointer-events-auto shadow-md  `}
+         className={` ${classList} z-50 lg:block hidden pointer-events-auto   `}
          ref={setNodeRef}
          {...listeners}
          {...attributes}
          style={{
             width: localSource?.startsWith("data:video") || isVideo(soundCloudTrackId) ? 350 : 0,
             ...style,
+            display: videoPlacement === "hidden" ? "none" : "block",
+            position: videoPlacement === "pip" || !videoPlacement ? "absolute" : "static",
          }}
       >
          <video

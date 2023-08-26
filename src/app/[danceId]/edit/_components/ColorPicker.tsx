@@ -11,7 +11,7 @@ export const PopoverPicker = ({
    position,
    text,
 }: {
-   color: string;
+   color: string | null;
    setColor: Function;
    dancers: dancer[];
    position: "top" | "bottom";

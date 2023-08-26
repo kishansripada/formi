@@ -8,33 +8,27 @@ export const Formation: React.FC<{
    formation: formation;
    amSelected: boolean;
    index: number;
-
    setSelectedFormation: Function;
-   // viewOnly: boolean;
    pixelsPerSecond: number;
-
    addToStack: Function;
    activeId: string | null;
-   formationGroups: formationGroup[];
    localSettings: localSettings;
-   selectedFormation: number | null;
 }> = ({
    formation,
    amSelected,
    index,
-
    setSelectedFormation,
    // viewOnly,
    pixelsPerSecond,
    addToStack,
    activeId,
-   formationGroups,
    localSettings,
-   selectedFormation,
 }) => {
-   const { viewOnly, setFormations, formations } = useStore();
+   const { viewOnly, selectedFormations, setFormations, formations } = useStore();
+
    const others = useStore((state) => state.liveblocks.others);
-   const othersOnThisFormation = others.filter((other) => other.presence.selectedFormation === index);
+
+   const othersOnThisFormation = others.filter((other) => other.presence?.selectedFormations?.includes(formation.id));
    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
       id: formation.id,
       attributes: { tabIndex: -1 },
@@ -70,22 +64,7 @@ export const Formation: React.FC<{
             {/* <div className=" absolute z-[50] top-[-40px] whitespace-nowrap text-xs -translate-x-1/2 left-1/2 group bg-neutral-800/90 p-1 rounded-md text-white">
                   {formation.name}
                </div> */}
-            <style jsx>{`
-               .group:hover::before {
-                  // content: "${formation.name}";
-                  // position: absolute;
-                  // bottom: -30px;
-                  // white-space: nowrap;
-                  // font-size: 0.875rem; /* approx 14px */
-                  // transform: translateX(-50%);
-                  // left: 50%;
-                  // background-color: #1f2937; /* match bg-neutral-800 */
-                  // padding: 0.25rem; /* approx 4px */
-                  // border-radius: 0.375rem; /* approx 6px */
-                  // color: white;
-                  // z-index: 99999;
-               }
-            `}</style>
+            <style jsx>{``}</style>
             {/* <div
                style={{
                   backgroundColor: colorsOnThisFormation.length
@@ -103,10 +82,10 @@ export const Formation: React.FC<{
             <div
                className={`  cursor-pointer    dark:bg-black  h-[50px]  dark:text-white  rounded-lg   overflow-hidden border-neutral-300 dark:border-neutral-600  border-2 flex flex-col  relative   `}
                style={{
-                  borderColor: othersOnThisFormation.length
-                     ? COLORS[othersOnThisFormation[0]?.connectionId % COLORS.length]
-                     : selectedFormation === index
+                  borderColor: selectedFormations.includes(formation.id)
                      ? "#db2777"
+                     : othersOnThisFormation.length
+                     ? COLORS[othersOnThisFormation[0]?.connectionId % COLORS.length]
                      : "",
                   // borderBottomColor:
                   // formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color ||

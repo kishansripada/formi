@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { dancer, dancerPosition, formation, formationGroup, localSettings, MAX_PIXELS_PER_SECOND, segment } from "../../../../types/types";
+import { COLORS, dancer, dancerPosition, formation, formationGroup, localSettings, MAX_PIXELS_PER_SECOND, segment } from "../../../../types/types";
 import { useHorizontalScrollInfo } from "../../../../hooks";
 import { Layer } from "./Layer";
 import { Layers } from "./Layers";
@@ -89,7 +89,7 @@ export const Timeline: React.FC<{
    menuOpen,
 }) => {
    const { segments, setSegments, get, formations, setFormations, viewOnly, resumeHistory, pauseHistory } = useStore();
-
+   const others = useStore((state) => state.liveblocks.others);
    const [resizingSegment, setResizingSegment] = useState<string | null>(null);
 
    const totalDurationOfFormations = formations
@@ -284,7 +284,7 @@ export const Timeline: React.FC<{
 
                   setPosition(clickEventSeconds);
 
-                  if (clickEventSeconds < songDuration) {
+                  if (clickEventSeconds < songDuration && player) {
                      player.seekTo(Math.max(Math.min(1, clickEventSeconds / songDuration), 0));
                   }
 
@@ -307,7 +307,33 @@ export const Timeline: React.FC<{
                   className={` relative   py-1 ${!soundCloudTrackId ? "h-[15px]" : ""} `}
                   id="wave-timeline"
                ></div>
-
+               {others
+                  .filter((other) => other.canWrite)
+                  .map((other) => {
+                     return (
+                        <div
+                           style={{
+                              // add 40 but subract 9 to account for the width of the svg
+                              left: (other.presence.position || 0) * pixelsPerSecond - 9,
+                              opacity: 0.5,
+                           }}
+                           className="absolute z-[999] top-[0px] pointer-events-none   left-0"
+                        >
+                           <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 180 157">
+                              <path
+                                 fill={COLORS[other?.connectionId % COLORS.length]}
+                                 d="M96 154c-3 4-9 4-12 0L2 11C-1 6 2 1 8 1h164c6 0 9 5 6 10L96 154Z"
+                              />
+                           </svg>
+                           <div
+                              style={{
+                                 backgroundColor: COLORS[other?.connectionId % COLORS.length],
+                              }}
+                              className="h-[90px] ml-[7px] w-[2px]  absolute"
+                           ></div>
+                        </div>
+                     );
+                  })}
                <div
                   style={{
                      // add 40 but subract 9 to account for the width of the svg
@@ -328,8 +354,6 @@ export const Timeline: React.FC<{
                pushChange={pushChange}
                setSelectedDancers={setSelectedDancers}
                songDuration={songDuration}
-               selectedFormation={selectedFormation}
-               setSelectedFormation={setSelectedFormation}
                isPlaying={isPlaying}
                position={position}
                soundCloudTrackId={soundCloudTrackId}
@@ -402,7 +426,6 @@ export const Timeline: React.FC<{
                >
                   <FileAudioPlayer
                      key={localSource || soundCloudTrackId}
-                     setSelectedFormation={setSelectedFormation}
                      soundCloudTrackId={localSource || soundCloudTrackId}
                      player={player}
                      setPlayer={setPlayer}
@@ -425,7 +448,6 @@ export const Timeline: React.FC<{
                      isPlaying={isPlaying}
                      setPlayer={setPlayer}
                      key={localSource || soundCloudTrackId}
-                     setSelectedFormation={setSelectedFormation}
                      soundCloudTrackId={localSource || soundCloudTrackId}
                      setSongDuration={setSongDuration}
                      songDuration={songDuration}

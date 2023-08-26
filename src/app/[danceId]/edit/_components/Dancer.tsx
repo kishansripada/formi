@@ -2,31 +2,14 @@ import { dancer, dancerPosition, formation, localSettings } from "../../../../ty
 import { useStore } from "../store";
 
 export const Dancer: React.FC<{
-   selectedFormation: number | null;
-   formations: formation[];
    dancer: dancer;
-   // setFormations: Function;
    selectedDancers: string[];
    index: number;
    setSelectedDancers: Function;
    pushChange: Function;
-   // uniqueDancers: string[];
-   // viewOnly: boolean;
    localSettings: localSettings;
-}> = ({
-   selectedFormation,
-   // formations,
-   dancer,
-   // setFormations,
-   selectedDancers,
-   index,
-   setSelectedDancers,
-   pushChange,
-   // uniqueDancers,
-   // viewOnly,
-   localSettings,
-}) => {
-   const { setFormations, formations, viewOnly } = useStore();
+}> = ({ dancer, selectedDancers, index, setSelectedDancers, pushChange, localSettings }) => {
+   const { viewOnly } = useStore();
    let { name, id, instagramUsername, color } = dancer;
    const { isDarkMode } = localSettings;
    let amSelected = selectedDancers.includes(id);
@@ -35,11 +18,11 @@ export const Dancer: React.FC<{
    //    return dancer.toLowerCase().startsWith(name.toLowerCase());
    // });
 
-   let canBeAddedToStage =
-      // there is a formation select
-      selectedFormation !== null &&
-      // and the dancer is not already on the stage
-      !formations[selectedFormation]?.positions.find((dancer) => dancer.id === id);
+   // let canBeAddedToStage =
+   //    // there is a formation select
+   //    selectedFormation !== null &&
+   //    // and the dancer is not already on the stage
+   //    !formations[selectedFormation]?.positions.find((dancer) => dancer.id === id);
 
    let initials = name
       .split(" ")
@@ -48,38 +31,33 @@ export const Dancer: React.FC<{
       .join("")
       .toUpperCase();
 
-   const addDancerToStage = () => {
-      setFormations(
-         formations.map((formation, i) => {
-            if (i === selectedFormation) {
-               return {
-                  ...formation,
-                  positions: [
-                     ...formation.positions,
-                     {
-                        id: id,
-                        position: {
-                           x: 0,
-                           y: 6,
-                        },
-                        transitionType: "linear",
-                     },
-                  ],
-               };
-            }
-            return formation;
-         })
-      );
-   };
+   // const addDancerToStage = () => {
+   //    setFormations(
+   //       formations.map((formation, i) => {
+   //          if (i === selectedFormation) {
+   //             return {
+   //                ...formation,
+   //                positions: [
+   //                   ...formation.positions,
+   //                   {
+   //                      id: id,
+   //                      position: {
+   //                         x: 0,
+   //                         y: 6,
+   //                      },
+   //                      transitionType: "linear",
+   //                   },
+   //                ],
+   //             };
+   //          }
+   //          return formation;
+   //       })
+   //    );
+   // };
 
    return (
       <>
          <div
-            style={
-               {
-                  // backgroundColor: amSelected ? (isDarkMode ? "#db2777" : "#fbcfe8") : "transparent",
-               }
-            }
             onClick={() => {
                setSelectedDancers([id]);
             }}
@@ -95,7 +73,7 @@ export const Dancer: React.FC<{
                   }}
                   className="h-6 w-full    px-2 py-4  text-sm rounded-md  ml-2    outline-none cursor-default"
                   value={name}
-                  onBlur={pushChange}
+                  // onBlur={pushChange}
                   disabled={viewOnly}
                   onChange={(e) => {
                      if (viewOnly) return;
@@ -105,7 +83,7 @@ export const Dancer: React.FC<{
                {/* <p className="absolute z-[50] left-[16px] top-[6.5px] text-neutral-500 text-sm">{suggestedDancer}</p> */}
             </div>
 
-            {canBeAddedToStage ? (
+            {/* {canBeAddedToStage ? (
                <button onClick={addDancerToStage}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -113,7 +91,7 @@ export const Dancer: React.FC<{
                </button>
             ) : (
                <></>
-            )}
+            )} */}
          </div>
       </>
    );

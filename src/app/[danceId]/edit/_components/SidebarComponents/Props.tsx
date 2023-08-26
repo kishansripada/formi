@@ -13,42 +13,13 @@ export const Props: React.FC<{
    player: any;
    setIsPlaying: Function;
    setLocalSource: Function;
-
-   // props: prop[];
-   // setFormations: Function;
-   selectedFormation: number | null;
-   propUploads: any;
-   // setProps: Function;
    selectedPropIds: string[];
    invalidatePropUploads: Function;
    setSelectedPropIds: Function;
    pushChange: Function;
-
-   // formations: formation[];
    setHelpUrl: Function;
    setAssetsOpen: Function;
-}> = ({
-   audioFiles,
-
-   setAudiofiles,
-   setIsPlaying,
-   player,
-   setLocalSource,
-
-   // props,
-   // setFormations,
-   selectedFormation,
-   propUploads,
-   // setProps,
-   selectedPropIds,
-   invalidatePropUploads,
-   setSelectedPropIds,
-   pushChange,
-
-   // formations,
-   setHelpUrl,
-   setAssetsOpen,
-}) => {
+}> = ({ selectedPropIds, setSelectedPropIds, pushChange, setHelpUrl, setAssetsOpen }) => {
    const { formations, setFormations, viewOnly, props, setProps, get } = useStore();
 
    return (
@@ -81,27 +52,6 @@ export const Props: React.FC<{
 
                <button
                   onClick={() => {
-                     let newId = uuidv4();
-
-                     // setProps(
-                     //    get().props.map((propx) => {
-                     //       if (propx.id === newId) {
-                     //          return {
-                     //             ...propx,
-                     //             static: {
-                     //                width: 5,
-                     //                position: {
-                     //                   x: 0,
-                     //                   y: 0,
-                     //                },
-                     //             },
-                     //          };
-                     //       }
-                     //       return propx;
-                     //    })
-                     // );
-
-                     // setSelectedItemId(newId);
                      setAssetsOpen("newProp");
                   }}
                   className="ml-auto text-xs flex flex-row items-center"
@@ -183,17 +133,20 @@ export const Props: React.FC<{
                                     );
                                  }
 
-                                 setProps(
-                                    props.map((propx) => {
-                                       if (propx.id === prop.id) {
-                                          return {
-                                             ...propx,
-                                             type: event.target.value,
-                                          };
-                                       }
-                                       return propx;
-                                    })
-                                 );
+                                 const selectedValue = event.target.value;
+                                 if (selectedValue === "static" || selectedValue === "dynamic") {
+                                    setProps(
+                                       props.map((propx) => {
+                                          if (propx.id === prop.id) {
+                                             return {
+                                                ...propx,
+                                                type: selectedValue, // Use the selectedValue here
+                                             };
+                                          }
+                                          return propx;
+                                       })
+                                    );
+                                 }
                               }}
                               className="text-xs ml-auto bg-transparent"
                               value={prop.type}

@@ -3,15 +3,12 @@ import { useStore } from "../store";
 
 export const DancerAliasShadow: React.FC<{
    dancer: dancer;
-   selectedFormation: number | null;
-   // formations: formation[];
    isPlaying: boolean;
-   currentFormationIndex: number | null;
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
    localSettings: localSettings;
-}> = ({ dancer, selectedFormation, isPlaying, currentFormationIndex, coordsToPosition, localSettings }) => {
+}> = ({ dancer, isPlaying, coordsToPosition, localSettings }) => {
    const { stageFlipped } = localSettings;
-   const { formations } = useStore();
+   const { formations, getPreviousFormation, selectedFormations } = useStore();
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])
@@ -20,9 +17,9 @@ export const DancerAliasShadow: React.FC<{
       .toUpperCase();
 
    let currentCoords;
-   if (isPlaying) return;
-   if (selectedFormation === null) return;
-   currentCoords = formations[selectedFormation - 1]?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id)?.position;
+
+   if (!selectedFormations.length || isPlaying) return;
+   currentCoords = getPreviousFormation()?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id)?.position;
    if (!currentCoords) return <></>;
 
    if (stageFlipped) {

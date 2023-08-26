@@ -21,6 +21,9 @@ interface Store {
    setFormations: (formations: formation[]) => void;
    //    updateDancerProperty: (id: string, propertyKey: keyof dancer, value: any) => void;
 
+   selectedFormations: string[];
+   setSelectedFormations: (selectedFormations: string[]) => void;
+
    props: prop[];
    setProps: (props: prop[]) => void;
 
@@ -39,8 +42,21 @@ interface Store {
    nameOrEmail: string;
    setNameOrEmail: (nameOrEmail: string) => void;
 
+   commandHeld: boolean;
+   setCommandHeld: (commandHeld: boolean) => void;
+
    selectedDancers: string[];
    setSelectedDancers: (selectedDancers: string[]) => void;
+
+   getFirstSelectedFormation: () => formation | undefined;
+   getPreviousFormation: () => formation | undefined;
+
+   incrementSelectedFormation: () => void;
+   decrementSelectedFormation: () => void;
+   getSelectedFormationIndex: () => number | null;
+
+   position: number;
+   setPosition: (position: number) => void;
 
    soundCloudTrackId: string | null;
    setSoundCloudTrackId: (soundCloudTrackId: string | null) => void;
@@ -51,31 +67,35 @@ interface Store {
 
 const PUBLIC_KEY = "pk_prod_3E8sI-8PR2FYB3__NcQ9YdEwhDyOKWvtC317Wo-fRSOQBCJBD4cmubrnKN8NE4bI";
 const client = createClient({
-   publicApiKey: PUBLIC_KEY,
-   // authEndpoint: "/api/liveblocks-auth",
+   // publicApiKey: PUBLIC_KEY,
+   authEndpoint: "/api/liveblocks-auth",
 });
 
 type Presence = {
-   selectedFormation: number | null;
+   selectedFormations: string[];
    nameOrEmail: string;
    selectedDancers: string[];
+   position: number;
 };
 
 export const useStore = create<WithLiveblocks<Store, Presence>>(
    liveblocks(
       (set, get) => ({
          selectedFormation: 0,
-         // segments
-         setSelectedFormation: (index: number | null) => {
-            const room = get().liveblocks.room!;
-            room.history.pause();
-            room.updatePresence({ selectedFormation: index }, { addToHistory: true });
-            // set({ isDragging: true });
-         },
+
+         selectedDancers: [],
+         setSelectedDancers: (selectedDancers: string[]) => set({ selectedDancers }),
+
+         selectedFormations: [],
+         setSelectedFormations: (selectedFormations: string[]) => set({ selectedFormations }),
 
          segments: [],
-         setSegments: (segments: segment[]) => set({ segments }),
+         setSegments: (segments: segment[]) => {
+            if (get().viewOnly) return;
+            set({ segments });
+         },
          updateSegmentProperty: (id: string, propertyKey: keyof segment, value: any) => {
+            if (get().viewOnly) return;
             const updatedSegments = get().segments.map((seg) => {
                if (seg.id === id) {
                   return { ...seg, [propertyKey]: value };
@@ -87,16 +107,29 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
 
          //dancers
          dancers: [],
-         setDancers: (dancers) => set({ dancers }),
+
+         setDancers: (dancers) => {
+            if (get().viewOnly) return;
+            set({ dancers });
+         },
 
          formations: [],
-         setFormations: (formations: formation[]) => set({ formations }),
+         setFormations: (formations: formation[]) => {
+            if (get().viewOnly) return;
+            set({ formations });
+         },
 
          props: [],
-         setProps: (props: prop[]) => set({ props }),
+         setProps: (props: prop[]) => {
+            if (get().viewOnly) return;
+            set({ props });
+         },
 
          items: [],
-         setItems: (items: item[]) => set({ items }),
+         setItems: (items: item[]) => {
+            if (get().viewOnly) return;
+            set({ items });
+         },
 
          cloudSettings: {
             stageDimensions: { width: 40, height: 32 },
@@ -105,22 +138,83 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             gridSubdivisions: 8,
             horizontalGridSubdivisions: 4,
          },
-         setCloudSettings: (cloudSettings: cloudSettings) => set({ cloudSettings }),
+         setCloudSettings: (cloudSettings: cloudSettings) => {
+            if (get().viewOnly) return;
+            set({ cloudSettings });
+         },
 
          soundCloudTrackId: null,
-         setSoundCloudTrackId: (soundCloudTrackId: string | null) => set({ soundCloudTrackId }),
+         setSoundCloudTrackId: (soundCloudTrackId: string | null) => {
+            if (get().viewOnly) return;
+            set({ soundCloudTrackId });
+         },
 
          viewOnly: true,
          setViewOnly: (viewOnly: boolean) => set({ viewOnly }),
 
-         selectedDancers: [],
-         setSelectedDancers: (selectedDancers: string[]) => set({ selectedDancers }),
+         getFirstSelectedFormation: () => {
+            if (get().selectedFormations.length === 1) {
+               return get().formations.find((formation) => formation.id === get().selectedFormations[0]);
+            } else {
+               return get().formations[
+                  Math.min(...get().selectedFormations.map((id: string) => get().formations.findIndex((formation) => formation.id === id)))
+               ];
+            }
+         },
+
+         getPreviousFormation: () => {
+            const selectedFormation = get().selectedFormations[0];
+            const index = get().formations.findIndex((formation) => formation.id === selectedFormation);
+            return get().formations[index - 1];
+         },
+
+         incrementSelectedFormation: () => {
+            const selectedFormationId =
+               get().formations[
+                  Math.min(...get().selectedFormations.map((id: string) => get().formations.findIndex((formation) => formation.id === id)))
+               ]?.id;
+            if (!selectedFormationId) return;
+            const index = get().formations.findIndex((formation) => formation.id === selectedFormationId);
+            const formationToSelect = get().formations[index + 1]?.id;
+            if (!formationToSelect) return;
+            set({ selectedFormations: [formationToSelect] });
+         },
+
+         decrementSelectedFormation: () => {
+            const selectedFormationId =
+               get().formations[
+                  Math.min(...get().selectedFormations.map((id: string) => get().formations.findIndex((formation) => formation.id === id)))
+               ]?.id;
+            if (!selectedFormationId) return;
+            const index = get().formations.findIndex((formation) => formation.id === selectedFormationId);
+            const formationToSelect = get().formations[index - 1]?.id;
+            if (!formationToSelect) return;
+            set({ selectedFormations: [formationToSelect] });
+         },
+
+         getSelectedFormationIndex: () => {
+            const selectedFormationId =
+               get().formations[
+                  Math.min(...get().selectedFormations.map((id: string) => get().formations.findIndex((formation) => formation.id === id)))
+               ]?.id;
+            if (!selectedFormationId) return null;
+            return get().formations.findIndex((formation) => formation.id === selectedFormationId);
+         },
 
          danceName: "",
-         setDanceName: (danceName: string) => set({ danceName }),
+         setDanceName: (danceName: string) => {
+            if (get().viewOnly) return;
+            set({ danceName });
+         },
+
+         commandHeld: false,
+         setCommandHeld: (commandHeld: boolean) => set({ commandHeld }),
 
          nameOrEmail: "",
          setNameOrEmail: (nameOrEmail: string) => set({ nameOrEmail }),
+
+         position: 0,
+         setPosition: (position: number) => set({ position }),
 
          pauseHistory: () => {
             const room = get().liveblocks.room!;
@@ -135,9 +229,10 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
       {
          client,
          presenceMapping: {
-            selectedFormation: true,
+            selectedFormations: true,
             nameOrEmail: true,
             selectedDancers: true,
+            position: true,
          },
          storageMapping: {
             formations: true,

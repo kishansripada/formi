@@ -10,7 +10,7 @@ import {
    propPosition,
 } from "../../../../types/types";
 import { useEffect, useState } from "react";
-import { Dropdown } from "../../app/dashboard/_components/Dropdown";
+
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { useStore } from "../store";
 
@@ -20,7 +20,7 @@ export const Prop: React.FC<{
    currentFormationIndex: number | null;
    percentThroughTransition: number;
 
-   selectedFormation: number | null;
+   // selectedFormation: number | null;
 
    isPlaying: boolean;
    position: number | null;
@@ -47,7 +47,7 @@ export const Prop: React.FC<{
    currentFormationIndex,
    percentThroughTransition,
 
-   selectedFormation,
+   // selectedFormation,
    isPlaying,
    position,
 
@@ -68,7 +68,7 @@ export const Prop: React.FC<{
    // setProps,
    pushChange,
 }) => {
-   let { formations, setFormations, setProps, props } = useStore();
+   let { formations, setFormations, setProps, props, selectedFormations, getFirstSelectedFormation } = useStore();
    const { stageFlipped } = localSettings;
    const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
    // if (stageFlipped) {
@@ -95,14 +95,14 @@ export const Prop: React.FC<{
    useEffect(() => {
       setIsDropdownOpen(false);
    }, [dropDownToggle]);
-   if (selectedFormation === null) return <></>;
+   if (!selectedFormations.length) return <></>;
 
    let myPosition;
    // if the track is playing then  return with the animation function
    let propPosition =
       prop.type === "static"
          ? prop.static
-         : (formations[selectedFormation]?.props || [])?.find((propPosition: propPosition) => propPosition.id === prop.id);
+         : (getFirstSelectedFormation()?.props || [])?.find((propPosition: propPosition) => propPosition.id === prop.id);
 
    if (!propPosition) return <></>;
    if (stageFlipped) {
@@ -138,7 +138,7 @@ export const Prop: React.FC<{
                //    height: PIXELS_PER_SQUARE * prop.width,
                borderWidth: selectedPropIds.includes(prop.id) && !isPlaying ? 4 / zoom : 0,
                transition: isPlaying ? "width 0.2s ease-in-out" : "",
-               opacity: isPlaying ? 1 : 0.5,
+               // opacity: isPlaying ? 1 : 0.5,
             }}
             onContextMenu={(e) => {
                e.preventDefault();
@@ -194,7 +194,7 @@ export const Prop: React.FC<{
                src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${prop.user_id}/${prop?.url}`}
                alt=""
             />
-            {isDropdownOpen && (
+            {/* {isDropdownOpen && (
                <div
                   id="dropdown-menu"
                   style={{
@@ -259,7 +259,7 @@ export const Prop: React.FC<{
                      {props.find((propx: prop) => propx.id === prop.id).type === "static" ? "Make dynamic" : "Make static"}
                   </div>
                </div>
-            )}
+            )} */}
          </div>
       </>
    );

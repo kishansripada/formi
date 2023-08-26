@@ -135,6 +135,11 @@ const Edit = ({
       selectedDancers,
       setSelectedDancers,
       liveblocks,
+      getFirstSelectedFormation,
+      selectedFormations,
+      setSelectedFormations,
+      position,
+      setPosition,
    } = useStore();
    // console.log(liveblocks);
    // console.log({ liveStatus });
@@ -156,6 +161,7 @@ const Edit = ({
       });
       setNameOrEmail(session?.user.user_metadata.full_name || session?.user.email || "");
       setSoundCloudTrackId(initialData.soundCloudId);
+      setSelectedFormations([initialData.formations[0].id]);
    }, []);
 
    const enterRoom = useStore((state) => state.liveblocks.enterRoom);
@@ -218,7 +224,7 @@ const Edit = ({
    const [zoom, setZoom] = useState(1);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [isCommenting, setIsCommenting] = useState<boolean>(false);
-   const [position, setPosition] = useState<number>(0);
+   // const [position, setPosition] = useState<number>(0);
    const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(35);
 
    const [isScrollingTimeline, setIsScrollingTimeline] = useState(false);
@@ -276,7 +282,7 @@ const Edit = ({
 
    useEffect(() => {
       if (!isPlaying) return;
-      setSelectedFormation(currentFormationIndex);
+      setSelectedFormations([formations.find((formation, i) => i === currentFormationIndex)?.id]);
    }, [currentFormationIndex, isPlaying]);
 
    useEffect(() => {
@@ -298,7 +304,7 @@ const Edit = ({
       const extendedFormations = [...formations, { name: "", notes: "" }];
 
       for (let index = 0; index < extendedFormations.length; index++) {
-         setSelectedFormation(index); // Assuming this function sets the formation
+         setSelectedFormations([formations[index]?.id]);
 
          // Wait for the formation to be rendered in the DOM
          await sleep(1000); // Delay in milliseconds. Adjust as needed.
@@ -390,9 +396,10 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      if (!session && danceId !== "207") {
-         router.push("/login");
-      }
+      // if (!session && danceId !== "207") {
+      //    router.push("/login");
+      // }
+      if (viewOnly) return;
       //   if (router.isReady) {
       setSaved(false);
       uploadSettings(cloudSettings);
@@ -413,9 +420,10 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      if (!session && danceId !== "207") {
-         router.push("/login");
-      }
+      // if (!session && danceId !== "207") {
+      //    router.push("/login");
+      // }
+      if (viewOnly) return;
       //   if (router.isReady) {
       setSaved(false);
       uploadDancers(dancers);
@@ -435,9 +443,10 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      if (!session && danceId !== "207") {
-         router.push("/login");
-      }
+      // if (!session && danceId !== "207") {
+      //    router.push("/login");
+      // }
+      if (viewOnly) return;
       //   if (router.isReady) {
       setSaved(false);
       uploadSoundCloudId(soundCloudTrackId);
@@ -457,9 +466,10 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      if (!session && danceId !== "207") {
-         router.push("/login");
-      }
+      // if (!session && danceId !== "207") {
+      //    router.push("/login");
+      // }
+      if (viewOnly) return;
       //   if (router.isReady) {
       setSaved(false);
       uploadName(danceName);
@@ -480,9 +490,10 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      if (!session && danceId !== "207") {
-         router.push("/login");
-      }
+      // if (!session && danceId !== "207") {
+      //    router.push("/login");
+      // }
+      if (viewOnly) return;
       //   if (router.isReady) {
       setSaved(false);
       uploadFormations(formations);
@@ -502,9 +513,10 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      if (!session && danceId !== "207") {
-         router.push("/login");
-      }
+      // if (!session && danceId !== "207") {
+      //    router.push("/login");
+      // }
+      if (viewOnly) return;
       //   if (router.isReady) {
       setSaved(false);
       uploadProps(props);
@@ -524,9 +536,10 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      if (!session && danceId !== "207") {
-         router.push("/login");
-      }
+      // if (!session && danceId !== "207") {
+      //    router.push("/login");
+      // }
+      if (viewOnly) return;
       //   if (router.isReady) {
       setSaved(false);
       uploadItems(items);
@@ -546,9 +559,10 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      if (!session && danceId !== "207") {
-         router.push("/login");
-      }
+      // if (!session && danceId !== "207") {
+      //    router.push("/login");
+      // }
+      if (viewOnly) return;
       //   if (router.isReady) {
       setSaved(false);
       uploadSegments(segments);
@@ -693,6 +707,14 @@ const Edit = ({
             </>
          ) : null}
 
+         {selectedFormations.length > 1 ? (
+            <>
+               <div className="fixed left-1/2 -translate-x-1/2 px-5 h-12 select-none rounded-full shadow-xl top-6 bg-black  z-[9999] bg-opacity-60 grid place-items-center">
+                  <p className="text-white text-sm pointer-events-none">Changes will apply to all selected formations</p>
+               </div>
+            </>
+         ) : null}
+
          {assetsOpen ? (
             <Assets
                menuOpen={menuOpen}
@@ -729,8 +751,6 @@ const Edit = ({
             draggingDancerId={draggingDancerId}
             setDraggingDancerId={setDraggingDancerId}
             songDuration={songDuration}
-            setSelectedFormation={setSelectedFormation}
-            selectedFormation={selectedFormation}
             selectedDancers={selectedDancers}
             setSelectedDancers={setSelectedDancers}
             setIsPlaying={setIsPlaying}
@@ -779,17 +799,16 @@ const Edit = ({
                setIsChangingCollisionRadius={setIsChangingCollisionRadius}
                isCommenting={isCommenting}
                pushChange={pushChange}
-               selectedFormation={selectedFormation}
                selectedDancers={selectedDancers}
                setIsCommenting={setIsCommenting}
                viewOnlyInitial={viewOnlyInitial}
-               setSelectedFormation={setSelectedFormation}
                localSettings={localSettings}
                setLocalSettings={setLocalSettings}
                undo={undo}
                saved={saved}
                setShareIsOpen={setShareIsOpen}
                dancers={dancers}
+               session={session}
             />
             <div className="flex flex-row overflow-hidden w-screen h-full">
                <Sidebar setLocalSettings={setLocalSettings} setHelpUrl={setHelpUrl} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
@@ -807,7 +826,6 @@ const Edit = ({
                                        addToStack={addToStack}
                                        pushChange={pushChange}
                                        dancers={dancers}
-                                       selectedFormation={selectedFormation}
                                        selectedDancers={selectedDancers}
                                        localSettings={localSettings}
                                     ></Roster>
@@ -855,7 +873,6 @@ const Edit = ({
                                        invalidatePropUploads={invalidatePropUploads}
                                        selectedPropIds={selectedPropIds}
                                        propUploads={propUploads}
-                                       selectedFormation={selectedFormation}
                                        player={player}
                                        setIsPlaying={setIsPlaying}
                                        soundCloudTrackId={soundCloudTrackId}
@@ -873,7 +890,6 @@ const Edit = ({
                                        invalidatePropUploads={invalidatePropUploads}
                                        // selectedPropIds={selectedPropIds}
                                        propUploads={propUploads}
-                                       selectedFormation={selectedFormation}
                                        player={player}
                                        setIsPlaying={setIsPlaying}
                                        soundCloudTrackId={soundCloudTrackId}
@@ -893,9 +909,7 @@ const Edit = ({
                                        pushChange={pushChange}
                                        selectedDancers={selectedDancers}
                                        setSelectedDancers={setSelectedDancers}
-                                       setSelectedFormation={setSelectedFormation}
                                        dancers={dancers}
-                                       selectedFormation={selectedFormation}
                                     />
                                  )}
                               </div>
@@ -913,10 +927,8 @@ const Edit = ({
                               setPlaybackRate={setPlaybackRate}
                               addToStack={addToStack}
                               pushChange={pushChange}
-                              selectedFormation={selectedFormation}
                               songDuration={songDuration}
                               soundCloudTrackId={soundCloudTrackId}
-                              setSelectedFormation={setSelectedFormation}
                               player={player}
                               isPlaying={isPlaying}
                               setIsPlaying={setIsPlaying}
@@ -929,218 +941,220 @@ const Edit = ({
                               dancers={dancers}
                               viewOnlyInitial={viewOnlyInitial}
                            ></ObjectControls>
-                           <Video
-                              videoPlayer={videoPlayer}
-                              soundCloudTrackId={soundCloudTrackId}
-                              localSource={localSource}
-                              videoPosition={videoPosition}
-                           ></Video>
 
-                           <TopLeft></TopLeft>
-                           <TopRight></TopRight>
-                           <BottomLeft></BottomLeft>
-                           <BottomRight></BottomRight>
-
-                           {localSettings.viewingThree ? (
-                              <ThreeD
-                                 setIsThreeDancerDragging={setIsThreeDancerDragging}
-                                 isThreeDancerDragging={isThreeDancerDragging}
-                                 isPlaying={isPlaying}
-                                 currentFormationIndex={currentFormationIndex}
-                                 percentThroughTransition={percentThroughTransition}
-                                 dancers={dancers}
-                                 position={position}
-                                 shiftHeld={shiftHeld}
-                                 setShiftHeld={setShiftHeld}
-                                 stageFlipped={localSettings.stageFlipped}
-                                 zoom={zoom}
-                                 setZoom={setZoom}
-                                 isCommenting={isCommenting}
-                                 setIsCommenting={setIsCommenting}
+                           <div
+                              style={{
+                                 flexDirection: localSettings.videoPlacement === "above" ? "column" : "row",
+                              }}
+                              className="flex  h-full overflow-hidden  w-full items-center justify-center"
+                           >
+                              <Video
                                  localSettings={localSettings}
-                                 pushChange={pushChange}
-                                 undo={undo}
-                                 addToStack={addToStack}
-                                 player={player}
-                                 draggingDancerId={draggingDancerId}
-                                 setDraggingDancerId={setDraggingDancerId}
-                                 songDuration={songDuration}
-                                 setSelectedFormation={setSelectedFormation}
-                                 selectedFormation={selectedFormation}
-                                 selectedDancers={selectedDancers}
-                                 setSelectedDancers={setSelectedDancers}
-                                 setIsPlaying={setIsPlaying}
-                                 setPixelsPerSecond={setPixelsPerSecond}
-                                 coordsToPosition={coordsToPosition}
-                                 currentFormationIndex={currentFormationIndex}
-                                 percentThroughTransition={percentThroughTransition}
-                                 // comments={comments}
-                              ></ThreeD>
-                           ) : null}
+                                 videoPlayer={videoPlayer}
+                                 soundCloudTrackId={soundCloudTrackId}
+                                 localSource={localSource}
+                                 videoPosition={videoPosition}
+                              ></Video>
 
-                           {localSettings.viewingTwo ? (
-                              <Canvas
-                                 menuOpen={menuOpen}
-                                 // selectedFormations={selectedFormations}
-                                 session={session}
-                                 resizingPropId={resizingPropId}
-                                 setResizingPropId={setResizingPropId}
-                                 setSelectedPropIds={setSelectedPropIds}
-                                 selectedPropIds={selectedPropIds}
-                                 isPlaying={isPlaying}
-                                 shiftHeld={shiftHeld}
-                                 setShiftHeld={setShiftHeld}
-                                 stageFlipped={localSettings.stageFlipped}
-                                 zoom={zoom}
-                                 setZoom={setZoom}
-                                 isCommenting={isCommenting}
-                                 setIsCommenting={setIsCommenting}
-                                 localSettings={localSettings}
-                                 pushChange={pushChange}
-                                 undo={undo}
-                                 addToStack={addToStack}
-                                 player={player}
-                                 draggingDancerId={draggingDancerId}
-                                 setDraggingDancerId={setDraggingDancerId}
-                                 songDuration={songDuration}
-                                 setSelectedFormation={setSelectedFormation}
-                                 selectedFormation={selectedFormation}
-                                 selectedDancers={selectedDancers}
-                                 setSelectedDancers={setSelectedDancers}
-                                 setIsPlaying={setIsPlaying}
-                                 setPixelsPerSecond={setPixelsPerSecond}
-                                 coordsToPosition={coordsToPosition}
-                                 currentFormationIndex={currentFormationIndex}
-                                 percentThroughTransition={percentThroughTransition}
-                                 dancers={dancers}
-                              >
-                                 {selectedFormation !== null ? (
-                                    <PathEditor
-                                       zoom={zoom}
-                                       collisions={collisions}
-                                       dancers={dancers}
-                                       currentFormationIndex={currentFormationIndex}
-                                       formations={localSettings.stageFlipped ? flippedFormations : formations}
-                                       selectedFormation={selectedFormation}
-                                       selectedDancers={selectedDancers}
-                                       localSettings={localSettings}
-                                       isPlaying={isPlaying}
-                                       coordsToPosition={coordsToPosition}
-                                    />
-                                 ) : (
-                                    <></>
-                                 )}
+                              <TopLeft></TopLeft>
+                              <TopRight></TopRight>
+                              <BottomLeft></BottomLeft>
+                              <BottomRight></BottomRight>
+                              {/* <video
+                                 className="w-1/4"
+                                 src="https://res.cloudinary.com/dxavpfwki/video/upload/q_auto:eco,vc_auto/v1692378451/IMG_2428_j6ymhd.mp4"
+                              ></video> */}
+                              {localSettings.viewingThree ? (
+                                 <ThreeD
+                                    setIsThreeDancerDragging={setIsThreeDancerDragging}
+                                    isThreeDancerDragging={isThreeDancerDragging}
+                                    isPlaying={isPlaying}
+                                    currentFormationIndex={currentFormationIndex}
+                                    percentThroughTransition={percentThroughTransition}
+                                    dancers={dancers}
+                                    position={position}
+                                    shiftHeld={shiftHeld}
+                                    setShiftHeld={setShiftHeld}
+                                    stageFlipped={localSettings.stageFlipped}
+                                    zoom={zoom}
+                                    setZoom={setZoom}
+                                    isCommenting={isCommenting}
+                                    setIsCommenting={setIsCommenting}
+                                    localSettings={localSettings}
+                                    pushChange={pushChange}
+                                    undo={undo}
+                                    addToStack={addToStack}
+                                    player={player}
+                                    draggingDancerId={draggingDancerId}
+                                    setDraggingDancerId={setDraggingDancerId}
+                                    songDuration={songDuration}
+                                    selectedDancers={selectedDancers}
+                                    setSelectedDancers={setSelectedDancers}
+                                    setIsPlaying={setIsPlaying}
+                                    setPixelsPerSecond={setPixelsPerSecond}
+                                    coordsToPosition={coordsToPosition}
+                                    currentFormationIndex={currentFormationIndex}
+                                    percentThroughTransition={percentThroughTransition}
+                                    // comments={comments}
+                                 ></ThreeD>
+                              ) : null}
 
-                                 {dancers.map((dancer, index) => (
-                                    <DancerAlias
-                                       zoom={zoom}
-                                       setZoom={setZoom}
-                                       coordsToPosition={coordsToPosition}
-                                       selectedDancers={selectedDancers}
-                                       isPlaying={isPlaying}
-                                       position={position}
-                                       selectedFormation={selectedFormation}
-                                       key={dancer.id}
-                                       dancer={dancer}
-                                       formations={localSettings.stageFlipped ? flippedFormations : formations}
-                                       draggingDancerId={draggingDancerId}
-                                       currentFormationIndex={currentFormationIndex}
-                                       percentThroughTransition={percentThroughTransition}
-                                       localSettings={localSettings}
-                                       index={index}
-                                       isPlaying={isPlaying}
-                                       collisions={collisions}
-                                       isChangingCollisionRadius={isChangingCollisionRadius}
-                                    />
-                                 ))}
+                              {localSettings.viewingTwo ? (
+                                 <Canvas
+                                    menuOpen={menuOpen}
+                                    // selectedFormations={selectedFormations}
+                                    session={session}
+                                    resizingPropId={resizingPropId}
+                                    setResizingPropId={setResizingPropId}
+                                    setSelectedPropIds={setSelectedPropIds}
+                                    selectedPropIds={selectedPropIds}
+                                    isPlaying={isPlaying}
+                                    shiftHeld={shiftHeld}
+                                    setShiftHeld={setShiftHeld}
+                                    stageFlipped={localSettings.stageFlipped}
+                                    zoom={zoom}
+                                    setZoom={setZoom}
+                                    isCommenting={isCommenting}
+                                    setIsCommenting={setIsCommenting}
+                                    localSettings={localSettings}
+                                    pushChange={pushChange}
+                                    undo={undo}
+                                    addToStack={addToStack}
+                                    player={player}
+                                    draggingDancerId={draggingDancerId}
+                                    setDraggingDancerId={setDraggingDancerId}
+                                    songDuration={songDuration}
+                                    selectedDancers={selectedDancers}
+                                    setSelectedDancers={setSelectedDancers}
+                                    setIsPlaying={setIsPlaying}
+                                    setPixelsPerSecond={setPixelsPerSecond}
+                                    coordsToPosition={coordsToPosition}
+                                    currentFormationIndex={currentFormationIndex}
+                                    percentThroughTransition={percentThroughTransition}
+                                    dancers={dancers}
+                                 >
+                                    {selectedFormation !== null ? (
+                                       <PathEditor
+                                          zoom={zoom}
+                                          collisions={collisions}
+                                          dancers={dancers}
+                                          currentFormationIndex={currentFormationIndex}
+                                          formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                          selectedDancers={selectedDancers}
+                                          localSettings={localSettings}
+                                          isPlaying={isPlaying}
+                                          coordsToPosition={coordsToPosition}
+                                       />
+                                    ) : (
+                                       <></>
+                                    )}
 
-                                 {selectedFormation !== null
-                                    ? props.map((prop: prop) => {
-                                         return (
-                                            <Prop
-                                               key={prop.id}
-                                               pushChange={pushChange}
-                                               dropDownToggle={dropDownToggle}
-                                               setResizingPropId={setResizingPropId}
-                                               selectedPropIds={selectedPropIds}
-                                               coordsToPosition={coordsToPosition}
-                                               prop={prop}
-                                               percentThroughTransition={percentThroughTransition}
-                                               selectedFormation={selectedFormation}
-                                               isPlaying={isPlaying}
-                                               position={position}
-                                               currentFormationIndex={currentFormationIndex}
-                                               zoom={zoom}
-                                               localSettings={localSettings}
-                                            ></Prop>
-                                         );
-                                      })
-                                    : null}
-                                 {localSettings.viewCollisions && selectedFormation !== null
-                                    ? collisions.map((collision, i) => {
-                                         return <Collision key={i} coordsToPosition={coordsToPosition} collision={collision}></Collision>;
-                                      })
-                                    : null}
+                                    {dancers.map((dancer, index) => (
+                                       <DancerAlias
+                                          zoom={zoom}
+                                          setZoom={setZoom}
+                                          coordsToPosition={coordsToPosition}
+                                          selectedDancers={selectedDancers}
+                                          isPlaying={isPlaying}
+                                          position={position}
+                                          key={dancer.id}
+                                          dancer={dancer}
+                                          formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                          draggingDancerId={draggingDancerId}
+                                          currentFormationIndex={currentFormationIndex}
+                                          percentThroughTransition={percentThroughTransition}
+                                          localSettings={localSettings}
+                                          index={index}
+                                          isPlaying={isPlaying}
+                                          collisions={collisions}
+                                          isChangingCollisionRadius={isChangingCollisionRadius}
+                                       />
+                                    ))}
 
-                                 {selectedFormation !== null && !isPlaying ? (
-                                    <>
-                                       {(formations[selectedFormation]?.comments || []).map((comment: comment) => {
-                                          return (
-                                             <Comment
-                                                zoom={zoom}
-                                                localSettings={localSettings}
-                                                coordsToPosition={coordsToPosition}
-                                                selectedFormation={selectedFormation}
-                                                key={comment.id}
-                                                comment={comment}
-                                                addToStack={addToStack}
-                                                pushChange={pushChange}
-                                             />
-                                          );
-                                       })}
-
-                                       {localSettings.previousFormationView !== "none"
-                                          ? dancers.map((dancer, index) => (
-                                               <DancerAliasShadow
+                                    {selectedFormation !== null
+                                       ? props.map((prop: prop) => {
+                                            return (
+                                               <Prop
+                                                  key={prop.id}
+                                                  pushChange={pushChange}
+                                                  dropDownToggle={dropDownToggle}
+                                                  setResizingPropId={setResizingPropId}
+                                                  selectedPropIds={selectedPropIds}
                                                   coordsToPosition={coordsToPosition}
-                                                  currentFormationIndex={currentFormationIndex}
+                                                  prop={prop}
+                                                  percentThroughTransition={percentThroughTransition}
                                                   isPlaying={isPlaying}
-                                                  selectedFormation={selectedFormation}
-                                                  key={"shadow" + dancer.id}
-                                                  dancer={dancer}
-                                                  //   formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                                  position={position}
+                                                  currentFormationIndex={currentFormationIndex}
+                                                  zoom={zoom}
                                                   localSettings={localSettings}
-                                               />
-                                            ))
-                                          : dancers
-                                               .filter(
-                                                  (dancer) =>
-                                                     selectedDancers.includes(dancer.id) ||
-                                                     (selectedFormation
-                                                        ? collisions
-                                                             ?.map((collision) => collision.dancers)
-                                                             .flat(Infinity)
-                                                             .includes(dancer.id)
-                                                        : false)
-                                               )
-                                               .map((dancer, index) => {
-                                                  return (
-                                                     <DancerAliasShadow
-                                                        coordsToPosition={coordsToPosition}
-                                                        currentFormationIndex={currentFormationIndex}
-                                                        isPlaying={isPlaying}
-                                                        selectedFormation={selectedFormation}
-                                                        key={"shadow" + dancer.id}
-                                                        dancer={dancer}
-                                                        //   formations={localSettings.stageFlipped ? flippedFormations : formations}
-                                                        localSettings={localSettings}
-                                                     />
-                                                  );
-                                               })}
-                                    </>
-                                 ) : null}
-                              </Canvas>
-                           ) : null}
+                                               ></Prop>
+                                            );
+                                         })
+                                       : null}
+                                    {localSettings.viewCollisions && selectedFormation !== null
+                                       ? collisions.map((collision, i) => {
+                                            return <Collision key={i} coordsToPosition={coordsToPosition} collision={collision}></Collision>;
+                                         })
+                                       : null}
+
+                                    {selectedFormations.length === 1 && !isPlaying ? (
+                                       <>
+                                          {(getFirstSelectedFormation()?.comments || []).map((comment: comment) => {
+                                             return (
+                                                <Comment
+                                                   zoom={zoom}
+                                                   localSettings={localSettings}
+                                                   coordsToPosition={coordsToPosition}
+                                                   key={comment.id}
+                                                   comment={comment}
+                                                   addToStack={addToStack}
+                                                   pushChange={pushChange}
+                                                />
+                                             );
+                                          })}
+
+                                          {localSettings.previousFormationView !== "none"
+                                             ? dancers.map((dancer, index) => (
+                                                  <DancerAliasShadow
+                                                     coordsToPosition={coordsToPosition}
+                                                     currentFormationIndex={currentFormationIndex}
+                                                     isPlaying={isPlaying}
+                                                     key={"shadow" + dancer.id}
+                                                     dancer={dancer}
+                                                     //   formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                                     localSettings={localSettings}
+                                                  />
+                                               ))
+                                             : dancers
+                                                  .filter(
+                                                     (dancer) =>
+                                                        selectedDancers.includes(dancer.id) ||
+                                                        (selectedFormation
+                                                           ? collisions
+                                                                ?.map((collision) => collision.dancers)
+                                                                .flat(Infinity)
+                                                                .includes(dancer.id)
+                                                           : false)
+                                                  )
+                                                  .map((dancer, index) => {
+                                                     return (
+                                                        <DancerAliasShadow
+                                                           coordsToPosition={coordsToPosition}
+                                                           currentFormationIndex={currentFormationIndex}
+                                                           isPlaying={isPlaying}
+                                                           key={"shadow" + dancer.id}
+                                                           dancer={dancer}
+                                                           //   formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                                           localSettings={localSettings}
+                                                        />
+                                                     );
+                                                  })}
+                                       </>
+                                    ) : null}
+                                 </Canvas>
+                              ) : null}
+                           </div>
                            <FormationControls
                               zoom={zoom}
                               setIsChangingZoom={setIsChangingZoom}
@@ -1150,9 +1164,7 @@ const Edit = ({
                               setPlaybackRate={setPlaybackRate}
                               addToStack={addToStack}
                               pushChange={pushChange}
-                              selectedFormation={selectedFormation}
                               songDuration={songDuration}
-                              setSelectedFormation={setSelectedFormation}
                               player={player}
                               isPlaying={isPlaying}
                               setIsPlaying={setIsPlaying}
@@ -1176,9 +1188,7 @@ const Edit = ({
                         setPlaybackRate={setPlaybackRate}
                         addToStack={addToStack}
                         pushChange={pushChange}
-                        selectedFormation={selectedFormation}
                         songDuration={songDuration}
-                        setSelectedFormation={setSelectedFormation}
                         player={player}
                         isPlaying={isPlaying}
                         setIsPlaying={setIsPlaying}
@@ -1200,8 +1210,6 @@ const Edit = ({
                         pushChange={pushChange}
                         setSelectedDancers={setSelectedDancers}
                         songDuration={songDuration}
-                        selectedFormation={selectedFormation}
-                        setSelectedFormation={setSelectedFormation}
                         isPlaying={isPlaying}
                         position={position}
                         soundCloudTrackId={soundCloudTrackId}

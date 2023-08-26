@@ -15,16 +15,12 @@ export const DancerAlias: React.FC<{
    dancer: dancer;
    currentFormationIndex: number | null;
    percentThroughTransition: number;
-
-   selectedFormation: number | null;
-   // formations: formation[];
    isPlaying: boolean;
    position: number | null;
 
    selectedDancers: string[];
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
    draggingDancerId: string | null;
-   // cloudSettings: cloudSettings;
 
    zoom: number;
    setZoom: Function;
@@ -32,21 +28,16 @@ export const DancerAlias: React.FC<{
    index: number;
    collisions: any;
    isChangingCollisionRadius: boolean;
-   // items: item[];
 }> = ({
    dancer,
    currentFormationIndex,
    percentThroughTransition,
-   // formations,
-
-   selectedFormation,
    isPlaying,
    position,
 
    selectedDancers,
    coordsToPosition,
    draggingDancerId,
-   // cloudSettings,
    zoom,
    setZoom,
    localSettings,
@@ -55,10 +46,11 @@ export const DancerAlias: React.FC<{
    isChangingCollisionRadius,
    // items,
 }) => {
-   let { formations, items, cloudSettings } = useStore();
+   let { formations, items, cloudSettings, selectedFormations, getFirstSelectedFormation } = useStore();
    const others = useStore((state) => state.liveblocks.others);
+   // const thisOne = getCurrentFormation();
 
-   const othersOnThisFormation = others.filter((other) => other.presence.selectedFormation === selectedFormation);
+   const othersOnThisFormation = others.filter((other) => other.presence?.selectedFormations?.includes(getFirstSelectedFormation()?.id));
    const othersOnThisDancer = othersOnThisFormation.filter((other) => other.presence.selectedDancers.includes(dancer.id));
    let { stageDimensions } = cloudSettings;
    let { dancerStyle, collisionRadius, stageFlipped } = localSettings;
@@ -89,14 +81,9 @@ export const DancerAlias: React.FC<{
          return { ...formation, positions: flippedPositions };
       });
    }
-   // let isInCollision = selectedFormation
-   //    ? collisions
-   //         ?.map((collision) => collision.dancers)
-   //         .flat(Infinity)
-   //         .includes(dancer.id)
-   //    : false;
-   if (selectedFormation === null) return <></>;
-   let dancerPos = formations[selectedFormation]?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id);
+
+   if (!selectedFormations.length) return <></>;
+   let dancerPos = getFirstSelectedFormation()?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id);
 
    if (!dancerPos) return <></>;
 
@@ -108,16 +95,11 @@ export const DancerAlias: React.FC<{
       myPosition = dancerPos?.position;
    }
    // if there is no formation selected and the track is not playing, then just return nothing
-   if (selectedFormation === null) return <></>;
+
    // if the dancer does not have any coordinates right now, return nothing since it shouln't be displayed
    if (!myPosition) return <></>;
 
    let { left, top } = coordsToPosition(myPosition);
-
-   // // since only one person should be selecting a single dancer, we just choose the first person that's selecting that dancer
-   // let idSelectingMe = Object.keys(userPositions).filter(
-   //    (id) => userPositions[id].selectedFormation === selectedFormation && userPositions[id].selectedDancers.includes(dancer.id)
-   // )?.[0];
 
    const thisItem = items.find((item) => item.id === dancerPos?.itemId) || null;
 
@@ -148,6 +130,12 @@ export const DancerAlias: React.FC<{
                </p>
             </div>
          ) : null} */}
+         <style jsx>{`
+            .text-outline {
+               color: white;
+               text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            }
+         `}</style>
          <div
             style={{
                left: left,
@@ -267,45 +255,47 @@ export const DancerAlias: React.FC<{
                               : "#404040"
                            : hexToRGBA(dancerPos?.color || dancer?.color || "#db2777", 0.5)
                      }
-                     // stroke-width="8"
+                     strokeWidth={selectedDancers.includes(dancer.id) ? 20 : 8}
                      d="M3.5 3.5h133v133H3.5z"
                   />
                </svg>
             ) : dancer.shape === "triangle" ? (
                <svg
-                  className={` w-full h-full select-none  pointer-events-none flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
+                  className={` w-full h-full select-none  pointer-events-none relative bottom-2 flex  flex-row justify-center items-center  z-[40] mr-auto ml-auto cursor-default `}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 134 116"
                >
-                  <path
-                     style={{
-                        transition: "fill 0.5s ease",
-                     }}
-                     className="group-hover:stroke-[20px]"
-                     fill={dancerPos?.color || dancer?.color || "#db2777"}
-                     stroke={
-                        selectedDancers.includes(dancer.id) && !isPlaying
-                           ? localSettings.isDarkMode
-                              ? "white"
-                              : "#404040"
-                           : hexToRGBA(dancerPos?.color || dancer?.color || "#db2777", 0.5)
-                     }
-                     strokeWidth="8"
-                     d="M8.9763 110.5L67 10L125.024 110.5H8.9763Z"
-                  />
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 366 317">
+                     <path
+                        style={{
+                           transition: "fill 0.5s ease",
+                        }}
+                        className="group-hover:stroke-[20px] "
+                        fill={dancerPos?.color || dancer?.color || "#db2777"}
+                        stroke={
+                           selectedDancers.includes(dancer.id) && !isPlaying
+                              ? localSettings.isDarkMode
+                                 ? "white"
+                                 : "#404040"
+                              : hexToRGBA(dancerPos?.color || dancer?.color || "#db2777", 0.5)
+                        }
+                        strokeWidth={selectedDancers.includes(dancer.id) ? 20 : 8}
+                        d="M191.66 35 183 20l-8.66 15L26.2494 291.5l-8.6603 15H348.411l-8.66-15L191.66 35Z"
+                     />
+                  </svg>
                </svg>
             ) : (
                <svg
                   className={` w-full h-full select-none  pointer-events-none flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
-                  viewBox="0 0 154 154"
+                  viewBox="0 0 190 190"
                >
                   <circle
-                     cx="77"
-                     cy="77"
-                     r="65"
+                     cx="95"
+                     cy="95"
+                     r="80"
                      style={{
                         transition: "fill 0.5s ease",
                      }}
@@ -335,7 +325,9 @@ export const DancerAlias: React.FC<{
                </p>
             ) : null}
             <div className="select-none w-full h-full font-semibold cursor-default text-center absolute top-0 left-0 grid place-items-center  pointer-events-none text-white z-50 ">
-               <p> {dancerStyle === "numbered" ? <>{index + 1}</> : dancerStyle === "initials" ? <> {initials}</> : <></>}</p>
+               <p className="text-2xl ">
+                  {dancerStyle === "numbered" ? index + 1 : dancerStyle === "initials" || dancerStyle === "initialsAndName" ? initials : <></>}
+               </p>
             </div>
 
             {/* <p id={dancer.id} data-type={"dancer"} className="select-none font-semibold cursor-default  ">
