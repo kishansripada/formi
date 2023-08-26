@@ -38,22 +38,35 @@ export const NoFilePlayer: React.FC<{
       position,
       playbackRate,
    }) => {
-      const { formations } = useStore();
+      const { formations, get } = useStore();
       let songDuration = formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0);
       // console.log({ playbackRate });
       useEffect(() => {
          let interval;
          if (isPlaying) {
+            // interval = setInterval(() => {
+            //    setPosition((prevTime: number) => {
+            //       if (prevTime < songDuration) {
+            //          //  console.log("adding 0.5 sec");
+            //          return prevTime + 0.02 * playbackRate;
+            //       } else {
+            //          setIsPlaying(false);
+            //          return 0;
+            //       }
+            //    });
+            // }, 20);
             interval = setInterval(() => {
-               setPosition((prevTime: number) => {
-                  if (prevTime < songDuration) {
-                     //  console.log("adding 0.5 sec");
-                     return prevTime + 0.02 * playbackRate;
-                  } else {
-                     setIsPlaying(false);
-                     return 0;
-                  }
-               });
+               const prevTime = get().position;
+               let newTime = prevTime;
+               if (prevTime < songDuration) {
+                  //  console.log("adding 0.5 sec");
+                  newTime = prevTime + 0.02;
+                  // playbackRate
+               } else {
+                  setIsPlaying(false);
+                  newTime = 0;
+               }
+               setPosition(newTime);
             }, 20);
          }
          return () => clearInterval(interval);
