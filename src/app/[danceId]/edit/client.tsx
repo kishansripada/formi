@@ -152,8 +152,8 @@ const Edit = ({
       setSegments(initialData.segments);
       setDancers(initialData.dancers);
       setFormations(initialData.formations);
-      // setViewOnly(viewOnlyInitial);
-      setViewOnly(false);
+      setViewOnly(viewOnlyInitial);
+      // setViewOnly(false);
       setDanceName(initialData.name);
       setProps(initialData.props);
       setItems(initialData.items);
