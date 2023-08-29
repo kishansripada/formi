@@ -57,6 +57,8 @@ export const AudioControls: React.FC<{
       get,
       decrementSelectedFormation,
       incrementSelectedFormation,
+      pauseHistory,
+      resumeHistory,
    } = useStore();
 
    const [playbackRateIndex, setPlaybackRateIndex] = useState(2);

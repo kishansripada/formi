@@ -91,7 +91,7 @@ export const ProjectPreview: React.FC<{
                   onClick={() => {
                      deleteProject(project.id);
                   }}
-                  className="ml-auto  px-3 text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-red-500 text-red-400  "
+                  className="ml-auto hidden lg:grid  px-3 text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  place-items-center  bg-opacity-20 py-2 bg-red-500 text-red-400  "
                >
                   Delete Project
                </button>

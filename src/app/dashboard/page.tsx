@@ -88,6 +88,6 @@ async function getServerSideProps() {
 }
 
 export default async function Page({}) {
-   const { dances: myDances, sharedWithMe } = await getServerSideProps();
-   return <Client sharedWithMe={sharedWithMe} myDances={myDances}></Client>;
+   const { dances: myDances, sharedWithMe, session } = await getServerSideProps();
+   return <Client sharedWithMe={sharedWithMe} myDances={myDances} session={session}></Client>;
 }

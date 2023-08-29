@@ -65,7 +65,7 @@ export default async function RootLayout({ children, params }: { children: React
           `}
          </style>
 
-         <div className="h-screen flex flex-col font-inter overscroll-none overflow-hidden bg-[#09090b] text-white">
+         <div className="h-[calc(100dvh)] flex flex-col font-inter overscroll-none overflow-hidden bg-[#09090b] text-white">
             {/* <div className="h-10 bg-pink-600 w-full grid place-items-center">
                <p className="text-xs text-white">try editing with your friends in real-time by sending them a link to your performance!</p>
             </div> */}
