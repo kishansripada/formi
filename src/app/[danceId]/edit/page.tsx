@@ -1,6 +1,6 @@
 // import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Edit from "./client";
 import { Database } from "../../../types/supabase";
@@ -70,6 +70,9 @@ const getServerSideProps = async (danceId: string) => {
    // if (extraDancers(dance.formations, dance.dancers).length > 0 || missingDancers(dance.formations, dance.dancers).length > 0) {
    //    throw new Error("Dancers and formations are out of sync");
    // }
+   const headersList = headers();
+   const userAgent = headersList.get("user-agent");
+   let isMobileView = userAgent!.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i);
 
    return {
       // props: {
@@ -79,6 +82,7 @@ const getServerSideProps = async (danceId: string) => {
       session,
       permissions,
       hasSeenCollab,
+      isMobileView: Boolean(isMobileView),
 
       // },
    };
@@ -98,6 +102,7 @@ export default async function Page({ params }: { params: { danceId: string } }) 
          viewOnly={data.viewOnly}
          pricingTier={data.pricingTier}
          hasSeenCollab={data.hasSeenCollab}
+         isMobileView={data.isMobileView}
       />
    );
 }

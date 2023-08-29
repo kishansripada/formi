@@ -4,6 +4,9 @@ import { liveblocks } from "@liveblocks/zustand";
 import type { WithLiveblocks } from "@liveblocks/zustand";
 import { Status, createClient } from "@liveblocks/client";
 interface Store {
+   isMobileView: boolean;
+   setIsMobileView: (isMobileView: boolean) => void;
+
    selectedFormation: number | null;
    setSelectedFormation: (index: number | null) => void;
 
@@ -67,8 +70,8 @@ interface Store {
 
 const PUBLIC_KEY = "pk_prod_3E8sI-8PR2FYB3__NcQ9YdEwhDyOKWvtC317Wo-fRSOQBCJBD4cmubrnKN8NE4bI";
 const client = createClient({
-   // publicApiKey: PUBLIC_KEY,
-   authEndpoint: "/api/liveblocks-auth",
+   publicApiKey: PUBLIC_KEY,
+   // authEndpoint: "/api/liveblocks-auth",
 });
 
 type Presence = {
@@ -81,6 +84,9 @@ type Presence = {
 export const useStore = create<WithLiveblocks<Store, Presence>>(
    liveblocks(
       (set, get) => ({
+         isMobileView: false,
+         setIsMobileView: (isMobileView: boolean) => set({ isMobileView }),
+
          selectedFormation: 0,
 
          selectedDancers: [],
@@ -115,7 +121,7 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
 
          formations: [],
          setFormations: (formations: formation[]) => {
-            if (get().viewOnly) return;
+            // if (get().viewOnly) return;
             set({ formations });
          },
 

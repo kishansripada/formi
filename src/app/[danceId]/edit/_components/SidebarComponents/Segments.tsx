@@ -17,7 +17,7 @@ export const Segments: React.FC<{
    const { segments, setSegments, updateSegmentProperty, viewOnly } = useStore();
    return (
       <>
-         <div className="lg:flex hidden w-[260px]  min-w-[260px] flex-col overflow-hidden  bg-white dark:bg-neutral-800 dark:text-white h-full ">
+         <div className="flex  w-[260px]  min-w-[260px] flex-col overflow-hidden  bg-white dark:bg-neutral-800 dark:text-white h-full ">
             <div className="flex-grow overflow-y-scroll">
                {segments.map((segment, index) => (
                   <div

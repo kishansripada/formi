@@ -62,7 +62,7 @@ export const CurrentFormation: React.FC<{
 
    return (
       <>
-         <div className=" lg:flex hidden  w-[260px] bg-white  min-w-[260px] flex-col h-full  dark:bg-neutral-800 dark:text-neutral-100  ">
+         <div className=" flex   w-[260px] bg-white  min-w-[260px] flex-col h-full  dark:bg-neutral-800 dark:text-neutral-100  ">
             {selectedFormations.length && getFirstSelectedFormation() ? (
                <>
                   {/* <div className="px-6">
@@ -205,7 +205,7 @@ export const CurrentFormation: React.FC<{
                         value={getFirstSelectedFormation().name || ""}
                      />
                   </div>
-                  <div className="overflow-y-scroll  px-3 mt-4 flex-grow">
+                  <div className="overflow-y-scroll   px-3 mt-4 flex-grow">
                      {getFirstSelectedFormation()?.comments?.map((comment: comment) => {
                         return (
                            <div key={comment.id} className="flex flex-row group items-start w-full  mb-6">
@@ -251,7 +251,12 @@ export const CurrentFormation: React.FC<{
                      })}
                   </div>
 
-                  <div className="w-full pb-3 px-3  ">
+                  <div
+                     style={{
+                        touchAction: "none",
+                     }}
+                     className="w-full pb-3 px-3  "
+                  >
                      <textarea
                         value={getFirstSelectedFormation()?.notes || ""}
                         onChange={(e) => {
@@ -267,7 +272,7 @@ export const CurrentFormation: React.FC<{
                               })
                            );
                         }}
-                        disabled={viewOnly}
+                        // disabled={viewOnly}
                         className="dark:bg-neutral-700 transition bg-neutral-100  w-full focus:outline-none p-3 text-sm border-2 border-neutral-300 focus:border-pink-300 dark:border-neutral-600 dark:focus:border-pink-600 resize-none rounded-md"
                         cols={30}
                         rows={13}

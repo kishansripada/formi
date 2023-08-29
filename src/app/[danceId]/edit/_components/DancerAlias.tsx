@@ -1,3 +1,4 @@
+import { useGesture } from "@use-gesture/react";
 import {
    cloudSettings,
    dancer,
@@ -10,6 +11,8 @@ import {
    COLORS,
 } from "../../../../types/types";
 import { useStore } from "../store";
+import { useRef } from "react";
+import { useIsDesktop } from "../../../../hooks";
 
 export const DancerAlias: React.FC<{
    dancer: dancer;
@@ -46,7 +49,49 @@ export const DancerAlias: React.FC<{
    isChangingCollisionRadius,
    // items,
 }) => {
-   let { formations, items, cloudSettings, selectedFormations, getFirstSelectedFormation } = useStore();
+   let { formations, items, cloudSettings, selectedFormations, getFirstSelectedFormation, setFormations, get, isMobileView } = useStore();
+   const container = useRef<HTMLDivElement>();
+   const horizontalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom);
+   const verticalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom);
+   // const isDesktop = useIsDesktop();
+   useGesture(
+      {
+         onDrag: (state) => {
+            if (!isMobileView) return;
+
+            setFormations(
+               get().formations.map((formation) => {
+                  if (get().selectedFormations.includes(formation.id)) {
+                     return {
+                        ...formation,
+                        positions: formation.positions.map((position) => {
+                           if (get().selectedDancers.includes(position.id)) {
+                              console.log(position.position.x + state.delta[0] * horizontalScalar, position.position.x);
+                              return {
+                                 ...position,
+                                 position: {
+                                    x: position.position.x + state.delta[0] * horizontalScalar,
+                                    y: position.position.y - state.delta[1] * verticalScalar,
+                                 },
+                              };
+                           }
+                           return position;
+                        }),
+                     };
+                  }
+                  return formation;
+               })
+            );
+            // console.log(getFirstSelectedFormation()?.positions.find((position) => position.id === dancer.id)?.position.x);
+         },
+      },
+      {
+         eventOptions: { passive: false },
+         target: container.current,
+      }
+      // config
+   );
+
    const others = useStore((state) => state.liveblocks.others);
    // const thisOne = getCurrentFormation();
 
@@ -140,6 +185,7 @@ export const DancerAlias: React.FC<{
             style={{
                left: left,
                top: top,
+               // transform: `translate(${left}px, ${top}px)`,
                WebkitUserSelect: "none",
                MozUserSelect: "none",
                msUserSelect: "none",
@@ -157,14 +203,18 @@ export const DancerAlias: React.FC<{
                //          ? "white"
                //          : "#404040"
                //       : hexToRGBA(dancer?.color || "#db2777", 0.5),
-               transition: !draggingDancerId && !isPlaying ? "left 0.33s ease-in-out, top 0.33s ease-in-out" : "",
+               transition: !draggingDancerId && !isPlaying ? "left 0.33s ease-in-out, top 0.33s ease-in-out, transform 0.33s ease-in-out" : "",
+               transform: `scale(${draggingDancerId === dancer.id ? (isMobileView ? 1.5 : 1.2) : 1}) translate(-50%, -50%)`,
                // width: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
                // height: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
+               touchAction: "none",
             }}
-            onMouseDown={(e) => e.preventDefault()}
+            ref={container}
+            // onMouseDown={(e) => e.preventDefault()}
             id={dancer.id}
+            // {...bind()}
             data-type={"dancer"}
-            className={`   group select-none  lg:pointer-events-auto pointer-events-none flex  -translate-y-1/2 -translate-x-1/2 flex-row justify-center items-center absolute z-[30] mr-auto ml-auto cursor-default `}
+            className={`   group   lg:pointer-events-auto  flex   flex-row justify-center items-center absolute z-[30] mr-auto ml-auto cursor-default `}
          >
             {thisItem && (
                <div

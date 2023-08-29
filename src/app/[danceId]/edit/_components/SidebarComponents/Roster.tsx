@@ -157,8 +157,13 @@ export const Roster: React.FC<{
                </div>
             </>
          ) : null}
-         <div className="lg:flex hidden w-[260px]  min-w-[260px] flex-col   bg-white dark:bg-neutral-800 dark:text-white h-full ">
-            <div className="flex-grow overflow-y-scroll">
+         <div className="flex  w-[260px]  min-w-[260px] flex-col   bg-white dark:bg-neutral-800 dark:text-white h-full ">
+            <div
+               style={{
+                  touchAction: "pan-y",
+               }}
+               className="flex-grow overflow-y-scroll overscroll-y-none"
+            >
                {dancers.slice().map((dancer, index) => (
                   <Dancer
                      // uniqueDancers={uniqueDancers}

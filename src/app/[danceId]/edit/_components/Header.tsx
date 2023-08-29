@@ -381,13 +381,13 @@ export const Header: React.FC<{
                      {saved ? (
                         <></>
                      ) : (
-                        <div className="flex flex-row items-center  ml-3">
+                        <div className=" flex-row items-center  ml-3 lg:flex hidden">
                            <p className="dark:text-neutral-300 text-neutral-700 text-xs">saving...</p>
                         </div>
                      )}
                   </>
                ) : (
-                  <p className="dark:text-neutral-300 text-neutral-700 text-sm  ml-3">View only</p>
+                  <p className="dark:text-neutral-300 text-neutral-700 text-sm lg:block hidden ml-3">View only</p>
                )}
             </div>
             <div className="w-1/5">
@@ -418,34 +418,38 @@ export const Header: React.FC<{
                   </Link>
                )}
 
-               <div className="px-3">
+               <div className="px-3 hidden lg:block">
                   <div className={styles.status} data-status={status}>
                      <div className={styles.statusCircle} />
                      <div className={styles.statusText}>{status}</div>
                   </div>
                </div>
-               {others.length
-                  ? others
-                       .filter((other) => other.presence.nameOrEmail)
-                       .map((person, i) => {
-                          return (
-                             <div
-                                key={person.connectionId}
-                                //   onClick={() => {
-                                //      setSelectedFormation(userPositions?.[id]?.selectedFormation || 0);
-                                //   }}
-                                style={{
-                                   border: "2px solid white",
-                                   backgroundColor: COLORS[person.connectionId % COLORS.length],
-                                }}
-                                className=" grid place-items-center w-9 select-none cursor-pointer  h-9 rounded-full mr-2"
-                             >
-                                {/* <img className="rounded-full" src={otherInitials} alt="" />{" "} */}
-                                <p className="text-white text-xs font-bold">{initials(person.presence.nameOrEmail) || "An"}</p>
-                             </div>
-                          );
-                       })
-                  : null}
+               <div className="lg:flex hidden">
+                  {" "}
+                  {others.length
+                     ? others
+                          .filter((other) => other.presence.nameOrEmail)
+                          .map((person, i) => {
+                             return (
+                                <div
+                                   key={person.connectionId}
+                                   //   onClick={() => {
+                                   //      setSelectedFormation(userPositions?.[id]?.selectedFormation || 0);
+                                   //   }}
+                                   style={{
+                                      border: "2px solid white",
+                                      backgroundColor: COLORS[person.connectionId % COLORS.length],
+                                   }}
+                                   className=" grid place-items-center w-9 select-none cursor-pointer  h-9 rounded-full mr-2"
+                                >
+                                   {/* <img className="rounded-full" src={otherInitials} alt="" />{" "} */}
+                                   <p className="text-white text-xs font-bold">{initials(person.presence.nameOrEmail) || "An"}</p>
+                                </div>
+                             );
+                          })
+                     : null}
+               </div>
+
                <button title="Export pdf" onClick={exportPdf} className=" hidden lg:block h-full text-xs  min-w-[48px]  py-2 ">
                   <div className="flex flex-row items-center justify-center ">
                      <svg className="h-6 w-6 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
@@ -457,7 +461,7 @@ export const Header: React.FC<{
                   <>
                      <button
                         onClick={() => setShareIsOpen((state: boolean) => !state)}
-                        className="dark:bg-pink-600 bg-pink-300 hidden lg:block text-xs rounded-md px-3 py-2 ml-2"
+                        className="dark:bg-pink-600 bg-pink-300  text-xs rounded-md px-3 py-2 ml-2"
                      >
                         <div className="flex flex-row items-center text-black dark:text-white ">
                            <p className="">Share</p>

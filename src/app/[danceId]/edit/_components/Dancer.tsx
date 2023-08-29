@@ -9,7 +9,7 @@ export const Dancer: React.FC<{
    pushChange: Function;
    localSettings: localSettings;
 }> = ({ dancer, selectedDancers, index, setSelectedDancers, pushChange, localSettings }) => {
-   const { viewOnly } = useStore();
+   const { viewOnly, isMobileView } = useStore();
    let { name, id, instagramUsername, color } = dancer;
    const { isDarkMode } = localSettings;
    let amSelected = selectedDancers.includes(id);
@@ -59,6 +59,10 @@ export const Dancer: React.FC<{
       <>
          <div
             onClick={() => {
+               if (isMobileView) return;
+               setSelectedDancers([id]);
+            }}
+            onTouchStart={() => {
                setSelectedDancers([id]);
             }}
             className={`flex flex-row items-center px-5 box-border ${

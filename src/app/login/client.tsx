@@ -78,10 +78,15 @@ const Client = () => {
                opacity: 0.2,
             }}
          ></div> */}
-         <div className="flex  flex-row  h-screen overflow-hidden relative font-inter">
+         <div
+            style={{
+               touchAction: "none",
+            }}
+            className="flex  flex-row  h-[calc(100dvh)] overflow-hidden relative font-inter"
+         >
             <Toaster></Toaster>
             <div className="flex flex-col items-center w-full lg:w-[40%] justify-center">
-               <div className="flex flex-col items-center w-96">
+               <div className="flex flex-col items-center w-96 px-5">
                   <p className="text-5xl w-full mb-6 font-bold">Welcome back!</p>
                   {/* <p className=" ">Log in to your account and start creating</p> */}
 

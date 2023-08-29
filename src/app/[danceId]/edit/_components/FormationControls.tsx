@@ -94,14 +94,14 @@ export const FormationControls: React.FC<{
             style={{
                pointerEvents: viewOnly ? "none" : "all",
             }}
-            className="w-full h-[40px] min-h-[40px] max-h-[40px]  border-t-neutral-300 border-t bg-white flex flex-row items-center justify-end px-3 dark:bg-neutral-800 mt-auto dark:border-neutral-700 dark:text-white"
+            className="w-full h-[40px] min-h-[40px] max-h-[40px]  border-t-neutral-300 border-t bg-white md:flex hidden flex-row items-center justify-end px-3 dark:bg-neutral-800 mt-auto dark:border-neutral-700 dark:text-white"
          >
             <button
                onClick={() => {
                   pauseHistory();
                   if (!selectedFormations.length) return;
 
-                  if (formations.length === 1) {
+                  if (get().formations.length === 1) {
                      toast.error("You must have at least one formation");
                      return;
                   }
@@ -274,7 +274,7 @@ export const FormationControls: React.FC<{
             ) : null}
 
             <div className="w-[1px] bg-neutral-300 dark:bg-neutral-700 h-[70%]"></div>
-            <div className="flex flex-row items-center ml-7 text-neutral-700 dark:text-neutral-200 mr-5">
+            <div className="lg:flex hidden flex-row items-center ml-7 text-neutral-700 dark:text-neutral-200 mr-5">
                <div className="w-24 rounded-full h-1 dark:bg-neutral-600 bg-neutral-200 mx-2 relative">
                   <div
                      // onMouseDown={() => {

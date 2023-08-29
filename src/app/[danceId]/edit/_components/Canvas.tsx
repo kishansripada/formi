@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { GridLines } from "./GridLines";
+import Hammer from "hammerjs";
 
 import {
    dancer,
@@ -21,7 +22,8 @@ import { StageLines } from "./StageLines";
 import { OldGridLines } from "./OldGridLines";
 import { useStore } from "../store";
 import { AuthSession } from "@supabase/supabase-js";
-
+import { useGesture, usePinch } from "@use-gesture/react";
+import { useIsDesktop } from "../../../../hooks";
 export const Canvas: React.FC<{
    children: React.ReactNode;
    selectedDancers: string[];
@@ -93,6 +95,7 @@ export const Canvas: React.FC<{
          horizontalFineDivisions,
          horizontalGridSubdivisions,
       },
+      isMobileView,
    } = useStore();
    // const undo = useStore((state) => state.liveblocks.room?.history.undo);
    let { selectedFormations, getFirstSelectedFormation } = useStore();
@@ -103,7 +106,7 @@ export const Canvas: React.FC<{
    const stageFlippedFactor = stageFlipped ? -1 : 1;
    // const stageFlippedFactor = 1;
    // console.log({ stageFlipped });
-
+   const isDesktop = useIsDesktop();
    const [draggingCommentId, setDraggingCommentId] = useState<string | null>();
    const [changingControlId, setChangingControlId] = useState<null | string>(null);
    const [changingControlType, setChangingControlType] = useState<"start" | "end" | null>(null);
@@ -170,8 +173,11 @@ export const Canvas: React.FC<{
 
       let heightPercentage = (container.current.clientHeight - (buffer || 75)) / stage.current.clientHeight;
       let widthPercentage = (container.current.clientWidth - (buffer || 75)) / stage.current.clientWidth;
+
+      // console.log(maxTopOffset);
       // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
       // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
+      // setZoom(1)
       setZoom(Math.min(heightPercentage, widthPercentage));
    };
 
@@ -181,7 +187,7 @@ export const Canvas: React.FC<{
          setScrollOffset({ x: 0, y: 0 });
          return;
       }
-      fitStageToScreen();
+      fitStageToScreen(isMobileView ? 10 : 75);
    }, [container?.current?.clientHeight, stage?.current?.clientHeight, stageDimensions]);
 
    useEffect(() => {
@@ -193,6 +199,8 @@ export const Canvas: React.FC<{
 
    const handleDragMove = (e: any) => {
       if (!selectedFormations.length || isPlaying) return;
+      if (isMobileView) return;
+
       const movementX = e.movementX * horizontalScalar;
       const movementY = e.movementY * verticalScalar;
       const target = e.currentTarget;
@@ -612,6 +620,7 @@ export const Canvas: React.FC<{
          setSelectedDancers([]);
          setSelectedPropIds([]);
          // Get the target
+         if (isMobileView) return;
          const target = e.currentTarget;
 
          // Get the bounding rectangle of target
@@ -784,37 +793,102 @@ export const Canvas: React.FC<{
    const [scrollOffset, setScrollOffset] = useState({ x: 0, y: 0 });
    const ZOOM_BASE = 1.6; // Adjust the base to fit your preferred zooming speed.
 
-   useEffect(() => {
-      const handleWheel = (event) => {
-         if (
-            !event
-               .composedPath()
-               .map((elem) => elem.id)
-               .includes("stage")
-         )
-            return;
-         if (event.ctrlKey) {
-            event.preventDefault();
-            setZoom((oldZoom) => {
-               const logZoom = Math.log(oldZoom) / Math.log(ZOOM_BASE);
-               const newZoom = Math.pow(ZOOM_BASE, logZoom - event.deltaY * 0.01);
-               return Math.min(Math.max(0.1, newZoom), 4);
-            });
-         } else {
-            event.preventDefault();
+   // useEffect(() => {
+   //    const handleWheel = (event) => {
+   //       if (
+   //          !event
+   //             .composedPath()
+   //             .map((elem) => elem.id)
+   //             .includes("stage")
+   //       )
+   //          return;
+   //       if (event.ctrlKey) {
+   //          // event.preventDefault();
+   //          // setZoom((oldZoom) => {
+   //          //    const logZoom = Math.log(oldZoom) / Math.log(ZOOM_BASE);
+   //          //    const newZoom = Math.pow(ZOOM_BASE, logZoom - event.deltaY * 0.01);
+   //          //    return Math.min(Math.max(0.1, newZoom), 4);
+   //          // });
+   //       } else {
+   //          event.preventDefault();
+   //          // setScrollOffset((scrollOffset) => ({
+   //          //    x: scrollOffset.x - event.deltaX / zoom / 1.5,
+   //          //    y: scrollOffset.y - event.deltaY / zoom / 1.5,
+   //          // }));
+   //       }
+   //    };
+
+   //    document.addEventListener("wheel", handleWheel, { passive: false });
+
+   //    return () => {
+   //       document.removeEventListener("wheel", handleWheel);
+   //    };
+   // }, [zoom]);
+
+   useGesture(
+      {
+         onPinch: ({ offset: [d] }) => {
+            let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
+            let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
+
+            // console.log(maxTopOffset);
+            // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
+            // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
+            // setZoom(1)
+            const maxZoom = Math.min(heightPercentage, widthPercentage);
+            // let zoom = state.memo[0] * state.movement[0];
+            const newZoom = d / 5;
+            if (newZoom < maxZoom) {
+               setScrollOffset({ x: 0, y: 0 });
+            }
+            if (isMobileView) {
+               setZoom((zoom: number) => (newZoom < maxZoom ? maxZoom : newZoom));
+            } else {
+               setZoom(newZoom);
+            }
+
+            // console.log("pinching");
+            // setZoom(zoom);
+         },
+         onDrag: (state) => {
+            if (!isMobileView) return;
+            if (state.target.id) return;
+            let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
+            let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
+
+            // console.log(maxTopOffset);
+            // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
+            // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
+            // setZoom(1)
+            const maxZoom = Math.min(heightPercentage, widthPercentage);
+            if (maxZoom === zoom) return;
+
+            // // console.log(state.delta);
+
             setScrollOffset((scrollOffset) => ({
-               x: scrollOffset.x - event.deltaX / zoom / 1.5,
-               y: scrollOffset.y - event.deltaY / zoom / 1.5,
+               x: scrollOffset.x + state.delta[0] / zoom,
+               y: scrollOffset.y + state.delta[1] / zoom,
             }));
-         }
-      };
+         },
+         onWheel: (state) => {
+            if (isMobileView) return;
+            // console.log(state.delta);
 
-      document.addEventListener("wheel", handleWheel, { passive: false });
-
-      return () => {
-         document.removeEventListener("wheel", handleWheel);
-      };
-   }, [zoom]);
+            // console.log(maxTopOffset);
+            state.event.preventDefault();
+            const newY = scrollOffset.y - state.delta[1] / zoom / 1.5;
+            setScrollOffset((scrollOffset) => ({
+               x: scrollOffset.x - state.delta[0] / zoom / 1.5,
+               y: newY,
+            }));
+         },
+      },
+      {
+         eventOptions: { passive: false },
+         target: container.current,
+      }
+      // config
+   );
 
    // useEffect(() => {
    //    const div = container.current;
@@ -879,6 +953,10 @@ export const Canvas: React.FC<{
             className="  relative  bg-neutral-100  dark:bg-neutral-900  h-full  w-full overflow-scroll  overscroll-none  flex flex-row items-center justify-center "
             id="stage"
             ref={container}
+            // {...bind()}
+            style={{
+               touchAction: "none",
+            }}
             onPointerUp={pointerUp}
             onPointerMove={handleDragMove}
 

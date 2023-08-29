@@ -80,7 +80,7 @@ export const Formation: React.FC<{
                <div className="h-[1px] rounded-full bg-neutral-800 w-[12px] mt-[1px]"></div>
             </div> */}
             <div
-               className={`  cursor-pointer    dark:bg-black  h-[50px]  dark:text-white  rounded-lg   overflow-hidden border-neutral-300 dark:border-neutral-600  border-2 flex flex-col  relative   `}
+               className={`  cursor-pointer    dark:bg-black  md:h-[50px] h-[40px]  dark:text-white  rounded-lg   overflow-hidden border-neutral-300 dark:border-neutral-600  border-2 flex flex-col  relative   `}
                style={{
                   borderColor: selectedFormations.includes(formation.id)
                      ? "#db2777"
@@ -134,7 +134,7 @@ export const Formation: React.FC<{
                         })
                      );
                   }}
-                  className="text-[10px] select-none bg-transparent cursor-pointer p-1 font-semibold  relative whitespace-nowrap  focus:outline-none  "
+                  className="text-[10px] hidden lg:block select-none bg-transparent cursor-pointer p-1 font-semibold   relative whitespace-nowrap  focus:outline-none  "
                />
 
                {!viewOnly ? (
@@ -152,7 +152,7 @@ export const Formation: React.FC<{
 
                <div
                   duration={formation.transition.durationSeconds}
-                  className={` flex flex-row border-t dark:border-neutral-600  box-border h-[40%] mt-auto   `}
+                  className={` flex flex-row border-t dark:border-neutral-600  box-border md:h-[40%] h-full mt-auto   `}
                >
                   {index !== 0 ? (
                      <div

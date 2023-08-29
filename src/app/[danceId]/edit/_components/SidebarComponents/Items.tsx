@@ -71,7 +71,7 @@ export const Items: React.FC<{
             style={{
                pointerEvents: viewOnly ? "none" : "all",
             }}
-            className="lg:flex hidden  w-[260px]  min-w-[260px] h-full  flex-col   bg-white  overflow-scroll dark:bg-neutral-800 dark:text-white  pt-6 "
+            className="flex   w-[260px]  min-w-[260px] h-full  flex-col   bg-white  overflow-scroll dark:bg-neutral-800 dark:text-white  pt-6 "
          >
             <div className=" font-medium mb-2 flex flex-row  items-center  px-4 text-sm ">
                <p>Handheld props</p>

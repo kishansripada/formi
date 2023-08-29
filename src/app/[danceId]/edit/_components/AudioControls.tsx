@@ -46,6 +46,7 @@ export const AudioControls: React.FC<{
    isChangingZoom,
    setIsChangingZoom,
    setHelpUrl,
+   dancers,
 }) => {
    const {
       formations,
@@ -88,6 +89,7 @@ export const AudioControls: React.FC<{
 
    const newFormation = () => {
       let id = uuidv4();
+      // if (formations.length) {
       setFormations([
          ...formations,
          {
@@ -103,8 +105,26 @@ export const AudioControls: React.FC<{
             notes: "",
          },
       ]);
+      // } else {
+      // console.log("fire");
+      // setFormations([
+      //       {
+      //          id: id,
+      //          name: `Untitled`,
+      //          positions: dancers.map((dancer) => {
+      //             return { id: dancer.id, position: { x: 0, y: 0 } };
+      //          }),
+      //          notes: "",
+      //          durationSeconds: 5,
+      //          transition: {
+      //             durationSeconds: 5,
+      //          },
+      //       },
+      //    ]);
+      // }
+
       setSelectedFormations([get().formations[get().formations.length - 1]?.id]);
-      pushChange();
+      // pushChange();
    };
    const totalDurationOfFormations = formations
       .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
@@ -128,13 +148,13 @@ export const AudioControls: React.FC<{
    return (
       <>
          <div className="min-h-[45px]  dark:bg-black dark:text-neutral-100  bg-neutral-50 w-full border-t dark:border-neutral-700  border-neutral-300 flex flex-row items-center justify-between select-none">
-            <div className="w-[45%] flex flex-col items-center justify-center   pl-4">
+            <div className="md:w-[45%] flex flex-col items-center justify-center   pl-4">
                {!viewOnly ? (
                   <>
-                     <div className="flex flex-row items-center justify-center mr-auto ">
+                     <div className="flex flex-row  items-center justify-center mr-auto ">
                         <button
                            onClick={newFormation}
-                           className=" rounded-md  hidden transition duration-300   mr-4  lg:flex  flex-row items-center   cursor-pointer  "
+                           className=" rounded-md   transition duration-300   mr-4  flex  flex-row items-center   cursor-pointer  "
                         >
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -147,7 +167,8 @@ export const AudioControls: React.FC<{
                               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                            </svg>
 
-                           <p className="text-sm">New Formation </p>
+                           <p className="text-sm hidden md:block">New Formation </p>
+                           <p className="text-sm md:hidden block">New </p>
                         </button>
                         <svg
                            xmlns="http://www.w3.org/2000/svg"
@@ -155,7 +176,7 @@ export const AudioControls: React.FC<{
                            viewBox="0 0 24 24"
                            strokeWidth={1.5}
                            stroke="currentColor"
-                           className="w-5 h-5 ml-1  cursor-pointer"
+                           className="w-5 h-5 ml-1  cursor-pointer hidden md:block"
                            onClick={(e) => {
                               setHelpUrl({ url: "https://www.youtube.com/shorts/m4uBCon7VR4", event: e });
                            }}
@@ -221,8 +242,8 @@ export const AudioControls: React.FC<{
                </button>
             </div>
 
-            <div className="w-[45%] pr-10 flex flex-row  items-center ">
-               <p className=" mr-auto  dark:text-neutral-400 text-neutral-600 ">
+            <div className="w-[45%] pr-10 md:flex hidden flex-row  items-center ">
+               <p className=" mr-auto  dark:text-neutral-400 text-neutral-600 lg:block hidden ">
                   <span>{formatTime(position || 0)}</span>
                </p>
 
@@ -263,7 +284,7 @@ export const AudioControls: React.FC<{
                   <p>{JSON.stringify(playbackRates[playbackRateIndex % 5])}x</p>
                </button>
 
-               <div className="flex flex-row items-center ml-7 text-neutral-700 dark:text-neutral-200">
+               <div className=" flex-row items-center ml-7 text-neutral-700 dark:text-neutral-200 lg:flex hidden">
                   <svg
                      xmlns="http://www.w3.org/2000/svg"
                      fill="none"
@@ -279,7 +300,7 @@ export const AudioControls: React.FC<{
                      />
                   </svg>
 
-                  <div className="w-24 rounded-full h-1 dark:bg-neutral-600 bg-neutral-200 mx-2 relative">
+                  <div className="w-24 rounded-full h-1 dark:bg-neutral-600 bg-neutral-200 mx-2 relative ">
                      <div
                         onMouseDown={() => {
                            setIsChangingZoom(true);
@@ -307,6 +328,62 @@ export const AudioControls: React.FC<{
                   </svg>
                </div>
             </div>
+            <button
+               onClick={() => {
+                  pauseHistory();
+                  if (!selectedFormations.length) return;
+
+                  if (get().formations.length === 1) {
+                     toast.error("You must have at least one formation");
+                     return;
+                  }
+
+                  selectedFormations.forEach((selectedFormationId) => {
+                     if (selectedFormationId === get().formations[0].id) {
+                        setFormations(
+                           get().formations.map((formation, index) => {
+                              if (index === 1) {
+                                 return {
+                                    ...formation,
+                                    durationSeconds: formation.transition.durationSeconds + formation.durationSeconds + formations[0].durationSeconds,
+                                 };
+                              }
+                              return formation;
+                           })
+                        );
+                     } else if (selectedFormationId !== get().formations[get().formations.length - 1].id) {
+                        // console.log("trigger");
+                        setFormations(
+                           get().formations.map((formation, index) => {
+                              if (index === formations.findIndex((formation) => formation.id === selectedFormationId) - 1) {
+                                 return {
+                                    ...formation,
+                                    durationSeconds:
+                                       formation.durationSeconds +
+                                       get().formations.find((formation) => formation.id === selectedFormationId)?.transition.durationSeconds +
+                                       get().formations.find((formation) => formation.id === selectedFormationId).durationSeconds,
+                                 };
+                              }
+                              return formation;
+                           })
+                        );
+                     }
+                  });
+
+                  setSelectedFormations([]);
+                  // remove the formation
+                  setFormations(
+                     get().formations.filter((formation) => {
+                        return !selectedFormations.includes(formation.id);
+                     })
+                  );
+                  resumeHistory();
+                  // pushChange();
+               }}
+               className="   text-xs shadow-sm md:hidden  cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-1 px-3 mr-4 bg-red-500 dark:text-red-400 text-red-600  "
+            >
+               Delete
+            </button>
          </div>
       </>
    );

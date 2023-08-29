@@ -2,7 +2,7 @@ import { dancer, dancerPosition, formation, localSettings } from "../../../../ty
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 
-export const Sidebar: React.FC<{
+export const MobileSidebar: React.FC<{
    setMenuOpen: Function;
    menuOpen: string;
 
@@ -11,12 +11,12 @@ export const Sidebar: React.FC<{
 }> = ({ setMenuOpen, menuOpen, setHelpUrl, setLocalSettings }) => {
    return (
       <>
-         <div className="md:flex  flex-col hidden  h-full  items-center   text-[10px] dark:bg-black  text-black bg-neutral-100  child:mb-5   w-20 min-w-[80px] border-r border-neutral-300 dark:border-neutral-700 overflow-y-scroll">
+         <div className="flex md:hidden justify-around   flex-row    items-center   text-[9px] dark:bg-black  text-black bg-neutral-100   w-full h-[60px] border-neutral-300 dark:border-neutral-700 overflow-y-scroll">
             {/* <button onClick={() => setMenuOpen("formations")}>
                <svg
                   className={` ${
                      menuOpen === "formations" ? "stroke-pink-600" : "dark:stroke-white stroke-neutral-600"
-                  } transition duration-300 ease-in-out  w-7 h-7`}
+                  } transition duration-300 ease-in-out  w-5 h-5`}
                   fill="none"
                   viewBox="0 0 40 40"
                >
@@ -39,16 +39,21 @@ export const Sidebar: React.FC<{
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
                onClick={() => {
-                  setMenuOpen("formations");
+                  menuOpen === "formations" ? setMenuOpen("") : setMenuOpen("formations");
+                  //   setMenuOpen("formations");
+
                   setLocalSettings((localSettings: localSettings) => {
                      return { ...localSettings, fullScreen: false };
                   });
                }}
             >
                <svg
+                  style={{
+                     opacity: menuOpen !== "formations" ? 1 : 0,
+                  }}
                   className={` ${
                      menuOpen === "formations" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"
-                  } transition duration-300 ease-in-out  w-7 h-7 mt-4`}
+                  } transition duration-300 ease-in-out  w-5 h-5`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -61,13 +66,29 @@ export const Sidebar: React.FC<{
                      d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
                   />
                </svg>
+
+               <svg
+                  style={{
+                     opacity: menuOpen === "formations" ? 1 : 0,
+                     transform: `rotate(${menuOpen === "formations" ? 180 : 0}deg)`,
+                  }}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-5 h-5 stroke-pink-600 absolute transition-[transform]"
+               >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+               </svg>
+
                <p className=" mt-1">Formation</p>
             </button>
 
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
                onClick={() => {
-                  setMenuOpen("dancers");
+                  menuOpen === "dancers" ? setMenuOpen("") : setMenuOpen("dancers");
                   setLocalSettings((localSettings: localSettings) => {
                      return { ...localSettings, fullScreen: false };
                   });
@@ -76,7 +97,7 @@ export const Sidebar: React.FC<{
                <svg
                   className={` ${
                      menuOpen === "dancers" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"
-                  } transition duration-300 ease-in-out  w-7 h-7`}
+                  } transition duration-300 ease-in-out  w-5 h-5`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -94,7 +115,7 @@ export const Sidebar: React.FC<{
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
                onClick={() => {
-                  setMenuOpen("audio");
+                  menuOpen === "audio" ? setMenuOpen("") : setMenuOpen("audio");
                   setLocalSettings((localSettings: localSettings) => {
                      return { ...localSettings, fullScreen: false };
                   });
@@ -106,7 +127,7 @@ export const Sidebar: React.FC<{
                   strokeWidth={1.5}
                   stroke="currentColor"
                   fill="none"
-                  className={`w-7 h-7 ${menuOpen === "audio" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
+                  className={`w-5 h-5 ${menuOpen === "audio" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
                >
                   <path
                      strokeLinecap="round"
@@ -116,7 +137,7 @@ export const Sidebar: React.FC<{
                </svg>
                <p className=" mt-1">Media</p>
             </button>
-            <button
+            {/* <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
                onClick={() => setMenuOpen("collisions")}
             >
@@ -126,7 +147,7 @@ export const Sidebar: React.FC<{
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className={`w-7 h-7 ${menuOpen === "collisions" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
+                  className={`w-5 h-5 ${menuOpen === "collisions" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
                >
                   <path
                      strokeLinecap="round"
@@ -135,11 +156,11 @@ export const Sidebar: React.FC<{
                   />
                </svg>
                <p className=" mt-1">Collisions</p>
-            </button>
+            </button> */}
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
                onClick={() => {
-                  setMenuOpen("items");
+                  menuOpen === "items" ? setMenuOpen("") : setMenuOpen("items");
                   setLocalSettings((localSettings: localSettings) => {
                      return { ...localSettings, fullScreen: false };
                   });
@@ -151,7 +172,7 @@ export const Sidebar: React.FC<{
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className={`w-7 h-7 ${menuOpen === "items" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
+                  className={`w-5 h-5 ${menuOpen === "items" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
                >
                   <path
                      strokeLinecap="round"
@@ -166,14 +187,14 @@ export const Sidebar: React.FC<{
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
                onClick={() => {
-                  setMenuOpen("props");
+                  menuOpen === "props" ? setMenuOpen("") : setMenuOpen("props");
                   setLocalSettings((localSettings: localSettings) => {
                      return { ...localSettings, fullScreen: false };
                   });
                }}
             >
                {/* <svg
-                  className={`w-7 h-7 ${menuOpen === "props" ? "fill-pink-600" : "dark:fill-neutral-300 fill-neutral-400"} `}
+                  className={`w-5 h-5 ${menuOpen === "props" ? "fill-pink-600" : "dark:fill-neutral-300 fill-neutral-400"} `}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 -960 960 960"
                   strokeWidth={1.5}
@@ -182,7 +203,7 @@ export const Sidebar: React.FC<{
                   <path d="M303-80v-149H0l189-274H94l266-377 120 170 120-170 266 377h-94l188 274H658v149H543v-149H418v149H303Zm377-209h165L656-563h89L600-769l-80 115 106 151h-94l148 214Zm-564 0h489L416-563h89L360-769 215-563h90L116-289Zm0 0h189-90 290-89 189-489Zm564 0H532h94-106 225-89 189-165Zm-137 60h115-115Zm178 0Z" />
                </svg> */}
                <svg
-                  className={`w-8 h-8 ${menuOpen === "props" ? "fill-pink-600" : "dark:fill-neutral-300 fill-neutral-400"} `}
+                  className={`w-6 h-6 ${menuOpen === "props" ? "fill-pink-600" : "dark:fill-neutral-300 fill-neutral-400"} `}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 -960 960 960"
                >
@@ -193,7 +214,7 @@ export const Sidebar: React.FC<{
                {/* <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p> */}
             </button>
 
-            <button
+            {/* <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
                onClick={() => {
                   setMenuOpen("segments");
@@ -202,16 +223,6 @@ export const Sidebar: React.FC<{
                   });
                }}
             >
-               {/* <svg
-                  className={`w-7 h-7 ${menuOpen === "props" ? "fill-pink-600" : "dark:fill-neutral-300 fill-neutral-400"} `}
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 -960 960 960"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-               >
-                  <path d="M303-80v-149H0l189-274H94l266-377 120 170 120-170 266 377h-94l188 274H658v149H543v-149H418v149H303Zm377-209h165L656-563h89L600-769l-80 115 106 151h-94l148 214Zm-564 0h489L416-563h89L360-769 215-563h90L116-289Zm0 0h189-90 290-89 189-489Zm564 0H532h94-106 225-89 189-165Zm-137 60h115-115Zm178 0Z" />
-               </svg> */}
-
                <svg
                   className={`w-8 h-8 ${menuOpen === "segments" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
                   xmlns="http://www.w3.org/2000/svg"
@@ -228,20 +239,19 @@ export const Sidebar: React.FC<{
                </svg>
 
                <p className=" mt-1">Segments</p>
-               {/* <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p> */}
-            </button>
+            </button> */}
 
             <button
-               className="flex flex-col  mb-2 items-center dark:text-neutral-300 font-semibold text-neutral-600   "
+               className="flex flex-col   items-center dark:text-neutral-300 font-semibold text-neutral-600   "
                onClick={() => {
-                  setMenuOpen("stageSettings");
+                  menuOpen === "stageSettings" ? setMenuOpen("") : setMenuOpen("stageSettings");
                   setLocalSettings((localSettings: localSettings) => {
                      return { ...localSettings, fullScreen: false };
                   });
                }}
             >
                <svg
-                  className={`w-7 h-7 transition duration-300  ml-auto mr-auto ${
+                  className={`w-5 h-5 transition duration-300  ml-auto mr-auto ${
                      menuOpen === "stageSettings" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"
                   }`}
                   xmlns="http://www.w3.org/2000/svg"
@@ -264,7 +274,7 @@ export const Sidebar: React.FC<{
                onClick={() => setMenuOpen("collisions")}
             >
                <svg
-                  className={`w-7 h-7 transition duration-300  ml-auto mr-auto ${
+                  className={`w-5 h-5 transition duration-300  ml-auto mr-auto ${
                      menuOpen === "collisions" ? "stroke-pink-600" : "dark:stroke-white stroke-neutral-600"
                   }`}
                   xmlns="http://www.w3.org/2000/svg"
@@ -282,14 +292,14 @@ export const Sidebar: React.FC<{
                <p className=" mt-1">Collisions</p>
             </button> */}
 
-            <button
+            {/* <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600 mt-auto   "
                onClick={(e) => {
                   setHelpUrl({ url: "https://www.youtube.com/shorts/uiTwpkpsL1E", event: e });
                }}
             >
                <svg
-                  className={`w-7 h-7 transition duration-300  ml-auto mr-auto dark:stroke-neutral-300 stroke-neutral-400
+                  className={`w-5 h-5 transition duration-300  ml-auto mr-auto dark:stroke-neutral-300 stroke-neutral-400
                   
                  
                   `}
@@ -307,11 +317,11 @@ export const Sidebar: React.FC<{
                </svg>
 
                <p className=" mt-1">Tutorial</p>
-            </button>
+            </button> */}
             <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600    "
                onClick={() => {
-                  setMenuOpen("settings");
+                  menuOpen === "settings" ? setMenuOpen("") : setMenuOpen("settings");
                   setLocalSettings((localSettings: localSettings) => {
                      return { ...localSettings, fullScreen: false };
                   });
@@ -323,7 +333,7 @@ export const Sidebar: React.FC<{
                   strokeWidth={1.5}
                   stroke=""
                   fill="none"
-                  className={`w-7 h-7 transition duration-300  ml-auto mr-auto ${
+                  className={`w-5 h-5 transition duration-300  ml-auto mr-auto ${
                      menuOpen === "settings" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"
                   }`}
                >
@@ -336,71 +346,6 @@ export const Sidebar: React.FC<{
                </svg>
                <p className=" mt-1">Settings</p>
             </button>
-            {/* <button
-               onClick={() => setMenuOpen("formations")}
-               className={`  font-medium mr-3 ${menuOpen === "formations" ? "text-neutral-100" : "text-neutral-400"}`}
-            >
-               <svg className="w-12 h-12" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 40 40">
-                  <g>
-                     <path
-                        fill="white"
-                        d="M8 17.6c0-3.3603 0-5.0405.65396-6.3239.57524-1.129 1.49314-2.0469 2.62214-2.62214C12.5595 8 14.2397 8 17.6 8h4.8c3.3603 0 5.0405 0 6.3239.65396 1.129.57524 2.0469 1.49314 2.6221 2.62214C32 12.5595 32 14.2397 32 17.6v4.8c0 3.3603 0 5.0405-.654 6.3239-.5752 1.129-1.4931 2.0469-2.6221 2.6221C27.4405 32 25.7603 32 22.4 32h-4.8c-3.3603 0-5.0405 0-6.3239-.654-1.129-.5752-2.0469-1.4931-2.62214-2.6221C8 27.4405 8 25.7603 8 22.4v-4.8Zm12.5649 2.9183c.1207.294.4656.5283 1.1555.9969l3.8726 2.6304c.8563.5816 1.2845.8725 1.6401.8534.3097-.0166.5964-.1685.7842-.4153.2155-.2835.2155-.8011.2155-1.8362v-5.2609c0-1.0351 0-1.5527-.2155-1.8361-.1878-.2469-.4745-.3988-.7842-.4154-.3556-.0191-.7838.2718-1.6401.8534l-3.8726 2.6304c-.6899.4686-1.0348.7029-1.1555.9969-.1056.2571-.1056.5454 0 .8025Z"
-                     />
-                     <path
-                        fill="white"
-                        fill-opacity=".2"
-                        d="M8 17.6c0-3.3603 0-5.0405.65396-6.3239.57524-1.129 1.49314-2.0469 2.62214-2.62214C12.5595 8 14.2397 8 17.6 8h4.8c3.3603 0 5.0405 0 6.3239.65396 1.129.57524 2.0469 1.49314 2.6221 2.62214C32 12.5595 32 14.2397 32 17.6v4.8c0 3.3603 0 5.0405-.654 6.3239-.5752 1.129-1.4931 2.0469-2.6221 2.6221C27.4405 32 25.7603 32 22.4 32h-4.8c-3.3603 0-5.0405 0-6.3239-.654-1.129-.5752-2.0469-1.4931-2.62214-2.6221C8 27.4405 8 25.7603 8 22.4v-4.8Zm12.5649 2.9183c.1207.294.4656.5283 1.1555.9969l3.8726 2.6304c.8563.5816 1.2845.8725 1.6401.8534.3097-.0166.5964-.1685.7842-.4153.2155-.2835.2155-.8011.2155-1.8362v-5.2609c0-1.0351 0-1.5527-.2155-1.8361-.1878-.2469-.4745-.3988-.7842-.4154-.3556-.0191-.7838.2718-1.6401.8534l-3.8726 2.6304c-.6899.4686-1.0348.7029-1.1555.9969-.1056.2571-.1056.5454 0 .8025Z"
-                     />
-                  </g>
-                  <g fill="white">
-                     <path
-                        fill="white"
-                        d="M18.2453 18.7189c.6898.4686 1.0348.7029 1.1555.9969.1056.2571.1056.5455 0 .8026-.1207.2939-.4657.5282-1.1555.9968l-3.8726 2.6304c-.8564.5817-1.2845.8725-1.6401.8534-.3097-.0166-.5964-.1685-.7842-.4153-.2156-.2834-.2156-.801-.2156-1.8362v-5.2608c0-1.0352 0-1.5528.2156-1.8362.1878-.2469.4745-.3988.7842-.4154.3556-.019.7837.2718 1.6401.8534l3.8726 2.6304Z"
-                     />
-                  </g>
-               </svg>
-            </button>
-            <button
-               onClick={() => setMenuOpen("dancers")}
-               className={`  font-medium mr-3 ${menuOpen === "dancers" ? "text-neutral-100" : "text-neutral-400"}`}
-            >
-               Roster
-            </button>
-            {!viewOnly ? (
-               <>
-                  {" "}
-                  <button
-                     onClick={() => setMenuOpen("audio")}
-                     className={`  font-medium mr-3 ${menuOpen === "audio" ? "text-neutral-100" : "text-neutral-400"}`}
-                  >
-                     Media
-                  </button>
-                  <button
-                     className={`  font-medium mr-3 ${menuOpen === "stageSettings" ? "text-neutral-100" : "text-neutral-400"}`}
-                     onClick={() => setMenuOpen("stageSettings")}
-                  >
-                     Stage
-                  </button>
-               </>
-            ) : null}
-
-            <button onClick={() => setMenuOpen("settings")} className="text-neutral-100  font-medium ml-auto">
-               <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke=""
-                  fill="none"
-                  className={`w-5 h-5  transition duration-300  ${menuOpen === "settings" ? "stroke-white" : "stroke-neutral-400"}`}
-               >
-                  <path
-                     strokeLinecap="round"
-                     strokeLinejoin="round"
-                     d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"
-                  />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-               </svg>
-            </button> */}
          </div>
       </>
    );

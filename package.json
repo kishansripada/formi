@@ -22,7 +22,7 @@
     "@supabase/auth-helpers-react": "^0.4.1",
     "@supabase/supabase-js": "^2.31.0",
     "@types/three": "^0.148.0",
-    "@use-gesture/react": "^10.2.24",
+    "@use-gesture/react": "^10.2.27",
     "dom-to-pdf": "^0.3.2",
     "fast-json-patch": "^3.1.1",
     "jsondiffpatch": "^0.4.1",

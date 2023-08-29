@@ -94,3 +94,24 @@ export const useClickOutside = (ref, handler) => {
       };
    }, [ref, handler]);
 };
+
+export const useIsDesktop = () => {
+   if (typeof window === "undefined") return;
+   const [isDesktop, setIsDesktop] = useState(window.innerWidth > 1024);
+
+   const checkScreenSize = () => {
+      if (typeof window === "undefined") return;
+      setIsDesktop(window.innerWidth > 1024);
+   };
+
+   useEffect(() => {
+      checkScreenSize();
+      if (typeof window === "undefined") return;
+      window.addEventListener("resize", checkScreenSize);
+
+      // Clean up event listener on component unmount
+      return () => window.removeEventListener("resize", checkScreenSize);
+   }, []);
+
+   return isDesktop;
+};

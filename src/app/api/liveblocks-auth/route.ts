@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       }
    );
 
-   //    Check if we have a session
+   //    Check if we have a sessions
    const {
       data: { session },
       error,

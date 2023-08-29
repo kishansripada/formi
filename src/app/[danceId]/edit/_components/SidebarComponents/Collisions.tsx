@@ -22,7 +22,7 @@ export const Collisions: React.FC<{
    return (
       <>
          <Toaster></Toaster>
-         <div className=" w-[260px]  min-w-[260px] hidden lg:block bg-white dark:bg-neutral-800 dark:text-white h-full  py-4 overflow-y-scroll pl-1">
+         <div className=" w-[260px]  min-w-[260px] block bg-white dark:bg-neutral-800 dark:text-white h-full  py-4 overflow-y-scroll pl-1">
             <p className=" pl-3  font-medium text-sm mb-3">View Collisions</p>
             <Dropdown
                dropDownToggle={dropDownToggle}

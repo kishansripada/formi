@@ -7,6 +7,7 @@ import { Layers } from "./Layers";
 import dynamic from "next/dynamic";
 import { NoFilePlayer } from "./NoFilePlayer";
 import { useStore } from "../store";
+import { useGesture } from "@use-gesture/react";
 
 const FileAudioPlayer = dynamic<{
    setPosition: Function;
@@ -88,7 +89,7 @@ export const Timeline: React.FC<{
 
    menuOpen,
 }) => {
-   const { segments, setSegments, get, formations, setFormations, viewOnly, resumeHistory, pauseHistory } = useStore();
+   const { segments, setSegments, get, formations, setFormations, viewOnly, resumeHistory, pauseHistory, isMobileView } = useStore();
    const others = useStore((state) => state.liveblocks.others);
    const [resizingSegment, setResizingSegment] = useState<string | null>(null);
 
@@ -221,6 +222,24 @@ export const Timeline: React.FC<{
       };
    }, [segments, resizingSegment]); // The empty dependency array ensures that the effect only runs once, similar to componentDidMount.
 
+   useGesture(
+      {
+         onPinch: ({ delta }) => {
+            // let zoom = state.memo[0] * state.movement[0];
+            // console.log(delta);
+            if (!isMobileView) return;
+            setPixelsPerSecond((pixelsPerSecond: number) => pixelsPerSecond + delta[0] * 20);
+            // console.log("pinching");
+            // setZoom(zoom);
+         },
+      },
+      {
+         eventOptions: { passive: false },
+         target: scrollRef.current,
+      }
+      // config
+   );
+
    return (
       <>
          <style jsx>
@@ -233,7 +252,7 @@ export const Timeline: React.FC<{
                }
             `}
          </style>
-         <div className="w-full h-[10px] bg-neutral-100 dark:bg-black select-none  ">
+         <div className="w-full h-[10px] bg-neutral-100 dark:bg-black select-none hidden lg:block  ">
             <div
                onMouseDown={() => {
                   setIsScrollingTimeline(true);
@@ -255,6 +274,7 @@ export const Timeline: React.FC<{
             className=" overflow-y-hidden overflow-x-scroll   removeScrollBar bg-neutral-100 dark:bg-black   pl-3 "
             style={{
                overscrollBehavior: "none",
+               touchAction: "pan-x",
             }}
             id="layers"
             // style={{
@@ -371,13 +391,13 @@ export const Timeline: React.FC<{
                   style={{
                      width: timelineWidth,
                   }}
-                  className=" h-[20px] bg-white dark:bg-black relative  overflow-hidden  flex flex-row justify-start  "
+                  className=" md:h-[20px] h-[15px] bg-white dark:bg-black relative  overflow-hidden  flex flex-row justify-start  "
                >
                   {segments.map((section, index) => {
                      return (
                         <div
                            key={section.id}
-                           className="h-full border-2 box-border  grid rounded-md place-items-center dark:text-white text-[10px] relative cursor-pointer "
+                           className="h-full border-2 box-border  grid rounded-md place-items-center dark:text-white md:text-[10px] text-[8px] relative cursor-pointer "
                            onClick={(e: any) => {
                               if (menuOpen === "segments") return;
 

@@ -163,6 +163,7 @@ export const FileAudioPlayer: React.FC<{
             <div
                style={{
                   width: timelineWidth,
+                  display: ready ? "flex" : "none",
                }}
                onClick={(e) => {
                   e.preventDefault();
@@ -189,7 +190,7 @@ export const FileAudioPlayer: React.FC<{
                      }
                   }
                }}
-               className="flex flex-row items-center"
+               className="flex flex-row items-center ]"
             >
                <div
                   /** THE FILE AUDIO PART */

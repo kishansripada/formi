@@ -44,6 +44,7 @@ import { StageSettings } from "./_components/SidebarComponents/StageSettings";
 import { Segments } from "./_components/SidebarComponents/Segments";
 import { create } from "zustand";
 import { useStore } from "./store";
+import { MobileSidebar } from "./_components/MobileSidebar";
 
 const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => (
@@ -101,6 +102,7 @@ const Edit = ({
    session,
    permissions: initialPermissions,
    hasSeenCollab: hasSeenCollabInitial,
+   isMobileView: isMobileViewInitial,
 }: {
    initialData: any;
    viewOnly: boolean;
@@ -109,6 +111,7 @@ const Edit = ({
    session: AuthSession | null;
    permissions: string[];
    hasSeenCollab: boolean;
+   isMobileView: boolean;
 }) => {
    const {
       segments,
@@ -140,14 +143,17 @@ const Edit = ({
       setSelectedFormations,
       position,
       setPosition,
+      setIsMobileView,
    } = useStore();
+
    // console.log(liveblocks);
    // console.log({ liveStatus });
    useEffect(() => {
       setSegments(initialData.segments);
       setDancers(initialData.dancers);
       setFormations(initialData.formations);
-      setViewOnly(viewOnlyInitial);
+      // setViewOnly(viewOnlyInitial);
+      setViewOnly(false);
       setDanceName(initialData.name);
       setProps(initialData.props);
       setItems(initialData.items);
@@ -162,7 +168,12 @@ const Edit = ({
       setNameOrEmail(session?.user.user_metadata.full_name || session?.user.email || "");
       setSoundCloudTrackId(initialData.soundCloudId);
       setSelectedFormations([initialData.formations[0].id]);
+      setIsMobileView(isMobileViewInitial);
    }, []);
+
+   // useEffect(() => {
+   //    document.documentElement.style.setProperty("--vh", window.innerHeight * 0.01 + "px");
+   // }, []);
 
    const enterRoom = useStore((state) => state.liveblocks.enterRoom);
    const leaveRoom = useStore((state) => state.liveblocks.leaveRoom);
@@ -229,7 +240,7 @@ const Edit = ({
 
    const [isScrollingTimeline, setIsScrollingTimeline] = useState(false);
    const [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
-   const [menuOpen, setMenuOpen] = useState<string>("formations");
+   const [menuOpen, setMenuOpen] = useState<string | null>(isMobileViewInitial ? null : "formations");
    const [player, setPlayer] = useState(null);
    const [saved, setSaved] = useState<boolean>(true);
    const [shareIsOpen, setShareIsOpen] = useState(false);
@@ -571,7 +582,7 @@ const Edit = ({
 
    //////////////////////
    let flippedFormations = formations.map((formation: formation) => {
-      let flippedPositions = formation.positions.map((position) => {
+      let flippedPositions = formation?.positions.map((position) => {
          if (position.controlPointEnd && position.controlPointStart) {
             return {
                ...position,
@@ -595,6 +606,7 @@ const Edit = ({
 
       return { ...formation, positions: flippedPositions };
    });
+
    //////////////////////////
    const collisions = localSettings.viewCollisions
       ? detectCollisions(localSettings.stageFlipped ? flippedFormations : formations, selectedFormation, localSettings.collisionRadius)
@@ -612,11 +624,21 @@ const Edit = ({
          document.cookie = "hasSeenCollab=true; expires=" + new Date(new Date().getTime() + 86409000).toUTCString() + "; path=/";
       }
    }, []);
+   // useEffect(() => {
+   //    document.body.addEventListener(
+   //       "touchmove",
+   //       (event) => {
+   //          event.preventDefault();
+   //       },
+   //       { passive: false }
+   //    );
+   // }, []);
    return (
       <>
          <Toaster></Toaster>
          <Head>
             <title>Edit | FORMI</title>
+            {/* <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" /> */}
 
             <meta
                name="description"
@@ -631,7 +653,8 @@ const Edit = ({
             <meta property="og:description" content="automate, animate and visualize your dance formations synced to music" />
             <meta property="og:image" content="https://i.imgur.com/83VsfSG.png" />
             <meta property="og:site_name" content="FORMI — Online performance planning software." />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
+            {/* <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta> */}
+            {/* <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta> */}
          </Head>
 
          {/* {!hasVisited ? <div className="fixed w-[500px] h-[200px] bg-black">warning</div> : null} */}
@@ -663,7 +686,7 @@ const Edit = ({
 
          {collabOpen ? (
             <div
-               className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
+               className="fixed top-0 left-0 z-[70] flex h-screen  w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
                id="outside"
                onClick={(e) => {
                   if (e.target.id === "outside") {
@@ -766,14 +789,21 @@ const Edit = ({
             // style={{
             //    pointerEvents: subscriptionStatus === "SUBSCRIBED" ? "none" : "auto",
             // }}
-            className={`   flex-col h-screen ${
+            className={`  h-[calc(100dvh)] flex-col  ${
                localSettings.isDarkMode ? "dark" : ""
-            }  flex  bg-[#fafafa] overflow-hidden text-neutral-900 select-none `}
+            }  flex  bg-[#fafafa] dark:bg-black overflow-hidden text-neutral-900 select-none `}
+            style={{
+               touchAction: "none",
+            }}
          >
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
             <style>
                {`
                html, body {
                   overscroll-behavior: none;
+                  overscroll-behavior-y: none;
+                  overflow-y: overlay;
+                  background-color: black;
                   // overscroll-behavior-x: none;
               }
 
@@ -810,111 +840,117 @@ const Edit = ({
                dancers={dancers}
                session={session}
             />
+
+            <MobileSidebar setLocalSettings={setLocalSettings} setHelpUrl={setHelpUrl} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></MobileSidebar>
+
             <div className="flex flex-row overflow-hidden w-screen h-full">
                <Sidebar setLocalSettings={setLocalSettings} setHelpUrl={setHelpUrl} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
                <div className="flex flex-col w-full h-full overflow-hidden">
                   <div className="flex flex-row   overflow-hidden w-full h-full">
                      {!localSettings.fullScreen ? (
-                        <>
-                           <div className="flex flex-row ">
-                              <div className="border-r border-neutral-300 dark:border-neutral-700">
-                                 {menuOpen === "dancers" ? (
-                                    <Roster
-                                       session={session}
-                                       removeDancer={removeDancer}
-                                       setSelectedDancers={setSelectedDancers}
-                                       addToStack={addToStack}
-                                       pushChange={pushChange}
-                                       dancers={dancers}
-                                       selectedDancers={selectedDancers}
-                                       localSettings={localSettings}
-                                    ></Roster>
-                                 ) : menuOpen === "audio" ? (
-                                    <ChooseAudioSource
-                                       session={session}
-                                       player={player}
-                                       setIsPlaying={setIsPlaying}
-                                       soundCloudTrackId={soundCloudTrackId}
-                                       setSoundCloudTrackId={setSoundCloudTrackId}
-                                       audioFiles={audioFiles}
-                                       setAudiofiles={setAudiofiles}
-                                       setLocalSource={setLocalSource}
-                                    ></ChooseAudioSource>
-                                 ) : menuOpen === "settings" ? (
-                                    <Settings
-                                       setHelpUrl={setHelpUrl}
-                                       dropDownToggle={dropDownToggle}
-                                       setLocalSettings={setLocalSettings}
-                                       localSettings={localSettings}
-                                       pushChange={pushChange}
-                                       setAssetsOpen={setAssetsOpen}
-                                    ></Settings>
-                                 ) : menuOpen === "stageSettings" ? (
-                                    <StageSettings
-                                       setHelpUrl={setHelpUrl}
-                                       dropDownToggle={dropDownToggle}
-                                       setLocalSettings={setLocalSettings}
-                                       localSettings={localSettings}
-                                       pushChange={pushChange}
-                                       setAssetsOpen={setAssetsOpen}
-                                    ></StageSettings>
-                                 ) : menuOpen === "collisions" ? (
-                                    <Collisions
-                                       dropDownToggle={dropDownToggle}
-                                       setLocalSettings={setLocalSettings}
-                                       localSettings={localSettings}
-                                    ></Collisions>
-                                 ) : menuOpen === "props" ? (
-                                    <Props
-                                       setAssetsOpen={setAssetsOpen}
-                                       setHelpUrl={setHelpUrl}
-                                       pushChange={pushChange}
-                                       setSelectedPropIds={setSelectedPropIds}
-                                       invalidatePropUploads={invalidatePropUploads}
-                                       selectedPropIds={selectedPropIds}
-                                       propUploads={propUploads}
-                                       player={player}
-                                       setIsPlaying={setIsPlaying}
-                                       soundCloudTrackId={soundCloudTrackId}
-                                       setSoundCloudTrackId={setSoundCloudTrackId}
-                                       audioFiles={audioFiles}
-                                       setAudiofiles={setAudiofiles}
-                                       setLocalSource={setLocalSource}
-                                    ></Props>
-                                 ) : menuOpen === "items" ? (
-                                    <Items
-                                       setAssetsOpen={setAssetsOpen}
-                                       setHelpUrl={setHelpUrl}
-                                       pushChange={pushChange}
-                                       setSelectedPropIds={setSelectedPropIds}
-                                       invalidatePropUploads={invalidatePropUploads}
-                                       // selectedPropIds={selectedPropIds}
-                                       propUploads={propUploads}
-                                       player={player}
-                                       setIsPlaying={setIsPlaying}
-                                       soundCloudTrackId={soundCloudTrackId}
-                                       setSoundCloudTrackId={setSoundCloudTrackId}
-                                       audioFiles={audioFiles}
-                                       setAudiofiles={setAudiofiles}
-                                       setLocalSource={setLocalSource}
-                                    ></Items>
-                                 ) : menuOpen === "segments" ? (
-                                    <Segments pushChange={pushChange}></Segments>
-                                 ) : (
-                                    <CurrentFormation
-                                       dropDownToggle={dropDownToggle}
-                                       isCommenting={isCommenting}
-                                       setIsCommenting={setIsCommenting}
-                                       addToStack={addToStack}
-                                       pushChange={pushChange}
-                                       selectedDancers={selectedDancers}
-                                       setSelectedDancers={setSelectedDancers}
-                                       dancers={dancers}
-                                    />
-                                 )}
-                              </div>
+                        <div
+                           style={{
+                              pointerEvents: menuOpen ? "auto" : "none",
+                           }}
+                           className="flex flex-row absolute md:static bottom-0 top-[100px] md:w-auto w-full md:z-auto z-[65] "
+                        >
+                           <div className="border-r border-neutral-300 dark:border-neutral-700">
+                              {menuOpen === "dancers" ? (
+                                 <Roster
+                                    session={session}
+                                    removeDancer={removeDancer}
+                                    setSelectedDancers={setSelectedDancers}
+                                    addToStack={addToStack}
+                                    pushChange={pushChange}
+                                    dancers={dancers}
+                                    selectedDancers={selectedDancers}
+                                    localSettings={localSettings}
+                                 ></Roster>
+                              ) : menuOpen === "audio" ? (
+                                 <ChooseAudioSource
+                                    session={session}
+                                    player={player}
+                                    setIsPlaying={setIsPlaying}
+                                    soundCloudTrackId={soundCloudTrackId}
+                                    setSoundCloudTrackId={setSoundCloudTrackId}
+                                    audioFiles={audioFiles}
+                                    setAudiofiles={setAudiofiles}
+                                    setLocalSource={setLocalSource}
+                                 ></ChooseAudioSource>
+                              ) : menuOpen === "settings" ? (
+                                 <Settings
+                                    setHelpUrl={setHelpUrl}
+                                    dropDownToggle={dropDownToggle}
+                                    setLocalSettings={setLocalSettings}
+                                    localSettings={localSettings}
+                                    pushChange={pushChange}
+                                    setAssetsOpen={setAssetsOpen}
+                                 ></Settings>
+                              ) : menuOpen === "stageSettings" ? (
+                                 <StageSettings
+                                    setHelpUrl={setHelpUrl}
+                                    dropDownToggle={dropDownToggle}
+                                    setLocalSettings={setLocalSettings}
+                                    localSettings={localSettings}
+                                    pushChange={pushChange}
+                                    setAssetsOpen={setAssetsOpen}
+                                 ></StageSettings>
+                              ) : menuOpen === "collisions" ? (
+                                 <Collisions
+                                    dropDownToggle={dropDownToggle}
+                                    setLocalSettings={setLocalSettings}
+                                    localSettings={localSettings}
+                                 ></Collisions>
+                              ) : menuOpen === "props" ? (
+                                 <Props
+                                    setAssetsOpen={setAssetsOpen}
+                                    setHelpUrl={setHelpUrl}
+                                    pushChange={pushChange}
+                                    setSelectedPropIds={setSelectedPropIds}
+                                    invalidatePropUploads={invalidatePropUploads}
+                                    selectedPropIds={selectedPropIds}
+                                    propUploads={propUploads}
+                                    player={player}
+                                    setIsPlaying={setIsPlaying}
+                                    soundCloudTrackId={soundCloudTrackId}
+                                    setSoundCloudTrackId={setSoundCloudTrackId}
+                                    audioFiles={audioFiles}
+                                    setAudiofiles={setAudiofiles}
+                                    setLocalSource={setLocalSource}
+                                 ></Props>
+                              ) : menuOpen === "items" ? (
+                                 <Items
+                                    setAssetsOpen={setAssetsOpen}
+                                    setHelpUrl={setHelpUrl}
+                                    pushChange={pushChange}
+                                    setSelectedPropIds={setSelectedPropIds}
+                                    invalidatePropUploads={invalidatePropUploads}
+                                    // selectedPropIds={selectedPropIds}
+                                    propUploads={propUploads}
+                                    player={player}
+                                    setIsPlaying={setIsPlaying}
+                                    soundCloudTrackId={soundCloudTrackId}
+                                    setSoundCloudTrackId={setSoundCloudTrackId}
+                                    audioFiles={audioFiles}
+                                    setAudiofiles={setAudiofiles}
+                                    setLocalSource={setLocalSource}
+                                 ></Items>
+                              ) : menuOpen === "segments" ? (
+                                 <Segments pushChange={pushChange}></Segments>
+                              ) : menuOpen === "formations" ? (
+                                 <CurrentFormation
+                                    dropDownToggle={dropDownToggle}
+                                    isCommenting={isCommenting}
+                                    setIsCommenting={setIsCommenting}
+                                    addToStack={addToStack}
+                                    pushChange={pushChange}
+                                    selectedDancers={selectedDancers}
+                                    setSelectedDancers={setSelectedDancers}
+                                    dancers={dancers}
+                                 />
+                              ) : null}
                            </div>
-                        </>
+                        </div>
                      ) : null}
                      <DndContext id="1" onDragEnd={handleDragEnd}>
                         <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-100 dark:bg-neutral-900 relative `}>
@@ -1098,7 +1134,7 @@ const Edit = ({
                                          })
                                        : null}
 
-                                    {selectedFormations.length === 1 && !isPlaying ? (
+                                    {selectedFormations.length === 1 && !isPlaying && !isMobileViewInitial ? (
                                        <>
                                           {(getFirstSelectedFormation()?.comments || []).map((comment: comment) => {
                                              return (
@@ -1180,6 +1216,7 @@ const Edit = ({
 
                   <div className="  bg-black">
                      <AudioControls
+                        dancers={dancers}
                         setHelpUrl={setHelpUrl}
                         setIsChangingZoom={setIsChangingZoom}
                         isChangingZoom={isChangingZoom}
