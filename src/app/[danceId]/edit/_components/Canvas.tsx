@@ -825,32 +825,35 @@ export const Canvas: React.FC<{
    //    };
    // }, [zoom]);
 
+   const bind = useGesture({
+      onPinch: ({ offset: [d] }) => {
+         // let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
+         // let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
+
+         // // console.log(maxTopOffset);
+         // // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
+         // // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
+         // // setZoom(1)
+         // const maxZoom = Math.min(heightPercentage, widthPercentage);
+         // // let zoom = state.memo[0] * state.movement[0];
+
+         // if (newZoom < maxZoom) {
+         //    setScrollOffset({ x: 0, y: 0 });
+         // }
+         // if (isMobileView) {
+         //    // setZoom((zoom: number) => (newZoom < maxZoom ? maxZoom : newZoom));
+         // } else {
+
+         // }
+         setZoom(d / 5);
+
+         // console.log("pinching");
+         // setZoom(zoom);
+      },
+   });
+
    useGesture(
       {
-         onPinch: ({ offset: [d] }) => {
-            // let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
-            // let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
-
-            // // console.log(maxTopOffset);
-            // // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
-            // // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
-            // // setZoom(1)
-            // const maxZoom = Math.min(heightPercentage, widthPercentage);
-            // // let zoom = state.memo[0] * state.movement[0];
-
-            // if (newZoom < maxZoom) {
-            //    setScrollOffset({ x: 0, y: 0 });
-            // }
-            // if (isMobileView) {
-            //    // setZoom((zoom: number) => (newZoom < maxZoom ? maxZoom : newZoom));
-            // } else {
-
-            // }
-            setZoom(d / 5);
-
-            // console.log("pinching");
-            // setZoom(zoom);
-         },
          onDrag: (state) => {
             if (state.touches > 1) return;
             if (!isMobileView) return;
@@ -955,7 +958,7 @@ export const Canvas: React.FC<{
             className="  relative  bg-neutral-100  dark:bg-neutral-900  h-full  w-full overflow-scroll  overscroll-none  flex flex-row items-center justify-center "
             id="stage"
             ref={container}
-            // {...bind()}
+            {...bind()}
             style={{
                touchAction: "none",
             }}
