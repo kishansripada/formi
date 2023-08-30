@@ -861,7 +861,7 @@ export const Canvas: React.FC<{
             // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
             // setZoom(1)
             const maxZoom = Math.min(heightPercentage, widthPercentage);
-            if (maxZoom === zoom) return;
+            // if (maxZoom === zoom) return;
 
             // // console.log(state.delta);
 
