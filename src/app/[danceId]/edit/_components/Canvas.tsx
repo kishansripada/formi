@@ -852,45 +852,45 @@ export const Canvas: React.FC<{
             // console.log("pinching");
             // setZoom(zoom);
          },
-         onDrag: (state) => {
-            if (state.touches > 1) return;
-            if (state.target.id) return;
-            let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
-            let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
+         // onDrag: (state) => {
+         //    if (state.touches > 1) return;
+         //    if (state.target.id) return;
+         //    let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
+         //    let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
 
-            // console.log(maxTopOffset);
-            // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
-            // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
-            // setZoom(1)
-            const maxZoom = Math.min(heightPercentage, widthPercentage);
-            // if (maxZoom === zoom) return;
+         //    // console.log(maxTopOffset);
+         //    // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
+         //    // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
+         //    // setZoom(1)
+         //    const maxZoom = Math.min(heightPercentage, widthPercentage);
+         //    // if (maxZoom === zoom) return;
 
-            // // console.log(state.delta);
+         //    // // console.log(state.delta);
 
-            setScrollOffset((scrollOffset) => ({
-               x: scrollOffset.x + state.delta[0] / zoom,
-               y: scrollOffset.y + state.delta[1] / zoom,
-            }));
-         },
-         onWheel: (state) => {
-            // console.log(state.delta);
+         //    setScrollOffset((scrollOffset) => ({
+         //       x: scrollOffset.x + state.delta[0] / zoom,
+         //       y: scrollOffset.y + state.delta[1] / zoom,
+         //    }));
+         // },
+         // onWheel: (state) => {
+         //    // console.log(state.delta);
 
-            // console.log(maxTopOffset);
-            state.event.preventDefault();
-            const newY = scrollOffset.y - state.delta[1] / zoom / 1.5;
-            setScrollOffset((scrollOffset) => ({
-               x: scrollOffset.x - state.delta[0] / zoom / 1.5,
-               y: newY,
-            }));
-         },
+         //    // console.log(maxTopOffset);
+         //    state.event.preventDefault();
+         //    const newY = scrollOffset.y - state.delta[1] / zoom / 1.5;
+         //    setScrollOffset((scrollOffset) => ({
+         //       x: scrollOffset.x - state.delta[0] / zoom / 1.5,
+         //       y: newY,
+         //    }));
+         // },
       },
       {
          eventOptions: { passive: false },
          target: container.current,
          // pinch: {preventDefault: true},
          pinch: { pointer: { touch: true }, preventDefault: true },
-         wheel: { enabled: !isMobileView },
-         drag: { enabled: isMobileView },
+         // wheel: { enabled: !isMobileView },
+         // drag: { enabled: isMobileView },
       }
       // config
    );
