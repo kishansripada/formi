@@ -32,7 +32,7 @@ const Client = () => {
          },
       });
       if (!error) {
-         router.push("/login/emailsent");
+         router.push(`/login/emailsent?email=${email}`);
          return;
       }
       if (error) {
@@ -78,6 +78,7 @@ const Client = () => {
                opacity: 0.2,
             }}
          ></div> */}
+         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
          <div
             style={{
                touchAction: "none",

@@ -38,11 +38,11 @@ const Client = () => {
             <div className="bg-black w-full text-white  relative flex flex-col pointer-events-none ">
                <div className=" mt-[50px] top-[170px] text-center flex flex-col items-center justify-center z-50 ">
                   {/* <div className="bg-neutral-500/50 w-full rounded-full h-16"></div> */}
-                  <div className="rounded-full  px-4 text-sm text-neutral-200 py-2 border border-pink-600/50">
+                  <div className="rounded-full  px-4 text-xs lg:text-sm text-neutral-200 py-2 border border-pink-600/50">
                      <p>Join 5000+ dancers and choreographers just like you</p>
                   </div>
                   <p className="  lg:text-7xl  text-2xl font-semibold mt-5 w-2/3  ">The collaborative choreography design tool</p>
-                  <p className="text-neutral-300 mt-5">Realtime collaboration. Three Dimensional. Synced to Audio. </p>
+                  <p className="text-neutral-300 mt-5 text-xs lg:text-base">Realtime collaboration. Three Dimensional. Synced to Audio. </p>
                   <div className=" bg-white text-black w-[250px]   px-6 z-50 relative py-3 rounded-md mt-10 pointer-events-auto">
                      <Link href={"/login"} className=" ">
                         <div className=" lg:flex flex-row items-center justify-around hidden">
@@ -51,7 +51,7 @@ const Client = () => {
                               <path d="M14 8.5H3m11 0-3 3m3-3-3-3" strokeLinecap="round" strokeLinejoin="round"></path>
                            </svg>
                         </div>
-                        <div className="  flex-row items-center justify-around lg:hidden flex">Mobile app coming soon</div>
+                        <div className="  flex-row items-center justify-around lg:hidden flex">Launch mobile web app</div>
                      </Link>
                   </div>
                </div>
