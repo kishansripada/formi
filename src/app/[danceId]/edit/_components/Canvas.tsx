@@ -828,19 +828,19 @@ export const Canvas: React.FC<{
    useGesture(
       {
          onPinch: ({ offset: [d] }) => {
-            let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
-            let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
+            // let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
+            // let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
 
-            // console.log(maxTopOffset);
-            // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
-            // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
-            // setZoom(1)
-            const maxZoom = Math.min(heightPercentage, widthPercentage);
-            // let zoom = state.memo[0] * state.movement[0];
+            // // console.log(maxTopOffset);
+            // // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
+            // // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
+            // // setZoom(1)
+            // const maxZoom = Math.min(heightPercentage, widthPercentage);
+            // // let zoom = state.memo[0] * state.movement[0];
             const newZoom = d / 5;
-            if (newZoom < maxZoom) {
-               setScrollOffset({ x: 0, y: 0 });
-            }
+            // if (newZoom < maxZoom) {
+            //    setScrollOffset({ x: 0, y: 0 });
+            // }
             // if (isMobileView) {
             //    // setZoom((zoom: number) => (newZoom < maxZoom ? maxZoom : newZoom));
             // } else {
