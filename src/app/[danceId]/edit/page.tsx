@@ -72,7 +72,7 @@ const getServerSideProps = async (danceId: string) => {
    // }
    const headersList = headers();
    const userAgent = headersList.get("user-agent");
-   let isMobileView = userAgent!.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i);
+   // let isMobileView = userAgent!.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i);
 
    return {
       // props: {
@@ -82,7 +82,7 @@ const getServerSideProps = async (danceId: string) => {
       session,
       permissions,
       hasSeenCollab,
-      isMobileView: Boolean(isMobileView),
+      // isMobileView: Boolean(isMobileView),
 
       // },
    };
@@ -102,7 +102,7 @@ export default async function Page({ params }: { params: { danceId: string } }) 
          viewOnly={data.viewOnly}
          pricingTier={data.pricingTier}
          hasSeenCollab={data.hasSeenCollab}
-         isMobileView={data.isMobileView}
+         // isMobileView={data.isMobileView}
       />
    );
 }

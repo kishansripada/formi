@@ -152,7 +152,8 @@ const Edit = ({
       setSegments(initialData.segments);
       setDancers(initialData.dancers);
       setFormations(initialData.formations);
-      setViewOnly(viewOnlyInitial);
+      // setViewOnly(viewOnlyInitial);
+      setViewOnly(false);
       // setViewOnly(false);
       setDanceName(initialData.name);
       setProps(initialData.props);
@@ -168,7 +169,11 @@ const Edit = ({
       setNameOrEmail(session?.user.user_metadata.full_name || session?.user.email || "");
       setSoundCloudTrackId(initialData.soundCloudId);
       setSelectedFormations([initialData.formations[0].id]);
-      setIsMobileView(isMobileViewInitial);
+      // setIsMobileView(isMobileViewInitial);
+      function is_touch_enabled() {
+         return "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator?.msMaxTouchPoints > 0;
+      }
+      setIsMobileView(Boolean(is_touch_enabled()));
    }, []);
 
    // useEffect(() => {
