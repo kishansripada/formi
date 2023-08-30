@@ -102,6 +102,7 @@ export const Canvas: React.FC<{
    const [movedOnMultipleFormations, setMovedOnMultipleFormations] = useState(false);
    const [confirmChange, setConfirmChange] = useState(false);
    let { gridSnap, stageFlipped } = localSettings;
+   console.log({ isMobileView });
    // console.log({ stageFlipped });
    const stageFlippedFactor = stageFlipped ? -1 : 1;
    // const stageFlippedFactor = 1;
