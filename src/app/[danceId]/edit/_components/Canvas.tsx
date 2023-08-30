@@ -841,11 +841,12 @@ export const Canvas: React.FC<{
             if (newZoom < maxZoom) {
                setScrollOffset({ x: 0, y: 0 });
             }
-            if (isMobileView) {
-               setZoom((zoom: number) => (newZoom < maxZoom ? maxZoom : newZoom));
-            } else {
-               setZoom(newZoom);
-            }
+            // if (isMobileView) {
+            //    // setZoom((zoom: number) => (newZoom < maxZoom ? maxZoom : newZoom));
+            // } else {
+
+            // }
+            setZoom(newZoom);
 
             // console.log("pinching");
             // setZoom(zoom);
