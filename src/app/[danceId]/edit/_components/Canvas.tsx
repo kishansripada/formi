@@ -102,7 +102,7 @@ export const Canvas: React.FC<{
    const [movedOnMultipleFormations, setMovedOnMultipleFormations] = useState(false);
    const [confirmChange, setConfirmChange] = useState(false);
    let { gridSnap, stageFlipped } = localSettings;
-   console.log({ isMobileView });
+
    // console.log({ stageFlipped });
    const stageFlippedFactor = stageFlipped ? -1 : 1;
    // const stageFlippedFactor = 1;
@@ -829,6 +829,7 @@ export const Canvas: React.FC<{
    useGesture(
       {
          onPinch: ({ offset: [d] }) => {
+            console.log(d);
             // let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
             // let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
 
@@ -889,6 +890,7 @@ export const Canvas: React.FC<{
          target: container.current,
          // pinch: {preventDefault: true},
          pinch: { pointer: { touch: true }, preventDefault: true },
+
          // wheel: { enabled: !isMobileView },
          // drag: { enabled: isMobileView },
       }
