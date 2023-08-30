@@ -22,7 +22,7 @@ import { StageLines } from "./StageLines";
 import { OldGridLines } from "./OldGridLines";
 import { useStore } from "../store";
 import { AuthSession } from "@supabase/supabase-js";
-import { createUseGesture, dragAction, pinchAction, useGesture, usePinch } from "@use-gesture/react";
+import { createUseGesture, dragAction, pinchAction, useGesture, usePinch, wheelAction } from "@use-gesture/react";
 import { useIsDesktop } from "../../../../hooks";
 export const Canvas: React.FC<{
    children: React.ReactNode;
@@ -826,7 +826,7 @@ export const Canvas: React.FC<{
    //    };
    // }, [zoom]);
 
-   const useGesture = createUseGesture([dragAction, pinchAction]);
+   const useGesture = createUseGesture([dragAction, pinchAction, wheelAction]);
    useEffect(() => {
       const handler = (e: Event) => e.preventDefault();
       document.addEventListener("gesturestart", handler);
@@ -841,8 +841,6 @@ export const Canvas: React.FC<{
 
    useGesture(
       {
-         // onHover: ({ active, event }) => console.log('hover', event, active),
-         // onMove: ({ event }) => console.log('move', event),
          onDrag: (state) => {
             if (state.touches > 1) return;
             if (state.target.id) return;
@@ -865,22 +863,21 @@ export const Canvas: React.FC<{
          },
          onPinch: ({ offset: [d] }) => {
             setZoom(d / 5);
-            //  if (first) {
-            //    const { width, height, x, y } = ref.current!.getBoundingClientRect()
-            //    const tx = ox - (x + width / 2)
-            //    const ty = oy - (y + height / 2)
-            //    // memo = [style.x.get(), style.y.get(), tx, ty]
-            //  }
-
-            //  const x = memo[0] - (ms - 1) * memo[2]
-            //  const y = memo[1] - (ms - 1) * memo[3]
-            // //  api.start({ scale: s, rotateZ: a, x, y })
-            //  return memo
+         },
+         onWheel: (state) => {
+            const newY = scrollOffset.y - state.delta[1] / zoom / 1.5;
+            setScrollOffset((scrollOffset) => ({
+               x: scrollOffset.x - state.delta[0] / zoom / 1.5,
+               y: newY,
+            }));
          },
       },
       {
+         eventOptions: { passive: false },
          target: container.current,
          drag: { enabled: isMobileView },
+         wheel: { preventDefault: true, enabled: !isMobileView },
+
          //   pinch: { scaleBounds: { min: 0.5, max: 2 }, rubberband: true },
       }
    );
@@ -1023,6 +1020,7 @@ export const Canvas: React.FC<{
                touchAction: "none",
             }}
             onPointerUp={pointerUp}
+            onTouchEnd={pointerUp}
             onPointerMove={handleDragMove}
 
             // style={{
