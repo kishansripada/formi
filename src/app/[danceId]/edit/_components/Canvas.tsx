@@ -886,7 +886,8 @@ export const Canvas: React.FC<{
       {
          eventOptions: { passive: false },
          target: container.current,
-         pinch: { eventOptions: { passive: false }, pointer: { touch: true } },
+         // pinch: {preventDefault: true},
+         pinch: { pointer: { touch: true }, preventDefault: true },
          wheel: { enabled: !isMobileView },
          drag: { enabled: isMobileView },
       }
