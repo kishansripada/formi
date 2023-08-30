@@ -11,7 +11,7 @@ import {
    COLORS,
 } from "../../../../types/types";
 import { useStore } from "../store";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useIsDesktop } from "../../../../hooks";
 
 export const DancerAlias: React.FC<{
@@ -31,6 +31,7 @@ export const DancerAlias: React.FC<{
    index: number;
    collisions: any;
    isChangingCollisionRadius: boolean;
+   roundPositions: Function;
 }> = ({
    dancer,
    currentFormationIndex,
@@ -48,11 +49,27 @@ export const DancerAlias: React.FC<{
    index,
    isChangingCollisionRadius,
    // items,
+   roundPositions,
 }) => {
    let { formations, items, cloudSettings, selectedFormations, getFirstSelectedFormation, setFormations, get, isMobileView } = useStore();
    const container = useRef<HTMLDivElement>();
    const horizontalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom);
    const verticalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom);
+   // useEffect(() => {
+   //    // const handler = (e: Event) => e.preventDefault();
+
+   //    document.addEventListener("gestureend", () => {
+   //       console.log("gesture end");
+   //       roundPositions();
+   //    });
+   //    return () => {
+   //       document.removeEventListener("gestureend", () => {
+   //          console.log("gesture end");
+   //          roundPositions();
+   //       });
+   //    };
+   // }, []);
+
    // const isDesktop = useIsDesktop();
    useGesture(
       {
@@ -81,6 +98,9 @@ export const DancerAlias: React.FC<{
                })
             );
             // console.log(getFirstSelectedFormation()?.positions.find((position) => position.id === dancer.id)?.position.x);
+         },
+         onDragEnd: () => {
+            roundPositions();
          },
       },
       {

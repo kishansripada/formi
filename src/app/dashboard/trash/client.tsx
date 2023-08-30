@@ -5,6 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { Dance } from "../../../types/supabase";
+
 export default function PageClient({ trash }: { trash: Dance[] }) {
    const supabase = createClientComponentClient();
    const router = useRouter();

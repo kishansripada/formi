@@ -102,7 +102,6 @@ const Edit = ({
    session,
    permissions: initialPermissions,
    hasSeenCollab: hasSeenCollabInitial,
-   isMobileView: isMobileViewInitial,
 }: {
    initialData: any;
    viewOnly: boolean;
@@ -111,7 +110,6 @@ const Edit = ({
    session: AuthSession | null;
    permissions: string[];
    hasSeenCollab: boolean;
-   isMobileView: boolean;
 }) => {
    const {
       segments,
@@ -144,10 +142,12 @@ const Edit = ({
       position,
       setPosition,
       setIsMobileView,
+      isMobileView,
    } = useStore();
 
    // console.log(liveblocks);
    // console.log({ liveStatus });
+
    useEffect(() => {
       setSegments(initialData.segments);
       setDancers(initialData.dancers);
@@ -174,6 +174,7 @@ const Edit = ({
          return "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator?.msMaxTouchPoints > 0;
       }
       setIsMobileView(Boolean(is_touch_enabled()));
+      setMenuOpen(is_touch_enabled() ? null : "formations");
    }, []);
 
    // useEffect(() => {
@@ -245,7 +246,7 @@ const Edit = ({
 
    const [isScrollingTimeline, setIsScrollingTimeline] = useState(false);
    const [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
-   const [menuOpen, setMenuOpen] = useState<string | null>(isMobileViewInitial ? null : "formations");
+   const [menuOpen, setMenuOpen] = useState<string | null>("formations");
    const [player, setPlayer] = useState(null);
    const [saved, setSaved] = useState<boolean>(true);
    const [shareIsOpen, setShareIsOpen] = useState(false);
@@ -386,6 +387,56 @@ const Edit = ({
       );
       setDancers(dancers.filter((dancer) => dancer.id !== id));
       // pushChange();
+   };
+
+   const roundPositions = () => {
+      const { stageBackground, gridSubdivisions, horizontalGridSubdivisions, verticalFineDivisions, horizontalFineDivisions, stageDimensions } =
+         cloudSettings;
+      const { gridSnap } = localSettings;
+      let gridSizeX = 1;
+      let gridSizeY = 1;
+      let verticalOffset = 0;
+      let horizontalOffset = 0;
+      if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
+         // Determine the total number of divisions along each axis.
+         const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
+         const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
+
+         // Calculate the width and height of each grid cell.
+         gridSizeX = stageDimensions.width / totalVerticalDivisions / gridSnap;
+         gridSizeY = stageDimensions.height / totalHorizontalDivisions / gridSnap;
+         let isOddVerticalDivisions = (gridSubdivisions * verticalFineDivisions) % 2 !== 0;
+         let isOddHorizontalDivisions = (horizontalGridSubdivisions * horizontalFineDivisions) % 2 !== 0;
+
+         verticalOffset = isOddVerticalDivisions ? gridSizeX / 2 : 0;
+         horizontalOffset = isOddHorizontalDivisions ? gridSizeY / 2 : 0;
+         if (gridSnap % 2 === 0) {
+            verticalOffset = 0;
+            horizontalOffset = 0;
+         }
+      } else {
+         gridSizeX = 1 / gridSnap;
+         gridSizeY = 1 / gridSnap;
+      }
+
+      // console.log(gridSizeX);
+      setFormations(
+         formations.map((formation) => {
+            // Use the grid cell dimensions to round the dancer positions to the nearest grid position.
+            return {
+               ...formation,
+               positions: formation.positions.map((position) => {
+                  return {
+                     ...position,
+                     position: {
+                        x: roundToHundredth(Math.round((position.position.x - verticalOffset) / gridSizeX) * gridSizeX + verticalOffset),
+                        y: roundToHundredth(Math.round((position.position.y - horizontalOffset) / gridSizeY) * gridSizeY + horizontalOffset),
+                     },
+                  };
+               }),
+            };
+         })
+      );
    };
 
    // const undo = () => {
@@ -1092,6 +1143,7 @@ const Edit = ({
 
                                     {dancers.map((dancer, index) => (
                                        <DancerAlias
+                                          roundPositions={roundPositions}
                                           zoom={zoom}
                                           setZoom={setZoom}
                                           coordsToPosition={coordsToPosition}
@@ -1139,7 +1191,7 @@ const Edit = ({
                                          })
                                        : null}
 
-                                    {selectedFormations.length === 1 && !isPlaying && !isMobileViewInitial ? (
+                                    {selectedFormations.length === 1 && !isPlaying && !isMobileView ? (
                                        <>
                                           {(getFirstSelectedFormation()?.comments || []).map((comment: comment) => {
                                              return (
@@ -1342,14 +1394,6 @@ function BottomRight() {
    return <div className="w-1/2 h-1/2 bottom-0 right-0  absolute z-10 opacity-40 pointer-events-none" ref={setNodeRef}></div>;
 }
 
-// function roundDownToEven(n: number): number {
-//    // If the floored number is odd
-//    if (Math.floor(n) % 2 !== 0) {
-//       return Math.floor(n) - 1;
-//    }
-//    // If the floored number is even
-//    return Math.floor(n);
-// }
-function roundDownToEven(value) {
-   return Number.isNaN(value) ? 0.0 : 2 * Math.round(value / 2);
+function roundToHundredth(value: number): number {
+   return Math.round(value * 100) / 100;
 }

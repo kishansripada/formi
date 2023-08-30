@@ -783,7 +783,7 @@ export const Canvas: React.FC<{
             })
          );
 
-         pushChange();
+         // pushChange();
       }
 
       setDraggingDancerId(null);

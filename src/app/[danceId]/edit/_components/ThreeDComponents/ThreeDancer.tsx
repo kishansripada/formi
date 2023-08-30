@@ -205,7 +205,7 @@ export function ThreeDancer({
                                  if (viewOnly) return;
                                  // e.stopPropagation();
                                  setSelectedDancers([dancer.id]);
-                                 // setIsThreeDancerDragging(true);
+                                 setIsThreeDancerDragging(true);
                                  // addToStack();
                               }}
                               onPointerEnter={() => {
