@@ -57,8 +57,6 @@ export const DancerAlias: React.FC<{
    useGesture(
       {
          onDrag: (state) => {
-            if (!isMobileView) return;
-
             setFormations(
                get().formations.map((formation) => {
                   if (get().selectedFormations.includes(formation.id)) {
@@ -88,6 +86,7 @@ export const DancerAlias: React.FC<{
       {
          eventOptions: { passive: false },
          target: container.current,
+         enabled: isMobileView,
       }
       // config
    );

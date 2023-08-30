@@ -828,7 +828,6 @@ export const Canvas: React.FC<{
    useGesture(
       {
          onPinch: ({ offset: [d] }) => {
-            console.log(d);
             // let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
             // let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
 
@@ -853,6 +852,7 @@ export const Canvas: React.FC<{
             // setZoom(zoom);
          },
          onDrag: (state) => {
+            if (state.touches > 1) return;
             if (!isMobileView) return;
             if (state.target.id) return;
             let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
