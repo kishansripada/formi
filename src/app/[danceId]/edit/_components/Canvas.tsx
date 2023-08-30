@@ -22,7 +22,7 @@ import { StageLines } from "./StageLines";
 import { OldGridLines } from "./OldGridLines";
 import { useStore } from "../store";
 import { AuthSession } from "@supabase/supabase-js";
-import { useGesture, usePinch } from "@use-gesture/react";
+import { createUseGesture, dragAction, pinchAction, useGesture, usePinch } from "@use-gesture/react";
 import { useIsDesktop } from "../../../../hooks";
 export const Canvas: React.FC<{
    children: React.ReactNode;
@@ -826,10 +826,26 @@ export const Canvas: React.FC<{
    //    };
    // }, [zoom]);
 
+   const useGesture = createUseGesture([dragAction, pinchAction]);
+   useEffect(() => {
+      const handler = (e: Event) => e.preventDefault();
+      document.addEventListener("gesturestart", handler);
+      document.addEventListener("gesturechange", handler);
+      document.addEventListener("gestureend", handler);
+      return () => {
+         document.removeEventListener("gesturestart", handler);
+         document.removeEventListener("gesturechange", handler);
+         document.removeEventListener("gestureend", handler);
+      };
+   }, []);
+
    useGesture(
       {
-         onPinch: ({ offset: [d] }) => {
-            console.log(d);
+         // onHover: ({ active, event }) => console.log('hover', event, active),
+         // onMove: ({ event }) => console.log('move', event),
+         onDrag: (state) => {
+            if (state.touches > 1) return;
+            if (state.target.id) return;
             // let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
             // let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
 
@@ -838,64 +854,106 @@ export const Canvas: React.FC<{
             // // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
             // // setZoom(1)
             // const maxZoom = Math.min(heightPercentage, widthPercentage);
-            // // let zoom = state.memo[0] * state.movement[0];
+            // // if (maxZoom === zoom) return;
 
-            // if (newZoom < maxZoom) {
-            //    setScrollOffset({ x: 0, y: 0 });
-            // }
-            // if (isMobileView) {
-            //    // setZoom((zoom: number) => (newZoom < maxZoom ? maxZoom : newZoom));
-            // } else {
+            // // console.log(state.delta);
 
-            // }
-            setZoom(d / 5);
-
-            // console.log("pinching");
-            // setZoom(zoom);
+            setScrollOffset((scrollOffset) => ({
+               x: scrollOffset.x + state.delta[0] / zoom,
+               y: scrollOffset.y + state.delta[1] / zoom,
+            }));
          },
-         // onDrag: (state) => {
-         //    if (state.touches > 1) return;
-         //    if (state.target.id) return;
-         //    let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
-         //    let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
+         onPinch: ({ offset: [d] }) => {
+            setZoom(d / 5);
+            //  if (first) {
+            //    const { width, height, x, y } = ref.current!.getBoundingClientRect()
+            //    const tx = ox - (x + width / 2)
+            //    const ty = oy - (y + height / 2)
+            //    // memo = [style.x.get(), style.y.get(), tx, ty]
+            //  }
 
-         //    // console.log(maxTopOffset);
-         //    // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
-         //    // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
-         //    // setZoom(1)
-         //    const maxZoom = Math.min(heightPercentage, widthPercentage);
-         //    // if (maxZoom === zoom) return;
-
-         //    // // console.log(state.delta);
-
-         //    setScrollOffset((scrollOffset) => ({
-         //       x: scrollOffset.x + state.delta[0] / zoom,
-         //       y: scrollOffset.y + state.delta[1] / zoom,
-         //    }));
-         // },
-         // onWheel: (state) => {
-         //    // console.log(state.delta);
-
-         //    // console.log(maxTopOffset);
-         //    state.event.preventDefault();
-         //    const newY = scrollOffset.y - state.delta[1] / zoom / 1.5;
-         //    setScrollOffset((scrollOffset) => ({
-         //       x: scrollOffset.x - state.delta[0] / zoom / 1.5,
-         //       y: newY,
-         //    }));
-         // },
+            //  const x = memo[0] - (ms - 1) * memo[2]
+            //  const y = memo[1] - (ms - 1) * memo[3]
+            // //  api.start({ scale: s, rotateZ: a, x, y })
+            //  return memo
+         },
       },
       {
-         eventOptions: { passive: false },
          target: container.current,
-         // pinch: {preventDefault: true},
-         pinch: { pointer: { touch: true }, preventDefault: true },
-
-         // wheel: { enabled: !isMobileView },
-         // drag: { enabled: isMobileView },
+         drag: { enabled: isMobileView },
+         //   pinch: { scaleBounds: { min: 0.5, max: 2 }, rubberband: true },
       }
-      // config
    );
+   // useGesture(
+   //    {
+   //       onPinch: ({ offset: [d] }) => {
+   //          console.log(d);
+   //          // let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
+   //          // let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
+
+   //          // // console.log(maxTopOffset);
+   //          // // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
+   //          // // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
+   //          // // setZoom(1)
+   //          // const maxZoom = Math.min(heightPercentage, widthPercentage);
+   //          // // let zoom = state.memo[0] * state.movement[0];
+
+   //          // if (newZoom < maxZoom) {
+   //          //    setScrollOffset({ x: 0, y: 0 });
+   //          // }
+   //          // if (isMobileView) {
+   //          //    // setZoom((zoom: number) => (newZoom < maxZoom ? maxZoom : newZoom));
+   //          // } else {
+
+   //          // }
+   //          setZoom(d / 5);
+
+   //          // console.log("pinching");
+   //          // setZoom(zoom);
+   //       },
+   //       // onDrag: (state) => {
+   //       //    if (state.touches > 1) return;
+   //       //    if (state.target.id) return;
+   //       //    let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
+   //       //    let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
+
+   //       //    // console.log(maxTopOffset);
+   //       //    // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
+   //       //    // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
+   //       //    // setZoom(1)
+   //       //    const maxZoom = Math.min(heightPercentage, widthPercentage);
+   //       //    // if (maxZoom === zoom) return;
+
+   //       //    // // console.log(state.delta);
+
+   //       //    setScrollOffset((scrollOffset) => ({
+   //       //       x: scrollOffset.x + state.delta[0] / zoom,
+   //       //       y: scrollOffset.y + state.delta[1] / zoom,
+   //       //    }));
+   //       // },
+   //       // onWheel: (state) => {
+   //       //    // console.log(state.delta);
+
+   //       //    // console.log(maxTopOffset);
+   //       //    state.event.preventDefault();
+   //       //    const newY = scrollOffset.y - state.delta[1] / zoom / 1.5;
+   //       //    setScrollOffset((scrollOffset) => ({
+   //       //       x: scrollOffset.x - state.delta[0] / zoom / 1.5,
+   //       //       y: newY,
+   //       //    }));
+   //       // },
+   //    },
+   //    {
+   //       eventOptions: { passive: false },
+   //       target: container.current,
+   //       // pinch: {preventDefault: true},
+   //       pinch: { pointer: { touch: true }, preventDefault: true },
+
+   //       // wheel: { enabled: !isMobileView },
+   //       // drag: { enabled: isMobileView },
+   //    }
+   //    // config
+   // );
 
    // useEffect(() => {
    //    const div = container.current;
