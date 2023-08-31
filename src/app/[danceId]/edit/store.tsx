@@ -101,7 +101,7 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             set({ segments });
          },
          updateSegmentProperty: (id: string, propertyKey: keyof segment, value: any) => {
-            if (get().viewOnly) return;
+            // if (get().viewOnly) return;
             const updatedSegments = get().segments.map((seg) => {
                if (seg.id === id) {
                   return { ...seg, [propertyKey]: value };

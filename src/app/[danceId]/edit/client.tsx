@@ -153,7 +153,7 @@ const Edit = ({
       setDancers(initialData.dancers);
       setFormations(initialData.formations);
       setViewOnly(viewOnlyInitial);
-      setViewOnly(true);
+      // setViewOnly(true);
       // setViewOnly(false);
       setDanceName(initialData.name);
       setProps(initialData.props);
