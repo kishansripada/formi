@@ -84,7 +84,7 @@ export const PathEditor: React.FC<{
                               d={`M ${startCoords.left} ${startCoords.top} L ${endCoords.left} ${endCoords.top}`}
                               // className=" stroke-red-700 "
                               fill="transparent"
-                              stroke-linecap="round"
+                              strokeLinecap="round"
                               strokeDasharray={"10, 10"}
                               stroke={dancer?.color || "#db2777"}
                               strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 3 : 0.5}
@@ -112,7 +112,7 @@ export const PathEditor: React.FC<{
                               d={`M ${startCoords.left} ${startCoords.top} C ${controlPointStartCoords.left} ${controlPointStartCoords.top},  ${controlPointEndCoords.left} ${controlPointEndCoords.top}, ${endCoords.left} ${endCoords.top}`}
                               stroke={dancer?.color || "#db2777"}
                               fill="transparent"
-                              stroke-linecap="round"
+                              strokeLinecap="round"
                               strokeDasharray={"10, 10"}
                               strokeWidth={selectedDancers[0] === dancerPosition.id && selectedDancers.length === 1 ? 2 : 1}
                            >

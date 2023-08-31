@@ -272,7 +272,7 @@ export const CurrentFormation: React.FC<{
                               })
                            );
                         }}
-                        // disabled={viewOnly}
+                        disabled={viewOnly}
                         className="dark:bg-neutral-700 transition bg-neutral-100  w-full focus:outline-none p-3 text-sm border-2 border-neutral-300 focus:border-pink-300 dark:border-neutral-600 dark:focus:border-pink-600 resize-none rounded-md"
                         cols={30}
                         rows={13}

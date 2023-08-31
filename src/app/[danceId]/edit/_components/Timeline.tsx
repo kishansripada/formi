@@ -327,11 +327,13 @@ export const Timeline: React.FC<{
                   className={` relative   py-1 ${!soundCloudTrackId ? "h-[15px]" : ""} `}
                   id="wave-timeline"
                ></div>
+
                {others
                   .filter((other) => other.canWrite)
                   .map((other) => {
                      return (
                         <div
+                           key={other.id}
                            style={{
                               // add 40 but subract 9 to account for the width of the svg
                               left: (other.presence.position || 0) * pixelsPerSecond - 9,

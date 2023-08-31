@@ -97,7 +97,7 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
 
          segments: [],
          setSegments: (segments: segment[]) => {
-            if (get().viewOnly) return;
+            // if (get().viewOnly) return;
             set({ segments });
          },
          updateSegmentProperty: (id: string, propertyKey: keyof segment, value: any) => {
@@ -115,7 +115,7 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
          dancers: [],
 
          setDancers: (dancers) => {
-            if (get().viewOnly) return;
+            // if (get().viewOnly) return;
             set({ dancers });
          },
 
@@ -127,13 +127,13 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
 
          props: [],
          setProps: (props: prop[]) => {
-            if (get().viewOnly) return;
+            // if (get().viewOnly) return;
             set({ props });
          },
 
          items: [],
          setItems: (items: item[]) => {
-            if (get().viewOnly) return;
+            // if (get().viewOnly) return;
             set({ items });
          },
 
@@ -145,17 +145,17 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             horizontalGridSubdivisions: 4,
          },
          setCloudSettings: (cloudSettings: cloudSettings) => {
-            if (get().viewOnly) return;
+            // if (get().viewOnly) return;
             set({ cloudSettings });
          },
 
          soundCloudTrackId: null,
          setSoundCloudTrackId: (soundCloudTrackId: string | null) => {
-            if (get().viewOnly) return;
+            // if (get().viewOnly) return;
             set({ soundCloudTrackId });
          },
 
-         viewOnly: true,
+         viewOnly: false,
          setViewOnly: (viewOnly: boolean) => set({ viewOnly }),
 
          getFirstSelectedFormation: (formations?: formation[]) => {
@@ -208,7 +208,7 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
 
          danceName: "",
          setDanceName: (danceName: string) => {
-            if (get().viewOnly) return;
+            // if (get().viewOnly) return;
             set({ danceName });
          },
 

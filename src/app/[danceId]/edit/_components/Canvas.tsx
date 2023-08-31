@@ -863,9 +863,11 @@ export const Canvas: React.FC<{
             }));
          },
          onPinch: ({ offset: [d] }) => {
-            setZoom(d / 5);
+            setZoom(d);
+            // setZoom((zoom) => zoom + delta[0] / 20);
          },
          onWheel: (state) => {
+            if (state.pinching) return;
             const newY = scrollOffset.y - state.delta[1] / zoom / 1.5;
             setScrollOffset((scrollOffset) => ({
                x: scrollOffset.x - state.delta[0] / zoom / 1.5,
@@ -878,7 +880,9 @@ export const Canvas: React.FC<{
          target: container.current,
          drag: { enabled: isMobileView },
          wheel: { preventDefault: true },
-
+         pinch: {
+            from: () => [zoom, zoom],
+         },
          //   pinch: { scaleBounds: { min: 0.5, max: 2 }, rubberband: true },
       }
    );
