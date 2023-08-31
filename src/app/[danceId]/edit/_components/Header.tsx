@@ -419,10 +419,10 @@ export const Header: React.FC<{
                   </Link>
                )}
 
-               <div className="px-3 hidden lg:block">
-                  <div className={styles.status} data-status={status}>
+               <div className="md:px-3 px-1 ">
+                  <div className={`${styles.status} hidden lg:block`} data-status={status}>
                      <div className={styles.statusCircle} />
-                     <div className={styles.statusText}>{status}</div>
+                     <div className={`${styles.statusText} hidden lg:block`}>{status}</div>
                   </div>
                </div>
                <div className="lg:flex hidden">
