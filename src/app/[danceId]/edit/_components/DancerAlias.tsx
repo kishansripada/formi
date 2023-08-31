@@ -223,7 +223,8 @@ export const DancerAlias: React.FC<{
                //          : "#404040"
                //       : hexToRGBA(dancer?.color || "#db2777", 0.5),
                transition: !draggingDancerId && !isPlaying ? "left 0.33s ease-in-out, top 0.33s ease-in-out, transform 0.33s ease-in-out" : "",
-               transform: `scale(${draggingDancerId === dancer.id ? (isMobileView ? 1.5 : 1.2) : 1}) translate(-50%, -50%)`,
+               transform: `translate(-50%, -50%) scale(${draggingDancerId === dancer.id ? (isMobileView ? 1.5 : 1.2) : 1})`,
+
                // width: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
                transformOrigin: "center",
                // height: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,

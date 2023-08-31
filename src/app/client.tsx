@@ -81,11 +81,19 @@ const Client = () => {
 
                <div className="flex flex-col justify-center items-center py-20">
                   <p className="lg:text-7xl text-3xl mb-24 ">Edit formations on the go</p>
-                  <img
-                     className="rounded-xl xl:max-w-4xl max-w-md"
-                     src="https://res.cloudinary.com/dxavpfwki/image/upload/q_auto:eco/v1693416380/IMG_8303_kk6to4.png"
-                     alt=""
-                  />
+                  <div className="flex lg:flex-row lg:px-10 flex-col items-center">
+                     {" "}
+                     <img
+                        className="rounded-xl w-1/2"
+                        src="https://res.cloudinary.com/dxavpfwki/image/upload/q_auto:eco/v1693416380/IMG_8303_kk6to4.png"
+                        alt="w-1/2"
+                     />
+                     <img
+                        className="w-1/2"
+                        src="https://res.cloudinary.com/dxavpfwki/image/upload/q_auto:eco/v1693484313/IMG_5131_zbj7c0.png"
+                        alt=""
+                     />
+                  </div>
                </div>
                <div className="flex flex-col justify-center items-center py-40">
                   <p className="lg:text-7xl text-3xl mb-24 font-light">Collaborate in real-time</p>

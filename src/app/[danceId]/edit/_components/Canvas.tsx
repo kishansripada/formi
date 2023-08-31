@@ -876,7 +876,7 @@ export const Canvas: React.FC<{
          eventOptions: { passive: false },
          target: container.current,
          drag: { enabled: isMobileView },
-         wheel: { preventDefault: true, enabled: !isMobileView },
+         wheel: { preventDefault: true },
 
          //   pinch: { scaleBounds: { min: 0.5, max: 2 }, rubberband: true },
       }

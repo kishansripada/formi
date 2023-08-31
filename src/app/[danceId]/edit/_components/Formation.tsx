@@ -99,45 +99,47 @@ export const Formation: React.FC<{
                   // subtract 4 to account for the mx-[2px]
                }}
             >
-               <input
-                  id="drag-handle"
-                  {...attributes}
-                  // onKeyDown={(e) => {
-                  //    if (e.key === " ") {
-                  //       e.preventDefault();
-                  //    }
-                  // }}
-                  {...listeners}
-                  readOnly={!editingName}
-                  onBlur={(e) => {
-                     setEditingName(false);
-                  }}
-                  onClick={(e) => {
-                     e.preventDefault();
-                     // e.stopPropagation();
-                  }}
-                  onDoubleClick={(e) => {
-                     if (viewOnly) return;
-                     setEditingName(true);
-                  }}
-                  onFocus={(e) => {
-                     if (!editingName) {
-                        e.target.blur();
-                     }
-                  }}
-                  value={formation.name || ""}
-                  onChange={(e) => {
-                     setFormations(
-                        formations.map((f: formation) => {
-                           if (f.id === formation.id) {
-                              return { ...f, name: e.target.value };
-                           }
-                           return f;
-                        })
-                     );
-                  }}
-                  className="text-[10px] hidden lg:block select-none bg-transparent cursor-pointer p-1 font-semibold   relative whitespace-nowrap  focus:outline-none  "
-               />
+               {!isMobileView ? (
+                  <input
+                     id="drag-handle"
+                     {...attributes}
+                     // onKeyDown={(e) => {
+                     //    if (e.key === " ") {
+                     //       e.preventDefault();
+                     //    }
+                     // }}
+                     {...listeners}
+                     readOnly={!editingName}
+                     onBlur={(e) => {
+                        setEditingName(false);
+                     }}
+                     onClick={(e) => {
+                        e.preventDefault();
+                        // e.stopPropagation();
+                     }}
+                     onDoubleClick={(e) => {
+                        if (viewOnly) return;
+                        setEditingName(true);
+                     }}
+                     onFocus={(e) => {
+                        if (!editingName) {
+                           e.target.blur();
+                        }
+                     }}
+                     value={formation.name || ""}
+                     onChange={(e) => {
+                        setFormations(
+                           formations.map((f: formation) => {
+                              if (f.id === formation.id) {
+                                 return { ...f, name: e.target.value };
+                              }
+                              return f;
+                           })
+                        );
+                     }}
+                     className="text-[10px] select-none bg-transparent cursor-pointer p-1 font-semibold   relative whitespace-nowrap  focus:outline-none  "
+                  />
+               ) : null}
 
                {!viewOnly ? (
                   <div
@@ -146,7 +148,7 @@ export const Formation: React.FC<{
                      onMouseDown={(e) => e.preventDefault()}
                      className={` top-0 absolute right-[0px] flex flex-row items-center bg-black/50 justify-between    ${
                         isMobileView ? "h-full" : "opacity-0 h-[60%]"
-                     } group-hover:opacity-100 transition lg:pointer-events-auto pointer-events-none w-[7px] cursor-col-resize	z-[99]`}
+                     } group-hover:opacity-100 transition  w-[7px] cursor-col-resize	z-[99]`}
                   >
                      <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none">
                         <div className="w-[2px] h-[15px] rounded-full bg-neutral-300 dark:bg-neutral-300"></div>
@@ -156,7 +158,10 @@ export const Formation: React.FC<{
 
                <div
                   duration={formation.transition.durationSeconds}
-                  className={` flex flex-row border-t dark:border-neutral-600  box-border md:h-[40%] h-full mt-auto   `}
+                  className={` flex flex-row border-t dark:border-neutral-600  box-border  mt-auto   `}
+                  style={{
+                     height: isMobileView ? "100%" : "40%",
+                  }}
                >
                   {index !== 0 ? (
                      <div
@@ -175,7 +180,7 @@ export const Formation: React.FC<{
                                  onMouseDown={(e) => e.preventDefault()}
                                  className={`h-full absolute right-[7px]  flex flex-row items-center bg-black/50 justify-between  ${
                                     isMobileView ? "" : "opacity-0"
-                                 } group-hover:opacity-100 transition lg:pointer-events-auto pointer-events-none w-[7px] cursor-col-resize	z-[99]`}
+                                 } group-hover:opacity-100 transition  w-[7px] cursor-col-resize	z-[99]`}
                               >
                                  <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none">
                                     <div className="w-[2px] h-[10px] rounded-full bg-neutral-300 dark:bg-neutral-300"></div>
