@@ -51,7 +51,7 @@ export const DancerAlias: React.FC<{
    // items,
    roundPositions,
 }) => {
-   let { formations, items, cloudSettings, selectedFormations, getFirstSelectedFormation, setFormations, get, isMobileView } = useStore();
+   let { formations, items, cloudSettings, selectedFormations, getFirstSelectedFormation, setFormations, get, isMobileView, viewOnly } = useStore();
    const container = useRef<HTMLDivElement>();
    const stageFlippedFactor = localSettings.stageFlipped ? -1 : 1;
    const horizontalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
@@ -75,7 +75,8 @@ export const DancerAlias: React.FC<{
    useGesture(
       {
          onDrag: (state) => {
-            if (state.touches > 2) state.cancel();
+            if (state.touches > 2 || viewOnly) state.cancel();
+
             setFormations(
                get().formations.map((formation) => {
                   if (get().selectedFormations.includes(formation.id)) {
