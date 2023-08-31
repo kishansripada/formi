@@ -158,13 +158,12 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
          viewOnly: true,
          setViewOnly: (viewOnly: boolean) => set({ viewOnly }),
 
-         getFirstSelectedFormation: () => {
+         getFirstSelectedFormation: (formations?: formation[]) => {
+            formations = formations || get().formations;
             if (get().selectedFormations.length === 1) {
-               return get().formations.find((formation) => formation.id === get().selectedFormations[0]);
+               return formations.find((formation) => formation.id === get().selectedFormations[0]);
             } else {
-               return get().formations[
-                  Math.min(...get().selectedFormations.map((id: string) => get().formations.findIndex((formation) => formation.id === id)))
-               ];
+               return formations[Math.min(...get().selectedFormations.map((id: string) => formations.findIndex((formation) => formation.id === id)))];
             }
          },
 

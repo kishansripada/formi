@@ -53,8 +53,9 @@ export const DancerAlias: React.FC<{
 }) => {
    let { formations, items, cloudSettings, selectedFormations, getFirstSelectedFormation, setFormations, get, isMobileView } = useStore();
    const container = useRef<HTMLDivElement>();
-   const horizontalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom);
-   const verticalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom);
+   const stageFlippedFactor = localSettings.stageFlipped ? -1 : 1;
+   const horizontalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
+   const verticalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
    // useEffect(() => {
    //    // const handler = (e: Event) => e.preventDefault();
 
@@ -147,7 +148,7 @@ export const DancerAlias: React.FC<{
    }
 
    if (!selectedFormations.length) return <></>;
-   let dancerPos = getFirstSelectedFormation()?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id);
+   let dancerPos = getFirstSelectedFormation(formations)?.positions.find((dancerx: dancerPosition) => dancerx.id === dancer.id);
 
    if (!dancerPos) return <></>;
 
