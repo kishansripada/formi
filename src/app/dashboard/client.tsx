@@ -78,7 +78,7 @@ export default function Client({ myDances, sharedWithMe, session }) {
             >
                New performance
             </button>
-            <div className="h-[310px] min-h-[310px] overflow-scroll bg-neutral-900 rounded-xl border-2 border-neutral-800 ">
+            <div className="lg:h-[310px] lg:min-h-[310px] h-full  overflow-scroll bg-neutral-900 rounded-xl border-2 border-neutral-800 ">
                <div className="flex flex-row items-center justify-between p-5">
                   <p className=" text-sm">Recents</p>
                   <Link
@@ -99,7 +99,7 @@ export default function Client({ myDances, sharedWithMe, session }) {
                   </Link>
                </div>
 
-               <div className="flex lg:flex-row flex-col min-h-screen lg:h-auto px-5">
+               <div className="flex lg:flex-row flex-col  px-5">
                   {myDances.length ? (
                      [...myDances.filter((dance) => !dance.isInTrash), ...sharedWithMe.filter((dance) => !dance.isInTrash)]
                         .sort((a, b) => new Date(b.last_edited) - new Date(a.last_edited))

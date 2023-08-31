@@ -146,7 +146,7 @@ export const Assets: React.FC<{
             id="outside"
             className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
          >
-            <div className="w-2/3 h-[560px] bg-neutral-800/90 border border-neutral-500  rounded-xl  text-sm  text-white  flex flex-col  items-center">
+            <div className="lg:w-2/3 w-full h-[560px] bg-neutral-800/90 border border-neutral-500  rounded-xl  text-sm  text-white  flex flex-col  items-center">
                <div className="w-full h-12 border-b border-b-neutral-500 flex flex-row items-center px-6">
                   <p className="font-semibold"> My assets</p>
                </div>

@@ -24,7 +24,7 @@ export const Formation: React.FC<{
    activeId,
    localSettings,
 }) => {
-   const { viewOnly, selectedFormations, setFormations, formations } = useStore();
+   const { viewOnly, selectedFormations, setFormations, formations, isMobileView } = useStore();
 
    const others = useStore((state) => state.liveblocks.others);
 
@@ -53,8 +53,9 @@ export const Formation: React.FC<{
                // borderColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "transparent",
                // marginLeft: 2 / pixelsPerSecond,
                // marginRight: 2 / pixelsPerSecond,
+               borderRadius: isMobileView ? 99 : 8,
             }}
-            className="relative  border-2 border-transparent  rounded-lg overflow-hidden group  bg-neutral-100 dark:bg-neutral-800  "
+            className="relative  border-2 border-transparent  overflow-hidden group  bg-neutral-100 dark:bg-neutral-800  "
             ref={setNodeRef}
          >
             {/* <div className=" absolute z-[50] bottom-[-30px] whitespace-nowrap text-xs -translate-x-1/2 left-1/2 group bg-neutral-800/90 p-1 rounded-md text-white">
@@ -80,13 +81,14 @@ export const Formation: React.FC<{
                <div className="h-[1px] rounded-full bg-neutral-800 w-[12px] mt-[1px]"></div>
             </div> */}
             <div
-               className={`  cursor-pointer    dark:bg-black  md:h-[50px] h-[40px]  dark:text-white  rounded-lg   overflow-hidden border-neutral-300 dark:border-neutral-600  border-2 flex flex-col  relative   `}
+               className={`  cursor-pointer    dark:bg-black  md:h-[50px] h-[40px]  dark:text-white    overflow-hidden border-neutral-300 dark:border-neutral-600  border-2 flex flex-col  relative   `}
                style={{
                   borderColor: selectedFormations.includes(formation.id)
                      ? "#db2777"
                      : othersOnThisFormation.length
                      ? COLORS[othersOnThisFormation[0]?.connectionId % COLORS.length]
                      : "",
+                  borderRadius: isMobileView ? 99 : 8,
                   // borderBottomColor:
                   // formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color ||
                   // (colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : localSettings.isDarkMode ? "#a3a3a3" : "#d4d4d4"),
@@ -142,7 +144,9 @@ export const Formation: React.FC<{
                      data-type="formation-resize"
                      id={formation.id}
                      onMouseDown={(e) => e.preventDefault()}
-                     className="h-[60%] top-0 absolute right-[0px] flex flex-row items-center bg-black/50 justify-between    opacity-0 group-hover:opacity-100 transition lg:pointer-events-auto pointer-events-none w-[7px] cursor-col-resize	z-[99]"
+                     className={` top-0 absolute right-[0px] flex flex-row items-center bg-black/50 justify-between    ${
+                        isMobileView ? "h-full" : "opacity-0 h-[60%]"
+                     } group-hover:opacity-100 transition lg:pointer-events-auto pointer-events-none w-[7px] cursor-col-resize	z-[99]`}
                   >
                      <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none">
                         <div className="w-[2px] h-[15px] rounded-full bg-neutral-300 dark:bg-neutral-300"></div>
@@ -159,19 +163,19 @@ export const Formation: React.FC<{
                         style={{
                            width: formation.transition.durationSeconds * pixelsPerSecond,
                            minWidth: formation.transition.durationSeconds * pixelsPerSecond,
+                           borderRadius: isMobileView ? 99 : 8,
                         }}
                         className="  "
                      >
-                        <div className="flex flex-row relative  dark:bg-pink-600 bg-pink-600    pointer-events-none h-full  ">
-                           {/* <svg className="" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 10 20">
-                                 <polygon className="fill-neutral-300 dark:fill-neutral-500" strokeWidth={0} points="0,0 0,20 10,10" />
-                              </svg> */}
+                        <div style={{}} className="flex flex-row relative  dark:bg-pink-600 bg-pink-600    pointer-events-none h-full  ">
                            {!viewOnly ? (
                               <div
                                  data-type="transition-resize"
                                  id={formation.id}
                                  onMouseDown={(e) => e.preventDefault()}
-                                 className="h-full absolute right-[7px]  flex flex-row items-center bg-black/50 justify-between  opacity-0 group-hover:opacity-100 transition lg:pointer-events-auto pointer-events-none w-[7px] cursor-col-resize	z-[99]"
+                                 className={`h-full absolute right-[7px]  flex flex-row items-center bg-black/50 justify-between  ${
+                                    isMobileView ? "" : "opacity-0"
+                                 } group-hover:opacity-100 transition lg:pointer-events-auto pointer-events-none w-[7px] cursor-col-resize	z-[99]`}
                               >
                                  <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none">
                                     <div className="w-[2px] h-[10px] rounded-full bg-neutral-300 dark:bg-neutral-300"></div>

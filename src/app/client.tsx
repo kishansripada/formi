@@ -78,13 +78,18 @@ const Client = () => {
                      }}
                   ></div>
                </div>
+
+               <div className="flex flex-col justify-center items-center py-20">
+                  <p className="lg:text-7xl text-3xl mb-24 ">Edit formations on the go</p>
+                  <img
+                     className="rounded-xl xl:max-w-4xl max-w-md"
+                     src="https://res.cloudinary.com/dxavpfwki/image/upload/q_auto:eco/v1693416380/IMG_8303_kk6to4.png"
+                     alt=""
+                  />
+               </div>
                <div className="flex flex-col justify-center items-center py-40">
                   <p className="lg:text-7xl text-3xl mb-24 font-light">Collaborate in real-time</p>
                   <img className="rounded-xl xl:max-w-4xl max-w-md" src="/realtime.png" alt="" />
-               </div>
-               <div className="flex flex-col justify-center items-center py-40">
-                  <p className="lg:text-7xl text-3xl mb-24 font-light">Remember your choreography</p>
-                  <img className="rounded-xl xl:max-w-4xl max-w-md" src="/vinny.png" alt="" />
                </div>
             </div>
 

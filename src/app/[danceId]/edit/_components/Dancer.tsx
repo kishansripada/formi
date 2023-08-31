@@ -65,8 +65,9 @@ export const Dancer: React.FC<{
             onTouchStart={() => {
                setSelectedDancers([id]);
             }}
+            onto
             className={`flex flex-row items-center px-5 box-border ${
-               amSelected ? "bg-pink-200 dark:bg-pink-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
+               amSelected ? "bg-pink-200 dark:bg-pink-600" : !isMobileView ? "hover:bg-neutral-100 dark:hover:bg-neutral-700" : ""
             }  group  select-none   min-h-[40px] `}
          >
             <p className="font-semibold   text-sm "> {index + 1}</p>

@@ -41,20 +41,28 @@ const Client = () => {
             </div>
             <div className="flex flex-col items-center w-full lg:w-[40%] justify-center">
                <div className="flex flex-col items-center w-96">
-                  <p className="text-2xl  mb-10 font-bold">Check your email for a login link </p>
-                  <p>or</p>
+                  <p className="text-2xl  mb-10 font-bold text-center">Check your email for a verfication code</p>
+
                   <p>Enter your 6 digit verification code:</p>
                   <input
                      value={code}
                      onChange={(e) => {
+                        if (e.target.value.length > 6) return;
+                        if (isNaN(Number(e.target.value))) return;
+
                         setCode(e.target.value);
                      }}
+                     style={{
+                        borderColor: code.length === 6 ? "green" : "black",
+                     }}
+                     className="border-2 border-black w-full h-12 rounded-md mt-4 text-center px-3 focus:outline-none text-2xl"
                      type="text"
                   />
                   <button
                      onClick={() => {
                         signInWithCode();
                      }}
+                     className="w-full h-12 bg-black text-white rounded-md mt-4 text-sm"
                   >
                      {" "}
                      Sign In
