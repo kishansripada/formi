@@ -71,6 +71,7 @@ export const Header: React.FC<{
       danceName,
       setDanceName,
       liveblocks: { status },
+      isMobileView,
    } = useStore();
 
    const supabase = createClientComponentClient();
@@ -246,7 +247,7 @@ export const Header: React.FC<{
                   )}
                </div>
 
-               {!viewOnlyInitial ? (
+               {!viewOnlyInitial && !isMobileView ? (
                   <button
                      title="Comment on stage"
                      className={`min-w-[48px]  hidden lg:grid h-full  place-items-center ${

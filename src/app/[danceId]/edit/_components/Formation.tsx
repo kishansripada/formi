@@ -150,8 +150,8 @@ export const Formation: React.FC<{
                         isMobileView ? "h-full" : "opacity-0 h-[60%]"
                      } group-hover:opacity-100 transition  w-[7px] cursor-col-resize	z-[99]`}
                   >
-                     <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none">
-                        <div className="w-[2px] h-[15px] rounded-full bg-neutral-300 dark:bg-neutral-300"></div>
+                     <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none ">
+                        <div className="w-[2px] h-[15px] rounded-full bg-neutral-300 dark:bg-neutral-300 pointer-events-none"></div>
                      </div>
                   </div>
                ) : null}
@@ -172,7 +172,7 @@ export const Formation: React.FC<{
                         }}
                         className="  "
                      >
-                        <div style={{}} className="flex flex-row relative  dark:bg-pink-600 bg-pink-600    pointer-events-none h-full  ">
+                        <div style={{}} className="flex flex-row relative  dark:bg-pink-600 bg-pink-600   h-full  ">
                            {!viewOnly ? (
                               <div
                                  data-type="transition-resize"
@@ -182,8 +182,8 @@ export const Formation: React.FC<{
                                     isMobileView ? "" : "opacity-0"
                                  } group-hover:opacity-100 transition  w-[7px] cursor-col-resize	z-[99]`}
                               >
-                                 <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none">
-                                    <div className="w-[2px] h-[10px] rounded-full bg-neutral-300 dark:bg-neutral-300"></div>
+                                 <div className="relative flex flex-row item justify-between w-[5px] right-[-2px] pointer-events-none ">
+                                    <div className="w-[2px] h-[10px] rounded-full bg-neutral-300 dark:bg-neutral-300 pointer-events-none"></div>
                                  </div>
                               </div>
                            ) : null}

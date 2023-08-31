@@ -200,7 +200,7 @@ export const Canvas: React.FC<{
 
    const handleDragMove = (e: any) => {
       if (!selectedFormations.length || isPlaying) return;
-      if (isMobileView) return;
+      // if (isMobileView) return;
 
       const movementX = e.movementX * horizontalScalar;
       const movementY = e.movementY * verticalScalar;
@@ -294,6 +294,7 @@ export const Canvas: React.FC<{
 
       if (draggingDancerId) {
          if (viewOnly) return;
+         if (isMobileView) return;
          if (selectedFormations.length === 1) {
             setFormations(
                get().formations.map((formation) => {

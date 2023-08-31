@@ -171,7 +171,7 @@ const Edit = ({
       setSelectedFormations([initialData.formations[0].id]);
       // setIsMobileView(isMobileViewInitial);
       function is_touch_enabled() {
-         return true;
+         // return true;
          return "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator?.msMaxTouchPoints > 0;
       }
       setIsMobileView(Boolean(is_touch_enabled()));

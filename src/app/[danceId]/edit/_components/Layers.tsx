@@ -188,8 +188,6 @@ export const Layers: React.FC<{
          onPointerUp={pointerUp}
          onPointerDown={pointerDown}
          onPointerMove={pointerMove}
-         onTouchStart={pointerDown}
-         // id="layers"
       >
          <>
             <div
