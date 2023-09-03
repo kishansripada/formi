@@ -37,6 +37,7 @@ export const Segments: React.FC<{
                            onChange={(e) => {
                               updateSegmentProperty(segment.id, "name", e.target.value);
                            }}
+                           readOnly={viewOnly}
                         />
                      </div>
 
@@ -47,37 +48,39 @@ export const Segments: React.FC<{
 
             <div className=" min-h-[200px] h-[200px]  flex flex-col   ">
                <>
-                  <div className="flex flex-row items-center text-xs justify-between py-2 border-y border-neutral-200 dark:border-neutral-700 px-2">
-                     <button
-                        style={{
-                           pointerEvents: viewOnly ? "none" : "all",
-                        }}
-                        onClick={() => {
-                           setSegments([
-                              ...segments,
-                              {
-                                 name: "New segment",
-                                 duration: 10,
-                                 color: "#db2777",
-                                 id: uuidv4(),
-                              },
-                           ]);
-                        }}
-                        className=" flex flex-row items-center "
-                     >
-                        <p className="ml-auto mr-2">New Segment</p>
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-5 h-5"
+                  {!viewOnly ? (
+                     <div className="flex flex-row items-center text-xs justify-between py-2 border-y border-neutral-200 dark:border-neutral-700 px-2">
+                        <button
+                           style={{
+                              pointerEvents: viewOnly ? "none" : "all",
+                           }}
+                           onClick={() => {
+                              setSegments([
+                                 ...segments,
+                                 {
+                                    name: "New segment",
+                                    duration: 10,
+                                    color: "#db2777",
+                                    id: uuidv4(),
+                                 },
+                              ]);
+                           }}
+                           className=" flex flex-row items-center "
                         >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                     </button>
-                  </div>
+                           <p className="ml-auto mr-2">New Segment</p>
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-5 h-5"
+                           >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                           </svg>
+                        </button>
+                     </div>
+                  ) : null}
                </>
 
                {selectedSegment ? (
@@ -103,21 +106,23 @@ export const Segments: React.FC<{
                   <p className="h-full w-full grid place-items-center">No Segment Selected</p>
                )}
 
-               <div className="mt-auto p-2">
-                  <div
-                     style={{
-                        opacity: selectedSegment ? 1 : 0.5,
-                        pointerEvents: selectedSegment && !viewOnly ? "all" : "none",
-                     }}
-                     onClick={() => {
-                        setSelectedSegment(null);
-                        setSegments(segments.filter((segment) => segment.id !== selectedSegment));
-                     }}
-                     className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-red-500 dark:text-red-400 text-red-600  "
-                  >
-                     Delete Segment
+               {!viewOnly ? (
+                  <div className="mt-auto p-2">
+                     <div
+                        style={{
+                           opacity: selectedSegment ? 1 : 0.5,
+                           pointerEvents: selectedSegment && !viewOnly ? "all" : "none",
+                        }}
+                        onClick={() => {
+                           setSelectedSegment(null);
+                           setSegments(segments.filter((segment) => segment.id !== selectedSegment));
+                        }}
+                        className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-red-500 dark:text-red-400 text-red-600  "
+                     >
+                        Delete Segment
+                     </div>
                   </div>
-               </div>
+               ) : null}
             </div>
          </div>
       </>

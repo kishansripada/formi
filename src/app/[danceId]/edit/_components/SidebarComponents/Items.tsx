@@ -68,9 +68,11 @@ export const Items: React.FC<{
    return (
       <>
          <div
-            style={{
-               pointerEvents: viewOnly ? "none" : "all",
-            }}
+            style={
+               {
+                  // pointerEvents: viewOnly ? "none" : "all",
+               }
+            }
             className="flex   w-[260px]  min-w-[260px] h-full  flex-col   bg-white  overflow-scroll dark:bg-neutral-800 dark:text-white  pt-6 "
          >
             <div className=" font-medium mb-2 flex flex-row  items-center  px-4 text-sm ">
@@ -93,34 +95,38 @@ export const Items: React.FC<{
                   />
                </svg>
 
-               <button
-                  onClick={() => {
-                     let newId = uuidv4();
-                     // setItems([...items, { id: newId, name: "New prop" }]);
+               {!viewOnly ? (
+                  <button
+                     onClick={() => {
+                        if (viewOnly) return;
+                        // setItems([...items, { id: newId, name: "New prop" }]);
 
-                     // setSelectedItemId(newId);
-                     setAssetsOpen("newItem");
-                  }}
-                  className="ml-auto text-xs flex flex-row items-center"
-               >
-                  <svg
-                     xmlns="http://www.w3.org/2000/svg"
-                     fill="none"
-                     viewBox="0 0 24 24"
-                     strokeWidth={1.5}
-                     stroke="currentColor"
-                     className="w-6 h-6 mr-1"
+                        // setSelectedItemId(newId);
+                        setAssetsOpen("newItem");
+                     }}
+                     className="ml-auto text-xs flex flex-row items-center"
                   >
-                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
-                  </svg>
-                  New prop
-               </button>
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-6 h-6 mr-1"
+                     >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
+                     </svg>
+                     New prop
+                  </button>
+               ) : null}
             </div>
 
             <div
-               style={{
-                  pointerEvents: viewOnly ? "none" : "all",
-               }}
+               style={
+                  {
+                     // pointerEvents: viewOnly ? "none" : "all",
+                  }
+               }
                className=" flex flex-col overflow-scroll removeScrollBar   "
             >
                {items.length ? (
@@ -153,10 +159,12 @@ export const Items: React.FC<{
                               }}
                               value={item.name}
                               type="text"
+                              readOnly={viewOnly}
                            />
                            {item.url ? (
                               <img
                                  onClick={() => {
+                                    if (viewOnly) return;
                                     setAssetsOpen(item.id);
                                  }}
                                  className="h-[55px] w-[55px] ml-auto  object-contain  cursor-pointer  z-10 "
@@ -166,6 +174,7 @@ export const Items: React.FC<{
                            ) : (
                               <div
                                  onClick={() => {
+                                    if (viewOnly) return;
                                     setAssetsOpen(item.id);
                                  }}
                                  className="h-[55px] w-[55px] grid place-items-center  cursor-pointer  z-10 "
@@ -345,41 +354,44 @@ export const Items: React.FC<{
                )}
             </div>
 
-            <div className=" p-2 ">
-               <div
-                  style={{
-                     opacity: selectedItemId ? 1 : 0.5,
-                     pointerEvents: selectedItemId ? "all" : "none",
-                  }}
-                  onClick={(e) => {
-                     // Remove prop
-                     pauseHistory();
-                     e.stopPropagation();
-                     // remove prop from all formations
-                     setFormations(
-                        formations.map((formation, i) => {
-                           return {
-                              ...formation,
-                              positions: formation.positions.map((position) => {
-                                 return {
-                                    ...position,
-                                    itemId: position.itemId === selectedItemId ? null : position.itemId,
-                                 };
-                              }),
-                           };
-                        })
-                     );
-                     //  // remove prop from props
-                     setItems(items.filter((p) => p.id !== selectedItemId));
-                     setSelectedItemId(null);
-                     resumeHistory();
-                     pushChange();
-                  }}
-                  className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 hover:bg-opacity-50 transition py-2 bg-red-500 dark:text-red-400 text-red-600   "
-               >
-                  Delete Prop
+            {!viewOnly ? (
+               <div className=" p-2 ">
+                  <div
+                     style={{
+                        opacity: selectedItemId ? 1 : 0.5,
+                        pointerEvents: selectedItemId ? "all" : "none",
+                     }}
+                     onClick={(e) => {
+                        if (viewOnly) return;
+                        // Remove prop
+                        pauseHistory();
+                        e.stopPropagation();
+                        // remove prop from all formations
+                        setFormations(
+                           formations.map((formation, i) => {
+                              return {
+                                 ...formation,
+                                 positions: formation.positions.map((position) => {
+                                    return {
+                                       ...position,
+                                       itemId: position.itemId === selectedItemId ? null : position.itemId,
+                                    };
+                                 }),
+                              };
+                           })
+                        );
+                        //  // remove prop from props
+                        setItems(items.filter((p) => p.id !== selectedItemId));
+                        setSelectedItemId(null);
+                        resumeHistory();
+                        pushChange();
+                     }}
+                     className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 hover:bg-opacity-50 transition py-2 bg-red-500 dark:text-red-400 text-red-600   "
+                  >
+                     Delete Prop
+                  </div>
                </div>
-            </div>
+            ) : null}
          </div>
 
          <Toaster />

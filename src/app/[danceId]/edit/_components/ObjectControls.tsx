@@ -63,6 +63,7 @@ export const ObjectControls: React.FC<{
 
    if (!selectedFormations.length) return null;
    const setLinear = () => {
+      if (viewOnly) return;
       setFormations(
          formations.map((formation) => {
             if (selectedFormations.includes(formation.id)) {
@@ -86,6 +87,7 @@ export const ObjectControls: React.FC<{
    };
 
    const setTeleport = () => {
+      if (viewOnly) return;
       setFormations(
          formations.map((formation, index: number) => {
             if (selectedFormations.includes(formation.id)) {
@@ -109,6 +111,7 @@ export const ObjectControls: React.FC<{
    };
 
    const setCurved = () => {
+      if (viewOnly) return;
       selectedFormations.forEach((selectedFormation: string) => {
          const formationIndex = formations.findIndex((formation) => formation.id === selectedFormation);
          // console.log({ formationIndex });
@@ -211,6 +214,7 @@ export const ObjectControls: React.FC<{
    };
 
    const setDancerItem = (itemId: string | null) => {
+      if (viewOnly) return;
       setFormations(
          formations.map((formation, index: number) => {
             if (selectedFormations.includes(formation.id)) {
@@ -234,6 +238,7 @@ export const ObjectControls: React.FC<{
    };
 
    const setColor = (color: string) => {
+      if (viewOnly) return;
       setFormations(
          formations.map((formation, index: number) => {
             if (selectedFormations.includes(formation.id)) {
@@ -258,14 +263,7 @@ export const ObjectControls: React.FC<{
 
    return (
       <>
-         <div
-            style={
-               {
-                  // pointerEvents: viewOnly ? "none" : "auto",
-               }
-            }
-            className="w-full md:h-[40px] md:min-h-[40px] md:max-h-[40px] h-[30px] min-h-[30px] max-h-[30px] border-b-neutral-300 border-b bg-white flex flex-row items-center  px-3 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
-         >
+         <div className="w-full md:h-[40px] md:min-h-[40px] md:max-h-[40px] h-[30px] min-h-[30px] max-h-[30px] border-b-neutral-300 border-b bg-white flex flex-row items-center  px-3 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white">
             <p className="md:text-sm text-[10px] mr-auto font-bold">
                {selectedDancers.length === 1
                   ? dancers.find((dancer) => dancer.id === selectedDancers[0])?.name
@@ -276,7 +274,7 @@ export const ObjectControls: React.FC<{
 
             {selectedDancers.length && selectedFormations.length ? (
                <>
-                  {selectedDancers.length === 2 ? (
+                  {selectedDancers.length === 2 && !viewOnly ? (
                      <button
                         onClick={() => {
                            selectedFormations.forEach((selectedFormation: string) => {
@@ -412,7 +410,7 @@ export const ObjectControls: React.FC<{
                            .map((formation: formation) => formation.positions)
                            .flat()
                            .filter((dancerPosition: dancerPosition) => selectedDancers.includes(dancerPosition.id) && dancerPosition.color)
-                           ?.map((dancerPosition: dancerPosition) => dancerPosition.color).length ? (
+                           ?.map((dancerPosition: dancerPosition) => dancerPosition.color).length && !viewOnly ? (
                            <button
                               onClick={() => {
                                  setFormations(

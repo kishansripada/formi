@@ -226,26 +226,27 @@ export const CurrentFormation: React.FC<{
                                  <p className=" text-neutral-500 dark:text-neutral-300 text-xs font-medium">{comment.user.name}</p>
                                  <p className="mr-2 mt-1 w-full text-xs ">{comment.content}</p>
                               </div>
-                              <button
-                                 onClick={() => {
-                                    if (viewOnly) return;
-                                    // addToStack();
-                                    deleteComment(comment.id);
-                                    pushChange();
-                                 }}
-                                 className="ml-auto mt-auto mb-auto p-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition duration-300 rounded-xl group-hover:opacity-100 opacity-0"
-                              >
-                                 <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="w-5 h-5 stroke-neutral-600 dark:stroke-neutral-300 shrink-0  "
+                              {!viewOnly ? (
+                                 <button
+                                    onClick={() => {
+                                       // addToStack();
+                                       deleteComment(comment.id);
+                                       pushChange();
+                                    }}
+                                    className="ml-auto mt-auto mb-auto p-1 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition duration-300 rounded-xl group-hover:opacity-100 opacity-0"
                                  >
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                 </svg>
-                              </button>
+                                    <svg
+                                       xmlns="http://www.w3.org/2000/svg"
+                                       fill="none"
+                                       viewBox="0 0 24 24"
+                                       strokeWidth={1.5}
+                                       stroke="currentColor"
+                                       className="w-5 h-5 stroke-neutral-600 dark:stroke-neutral-300 shrink-0  "
+                                    >
+                                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                    </svg>
+                                 </button>
+                              ) : null}
                            </div>
                         );
                      })}
@@ -272,7 +273,7 @@ export const CurrentFormation: React.FC<{
                               })
                            );
                         }}
-                        disabled={viewOnly}
+                        readOnly={viewOnly}
                         className="dark:bg-neutral-700 transition bg-neutral-100  w-full focus:outline-none p-3 text-sm border-2 border-neutral-300 focus:border-pink-300 dark:border-neutral-600 dark:focus:border-pink-600 resize-none rounded-md"
                         cols={30}
                         rows={13}

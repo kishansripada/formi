@@ -25,9 +25,11 @@ export const Props: React.FC<{
    return (
       <>
          <div
-            style={{
-               pointerEvents: viewOnly ? "none" : "all",
-            }}
+            style={
+               {
+                  // pointerEvents: viewOnly ? "none" : "all",
+               }
+            }
             className="flex   w-[260px]  min-w-[260px] h-full  flex-col   bg-white  overflow-scroll dark:bg-neutral-800 dark:text-white  pt-6 "
          >
             <div className=" font-medium mb-2 flex flex-row  items-center  px-4 text-sm ">
@@ -50,30 +52,35 @@ export const Props: React.FC<{
                   />
                </svg>
 
-               <button
-                  onClick={() => {
-                     setAssetsOpen("newProp");
-                  }}
-                  className="ml-auto text-xs flex flex-row items-center"
-               >
-                  <svg
-                     xmlns="http://www.w3.org/2000/svg"
-                     fill="none"
-                     viewBox="0 0 24 24"
-                     strokeWidth={1.5}
-                     stroke="currentColor"
-                     className="w-6 h-6 mr-1"
+               {!viewOnly ? (
+                  <button
+                     onClick={() => {
+                        if (viewOnly) return;
+                        setAssetsOpen("newProp");
+                     }}
+                     className="ml-auto text-xs flex flex-row items-center"
                   >
-                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
-                  </svg>
-                  New set piece
-               </button>
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-6 h-6 mr-1"
+                     >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
+                     </svg>
+                     New set piece
+                  </button>
+               ) : null}
             </div>
 
             <div
-               style={{
-                  pointerEvents: viewOnly ? "none" : "all",
-               }}
+               style={
+                  {
+                     // pointerEvents: viewOnly ? "none" : "all",
+                  }
+               }
                className=" flex flex-col overflow-scroll removeScrollBar  h-full "
             >
                {props.length ? (
@@ -90,6 +97,7 @@ export const Props: React.FC<{
                         >
                            <img
                               onClick={() => {
+                                 if (viewOnly) return;
                                  setAssetsOpen(prop.id);
                               }}
                               className="h-[55px] w-[55px]  object-contain  cursor-pointer  z-10 "
@@ -99,6 +107,7 @@ export const Props: React.FC<{
 
                            <select
                               onChange={(event) => {
+                                 if (viewOnly) return;
                                  // if you make a prop static just place it in the middle of the stage
                                  if (event.target.value === "static") {
                                     setProps(
@@ -223,34 +232,37 @@ export const Props: React.FC<{
                )}
             </div>
 
-            <div className=" p-2 mt-auto">
-               <div
-                  style={{
-                     opacity: selectedPropIds.length ? 1 : 0.5,
-                     pointerEvents: selectedPropIds.length ? "all" : "none",
-                  }}
-                  onClick={(e) => {
-                     // Remove prop
-                     e.stopPropagation();
-                     // remove prop from all formations
-                     setFormations(
-                        formations.map((formation, i) => {
-                           return {
-                              ...formation,
-                              props: formation.props?.filter((p) => !selectedPropIds.includes(p.id)),
-                           };
-                        })
-                     );
-                     // remove prop from props
-                     setProps(props.filter((p) => !selectedPropIds.includes(p.id)));
-                     setSelectedPropIds([]);
-                     pushChange();
-                  }}
-                  className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-red-500 dark:text-red-400 text-red-600   "
-               >
-                  Delete Set Piece
+            {!viewOnly ? (
+               <div className=" p-2 mt-auto">
+                  <div
+                     style={{
+                        opacity: selectedPropIds.length ? 1 : 0.5,
+                        pointerEvents: selectedPropIds.length ? "all" : "none",
+                     }}
+                     onClick={(e) => {
+                        if (viewOnly) return;
+                        // Remove prop
+                        e.stopPropagation();
+                        // remove prop from all formations
+                        setFormations(
+                           formations.map((formation, i) => {
+                              return {
+                                 ...formation,
+                                 props: formation.props?.filter((p) => !selectedPropIds.includes(p.id)),
+                              };
+                           })
+                        );
+                        // remove prop from props
+                        setProps(props.filter((p) => !selectedPropIds.includes(p.id)));
+                        setSelectedPropIds([]);
+                        pushChange();
+                     }}
+                     className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-red-500 dark:text-red-400 text-red-600   "
+                  >
+                     Delete Set Piece
+                  </div>
                </div>
-            </div>
+            ) : null}
          </div>
 
          <Toaster />

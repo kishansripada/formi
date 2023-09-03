@@ -422,7 +422,7 @@ export const Timeline: React.FC<{
                            }}
                         >
                            {section.name} - ({Math.round(section.duration)}s)
-                           {menuOpen === "segments" ? (
+                           {menuOpen === "segments" && !viewOnly ? (
                               <div
                                  className="h-full  w-[15px] right-0 absolute cursor-ew-resize flex flex-row justify-center"
                                  data-type="segment-resize"

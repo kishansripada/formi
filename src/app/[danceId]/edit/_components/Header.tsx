@@ -399,9 +399,8 @@ export const Header: React.FC<{
                      e.target.select();
                   }}
                   placeholder={"Performance name"}
-                  className={`h-6 text-center  px-3 py-4 w-full  mx-auto text-sm hidden bg-transparent rounded-md  lg:block   outline-none  ${
-                     viewOnly ? "pointer-events-none" : ""
-                  } `}
+                  disabled={viewOnly}
+                  className={`h-6 text-center  px-3 py-4 w-full  mx-auto text-sm hidden bg-transparent rounded-md  lg:block   outline-none   `}
                />
             </div>
 
