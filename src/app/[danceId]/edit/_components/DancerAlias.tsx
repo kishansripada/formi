@@ -60,7 +60,7 @@ export const DancerAlias: React.FC<{
    useGesture(
       {
          onDrag: (state) => {
-            if (state.touches > 2 || viewOnly) state.cancel();
+            if (state.touches > 1) state.cancel();
 
             setFormations(
                get().formations.map((formation) => {
