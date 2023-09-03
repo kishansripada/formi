@@ -213,6 +213,7 @@ export const Layer: React.FC<{
                            addToStack={addToStack}
                            activeId={activeId}
                            localSettings={localSettings}
+                           shiftHeld={shiftHeld}
                         />
                      </div>
                   ))}

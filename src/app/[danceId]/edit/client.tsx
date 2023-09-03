@@ -101,7 +101,6 @@ const Edit = ({
    params: { danceId },
    session,
    permissions: initialPermissions,
-   hasSeenCollab: hasSeenCollabInitial,
 }: {
    initialData: any;
    viewOnly: boolean;
@@ -109,7 +108,6 @@ const Edit = ({
    params: { danceId: string };
    session: AuthSession | null;
    permissions: string[];
-   hasSeenCollab: boolean;
 }) => {
    const {
       segments,
@@ -261,7 +259,7 @@ const Edit = ({
    const [propUploads, setPropUploads] = useState([]);
    // hasVisited ? null : { url: "https://www.youtube.com/shorts/JRS1tPHJKAI" }
    const [helpUrl, setHelpUrl] = useState(null);
-   const [collabOpen, setCollabOpen] = useState(!hasSeenCollabInitial);
+
    const [resizingPropId, setResizingPropId] = useState(null);
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
    const [videoPosition, setVideoPosition] = useState<"top-left" | "top-right" | "bottom-left" | "bottom-right">("top-right");
@@ -676,11 +674,11 @@ const Edit = ({
          setVideoPosition(over.id);
       }
    }
-   useEffect(() => {
-      if (typeof window !== "undefined") {
-         document.cookie = "hasSeenCollab=true; expires=" + new Date(new Date().getTime() + 86409000).toUTCString() + "; path=/";
-      }
-   }, []);
+   // useEffect(() => {
+   //    if (typeof window !== "undefined") {
+   //       document.cookie = "hasSeenCollab=true; expires=" + new Date(new Date().getTime() + 86409000).toUTCString() + "; path=/";
+   //    }
+   // }, []);
    // useEffect(() => {
    //    document.body.addEventListener(
    //       "touchmove",
@@ -740,44 +738,6 @@ const Edit = ({
                <p className="text-center">Connected</p>
             </div>
          ) : null} */}
-
-         {collabOpen ? (
-            <div
-               className="fixed top-0 left-0 z-[70] flex h-screen  w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
-               id="outside"
-               onClick={(e) => {
-                  if (e.target.id === "outside") {
-                     setCollabOpen(false);
-                  }
-               }}
-            >
-               <div className="flex  w-2/3 flex-col   bg-neutral-800/90 text-white  rounded-xl  text-sm ">
-                  <div className="flex flex-col rounded-xl px-10 pt-10 pb-6 h-full ">
-                     <div className="flex flex-row items-center justify-between">
-                        <p className="text-4xl font-medium ">What's new 🎉</p>
-                        <button
-                           onClick={() => {
-                              setCollabOpen(false);
-                           }}
-                        >
-                           <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-6 h-6"
-                           >
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                           </svg>
-                        </button>
-                     </div>
-                     <p className="mt-5 text-xl">Collaborate in real-time just like Google Docs by sharing your performance with your friends!</p>
-                     <img src="/colab.png" className="w-full rounded-xl mt-5" alt="" />
-                  </div>
-               </div>
-            </div>
-         ) : null}
 
          {isCommenting ? (
             <>

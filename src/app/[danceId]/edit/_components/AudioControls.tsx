@@ -150,7 +150,7 @@ export const AudioControls: React.FC<{
    return (
       <>
          <div className="min-h-[45px]  dark:bg-black dark:text-neutral-100  bg-neutral-50 w-full border-t dark:border-neutral-700  border-neutral-300 flex flex-row items-center justify-between select-none">
-            <div className="md:w-[45%] flex flex-col items-center justify-center   pl-4">
+            <div className="w-[45%] flex flex-col items-center justify-center   pl-4">
                {!viewOnly ? (
                   <>
                      <div className="flex flex-row  items-center justify-center mr-auto ">
@@ -330,62 +330,65 @@ export const AudioControls: React.FC<{
                   </svg>
                </div>
             </div>
-            <button
-               onClick={() => {
-                  pauseHistory();
-                  if (!selectedFormations.length) return;
+            <div className="flex flex-row items-center w-[45%] md:hidden">
+               <button
+                  onClick={() => {
+                     pauseHistory();
+                     if (!selectedFormations.length) return;
 
-                  if (get().formations.length === 1) {
-                     toast.error("You must have at least one formation");
-                     return;
-                  }
-
-                  selectedFormations.forEach((selectedFormationId) => {
-                     if (selectedFormationId === get().formations[0].id) {
-                        setFormations(
-                           get().formations.map((formation, index) => {
-                              if (index === 1) {
-                                 return {
-                                    ...formation,
-                                    durationSeconds: formation.transition.durationSeconds + formation.durationSeconds + formations[0].durationSeconds,
-                                 };
-                              }
-                              return formation;
-                           })
-                        );
-                     } else if (selectedFormationId !== get().formations[get().formations.length - 1].id) {
-                        // console.log("trigger");
-                        setFormations(
-                           get().formations.map((formation, index) => {
-                              if (index === formations.findIndex((formation) => formation.id === selectedFormationId) - 1) {
-                                 return {
-                                    ...formation,
-                                    durationSeconds:
-                                       formation.durationSeconds +
-                                       get().formations.find((formation) => formation.id === selectedFormationId)?.transition.durationSeconds +
-                                       get().formations.find((formation) => formation.id === selectedFormationId).durationSeconds,
-                                 };
-                              }
-                              return formation;
-                           })
-                        );
+                     if (get().formations.length === 1) {
+                        toast.error("You must have at least one formation");
+                        return;
                      }
-                  });
 
-                  setSelectedFormations([]);
-                  // remove the formation
-                  setFormations(
-                     get().formations.filter((formation) => {
-                        return !selectedFormations.includes(formation.id);
-                     })
-                  );
-                  resumeHistory();
-                  // pushChange();
-               }}
-               className="   text-xs shadow-sm md:hidden  cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-1 px-3 mr-4 bg-red-500 dark:text-red-400 text-red-600  "
-            >
-               Delete
-            </button>
+                     selectedFormations.forEach((selectedFormationId) => {
+                        if (selectedFormationId === get().formations[0].id) {
+                           setFormations(
+                              get().formations.map((formation, index) => {
+                                 if (index === 1) {
+                                    return {
+                                       ...formation,
+                                       durationSeconds:
+                                          formation.transition.durationSeconds + formation.durationSeconds + formations[0].durationSeconds,
+                                    };
+                                 }
+                                 return formation;
+                              })
+                           );
+                        } else if (selectedFormationId !== get().formations[get().formations.length - 1].id) {
+                           // console.log("trigger");
+                           setFormations(
+                              get().formations.map((formation, index) => {
+                                 if (index === formations.findIndex((formation) => formation.id === selectedFormationId) - 1) {
+                                    return {
+                                       ...formation,
+                                       durationSeconds:
+                                          formation.durationSeconds +
+                                          get().formations.find((formation) => formation.id === selectedFormationId)?.transition.durationSeconds +
+                                          get().formations.find((formation) => formation.id === selectedFormationId).durationSeconds,
+                                    };
+                                 }
+                                 return formation;
+                              })
+                           );
+                        }
+                     });
+
+                     setSelectedFormations([]);
+                     // remove the formation
+                     setFormations(
+                        get().formations.filter((formation) => {
+                           return !selectedFormations.includes(formation.id);
+                        })
+                     );
+                     resumeHistory();
+                     // pushChange();
+                  }}
+                  className=" ml-auto   text-xs shadow-sm grid cursor-pointer select-none rounded-md font-semibold   place-items-center  bg-opacity-20 py-1 px-3 mr-4 bg-red-500 dark:text-red-400 text-red-600  "
+               >
+                  Delete
+               </button>
+            </div>
          </div>
       </>
    );

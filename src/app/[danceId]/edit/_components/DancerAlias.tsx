@@ -56,22 +56,7 @@ export const DancerAlias: React.FC<{
    const stageFlippedFactor = localSettings.stageFlipped ? -1 : 1;
    const horizontalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
    const verticalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
-   // useEffect(() => {
-   //    // const handler = (e: Event) => e.preventDefault();
 
-   //    document.addEventListener("gestureend", () => {
-   //       console.log("gesture end");
-   //       roundPositions();
-   //    });
-   //    return () => {
-   //       document.removeEventListener("gestureend", () => {
-   //          console.log("gesture end");
-   //          roundPositions();
-   //       });
-   //    };
-   // }, []);
-
-   // const isDesktop = useIsDesktop();
    useGesture(
       {
          onDrag: (state) => {
@@ -84,7 +69,6 @@ export const DancerAlias: React.FC<{
                         ...formation,
                         positions: formation.positions.map((position) => {
                            if (get().selectedDancers.includes(position.id)) {
-                              console.log(position.position.x + state.delta[0] * horizontalScalar, position.position.x);
                               return {
                                  ...position,
                                  position: {
@@ -100,7 +84,6 @@ export const DancerAlias: React.FC<{
                   return formation;
                })
             );
-            // console.log(getFirstSelectedFormation()?.positions.find((position) => position.id === dancer.id)?.position.x);
          },
          onDragEnd: () => {
             roundPositions();
@@ -109,13 +92,11 @@ export const DancerAlias: React.FC<{
       {
          eventOptions: { passive: false },
          target: container.current,
-         enabled: isMobileView,
+         enabled: isMobileView && !viewOnly,
       }
-      // config
    );
 
    const others = useStore((state) => state.liveblocks.others);
-   // const thisOne = getCurrentFormation();
 
    const othersOnThisFormation = others.filter((other) => other.presence?.selectedFormations?.includes(getFirstSelectedFormation()?.id));
    const othersOnThisDancer = othersOnThisFormation.filter((other) => other.presence.selectedDancers.includes(dancer.id));
