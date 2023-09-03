@@ -14,7 +14,7 @@ const Client = () => {
                </a>{" "}
                on TikTok <span className="text-xs text-neutral-500 ml-2 hidden lg:block">and discover what's new on our platform</span>
             </div>
-            <div className="bg-black  py-5 px-24  w-full     hidden lg:flex flex-row items-center">
+            <div className="bg-black  py-5   w-full px-24    hidden lg:flex flex-row items-center">
                {/* <img src="/logobg.png" className="h-full" alt="" /> */}
                {/* <p className="text-white ml-4 font-bold">FORMI</p> */}
                <div className="h-full p-1 ml-3">
@@ -41,9 +41,9 @@ const Client = () => {
                   <div className="rounded-full  px-4 text-xs lg:text-sm text-neutral-200 py-2 border border-pink-600/50">
                      <p>Join 5000+ dancers and choreographers just like you</p>
                   </div>
-                  <p className="  lg:text-7xl  text-2xl font-semibold mt-5 w-2/3  ">The collaborative choreography design tool</p>
+                  <p className="  lg:text-7xl  text-4xl font-semibold mt-5 lg:w-2/3 w-[90%]  ">The collaborative choreography design tool</p>
                   <p className="text-neutral-300 mt-5 text-xs lg:text-base">Realtime collaboration. Three Dimensional. Synced to Audio. </p>
-                  <div className=" bg-white text-black w-[250px]   px-6 z-50 relative py-3 rounded-md mt-10 pointer-events-auto">
+                  <div className=" bg-white text-black lg:w-[250px] w-[200px]  px-6 z-50 relative py-2 lg:py-3 rounded-md mt-10 pointer-events-auto">
                      <Link href={"/login"} className=" ">
                         <div className=" lg:flex flex-row items-center justify-around hidden">
                            <span className="font-semibold">Get started</span> — it’s free{" "}
@@ -51,7 +51,7 @@ const Client = () => {
                               <path d="M14 8.5H3m11 0-3 3m3-3-3-3" strokeLinecap="round" strokeLinejoin="round"></path>
                            </svg>
                         </div>
-                        <div className="  flex-row items-center justify-around lg:hidden flex">Launch mobile web app</div>
+                        <div className=" lg:text-base text-sm  flex-row items-center justify-around lg:hidden flex">Launch mobile web app</div>
                      </Link>
                   </div>
                </div>
@@ -124,7 +124,7 @@ const Client = () => {
                   alt=""
                />
             </div>
-            <div className="bg-neutral-50 dark:bg-neutral-900 lg:px-0 px-7 w-full  font-proxima">
+            <div className="bg-neutral-50 dark:bg-neutral-900 lg:px-0 px-7 w-full  ">
                <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-8 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
                      <p className="text-3xl font-bold dark:text-neutral-50">Collaborate, communicate</p>

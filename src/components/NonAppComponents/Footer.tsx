@@ -21,7 +21,7 @@ export const Footer = () => {
             </p>
 
             <div className=" flex flex-row  mt-12 ">
-               <img className="ml-auto opacity-50 h-6" src="/holylogo.png" alt="" />
+               <img className="ml-auto opacity-50 h-3" src="/holylogo.png" alt="" />
             </div>
          </div>
       </>
