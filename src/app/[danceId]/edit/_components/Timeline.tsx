@@ -224,18 +224,15 @@ export const Timeline: React.FC<{
 
    useGesture(
       {
-         onPinch: ({ delta }) => {
-            // let zoom = state.memo[0] * state.movement[0];
-            // console.log(delta);
-            if (!isMobileView) return;
-            setPixelsPerSecond((pixelsPerSecond: number) => pixelsPerSecond + delta[0] * 20);
-            // console.log("pinching");
-            // setZoom(zoom);
+         onPinch: ({ offset: [d] }) => {
+            setPixelsPerSecond(d);
          },
       },
       {
          eventOptions: { passive: false },
          target: scrollRef.current,
+         pinch: { from: () => [pixelsPerSecond, pixelsPerSecond] },
+         enabled: isMobileView,
       }
       // config
    );
