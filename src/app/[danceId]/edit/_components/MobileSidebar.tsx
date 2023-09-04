@@ -1,6 +1,7 @@
 import { dancer, dancerPosition, formation, localSettings } from "../../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
+import { useStore } from "../store";
 
 export const MobileSidebar: React.FC<{
    setMenuOpen: Function;
@@ -9,6 +10,7 @@ export const MobileSidebar: React.FC<{
    setHelpUrl: Function;
    setLocalSettings: Function;
 }> = ({ setMenuOpen, menuOpen, setHelpUrl, setLocalSettings }) => {
+   const { viewOnly } = useStore();
    return (
       <>
          <div className="flex md:hidden justify-around   flex-row    items-center   text-[9px] dark:bg-black  text-black bg-neutral-100   w-full h-[60px] border-neutral-300 dark:border-neutral-700 overflow-y-scroll">
@@ -112,31 +114,33 @@ export const MobileSidebar: React.FC<{
                </svg>
                <p className=" mt-1">Roster</p>
             </button>
-            <button
-               className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
-               onClick={() => {
-                  menuOpen === "audio" ? setMenuOpen("") : setMenuOpen("audio");
-                  setLocalSettings((localSettings: localSettings) => {
-                     return { ...localSettings, fullScreen: false };
-                  });
-               }}
-            >
-               <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  fill="none"
-                  className={`w-5 h-5 ${menuOpen === "audio" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
+            {!viewOnly ? (
+               <button
+                  className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
+                  onClick={() => {
+                     menuOpen === "audio" ? setMenuOpen("") : setMenuOpen("audio");
+                     setLocalSettings((localSettings: localSettings) => {
+                        return { ...localSettings, fullScreen: false };
+                     });
+                  }}
                >
-                  <path
-                     strokeLinecap="round"
-                     strokeLinejoin="round"
-                     d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
-                  />
-               </svg>
-               <p className=" mt-1">Media</p>
-            </button>
+                  <svg
+                     xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     strokeWidth={1.5}
+                     stroke="currentColor"
+                     fill="none"
+                     className={`w-5 h-5 ${menuOpen === "audio" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"} `}
+                  >
+                     <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z"
+                     />
+                  </svg>
+                  <p className=" mt-1">Media</p>
+               </button>
+            ) : null}
             {/* <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
                onClick={() => setMenuOpen("collisions")}
