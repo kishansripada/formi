@@ -70,8 +70,8 @@ interface Store {
 
 const PUBLIC_KEY = "pk_prod_3E8sI-8PR2FYB3__NcQ9YdEwhDyOKWvtC317Wo-fRSOQBCJBD4cmubrnKN8NE4bI";
 const client = createClient({
-   publicApiKey: PUBLIC_KEY,
-   // authEndpoint: "/api/liveblocks-auth",
+   // publicApiKey: PUBLIC_KEY,
+   authEndpoint: "/api/liveblocks-auth",
 });
 
 type Presence = {
