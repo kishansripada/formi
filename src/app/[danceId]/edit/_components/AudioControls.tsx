@@ -135,13 +135,11 @@ export const AudioControls: React.FC<{
 
    const playPause = () => {
       if (player) {
-         if (player.isReady) {
-            if (position < songDuration / 1000) {
-               player.playPause();
-            }
-
-            setIsPlaying(player.isPlaying());
+         if (position < songDuration / 1000) {
+            player.isPlaying() ? player.pause() : player.play();
          }
+
+         setIsPlaying(player.isPlaying());
       } else {
          setIsPlaying(!isPlaying);
       }
