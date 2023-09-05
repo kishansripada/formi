@@ -191,7 +191,7 @@ export const Formation: React.FC<{
                // borderColor: colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : "transparent",
                // marginLeft: 2 / pixelsPerSecond,
                // marginRight: 2 / pixelsPerSecond,
-               borderRadius: isMobileView ? 99 : 8,
+               borderRadius: 8,
                // touchAction: changingFormation ? "none" : "pan-x",
             }}
             // onTouchMove={(e) => {
@@ -216,7 +216,7 @@ export const Formation: React.FC<{
                      : othersOnThisFormation.length
                      ? COLORS[othersOnThisFormation[0]?.connectionId % COLORS.length]
                      : "",
-                  borderRadius: isMobileView ? 99 : 8,
+                  borderRadius: 8,
                   // borderBottomColor:
                   // formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color ||
                   // (colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : localSettings.isDarkMode ? "#a3a3a3" : "#d4d4d4"),
@@ -277,7 +277,7 @@ export const Formation: React.FC<{
                            id={formation.id}
                            ref={formationResize}
                            onMouseDown={(e) => e.preventDefault()}
-                           className={`h-full  ml-auto  grid place-items-center bg-pink-200 justify-between  w-[25px] rounded-full transition   cursor-col-resize	z-[99]`}
+                           className={`h-full  ml-auto  grid place-items-center bg-pink-200 justify-between  w-[25px] transition rounded-md  cursor-col-resize	z-[99]`}
                         ></div>
                      ) : (
                         <div
@@ -309,7 +309,7 @@ export const Formation: React.FC<{
                         style={{
                            width: formation.transition.durationSeconds * pixelsPerSecond,
                            minWidth: formation.transition.durationSeconds * pixelsPerSecond,
-                           borderRadius: isMobileView ? 99 : 8,
+                           borderRadius: 8,
                         }}
                         className="  "
                      >
@@ -328,7 +328,7 @@ export const Formation: React.FC<{
                                        id={formation.id}
                                        ref={transitionResize}
                                        onMouseDown={(e) => e.preventDefault()}
-                                       className={`h-full  ml-auto  grid place-items-center bg-pink-200 justify-between  w-[25px] rounded-full transition   cursor-col-resize	z-[99]`}
+                                       className={`h-full  ml-auto  grid place-items-center bg-pink-200 justify-between  w-[25px] rounded-md transition   cursor-col-resize	z-[99]`}
                                     ></div>
                                  ) : (
                                     <div
