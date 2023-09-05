@@ -314,10 +314,12 @@ export const Formation: React.FC<{
                         className="  "
                      >
                         <div
-                           style={{
-                              borderTopRightRadius: isMobileView ? 99 : 0,
-                              borderBottomRightRadius: isMobileView ? 99 : 0,
-                           }}
+                           style={
+                              {
+                                 // borderTopRightRadius: isMobileView ? 99 : 0,
+                                 // borderBottomRightRadius: isMobileView ? 99 : 0,
+                              }
+                           }
                            className="flex flex-row relative  dark:bg-pink-600 bg-pink-600   h-full  "
                         >
                            {!viewOnly ? (
