@@ -81,7 +81,7 @@ const Client = () => {
 
                <div className="flex flex-col justify-center items-center py-20">
                   <p className="lg:text-7xl text-3xl mb-24 ">Edit formations on the go</p>
-                  <div className="flex lg:flex-row lg:px-10 flex-col items-center">
+                  <div className="flex lg:flex-row  lg:px-24 flex-col items-center">
                      {" "}
                      <img
                         className="rounded-xl w-1/2"

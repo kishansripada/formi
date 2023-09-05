@@ -160,32 +160,81 @@ export const FormationControls: React.FC<{
                   selectedFormations.forEach((selectedFormationId) => {
                      const selectedFormation = get().formations.findIndex((formation) => formation.id === selectedFormationId);
                      const lastIsSelected = selectedFormation === get().formations.length - 1;
+                     let oldTotalDuration =
+                        get().formations[selectedFormation].durationSeconds + get().formations[selectedFormation].transition.durationSeconds;
+
+                     if (selectedFormation === 0) {
+                        let oldTotalDuration = get().formations[selectedFormation].durationSeconds;
+                        setFormations([
+                           {
+                              ...get().formations[selectedFormation],
+                              durationSeconds: 0,
+                              durationSeconds: oldTotalDuration / (lastIsSelected ? 1 : 2),
+                              transition: {
+                                 durationSeconds: 0,
+                              },
+                           },
+                           {
+                              ...get().formations[selectedFormation],
+                              id: uuidv4(),
+                              name: get().formations[selectedFormation].name + " copy",
+                              durationSeconds: 0,
+                              transition: {
+                                 durationSeconds: oldTotalDuration / (lastIsSelected ? 1 : 2),
+                              },
+                           },
+                           ...get().formations.slice(selectedFormation + 1),
+                        ]);
+                        return;
+                     }
+
                      setFormations([
                         ...get().formations.slice(0, selectedFormation),
                         {
                            ...get().formations[selectedFormation],
-                           durationSeconds: get().formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
+                           durationSeconds: 0,
                            transition: {
-                              durationSeconds:
-                                 get().formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2) > 0.5
-                                    ? get().formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2)
-                                    : get().formations[selectedFormation].transition.durationSeconds,
+                              durationSeconds: oldTotalDuration / (lastIsSelected ? 1 : 2),
                            },
                         },
                         {
                            ...get().formations[selectedFormation],
                            id: uuidv4(),
                            name: get().formations[selectedFormation].name + " copy",
-                           durationSeconds: get().formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
+                           durationSeconds: 0,
                            transition: {
-                              durationSeconds:
-                                 get().formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2) > 0.5
-                                    ? get().formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2)
-                                    : get().formations[selectedFormation].transition.durationSeconds,
+                              durationSeconds: oldTotalDuration / (lastIsSelected ? 1 : 2),
                            },
                         },
                         ...get().formations.slice(selectedFormation + 1),
                      ]);
+
+                     // setFormations([
+                     //    ...get().formations.slice(0, selectedFormation),
+                     //    {
+                     //       ...get().formations[selectedFormation],
+                     //       durationSeconds: get().formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
+                     //       transition: {
+                     //          durationSeconds:
+                     //             get().formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2) > 0.5
+                     //                ? get().formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2)
+                     //                : get().formations[selectedFormation].transition.durationSeconds,
+                     //       },
+                     //    },
+                     //    {
+                     //       ...get().formations[selectedFormation],
+                     //       id: uuidv4(),
+                     //       name: get().formations[selectedFormation].name + " copy",
+                     //       durationSeconds: get().formations[selectedFormation].durationSeconds / (lastIsSelected ? 1 : 2),
+                     //       transition: {
+                     //          durationSeconds:
+                     //             get().formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2) > 0.5
+                     //                ? get().formations[selectedFormation].transition.durationSeconds / (lastIsSelected ? 1 : 2)
+                     //                : get().formations[selectedFormation].transition.durationSeconds,
+                     //       },
+                     //    },
+                     //    ...get().formations.slice(selectedFormation + 1),
+                     // ]);
                   });
                   // setSelectedFormation(selectedFormation + 1);
 
