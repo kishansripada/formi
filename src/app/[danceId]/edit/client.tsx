@@ -897,6 +897,7 @@ const Edit = ({
                                  <ChooseAudioSource
                                     session={session}
                                     player={player}
+                                    setPlayer={setPlayer}
                                     setIsPlaying={setIsPlaying}
                                     soundCloudTrackId={soundCloudTrackId}
                                     setSoundCloudTrackId={setSoundCloudTrackId}

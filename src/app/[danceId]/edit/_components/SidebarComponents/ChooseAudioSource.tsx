@@ -12,19 +12,9 @@ export const ChooseAudioSource: React.FC<{
    player: any;
    setIsPlaying: Function;
    setLocalSource: Function;
-
+   setPlayer: Function;
    session: AuthSession | null;
-}> = ({
-   audioFiles,
-   setSoundCloudTrackId,
-   soundCloudTrackId,
-   setAudiofiles,
-   setIsPlaying,
-   player,
-   setLocalSource,
-
-   session,
-}) => {
+}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, setAudiofiles, setIsPlaying, player, setLocalSource, setPlayer, session }) => {
    const { viewOnly } = useStore();
    const [file, setFile] = useState<File | null>();
 
@@ -130,6 +120,7 @@ export const ChooseAudioSource: React.FC<{
 
                               setSoundCloudTrackId(null);
                               setLocalSource(null);
+                              setPlayer(null);
 
                               toast.success("Deselected Track");
                            }}
