@@ -155,49 +155,6 @@ export const Timeline: React.FC<{
       }
    }, [position, pixelsPerSecond]); // This effect runs every time the posi
 
-   useEffect(() => {
-      window.addEventListener("wheel", handleScroll, { passive: false });
-
-      return () => {
-         window.removeEventListener("wheel", handleScroll);
-      };
-   }, [selectedFormation, formations, songDuration, scrollInfo, position, pixelsPerSecond]);
-   // console.log(position);
-   const handleScroll = (e) => {
-      let minPixelsPerSecond = Math.max((songDuration || 0) / 1000, totalDurationOfFormations)
-         ? (window.screen.width - 90) / Math.max((songDuration || 0) / 1000, totalDurationOfFormations)
-         : 10;
-
-      if (
-         e
-            .composedPath()
-            .map((elem) => elem.id)
-            .includes("layers") &&
-         e.ctrlKey === true
-      ) {
-         e.preventDefault();
-         const scrollElement = scrollRef.current;
-         if (scrollElement) {
-            setPixelsPerSecond((pixelsPerSecond: number) => {
-               let newPixelsPerSecond = pixelsPerSecond - e.deltaY / 10;
-
-               if (newPixelsPerSecond < minPixelsPerSecond || newPixelsPerSecond > MAX_PIXELS_PER_SECOND) return pixelsPerSecond;
-
-               const oldCursorPosition = (position || 0) * pixelsPerSecond + 32;
-               const newCursorPosition = (position || 0) * newPixelsPerSecond + 32;
-               const delta = newCursorPosition - oldCursorPosition;
-
-               // delay the scroll left update until next repaint
-               requestAnimationFrame(() => {
-                  scrollElement.scrollLeft += delta;
-               });
-
-               return newPixelsPerSecond;
-            });
-         }
-      }
-   };
-
    const handlePointerUp = (event) => {
       resumeHistory();
       setResizingSegment(null);
@@ -225,16 +182,38 @@ export const Timeline: React.FC<{
    useGesture(
       {
          onPinch: ({ offset: [d] }) => {
-            setPixelsPerSecond(d);
+            const scrollElement = scrollRef.current;
+            if (scrollElement) {
+               setPixelsPerSecond((pixelsPerSecond: number) => {
+                  let newPixelsPerSecond = d;
+
+                  const oldCursorPosition = (position || 0) * pixelsPerSecond;
+                  const newCursorPosition = (position || 0) * newPixelsPerSecond;
+                  const delta = newCursorPosition - oldCursorPosition;
+
+                  // delay the scroll left update until next repaint
+                  requestAnimationFrame(() => {
+                     scrollElement.scrollLeft += delta;
+                  });
+
+                  return newPixelsPerSecond;
+               });
+            }
          },
       },
       {
          eventOptions: { passive: false },
          target: scrollRef.current,
-         pinch: { from: () => [pixelsPerSecond, pixelsPerSecond] },
-         enabled: isMobileView,
+         pinch: {
+            from: () => [pixelsPerSecond, pixelsPerSecond],
+            scaleBounds: {
+               min: Math.max((songDuration || 0) / 1000, totalDurationOfFormations)
+                  ? (window.screen.width - 90) / Math.max((songDuration || 0) / 1000, totalDurationOfFormations)
+                  : 10,
+               max: MAX_PIXELS_PER_SECOND,
+            },
+         },
       }
-      // config
    );
 
    return (
