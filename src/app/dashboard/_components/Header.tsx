@@ -62,6 +62,7 @@ export default function Header({}) {
                </Link>
             ) : null} */}
             <Link
+               prefetch={false}
                href={"/auth/logout"}
                // onClick={() => {
                //    supabase.auth.signOut().then((r) => {
