@@ -19,7 +19,7 @@ export default function Header({}) {
 
    const supabase = createClientComponentClient();
    return (
-      <div className="flex flex-row items-center  px-6 py-4 text-neutral-200 ml-auto w-full mt-3">
+      <div className="flex flex-row items-center  justify-between px-6 py-4 text-neutral-200 ml-auto w-full mt-3">
          <div className="mr-4 flex flex-row items-center">
             {pathname === "/dashboard" ? (
                <p>Home</p>
@@ -34,16 +34,45 @@ export default function Header({}) {
             ) : null}
          </div>
 
-         <button
-            onClick={() => {
-               supabase.auth.signOut().then((r) => {
-                  router.push("/login");
-               });
-            }}
-            className="mr-5 ml-auto text-xs"
+         <div>
+            {/* {plan ? (
+               <Link
+                  href={"/upgrade/customerportal"}
+                  // onClick={() => {
+                  //    supabase.auth.signOut().then((r) => {
+                  //       router.push("/upgrade/customerportal");
+                  //    });
+                  // }}
+                  className="mr-5 text-xs"
+               >
+                  Manage Subscription
+               </Link>
+            ) : null}
+            {!plan ? (
+               <Link
+                  href={"/upgrade"}
+                  // onClick={() => {
+                  //    supabase.auth.signOut().then((r) => {
+                  //       router.push("/upgrade/customerportal");
+                  //    });
+                  // }}
+                  className="mr-5 text-pink-300 text-sm font-semibold"
+               >
+                  Upgrade
+               </Link>
+            ) : null} */}
+            <Link
+               href={"/auth/logout"}
+               // onClick={() => {
+               //    supabase.auth.signOut().then((r) => {
+               //       router.push("/login");
+               //    });
+               // }}
+               className="mr-5  text-xs"
          >
             Sign Out
-         </button>
+            </Link>
+         </div>
       </div>
    );
 }
