@@ -54,7 +54,6 @@ export type formation = {
    id: string;
    name: string | null;
    comments?: comment[];
-   group?: string;
    notes: string;
 };
 

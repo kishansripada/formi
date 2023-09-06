@@ -231,6 +231,7 @@ export const ThreeD: React.FC<{
                         .map((_: number, index: number) => {
                            return (
                               <Text
+                                 key={index}
                                  scale={[0.7, 0.7, 0.7]}
                                  position={[index * squareWidthFeet, 0, cloudSettings.stageDimensions.height / 2]}
                                  rotation={[Math.PI * 1.5, 0, 0]}
@@ -247,6 +248,7 @@ export const ThreeD: React.FC<{
                         .map((_: number, index: number) => {
                            return (
                               <Text
+                                 key={index}
                                  scale={[0.7, 0.7, 0.7]}
                                  position={[-(index * squareWidthFeet), 0, cloudSettings.stageDimensions.height / 2]}
                                  rotation={[Math.PI * 1.5, 0, 0]}
@@ -328,6 +330,7 @@ export const ThreeD: React.FC<{
                   return (
                      <Text
                         scale={[0.7, 0.7, 0.7]}
+                        key={index}
                         position={[index, 0, cloudSettings.stageDimensions.height / 2]}
                         rotation={[Math.PI * 1.5, 0, 0]}
                         fillOpacity={0.7}
@@ -344,6 +347,7 @@ export const ThreeD: React.FC<{
                   return (
                      <Text
                         scale={[0.7, 0.7, 0.7]}
+                        key={index}
                         position={[-index, 0, cloudSettings.stageDimensions.height / 2]}
                         rotation={[Math.PI * 1.5, 0, 0]}
                         fillOpacity={0.7}
@@ -408,6 +412,7 @@ export const ThreeD: React.FC<{
             .map((prop: prop) => {
                return (
                   <ThreeSetPiece
+                     key={prop.id}
                      isPlaying={isPlaying}
                      position={position}
                      currentFormationIndex={currentFormationIndex}
