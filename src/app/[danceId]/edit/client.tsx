@@ -45,6 +45,7 @@ import { Segments } from "./_components/SidebarComponents/Segments";
 import { create } from "zustand";
 import { useStore } from "./store";
 import { MobileSidebar } from "./_components/MobileSidebar";
+import { setUser } from "@sentry/browser";
 
 const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => (
@@ -147,6 +148,7 @@ const Edit = ({
    // console.log({ liveStatus });
 
    useEffect(() => {
+      setUser(session ? { email: session?.user.email, id: session?.user.id } : null);
       setSegments(initialData.segments);
       setDancers(initialData.dancers);
       setFormations(initialData.formations);
@@ -301,15 +303,15 @@ const Edit = ({
       setSelectedFormations([formations.find((formation, i) => i === currentFormationIndex)?.id]);
    }, [currentFormationIndex, isPlaying]);
 
-   useEffect(() => {
-      // Add event listener for beforeunload event
-      window.addEventListener("beforeunload", handleBeforeUnload);
+   // useEffect(() => {
+   //    // Add event listener for beforeunload event
+   //    window.addEventListener("beforeunload", handleBeforeUnload);
 
-      // Cleanup event listener on unmount
-      return () => {
-         window.removeEventListener("beforeunload", handleBeforeUnload);
-      };
-   }, [saved]);
+   //    // Cleanup event listener on unmount
+   //    return () => {
+   //       window.removeEventListener("beforeunload", handleBeforeUnload);
+   //    };
+   // }, [saved]);
 
    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -1291,6 +1293,7 @@ const Edit = ({
                         localSource={localSource}
                         localSettings={localSettings}
                         hasVisited={hasVisited}
+                        currentFormationIndex={currentFormationIndex}
                         menuOpen={menuOpen}
                      ></Timeline>
                   </div>
