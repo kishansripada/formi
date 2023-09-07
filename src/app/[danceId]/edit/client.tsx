@@ -492,6 +492,7 @@ const Edit = ({
       if (viewOnly) return;
       //   if (router.isReady) {
       setSaved(false);
+      if (!dancers.length) return;
       uploadDancers(dancers);
       //   }
    }, [dancers]);
@@ -562,6 +563,7 @@ const Edit = ({
       if (viewOnly) return;
       //   if (router.isReady) {
       setSaved(false);
+      if (!formations.length) return;
       uploadFormations(formations);
       //   }
    }, [formations]);
