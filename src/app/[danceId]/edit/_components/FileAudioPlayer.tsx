@@ -5,6 +5,7 @@ import { formation, localSettings } from "../../../../types/types";
 import Timeline from "../../../../timeline-plugin";
 import { useStore } from "../store";
 import WaveSurfer from "wavesurfer.js";
+import { useGesture } from "@use-gesture/react";
 
 export const FileAudioPlayer: React.FC<{
    setPosition: Function;
@@ -21,6 +22,7 @@ export const FileAudioPlayer: React.FC<{
    // formations: formation[];
    isPlaying: boolean;
    position: number;
+   currentFormationIndex: number;
 }> = memo(
    ({
       setPosition,
@@ -39,8 +41,11 @@ export const FileAudioPlayer: React.FC<{
       isPlaying,
       songDuration,
       position,
+      currentFormationIndex,
    }) => {
+      const { formations, get, setSelectedFormations } = useStore();
       const { isDarkMode } = localSettings;
+
       const useWavesurfer = (containerRef: MutableRefObject<undefined>, options: WaveShaperOptions) => {
          const [wavesurfer, setWavesurfer] = useState<WaveSurfer | null>(null);
 
@@ -64,7 +69,6 @@ export const FileAudioPlayer: React.FC<{
          return wavesurfer;
       };
 
-      const { formations, get } = useStore();
       const [ready, setReady] = useState(false);
 
       const totalDurationOfFormations = formations
@@ -93,8 +97,43 @@ export const FileAudioPlayer: React.FC<{
          }
          return () => clearInterval(interval);
       }, [isPlaying, songDuration, position, totalDurationOfFormations]);
-
       const containerRef = useRef();
+      const trackRef = useRef();
+      useGesture(
+         {
+            onDrag: ({ event: e }) => {
+               const formationIdToSelect = formations.find((formation, i) => i === currentFormationIndex)?.id || null;
+               setSelectedFormations(formationIdToSelect ? [formationIdToSelect] : []);
+
+               e.preventDefault();
+               if (!e.currentTarget) return;
+               var rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+
+               var x = (e as MouseEvent).clientX - rect.left; //x position within the element.
+
+               songDuration = (songDuration || 0) / 1000;
+               const clickEventSeconds = x / pixelsPerSecond;
+               if (clickEventSeconds < 0) return;
+               setPosition(clickEventSeconds);
+               if (clickEventSeconds < songDuration && player) {
+                  player.seekTo(Math.max(Math.min(1, clickEventSeconds / songDuration), 0));
+               }
+               if (isPlaying) {
+                  if (clickEventSeconds < songDuration && position > songDuration) {
+                     player.play();
+                  }
+                  if (clickEventSeconds > songDuration && position < songDuration) {
+                     player.pause();
+                  }
+               }
+            },
+         },
+         {
+            eventOptions: { passive: false },
+            target: trackRef.current,
+         }
+      );
+
       // const [isPlaying, setIsPlaying] = useState(false);
       // const [currentTime, setCurrentTime] = useState(0);
       const wavesurfer = useWavesurfer(containerRef, {
@@ -171,33 +210,8 @@ export const FileAudioPlayer: React.FC<{
                   width: timelineWidth,
                   display: ready ? "flex" : "none",
                }}
-               onClick={(e) => {
-                  e.preventDefault();
-                  var rect = e.currentTarget.getBoundingClientRect();
-                  var x = e.clientX - rect.left; //x position within the element.
-
-                  songDuration = (songDuration || 0) / 1000;
-                  const clickEventSeconds = x / pixelsPerSecond;
-
-                  setPosition(clickEventSeconds);
-
-                  if (clickEventSeconds < songDuration) {
-                     player.seekTo(Math.min(1, clickEventSeconds / songDuration));
-                  }
-
-                  if (isPlaying) {
-                     if (clickEventSeconds < songDuration && position > songDuration) {
-                        player.play();
-                     }
-
-                     if (clickEventSeconds > songDuration && position < songDuration) {
-                        // setMovePlayhead(clickEventSeconds);
-                        player.pause();
-                        // setPosition(songDuration / 1000);
-                     }
-                  }
-               }}
-               className="flex flex-row items-center ]"
+               ref={trackRef}
+               className="flex flex-row items-center"
             >
                <div
                   className="py-[10px] dark:bg-black pointer-events-none"

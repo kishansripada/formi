@@ -139,7 +139,7 @@ export const AudioControls: React.FC<{
             player.isPlaying() ? player.pause() : player.play();
          }
 
-         setIsPlaying(player.isPlaying());
+         setIsPlaying(!isPlaying);
       } else {
          setIsPlaying(!isPlaying);
       }

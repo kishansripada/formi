@@ -1,10 +1,11 @@
 import Script from "next/script";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
 import { formation } from "../../../../types/types";
 import TimelinePlugin from "../../../../timeline-plugin";
 import { useStore } from "../store";
+import { useGesture } from "@use-gesture/react";
 
 export const NoFilePlayer: React.FC<{
    setPosition: Function;
@@ -21,6 +22,7 @@ export const NoFilePlayer: React.FC<{
    isPlaying: boolean;
    position: number;
    playbackRate: number;
+   currentFormationIndex: number;
 }> = memo(
    ({
       setPosition,
@@ -37,24 +39,14 @@ export const NoFilePlayer: React.FC<{
       isPlaying,
       position,
       playbackRate,
+      currentFormationIndex,
    }) => {
-      const { formations, get } = useStore();
+      const { formations, get, setSelectedFormations } = useStore();
       let songDuration = formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0);
       // console.log({ playbackRate });
       useEffect(() => {
          let interval;
          if (isPlaying) {
-            // interval = setInterval(() => {
-            //    setPosition((prevTime: number) => {
-            //       if (prevTime < songDuration) {
-            //          //  console.log("adding 0.5 sec");
-            //          return prevTime + 0.02 * playbackRate;
-            //       } else {
-            //          setIsPlaying(false);
-            //          return 0;
-            //       }
-            //    });
-            // }, 20);
             interval = setInterval(() => {
                const prevTime = get().position;
                let newTime = prevTime;
@@ -71,10 +63,47 @@ export const NoFilePlayer: React.FC<{
          }
          return () => clearInterval(interval);
       }, [isPlaying, songDuration, playbackRate]);
+      const timeline = useRef();
+      useGesture(
+         {
+            onDrag: ({ event: e }) => {
+               const formationIdToSelect = formations.find((formation, i) => i === currentFormationIndex)?.id || null;
+               setSelectedFormations(formationIdToSelect ? [formationIdToSelect] : []);
+
+               e.preventDefault();
+               if (!e.currentTarget) return;
+               var rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+
+               var x = (e as MouseEvent).clientX - rect.left; //x position within the element.
+
+               songDuration = (songDuration || 0) / 1000;
+               const clickEventSeconds = x / pixelsPerSecond;
+               if (clickEventSeconds < 0) return;
+               setPosition(clickEventSeconds);
+               if (clickEventSeconds < songDuration && player) {
+                  player.seekTo(Math.max(Math.min(1, clickEventSeconds / songDuration), 0));
+               }
+               if (isPlaying) {
+                  if (clickEventSeconds < songDuration && position > songDuration) {
+                     player.play();
+                  }
+                  if (clickEventSeconds > songDuration && position < songDuration) {
+                     player.pause();
+                  }
+               }
+            },
+         },
+
+         {
+            eventOptions: { passive: false },
+            target: timeline.current,
+         }
+      );
       return (
          <>
             <div
                className="relative "
+               ref={timeline}
                style={{
                   width:
                      formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0) *
@@ -88,20 +117,7 @@ export const NoFilePlayer: React.FC<{
                      setPosition(x / pixelsPerSecond);
                   }}
                   className={` h-[35px]   flex-col justify-end w-full`}
-               >
-                  {/* <div
-                     style={{
-                        overflowX: "hidden",
-                     }}
-                     // className="w-full"
-                  ></div> */}
-                  {/* <div
-                     style={{
-                        left: position * pixelsPerSecond,
-                     }}
-                     className="bg-pink-600 absolute w-[2px] h-full"
-                  ></div> */}
-               </div>
+               ></div>
             </div>
          </>
       );

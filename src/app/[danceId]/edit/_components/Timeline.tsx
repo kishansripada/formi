@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { COLORS, dancer, dancerPosition, formation, formationGroup, localSettings, MAX_PIXELS_PER_SECOND, segment } from "../../../../types/types";
 import { useHorizontalScrollInfo } from "../../../../hooks";
 import { Layer } from "./Layer";
@@ -31,7 +31,7 @@ export const Timeline: React.FC<{
    setSelectedFormation: Function;
    // setFormations: Function;
    songDuration: number | null;
-   position: number | null;
+   position: number;
    isPlaying: boolean;
    soundCloudTrackId: string | null;
 
@@ -55,7 +55,8 @@ export const Timeline: React.FC<{
    playbackRate: number;
    shiftHeld: boolean;
    hasVisited: boolean;
-   menuOpen: string;
+   menuOpen: string | null;
+   currentFormationIndex: number;
 }> = ({
    // formations,
    selectedFormation,
@@ -86,10 +87,10 @@ export const Timeline: React.FC<{
    playbackRate,
    shiftHeld,
    hasVisited,
-
    menuOpen,
+   currentFormationIndex,
 }) => {
-   const { segments, setSegments, get, formations, setFormations, viewOnly, resumeHistory, pauseHistory, isMobileView } = useStore();
+   const { segments, setSegments, get, formations, viewOnly, resumeHistory, pauseHistory, setSelectedFormations } = useStore();
    const others = useStore((state) => state.liveblocks.others);
    const [resizingSegment, setResizingSegment] = useState<string | null>(null);
 
@@ -216,6 +217,43 @@ export const Timeline: React.FC<{
       }
    );
 
+   const timeline = useRef<HTMLElement>();
+   useGesture(
+      {
+         onDrag: ({ event: e }) => {
+            const formationIdToSelect = formations.find((formation, i) => i === currentFormationIndex)?.id || null;
+            setSelectedFormations(formationIdToSelect ? [formationIdToSelect] : []);
+
+            e.preventDefault();
+            if (!e.currentTarget) return;
+            var rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+
+            var x = (e as MouseEvent).clientX - rect.left; //x position within the element.
+
+            songDuration = (songDuration || 0) / 1000;
+            const clickEventSeconds = x / pixelsPerSecond;
+            if (clickEventSeconds < 0) return;
+            setPosition(clickEventSeconds);
+            if (clickEventSeconds < songDuration && player) {
+               player.seekTo(Math.max(Math.min(1, clickEventSeconds / songDuration), 0));
+            }
+            if (isPlaying) {
+               if (clickEventSeconds < songDuration && position > songDuration) {
+                  player.play();
+               }
+               if (clickEventSeconds > songDuration && position < songDuration) {
+                  player.pause();
+               }
+            }
+         },
+      },
+
+      {
+         eventOptions: { passive: false },
+         target: timeline.current,
+      }
+   );
+
    return (
       <>
          <style jsx>
@@ -253,48 +291,13 @@ export const Timeline: React.FC<{
                touchAction: "pan-x",
             }}
             id="layers"
-            // style={{
-            //    width: timelineWidth,
-            // }}
          >
             <div
                style={{
                   width: timelineWidth,
                }}
-               onClick={(e) => {
-                  // var rect = e.currentTarget.getBoundingClientRect();
-                  // var x = e.clientX - rect.left; //x position within the element.
-                  // if (x < 0) return;
-
-                  // setPosition(x / pixelsPerSecond);
-
-                  // if (!(songDuration && player)) return;
-
-                  // player.seekTo(x / pixelsPerSecond / (songDuration / 1000));
-                  e.preventDefault();
-                  var rect = e.currentTarget.getBoundingClientRect();
-                  var x = e.clientX - rect.left; //x position within the element.
-
-                  songDuration = (songDuration || 0) / 1000;
-                  const clickEventSeconds = x / pixelsPerSecond;
-
-                  setPosition(clickEventSeconds);
-
-                  if (clickEventSeconds < songDuration && player) {
-                     player.seekTo(Math.max(Math.min(1, clickEventSeconds / songDuration), 0));
-                  }
-
-                  if (isPlaying) {
-                     if (clickEventSeconds < songDuration && position > songDuration) {
-                        player.play();
-                     }
-
-                     if (clickEventSeconds > songDuration && position < songDuration) {
-                        player.pause();
-                     }
-                  }
-               }}
                className=" relative  "
+               ref={timeline}
             >
                <div
                   style={{
@@ -309,7 +312,7 @@ export const Timeline: React.FC<{
                   .map((other) => {
                      return (
                         <div
-                           key={other.id}
+                           key={other.id + Math.random()}
                            style={{
                               // add 40 but subract 9 to account for the width of the svg
                               left: (other.presence.position || 0) * pixelsPerSecond - 9,
@@ -337,7 +340,7 @@ export const Timeline: React.FC<{
                      // add 40 but subract 9 to account for the width of the svg
                      left: (position || 0) * pixelsPerSecond - 9,
                   }}
-                  className="absolute z-[999] top-[0px] pointer-events-none   left-0"
+                  className="absolute z-[999] top-[0px] pointer-events-none  "
                >
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 180 157">
                      <path fill="#DB2777" d="M96 154c-3 4-9 4-12 0L2 11C-1 6 2 1 8 1h164c6 0 9 5 6 10L96 154Z" />
@@ -436,6 +439,7 @@ export const Timeline: React.FC<{
                      localSettings={localSettings}
                      isPlaying={isPlaying}
                      position={position}
+                     currentFormationIndex={currentFormationIndex}
                   ></FileAudioPlayer>
                </div>
             ) : (
@@ -454,6 +458,7 @@ export const Timeline: React.FC<{
                      pixelsPerSecond={pixelsPerSecond}
                      videoPlayer={videoPlayer}
                      position={position}
+                     currentFormationIndex={currentFormationIndex}
                   ></NoFilePlayer>
                </>
             )}

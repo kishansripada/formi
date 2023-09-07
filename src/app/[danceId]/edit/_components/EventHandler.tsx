@@ -119,15 +119,17 @@ export const EventHandler: React.FC<{
       if (e.key === " ") {
          e.preventDefault();
 
+         // const playPause = () => {
          if (player) {
             if (position < songDuration / 1000) {
                player.isPlaying() ? player.pause() : player.play();
             }
 
-            setIsPlaying(player.isPlaying());
+            setIsPlaying((isPlaying) => !isPlaying);
          } else {
             setIsPlaying((isPlaying) => !isPlaying);
          }
+         // };
 
          // };
       }
