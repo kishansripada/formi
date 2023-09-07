@@ -494,7 +494,12 @@ const Edit = ({
       if (viewOnly) return;
       //   if (router.isReady) {
       setSaved(false);
-      if (!dancers.length) return;
+      if (!dancers.length) {
+         try {
+            throw new Error("no dancers");
+         } catch {}
+         return;
+      }
       uploadDancers(dancers);
       //   }
    }, [dancers]);
@@ -565,7 +570,12 @@ const Edit = ({
       if (viewOnly) return;
       //   if (router.isReady) {
       setSaved(false);
-      if (!formations.length) return;
+      if (!formations.length) {
+         try {
+            throw new Error("no formations");
+         } catch {}
+         return;
+      }
       uploadFormations(formations);
       //   }
    }, [formations]);
