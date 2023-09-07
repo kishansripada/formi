@@ -90,7 +90,7 @@ export const Timeline: React.FC<{
    menuOpen,
    currentFormationIndex,
 }) => {
-   const { segments, setSegments, get, formations, viewOnly, resumeHistory, pauseHistory, setSelectedFormations } = useStore();
+   const { segments, setSegments, get, formations, viewOnly, resumeHistory, pauseHistory, setSelectedFormations, isMobileView } = useStore();
    const others = useStore((state) => state.liveblocks.others);
    const [resizingSegment, setResizingSegment] = useState<string | null>(null);
 
@@ -220,7 +220,35 @@ export const Timeline: React.FC<{
    const timeline = useRef<HTMLElement>();
    useGesture(
       {
-         onDrag: ({ event: e }) => {
+         onDrag: ({ event: e, cancel }) => {
+            if (isMobileView) cancel();
+            const formationIdToSelect = formations.find((formation, i) => i === currentFormationIndex)?.id || null;
+            setSelectedFormations(formationIdToSelect ? [formationIdToSelect] : []);
+
+            e.preventDefault();
+            if (!e.currentTarget) return;
+            var rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+
+            var x = (e as MouseEvent).clientX - rect.left; //x position within the element.
+
+            songDuration = (songDuration || 0) / 1000;
+            const clickEventSeconds = x / pixelsPerSecond;
+            if (clickEventSeconds < 0) return;
+            setPosition(clickEventSeconds);
+            if (clickEventSeconds < songDuration && player) {
+               player.seekTo(Math.max(Math.min(1, clickEventSeconds / songDuration), 0));
+            }
+            if (isPlaying) {
+               if (clickEventSeconds < songDuration && position > songDuration) {
+                  player.play();
+               }
+               if (clickEventSeconds > songDuration && position < songDuration) {
+                  player.pause();
+               }
+            }
+         },
+         onClick: ({ event: e }) => {
+            if (!isMobileView) return;
             const formationIdToSelect = formations.find((formation, i) => i === currentFormationIndex)?.id || null;
             setSelectedFormations(formationIdToSelect ? [formationIdToSelect] : []);
 
@@ -251,6 +279,7 @@ export const Timeline: React.FC<{
       {
          eventOptions: { passive: false },
          target: timeline.current,
+         drag: { enabled: !isMobileView },
       }
    );
 

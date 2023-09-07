@@ -43,7 +43,7 @@ export const FileAudioPlayer: React.FC<{
       position,
       currentFormationIndex,
    }) => {
-      const { formations, get, setSelectedFormations } = useStore();
+      const { formations, get, setSelectedFormations, isMobileView } = useStore();
       const { isDarkMode } = localSettings;
 
       const useWavesurfer = (containerRef: MutableRefObject<undefined>, options: WaveShaperOptions) => {
@@ -101,7 +101,35 @@ export const FileAudioPlayer: React.FC<{
       const trackRef = useRef();
       useGesture(
          {
-            onDrag: ({ event: e }) => {
+            onDrag: ({ event: e, cancel }) => {
+               if (isMobileView) cancel();
+               const formationIdToSelect = formations.find((formation, i) => i === currentFormationIndex)?.id || null;
+               setSelectedFormations(formationIdToSelect ? [formationIdToSelect] : []);
+
+               e.preventDefault();
+               if (!e.currentTarget) return;
+               var rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+
+               var x = (e as MouseEvent).clientX - rect.left; //x position within the element.
+
+               songDuration = (songDuration || 0) / 1000;
+               const clickEventSeconds = x / pixelsPerSecond;
+               if (clickEventSeconds < 0) return;
+               setPosition(clickEventSeconds);
+               if (clickEventSeconds < songDuration && player) {
+                  player.seekTo(Math.max(Math.min(1, clickEventSeconds / songDuration), 0));
+               }
+               if (isPlaying) {
+                  if (clickEventSeconds < songDuration && position > songDuration) {
+                     player.play();
+                  }
+                  if (clickEventSeconds > songDuration && position < songDuration) {
+                     player.pause();
+                  }
+               }
+            },
+            onClick: ({ event: e }) => {
+               if (!isMobileView) return;
                const formationIdToSelect = formations.find((formation, i) => i === currentFormationIndex)?.id || null;
                setSelectedFormations(formationIdToSelect ? [formationIdToSelect] : []);
 
@@ -128,9 +156,11 @@ export const FileAudioPlayer: React.FC<{
                }
             },
          },
+
          {
             eventOptions: { passive: false },
             target: trackRef.current,
+            drag: { enabled: !isMobileView },
          }
       );
 
