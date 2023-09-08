@@ -10,10 +10,13 @@ type Collision = {
    dancer2Id: string;
 };
 
-export function detectCollisions(formations: formation[], selectedFormation, collisionRadius): Record<string, Collision[]> {
+export function detectCollisions(formations: formation[], selectedFormations, collisionRadius): Record<string, Collision[]> {
    const collisionMap = [];
-   if (selectedFormation === null || selectedFormation === 0) return [];
-
+   collisionRadius = 0.75;
+   if (!formations) return [];
+   if (selectedFormations.length !== 1) return [];
+   const selectedFormation = formations.findIndex((formation) => formation.id === selectedFormations[0]);
+   if (selectedFormation === 0 || selectedFormation === -1) return [];
    const currFormation = formations[selectedFormation - 1];
    const nextFormation = formations[selectedFormation];
 

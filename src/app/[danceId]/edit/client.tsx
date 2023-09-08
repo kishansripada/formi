@@ -45,7 +45,7 @@ import { Segments } from "./_components/SidebarComponents/Segments";
 import { create } from "zustand";
 import { useStore } from "./store";
 import { MobileSidebar } from "./_components/MobileSidebar";
-import { setUser } from "@sentry/browser";
+import * as Sentry from "@sentry/browser";
 
 const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => (
@@ -148,7 +148,18 @@ const Edit = ({
    // console.log({ liveStatus });
 
    useEffect(() => {
-      setUser(session ? { email: session?.user.email, id: session?.user.id } : null);
+      Sentry.init({
+         dsn: "https://256536ba4b0c4b0e96d719fc685bbd59@o4504556574605312.ingest.sentry.io/4504965604638720",
+         beforeSend(event, hint) {
+            // Check if it is an exception, and if so, show the report dialog
+            if (event.exception) {
+               Sentry.showReportDialog({ eventId: event.event_id });
+            }
+            return event;
+         },
+      });
+      Sentry.setUser(session ? { email: session?.user.email, id: session?.user.id } : null);
+      
       setSegments(initialData.segments);
       setDancers(initialData.dancers);
       setFormations(initialData.formations);
@@ -678,7 +689,7 @@ const Edit = ({
 
    //////////////////////////
    const collisions = localSettings.viewCollisions
-      ? detectCollisions(localSettings.stageFlipped ? flippedFormations : formations, selectedFormation, localSettings.collisionRadius)
+      ? detectCollisions(localSettings.stageFlipped ? flippedFormations : formations, selectedFormations, localSettings.collisionRadius)
       : [];
 
    function handleDragEnd(event) {
@@ -1171,7 +1182,8 @@ const Edit = ({
                                             );
                                          })
                                        : null}
-                                    {localSettings.viewCollisions && selectedFormation !== null
+
+                                    {localSettings.viewCollisions && selectedFormations.length === 1
                                        ? collisions.map((collision, i) => {
                                             return <Collision key={i} coordsToPosition={coordsToPosition} collision={collision}></Collision>;
                                          })
