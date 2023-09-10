@@ -8,7 +8,7 @@ const { withSentryConfig } = require('@sentry/nextjs');
 //   enabled: process.env.ANALYZE === 'true',
 // })
 const moduleExports = {
-  reactStrictMode: false,
+  reactStrictMode: true,
   swcMinify: true,
   typescript: {
     // !! WARN !!

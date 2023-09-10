@@ -54,7 +54,7 @@ const Client = () => {
                <div className=" mt-[120px] top-[170px] text-center flex flex-col items-center justify-center z-50  ">
                   {/* <div className="bg-neutral-500/50 w-full rounded-full h-16"></div> */}
                   <p className="text-center tracking-widest text-pink-500 mt-24 font-bold">PRICING</p>
-                  <p className="  lg:text-6xl  text-2xl font-semibold  w-2/3  ">Pricing based on your needs</p>
+                  <p className="  lg:text-6xl  text-2xl font-semibold  w-2/3  ">Want more than 5 performances?</p>
                </div>
                <div className="lg:max-w-4xl  w-full mt-24  lg:h-[400px] mb-52 ">
                   <div className="flex lg:flex-row flex-col h-full justify-center w-full ">

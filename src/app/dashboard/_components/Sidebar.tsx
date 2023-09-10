@@ -15,7 +15,9 @@ import { NewFolderModel } from "./NewFolderModel";
 export const Sidebar: React.FC<{
    rosters: any;
    session: AuthSession;
-}> = ({ rosters, session }) => {
+   plan: string | null;
+   myDances: any;
+}> = ({ rosters, session, plan, myDances }) => {
    const supabase = createClientComponentClient();
    const pathname = usePathname();
    const router = useRouter();
@@ -86,6 +88,7 @@ export const Sidebar: React.FC<{
             }}
             className="min-w-[280px]  w-[280px] px-6  border-r border-neutral-800   py-4 h-screen lg:flex hidden flex-col box-border  text-sm  "
          >
+            {/* {JSON.stringify(plan)} */}
             <div className="flex flex-row mt-3 ml-2   ">
                {session?.user.user_metadata.avatar_url ? (
                   <img
@@ -154,12 +157,29 @@ export const Sidebar: React.FC<{
             </button>
             <button
                onClick={() => {
+                  if (!plan && myDances.length >= 5) {
+                     router.push("/upgrade");
+                     return;
+                  }
+
                   createNewDance();
                }}
                className="bg-pink-600  mt-3 w-full text-white text-xs py-2 px-4  rounded-lg mr-auto "
             >
                New performance
             </button>
+
+            {!plan ? (
+               <div className="bg-neutral-800 h-[170px] rounded-xl mt-4 text-xs flex flex-col items-center justify-between p-3 text-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 11.25l-3-3m0 0l-3 3m3-3v7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p className="mt-3"> Ready to go beyond the free plan? Upgrade for to create unlimited performances.</p>
+                  <Link href={"/upgrade"} className="w-full text-center py-2 mt-auto bg-pink-600 text-xs text-white rounded-md">
+                     View plans
+                  </Link>
+               </div>
+            ) : null}
 
             {rosters.length ? <p className=" text-neutral-300 text-sm mt-5">New performance from roster:</p> : null}
             {rosters.map((roster: any) => {

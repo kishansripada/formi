@@ -46,6 +46,8 @@ import { create } from "zustand";
 import { useStore } from "./store";
 import { MobileSidebar } from "./_components/MobileSidebar";
 import * as Sentry from "@sentry/browser";
+import { animate, cubic, linear } from "./positionCalculator";
+import { USDZExporter } from "three/addons/exporters/USDZExporter.js";
 
 const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => (
@@ -159,13 +161,11 @@ const Edit = ({
       //    },
       // });
       Sentry.setUser(session ? { email: session?.user.email, id: session?.user.id } : null);
-      
+
       setSegments(initialData.segments);
       setDancers(initialData.dancers);
       setFormations(initialData.formations);
       setViewOnly(viewOnlyInitial);
-      // setViewOnly(true);
-      // setViewOnly(false);
       setDanceName(initialData.name);
       setProps(initialData.props);
       setItems(initialData.items);
@@ -268,23 +268,68 @@ const Edit = ({
    const [isThreeDancerDragging, setIsThreeDancerDragging] = useState(false);
    const [pdfLoading, setPdfLoading] = useState(false);
    const [assetsOpen, setAssetsOpen] = useState(false);
-
+   const [scene, setScene] = useState(null);
    const [propUploads, setPropUploads] = useState([]);
    // hasVisited ? null : { url: "https://www.youtube.com/shorts/JRS1tPHJKAI" }
    const [helpUrl, setHelpUrl] = useState(null);
 
    const [resizingPropId, setResizingPropId] = useState(null);
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
+
+   const objectPositions = (() => {
+      if (!isPlaying && selectedFormations.length === 0) {
+         return [];
+      }
+      if (!isPlaying && selectedFormations.length) return getFirstSelectedFormation()?.positions || [];
+
+      if (currentFormationIndex === null) return [];
+      if (!percentThroughTransition) {
+         return formations[currentFormationIndex]?.positions || [];
+      }
+
+      // worst case animate
+      const previousFormationPositions = formations[currentFormationIndex - 1]?.positions || [];
+      const thisFormationPositions = formations[currentFormationIndex]?.positions || [];
+      const animatedPositions = [];
+
+      for (let i = 0; i < thisFormationPositions.length; i++) {
+         const previousDancer = previousFormationPositions[i];
+         const thisDancer = thisFormationPositions[i];
+         if (!previousDancer || !thisDancer) continue;
+         let animatedPosition;
+         //   console.log(thisDancer);
+         if (thisDancer.transitionType === "cubic" && thisDancer.controlPointStart && thisDancer.controlPointEnd) {
+            animatedPosition = cubic(
+               previousDancer.position,
+               thisDancer.position,
+               percentThroughTransition,
+               thisDancer.controlPointStart,
+               thisDancer.controlPointEnd
+            );
+         } else if (thisDancer.transitionType === "teleport") {
+            animatedPosition = linear(previousDancer.position, thisDancer.position, percentThroughTransition);
+         } else {
+            animatedPosition = linear(previousDancer.position, thisDancer.position, percentThroughTransition);
+         }
+         animatedPositions.push({ ...thisDancer, position: animatedPosition });
+      }
+
+      return animatedPositions;
+   })();
+
    const [videoPosition, setVideoPosition] = useState<"top-left" | "top-right" | "bottom-left" | "bottom-right">("top-right");
 
-   const coordsToPosition = (coords: { x: number; y: number }) => {
-      if (!coords) return null;
-      let { x, y } = coords;
-      return {
-         left: (PIXELS_PER_SQUARE * cloudSettings.stageDimensions.width) / 2 + PIXELS_PER_SQUARE * x,
-         top: (PIXELS_PER_SQUARE * cloudSettings.stageDimensions.height) / 2 + PIXELS_PER_SQUARE * -y,
-      };
-   };
+   const coordsToPosition = useCallback(
+      (coords: { x: number; y: number }) => {
+         if (!coords) return null;
+         let { x, y } = coords;
+         return {
+            left: (PIXELS_PER_SQUARE * cloudSettings.stageDimensions.width) / 2 + PIXELS_PER_SQUARE * x,
+            top: (PIXELS_PER_SQUARE * cloudSettings.stageDimensions.height) / 2 + PIXELS_PER_SQUARE * -y,
+         };
+      },
+      [cloudSettings.stageDimensions]
+   );
 
    useEffect(() => {
       if (!session) return;
@@ -505,12 +550,12 @@ const Edit = ({
       if (viewOnly) return;
       //   if (router.isReady) {
       setSaved(false);
-      if (!dancers.length) {
-         try {
-            throw new Error("no dancers");
-         } catch {}
-         return;
-      }
+      // if (!dancers.length) {
+      //    try {
+      //       throw new Error("no dancers");
+      //    } catch {}
+      //    return;
+      // }
       uploadDancers(dancers);
       //   }
    }, [dancers]);
@@ -581,12 +626,12 @@ const Edit = ({
       if (viewOnly) return;
       //   if (router.isReady) {
       setSaved(false);
-      if (!formations.length) {
-         try {
-            throw new Error("no formations");
-         } catch {}
-         return;
-      }
+      // if (!formations.length) {
+      //    try {
+      //       throw new Error("no formations");
+      //    } catch {}
+      //    return;
+      // }
       uploadFormations(formations);
       //   }
    }, [formations]);
@@ -719,6 +764,33 @@ const Edit = ({
       // Then we set the value in the --vh custom property to the root of the document
       document.documentElement.style.setProperty("--vh", `${vh}px`);
    }, []);
+
+   const exportThree = async () => {
+      const exporter = new USDZExporter();
+      const arraybuffer = await exporter.parse(scene);
+      const blob = new Blob([arraybuffer], { type: "model/vnd.usdz+zip" });
+
+      const url = URL.createObjectURL(blob);
+
+      // Create an anchor element and set its href to the blob's URL
+      const a = document.createElement("a");
+      a.rel = "ar";
+      a.href = url;
+      // a.download = "scene.usdz";
+      const img = document.createElement("img");
+      img.src = "path_to_your_image.jpg"; // Set the image source
+      img.alt = "Description of image";
+      a.appendChild(img);
+      // Append the anchor to the body (this is required for Firefox)
+      document.body.appendChild(a);
+
+      // Trigger a click event on the anchor
+      a.click();
+
+      // Clean up: remove the anchor and revoke the blob URL
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+   };
    return (
       <>
          <Toaster></Toaster>
@@ -891,6 +963,7 @@ const Edit = ({
                setShareIsOpen={setShareIsOpen}
                dancers={dancers}
                session={session}
+               exportThree={exportThree}
             />
 
             <MobileSidebar setLocalSettings={setLocalSettings} setHelpUrl={setHelpUrl} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></MobileSidebar>
@@ -1005,6 +1078,7 @@ const Edit = ({
                            </div>
                         </div>
                      ) : null}
+
                      <DndContext id="1" onDragEnd={handleDragEnd}>
                         <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-100 dark:bg-neutral-900 relative `}>
                            <ObjectControls
@@ -1055,6 +1129,7 @@ const Edit = ({
                               ></video> */}
                               {localSettings.viewingThree ? (
                                  <ThreeD
+                                    setScene={setScene}
                                     setIsThreeDancerDragging={setIsThreeDancerDragging}
                                     isThreeDancerDragging={isThreeDancerDragging}
                                     isPlaying={isPlaying}
@@ -1138,28 +1213,23 @@ const Edit = ({
                                        <></>
                                     )}
 
-                                    {dancers.map((dancer, index) => (
-                                       <DancerAlias
-                                          roundPositions={roundPositions}
-                                          zoom={zoom}
-                                          setZoom={setZoom}
-                                          coordsToPosition={coordsToPosition}
-                                          selectedDancers={selectedDancers}
-                                          isPlaying={isPlaying}
-                                          position={position}
-                                          key={dancer.id}
-                                          dancer={dancer}
-                                          formations={localSettings.stageFlipped ? flippedFormations : formations}
-                                          draggingDancerId={draggingDancerId}
-                                          currentFormationIndex={currentFormationIndex}
-                                          percentThroughTransition={percentThroughTransition}
-                                          localSettings={localSettings}
-                                          index={index}
-                                          isPlaying={isPlaying}
-                                          collisions={collisions}
-                                          isChangingCollisionRadius={isChangingCollisionRadius}
-                                       />
-                                    ))}
+                                    {objectPositions.map((position, index) => {
+                                       return (
+                                          <DancerAlias
+                                             item={items.find((item) => item.id === position?.itemId) || null}
+                                             key={position.id}
+                                             isPlaying={isPlaying}
+                                             position={position.position}
+                                             color={position.color}
+                                             index={dancers.findIndex((dancer) => dancer.id === position.id)}
+                                             coordsToPosition={coordsToPosition}
+                                             amSelected={selectedDancers.includes(position.id)}
+                                             dancer={dancers.find((dancer) => dancer.id === position.id)}
+                                             draggingDancerId={draggingDancerId}
+                                             localSettings={localSettings}
+                                          />
+                                       );
+                                    })}
 
                                     {selectedFormation !== null
                                        ? props.map((prop: prop) => {

@@ -36,6 +36,26 @@ async function getServerSideProps() {
    if (!session) {
       redirect("/login");
    }
+   async function getStripe(session: Session) {
+      const plan = fetch(
+         `https://api.stripe.com/v1/customers/search?query=metadata['supabase_id']:'${session.user.id}'&expand[]=data.subscriptions.data`,
+         {
+            headers: {
+               Authorization:
+                  "Basic cmtfbGl2ZV81MUxhajV0SHZDM3c2ZThmY21zVklCRjlKMjRLUWFFYlgwVUs0SHE0b245QTVXMUNIaWlHaHAwVzlrbHg5dDU3OW9WcWVibFJGOHh3cE8xc3FlUmFMOHBzYjAwMmhLNFl0NEU6",
+            },
+         }
+      )
+         .then((r) => r.json())
+         .then((r) => {
+            // customerExists = Boolean(r.data.length);
+
+            let plan = r?.data?.[0]?.subscriptions.data[0];
+            return plan;
+         });
+      return plan;
+   }
+
    async function getMyDances(session: Session) {
       let data = await supabase
          .from("dances")
@@ -82,12 +102,12 @@ async function getServerSideProps() {
       return data?.data?.map((x) => x?.performance_id) || [];
    }
 
-   let [dances, sharedWithMe] = await Promise.all([getMyDances(session), getSharedWithMe(session)]);
+   let [dances, sharedWithMe, plan] = await Promise.all([getMyDances(session), getSharedWithMe(session), getStripe(session)]);
 
-   return { dances, sharedWithMe, session };
+   return { dances, sharedWithMe, session, plan };
 }
 
 export default async function Page({}) {
-   const { dances: myDances, sharedWithMe, session } = await getServerSideProps();
-   return <Client sharedWithMe={sharedWithMe} myDances={myDances} session={session}></Client>;
+   const { dances: myDances, sharedWithMe, session, plan } = await getServerSideProps();
+   return <Client sharedWithMe={sharedWithMe} myDances={myDances} session={session} plan={plan}></Client>;
 }

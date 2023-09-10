@@ -204,13 +204,7 @@ export const Canvas: React.FC<{
 
       const movementX = e.movementX * horizontalScalar;
       const movementY = e.movementY * verticalScalar;
-      const target = e.currentTarget;
-      const stage = target.querySelector("#stage-cutout");
-      // const stage = target;
-      // Get the bounding rectangle of target
-      const rect = stage.getBoundingClientRect();
 
-      const { x, y } = positionToCoords({ left: (e.clientX - rect.left) / zoom, top: (e.clientY - rect.top) / zoom });
       // console.log(x, y);
       if (changingControlId) {
          if (viewOnly) return;
@@ -293,6 +287,7 @@ export const Canvas: React.FC<{
       }
 
       if (draggingDancerId) {
+         return;
          if (viewOnly) return;
          if (isMobileView) return;
          if (selectedFormations.length === 1) {
@@ -336,6 +331,13 @@ export const Canvas: React.FC<{
                })
             );
          } else {
+            const target = e.currentTarget;
+            const stage = target.querySelector("#stage-cutout");
+            // const stage = target;
+            // Get the bounding rectangle of target
+            const rect = stage.getBoundingClientRect();
+
+            const { x, y } = positionToCoords({ left: (e.clientX - rect.left) / zoom, top: (e.clientY - rect.top) / zoom });
             setMovedOnMultipleFormations(true);
             setFormations(
                get().formations.map((formation) => {
@@ -437,6 +439,13 @@ export const Canvas: React.FC<{
                   })
                );
             } else {
+               const target = e.currentTarget;
+               const stage = target.querySelector("#stage-cutout");
+               // const stage = target;
+               // Get the bounding rectangle of target
+               const rect = stage.getBoundingClientRect();
+
+               const { x, y } = positionToCoords({ left: (e.clientX - rect.left) / zoom, top: (e.clientY - rect.top) / zoom });
                setFormations(
                   get().formations.map((formation) => {
                      if (selectedFormations.includes(formation.id)) {
@@ -793,39 +802,6 @@ export const Canvas: React.FC<{
    };
 
    const [scrollOffset, setScrollOffset] = useState({ x: 0, y: 0 });
-   const ZOOM_BASE = 1.6; // Adjust the base to fit your preferred zooming speed.
-
-   // useEffect(() => {
-   //    const handleWheel = (event) => {
-   //       if (
-   //          !event
-   //             .composedPath()
-   //             .map((elem) => elem.id)
-   //             .includes("stage")
-   //       )
-   //          return;
-   //       if (event.ctrlKey) {
-   //          // event.preventDefault();
-   //          // setZoom((oldZoom) => {
-   //          //    const logZoom = Math.log(oldZoom) / Math.log(ZOOM_BASE);
-   //          //    const newZoom = Math.pow(ZOOM_BASE, logZoom - event.deltaY * 0.01);
-   //          //    return Math.min(Math.max(0.1, newZoom), 4);
-   //          // });
-   //       } else {
-   //          event.preventDefault();
-   //          // setScrollOffset((scrollOffset) => ({
-   //          //    x: scrollOffset.x - event.deltaX / zoom / 1.5,
-   //          //    y: scrollOffset.y - event.deltaY / zoom / 1.5,
-   //          // }));
-   //       }
-   //    };
-
-   //    document.addEventListener("wheel", handleWheel, { passive: false });
-
-   //    return () => {
-   //       document.removeEventListener("wheel", handleWheel);
-   //    };
-   // }, [zoom]);
 
    const useGesture = createUseGesture([dragAction, pinchAction, wheelAction]);
    useEffect(() => {
@@ -845,17 +821,6 @@ export const Canvas: React.FC<{
          onDrag: (state) => {
             if (state.touches > 1) return;
             if (state.target.id) return;
-            // let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
-            // let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
-
-            // // console.log(maxTopOffset);
-            // // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
-            // // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
-            // // setZoom(1)
-            // const maxZoom = Math.min(heightPercentage, widthPercentage);
-            // // if (maxZoom === zoom) return;
-
-            // // console.log(state.delta);
 
             setScrollOffset((scrollOffset) => ({
                x: scrollOffset.x + state.delta[0] / zoom,
@@ -886,85 +851,44 @@ export const Canvas: React.FC<{
          //   pinch: { scaleBounds: { min: 0.5, max: 2 }, rubberband: true },
       }
    );
-   // useGesture(
-   //    {
-   //       onPinch: ({ offset: [d] }) => {
-   //          console.log(d);
-   //          // let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
-   //          // let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
-
-   //          // // console.log(maxTopOffset);
-   //          // // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
-   //          // // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
-   //          // // setZoom(1)
-   //          // const maxZoom = Math.min(heightPercentage, widthPercentage);
-   //          // // let zoom = state.memo[0] * state.movement[0];
-
-   //          // if (newZoom < maxZoom) {
-   //          //    setScrollOffset({ x: 0, y: 0 });
-   //          // }
-   //          // if (isMobileView) {
-   //          //    // setZoom((zoom: number) => (newZoom < maxZoom ? maxZoom : newZoom));
-   //          // } else {
-
-   //          // }
-   //          setZoom(d / 5);
-
-   //          // console.log("pinching");
-   //          // setZoom(zoom);
-   //       },
-   //       // onDrag: (state) => {
-   //       //    if (state.touches > 1) return;
-   //       //    if (state.target.id) return;
-   //       //    let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
-   //       //    let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
-
-   //       //    // console.log(maxTopOffset);
-   //       //    // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
-   //       //    // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
-   //       //    // setZoom(1)
-   //       //    const maxZoom = Math.min(heightPercentage, widthPercentage);
-   //       //    // if (maxZoom === zoom) return;
-
-   //       //    // // console.log(state.delta);
-
-   //       //    setScrollOffset((scrollOffset) => ({
-   //       //       x: scrollOffset.x + state.delta[0] / zoom,
-   //       //       y: scrollOffset.y + state.delta[1] / zoom,
-   //       //    }));
-   //       // },
-   //       // onWheel: (state) => {
-   //       //    // console.log(state.delta);
-
-   //       //    // console.log(maxTopOffset);
-   //       //    state.event.preventDefault();
-   //       //    const newY = scrollOffset.y - state.delta[1] / zoom / 1.5;
-   //       //    setScrollOffset((scrollOffset) => ({
-   //       //       x: scrollOffset.x - state.delta[0] / zoom / 1.5,
-   //       //       y: newY,
-   //       //    }));
-   //       // },
-   //    },
-   //    {
-   //       eventOptions: { passive: false },
-   //       target: container.current,
-   //       // pinch: {preventDefault: true},
-   //       pinch: { pointer: { touch: true }, preventDefault: true },
-
-   //       // wheel: { enabled: !isMobileView },
-   //       // drag: { enabled: isMobileView },
-   //    }
-   //    // config
-   // );
-
-   // useEffect(() => {
-   //    const div = container.current;
-   //    if (div) {
-   //       const x = (div.scrollWidth - div.offsetWidth) / 2;
-   //       const y = (div.scrollHeight - div.offsetHeight) / 2;
-   //       div.scrollTo(x, y);
-   //    }
-   // }, [stageDimensions]);
+   useGesture(
+      {
+         onDrag: (state) => {
+            if (state.touches > 1) state.cancel();
+            if (state.event.target.dataset.type !== "dancer") return;
+            setFormations(
+               get().formations.map((formation) => {
+                  if (get().selectedFormations.includes(formation.id)) {
+                     return {
+                        ...formation,
+                        positions: formation.positions.map((position) => {
+                           if (get().selectedDancers.includes(position.id)) {
+                              return {
+                                 ...position,
+                                 position: {
+                                    x: position.position.x + state.delta[0] * horizontalScalar,
+                                    y: position.position.y - state.delta[1] * verticalScalar,
+                                 },
+                              };
+                           }
+                           return position;
+                        }),
+                     };
+                  }
+                  return formation;
+               })
+            );
+         },
+         onDragEnd: () => {
+            // roundPositions();
+         },
+      },
+      {
+         eventOptions: { passive: false },
+         target: container.current,
+         // enabled: isMobileView && !viewOnly,
+      }
+   );
 
    return (
       <>
@@ -1025,8 +949,8 @@ export const Canvas: React.FC<{
                touchAction: "none",
             }}
             onPointerUp={pointerUp}
-            onTouchEnd={pointerUp}
-            onPointerMove={handleDragMove}
+            // onTouchEnd={pointerUp}
+            // onPointerMove={handleDragMove}
 
             // style={{
             //    width: `${(stageDimensions.width * PIXELS_PER_SQUARE) / zoom}px`,

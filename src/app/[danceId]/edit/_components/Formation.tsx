@@ -1,33 +1,18 @@
 import { COLORS, dancer, dancerPosition, formation, formationGroup, localSettings } from "../../../../types/types";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "../store";
 import { useGesture } from "@use-gesture/react";
+
 export const Formation: React.FC<{
    formation: formation;
-   amSelected: boolean;
    index: number;
    setSelectedFormation: Function;
    pixelsPerSecond: number;
-   addToStack: Function;
    activeId: string | null;
-   localSettings: localSettings;
    shiftHeld: boolean;
-}> = ({
-   formation,
-   amSelected,
-   index,
-   setSelectedFormation,
-   // viewOnly,
-   pixelsPerSecond,
-   addToStack,
-   activeId,
-   localSettings,
-   // bind,
-   shiftHeld,
-}) => {
+}> = ({ formation, index, pixelsPerSecond, activeId, shiftHeld }) => {
    const { viewOnly, selectedFormations, setFormations, formations, isMobileView, get } = useStore();
    const transitionResize = useRef();
    const formationResize = useRef();
@@ -194,15 +179,6 @@ export const Formation: React.FC<{
                borderRadius: 8,
                // touchAction: changingFormation ? "none" : "pan-x",
             }}
-            // onTouchMove={(e) => {
-            //    e.preventDefault();
-            //    // if (changingFormation) {
-            //    //    e.preventDefault();
-            //    // } else {
-            //    //    return;
-            //    // }
-            // }}
-
             className="relative  border-2 border-transparent  overflow-hidden group  bg-neutral-100 dark:bg-neutral-800  "
             ref={setNodeRef}
          >

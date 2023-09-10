@@ -13,7 +13,7 @@ import { DndContext, useDroppable, MouseSensor, useSensors, useSensor } from "@d
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-export default function Header({}) {
+export default function Header({ plan }: { plan: string | null }) {
    const pathname = usePathname();
    const router = useRouter();
 
@@ -70,8 +70,8 @@ export default function Header({}) {
                //    });
                // }}
                className="mr-5  text-xs"
-         >
-            Sign Out
+            >
+               Sign Out
             </Link>
          </div>
       </div>

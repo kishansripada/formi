@@ -40,6 +40,44 @@ const getServerSideProps = async (projectId: string) => {
 
       return data?.data || [];
    }
+   async function getStripe(session: Session) {
+      const plan = await fetch(
+         `https://api.stripe.com/v1/customers/search?query=metadata['supabase_id']:'${session.user.id}'&expand[]=data.subscriptions.data`,
+         {
+            headers: {
+               Authorization:
+                  "Basic cmtfbGl2ZV81MUxhajV0SHZDM3c2ZThmY21zVklCRjlKMjRLUWFFYlgwVUs0SHE0b245QTVXMUNIaWlHaHAwVzlrbHg5dDU3OW9WcWVibFJGOHh3cE8xc3FlUmFMOHBzYjAwMmhLNFl0NEU6",
+            },
+         }
+      )
+         .then((r) => r.json())
+         .then((r) => {
+            // customerExists = Boolean(r.data.length);
+
+            let activeProducts = r?.data?.[0]?.subscriptions.data.map((data) => data.items.data.map((obj) => obj.plan.product)).flat();
+            let plan = null;
+            if (activeProducts.includes("prod_MngV5QMEYtDnjr")) {
+               plan = "choreographer";
+            }
+            return plan;
+         });
+      return plan as string | null;
+   }
+
+   async function getMyDances(session: Session) {
+      let data = await supabase
+         .from("dances")
+         .select(
+            `
+                 id,
+                 user,
+                 isInTrash
+                 `
+         )
+         .eq("user", session.user.id);
+      // .eq("isInTrash", false);
+      return data?.data || [];
+   }
 
    // async function getProject(session: Session) {
    //    if (!projectId) return;
@@ -48,12 +86,12 @@ const getServerSideProps = async (projectId: string) => {
    //    return data?.data || [];
    // }
 
-   let [rosters] = await Promise.all([getRosters(session)]);
+   let [rosters, plan, myDances] = await Promise.all([getRosters(session), getStripe(session), getMyDances(session)]);
 
-   return { rosters, session };
+   return { rosters, session, plan, myDances };
 };
 export default async function RootLayout({ children, params }: { children: React.ReactNode; params: { projectId: string } }) {
-   const { rosters, session } = await getServerSideProps(params.projectId);
+   const { rosters, session, plan, myDances } = await getServerSideProps(params.projectId);
    return (
       <div>
          <style>
@@ -70,10 +108,10 @@ export default async function RootLayout({ children, params }: { children: React
                <p className="text-xs text-white">try editing with your friends in real-time by sending them a link to your performance!</p>
             </div> */}
             <div className="flex flex-row font-inter overscroll-none overflow-hidden bg-[#09090b] text-white">
-               <Sidebar session={session} rosters={rosters}></Sidebar>
+               <Sidebar myDances={myDances} plan={plan} session={session} rosters={rosters}></Sidebar>
                {/* {JSON.stringify(project)} */}
                <div className="flex flex-col bg-neutral  h-full  overflow-hidden  w-full justify-start  ">
-                  <Header></Header>
+                  <Header plan={plan}></Header>
                   <div className="px-6 pt-5 w-full h-full overflow-hidden">{children}</div>
                </div>
             </div>
