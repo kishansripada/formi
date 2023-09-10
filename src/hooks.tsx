@@ -120,11 +120,12 @@ export function useIsIOS() {
    const [isIOS, setIsIOS] = useState(false);
 
    useEffect(() => {
-      // Check if the platform is iOS by examining the user agent
       if (typeof window !== "undefined") {
          const userAgent = window.navigator.userAgent;
-         const isiPhoneOriPad = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-         setIsIOS(isiPhoneOriPad);
+         const isTraditionalIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+         // Attempt to detect iPadOS 13 and later
+         const isModerniPad = /Macintosh/.test(userAgent) && "ontouchend" in document;
+         setIsIOS(isTraditionalIOS || isModerniPad);
       }
    }, []);
 
