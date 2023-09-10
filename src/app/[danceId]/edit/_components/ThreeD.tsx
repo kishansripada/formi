@@ -12,10 +12,7 @@ import {
    item,
 } from "../../../../types/types";
 import dynamic from "next/dynamic";
-import { useState, useRef, useMemo, useLayoutEffect, useEffect } from "react";
-import { SpotLight, useDepthBuffer, SpotLightShadow } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
-import { Vector3, Plane } from "three";
+
 import { Canvas } from "@react-three/fiber";
 import { Grid, OrbitControls, Text } from "@react-three/drei";
 
@@ -68,6 +65,7 @@ export const ThreeD: React.FC<{
    // props: prop[];
    // items: item[];
    isIntro: boolean;
+   setScene: any;
    // comments: comment[];
 }> = ({
    player,
@@ -107,6 +105,7 @@ export const ThreeD: React.FC<{
    // props,
    // items,
    isIntro,
+   setScene,
    // comments,
 }) => {
    const {
@@ -201,7 +200,7 @@ export const ThreeD: React.FC<{
             pushChange();
          }}
          gl={{ logarithmicDepthBuffer: true }}
-         camera={{ position: [0, 10, (localSettings.stageFlipped ? -1 : 1) * 40], fov: 40, near: 0.1, far: 1000 }}
+         camera={{ position: [0, 5, (localSettings.stageFlipped ? -1 : 1) * 10], fov: 40, near: 0.1, far: 1000 }}
       >
          {/* {(formations[selectedFormation]?.comments || []).map((comment: comment) => {
             return (
@@ -320,7 +319,7 @@ export const ThreeD: React.FC<{
                   args={[cloudSettings.stageDimensions.width, cloudSettings.stageDimensions.height]}
                   cellSize={1}
                   cellThickness={0.5}
-                  sectionSize={8}
+                  sectionSize={cloudSettings.gridSubdivisions}
                   sectionThickness={1.5}
                   cellColor={`${localSettings.isDarkMode ? "white" : "black"}`}
                   sectionColor={"#737373"}
@@ -447,11 +446,27 @@ export const ThreeD: React.FC<{
          {/* <spotLight intensity={1} position={[10, 10, 10]} color="blue" /> */}
          {/* <spotLight ref={spotLightRef} args={[0xffffff, 1]} position={[0, 5, 10]} angle={0.3} penumbra={1} castShadow /> */}
          {/* {spotLightRef.current && <SpotLightHelper args={[spotLightRef.current]} />} */}
-
+         {/* <mesh position={[-stageDimensions.width / 2, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderBufferGeometry attach="geometry" args={[0.01, 0.01, stageDimensions.height, 10]} />
+            <meshStandardMaterial attach="material" />
+         </mesh>
+         <mesh position={[stageDimensions.width / 2, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <cylinderBufferGeometry attach="geometry" args={[0.01, 0.01, stageDimensions.height, 10]} />
+            <meshStandardMaterial attach="material" />
+         </mesh>
+         <mesh position={[0, 0, stageDimensions.height / 2]} rotation={[Math.PI / 2, 0, Math.PI / 2]}>
+            <cylinderBufferGeometry attach="geometry" args={[0.01, 0.01, stageDimensions.width, 10]} />
+            <meshStandardMaterial attach="material" />
+         </mesh>
+         <mesh position={[0, 0, -stageDimensions.height / 2]} rotation={[Math.PI / 2, 0, Math.PI / 2]}>
+            <cylinderBufferGeometry attach="geometry" args={[0.01, 0.01, stageDimensions.width, 10]} />
+            <meshStandardMaterial attach="material" />
+         </mesh> */}
          {selectedFormation !== null
             ? getFirstSelectedFormation()?.positions.map((dancerPosition: dancerPosition) => {
                  return (
                     <ThreeDancer
+                       setScene={setScene}
                        setSelectedDancers={setSelectedDancers}
                        key={dancerPosition.id}
                        selectedDancers={selectedDancers}
@@ -474,13 +489,13 @@ export const ThreeD: React.FC<{
          <OrbitControls
             enableDamping={false}
             // dampingFactor={0.5}
-            autoRotate={isIntro}
-            autoRotateSpeed={1}
-            enableZoom={!isIntro}
+            autoRotate={false}
+            enableZoom={true}
             makeDefault
             minPolarAngle={0}
             maxPolarAngle={Math.PI / 2}
             enabled={!isThreeDancerDragging}
+
             // minDistance={5} // Prevents the camera from going too close to the point of interest
             // maxDistance={50} //
          />

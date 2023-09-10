@@ -4,7 +4,7 @@ import { dancerPosition, dancer, formation, localSettings, item } from "../../..
 import { Text } from "@react-three/drei";
 import { useSpring, animated } from "@react-spring/three";
 import { useDrag } from "@use-gesture/react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Vector3, Plane } from "three";
 import { ThreeItem } from "./ThreeItem";
 import { useStore } from "../../store";
@@ -26,6 +26,7 @@ export function ThreeDancer({
    isThreeDancerDragging,
    selectedDancers,
    setSelectedDancers,
+   setScene,
 }: // items,
 {
    dancerPosition: dancerPosition;
@@ -45,17 +46,26 @@ export function ThreeDancer({
    isThreeDancerDragging: boolean;
    selectedDancers: string[];
    setSelectedDancers: Function;
+   setScene: Function;
    // items: item[];
 }) {
    const { formations, setFormations, get, viewOnly, items, selectedFormations } = useStore();
+
+   const { scene } = useThree((state) => state);
+
+   const FEET_IN_A_METER = 3.28084;
+   useEffect(() => {
+      scene.scale.set(1 / FEET_IN_A_METER, 1 / FEET_IN_A_METER, 1 / FEET_IN_A_METER);
+      setScene(scene); // Adjust scale as needed
+   }, [scene]);
+
    /**
     * Text always looks at the camera
     */
    if (!selectedFormations.length) return null;
 
    const textRef = useRef();
-   const bgRef = useRef();
-   const [itemDimensions, setItemDimensions] = useState({ width: 0, height: 0 });
+
    // const changeStateDancerDragging = useDancerDragging((state) => state.changeStateDancerDragging);
    useFrame((state, dt) => {
       if (textRef?.current != null) {
@@ -87,14 +97,14 @@ export function ThreeDancer({
                               return {
                                  ...dancerPosition,
                                  position: {
-                                    x: planeIntersectPoint.x,
-                                    y: -planeIntersectPoint.z,
+                                    x: planeIntersectPoint.x * FEET_IN_A_METER,
+                                    y: -planeIntersectPoint.z * FEET_IN_A_METER,
                                  },
 
                                  // THIS NEEDS TO BE FIXED
                                  controlPointEnd: {
-                                    x: planeIntersectPoint.x,
-                                    y: -planeIntersectPoint.z,
+                                    x: planeIntersectPoint.x * FEET_IN_A_METER,
+                                    y: -planeIntersectPoint.z * FEET_IN_A_METER,
                                  },
                               };
                            }
@@ -102,8 +112,8 @@ export function ThreeDancer({
                               return {
                                  ...dancerPosition,
                                  position: {
-                                    x: planeIntersectPoint.x,
-                                    y: -planeIntersectPoint.z,
+                                    x: planeIntersectPoint.x * FEET_IN_A_METER,
+                                    y: -planeIntersectPoint.z * FEET_IN_A_METER,
                                  },
                               };
                            }
@@ -120,9 +130,6 @@ export function ThreeDancer({
          }
          setIsThreeDancerDragging(active);
 
-         // api.start({
-         //    position: [dancerPosition.position.x, dancerPosition.position.y],
-         // });
          return timeStamp;
       },
       { delay: true }

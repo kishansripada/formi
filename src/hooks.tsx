@@ -115,3 +115,18 @@ export const useIsDesktop = () => {
 
    return isDesktop;
 };
+
+export function useIsIOS() {
+   const [isIOS, setIsIOS] = useState(false);
+
+   useEffect(() => {
+      // Check if the platform is iOS by examining the user agent
+      if (typeof window !== "undefined") {
+         const userAgent = window.navigator.userAgent;
+         const isiPhoneOriPad = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+         setIsIOS(isiPhoneOriPad);
+      }
+   }, []);
+
+   return isIOS;
+}

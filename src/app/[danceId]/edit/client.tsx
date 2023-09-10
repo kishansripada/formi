@@ -268,7 +268,7 @@ const Edit = ({
    const [isThreeDancerDragging, setIsThreeDancerDragging] = useState(false);
    const [pdfLoading, setPdfLoading] = useState(false);
    const [assetsOpen, setAssetsOpen] = useState(false);
-
+   const [scene, setScene] = useState(null);
    const [propUploads, setPropUploads] = useState([]);
    // hasVisited ? null : { url: "https://www.youtube.com/shorts/JRS1tPHJKAI" }
    const [helpUrl, setHelpUrl] = useState(null);
@@ -719,6 +719,35 @@ const Edit = ({
       // Then we set the value in the --vh custom property to the root of the document
       document.documentElement.style.setProperty("--vh", `${vh}px`);
    }, []);
+
+   const exportThree = async () => {
+      const { USDZExporter } = await import("three/addons/exporters/USDZExporter.js");
+
+      const exporter = new USDZExporter();
+      const arraybuffer = await exporter.parse(scene);
+      const blob = new Blob([arraybuffer], { type: "model/vnd.usdz+zip" });
+
+      const url = URL.createObjectURL(blob);
+
+      // Create an anchor element and set its href to the blob's URL
+      const a = document.createElement("a");
+      a.rel = "ar";
+      a.href = url;
+      // a.download = "scene.usdz";
+      const img = document.createElement("img");
+      img.src = "path_to_your_image.jpg"; // Set the image source
+      img.alt = "Description of image";
+      a.appendChild(img);
+      // Append the anchor to the body (this is required for Firefox)
+      document.body.appendChild(a);
+
+      // Trigger a click event on the anchor
+      a.click();
+
+      // Clean up: remove the anchor and revoke the blob URL
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+   };
    return (
       <>
          <Toaster></Toaster>
@@ -891,6 +920,7 @@ const Edit = ({
                setShareIsOpen={setShareIsOpen}
                dancers={dancers}
                session={session}
+               exportThree={exportThree}
             />
 
             <MobileSidebar setLocalSettings={setLocalSettings} setHelpUrl={setHelpUrl} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></MobileSidebar>
@@ -1055,6 +1085,7 @@ const Edit = ({
                               ></video> */}
                               {localSettings.viewingThree ? (
                                  <ThreeD
+                                    setScene={setScene}
                                     setIsThreeDancerDragging={setIsThreeDancerDragging}
                                     isThreeDancerDragging={isThreeDancerDragging}
                                     isPlaying={isPlaying}
