@@ -446,7 +446,7 @@ export const ThreeD: React.FC<{
          {/* <spotLight intensity={1} position={[10, 10, 10]} color="blue" /> */}
          {/* <spotLight ref={spotLightRef} args={[0xffffff, 1]} position={[0, 5, 10]} angle={0.3} penumbra={1} castShadow /> */}
          {/* {spotLightRef.current && <SpotLightHelper args={[spotLightRef.current]} />} */}
-         {/* <mesh position={[-stageDimensions.width / 2, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
+         <mesh position={[-stageDimensions.width / 2, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
             <cylinderBufferGeometry attach="geometry" args={[0.01, 0.01, stageDimensions.height, 10]} />
             <meshStandardMaterial attach="material" />
          </mesh>
@@ -461,7 +461,8 @@ export const ThreeD: React.FC<{
          <mesh position={[0, 0, -stageDimensions.height / 2]} rotation={[Math.PI / 2, 0, Math.PI / 2]}>
             <cylinderBufferGeometry attach="geometry" args={[0.01, 0.01, stageDimensions.width, 10]} />
             <meshStandardMaterial attach="material" />
-         </mesh> */}
+         </mesh>
+
          {selectedFormation !== null
             ? getFirstSelectedFormation()?.positions.map((dancerPosition: dancerPosition) => {
                  return (
