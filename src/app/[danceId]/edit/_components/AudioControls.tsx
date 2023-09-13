@@ -331,6 +331,7 @@ export const AudioControls: React.FC<{
             <div className="flex flex-row items-center w-[45%] md:hidden">
                <button
                   onClick={() => {
+                     if (viewOnly) return;
                      pauseHistory();
                      if (!selectedFormations.length) return;
 
