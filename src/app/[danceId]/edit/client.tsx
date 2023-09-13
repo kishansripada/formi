@@ -507,9 +507,7 @@ const Edit = ({
       //   if (router.isReady) {
       setSaved(false);
       if (!dancers.length) {
-         try {
             throw new Error("no dancers");
-         } catch {}
          return;
       }
       uploadDancers(dancers);
@@ -583,9 +581,7 @@ const Edit = ({
       //   if (router.isReady) {
       setSaved(false);
       if (!formations.length) {
-         try {
             throw new Error("no formations");
-         } catch {}
          return;
       }
       uploadFormations(formations);
