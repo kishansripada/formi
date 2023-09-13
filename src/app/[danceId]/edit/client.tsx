@@ -476,14 +476,10 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      // if (!session && danceId !== "207") {
-      //    router.push("/login");
-      // }
-      if (viewOnly) return;
-      //   if (router.isReady) {
+      if (viewOnlyInitial) return;
+
       setSaved(false);
       uploadSettings(cloudSettings);
-      //   }
    }, [cloudSettings]);
 
    ////////////////////////////////////////
@@ -500,18 +496,14 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      // if (!session && danceId !== "207") {
-      //    router.push("/login");
-      // }
-      if (viewOnly) return;
-      //   if (router.isReady) {
+      if (viewOnlyInitial) return;
+
       setSaved(false);
       if (!dancers.length) {
             throw new Error("no dancers");
          return;
       }
       uploadDancers(dancers);
-      //   }
    }, [dancers]);
 
    let uploadSoundCloudId = useCallback(
@@ -530,7 +522,7 @@ const Edit = ({
       // if (!session && danceId !== "207") {
       //    router.push("/login");
       // }
-      if (viewOnly) return;
+      if (viewOnlyInitial) return;
       //   if (router.isReady) {
       setSaved(false);
       uploadSoundCloudId(soundCloudTrackId);
@@ -553,7 +545,7 @@ const Edit = ({
       // if (!session && danceId !== "207") {
       //    router.push("/login");
       // }
-      if (viewOnly) return;
+      if (viewOnlyInitial) return;
       //   if (router.isReady) {
       setSaved(false);
       uploadName(danceName);
@@ -577,9 +569,10 @@ const Edit = ({
       // if (!session && danceId !== "207") {
       //    router.push("/login");
       // }
-      if (viewOnly) return;
+      if (viewOnlyInitial) return;
       //   if (router.isReady) {
       setSaved(false);
+      // console.log({ formations: formations });
       if (!formations.length) {
             throw new Error("no formations");
          return;
@@ -604,7 +597,7 @@ const Edit = ({
       // if (!session && danceId !== "207") {
       //    router.push("/login");
       // }
-      if (viewOnly) return;
+      if (viewOnlyInitial) return;
       //   if (router.isReady) {
       setSaved(false);
       uploadProps(props);
@@ -627,7 +620,7 @@ const Edit = ({
       // if (!session && danceId !== "207") {
       //    router.push("/login");
       // }
-      if (viewOnly) return;
+      if (viewOnlyInitial) return;
       //   if (router.isReady) {
       setSaved(false);
       uploadItems(items);
@@ -650,7 +643,7 @@ const Edit = ({
       // if (!session && danceId !== "207") {
       //    router.push("/login");
       // }
-      if (viewOnly) return;
+      if (viewOnlyInitial) return;
       //   if (router.isReady) {
       setSaved(false);
       uploadSegments(segments);
