@@ -16,10 +16,15 @@ const Client = () => {
       if (!email) return;
       const { data, error } = await supabase.auth.verifyOtp({ email, token: code, type: "email" });
       if (error) return;
-      const result = await supabase.auth.setSession({
-         access_token: data.session?.access_token,
-         refresh_token: data.session?.refresh_token,
-      });
+      try {
+         const result = await supabase.auth.setSession({
+            access_token: data.session?.access_token,
+            refresh_token: data.session?.refresh_token,
+         });
+      } catch {
+         router.push("/logout");
+      }
+
       router.push("/dashboard");
       console.log(result.data, result.error);
    };
