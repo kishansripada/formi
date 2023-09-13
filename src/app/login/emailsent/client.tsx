@@ -26,7 +26,7 @@ const Client = () => {
       }
 
       router.push("/dashboard");
-      console.log(result.data, result.error);
+      // console.log(result.data, result.error);
    };
 
    return (
