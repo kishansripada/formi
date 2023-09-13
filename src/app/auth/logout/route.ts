@@ -5,13 +5,19 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-   const requestUrl = new URL(request.url);
-   console.log(requestUrl);
-   const supabase = createRouteHandlerClient({ cookies });
+   try {
+      cookies().delete("sb-dxtxbxkkvoslcrsxbfai-auth-token");
 
-   await supabase.auth.signOut();
+      const requestUrl = new URL(request.url);
+      // console.log(requestUrl);
+      const supabase = createRouteHandlerClient({ cookies });
 
-   return NextResponse.redirect(`${requestUrl.origin}/login`, {
-      status: 301,
-   });
+      await supabase.auth.signOut();
+
+      return NextResponse.redirect(`${requestUrl.origin}/login`, {
+         status: 301,
+      });
+   } catch {
+      // res.cookies.delete("my-auth-token-name");
+   }
 }
