@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { cloudSettings, localSettings, PIXELS_PER_SQUARE } from "../../../../types/types";
 import { useStore } from "../store";
 
@@ -56,7 +57,7 @@ export const OldGridLines: React.FC<{
                const differenceFromCenter = Math.round(Math.abs(myXOffset - centerPos));
 
                return (
-                  <>
+                  <Fragment key={i}>
                      <line
                         key={i}
                         x1={myXOffset}
@@ -88,7 +89,7 @@ export const OldGridLines: React.FC<{
                            {differenceFromCenter}
                         </text>
                      ) : null}
-                  </>
+                  </Fragment>
                );
             })}
          </svg>
