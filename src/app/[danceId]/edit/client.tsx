@@ -164,9 +164,6 @@ const Edit = ({
       setDancers(initialData.dancers);
       setFormations(initialData.formations);
       setViewOnly(viewOnlyInitial);
-      // setViewOnly(true);
-      // setViewOnly(false);
-      setDanceName(initialData.name);
       setProps(initialData.props);
       setItems(initialData.items);
       setCloudSettings({
@@ -180,9 +177,9 @@ const Edit = ({
       setNameOrEmail(session?.user.user_metadata.full_name || session?.user.email || "");
       setSoundCloudTrackId(initialData.soundCloudId);
       setSelectedFormations([initialData.formations[0].id]);
-      // setIsMobileView(isMobileViewInitial);
+      setDanceName(initialData.name);
+
       function is_touch_enabled() {
-         // return true;
          return !window.matchMedia("(pointer:fine)").matches;
          // return "ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator?.msMaxTouchPoints > 0;
       }
@@ -196,7 +193,7 @@ const Edit = ({
 
    const enterRoom = useStore((state) => state.liveblocks.enterRoom);
    const leaveRoom = useStore((state) => state.liveblocks.leaveRoom);
-   // const isLoading = useStore((state) => state.liveblocks.isStorageLoading);
+
    const undo = useStore((state) => state.liveblocks.room?.history.undo);
    // const redo = useStore((state) => state.liveblocks.room?.history.redo);
    useEffect(() => {
@@ -207,7 +204,7 @@ const Edit = ({
    }, [enterRoom, leaveRoom]);
 
    const supabase = createClientComponentClient<Database>();
-   const router = useRouter();
+
    const videoPlayer = useRef();
 
    const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
@@ -476,7 +473,7 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      if (viewOnlyInitial) return;
+      if (viewOnlyInitial || danceName === "initialName") return;
 
       setSaved(false);
       uploadSettings(cloudSettings);
@@ -496,19 +493,16 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      if (viewOnlyInitial) return;
+      if (viewOnlyInitial || danceName === "initialName") return;
 
       setSaved(false);
-      if (!dancers.length) {
-            throw new Error("no dancers");
-         return;
-      }
+
       uploadDancers(dancers);
    }, [dancers]);
 
    let uploadSoundCloudId = useCallback(
       debounce(async (soundCloudTrackId) => {
-         console.log("uploading formations");
+         console.log("uploading soundcloudId");
          const { data, error } = await supabase.from("dances").update({ soundCloudId: soundCloudTrackId, last_edited: new Date() }).eq("id", danceId);
 
          console.log({ data });
@@ -519,14 +513,9 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      // if (!session && danceId !== "207") {
-      //    router.push("/login");
-      // }
-      if (viewOnlyInitial) return;
-      //   if (router.isReady) {
+      if (viewOnlyInitial || danceName === "initialName") return;
       setSaved(false);
       uploadSoundCloudId(soundCloudTrackId);
-      //   }
    }, [soundCloudTrackId]);
    // //////////////////////////
 
@@ -542,16 +531,11 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      // if (!session && danceId !== "207") {
-      //    router.push("/login");
-      // }
-      if (viewOnlyInitial) return;
-      //   if (router.isReady) {
+      if (viewOnlyInitial || danceName === "initialName") return;
       setSaved(false);
       uploadName(danceName);
-      //   }
    }, [danceName]);
-   // console.log(formations);
+
    // // ///////////
    let uploadFormations = useCallback(
       debounce(async (formations) => {
@@ -566,20 +550,10 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      // if (!session && danceId !== "207") {
-      //    router.push("/login");
-      // }
-      if (viewOnlyInitial) return;
-      //   if (router.isReady) {
+      if (viewOnlyInitial || danceName === "initialName") return;
       setSaved(false);
-      // console.log({ formations: formations });
-      if (!formations.length) {
-            throw new Error("no formations");
-         return;
-      }
-      //
+
       uploadFormations(formations);
-      //   }
    }, [formations]);
 
    let uploadProps = useCallback(
@@ -595,14 +569,9 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      // if (!session && danceId !== "207") {
-      //    router.push("/login");
-      // }
-      if (viewOnlyInitial) return;
-      //   if (router.isReady) {
+      if (viewOnlyInitial || danceName === "initialName") return;
       setSaved(false);
       uploadProps(props);
-      //   }
    }, [props]);
 
    let uploadItems = useCallback(
@@ -618,14 +587,9 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      // if (!session && danceId !== "207") {
-      //    router.push("/login");
-      // }
-      if (viewOnlyInitial) return;
-      //   if (router.isReady) {
+      if (viewOnlyInitial || danceName === "initialName") return;
       setSaved(false);
       uploadItems(items);
-      //   }
    }, [items]);
 
    let uploadSegments = useCallback(
@@ -641,14 +605,9 @@ const Edit = ({
    );
 
    useDidMountEffect(() => {
-      // if (!session && danceId !== "207") {
-      //    router.push("/login");
-      // }
-      if (viewOnlyInitial) return;
-      //   if (router.isReady) {
+      if (viewOnlyInitial || danceName === "initialName") return;
       setSaved(false);
       uploadSegments(segments);
-      //   }
    }, [segments]);
 
    //////////////////////
