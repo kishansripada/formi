@@ -61,7 +61,7 @@ export const ObjectControls: React.FC<{
 }) => {
    const { formations, setFormations, viewOnly, items, selectedFormations, getFirstSelectedFormation, get, isMobileView } = useStore();
 
-   if (!selectedFormations.length) return null;
+   // if (!selectedFormations.length) return null;
    const setLinear = () => {
       if (viewOnly) return;
       setFormations(
