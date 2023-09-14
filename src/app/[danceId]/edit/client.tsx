@@ -780,7 +780,7 @@ const Edit = ({
 
          {pdfLoading ? (
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] bg-black/80 text-white border border-neutral-600  rounded-xl h-[100px] bg-white z-50 grid place-items-center">
-               <p className="text-center">Loading, pdf. This may take a sec. lol</p>
+               <p className="text-center">Loading PDF. This may take a while.</p>
             </div>
          ) : null}
 
