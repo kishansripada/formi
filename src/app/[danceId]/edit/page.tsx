@@ -4,9 +4,11 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Edit from "./client";
 import { Database } from "../../../types/supabase";
+import Link from "next/link";
 export const metadata: Metadata = {
    title: "Edit Performance",
 };
+
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 const getServerSideProps = async (danceId: string) => {
@@ -27,7 +29,7 @@ const getServerSideProps = async (danceId: string) => {
          supabaseUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co",
       }
    );
-
+   let noAccess = false;
    // Check if we have a session
    const {
       data: { session },
@@ -39,8 +41,9 @@ const getServerSideProps = async (danceId: string) => {
    ]);
 
    if (!dance?.formations && session) {
-      redirect("/noaccess");
+      noAccess = true;
    }
+
    if (!dance?.formations && !session) {
       redirect("/login");
    }
@@ -82,6 +85,7 @@ const getServerSideProps = async (danceId: string) => {
       session,
       permissions,
       hasSeenCollab,
+      noAccess,
       // isMobileView: Boolean(isMobileView),
 
       // },
@@ -91,18 +95,28 @@ const getServerSideProps = async (danceId: string) => {
 export default async function Page({ params }: { params: { danceId: string } }) {
    const data = await getServerSideProps(params.danceId);
 
-   // return <>{JSON.stringify(data)}</>;
-   // console.log(data);
    return (
-      <Edit
-         params={params}
-         session={data.session}
-         initialData={data.initialData}
-         permissions={data.permissions}
-         viewOnly={data.viewOnly}
-         pricingTier={data.pricingTier}
-         hasSeenCollab={data.hasSeenCollab}
-         // isMobileView={data.isMobileView}
-      />
+      <>
+         {data.noAccess ? (
+            <div className="flex flex-col items-center justify-center h-screen">
+               <div className="flex flex-col items-center">
+                  <p>You don't have permission to view this performance</p>
+                  <Link href="/dashboard">
+                     <button className="bg-pink-600 text-white p-2 rounded-md mt-2">Go to Dashboard</button>
+                  </Link>
+               </div>
+            </div>
+         ) : (
+            <Edit
+               params={params}
+               session={data.session}
+               initialData={data.initialData}
+               permissions={data.permissions}
+               viewOnly={data.viewOnly}
+               pricingTier={data.pricingTier}
+               hasSeenCollab={data.hasSeenCollab}
+            />
+         )}
+      </>
    );
 }
