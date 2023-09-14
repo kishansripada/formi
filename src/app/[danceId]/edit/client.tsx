@@ -577,6 +577,7 @@ const Edit = ({
             throw new Error("no formations");
          return;
       }
+      //
       uploadFormations(formations);
       //   }
    }, [formations]);
