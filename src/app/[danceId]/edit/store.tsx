@@ -206,7 +206,7 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             return get().formations.findIndex((formation) => formation.id === selectedFormationId);
          },
 
-         danceName: "",
+         danceName: "initialName",
          setDanceName: (danceName: string) => {
             // if (get().viewOnly) return;
             set({ danceName });
