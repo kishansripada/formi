@@ -664,7 +664,7 @@ export const Canvas: React.FC<{
             }
 
             const dragType = event?.target?.dataset?.type;
-
+            if (viewOnly) return;
             if (dragType === "controlPointStart" || dragType === "controlPointEnd") {
                setFormations(
                   get().formations.map((formation) => {
