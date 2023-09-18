@@ -21,7 +21,7 @@ export function ThreeItem({ itemPos, thisItem }: { itemPos: any; thisItem: any }
          {thisItem && (
             <animated.mesh position={itemPos.position}>
                <mesh rotation={[0, 0, 0]}>
-                  <planeBufferGeometry attach="geometry" args={[itemDimensions.width, itemDimensions.height]} />
+                  <planeGeometry attach="geometry" args={[itemDimensions.width, itemDimensions.height]} />
                   <meshStandardMaterial opacity={0.8} transparent={true} attach="material" map={texture} />
                </mesh>
             </animated.mesh>

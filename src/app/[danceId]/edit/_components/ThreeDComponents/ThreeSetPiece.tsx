@@ -60,7 +60,7 @@ export function ThreeSetPiece({
 
    return (
       <mesh position={[myPosition.x, 0, -myPosition.y]} rotation={[Math.PI * 1.5, 0, 0]}>
-         <planeBufferGeometry attach="geometry" args={[dimensions.width, dimensions.height]} />
+         <planeGeometry attach="geometry" args={[dimensions.width, dimensions.height]} />
          <meshStandardMaterial opacity={0.7} transparent={true} attach="material" map={texture} />
       </mesh>
    );
