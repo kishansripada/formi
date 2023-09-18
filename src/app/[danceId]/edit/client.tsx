@@ -35,17 +35,18 @@ import { Assets } from "./_components/Modals/Assets";
 // could be dynamic imports
 import { Prop } from "./_components/Prop";
 import { Comment } from "./_components/Comment";
-// import * as jsonpatch from "fast-json-patch";
+
 import { HelpUrl } from "./_components/Modals/HelpUrl";
 import { ObjectControls } from "./_components/ObjectControls";
 import { Database } from "../../../types/supabase";
-import Loading from "../../loading";
+
 import { StageSettings } from "./_components/SidebarComponents/StageSettings";
 import { Segments } from "./_components/SidebarComponents/Segments";
-import { create } from "zustand";
+
 import { useStore } from "./store";
 import { MobileSidebar } from "./_components/MobileSidebar";
 import * as Sentry from "@sentry/browser";
+import { cubic, linear } from "./animationFunctions";
 
 const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => (
@@ -273,16 +274,61 @@ const Edit = ({
 
    const [resizingPropId, setResizingPropId] = useState(null);
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
+
+   const dancerPositions = (() => {
+      if (!isPlaying && selectedFormations.length === 0) {
+         return [];
+      }
+      if (!isPlaying && selectedFormations.length) return getFirstSelectedFormation()?.positions || [];
+
+      if (currentFormationIndex === null) return [];
+      if (!percentThroughTransition) {
+         return formations[currentFormationIndex]?.positions || [];
+      }
+
+      // worst case animate
+      const previousFormationPositions = formations[currentFormationIndex - 1]?.positions || [];
+      const thisFormationPositions = formations[currentFormationIndex]?.positions || [];
+      const animatedPositions = [];
+
+      for (let i = 0; i < thisFormationPositions.length; i++) {
+         const previousDancer = previousFormationPositions[i];
+         const thisDancer = thisFormationPositions[i];
+         if (!previousDancer || !thisDancer) continue;
+         let animatedPosition;
+         //   console.log(thisDancer);
+         if (thisDancer.transitionType === "cubic" && thisDancer.controlPointStart && thisDancer.controlPointEnd) {
+            animatedPosition = cubic(
+               previousDancer.position,
+               thisDancer.position,
+               percentThroughTransition,
+               thisDancer.controlPointStart,
+               thisDancer.controlPointEnd
+            );
+         } else if (thisDancer.transitionType === "teleport") {
+            animatedPosition = linear(previousDancer.position, thisDancer.position, percentThroughTransition);
+         } else {
+            animatedPosition = linear(previousDancer.position, thisDancer.position, percentThroughTransition);
+         }
+         animatedPositions.push({ ...thisDancer, position: animatedPosition });
+      }
+
+      return animatedPositions;
+   })();
+
    const [videoPosition, setVideoPosition] = useState<"top-left" | "top-right" | "bottom-left" | "bottom-right">("top-right");
 
-   const coordsToPosition = (coords: { x: number; y: number }) => {
+   const coordsToPosition = useCallback(
+      (coords: { x: number; y: number }) => {
       if (!coords) return null;
       let { x, y } = coords;
       return {
          left: (PIXELS_PER_SQUARE * cloudSettings.stageDimensions.width) / 2 + PIXELS_PER_SQUARE * x,
          top: (PIXELS_PER_SQUARE * cloudSettings.stageDimensions.height) / 2 + PIXELS_PER_SQUARE * -y,
       };
-   };
+      },
+      [cloudSettings.stageDimensions]
+   );
 
    useEffect(() => {
       if (!session) return;
@@ -1118,28 +1164,23 @@ const Edit = ({
                                        <></>
                                     )}
 
-                                    {dancers.map((dancer, index) => (
+                                    {dancerPositions.map((position, index) => {
+                                       return (
                                        <DancerAlias
-                                          roundPositions={roundPositions}
-                                          zoom={zoom}
-                                          setZoom={setZoom}
+                                             item={items.find((item) => item.id === position?.itemId) || null}
+                                             key={position.id}
+                                             isPlaying={isPlaying}
+                                             position={position.position}
+                                             color={position.color}
+                                             index={dancers.findIndex((dancer) => dancer.id === position.id)}
                                           coordsToPosition={coordsToPosition}
-                                          selectedDancers={selectedDancers}
-                                          isPlaying={isPlaying}
-                                          position={position}
-                                          key={dancer.id}
-                                          dancer={dancer}
-                                          formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                             amSelected={selectedDancers.includes(position.id)}
+                                             dancer={dancers.find((dancer) => dancer.id === position.id)}
                                           draggingDancerId={draggingDancerId}
-                                          currentFormationIndex={currentFormationIndex}
-                                          percentThroughTransition={percentThroughTransition}
                                           localSettings={localSettings}
-                                          index={index}
-                                          isPlaying={isPlaying}
-                                          collisions={collisions}
-                                          isChangingCollisionRadius={isChangingCollisionRadius}
                                        />
-                                    ))}
+                                       );
+                                    })}
 
                                     {selectedFormation !== null
                                        ? props.map((prop: prop) => {

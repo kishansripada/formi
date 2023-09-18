@@ -204,49 +204,6 @@ export const Canvas: React.FC<{
 
       const movementX = e.movementX * horizontalScalar;
       const movementY = e.movementY * verticalScalar;
-      const target = e.currentTarget;
-      const stage = target.querySelector("#stage-cutout");
-      // const stage = target;
-      // Get the bounding rectangle of target
-      const rect = stage.getBoundingClientRect();
-
-      const { x, y } = positionToCoords({ left: (e.clientX - rect.left) / zoom, top: (e.clientY - rect.top) / zoom });
-      // console.log(x, y);
-      if (changingControlId) {
-         if (viewOnly) return;
-
-         setFormations(
-            get().formations.map((formation, index: number) => {
-               if (selectedFormations.includes(formation.id)) {
-                  return {
-                     ...formation,
-                     positions: formation.positions.map((dancerPosition) => {
-                        if (selectedDancers.includes(dancerPosition.id) && changingControlType === "start" && dancerPosition.controlPointStart) {
-                           return {
-                              ...dancerPosition,
-                              controlPointStart: {
-                                 x: roundToHundredth(dancerPosition.controlPointStart.x + movementX),
-                                 y: roundToHundredth(dancerPosition.controlPointStart.y - movementY),
-                              },
-                           };
-                        }
-                        if (selectedDancers.includes(dancerPosition.id) && changingControlType === "end" && dancerPosition.controlPointEnd) {
-                           return {
-                              ...dancerPosition,
-                              controlPointEnd: {
-                                 x: roundToHundredth(dancerPosition.controlPointEnd.x + movementX),
-                                 y: roundToHundredth(dancerPosition.controlPointEnd.y - movementY),
-                              },
-                           };
-                        }
-                        return dancerPosition;
-                     }),
-                  };
-               }
-               return formation;
-            })
-         );
-      }
 
       if (e.target.dataset.type === "dancer" && !dragBoxCoords.start.x) {
          setIsDragging(true);
@@ -288,77 +245,6 @@ export const Canvas: React.FC<{
                      );
                   })
                   .map((dancerPosition: dancerPosition) => dancerPosition.id)
-            );
-         }
-      }
-
-      if (draggingDancerId) {
-         if (viewOnly) return;
-         if (isMobileView) return;
-         if (selectedFormations.length === 1) {
-            setFormations(
-               get().formations.map((formation) => {
-                  if (selectedFormations.includes(formation.id)) {
-                     return {
-                        ...formation,
-                        positions: formation.positions.map((dancerPosition) => {
-                           // Check if the dancerPosition is selected
-                           if (selectedDancers.includes(dancerPosition.id)) {
-                              // Update the position regardless of the transitionType
-                              let updatedPosition = {
-                                 x: dancerPosition.position.x + movementX,
-                                 y: dancerPosition.position.y - movementY,
-                              };
-
-                              // If it's a cubic transition and has control points, update controlPointEnd
-                              let updatedControlPointEnd;
-                              if (dancerPosition.transitionType === "cubic" && dancerPosition.controlPointEnd && dancerPosition.controlPointStart) {
-                                 updatedControlPointEnd = {
-                                    x: roundToHundredth(dancerPosition.controlPointEnd.x + movementX),
-                                    y: roundToHundredth(dancerPosition.controlPointEnd.y - movementY),
-                                 };
-                              }
-
-                              // Return the updated dancerPosition
-                              return {
-                                 ...dancerPosition,
-                                 position: updatedPosition,
-                                 ...(updatedControlPointEnd ? { controlPointEnd: updatedControlPointEnd } : {}),
-                              };
-                           }
-
-                           return dancerPosition;
-                        }),
-                     };
-                  }
-
-                  return formation;
-               })
-            );
-         } else {
-            setMovedOnMultipleFormations(true);
-            setFormations(
-               get().formations.map((formation) => {
-                  if (selectedFormations.includes(formation.id)) {
-                     return {
-                        ...formation,
-                        positions: formation.positions.map((dancerPosition) => {
-                           // Check if the dancerPosition is selected
-                           if (selectedDancers.includes(dancerPosition.id)) {
-                              // Return the updated dancerPosition
-                              return {
-                                 ...dancerPosition,
-                                 position: { x, y },
-                              };
-                           }
-
-                           return dancerPosition;
-                        }),
-                     };
-                  }
-
-                  return formation;
-               })
             );
          }
       }
@@ -437,6 +323,13 @@ export const Canvas: React.FC<{
                   })
                );
             } else {
+               const target = e.currentTarget;
+               const stage = target.querySelector("#stage-cutout");
+               // const stage = target;
+               // Get the bounding rectangle of target
+               const rect = stage.getBoundingClientRect();
+
+               const { x, y } = positionToCoords({ left: (e.clientX - rect.left) / zoom, top: (e.clientY - rect.top) / zoom });
                setFormations(
                   get().formations.map((formation) => {
                      if (selectedFormations.includes(formation.id)) {
@@ -737,55 +630,6 @@ export const Canvas: React.FC<{
       if (e.target.dataset.type === "dancer" && !shiftHeld && !isDragging) {
          setSelectedDancers([e.target.id]);
       }
-      // if a dancer was dragged (moved), then update round the formations to the nearest whole (persists to database)
-      if (isDragging) {
-         let gridSizeX = 1;
-         let gridSizeY = 1;
-         let verticalOffset = 0;
-         let horizontalOffset = 0;
-         if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
-            // Determine the total number of divisions along each axis.
-            const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
-            const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
-
-            // Calculate the width and height of each grid cell.
-            gridSizeX = stageDimensions.width / totalVerticalDivisions / gridSnap;
-            gridSizeY = stageDimensions.height / totalHorizontalDivisions / gridSnap;
-            let isOddVerticalDivisions = (gridSubdivisions * verticalFineDivisions) % 2 !== 0;
-            let isOddHorizontalDivisions = (horizontalGridSubdivisions * horizontalFineDivisions) % 2 !== 0;
-
-            verticalOffset = isOddVerticalDivisions ? gridSizeX / 2 : 0;
-            horizontalOffset = isOddHorizontalDivisions ? gridSizeY / 2 : 0;
-            if (gridSnap % 2 === 0) {
-               verticalOffset = 0;
-               horizontalOffset = 0;
-            }
-         } else {
-            gridSizeX = 1 / gridSnap;
-            gridSizeY = 1 / gridSnap;
-         }
-
-         // console.log(gridSizeX);
-         setFormations(
-            formations.map((formation) => {
-               // Use the grid cell dimensions to round the dancer positions to the nearest grid position.
-               return {
-                  ...formation,
-                  positions: formation.positions.map((position) => {
-                     return {
-                        ...position,
-                        position: {
-                           x: roundToHundredth(Math.round((position.position.x - verticalOffset) / gridSizeX) * gridSizeX + verticalOffset),
-                           y: roundToHundredth(Math.round((position.position.y - horizontalOffset) / gridSizeY) * gridSizeY + horizontalOffset),
-                        },
-                     };
-                  }),
-               };
-            })
-         );
-
-         // pushChange();
-      }
 
       setDraggingDancerId(null);
       setIsDragging(false);
@@ -793,39 +637,6 @@ export const Canvas: React.FC<{
    };
 
    const [scrollOffset, setScrollOffset] = useState({ x: 0, y: 0 });
-   const ZOOM_BASE = 1.6; // Adjust the base to fit your preferred zooming speed.
-
-   // useEffect(() => {
-   //    const handleWheel = (event) => {
-   //       if (
-   //          !event
-   //             .composedPath()
-   //             .map((elem) => elem.id)
-   //             .includes("stage")
-   //       )
-   //          return;
-   //       if (event.ctrlKey) {
-   //          // event.preventDefault();
-   //          // setZoom((oldZoom) => {
-   //          //    const logZoom = Math.log(oldZoom) / Math.log(ZOOM_BASE);
-   //          //    const newZoom = Math.pow(ZOOM_BASE, logZoom - event.deltaY * 0.01);
-   //          //    return Math.min(Math.max(0.1, newZoom), 4);
-   //          // });
-   //       } else {
-   //          event.preventDefault();
-   //          // setScrollOffset((scrollOffset) => ({
-   //          //    x: scrollOffset.x - event.deltaX / zoom / 1.5,
-   //          //    y: scrollOffset.y - event.deltaY / zoom / 1.5,
-   //          // }));
-   //       }
-   //    };
-
-   //    document.addEventListener("wheel", handleWheel, { passive: false });
-
-   //    return () => {
-   //       document.removeEventListener("wheel", handleWheel);
-   //    };
-   // }, [zoom]);
 
    const useGesture = createUseGesture([dragAction, pinchAction, wheelAction]);
    useEffect(() => {
@@ -842,143 +653,205 @@ export const Canvas: React.FC<{
 
    useGesture(
       {
-         onDrag: (state) => {
-            if (state.touches > 1) return;
-            if (state.target.id) return;
-            // let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
-            // let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
+         onDrag: ({ delta: [movementX, movementY], cancel, touches, event, target, pinching }) => {
+            if (pinching) cancel();
 
-            // // console.log(maxTopOffset);
-            // // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
-            // // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
-            // // setZoom(1)
-            // const maxZoom = Math.min(heightPercentage, widthPercentage);
-            // // if (maxZoom === zoom) return;
+            if (!target.id && touches === 1 && isMobileView) {
+               setScrollOffset((scrollOffset) => ({
+                  x: scrollOffset.x + movementX / zoom,
+                  y: scrollOffset.y + movementY / zoom,
+               }));
+            }
 
-            // // console.log(state.delta);
+            const dragType = event?.target?.dataset?.type;
 
-            setScrollOffset((scrollOffset) => ({
-               x: scrollOffset.x + state.delta[0] / zoom,
-               y: scrollOffset.y + state.delta[1] / zoom,
-            }));
+            if (dragType === "controlPointStart" || dragType === "controlPointEnd") {
+               setFormations(
+                  get().formations.map((formation) => {
+                     if (get().selectedFormations.includes(formation.id)) {
+                        return {
+                           ...formation,
+                           positions: formation.positions.map((dancerPosition) => {
+                              if (
+                                 get().selectedDancers.includes(dancerPosition.id) &&
+                                 dancerPosition?.controlPointStart?.x &&
+                                 dancerPosition?.controlPointEnd?.y
+                              ) {
+                                 return {
+                                    ...dancerPosition,
+                                    [dragType]: {
+                                       x: roundToHundredth(dancerPosition[dragType].x + movementX * horizontalScalar),
+                                       y: roundToHundredth(dancerPosition[dragType].y - movementY * verticalScalar),
+                                    },
+                                 };
+                              }
+
+                              return dancerPosition;
+                           }),
+                        };
+                     }
+                     return formation;
+                  })
+               );
+            }
+
+            if (dragType === "dancer") {
+               if (selectedFormations.length === 1) {
+                  setFormations(
+                     get().formations.map((formation) => {
+                        if (get().selectedFormations.includes(formation.id)) {
+                           return {
+                              ...formation,
+                              positions: formation.positions.map((position) => {
+                                 if (get().selectedDancers.includes(position.id)) {
+                                    return {
+                                       ...position,
+                                       position: {
+                                          x: position.position.x + movementX * horizontalScalar,
+                                          y: position.position.y - movementY * verticalScalar,
+                                       },
+                                       // if transition type is cubic, also move the controlPointEnd with the dancer
+                                       ...(position.transitionType === "cubic" && {
+                                          controlPointEnd: {
+                                             x: position.controlPointEnd.x + movementX * horizontalScalar,
+                                             y: position.controlPointEnd.y - movementY * verticalScalar,
+                                          },
+                                       }),
+                                    };
+                                 }
+                                 return position;
+                              }),
+                           };
+                        }
+                        return formation;
+                     })
+                  );
+               } else {
+                  const target = event.currentTarget;
+                  if (!target) cancel();
+                  const stage = target?.querySelector("#stage-cutout");
+                  // const stage = target;
+                  // Get the bounding rectangle of target
+                  const rect = stage.getBoundingClientRect();
+
+                  const { x, y } = positionToCoords({ left: (event.clientX - rect.left) / zoom, top: (event.clientY - rect.top) / zoom });
+                  setMovedOnMultipleFormations(true);
+                  setFormations(
+                     get().formations.map((formation) => {
+                        if (selectedFormations.includes(formation.id)) {
+                           return {
+                              ...formation,
+                              positions: formation.positions.map((dancerPosition) => {
+                                 if (selectedDancers.includes(dancerPosition.id)) {
+                                    return {
+                                       ...dancerPosition,
+                                       position: { x, y },
+                                    };
+                                 }
+
+                                 return dancerPosition;
+                              }),
+                           };
+                        }
+
+                        return formation;
+                     })
+                  );
+               }
+            }
          },
          onPinch: ({ offset: [d] }) => {
             setZoom(d);
-            // setZoom((zoom) => zoom + delta[0] / 20);
          },
-         onWheel: (state) => {
-            if (state.pinching) return;
-            const newY = scrollOffset.y - state.delta[1] / zoom / 1.5;
+         onWheel: ({ pinching, delta }) => {
+            if (pinching) return;
+            const newY = scrollOffset.y - delta[1] / zoom / 1.5;
             setScrollOffset((scrollOffset) => ({
-               x: scrollOffset.x - state.delta[0] / zoom / 1.5,
+               x: scrollOffset.x - delta[0] / zoom / 1.5,
                y: newY,
             }));
          },
+         onDragEnd: () => {
+            roundPositions();
+         },
       },
+
       {
          eventOptions: { passive: false },
          target: container.current,
-         drag: { enabled: isMobileView },
-         wheel: { preventDefault: true },
+         // drag: { enabled: isMobileView },
+         wheel: { preventDefault: true, enabled: !isMobileView },
          pinch: {
             from: () => [zoom, zoom],
+            // scaleBounds: { min: 0.5, max: 2 },
+            // rubberband: true,
          },
-         //   pinch: { scaleBounds: { min: 0.5, max: 2 }, rubberband: true },
       }
    );
+
    // useGesture(
    //    {
-   //       onPinch: ({ offset: [d] }) => {
-   //          console.log(d);
-   //          // let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
-   //          // let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
-
-   //          // // console.log(maxTopOffset);
-   //          // // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
-   //          // // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
-   //          // // setZoom(1)
-   //          // const maxZoom = Math.min(heightPercentage, widthPercentage);
-   //          // // let zoom = state.memo[0] * state.movement[0];
-
-   //          // if (newZoom < maxZoom) {
-   //          //    setScrollOffset({ x: 0, y: 0 });
-   //          // }
-   //          // if (isMobileView) {
-   //          //    // setZoom((zoom: number) => (newZoom < maxZoom ? maxZoom : newZoom));
-   //          // } else {
-
-   //          // }
-   //          setZoom(d / 5);
-
-   //          // console.log("pinching");
-   //          // setZoom(zoom);
-   //       },
-   //       // onDrag: (state) => {
-   //       //    if (state.touches > 1) return;
-   //       //    if (state.target.id) return;
-   //       //    let heightPercentage = (container.current.clientHeight - 10) / stage.current.clientHeight;
-   //       //    let widthPercentage = (container.current.clientWidth - 10) / stage.current.clientWidth;
-
-   //       //    // console.log(maxTopOffset);
-   //       //    // let heightPercentage = container.current.clientHeight / stage.current.clientHeight;
-   //       //    // let widthPercentage = container.current.clientWidth / stage.current.clientWidth;
-   //       //    // setZoom(1)
-   //       //    const maxZoom = Math.min(heightPercentage, widthPercentage);
-   //       //    // if (maxZoom === zoom) return;
-
-   //       //    // // console.log(state.delta);
-
-   //       //    setScrollOffset((scrollOffset) => ({
-   //       //       x: scrollOffset.x + state.delta[0] / zoom,
-   //       //       y: scrollOffset.y + state.delta[1] / zoom,
-   //       //    }));
-   //       // },
-   //       // onWheel: (state) => {
-   //       //    // console.log(state.delta);
-
-   //       //    // console.log(maxTopOffset);
-   //       //    state.event.preventDefault();
-   //       //    const newY = scrollOffset.y - state.delta[1] / zoom / 1.5;
-   //       //    setScrollOffset((scrollOffset) => ({
-   //       //       x: scrollOffset.x - state.delta[0] / zoom / 1.5,
-   //       //       y: newY,
-   //       //    }));
+   //       // onDrag: ({ delta: [movementX, movementY], cancel, touches, event }) => {
    //       // },
    //    },
    //    {
    //       eventOptions: { passive: false },
    //       target: container.current,
-   //       // pinch: {preventDefault: true},
-   //       pinch: { pointer: { touch: true }, preventDefault: true },
-
-   //       // wheel: { enabled: !isMobileView },
-   //       // drag: { enabled: isMobileView },
+   //       enabled: !viewOnly && Boolean(selectedFormations.length),
    //    }
-   //    // config
    // );
 
-   // useEffect(() => {
-   //    const div = container.current;
-   //    if (div) {
-   //       const x = (div.scrollWidth - div.offsetWidth) / 2;
-   //       const y = (div.scrollHeight - div.offsetHeight) / 2;
-   //       div.scrollTo(x, y);
-   //    }
-   // }, [stageDimensions]);
+   const roundPositions = () => {
+      const { stageBackground, gridSubdivisions, horizontalGridSubdivisions, verticalFineDivisions, horizontalFineDivisions, stageDimensions } =
+         cloudSettings;
+      const { gridSnap } = localSettings;
+      let gridSizeX = 1;
+      let gridSizeY = 1;
+      let verticalOffset = 0;
+      let horizontalOffset = 0;
+      if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
+         // Determine the total number of divisions along each axis.
+         const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
+         const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
 
+         // Calculate the width and height of each grid cell.
+         gridSizeX = stageDimensions.width / totalVerticalDivisions / gridSnap;
+         gridSizeY = stageDimensions.height / totalHorizontalDivisions / gridSnap;
+         let isOddVerticalDivisions = (gridSubdivisions * verticalFineDivisions) % 2 !== 0;
+         let isOddHorizontalDivisions = (horizontalGridSubdivisions * horizontalFineDivisions) % 2 !== 0;
+
+         verticalOffset = isOddVerticalDivisions ? gridSizeX / 2 : 0;
+         horizontalOffset = isOddHorizontalDivisions ? gridSizeY / 2 : 0;
+         if (gridSnap % 2 === 0) {
+            verticalOffset = 0;
+            horizontalOffset = 0;
+         }
+      } else {
+         gridSizeX = 1 / gridSnap;
+         gridSizeY = 1 / gridSnap;
+      }
+
+      // console.log(gridSizeX);
+      setFormations(
+         formations.map((formation) => {
+            // Use the grid cell dimensions to round the dancer positions to the nearest grid position.
+            return {
+               ...formation,
+               positions: formation.positions.map((position) => {
+                  return {
+                     ...position,
+                     position: {
+                        x: roundToHundredth(Math.round((position.position.x - verticalOffset) / gridSizeX) * gridSizeX + verticalOffset),
+                        y: roundToHundredth(Math.round((position.position.y - horizontalOffset) / gridSizeY) * gridSizeY + horizontalOffset),
+                     },
+                  };
+               }),
+            };
+         })
+      );
+   };
    return (
       <>
-         {/* <style>
-            {`
-#stage::-webkit-scrollbar:vertical {
-   width: 11px;
-}
-
-#stage::-webkit-scrollbar:horizontal {
-   height: 11px;
-}
-`}
-         </style> */}
          {confirmChange ? (
             <div
                className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
@@ -1025,7 +898,7 @@ export const Canvas: React.FC<{
                touchAction: "none",
             }}
             onPointerUp={pointerUp}
-            onTouchEnd={pointerUp}
+            // onTouchEnd={pointerUp}
             onPointerMove={handleDragMove}
 
             // style={{
