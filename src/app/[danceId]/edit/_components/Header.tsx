@@ -311,7 +311,7 @@ export const Header: React.FC<{
                   target={"_blank"}
                   className="text-xs mr-6  whitespace-nowrap ml-3  hidden lg:block border-pink-600 border p-2 rounded-md"
                >
-                  Contact Us
+                  Beta feedback
                </a>
 
                {/* {!viewOnlyInitial ? (
