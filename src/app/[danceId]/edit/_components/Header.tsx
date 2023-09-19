@@ -89,7 +89,7 @@ export const Header: React.FC<{
       <>
          <div className=" min-h-[50px] dark:bg-black bg-neutral-100  flex flex-row items-center w-full text-neutral-800 border-b  dark:text-white  dark:border-neutral-700 border-neutral-300 ">
             <div className="flex flex-row items-center justify-start w-2/5 h-full">
-               <div className="w-20 min-w-[80px] border-r border-neutral-300 h-full dark:border-neutral-700 grid place-items-center">
+               <div className="w-20 min-w-[80px] border-r border-neutral-300 h-full dark:border-neutral-700 grid place-items-center relative">
                   <button
                      onClick={async () => {
                         if (!session) {
@@ -135,6 +135,7 @@ export const Header: React.FC<{
                         <circle cx="248.301" cy="259.94" r="77.594" />
                      </svg>
                   </button>
+                  <p className="text-[10px] text-neutral-300 font-medium absolute right-[6px] bottom-1">Beta</p>
                </div>
 
                <button
