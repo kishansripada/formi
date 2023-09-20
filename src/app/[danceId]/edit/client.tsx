@@ -587,6 +587,7 @@ const Edit = ({
       debounce(async (formations) => {
          console.log("uploading formations");
          const { data, error } = await supabase.from("dances").update({ formations: formations, last_edited: new Date() }).eq("id", danceId);
+         const { data: danceData, error: danceError } = await supabase.from("activity").upsert({ day: new Date() }).single();
          console.log({ data });
          console.log({ error });
 
