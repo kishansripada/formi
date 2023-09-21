@@ -1179,6 +1179,7 @@ const Edit = ({
                                              dancer={dancers.find((dancer) => dancer.id === position.id)}
                                           draggingDancerId={draggingDancerId}
                                           localSettings={localSettings}
+                                             zoom={zoom}
                                        />
                                        );
                                     })}

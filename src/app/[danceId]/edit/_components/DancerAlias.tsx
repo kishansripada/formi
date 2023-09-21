@@ -25,7 +25,8 @@ export const DancerAlias: React.FC<{
    isPlaying: boolean;
    color?: string | null;
    item?: item;
-}> = memo(({ dancer, position, coordsToPosition, draggingDancerId, localSettings, index, color, amSelected, isPlaying, item }) => {
+   zoom: number;
+}> = memo(({ dancer, position, coordsToPosition, draggingDancerId, localSettings, index, color, amSelected, isPlaying, item, zoom }) => {
    let { getFirstSelectedFormation, isMobileView, viewOnly } = useStore();
 
    const others = useStore((state) => state.liveblocks.others);
@@ -227,10 +228,15 @@ export const DancerAlias: React.FC<{
          {dancerStyle !== "initials" ? (
             <p
                style={{
-                  bottom: item?.side === "bottom" ? null : -24,
-                  top: item?.side === "bottom" ? -24 : null,
+                  bottom: item?.side === "bottom" ? null : 0,
+                  top: item?.side === "bottom" ? 0 : null,
+                  // bottom: 0,
+                  opacity: zoom < 0.2 ? 0 : 1,
+                  // transform: `scale(${(1 / zoom) * 0.8}) translate(0%, 100%)`,
+                  transform: `scale(${(1 / zoom) * 0.7}) translate(0%, ${100 * (item?.side === "bottom" ? -1 : 1) * zoom * (1 / 0.7)}%)`,
+                  transformOrigin: `${item?.side === "bottom" ? "bottom" : "top"} center`,
                }}
-               className="absolute  text-center select-none pointer-events-none dark:text-white  rounded-full px-1"
+               className="absolute  text-center select-none pointer-events-none dark:text-white   rounded-full px-1"
             >
                {dancer.name.split(" ")[0]}
             </p>
