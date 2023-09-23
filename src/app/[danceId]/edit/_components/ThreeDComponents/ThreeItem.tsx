@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { animated } from "@react-spring/three";
 import { TextureLoader, DoubleSide, Vector3, Plane } from "three";
 import { useLoader } from "@react-three/fiber";
+import { useStore } from "../../store";
 export function ThreeItem({ itemPos, thisItem }: { itemPos: any; thisItem: any }) {
+   const { imageBlobs } = useStore();
    const [itemDimensions, setItemDimensions] = useState({ width: 0, height: 0 });
    // const outerMaterial = new MeshStandardMaterial({ color: 0x00ff00 });
-   const url = `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${thisItem?.url}`;
+   const url = imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${thisItem?.url}`];
    const texture = useLoader(TextureLoader, url);
 
    // const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
