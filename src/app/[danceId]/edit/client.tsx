@@ -143,6 +143,8 @@ const Edit = ({
       setPosition,
       setIsMobileView,
       isMobileView,
+      setImageBlobs,
+      imageBlobs,
    } = useStore();
 
    // console.log(liveblocks);
@@ -271,6 +273,31 @@ const Edit = ({
    const [propUploads, setPropUploads] = useState([]);
    // hasVisited ? null : { url: "https://www.youtube.com/shorts/JRS1tPHJKAI" }
    const [helpUrl, setHelpUrl] = useState(null);
+   useEffect(() => {
+      const allImages = items.map((item) => `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`);
+
+      const fetchImage = async (url) => {
+         const response = await fetch(url);
+         const blob = await response.blob();
+         const objectURL = URL.createObjectURL(blob);
+         return [url, objectURL];
+      };
+
+      const fetchImages = async () => {
+         const newImageMap = {};
+
+         const promises = allImages.map((url) => fetchImage(url));
+         const results = await Promise.all(promises);
+
+         for (const [url, objectURL] of results) {
+            newImageMap[url] = objectURL;
+         }
+
+         setImageBlobs(newImageMap);
+      };
+
+      fetchImages();
+   }, [items]);
 
    const [resizingPropId, setResizingPropId] = useState(null);
    let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);

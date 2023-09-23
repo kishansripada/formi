@@ -15,6 +15,9 @@ interface Store {
    setSegments: (segments: segment[]) => void;
    updateSegmentProperty: (id: string, propertyKey: keyof segment, value: any) => void;
 
+   imageBlobs: any;
+   setImageBlobs: (imageBlobs: any) => void;
+
    // dancer
    dancers: dancer[];
    setDancers: (dancers: dancer[]) => void;
@@ -136,6 +139,12 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             // if (get().viewOnly) return;
             set({ items });
          },
+
+            imageBlobs: {},
+            setImageBlobs: (imageBlobs: any) => {
+               // if (get().viewOnly) return;
+               set({ imageBlobs });
+            },
 
          cloudSettings: {
             stageDimensions: { width: 40, height: 32 },

@@ -27,7 +27,7 @@ export const DancerAlias: React.FC<{
    item?: item;
    zoom: number;
 }> = memo(({ dancer, position, coordsToPosition, draggingDancerId, localSettings, index, color, amSelected, isPlaying, item, zoom }) => {
-   let { getFirstSelectedFormation, isMobileView, viewOnly } = useStore();
+   let { getFirstSelectedFormation, isMobileView, viewOnly, imageBlobs } = useStore();
 
    const others = useStore((state) => state.liveblocks.others);
 
@@ -113,7 +113,7 @@ export const DancerAlias: React.FC<{
                            : `translateY(${-PIXELS_PER_SQUARE / 2}px)`,
                   }}
                   className="w-full h-full"
-                  src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`}
+                  src={imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`]}
                   alt=""
                />
             </div>
