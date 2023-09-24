@@ -78,6 +78,7 @@ export const Header: React.FC<{
    } = useStore();
    const isIOS = useIsIOS();
    const supabase = createClientComponentClient();
+
    const [templatesIsOpen, setTemplatesIsOpen] = useState(false);
    const others = useStore((state) => state.liveblocks.others);
    // const otherInitials = others.map((other) => initials(other.presence.nameOrEmail));
@@ -436,12 +437,14 @@ export const Header: React.FC<{
                      </svg>
                   </button>
                ) : null}
-               <div className="md:px-3 px-1 ">
-                  <div className={`${styles.status} hidden lg:block`} data-status={status}>
-                     <div className={styles.statusCircle} />
-                     <div className={`${styles.statusText} hidden lg:block`}>{status}</div>
+               {status ? (
+                  <div className="md:px-3 px-1 ">
+                     <div className={`${styles.status} hidden lg:block`} data-status={status}>
+                        <div className={styles.statusCircle} />
+                        <div className={`${styles.statusText} hidden lg:block`}>{status}</div>
+                     </div>
                   </div>
-               </div>
+               ) : null}
                <div className="lg:flex hidden">
                   {" "}
                   {others.length
