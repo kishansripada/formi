@@ -20,7 +20,7 @@ const getServerSideProps = async () => {
    } = await supabase.auth.getSession();
 
    if (error) {
-      redirect("/login");
+      redirect("/auth/logout");
    }
    if (session) {
       redirect("/dashboard");
