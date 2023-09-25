@@ -1180,13 +1180,13 @@ const Edit = ({
                                     percentThroughTransition={percentThroughTransition}
                                     dancers={dancers}
                                  >
-                                    {selectedFormations.length === 1 && !isPlaying ? (
+                                    {selectedFormations.length === 1 && getFirstSelectedFormation().id !== formations[0].id && !isPlaying ? (
                                        <PathEditor
                                           zoom={zoom}
                                           collisions={collisions}
                                           dancers={dancers}
                                           currentFormationIndex={currentFormationIndex}
-                                          formations={localSettings.stageFlipped ? flippedFormations : formations}
+                                          // formations={localSettings.stageFlipped ? flippedFormations : formations}
                                           selectedDancers={selectedDancers}
                                           localSettings={localSettings}
                                           coordsToPosition={coordsToPosition}

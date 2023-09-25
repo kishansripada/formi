@@ -11,7 +11,7 @@ export const PathEditor: React.FC<{
 }> = ({ selectedDancers, coordsToPosition, dancers, localSettings, collisions, zoom }) => {
    let { formations, getFirstSelectedFormation, getPreviousFormation } = useStore();
 
-   let { previousFormationView, stageFlipped } = localSettings;
+   const { previousFormationView, stageFlipped } = localSettings;
 
    if (stageFlipped) {
       formations = formations.map((formation: formation) => {
@@ -37,7 +37,8 @@ export const PathEditor: React.FC<{
 
    return (
       <svg className="absolute pointer-events-none w-full h-full z-40 overflow-visible" xmlns="http://www.w3.org/2000/svg">
-         {getFirstSelectedFormation()
+         {formations
+            .find((formation) => formation.id === getFirstSelectedFormation().id)
             ?.positions.filter((position) => {
                if (previousFormationView === "ghostDancersAndPaths") {
                   return true;
@@ -56,7 +57,9 @@ export const PathEditor: React.FC<{
                // global start and end coords
                let endCoords = coordsToPosition(dancerPosition.position);
                let startCoords = coordsToPosition(
-                  getPreviousFormation()?.positions?.find((dancerPosition2) => dancerPosition2.id === dancerPosition.id)?.position
+                  formations
+                     .find((formation) => formation.id === getPreviousFormation().id)
+                     ?.positions?.find((dancerPosition2) => dancerPosition2.id === dancerPosition.id)?.position
                );
                if (!endCoords || !startCoords) return;
 
