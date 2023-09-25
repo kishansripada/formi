@@ -210,6 +210,7 @@ const Edit = ({
 
    const videoPlayer = useRef();
 
+   const fullscreenContainer = useRef();
    const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
    const [permissions, setPermissions] = useState(initialPermissions);
    // const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
@@ -926,6 +927,7 @@ const Edit = ({
             </style>
 
             <Header
+               fullscreenContainer={fullscreenContainer}
                danceId={danceId}
                folder={initialData?.project_id}
                exportPdf={exportPdf}
@@ -1089,6 +1091,7 @@ const Edit = ({
                               style={{
                                  flexDirection: localSettings.videoPlacement === "above" ? "column" : "row",
                               }}
+                              ref={fullscreenContainer}
                               className="flex  h-full overflow-hidden  w-full items-center justify-center"
                            >
                               <Video

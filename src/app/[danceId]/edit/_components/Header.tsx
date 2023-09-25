@@ -39,6 +39,7 @@ export const Header: React.FC<{
    danceId: string;
    session: AuthSession | null;
    exportThree: Function;
+   fullscreenContainer: any;
 }> = ({
    saved,
 
@@ -66,6 +67,7 @@ export const Header: React.FC<{
    danceId,
    session,
    exportThree,
+   fullscreenContainer,
 }) => {
    const router = useRouter();
    const {
@@ -243,21 +245,30 @@ export const Header: React.FC<{
 
                <div
                   onClick={() => {
+                     fullscreenContainer.current.requestFullscreen();
                      setLocalSettings((localSettings: localSettings) => {
-                        return { ...localSettings, fullScreen: !localSettings.fullScreen };
+                        return { ...localSettings, fullScreen: false };
                      });
                   }}
                   className=" min-w-[48px] lg:grid place-items-center h-full hidden   cursor-pointer "
                >
-                  {localSettings.fullScreen ? (
+                  {/* {localSettings.fullScreen ? (
                      <svg className="w-6 h-6 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                         <path d="m122 976-42-42 298-298H180v-60h300v300h-60V678L122 976Zm358-400V276h60v198l298-298 42 42-298 298h198v60H480Z" />
                      </svg>
-                  ) : (
-                     <svg className="w-6 h-6 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                        <path d="M120 936V636h60v198l558-558H540v-60h300v300h-60V318L222 876h198v60H120Z" />
-                     </svg>
-                  )}
+                  ) : ( */}
+                  {/* <svg className="w-6 h-6 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                     <path d="M120 936V636h60v198l558-558H540v-60h300v300h-60V318L222 876h198v60H120Z" />
+                  </svg> */}
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                     <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"
+                     />
+                  </svg>
+
+                  {/* )} */}
                </div>
 
                {!viewOnlyInitial && !isMobileView ? (
