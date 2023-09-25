@@ -38,7 +38,7 @@ export const PathEditor: React.FC<{
    return (
       <svg className="absolute pointer-events-none w-full h-full z-40 overflow-visible" xmlns="http://www.w3.org/2000/svg">
          {formations
-            .find((formation) => formation.id === getFirstSelectedFormation().id)
+            .find((formation) => formation.id === getFirstSelectedFormation()?.id)
             ?.positions.filter((position) => {
                if (previousFormationView === "ghostDancersAndPaths") {
                   return true;
