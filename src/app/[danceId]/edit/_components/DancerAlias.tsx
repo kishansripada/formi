@@ -27,14 +27,13 @@ export const DancerAlias: React.FC<{
    item?: item;
    zoom: number;
 }> = memo(({ dancer, position, coordsToPosition, draggingDancerId, localSettings, index, color, amSelected, isPlaying, item, zoom }) => {
-   let { getFirstSelectedFormation, isMobileView, viewOnly, imageBlobs } = useStore();
+   const { getFirstSelectedFormation, isMobileView, imageBlobs } = useStore();
 
    const others = useStore((state) => state.liveblocks.others);
-
    const othersOnThisFormation = others.filter((other) => other.presence?.selectedFormations?.includes(getFirstSelectedFormation()?.id));
    const othersOnThisDancer = othersOnThisFormation.filter((other) => other.presence.selectedDancers.includes(dancer.id));
 
-   let { dancerStyle } = localSettings;
+   const { dancerStyle, stageFlipped } = localSettings;
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])
@@ -42,11 +41,8 @@ export const DancerAlias: React.FC<{
       .join("")
       .toUpperCase();
 
-   // useEffect(() => {
-   //    console.log("render" + dancer.name);
-   // });
-
-   let { left, top } = coordsToPosition(position);
+   position = { x: position.x * (stageFlipped ? -1 : 1), y: position.y * (stageFlipped ? -1 : 1) };
+   const { left, top } = coordsToPosition(position);
 
    const HUMAN_WIDTH_FEET = 1.5;
    return (
