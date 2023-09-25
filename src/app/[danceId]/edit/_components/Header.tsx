@@ -12,6 +12,8 @@ import { useStore } from "../store";
 import styles from "./Status.module.css";
 import { AuthSession } from "@supabase/supabase-js";
 import { useIsIOS } from "../../../../hooks";
+import { revalidatePath } from "next/cache";
+
 export const Header: React.FC<{
    saved: boolean;
 
@@ -93,30 +95,32 @@ export const Header: React.FC<{
          <div className=" min-h-[50px] dark:bg-black bg-neutral-100  flex flex-row items-center w-full text-neutral-800 border-b  dark:text-white  dark:border-neutral-700 border-neutral-300 ">
             <div className="flex flex-row items-center justify-start w-2/5 h-full">
                <div className="w-20 min-w-[80px] border-r border-neutral-300 h-full dark:border-neutral-700 grid place-items-center relative">
-                  <button
-                     onClick={async () => {
-                        if (!session) {
-                           router.push("/login");
-                           return;
-                        }
-                        if (viewOnly && session) {
-                           router.push("/dashboard");
-                           return;
-                        }
-                        if (!saved) {
-                           let updateDancers = supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", danceId);
+                  <a
+                     // onClick={async () => {
+                     //    // revalidatePath("/dashboard");
+                     //    if (!session) {
+                     //       router.push("/login");
+                     //       return;
+                     //    }
+                     //    if (viewOnly && session) {
+                     //       router.push("/dashboard");
+                     //       return;
+                     //    }
+                     //    if (!saved) {
+                     //       let updateDancers = supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", danceId);
 
-                           let updateFormations = supabase
-                              .from("dances")
-                              .update({ formations: formations, last_edited: new Date() })
-                              .eq("id", danceId);
-                           Promise.all([updateDancers, updateFormations]).then((results) => {
-                              router.push(`/dashboard`);
-                           });
-                        } else {
-                           router.push(`/dashboard`);
-                        }
-                     }}
+                     //       let updateFormations = supabase
+                     //          .from("dances")
+                     //          .update({ formations: formations, last_edited: new Date() })
+                     //          .eq("id", danceId);
+                     //       Promise.all([updateDancers, updateFormations]).then((results) => {
+                     //          router.push(`/dashboard`);
+                     //       });
+                     //    } else {
+                     //       router.push(`/dashboard`);
+                     //    }
+                     // }}
+                     href="/dashboard"
                      className=""
                   >
                      {/* <svg
@@ -137,7 +141,7 @@ export const Header: React.FC<{
                         <path d="M114 130V0l272.355-.0000119C386.355 71.797 328.152 130 256.355 130H114Z" />
                         <circle cx="248.301" cy="259.94" r="77.594" />
                      </svg>
-                  </button>
+                  </a>
                   <p className="text-[10px] text-neutral-300 font-medium absolute right-[6px] bottom-1">Beta</p>
                </div>
 
@@ -237,8 +241,19 @@ export const Header: React.FC<{
                   } group md:grid hidden h-full  text-sm   font-bold  place-items-center min-w-[48px] `}
                >
                   <div className="flex flex-row items-center justify-center ">
-                     <svg className="w-6 h-6 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                        <path d="M480 976q-140 0-248-86T93 667h61q30 111 120.5 180T480 916q98 0 180.5-50.5T788 728H657v-61h223v229h-59V787q-57 88-147 138.5T480 976Zm1-299q-42 0-72-30t-30-72q0-42 30-72t72-30q42 0 72 30t30 72q0 42-30 72t-72 30ZM80 484V256h60v107q57-88 146.5-137.5T480 176q140 0 248.5 85.5T868 484h-61q-30-111-121-180t-206-69q-97 0-179 51T173 423h131v61H80Z" />
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                     >
+                        <path
+                           strokeLinecap="round"
+                           strokeLinejoin="round"
+                           d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                        />
                      </svg>
                   </div>
                </button>
