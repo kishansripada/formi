@@ -51,7 +51,8 @@ export const DancerAlias: React.FC<{
    // items,
    roundPositions,
 }) => {
-   let { formations, items, cloudSettings, selectedFormations, getFirstSelectedFormation, setFormations, get, isMobileView, viewOnly } = useStore();
+   let { formations, items, cloudSettings, selectedFormations, getFirstSelectedFormation, setFormations, get, isMobileView, viewOnly, imageBlobs } =
+      useStore();
    const container = useRef<HTMLDivElement>();
    const stageFlippedFactor = localSettings.stageFlipped ? -1 : 1;
    const horizontalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
@@ -188,7 +189,7 @@ export const DancerAlias: React.FC<{
                               : `translateY(${-PIXELS_PER_SQUARE / 2}px)`,
                      }}
                      className="w-full h-full"
-                     src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${thisItem?.url}`}
+                     src={imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${thisItem?.url}`]}
                      alt=""
                   />
                </div>
