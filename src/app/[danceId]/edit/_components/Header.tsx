@@ -142,7 +142,7 @@ export const Header: React.FC<{
                         <circle cx="248.301" cy="259.94" r="77.594" />
                      </svg>
                   </a>
-                  <p className="text-[10px] text-neutral-300 font-medium absolute right-[6px] bottom-1">Beta</p>
+                  <p className="text-[10px] dark:text-neutral-300 text-neutral-700 font-medium absolute right-[6px] bottom-1">Beta</p>
                </div>
 
                <button
