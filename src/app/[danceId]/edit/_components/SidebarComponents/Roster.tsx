@@ -280,7 +280,7 @@ export const Roster: React.FC<{
                         <div className="flex flex-col ">
                            <p className=" text-neutral-800 dark:text-white  text-sm mb-2 mt-2 font-medium">Shape</p>
 
-                           <div className="w-full flex flex-row items-center child:mr-2">
+                           <div className="w-full flex flex-row items-center gap-2">
                               <button
                                  onClick={() => {
                                     setDancerShape("circle");
