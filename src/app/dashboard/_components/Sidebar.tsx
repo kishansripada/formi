@@ -12,12 +12,19 @@ import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { NewFolderModel } from "./NewFolderModel";
+import { useStore } from "../store";
 export const Sidebar: React.FC<{
    rosters: any;
    session: AuthSession;
    plan: string | null;
    myDances: any;
 }> = ({ rosters, session, plan, myDances }) => {
+   const { setPlan, setNumberOfDances } = useStore();
+   useEffect(() => {
+      setPlan(plan);
+      setNumberOfDances(myDances.length);
+   }, []);
+
    const MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN = 3;
    const supabase = createClientComponentClient();
    const pathname = usePathname();
@@ -27,6 +34,11 @@ export const Sidebar: React.FC<{
 
    const [newFolderName, setNewFolderName] = useState("");
    async function createNewDance(roster?: any) {
+      if (!plan && myDances.length >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {
+         router.push("/upgrade");
+         return;
+      }
+
       if (session === null) {
          router.push(`/login`);
          return;

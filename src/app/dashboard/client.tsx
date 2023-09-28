@@ -5,7 +5,10 @@ import { PerformancePreview } from "./_components/PerformancePreview";
 import { v4 as uuidv4 } from "uuid";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
-export default function Client({ myDances, sharedWithMe, session, plan }) {
+import { useStore } from "./store";
+export default function Client({ myDances, sharedWithMe, session }) {
+   const MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN = 3;
+   const { plan } = useStore();
    const supabase = createClientComponentClient();
    const router = useRouter();
    const videos = [
@@ -15,6 +18,10 @@ export default function Client({ myDances, sharedWithMe, session, plan }) {
       { url: "rhGn486vJJc", title: "What's a set piece?" },
    ];
    async function createNewDance(roster?: any) {
+      if (!plan && myDances.length >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {
+         router.push("/upgrade");
+         return;
+      }
       if (session === null) {
          router.push(`/login`);
          return;

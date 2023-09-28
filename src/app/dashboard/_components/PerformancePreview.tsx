@@ -8,7 +8,11 @@ import { useRouter } from "next/navigation";
 import { useDraggable } from "@dnd-kit/core";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Dance, Database } from "../../../types/supabase";
+import { useStore } from "../store";
 export const PerformancePreview = ({ dance }: { dance: Dance }) => {
+   const MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN = 3;
+   const { plan, numberOfDances } = useStore();
+
    const { attributes, listeners, setNodeRef, transform } = useDraggable({
       id: dance.id,
    });
@@ -29,6 +33,10 @@ export const PerformancePreview = ({ dance }: { dance: Dance }) => {
    };
 
    const duplicateDance = async (danceId: number) => {
+      if (!plan && numberOfDances >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {
+         router.push("/upgrade");
+         return;
+      }
       let dance = await supabase
          .from("dances")
          .select("*")
@@ -53,6 +61,10 @@ export const PerformancePreview = ({ dance }: { dance: Dance }) => {
    };
 
    const duplicateRoster = async (dance: Dance) => {
+      if (!plan && numberOfDances >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {
+         router.push("/upgrade");
+         return;
+      }
       // console.log(dance);
       const sessionId = (await supabase.auth.getUser()).data.user?.id;
       if (!sessionId) {
