@@ -18,7 +18,7 @@ export const Sidebar: React.FC<{
    plan: string | null;
    myDances: any;
 }> = ({ rosters, session, plan, myDances }) => {
-   const MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN = 5;
+   const MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN = 3;
    const supabase = createClientComponentClient();
    const pathname = usePathname();
    const router = useRouter();
@@ -160,10 +160,10 @@ export const Sidebar: React.FC<{
             </button>
             <button
                onClick={() => {
-                  // if (!plan && myDances.length >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {
-                  //    router.push("/upgrade");
-                  //    return;
-                  // }
+                  if (!plan && myDances.length >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {
+                     router.push("/upgrade");
+                     return;
+                  }
 
                   createNewDance();
                }}
