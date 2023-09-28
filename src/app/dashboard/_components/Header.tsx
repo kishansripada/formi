@@ -36,9 +36,9 @@ export default function Header({ plan }: { plan: string | null }) {
 
          <div>
             {plan ? (
-               <Link href={"/upgrade/customerportal"} className="mr-5 text-xs">
+               <a href={"/upgrade/customerportal"} className="mr-5 text-xs">
                   Manage Subscription
-               </Link>
+               </a>
             ) : null}
             {!plan ? (
                <Link href={"/upgrade"} className="mr-5 text-pink-300 text-sm font-semibold">

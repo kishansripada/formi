@@ -113,7 +113,7 @@ const Client = () => {
                               );
                            })}
                         </div>
-                        <Link
+                        <a
                            href={"/upgrade/checkout/price_1Nv8jbHvC3w6e8fcE6maAFjv"}
                            //    onClick={() => {
                            //       if (!session) {
@@ -122,11 +122,11 @@ const Client = () => {
                            //       }
                            //       router.push("/api/checkout?price=price_1MvAZ0HvC3w6e8fc2IPfCFJS");
                            //    }}
-                           prefetch={true}
+                           // prefetch={true}
                            className="w-full mt-auto bg-pink-500 py-2 text-sm  text-center rounded-md"
                         >
                            Get started
-                        </Link>
+                        </a>
                      </div>
                      <div className=" border border-neutral-800 rounded-xl w-1/3 mx-3 py-5 px-6  flex flex-col  ">
                         <div className="flex flex-row justify-between items-center">

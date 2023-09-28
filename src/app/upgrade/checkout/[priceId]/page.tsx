@@ -45,11 +45,12 @@ const getServerSideProps = async (priceId: string) => {
             Authorization:
                "Basic cmtfbGl2ZV81MUxhajV0SHZDM3c2ZThmY21zVklCRjlKMjRLUWFFYlgwVUs0SHE0b245QTVXMUNIaWlHaHAwVzlrbHg5dDU3OW9WcWVibFJGOHh3cE8xc3FlUmFMOHBzYjAwMmhLNFl0NEU6",
          },
+         cache: "no-store",
       }
    ).then((r) => r.json());
 
    let customerId = customer?.data?.[0]?.id || null;
-
+   // console.log({ customerId });
    //    if customer doesn't exist in stripe, create it using its supabase id
    if (!customerId) {
       // create customer
@@ -77,24 +78,6 @@ const getServerSideProps = async (priceId: string) => {
    }).then((r) => r.json());
    // console.log(checkoutSession);
    redirect(checkoutSession.url);
-
-   //    if (!dance?.formations && session) {
-   //       redirect("/noaccess");
-   //    }
-   //    if (!dance?.formations && !session) {
-   //       redirect("/login");
-   //    }
-
-   //    return {
-   //       // props: {
-   //       initialData: dance,
-   //       viewOnly,
-   //       pricingTier: "legacy",
-   //       session,
-   //       permissions,
-   //       hasVisited,
-   //       // },
-   //    };
 };
 
 export default async function Page({ params }: { params: { priceId: string } }) {

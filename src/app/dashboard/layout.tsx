@@ -37,7 +37,7 @@ const getServerSideProps = async (projectId: string) => {
 
    const EXEMPT_EMAILS = [
       // MINE
-      "kishansripada@formistudio.app",
+      // "kishansripada@formistudio.app",
 
       // KIRSTEN
       "kirsten.e.collison@gmail.com",
