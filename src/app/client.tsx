@@ -8,13 +8,14 @@ const Client = () => {
    return (
       <>
          <div className="overflow-hidden  bg-neutral-50 flex flex-col items-center ">
-            <div className="h-12 w-full border-b border-neutral-800 bg-black text-neutral-300 flex flex-row items-center justify-center">
-               Follow{" "}
+            <div className="h-12 w-full border-b border-neutral-800 bg-black text-neutral-300 flex flex-row items-center justify-center text-sm">
+               {/* Follow{" "}
                <a href="https://www.tiktok.com/@formi.dance/" target="_blank" className="text-pink-300 mx-2 ">
                   {" "}
                   @formi.dance{" "}
                </a>{" "}
-               on TikTok <span className="text-xs text-neutral-500 ml-2 hidden lg:block">and discover what's new on our platform</span>
+               on TikTok <span className="text-xs text-neutral-500 ml-2 hidden lg:block">and discover what's new on our platform</span> */}
+               Version 3 has launched! 🚀🔥 Powered by our all new rendering engine
             </div>
             <div className="bg-black  py-5   w-full px-24 gap-5    hidden lg:flex flex-row items-center">
                <div className="h-full p-1 ">
