@@ -1,11 +1,13 @@
-// "use client";
+"use client";
 import Link from "next/link";
 import Image from "next/image";
-import { Footer } from "../components/NonAppComponents/Footer";
+import { Footer } from "./NonAppComponents/Footer";
+import { motion } from "framer-motion";
+
 const Client = () => {
    return (
       <>
-         <div className="overflow-hidden relative bg-neutral-50 flex flex-col items-center ">
+         <div className="overflow-hidden  bg-neutral-50 flex flex-col items-center ">
             <div className="h-12 w-full border-b border-neutral-800 bg-black text-neutral-300 flex flex-row items-center justify-center">
                Follow{" "}
                <a href="https://www.tiktok.com/@formi.dance/" target="_blank" className="text-pink-300 mx-2 ">
@@ -14,31 +16,39 @@ const Client = () => {
                </a>{" "}
                on TikTok <span className="text-xs text-neutral-500 ml-2 hidden lg:block">and discover what's new on our platform</span>
             </div>
-            <div className="bg-black  py-5   w-full px-24    hidden lg:flex flex-row items-center">
-               {/* <img src="/logobg.png" className="h-full" alt="" /> */}
-               {/* <p className="text-white ml-4 font-bold">FORMI</p> */}
-               <div className="h-full p-1 ml-3">
+            <div className="bg-black  py-5   w-full px-24 gap-5    hidden lg:flex flex-row items-center">
+               <div className="h-full p-1 ">
                   <img className="h-12" src="/logo.png" alt="" />
                </div>
-               {/* <Link href={"/upgrade"} className="px-6 text-neutral-300 hover:text-white ml-auto">
-               Pricing
-            </Link> */}
+               <div className="flex flex-row items-center gap-6 ml-6 text-sm">
+                  <Link className="text-white" href={"#features"}>
+                     Features
+                  </Link>
+                  <Link className="text-white" href={"/upgrade"}>
+                     Pricing
+                  </Link>
+               </div>
 
                <Link
                   href={"/207/edit"}
-                  className="bg-neutral-700/50 h-full rounded-full py-2 px-6 hover:text-white transition grid place-items-center text-neutral-400 ml-auto "
+                  className="bg-transparent border border-white h-full rounded-md py-2 px-3 text-sm transition grid place-items-center text-white ml-auto "
                >
                   View Demo
                </Link>
 
-               <Link href={"/login"} className="bg-neutral-400/50  py-2 grid place-items-center h-full rounded-full px-6 text-white transition ml-2">
+               <Link href={"/login"} className="bg-white text-black py-2 grid place-items-center text-sm h-full rounded-md px-4  transition">
                   Log In
                </Link>
             </div>
-            <div className="bg-black w-full text-white  relative flex flex-col pointer-events-none ">
-               <div className=" mt-[50px] top-[170px] text-center flex flex-col items-center justify-center z-50 ">
+            <div className="bg-black w-full text-white   flex flex-col ">
+               <motion.div
+                  initial={{ opacity: 0, scale: 1, y: -25 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className=" mt-[50px] top-[170px] text-center flex flex-col items-center justify-center z-50 "
+               >
                   {/* <div className="bg-neutral-500/50 w-full rounded-full h-16"></div> */}
-                  <div className="rounded-full  px-4 text-xs lg:text-sm text-neutral-200 py-2 border border-pink-600/50">
+                  <div className="rounded-full  px-5 text-xs lg:text-sm text-neutral-200 py-2 border-2 border-pink-600/50">
                      <p>Join 5000+ dancers and choreographers just like you</p>
                   </div>
                   <p className="  lg:text-7xl  text-4xl font-semibold mt-5 lg:w-2/3 w-[90%]  ">The collaborative choreography design tool</p>
@@ -54,19 +64,22 @@ const Client = () => {
                         <div className=" lg:text-base text-sm  flex-row items-center justify-around lg:hidden flex">Launch mobile web app</div>
                      </Link>
                   </div>
-               </div>
+               </motion.div>
 
-               <div className="w-full flex flex-row justify-center mt-[100px] relative ">
+               <div className="w-full flex flex-row justify-center mt-[0px] relative ">
                   {/* <div className=" lg:h-[800px] h-[200px] text-center  "> */}
-                  <img
-                     className="z-10 w-2/3 relative"
-                     src="https://res.cloudinary.com/dxavpfwki/image/upload/q_auto:low/v1692624978/desktop_j7aonq.webp"
+                  <motion.img
+                     initial={{ opacity: 0, scale: 0.8, y: 0 }}
+                     animate={{ opacity: 1, scale: 1, y: 0 }}
+                     transition={{ duration: 0.5 }}
+                     className="z-10 w-[80%] relative"
+                     src="https://res.cloudinary.com/dxavpfwki/image/upload/q_auto:low/v1695307271/IMG_0533_afnzcf.png"
                      alt=""
                   />
                   {/* <Image fill={true} objectFit="contain" className="w-2/3 z-10 relative " src="/desktop.png" alt="" /> */}
                   {/* </div> */}
 
-                  <div
+                  {/* <div
                      className="pointer-events-none absolute left-1/2 hidden lg:block  -translate-x-1/2  h-[1000px] w-[1700px]"
                      style={{
                         //    backgroundImage: "-o-radial-gradient(47.64% 52.94%, 37.66% 48.2%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
@@ -76,10 +89,10 @@ const Client = () => {
                         top: -200,
                         opacity: 0.5,
                      }}
-                  ></div>
+                  ></div> */}
                </div>
 
-               <div className="flex flex-col justify-center items-center py-20">
+               <div id="features" className="flex flex-col justify-center items-center py-20">
                   <p className="lg:text-7xl text-3xl mb-24 ">Edit formations on the go</p>
                   <div className="flex lg:flex-row  lg:px-24 flex-col items-center">
                      {" "}

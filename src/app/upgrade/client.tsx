@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { Footer } from "../../components/NonAppComponents/Footer";
+import { Footer } from "../NonAppComponents/Footer";
 
 const Client = () => {
    return (
@@ -54,7 +54,8 @@ const Client = () => {
                <div className=" mt-[120px] top-[170px] text-center flex flex-col items-center justify-center z-50  ">
                   {/* <div className="bg-neutral-500/50 w-full rounded-full h-16"></div> */}
                   <p className="text-center tracking-widest text-pink-500 mt-24 font-bold">PRICING</p>
-                  <p className="  lg:text-6xl  text-2xl font-semibold  w-2/3  ">Pricing based on your needs</p>
+                  <p className="  lg:text-6xl  text-2xl font-semibold  w-full  ">Want more performances?</p>
+                  <p className="  lg:text-xl  text-xl font-semibold  w-full mt-5  ">Early Bird Pricing</p>
                </div>
                <div className="lg:max-w-4xl  w-full mt-24  lg:h-[400px] mb-52 ">
                   <div className="flex lg:flex-row flex-col h-full justify-center w-full ">
@@ -65,7 +66,7 @@ const Client = () => {
                         <p className="text-4xl mt-3 font-medium">Free</p>
                         <p className="text-sm mt-1 font-medium">no credit card required</p>
                         <div className="mt-3">
-                           {["Five performances", "Access to all features"].map((text) => {
+                           {["Access to all features", "Up to five performances"].map((text) => {
                               return (
                                  <div className="flex flex-row items-center mt-3">
                                     <svg
@@ -90,10 +91,10 @@ const Client = () => {
                         <div className="flex flex-row justify-between items-center">
                            <p className="text-pink-500 font-medium ">Choreographer</p>
                         </div>
-                        <p className="text-4xl mt-3 font-medium">$8</p>
+                        <p className="text-4xl mt-3 font-medium">$5</p>
                         <p className="text-sm mt-1 font-medium">per month</p>
                         <div className="mt-3">
-                           {["Collaborative editing", "Unlimited performances", "Unlimited media uploads"].map((text) => {
+                           {["Unlimited performances", "Unlimited media uploads"].map((text) => {
                               return (
                                  <div className="flex flex-row items-center mt-3">
                                     <svg
@@ -113,7 +114,7 @@ const Client = () => {
                            })}
                         </div>
                         <Link
-                           href={"/upgrade/checkout/price_1NlLnuHvC3w6e8fcpVBU35PG"}
+                           href={"/upgrade/checkout/price_1Nv8jbHvC3w6e8fcE6maAFjv"}
                            //    onClick={() => {
                            //       if (!session) {
                            //          router.push("/login");
@@ -129,14 +130,15 @@ const Client = () => {
                      </div>
                      <div className=" border border-neutral-800 rounded-xl w-1/3 mx-3 py-5 px-6  flex flex-col  ">
                         <div className="flex flex-row justify-between items-center">
-                           <p className="text-blue-300 font-medium ">Enterprise</p>
+                           <p className="text-blue-300 font-medium ">Studio</p>
                         </div>
                         <p className="text-4xl mt-3 font-medium">CUSTOM</p>
                         <p className="text-sm mt-1 font-medium">per month</p>
                         <div className="mt-3">
                            {[
-                              "Everything in choreographer",
+                              // "Everything in choreographer",
                               // "Shared performances and assets",
+                              "Collaborative editing",
                               "Accounts for you and your team",
                               "Custom watermark",
                               "Custom branding",

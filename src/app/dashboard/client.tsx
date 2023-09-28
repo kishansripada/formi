@@ -1,18 +1,11 @@
 "use client";
 
-import { dancer, dancerPosition, formation } from "../../../types/types";
-import toast, { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
 import Link from "next/link";
-// import { Dropdown } from "./Dropdown";
-import { useSupabaseClient, useSession, Session } from "@supabase/auth-helpers-react";
-import { ProjectPreview } from "../../../components/DashboardComponents/ProjectPreview";
 import { PerformancePreview } from "./_components/PerformancePreview";
-import { DndContext, useDroppable, MouseSensor, useSensors, useSensor } from "@dnd-kit/core";
 import { v4 as uuidv4 } from "uuid";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
-export default function Client({ myDances, sharedWithMe, session }) {
+export default function Client({ myDances, sharedWithMe, session, plan }) {
    const supabase = createClientComponentClient();
    const router = useRouter();
    const videos = [

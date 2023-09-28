@@ -13,7 +13,7 @@ import { DndContext, useDroppable, MouseSensor, useSensors, useSensor } from "@d
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-export default function Header({}) {
+export default function Header({ plan }: { plan: string | null }) {
    const pathname = usePathname();
    const router = useRouter();
 
@@ -35,32 +35,16 @@ export default function Header({}) {
          </div>
 
          <div>
-            {/* {plan ? (
-               <Link
-                  href={"/upgrade/customerportal"}
-                  // onClick={() => {
-                  //    supabase.auth.signOut().then((r) => {
-                  //       router.push("/upgrade/customerportal");
-                  //    });
-                  // }}
-                  className="mr-5 text-xs"
-               >
+            {plan ? (
+               <Link href={"/upgrade/customerportal"} className="mr-5 text-xs">
                   Manage Subscription
                </Link>
             ) : null}
             {!plan ? (
-               <Link
-                  href={"/upgrade"}
-                  // onClick={() => {
-                  //    supabase.auth.signOut().then((r) => {
-                  //       router.push("/upgrade/customerportal");
-                  //    });
-                  // }}
-                  className="mr-5 text-pink-300 text-sm font-semibold"
-               >
+               <Link href={"/upgrade"} className="mr-5 text-pink-300 text-sm font-semibold">
                   Upgrade
                </Link>
-            ) : null} */}
+            ) : null}
             <Link
                prefetch={false}
                href={"/auth/logout"}
@@ -70,8 +54,8 @@ export default function Header({}) {
                //    });
                // }}
                className="mr-5  text-xs"
-         >
-            Sign Out
+            >
+               Sign Out
             </Link>
          </div>
       </div>
