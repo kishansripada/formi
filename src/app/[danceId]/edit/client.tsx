@@ -401,55 +401,109 @@ const Edit = ({
    const exportPdf = async () => {
       setPdfLoading(true);
       setLocalSettings({ ...localSettings, viewingTwo: true, viewingThree: false });
-      const parentContainer = document.createElement("p");
-      const extendedFormations = [...formations, { name: "", notes: "" }];
+      // const parentContainer = document.createElement("div");
+      // const extendedFormations = [...formations, { name: "", notes: "" }];
 
-      for (let index = 0; index < extendedFormations.length; index++) {
+      // for (let index = 0; index < extendedFormations.length; index++) {
+      //    setSelectedFormations([formations[index]?.id]);
+
+      //    // Wait for the formation to be rendered in the DOM
+      //    await sleep(1000); // Delay in milliseconds. Adjust as needed.
+
+      //    const stageElement = document.getElementById("stage");
+      //    const clonedElement = stageElement.cloneNode(true); // Clone the element with its children
+      //    console.log(typeof clonedElement);
+      //    // Add each stage to the parentContainer
+      //    const label = document.createElement("p");
+      //    label.textContent = `${extendedFormations[index].name} (${index + 1} of ${formations.length})`;
+      //    label.style.textAlign = "center";
+      //    // label.style.width = "100%";
+
+      //    const notes = document.createElement("p");
+      //    notes.textContent = `${extendedFormations[index].notes || ""}`;
+      //    notes.style.textAlign = "left";
+      //    // notes.style.width = "100%";
+
+      //    // Create a container for the current formation to force a new page
+      //    const formationContainer = document.createElement("div");
+
+      //    // formationContainer.style.transform = "rotate(90deg)"; // Rotate the content 90 degrees
+
+      //    // Add the label, formation, and notes to the formationContainer
+      //    formationContainer.appendChild(clonedElement);
+      //    formationContainer.appendChild(label);
+      //    formationContainer.appendChild(notes);
+
+      //    // Add the formationContainer to the parentContainer
+      //    parentContainer.appendChild(formationContainer);
+      // }
+
+      const canvases = [];
+
+      // dynamically import html2canvas and jspdf
+      const [html2canvasinit, jsPDFinit] = await Promise.all([import("html2canvas"), import("jspdf")]);
+      const html2canvas = html2canvasinit.default;
+      const jsPDF = jsPDFinit.default;
+
+      const stageElement = document.getElementById("stage");
+      for (let index = 0; index < formations.length; index++) {
          setSelectedFormations([formations[index]?.id]);
 
          // Wait for the formation to be rendered in the DOM
          await sleep(1000); // Delay in milliseconds. Adjust as needed.
 
-         const stageElement = document.getElementById("stage-cutout");
-         const clonedElement = stageElement.cloneNode(true); // Clone the element with its children
+         console.log(stageElement?.clientWidth);
+         const canvas = await html2canvas(stageElement);
+         // canvases.push(canvas);
 
-         // Add each stage to the parentContainer
+         // const formationContainer = document.createElement("div");
+
          const label = document.createElement("p");
-         label.textContent = `${extendedFormations[index].name} (${index + 1} of ${formations.length})`;
+         label.textContent = `${formations[index].name} (${index + 1} of ${formations.length})`;
          label.style.textAlign = "center";
-         label.style.width = "100%";
+
+         // label.style.width = "100%";
 
          const notes = document.createElement("p");
-         notes.textContent = `${extendedFormations[index].notes || ""}`;
+         notes.textContent = `${formations[index].notes || ""}`;
          notes.style.textAlign = "left";
-         notes.style.width = "100%";
-
-         // Create a container for the current formation to force a new page
-         const formationContainer = document.createElement("div");
-         formationContainer.style.pageBreakInside = "avoid";
-
-         formationContainer.style.transform = "rotate(90deg)"; // Rotate the content 90 degrees
-         formationContainer.style.transformOrigin = "center"; // Rotate from the bottom left corner
-         formationContainer.style.textAlign = "center";
-         stageElement.style.textAlign = "center";
-         // const pageBreak = document.createElement("div");
-
-         // Add the label, formation, and notes to the formationContainer
-         formationContainer.appendChild(clonedElement);
-         formationContainer.appendChild(label);
-         formationContainer.appendChild(notes);
-
-         // Add the formationContainer to the parentContainer
-         parentContainer.appendChild(formationContainer);
+         // notes.style.width = "100%";
+         // formationContainer.appendChild(canvas);
+         // formationContainer.appendChild(label);
+         // formationContainer.appendChild(notes);
+         // formationContainer.appendChild(formationContainer);
+         canvases.push({ canvas, label, notes });
+         // document.body.appendChild(canvas);
       }
+
+      // Now export the canvases to a PDF
+      const pdf = new jsPDF({
+         orientation: "landscape",
+         unit: "px",
+         format: [stageElement?.clientWidth, stageElement?.clientHeight + 100],
+      });
+
+      for (let i = 0; i < canvases.length; i++) {
+         const imgData = canvases[i].canvas.toDataURL("image/png");
+         // pdf.addImage(imgData, "PNG", 0, 0);
+         pdf.addImage(imgData, "PNG", 0, 0, stageElement?.clientWidth, stageElement?.clientHeight);
+         pdf.text(canvases[i].label.textContent, 10, stageElement?.clientHeight + 20);
+         pdf.text(canvases[i].notes.textContent, 10, stageElement?.clientHeight + 40);
+         if (i < canvases.length - 1) {
+            pdf.addPage(); // Add new page for next image if there is one
+         }
+      }
+
+      pdf.save("formations.pdf");
+      setPdfLoading(false);
 
       var options = {
          filename: `${danceName}.pdf`,
       };
-      const domToPdf = (await import("dom-to-pdf")).default;
-      domToPdf(parentContainer, options, (pdf) => {
-         setPdfLoading(false);
-      });
+
+      // domToPdf(parentContainer, options, (pdf) => {
+      //    setPdfLoading(false);
+      // });
    };
 
    async function handleBeforeUnload(event) {
