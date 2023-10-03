@@ -83,6 +83,12 @@ export const Dancer: React.FC<{
                {/* <p className="absolute z-[50] left-[16px] top-[6.5px] text-neutral-500 text-sm">{suggestedDancer}</p> */}
             </div>
 
+            <div
+               style={{
+                  backgroundColor: color || "#db2777",
+               }}
+               className="h-2 w-2 ml-auto rounded-full"
+            ></div>
             {/* {canBeAddedToStage ? (
                <button onClick={addDancerToStage}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
