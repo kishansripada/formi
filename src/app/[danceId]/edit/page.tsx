@@ -50,6 +50,7 @@ const getServerSideProps = async (danceId: string) => {
          // BALEX
          "alex.battenfield@gmail.com",
       ];
+      if (!session) return null;
       if (session.user.email?.endsWith("@umich.edu") || EXEMPT_EMAILS.includes(session.user.email)) return "choreographer";
       const plan = await fetch(
          `https://api.stripe.com/v1/customers/search?query=metadata['supabase_id']:'${session.user.id}'&expand[]=data.subscriptions.data`,
