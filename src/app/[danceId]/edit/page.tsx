@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Edit from "./client";
 import { Database } from "../../../types/supabase";
 import Link from "next/link";
+// import { getPlan } from "../../api/get-plan/route";
 export const metadata: Metadata = {
    title: "Edit Performance",
 };
@@ -34,10 +35,51 @@ const getServerSideProps = async (danceId: string) => {
    const {
       data: { session },
    } = await supabase.auth.getSession();
+
+   async function getStripe(session: Session) {
+      const EXEMPT_EMAILS = [
+         // MINE
+         "kishansripada@formistudio.app",
+
+         // KIRSTEN
+         "kirsten.e.collison@gmail.com",
+         "courtney.j.laney@gmail.com",
+         "annaludgate11@gmail.com",
+         "natalie.e1010@gmail.com",
+
+         // BALEX
+         "alex.battenfield@gmail.com",
+      ];
+      if (session.user.email?.endsWith("@umich.edu") || EXEMPT_EMAILS.includes(session.user.email)) return "choreographer";
+      const plan = await fetch(
+         `https://api.stripe.com/v1/customers/search?query=metadata['supabase_id']:'${session.user.id}'&expand[]=data.subscriptions.data`,
+         {
+            headers: {
+               Authorization:
+                  "Basic cmtfbGl2ZV81MUxhajV0SHZDM3c2ZThmY21zVklCRjlKMjRLUWFFYlgwVUs0SHE0b245QTVXMUNIaWlHaHAwVzlrbHg5dDU3OW9WcWVibFJGOHh3cE8xc3FlUmFMOHBzYjAwMmhLNFl0NEU6",
+            },
+         }
+      )
+         .then((r) => r.json())
+         .then((r) => {
+            // customerExists = Boolean(r.data.length);
+
+            let activeProducts = r?.data?.[0]?.subscriptions.data.map((data) => data.items.data.map((obj) => obj.plan.product)).flat();
+            let plan = null;
+            if (activeProducts?.includes("prod_MngV5QMEYtDnjr")) {
+               plan = "choreographer";
+            }
+            return plan;
+         });
+
+      // return null;
+      return plan as string | null;
+   }
    // console.log(session);
-   let [{ data: dance }, { data: permissions }] = await Promise.all([
+   let [{ data: dance }, { data: permissions }, plan] = await Promise.all([
       supabase.from("dances").select("*, project_id(name, id)").eq("id", danceId).single(),
       supabase.from("permissions").select("*").eq("performance_id", danceId),
+      getStripe(session),
    ]);
 
    if (!dance?.formations && session) {
@@ -73,10 +115,13 @@ const getServerSideProps = async (danceId: string) => {
    // if (extraDancers(dance.formations, dance.dancers).length > 0 || missingDancers(dance.formations, dance.dancers).length > 0) {
    //    throw new Error("Dancers and formations are out of sync");
    // }
+
    const headersList = headers();
    const userAgent = headersList.get("user-agent");
-   // let isMobileView = userAgent!.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i);
 
+   // const plan = await getPlan(session).then((r) => r.json());
+   // const plan = { plan: null };
+   // console.log(plan);
    return {
       // props: {
       initialData: dance,
@@ -84,8 +129,9 @@ const getServerSideProps = async (danceId: string) => {
       pricingTier: "legacy",
       session,
       permissions,
-      hasSeenCollab,
+      // hasSeenCollab,
       noAccess,
+      plan,
       // isMobileView: Boolean(isMobileView),
 
       // },
@@ -114,7 +160,8 @@ export default async function Page({ params }: { params: { danceId: string } }) 
                permissions={data.permissions}
                viewOnly={data.viewOnly}
                pricingTier={data.pricingTier}
-               hasSeenCollab={data.hasSeenCollab}
+               plan={data?.plan}
+               // hasSeenCollab={data.hasSeenCollab}
             />
          )}
       </>

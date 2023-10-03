@@ -103,6 +103,7 @@ const Edit = ({
    params: { danceId },
    session,
    permissions: initialPermissions,
+   plan,
 }: {
    initialData: any;
    viewOnly: boolean;
@@ -110,6 +111,7 @@ const Edit = ({
    params: { danceId: string };
    session: AuthSession | null;
    permissions: string[];
+   plan: string | null;
 }) => {
    const {
       segments,
@@ -1050,6 +1052,7 @@ const Edit = ({
                dancers={dancers}
                session={session}
                exportThree={exportThree}
+               plan={plan}
             />
 
             <MobileSidebar setLocalSettings={setLocalSettings} setHelpUrl={setHelpUrl} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></MobileSidebar>

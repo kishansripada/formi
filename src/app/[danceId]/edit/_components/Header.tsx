@@ -11,9 +11,10 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useStore } from "../store";
 import styles from "./Status.module.css";
 import { AuthSession } from "@supabase/supabase-js";
-import { useIsIOS } from "../../../../hooks";
+import { useIsDesktop, useIsIOS } from "../../../../hooks";
+import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarShortcut, MenubarTrigger } from "@/components/ui/menubar";
 import { revalidatePath } from "next/cache";
-
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 export const Header: React.FC<{
    saved: boolean;
 
@@ -42,6 +43,7 @@ export const Header: React.FC<{
    session: AuthSession | null;
    exportThree: Function;
    fullscreenContainer: any;
+   plan: string | null;
 }> = ({
    saved,
 
@@ -70,6 +72,7 @@ export const Header: React.FC<{
    session,
    exportThree,
    fullscreenContainer,
+   plan,
 }) => {
    const router = useRouter();
    const {
@@ -85,10 +88,7 @@ export const Header: React.FC<{
 
    const [templatesIsOpen, setTemplatesIsOpen] = useState(false);
    const others = useStore((state) => state.liveblocks.others);
-   // const otherInitials = others.map((other) => initials(other.presence.nameOrEmail));
-   useEffect(() => {
-      setTemplatesIsOpen(false);
-   }, [dropDownToggle]);
+   const isDesktop = useIsDesktop();
    // console.log(folder);
    return (
       <>
@@ -144,6 +144,87 @@ export const Header: React.FC<{
                   </a>
                   <p className="text-[10px] dark:text-neutral-300 text-neutral-700 font-medium absolute right-[6px] bottom-1">Beta</p>
                </div>
+               <div className="md:px-1 h-full">
+                  {/* {isDesktop ? ( */}
+                  <Menubar className="dark:bg-black h-full border-none bg-neutral-100 ">
+                     <MenubarMenu>
+                        <MenubarTrigger className="dark:hover:bg-neutral-800 hover:bg-neutral-200 h-full">File</MenubarTrigger>
+                        <MenubarContent className="dark:bg-black w-[200px]">
+                           <MenubarItem
+                              onClick={() => {
+                                 // window.location.href = "/dashboard";
+                                 window.location.href = "/dashboard";
+                              }}
+                              className="py-1 hover:bg-neutral-200 flex flex-row items-center"
+                           >
+                              Back to files
+                           </MenubarItem>
+                           <MenubarSeparator className="h-[1px] bg-neutral-300" />
+
+                           <MenubarItem
+                              onClick={() => {
+                                 setLocalSettings((localSettings: localSettings) => {
+                                    return { ...localSettings, isDarkMode: !localSettings.isDarkMode };
+                                 });
+                              }}
+                              className="py-1 hover:bg-neutral-200"
+                           >
+                              Switch to {localSettings.isDarkMode ? "light" : "dark"} mode
+                           </MenubarItem>
+                           <MenubarSeparator />
+                           <MenubarItem
+                              onClick={() => {
+                                 fullscreenContainer.current.requestFullscreen();
+                                 setLocalSettings((localSettings: localSettings) => {
+                                    return { ...localSettings, fullScreen: false };
+                                 });
+                              }}
+                              className="py-1 hover:bg-neutral-200"
+                           >
+                              Enter full screen
+                           </MenubarItem>
+                           <MenubarSeparator />
+                           <MenubarItem
+                              onClick={() => {
+                                 setLocalSettings((localSettings: localSettings) => {
+                                    return { ...localSettings, stageFlipped: !localSettings.stageFlipped };
+                                 });
+                              }}
+                              className="py-1 hover:bg-neutral-200"
+                           >
+                              {!localSettings.stageFlipped ? "View from back" : "View from front"}
+                           </MenubarItem>
+                           <MenubarSeparator />
+                           <MenubarItem
+                              onClick={() => {
+                                 if (!plan) {
+                                    router.push("/upgrade");
+                                 } else {
+                                    exportPdf();
+                                 }
+                              }}
+                              className="py-1 hover:bg-neutral-200"
+                           >
+                              Export PDF
+                              {!plan ? <MenubarShortcut>⚡️</MenubarShortcut> : null}
+                           </MenubarItem>
+                           <MenubarItem onClick={() => undo()} className="py-1 hover:bg-neutral-200 md:hidden">
+                              Undo <MenubarShortcut>⌘Z</MenubarShortcut>
+                           </MenubarItem>
+                        </MenubarContent>
+                     </MenubarMenu>
+
+                     <MenubarMenu className="">
+                        <MenubarTrigger className="hidden md:block dark:hover:bg-neutral-800 hover:bg-neutral-200 h-full">Edit</MenubarTrigger>
+                        <MenubarContent className="w-[200px]">
+                           <MenubarItem onClick={() => undo()} className="py-1 hover:bg-neutral-200">
+                              Undo <MenubarShortcut>⌘Z</MenubarShortcut>
+                           </MenubarItem>
+                        </MenubarContent>
+                     </MenubarMenu>
+                  </Menubar>
+                  {/* ) : null} */}
+               </div>
 
                <button
                   onClick={() =>
@@ -178,31 +259,7 @@ export const Header: React.FC<{
                   </button>
                ) : null}
 
-               {/* <button
-                  title="Toggle collision detection"
-                  onClick={() => {
-                     setLocalSettings((localSettings: localSettings) => {
-                        return {
-                           ...localSettings,
-                           viewCollisions: !localSettings.viewCollisions,
-                        };
-                     });
-                     if (!localSettings.viewCollisions) {
-                        setIsChangingCollisionRadius(true);
-                     }
-                  }}
-                  style={{
-                     backgroundColor: localSettings.viewCollisions ? "#db2777" : "transparent",
-                  }}
-                  className=" h-full min-w-[48px]  grid place-items-center relative"
-               >
-                  <svg className="w-6 h-6  flex-shrink-0 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 457.68 457.68">
-                     <path d="m453.822 195.374-58.311-44.323 45.737-40.447c3.195-2.825 4.189-7.396 2.455-11.292-1.733-3.896-5.779-6.215-10.03-5.738l-61.163 6.943 26.917-68.152c1.591-4.027.341-8.622-3.07-11.288-3.412-2.665-8.17-2.77-11.696-.254L318.889 67.78l-14.022-54.566c-1.041-4.05-4.543-6.989-8.712-7.311-4.157-.317-8.081 2.044-9.731 5.886L262.659 67.11l-66.396-34.183c-4.117-2.12-9.157-1.059-12.068 2.541-2.913 3.599-2.901 8.748.031 12.333l42.625 52.133-45.023 21.367c-3.829 1.817-6.05 5.895-5.499 10.098.551 4.203 3.748 7.571 7.916 8.34l46.369 8.554s10.757 1.677 16.309 10.642c.044.072.116.122.175.181l9.481-10.928c2.297-2.648 3-6.324 1.841-9.633s-4.002-5.744-7.449-6.38l-33.463-6.174 28.999-13.762c2.714-1.288 4.685-3.753 5.345-6.684.659-2.932-.067-6.003-1.97-8.329l-20.773-25.407 33.922 17.464c2.408 1.24 5.227 1.425 7.776.508 2.551-.916 4.606-2.85 5.675-5.34l16.59-38.618 10.435 40.61c.802 3.121 3.09 5.645 6.117 6.749s6.403.643 9.025-1.228l50.452-36.021-20.746 52.529c-1.26 3.191-.754 6.81 1.332 9.533 2.087 2.723 5.456 4.155 8.858 3.766l46.548-5.284-31.451 27.814c-2.193 1.939-3.401 4.758-3.292 7.682.108 2.925 1.522 5.646 3.851 7.418l30.374 23.087-31.878-7.801c-3.224-.787-6.633.114-9.044 2.399-2.41 2.284-3.496 5.637-2.882 8.901l6.75 35.854-27.148-33.493c-2.056-2.537-5.248-3.886-8.497-3.576-3.252.302-6.138 2.209-7.69 5.082l-20.833 38.531-8.793-52.25c-.463-2.753-2.081-5.175-4.445-6.658-2.33-1.46-5.208-1.895-7.931-1.101l-25.402 7.419c.817 3.021 1.263 6.163 1.303 9.372l.133 10.569 18.893-5.518 11.684 69.435c.692 4.114 3.92 7.335 8.036 8.018 4.118.685 8.211-1.322 10.195-4.993l27.384-50.648 42.275 52.154c2.817 3.475 7.636 4.595 11.697 2.714 4.06-1.88 6.325-6.278 5.497-10.675l-11.098-58.949 62.802 15.369c4.493 1.097 9.151-1.107 11.143-5.286 1.996-4.178.782-9.182-2.904-11.983z" />
-                     <circle cx="115.693" cy="200.763" r="35.901" />
-                     <path d="m320.305 412.487-69.806-35.484c-2.952-1.502-6.236-2.284-9.609-2.257l-103.278.945 78.446-17.485 13.552-13.011 3.346 9.424 7.753-.071c6.8-.029 13.217 1.536 18.943 4.449l23.151 11.768-24.996-70.408c-2.383-6.712-8.037-11.737-14.983-13.315-6.944-1.577-14.216.51-19.266 5.533l-30.721 30.561c-7.876-32.024-5.631-22.898-11.418-46.429l44.549-12.322c7.584-2.098 12.802-9.045 12.703-16.914l-.782-62.048c-.12-9.563-7.97-17.222-17.539-17.103-9.563.121-17.224 7.97-17.103 17.54l.613 48.694-36.492 10.094c-5.532-3.879-12.643-5.444-19.719-3.704-45.884 11.284-43.007 10.473-45.305 11.4l17.54 8.809-64.43-13.751-22.017-55.728c-3.524-8.917-13.646-13.234-22.475-9.746-8.89 3.511-13.262 13.573-9.746 22.475l25.429 64.366c2.12 5.366 6.79 9.358 12.495 10.576l71.148 15.184-18.879.384c5.13 20.86 20.61 83.804 26.398 107.341l.031-.041c2.497 8.697 10.492 15.049 19.96 15.049.064 0 .128 0 .192-.001l98.198-.9 65.277 33.182c10.257 5.212 22.759 1.101 27.95-9.11 5.203-10.231 1.124-22.744-9.11-27.946z" />
-                  </svg>
-               </button> */}
-               {isChangingCollisionRadius ? (
+               {/* {isChangingCollisionRadius ? (
                   <div
                      className="w-[200px] left-12 h-[80px] bg-neutral-800 absolute top-14 flex flex-col z-[50] text-sm shadow-2xl"
                      id="dropdown-menu"
@@ -227,64 +284,7 @@ export const Header: React.FC<{
                         <p className="mx-1">Squares</p>
                      </div>
                   </div>
-               ) : null}
-
-               <button
-                  title="Flip stage"
-                  onClick={() =>
-                     setLocalSettings((localSettings: localSettings) => {
-                        return { ...localSettings, stageFlipped: !localSettings.stageFlipped };
-                     })
-                  }
-                  className={` ${
-                     localSettings.stageFlipped ? "dark:bg-pink-600 bg-pink-300" : ""
-                  } group md:grid hidden h-full  text-sm   font-bold  place-items-center min-w-[48px] `}
-               >
-                  <div className="flex flex-row items-center justify-center ">
-                     <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-6 h-6"
-                     >
-                        <path
-                           strokeLinecap="round"
-                           strokeLinejoin="round"
-                           d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
-                        />
-                     </svg>
-                  </div>
-               </button>
-
-               <div
-                  onClick={() => {
-                     fullscreenContainer.current.requestFullscreen();
-                     setLocalSettings((localSettings: localSettings) => {
-                        return { ...localSettings, fullScreen: false };
-                     });
-                  }}
-                  className=" min-w-[48px] lg:grid place-items-center h-full hidden   cursor-pointer "
-               >
-                  {/* {localSettings.fullScreen ? (
-                     <svg className="w-6 h-6 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                        <path d="m122 976-42-42 298-298H180v-60h300v300h-60V678L122 976Zm358-400V276h60v198l298-298 42 42-298 298h198v60H480Z" />
-                     </svg>
-                  ) : ( */}
-                  {/* <svg className="w-6 h-6 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                     <path d="M120 936V636h60v198l558-558H540v-60h300v300h-60V318L222 876h198v60H120Z" />
-                  </svg> */}
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                     <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"
-                     />
-                  </svg>
-
-                  {/* )} */}
-               </div>
+               ) : null} */}
 
                {!viewOnlyInitial && !isMobileView ? (
                   <button
@@ -319,20 +319,7 @@ export const Header: React.FC<{
                      </svg>
                   </button>
                ) : null}
-               <div className="min-w-[48px] lg:grid place-items-center h-full  hidden  cursor-pointer">
-                  <DarkModeSwitch
-                     style={{ width: 25, height: 25, fill: "white" }}
-                     sunColor={"black"}
-                     moonColor="white"
-                     checked={localSettings.isDarkMode}
-                     onChange={() => {
-                        setLocalSettings((localSettings: localSettings) => {
-                           return { ...localSettings, isDarkMode: !localSettings.isDarkMode };
-                        });
-                     }}
-                     size={120}
-                  />
-               </div>
+
                <a
                   href="https://linktr.ee/formistudio.app"
                   target={"_blank"}
@@ -456,18 +443,18 @@ export const Header: React.FC<{
                      <p>{folder?.name}</p>
                   </Link>
                )}
-               {!viewOnly ? (
+               {/* {!viewOnly && !isDesktop ? (
                   <button onClick={() => undo()} className="ml-auto mr-4">
                      <svg className="w-6 h-6 dark:fill-white fill-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
                         <path d="M280-200v-80h284q63 0 109.5-40T720-420q0-60-46.5-100T564-560H312l104 104-56 56-200-200 200-200 56 56-104 104h252q97 0 166.5 63T800-420q0 94-69.5 157T564-200H280Z" />
                      </svg>
                   </button>
-               ) : null}
+               ) : null} */}
                {status ? (
                   <div className="md:px-3 px-1 ">
                      <div className={`${styles.status} hidden lg:block`} data-status={status}>
                         <div className={styles.statusCircle} />
-                        <div className={`${styles.statusText} hidden lg:block`}>{status}</div>
+                        {/* <div className={`${styles.statusText} hidden lg:block`}>{status}</div> */}
                      </div>
                   </div>
                ) : null}
@@ -496,15 +483,10 @@ export const Header: React.FC<{
                           })
                      : null}
                </div>
+               
 
-               <button title="Export pdf" onClick={exportPdf} className=" hidden lg:block h-full text-xs  min-w-[48px]  py-2 ">
-                  <div className="flex flex-row items-center justify-center ">
-                     <svg className="h-6 w-6 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                        <path d="M331 625h37v-83h48q15.725 0 26.362-10.638Q453 520.725 453 505v-48q0-15.725-10.638-26.362Q431.725 420 416 420h-85v205Zm37-120v-48h48v48h-48Zm129 120h84q15 0 26-10.638 11-10.637 11-26.362V457q0-15.725-11-26.362Q596 420 581 420h-84v205Zm37-37V457h47v131h-47Zm133 37h37v-83h50v-37h-50v-48h50v-37h-87v205ZM260 856q-24 0-42-18t-18-42V236q0-24 18-42t42-18h560q24 0 42 18t18 42v560q0 24-18 42t-42 18H260Zm0-60h560V236H260v560ZM140 976q-24 0-42-18t-18-42V296h60v620h620v60H140Zm120-740v560-560Z" />
-                     </svg>
-                  </div>
-               </button>
                {!viewOnly ? (
+
                   <>
                      <button
                         onClick={() => setShareIsOpen((state: boolean) => !state)}
