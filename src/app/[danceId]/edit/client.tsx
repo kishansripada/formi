@@ -957,6 +957,7 @@ const Edit = ({
             ></Assets>
          ) : null}
          <EventHandler
+            fullscreenContainer={fullscreenContainer}
             position={position}
             setPosition={setPosition}
             selectedPropIds={selectedPropIds}

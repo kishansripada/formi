@@ -47,6 +47,7 @@ export const EventHandler: React.FC<{
    setPosition: Function;
    position: number;
    setLocalSettings: Function;
+   fullscreenContainer: any;
 }> = ({
    player,
    setSelectedDancers,
@@ -67,6 +68,7 @@ export const EventHandler: React.FC<{
    position,
    setLocalSettings,
    shiftHeld,
+   fullscreenContainer,
 }) => {
    const {
       formations,
@@ -141,6 +143,22 @@ export const EventHandler: React.FC<{
                viewingTwo: true,
                viewingThree: false,
             };
+         });
+      }
+
+      if (e.key === "r") {
+         setLocalSettings((localSettings: localSettings) => {
+            return {
+               ...localSettings,
+               stageFlipped: !localSettings.stageFlipped,
+            };
+         });
+      }
+
+      if (e.key === "f") {
+         fullscreenContainer.current.requestFullscreen();
+         setLocalSettings((localSettings: localSettings) => {
+            return { ...localSettings, fullScreen: false };
          });
       }
 
