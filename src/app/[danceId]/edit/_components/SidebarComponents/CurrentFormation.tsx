@@ -183,11 +183,8 @@ export const CurrentFormation: React.FC<{
                   </div> */}
                   <div className="flex flex-row items-center  px-3 pt-4 ">
                      <input
-                        onClick={(e) => {
-                           e.target.select();
-                        }}
                         // onBlur={pushChange}
-                        className="font-medium w-full bg rounded-md  h-6 text-xl dark:bg-neutral-800 dark:text-white   text-neutral-800  outline-none cursor-pointer "
+                        className="font-medium w-full focus:ring-pink-600 ring-transparent ring-[2px] px-2 py-2 bg rounded-md  h-8 transition text-xl dark:bg-neutral-800 dark:text-white   text-neutral-800  outline-none cursor-pointer "
                         onChange={(e) =>
                            setFormations(
                               formations.map((formation, i) => {
