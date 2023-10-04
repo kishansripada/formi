@@ -3,7 +3,14 @@ import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useStore } from "../store";
-
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuLabel,
+   DropdownMenuSeparator,
+   DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 export const AudioControls: React.FC<{
    player: any;
    isPlaying: boolean;
@@ -247,42 +254,50 @@ export const AudioControls: React.FC<{
                   <span>{formatTime(position || 0)}</span>
                </p>
 
-               <button
-                  onClick={() => {
-                     setLocalSettings((s) => ({ ...s, autoScroll: !s.autoScroll }));
-                  }}
-                  className={`py-1 px-2 rounded-md border focus:outline-none hidden lg:flex flex-row items-center ${
-                     localSettings.autoScroll ? "dark:border-pink-600 border-pink-300 " : " border-neutral-200 dark:border-neutral-600"
-                  }`}
-               >
-                  <svg
-                     className="h-4 w-5 mr-2 dark:fill-white fill-neutral-800"
-                     xmlns="http://www.w3.org/2000/svg"
-                     fill="none"
-                     viewBox="0 57 352.71 403"
-                  >
-                     <path d="M189.856 204c-6.158 10.667-21.554 10.667-27.712 0L91.1295 81c-6.1584-10.6667 1.5396-24 13.8565-24h142.028c12.317 0 20.015 13.3333 13.857 24l-71.015 123Z" />
-                     <rect width="34" height="372" x="159" y="88" rx="16" />
-                     <rect width="27" height="128" x="109.708" y="296.51" rx="8" transform="rotate(135 109.708 296.51)" />
-                     <rect width="27" height="128" x="90.5095" y="278.25" rx="8" transform="rotate(45 90.5095 278.25)" />
-                     <rect width="27" height="128" x="243" y="297.341" rx="8" transform="rotate(-45 243 297.341)" />
-                     <rect width="27" height="128" x="262.199" y="315.601" rx="8" transform="rotate(-135 262.199 315.601)" />
-                  </svg>
-                  <p className="text-sm">Auto Scroll</p>
-               </button>
-               <button
-                  className="hidden lg:block ml-7"
-                  onClick={() => {
-                     setPlaybackRateIndex((i) => i + 1);
-                     setPlaybackRate(playbackRates[(playbackRateIndex + 1) % 5]);
-                     // console.log(playbackRates[(playbackRateIndex + 1) % 5]);
-                     if (player) {
-                        player.setPlaybackRate(playbackRates[(playbackRateIndex + 1) % 5]);
-                     }
-                  }}
-               >
-                  <p>{JSON.stringify(playbackRates[playbackRateIndex % 5])}x</p>
-               </button>
+               <DropdownMenu>
+                  <DropdownMenuTrigger asChild className=" cursor-pointer rounded-md">
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                        <path d="M10 3.75a2 2 0 10-4 0 2 2 0 004 0zM17.25 4.5a.75.75 0 000-1.5h-5.5a.75.75 0 000 1.5h5.5zM5 3.75a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5a.75.75 0 01.75.75zM4.25 17a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5h1.5zM17.25 17a.75.75 0 000-1.5h-5.5a.75.75 0 000 1.5h5.5zM9 10a.75.75 0 01-.75.75h-5.5a.75.75 0 010-1.5h5.5A.75.75 0 019 10zM17.25 10.75a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5h1.5zM14 10a2 2 0 10-4 0 2 2 0 004 0zM10 16.25a2 2 0 10-4 0 2 2 0 004 0z" />
+                     </svg>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent side="top" className="DropdownMenuContent ">
+                     <DropdownMenuItem
+                        onClick={() => {
+                           setLocalSettings((s) => ({ ...s, autoScroll: !s.autoScroll }));
+                        }}
+                        className={`w-full py-2  flex flex-row items-center justify-between  text-sm  hover:bg-neutral-200 ${
+                           localSettings.autoScroll ? "bg-neutral-200" : ""
+                        }`}
+                     >
+                        <p>Autoscroll</p>
+                        {localSettings.autoScroll ? (
+                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                              <path
+                                 fillRule="evenodd"
+                                 d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                                 clipRule="evenodd"
+                              />
+                           </svg>
+                        ) : null}
+                     </DropdownMenuItem>
+                     <DropdownMenuItem
+                        onClick={() => {
+                           setPlaybackRateIndex((i) => i + 1);
+                           setPlaybackRate(playbackRates[(playbackRateIndex + 1) % 5]);
+                           // console.log(playbackRates[(playbackRateIndex + 1) % 5]);
+                           if (player) {
+                              player.setPlaybackRate(playbackRates[(playbackRateIndex + 1) % 5]);
+                           }
+                        }}
+                        className="w-full  hover:bg-neutral-200"
+                     >
+                        <div className="  py-2  text-sm   flex flex-row items-center">
+                           <p>Playback rate: {JSON.stringify(playbackRates[playbackRateIndex % 5])}x</p>
+                        </div>
+                     </DropdownMenuItem>
+                  </DropdownMenuContent>
+               </DropdownMenu>
 
                <div className=" flex-row items-center ml-7 text-neutral-700 dark:text-neutral-200 lg:flex hidden">
                   <svg
