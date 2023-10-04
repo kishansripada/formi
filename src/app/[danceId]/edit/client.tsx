@@ -163,7 +163,7 @@ const Edit = ({
       //       return event;
       //    },
       // });
-      Sentry.setUser(session ? { email: session?.user.email, id: session?.user.id } : null);
+      Sentry.setUser(session ? { email: session?.user.email, id: session?.user.id, plan } : null);
       
       setSegments(initialData.segments);
       setDancers(initialData.dancers);
