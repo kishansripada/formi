@@ -82,6 +82,12 @@ export const Header: React.FC<{
       setDanceName,
       liveblocks: { status },
       isMobileView,
+      selectedFormations,
+      setSelectedDancers,
+      setCopiedPositions,
+      getFirstSelectedFormation,
+      setFormations,
+      copiedPositions,
    } = useStore();
    const isIOS = useIsIOS();
    const supabase = createClientComponentClient();
