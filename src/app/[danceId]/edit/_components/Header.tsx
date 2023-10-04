@@ -493,11 +493,14 @@ export const Header: React.FC<{
                />
             </div>
 
-            <div className=" flex flex-row items-center justify-end mr-3 w-2/5 ">
+            <div className=" flex flex-row items-center justify-end mr-3 w-2/5 gap-3 ">
+               <Link href={"/upgrade"} className="text-sm mr-3 hidden md:flex dark:text-neutral-200 text-neutral-800 ">
+                  Upgrade <span className="ml-1">⚡️</span>
+               </Link>
                {folder?.name && (
                   <Link
                      href={`/dashboard/project/${folder.id}`}
-                     className=" mr-4 text-xs border dark:border-neutral-600 border-neutral-300 text-neutral-800 dark:text-neutral-300 rounded-full py-1  px-2 flex flex-row items-center"
+                     className="text-xs border dark:border-neutral-600 border-neutral-300 text-neutral-800 dark:text-neutral-300 rounded-full py-1  px-2 md:flex flex-row items-center hidden"
                   >
                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-2">
                         <path d="M3.75 3A1.75 1.75 0 002 4.75v3.26a3.235 3.235 0 011.75-.51h12.5c.644 0 1.245.188 1.75.51V6.75A1.75 1.75 0 0016.25 5h-4.836a.25.25 0 01-.177-.073L9.823 3.513A1.75 1.75 0 008.586 3H3.75zM3.75 9A1.75 1.75 0 002 10.75v4.5c0 .966.784 1.75 1.75 1.75h12.5A1.75 1.75 0 0018 15.25v-4.5A1.75 1.75 0 0016.25 9H3.75z" />
@@ -514,7 +517,7 @@ export const Header: React.FC<{
                   </button>
                ) : null} */}
                {status ? (
-                  <div className="md:px-3 px-1 ">
+                  <div className="">
                      <div className={`${styles.status} hidden lg:block`} data-status={status}>
                         <div className={styles.statusCircle} />
                         {/* <div className={`${styles.statusText} hidden lg:block`}>{status}</div> */}
