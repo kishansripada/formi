@@ -88,9 +88,12 @@ export const Header: React.FC<{
       getFirstSelectedFormation,
       setFormations,
       copiedPositions,
+      liveblocks,
    } = useStore();
    const isIOS = useIsIOS();
    const supabase = createClientComponentClient();
+
+   const redo = liveblocks.room?.history.redo;
 
    const [templatesIsOpen, setTemplatesIsOpen] = useState(false);
    const others = useStore((state) => state.liveblocks.others);
@@ -236,6 +239,9 @@ export const Header: React.FC<{
                               Select all positions <MenubarShortcut>⌘A</MenubarShortcut>
                            </MenubarItem>
                            <MenubarItem
+                              style={{
+                                 opacity: !selectedDancers?.length ? 0.5 : 1,
+                              }}
                               onClick={() => {
                                  if (!selectedFormations.length) return;
 
@@ -282,6 +288,10 @@ export const Header: React.FC<{
                            <MenubarSeparator className="h-[1px] bg-neutral-300" />
                            <MenubarItem onClick={() => undo()} className="py-1 hover:bg-neutral-200">
                               Undo <MenubarShortcut>⌘Z</MenubarShortcut>
+                           </MenubarItem>
+                           <MenubarItem onClick={() => (redo ? redo() : null)} className="py-1 hover:bg-neutral-200 ">
+                              Redo
+                              {/* <MenubarShortcut>⇧⌘Z</MenubarShortcut> */}
                            </MenubarItem>
                         </MenubarContent>
                      </MenubarMenu>
