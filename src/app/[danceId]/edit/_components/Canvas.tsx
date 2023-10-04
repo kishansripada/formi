@@ -736,6 +736,7 @@ export const Canvas: React.FC<{
 
                   const { x, y } = positionToCoords({ left: (event.clientX - rect.left) / zoom, top: (event.clientY - rect.top) / zoom });
                   setMovedOnMultipleFormations(true);
+                  const flippedFactor = localSettings.stageFlipped ? -1 : 1;
                   setFormations(
                      get().formations.map((formation) => {
                         if (selectedFormations.includes(formation.id)) {
@@ -745,7 +746,7 @@ export const Canvas: React.FC<{
                                  if (selectedDancers.includes(dancerPosition.id)) {
                                     return {
                                        ...dancerPosition,
-                                       position: { x, y },
+                                       position: { x: x * flippedFactor, y: y * flippedFactor },
                                     };
                                  }
 
