@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { formation, localSettings, dancer, initials, COLORS } from "../../../../types/types";
+import { formation, localSettings, dancer, initials, COLORS, dancerPosition } from "../../../../types/types";
 import { useRouter } from "next/navigation";
 import logo from "../../../public/logo.svg";
 import Image from "next/image";
@@ -182,6 +182,7 @@ export const Header: React.FC<{
                               className="py-1 hover:bg-neutral-200"
                            >
                               Enter full screen
+                              <MenubarShortcut>F</MenubarShortcut>
                            </MenubarItem>
                            <MenubarSeparator />
                            <MenubarItem
@@ -193,6 +194,7 @@ export const Header: React.FC<{
                               className="py-1 hover:bg-neutral-200"
                            >
                               {!localSettings.stageFlipped ? "View from back" : "View from front"}
+                              <MenubarShortcut>R</MenubarShortcut>
                            </MenubarItem>
                            <MenubarSeparator />
                            <MenubarItem
@@ -217,6 +219,61 @@ export const Header: React.FC<{
                      <MenubarMenu className="">
                         <MenubarTrigger className="hidden md:block dark:hover:bg-neutral-800 hover:bg-neutral-200 h-full">Edit</MenubarTrigger>
                         <MenubarContent className="w-[200px]">
+                           <MenubarItem
+                              onClick={() => {
+                                 // if (!selectedFormations.length) return;
+                                 // e.preventDefault();
+                                 setSelectedDancers([...formations?.[0]?.positions?.map((position) => position.id)] || []);
+                              }}
+                              className="py-1 hover:bg-neutral-200 "
+                           >
+                              Select all positions <MenubarShortcut>⌘A</MenubarShortcut>
+                           </MenubarItem>
+                           <MenubarItem
+                              onClick={() => {
+                                 if (!selectedFormations.length) return;
+
+                                 setCopiedPositions(
+                                    getFirstSelectedFormation()?.positions?.filter((dancerPosition: dancerPosition) =>
+                                       selectedDancers.includes(dancerPosition.id)
+                                    ) || []
+                                 );
+                              }}
+                              className="py-1 hover:bg-neutral-200 "
+                           >
+                              Copy positions <MenubarShortcut>⌘C</MenubarShortcut>
+                           </MenubarItem>
+                           <MenubarItem
+                              style={{
+                                 opacity: !copiedPositions?.length ? 0.5 : 1,
+                              }}
+                              onClick={() => {
+                                 if (!selectedFormations.length) return;
+                                 if (!copiedPositions) return;
+                                 setFormations(
+                                    formations.map((formation, i) => {
+                                       if (selectedFormations.includes(formation.id)) {
+                                          return {
+                                             ...formation,
+                                             positions: [
+                                                ...formation.positions.filter((dancerPosition) => {
+                                                   return !copiedPositions
+                                                      .map((dancerPositionCopy: dancerPosition) => dancerPositionCopy.id)
+                                                      .includes(dancerPosition.id);
+                                                }),
+                                                ...copiedPositions,
+                                             ],
+                                          };
+                                       }
+                                       return formation;
+                                    })
+                                 );
+                              }}
+                              className="py-1 hover:bg-neutral-200 "
+                           >
+                              Paste positions <MenubarShortcut>⌘V</MenubarShortcut>
+                           </MenubarItem>
+                           <MenubarSeparator className="h-[1px] bg-neutral-300" />
                            <MenubarItem onClick={() => undo()} className="py-1 hover:bg-neutral-200">
                               Undo <MenubarShortcut>⌘Z</MenubarShortcut>
                            </MenubarItem>

@@ -1,9 +1,12 @@
 import { create } from "zustand";
-import { cloudSettings, dancer, formation, item, prop, segment } from "../../../types/types";
+import { cloudSettings, dancer, dancerPosition, formation, item, prop, segment } from "../../../types/types";
 import { liveblocks } from "@liveblocks/zustand";
 import type { WithLiveblocks } from "@liveblocks/zustand";
 import { Status, createClient } from "@liveblocks/client";
 interface Store {
+   copiedPositions: dancerPosition[];
+   setCopiedPositions: (copiedPositions: dancerPosition[]) => void;
+
    isMobileView: boolean;
    setIsMobileView: (isMobileView: boolean) => void;
 
@@ -87,6 +90,9 @@ type Presence = {
 export const useStore = create<WithLiveblocks<Store, Presence>>(
    liveblocks(
       (set, get) => ({
+         copiedPositions: [],
+         setCopiedPositions: (copiedPositions: dancerPosition[]) => set({ copiedPositions }),
+
          isMobileView: false,
          setIsMobileView: (isMobileView: boolean) => set({ isMobileView }),
 

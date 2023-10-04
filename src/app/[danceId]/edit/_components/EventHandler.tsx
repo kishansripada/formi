@@ -1,16 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import {
-   dancer,
-   dancerPosition,
-   formation,
-   dragBoxCoords,
-   PIXELS_PER_SQUARE,
-   comment,
-   cloudSettings,
-   MAX_PIXELS_PER_SECOND,
-   localSettings,
-} from "../../../../types/types";
-import { useStore } from "../store";
+import { dancer, dancerPosition, localSettings } from "../../../../types/types";
+import { useStore, useTemporalStore } from "../store";
 
 export const EventHandler: React.FC<{
    children: React.ReactNode;
@@ -26,7 +16,7 @@ export const EventHandler: React.FC<{
    draggingDancerId: string | null;
    setDraggingDancerId: Function;
    player: any;
-   undo: Function;
+   undo: () => void;
    addToStack: Function;
    pushChange: Function;
    localSettings: any;
@@ -79,10 +69,12 @@ export const EventHandler: React.FC<{
       getSelectedFormationIndex,
       getFirstSelectedFormation,
       commandHeld,
+      copiedPositions,
+      setCopiedPositions,
       setCommandHeld,
    } = useStore();
 
-   const [copiedPositions, setCopiedPositions] = useState<dancerPosition[]>([]);
+   // const [copiedPositions, setCopiedPositions] = useState<dancerPosition[]>([]);
 
    useEffect(() => {
       window.addEventListener("keydown", downHandler);
