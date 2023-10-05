@@ -342,8 +342,8 @@ export const ObjectControls: React.FC<{
                            </div>
                         </DropdownMenuTrigger>
 
-                        <DropdownMenuContent className="DropdownMenuContent ">
-                           <DropdownMenuItem className="w-full  hover:bg-neutral-200">
+                        <DropdownMenuContent className=" dark:fill-white ">
+                           <DropdownMenuItem className="w-full  hover:bg-neutral-200 ">
                               <div className="  py-1  text-xs   flex flex-row items-center" onClick={setLinear}>
                                  <svg className="w-5 h-5 mr-4  " xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                                     <path d="M170 666q-37.8 0-63.9-26.141t-26.1-64Q80 538 106.1 512t63.9-26q29.086 0 52.543 17T255 546h625v60H255q-9 26-32.457 43T170 666Z" />

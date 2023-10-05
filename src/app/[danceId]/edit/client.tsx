@@ -994,12 +994,7 @@ const Edit = ({
          ></EventHandler>
 
          <div
-            // style={{
-            //    pointerEvents: subscriptionStatus === "SUBSCRIBED" ? "none" : "auto",
-            // }}
-            className={`  full-screen   flex-col  ${
-               localSettings.isDarkMode ? "dark" : ""
-            }  flex  bg-[#fafafa] dark:bg-black overflow-hidden text-neutral-900 select-none `}
+            className={`  full-screen   flex-col   flex  bg-[#fafafa] dark:bg-black overflow-hidden text-neutral-900 select-none `}
             style={{
                touchAction: "none",
             }}

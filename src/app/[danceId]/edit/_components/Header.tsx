@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import logo from "../../../public/logo.svg";
 import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
-import Dropdown from "./Dropdown";
-import { DarkModeSwitch } from "react-toggle-dark-mode";
+
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useStore } from "../store";
 import styles from "./Status.module.css";
@@ -15,6 +15,12 @@ import { useIsDesktop, useIsIOS } from "../../../../hooks";
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarShortcut, MenubarTrigger } from "@/components/ui/menubar";
 import { revalidatePath } from "next/cache";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+// import { usePostHog } from "posthog-js/react";
+import { useTheme } from "next-themes";
+import { Input } from "../../../../../@/components/ui/input";
+import { Button } from "../../../../../@/components/ui/button";
+import { DialogClose } from "@radix-ui/react-dialog";
+
 export const Header: React.FC<{
    saved: boolean;
 
@@ -75,6 +81,8 @@ export const Header: React.FC<{
    plan,
 }) => {
    const router = useRouter();
+   // const posthog = usePostHog();
+
    const {
       formations,
       viewOnly,
@@ -94,11 +102,30 @@ export const Header: React.FC<{
    const supabase = createClientComponentClient();
 
    const redo = liveblocks.room?.history.redo;
-
-   const [templatesIsOpen, setTemplatesIsOpen] = useState(false);
    const others = useStore((state) => state.liveblocks.others);
-   const isDesktop = useIsDesktop();
-   // console.log(folder);
+
+   const { setTheme, theme } = useTheme();
+
+   const [rosterName, setRosterName] = useState("");
+
+   const createNewRoster = async () => {
+      if (!session) return;
+      const response = await supabase.from("rosters").insert([
+         {
+            name: rosterName,
+            user_id: session?.user?.id,
+            roster: JSON.parse(JSON.stringify(dancers)).map((dancer: any) => {
+               delete dancer.id;
+               return dancer;
+            }),
+         },
+      ]);
+
+      if (!response.error) {
+         toast.success("Roster saved");
+      }
+   };
+
    return (
       <>
          <div className=" min-h-[50px] dark:bg-black bg-neutral-100  flex flex-row items-center w-full text-neutral-800 border-b  dark:text-white  dark:border-neutral-700 border-neutral-300 ">
@@ -132,19 +159,6 @@ export const Header: React.FC<{
                      href="/dashboard"
                      className=""
                   >
-                     {/* <svg
-                        className="w-10 h-10 ml-5 mr-3 cursor-pointer flex-shrink-0"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 59 125"
-                     >
-                        <path className="dark:fill-pink-600 fill-pink-300" d="M0 90h59v24H0z" />
-                        <path
-                           className="fill-neutral-700 dark:fill-white"
-                           d="M6.63707 102V25.6364H57.1982v13.3114H22.7823v18.196h31.06v13.3115h-31.06V102H6.63707Z"
-                        />
-                     </svg> */}
-                     {/* <img className="  w-6" src="/logo.png" alt="" /> */}
                      <svg className="w-6 fill-neutral-700 dark:fill-neutral-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 387 516">
                         <path d="M0 130C0 58.203 58.203 0 130 0v386c0 71.797-58.203 130-130 130V130Z" />
                         <path d="M114 130V0l272.355-.0000119C386.355 71.797 328.152 130 256.355 130H114Z" />
@@ -154,33 +168,165 @@ export const Header: React.FC<{
                   <p className="text-[10px] dark:text-neutral-300 text-neutral-700 font-medium absolute right-[6px] bottom-1">Beta</p>
                </div>
                <div className="md:px-1 h-full">
-                  {/* {isDesktop ? ( */}
                   <Menubar className="dark:bg-black h-full border-none bg-neutral-100 ">
-                     <MenubarMenu>
-                        <MenubarTrigger className="dark:hover:bg-neutral-800 hover:bg-neutral-200 h-full">File</MenubarTrigger>
-                        <MenubarContent className="dark:bg-black w-[200px]">
-                           <MenubarItem
-                              onClick={() => {
-                                 // window.location.href = "/dashboard";
-                                 window.location.href = "/dashboard";
-                              }}
-                              className="py-1 hover:bg-neutral-200 flex flex-row items-center"
-                           >
-                              Back to files
-                           </MenubarItem>
-                           <MenubarSeparator className="h-[1px] bg-neutral-300" />
+                     {session ? (
+                        <>
+                           <MenubarMenu>
+                              <MenubarTrigger className="dark:hover:bg-neutral-800 hover:bg-neutral-200 h-full">File</MenubarTrigger>
 
-                           <MenubarItem
-                              onClick={() => {
-                                 setLocalSettings((localSettings: localSettings) => {
-                                    return { ...localSettings, isDarkMode: !localSettings.isDarkMode };
-                                 });
-                              }}
-                              className="py-1 hover:bg-neutral-200"
-                           >
-                              Switch to {localSettings.isDarkMode ? "light" : "dark"} mode
-                           </MenubarItem>
-                           <MenubarSeparator />
+                              <MenubarContent className="dark:bg-black w-[200px]">
+                                 <Dialog className="">
+                                    <MenubarItem
+                                       onClick={() => {
+                                          window.location.href = "/dashboard";
+                                       }}
+                                       className="py-1 hover:bg-neutral-200 flex flex-row items-center"
+                                    >
+                                       Back to files
+                                    </MenubarItem>
+                                    <MenubarSeparator className="h-[1px] bg-neutral-300" />
+
+                                    <MenubarItem
+                                       onClick={() => {
+                                          if (!plan) {
+                                             router.push("/upgrade");
+                                          } else {
+                                             exportPdf();
+                                          }
+                                       }}
+                                       className="py-1 hover:bg-neutral-200"
+                                    >
+                                       Export PDF
+                                       {!plan ? <MenubarShortcut>⚡️</MenubarShortcut> : null}
+                                    </MenubarItem>
+
+                                    <DialogTrigger
+                                       onClick={(e) => {
+                                          if (!plan) {
+                                             e.preventDefault();
+                                             router.push("/upgrade");
+                                          }
+                                       }}
+                                       asChild
+                                    >
+                                       <MenubarItem onSelect={(e) => e.preventDefault()} className="py-1 hover:bg-neutral-200 w-full">
+                                          Save roster
+                                          {!plan ? <MenubarShortcut>⚡️</MenubarShortcut> : null}
+                                       </MenubarItem>
+                                    </DialogTrigger>
+
+                                    <DialogContent className="dark:bg-neutral-950/80 ">
+                                       <DialogHeader>
+                                          <DialogTitle>Name your roster</DialogTitle>
+                                          <DialogDescription className="my-3">
+                                             Save your roster to easily create new performances with an existing roster. Performer height, color, and
+                                             shape will all be saved
+                                          </DialogDescription>
+                                       </DialogHeader>
+                                       <Input
+                                          value={rosterName}
+                                          onChange={(e) => {
+                                             setRosterName(e.target.value);
+                                          }}
+                                          className=""
+                                          // type="text"
+                                          placeholder="Roster name"
+                                       />
+                                       <DialogClose className="ml-auto">
+                                          <Button
+                                             onClick={async (e) => {
+                                                createNewRoster();
+                                             }}
+                                             className="     "
+                                          >
+                                             Save
+                                          </Button>
+                                       </DialogClose>
+                                    </DialogContent>
+
+                                    <MenubarItem onClick={() => undo()} className="py-1 hover:bg-neutral-200 md:hidden">
+                                       Undo <MenubarShortcut>⌘Z</MenubarShortcut>
+                                    </MenubarItem>
+                                 </Dialog>
+                              </MenubarContent>
+                           </MenubarMenu>
+
+                           <MenubarMenu className="">
+                              <MenubarTrigger className="hidden md:block dark:hover:bg-neutral-800 hover:bg-neutral-200 h-full">Edit</MenubarTrigger>
+                              <MenubarContent className="dark:bg-black">
+                                 <MenubarItem
+                                    onClick={() => {
+                                       // if (!selectedFormations.length) return;
+                                       // e.preventDefault();
+                                       setSelectedDancers([...formations?.[0]?.positions?.map((position) => position.id)] || []);
+                                    }}
+                                    className="py-1 hover:bg-neutral-200 "
+                                 >
+                                    Select all positions <MenubarShortcut>⌘A</MenubarShortcut>
+                                 </MenubarItem>
+                                 <MenubarItem
+                                    style={{
+                                       opacity: !selectedDancers?.length ? 0.5 : 1,
+                                    }}
+                                    onClick={() => {
+                                       if (!selectedFormations.length) return;
+
+                                       setCopiedPositions(
+                                          getFirstSelectedFormation()?.positions?.filter((dancerPosition: dancerPosition) =>
+                                             selectedDancers.includes(dancerPosition.id)
+                                          ) || []
+                                       );
+                                    }}
+                                    className="py-1 hover:bg-neutral-200 "
+                                 >
+                                    Copy positions <MenubarShortcut>⌘C</MenubarShortcut>
+                                 </MenubarItem>
+                                 <MenubarItem
+                                    style={{
+                                       opacity: !copiedPositions?.length ? 0.5 : 1,
+                                    }}
+                                    onClick={() => {
+                                       if (!selectedFormations.length) return;
+                                       if (!copiedPositions) return;
+                                       setFormations(
+                                          formations.map((formation, i) => {
+                                             if (selectedFormations.includes(formation.id)) {
+                                                return {
+                                                   ...formation,
+                                                   positions: [
+                                                      ...formation.positions.filter((dancerPosition) => {
+                                                         return !copiedPositions
+                                                            .map((dancerPositionCopy: dancerPosition) => dancerPositionCopy.id)
+                                                            .includes(dancerPosition.id);
+                                                      }),
+                                                      ...copiedPositions,
+                                                   ],
+                                                };
+                                             }
+                                             return formation;
+                                          })
+                                       );
+                                    }}
+                                    className="py-1 hover:bg-neutral-200 "
+                                 >
+                                    Paste positions <MenubarShortcut>⌘V</MenubarShortcut>
+                                 </MenubarItem>
+                                 <MenubarSeparator className="h-[1px] bg-neutral-300" />
+                                 <MenubarItem onClick={() => undo()} className="py-1 hover:bg-neutral-200">
+                                    Undo <MenubarShortcut>⌘Z</MenubarShortcut>
+                                 </MenubarItem>
+                                 <MenubarItem onClick={() => (redo ? redo() : null)} className="py-1 hover:bg-neutral-200 ">
+                                    Redo
+                                    {/* <MenubarShortcut>⇧⌘Z</MenubarShortcut> */}
+                                 </MenubarItem>
+                              </MenubarContent>
+                           </MenubarMenu>
+                        </>
+                     ) : null}
+
+                     <MenubarMenu className="">
+                        <MenubarTrigger className="hidden md:block dark:hover:bg-neutral-800 hover:bg-neutral-200 h-full">View</MenubarTrigger>
+                        <MenubarContent>
                            <MenubarItem
                               onClick={() => {
                                  fullscreenContainer.current.requestFullscreen();
@@ -193,7 +339,7 @@ export const Header: React.FC<{
                               Enter full screen
                               <MenubarShortcut>F</MenubarShortcut>
                            </MenubarItem>
-                           <MenubarSeparator />
+
                            <MenubarItem
                               onClick={() => {
                                  setLocalSettings((localSettings: localSettings) => {
@@ -205,98 +351,24 @@ export const Header: React.FC<{
                               {!localSettings.stageFlipped ? "View from back" : "View from front"}
                               <MenubarShortcut>R</MenubarShortcut>
                            </MenubarItem>
-                           <MenubarSeparator />
                            <MenubarItem
                               onClick={() => {
-                                 if (!plan) {
-                                    router.push("/upgrade");
+                                 // setLocalSettings((localSettings: localSettings) => {
+                                 //    return { ...localSettings, isDarkMode: !localSettings.isDarkMode };
+                                 // });
+                                 if (theme === "dark") {
+                                    setTheme("light");
                                  } else {
-                                    exportPdf();
+                                    setTheme("dark");
                                  }
                               }}
                               className="py-1 hover:bg-neutral-200"
                            >
-                              Export PDF
-                              {!plan ? <MenubarShortcut>⚡️</MenubarShortcut> : null}
-                           </MenubarItem>
-                           <MenubarItem onClick={() => undo()} className="py-1 hover:bg-neutral-200 md:hidden">
-                              Undo <MenubarShortcut>⌘Z</MenubarShortcut>
-                           </MenubarItem>
-                        </MenubarContent>
-                     </MenubarMenu>
-
-                     <MenubarMenu className="">
-                        <MenubarTrigger className="hidden md:block dark:hover:bg-neutral-800 hover:bg-neutral-200 h-full">Edit</MenubarTrigger>
-                        <MenubarContent className="w-[200px]">
-                           <MenubarItem
-                              onClick={() => {
-                                 // if (!selectedFormations.length) return;
-                                 // e.preventDefault();
-                                 setSelectedDancers([...formations?.[0]?.positions?.map((position) => position.id)] || []);
-                              }}
-                              className="py-1 hover:bg-neutral-200 "
-                           >
-                              Select all positions <MenubarShortcut>⌘A</MenubarShortcut>
-                           </MenubarItem>
-                           <MenubarItem
-                              style={{
-                                 opacity: !selectedDancers?.length ? 0.5 : 1,
-                              }}
-                              onClick={() => {
-                                 if (!selectedFormations.length) return;
-
-                                 setCopiedPositions(
-                                    getFirstSelectedFormation()?.positions?.filter((dancerPosition: dancerPosition) =>
-                                       selectedDancers.includes(dancerPosition.id)
-                                    ) || []
-                                 );
-                              }}
-                              className="py-1 hover:bg-neutral-200 "
-                           >
-                              Copy positions <MenubarShortcut>⌘C</MenubarShortcut>
-                           </MenubarItem>
-                           <MenubarItem
-                              style={{
-                                 opacity: !copiedPositions?.length ? 0.5 : 1,
-                              }}
-                              onClick={() => {
-                                 if (!selectedFormations.length) return;
-                                 if (!copiedPositions) return;
-                                 setFormations(
-                                    formations.map((formation, i) => {
-                                       if (selectedFormations.includes(formation.id)) {
-                                          return {
-                                             ...formation,
-                                             positions: [
-                                                ...formation.positions.filter((dancerPosition) => {
-                                                   return !copiedPositions
-                                                      .map((dancerPositionCopy: dancerPosition) => dancerPositionCopy.id)
-                                                      .includes(dancerPosition.id);
-                                                }),
-                                                ...copiedPositions,
-                                             ],
-                                          };
-                                       }
-                                       return formation;
-                                    })
-                                 );
-                              }}
-                              className="py-1 hover:bg-neutral-200 "
-                           >
-                              Paste positions <MenubarShortcut>⌘V</MenubarShortcut>
-                           </MenubarItem>
-                           <MenubarSeparator className="h-[1px] bg-neutral-300" />
-                           <MenubarItem onClick={() => undo()} className="py-1 hover:bg-neutral-200">
-                              Undo <MenubarShortcut>⌘Z</MenubarShortcut>
-                           </MenubarItem>
-                           <MenubarItem onClick={() => (redo ? redo() : null)} className="py-1 hover:bg-neutral-200 ">
-                              Redo
-                              {/* <MenubarShortcut>⇧⌘Z</MenubarShortcut> */}
+                              Switch to {theme === "light" ? "dark" : "light"} mode
                            </MenubarItem>
                         </MenubarContent>
                      </MenubarMenu>
                   </Menubar>
-                  {/* ) : null} */}
                </div>
 
                <button
@@ -312,11 +384,14 @@ export const Header: React.FC<{
                   <p className="">2D</p>
                </button>
                <button
-                  onClick={() =>
+                  onClick={() => {
                      setLocalSettings((localSettings: localSettings) => {
                         return { ...localSettings, viewingTwo: false, viewingThree: true };
-                     })
-                  }
+                     });
+                     // posthog.capture("3D view enabled", {
+                     //    performanceId: danceId,
+                     // });
+                  }}
                   className={` ${
                      localSettings.viewingThree ? "dark:bg-pink-600 bg-pink-300" : ""
                   }  group   h-full  text-sm font-bold place-items-center  min-w-[48px] `}
@@ -401,81 +476,6 @@ export const Header: React.FC<{
                   Beta feedback
                </a>
 
-               {/* {!viewOnlyInitial ? (
-                  <button
-                     title="Formation templates"
-                     onClick={() => {
-                        setTemplatesIsOpen((x: boolean) => !x);
-                     }}
-                     className="min-w-[48px]   h-full grid place-items-center"
-                  >
-                     <svg className="w-6 fill-white h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                        <path d="M340.118 766Q361 766 375.5 751.382q14.5-14.617 14.5-35.5Q390 695 375.382 680.5q-14.617-14.5-35.5-14.5Q319 666 304.5 680.618q-14.5 14.617-14.5 35.5Q290 737 304.618 751.5q14.617 14.5 35.5 14.5Zm0-280Q361 486 375.5 471.382q14.5-14.617 14.5-35.5Q390 415 375.382 400.5q-14.617-14.5-35.5-14.5Q319 386 304.5 400.618q-14.5 14.617-14.5 35.5Q290 457 304.618 471.5q14.617 14.5 35.5 14.5Zm280 280Q641 766 655.5 751.382q14.5-14.617 14.5-35.5Q670 695 655.382 680.5q-14.617-14.5-35.5-14.5Q599 666 584.5 680.618q-14.5 14.617-14.5 35.5Q570 737 584.618 751.5q14.617 14.5 35.5 14.5Zm0-280Q641 486 655.5 471.382q14.5-14.617 14.5-35.5Q670 415 655.382 400.5q-14.617-14.5-35.5-14.5Q599 386 584.5 400.618q-14.5 14.617-14.5 35.5Q570 457 584.618 471.5q14.617 14.5 35.5 14.5ZM180 936q-24 0-42-18t-18-42V276q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600V276H180v600Zm0-600v600-600Z" />
-                     </svg>
-                  </button>
-               ) : null} */}
-
-               {/* {templatesIsOpen ? (
-                  <div
-                     className="w-[300px] left-[200px] h-[500px] bg-neutral-800 absolute top-12 flex flex-col  text-sm shadow-2xl z-[50]"
-                     id="dropdown-menu"
-                  >
-                     <p className="font-semibold ml-2 mt-1">Formation Templates</p>
-                     <div className="flex flex-row items-center mt-auto m-1">
-                        <div className=" grid   flex-col mt-6  grid-cols-2  gap-2 h-full w-full p-2 ">
-                           <button
-                              className=" w-full h-24 border border-gray-200 shadow-sm ml-auto mr-auto rounded-xl grid place-items-center"
-                              onClick={() => {
-                                 if (pricingTier === "basic") {
-                                    setUpgradeIsOpen(true);
-                                 }
-                                 // addToStack();
-                                 setFormations(horizontalLineFormation(formations, selectedFormation));
-                                 pushChange();
-                              }}
-                           >
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth={1.5}
-                                 stroke="currentColor"
-                                 className="w-10 h-10"
-                              >
-                                 <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                                 />
-                              </svg>
-                           </button>
-                           <button
-                              className=" w-full h-24 border border-gray-200 shadow-sm ml-auto mr-auto rounded-xl grid place-items-center"
-                              onClick={() => {
-                                 setFormations(verticalLineFormation(formations, selectedFormation));
-                                 pushChange();
-                              }}
-                           >
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth={1.5}
-                                 stroke="currentColor"
-                                 className="w-10 h-10"
-                              >
-                                 <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
-                                 />
-                              </svg>
-                           </button>
-                        </div>
-                     </div>
-                  </div>
-               ) : null} */}
-
                {!viewOnly ? (
                   <>
                      {saved ? (
@@ -505,10 +505,11 @@ export const Header: React.FC<{
 
             <div className=" flex flex-row items-center justify-end mr-3 w-2/5 gap-3 ">
                {!plan && session ? (
-               <Link href={"/upgrade"} className="text-sm mr-3 hidden md:flex dark:text-neutral-200 text-neutral-800 ">
-                  Upgrade <span className="ml-1">⚡️</span>
-               </Link>
+                  <Link href={"/upgrade"} className="text-sm mr-3 hidden md:flex dark:text-neutral-200 text-neutral-800 ">
+                     Upgrade <span className="ml-1">⚡️</span>
+                  </Link>
                ) : null}
+
                {folder?.name && (
                   <Link
                      href={`/dashboard/project/${folder.id}`}
@@ -521,13 +522,7 @@ export const Header: React.FC<{
                      <p>{folder?.name}</p>
                   </Link>
                )}
-               {/* {!viewOnly && !isDesktop ? (
-                  <button onClick={() => undo()} className="ml-auto mr-4">
-                     <svg className="w-6 h-6 dark:fill-white fill-black" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-                        <path d="M280-200v-80h284q63 0 109.5-40T720-420q0-60-46.5-100T564-560H312l104 104-56 56-200-200 200-200 56 56-104 104h252q97 0 166.5 63T800-420q0 94-69.5 157T564-200H280Z" />
-                     </svg>
-                  </button>
-               ) : null} */}
+
                {status ? (
                   <div className="">
                      <div className={`${styles.status} hidden lg:block`} data-status={status}>
@@ -536,45 +531,54 @@ export const Header: React.FC<{
                      </div>
                   </div>
                ) : null}
-               <div className="lg:flex hidden">
-                  {" "}
-                  {others.length
-                     ? others
-                          .filter((other) => other.presence.nameOrEmail)
-                          .map((person, i) => {
-                             return (
-                                <div
-                                   key={person.connectionId}
-                                   //   onClick={() => {
-                                   //      setSelectedFormation(userPositions?.[id]?.selectedFormation || 0);
-                                   //   }}
-                                   style={{
-                                      border: "2px solid white",
-                                      backgroundColor: COLORS[person.connectionId % COLORS.length],
-                                   }}
-                                   className=" grid place-items-center w-9 select-none cursor-pointer  h-9 rounded-full mr-2"
-                                >
-                                   {/* <img className="rounded-full" src={otherInitials} alt="" />{" "} */}
-                                   <p className="text-white text-xs font-bold">{initials(person.presence.nameOrEmail) || "An"}</p>
-                                </div>
-                             );
-                          })
-                     : null}
+               <div className="lg:flex gap-2 hidden">
+                  <TooltipProvider className="">
+                     {others.length
+                        ? others
+                             .filter((other) => other.presence.nameOrEmail)
+                             .map((person, i) => {
+                                return (
+                                   <Tooltip>
+                                      <TooltipTrigger>
+                                         <div
+                                            key={person.connectionId}
+                                            //   onClick={() => {
+                                            //      setSelectedFormation(userPositions?.[id]?.selectedFormation || 0);
+                                            //   }}
+                                            style={{
+                                               border: "2px solid",
+                                               borderColor: COLORS[person.connectionId % COLORS.length],
+                                               backgroundColor: COLORS[person.connectionId % COLORS.length],
+                                            }}
+                                            className=" grid place-items-center w-9 select-none cursor-pointer  h-9 rounded-full"
+                                         >
+                                            <p className="text-white text-xs font-bold">{initials(person.presence.nameOrEmail || "") || "An"}</p>
+                                         </div>
+                                      </TooltipTrigger>
+                                      <TooltipContent
+                                         style={{
+                                            backgroundColor: COLORS[person.connectionId % COLORS.length],
+                                         }}
+                                         className="py-1 border-none"
+                                      >
+                                         <p className="text-xs text-white">{person.presence.nameOrEmail}</p>
+                                      </TooltipContent>
+                                   </Tooltip>
+                                );
+                             })
+                        : null}
+                  </TooltipProvider>
                </div>
-               
 
                {!viewOnly ? (
-
-                  <>
-                     <button
-                        onClick={() => setShareIsOpen((state: boolean) => !state)}
-                        className="dark:bg-pink-600 bg-pink-300  text-xs rounded-md px-3 py-2 ml-2"
-                     >
-                        <div className="flex flex-row items-center text-black dark:text-white ">
-                           <p className="">Share</p>
-                        </div>
-                     </button>
-                  </>
+                  <button
+                     onClick={() => setShareIsOpen((state: boolean) => !state)}
+                     className="dark:bg-pink-600 bg-pink-300  text-xs rounded-md px-3 py-2"
+                  >
+                     <div className="flex flex-row items-center text-black dark:text-white ">
+                        <p className="">Share</p>
+                     </div>
+                  </button>
                ) : null}
             </div>
          </div>

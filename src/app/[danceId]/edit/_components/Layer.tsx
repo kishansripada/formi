@@ -146,22 +146,6 @@ export const Layer: React.FC<{
                         key={formation.id}
                         id={formation.id}
                         onClick={(e: any) => {
-                           // if (!selectedFormations.includes(formation.id)) {
-                           //    setSelectedDancers([]);
-                           // }
-
-                           // setFormations((formations: formation[]) => {
-                           //    return formations.map((formationx) => {
-                           //       if (formationx.id === formation.id) {
-                           //          return {
-                           //             ...formation,
-                           //             durationSeconds: formationx.durationSeconds - 1,
-                           //             transition: { ...formationx.transition, durationSeconds: formationx.transition.durationSeconds + 1 },
-                           //          };
-                           //       }
-                           //       return formationx;
-                           //    });
-                           // });
                            if (shiftHeld) {
                               if (selectedFormations.includes(formation.id)) {
                                  setSelectedFormations(selectedFormations.filter((id) => id !== formation.id));
@@ -176,9 +160,6 @@ export const Layer: React.FC<{
                                  } else {
                                     setSelectedFormations([formation.id]);
                                  }
-
-                                 // setSelectedFormations()
-                                 // setSelectedFormations([...selectedFormations, formation.id]);
                               }
                            } else if (commandHeld) {
                               if (selectedFormations.includes(formation.id)) {
@@ -190,16 +171,13 @@ export const Layer: React.FC<{
                               setSelectedFormations([formation.id]);
                            }
 
-                           // setSelectedFormation(index);
-                           // if (isPlaying) {
                            let position = formations
                               .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
                               .slice(0, index)
                               .reduce((a, b) => a + b, 0);
-                           // position = position + formations[index]?.transition.durationSeconds;
-                           // console.log(position);
+
                            setPosition(position);
-                           // setSelectedFormation(index);
+
                            if (!(songDuration && player)) return;
 
                            player.seekTo(Math.min(Math.max(0, position / (songDuration / 1000)), 1));

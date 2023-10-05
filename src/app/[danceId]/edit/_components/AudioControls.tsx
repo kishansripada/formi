@@ -266,9 +266,7 @@ export const AudioControls: React.FC<{
                         onClick={() => {
                            setLocalSettings((s) => ({ ...s, autoScroll: !s.autoScroll }));
                         }}
-                        className={`w-full py-2  flex flex-row items-center justify-between  text-sm  hover:bg-neutral-200 ${
-                           localSettings.autoScroll ? "bg-neutral-200" : ""
-                        }`}
+                        className={`w-full py-2  flex flex-row items-center justify-between  text-sm   ${localSettings.autoScroll ? "" : ""}`}
                      >
                         <p>Autoscroll</p>
                         {localSettings.autoScroll ? (
@@ -292,7 +290,7 @@ export const AudioControls: React.FC<{
                         }}
                         className="w-full  hover:bg-neutral-200"
                      >
-                        <div className="  py-2  text-sm   flex flex-row items-center">
+                        <div className="  py-1  text-sm   flex flex-row items-center">
                            <p>Playback rate: {JSON.stringify(playbackRates[playbackRateIndex % 5])}x</p>
                         </div>
                      </DropdownMenuItem>
