@@ -381,7 +381,7 @@ export const ObjectControls: React.FC<{
                            </div>
                         </DropdownMenuTrigger>
 
-                        <DropdownMenuContent className="">
+                        <DropdownMenuContent className={`grid ${items.length > 10 ? "grid-cols-2 " : ""}`}>
                            {items.map((item: item) => {
                               return (
                                  <DropdownMenuItem key={item.id} onClick={() => setDancerItem(item.id)} className="w-full  hover:bg-neutral-200">
