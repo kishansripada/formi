@@ -504,9 +504,11 @@ export const Header: React.FC<{
             </div>
 
             <div className=" flex flex-row items-center justify-end mr-3 w-2/5 gap-3 ">
+               {!plan ? (
                <Link href={"/upgrade"} className="text-sm mr-3 hidden md:flex dark:text-neutral-200 text-neutral-800 ">
                   Upgrade <span className="ml-1">⚡️</span>
                </Link>
+               ) : null}
                {folder?.name && (
                   <Link
                      href={`/dashboard/project/${folder.id}`}
