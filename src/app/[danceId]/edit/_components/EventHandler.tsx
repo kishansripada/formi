@@ -138,7 +138,7 @@ export const EventHandler: React.FC<{
          });
       }
 
-      if (e.key === "r") {
+      if (e.key === "r" && !commandHeld) {
          setLocalSettings((localSettings: localSettings) => {
             return {
                ...localSettings,

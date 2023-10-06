@@ -116,7 +116,7 @@ const Client = () => {
             </div>
 
             <p className="text-center font-bold text-3xl mt-12 ">Trusted by</p>
-            <div className="lg:h-40 w-1/4  lg:w-full bg-neutral-50 flex lg:flex-row flex-col justify-center py-10 lg:child:mx-10 child:my-5 lg:child:my-0 ">
+            <div className="lg:h-40 w-1/4  lg:w-full bg-neutral-50 flex lg:flex-row flex-col justify-center py-10  gap-5  ">
                <img
                   className="   h-full opacity-80 object-cover"
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Los_Angeles_Lakers_logo.svg/1200px-Los_Angeles_Lakers_logo.svg.png"
@@ -138,11 +138,11 @@ const Client = () => {
                   alt=""
                />
             </div>
-            <div className="bg-neutral-50 dark:bg-neutral-900 lg:px-0 px-7 w-full  ">
+            <div className="bg-neutral-50  lg:px-0 px-7 w-full  ">
                <div className="flex lg:flex-row flex-col items-center mx-auto max-w-[1000px] py-8 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
-                     <p className="text-3xl font-bold dark:text-neutral-50">Collaborate, communicate</p>
-                     <p className="text-lg mt-6 lg:w-[80%] text-neutral-500 dark:text-neutral-300">
+                     <p className="text-3xl font-bold ">Collaborate, communicate</p>
+                     <p className="text-lg mt-6 lg:w-[80%] text-neutral-500 ">
                         Directly add comments and annotations on the stage, making collaboration among team members easier and more efficient. Make
                         FORMI a central platform for discussion and feedback, streamlining the choreography process.
                      </p>
@@ -160,7 +160,7 @@ const Client = () => {
                </div>
             </div>
 
-            <div className="bg-neutral-50 dark:bg-[#191919] w-full  font-proxima lg:px-0 px-7">
+            <div className="bg-neutral-50  w-full  font-proxima lg:px-0 px-7">
                <div className="flex lg:flex-row flex-col-reverse items-center mx-auto max-w-[1000px] py-8 w-full ">
                   <div className="lg:w-1/2 w-[90%]">
                      <video
@@ -173,8 +173,8 @@ const Client = () => {
                   </div>
                   <div className="lg:w-1/2 w-[90%] ">
                      <div className="lg:w-[90%] mx-auto">
-                        <p className="text-3xl font-bold dark:text-neutral-50">Complex dancer paths</p>
-                        <p className="text-lg mt-6  text-neutral-500 dark:text-neutral-300 ">
+                        <p className="text-3xl font-bold ">Complex dancer paths</p>
+                        <p className="text-lg mt-6  text-neutral-500 ">
                            Our non-linear path feature lets you plan complex formations with ease, making your choreography process smoother and more
                            efficient. Say goodbye to old-fashioned, complicated methods and hello to modern, streamlined choreography.
                         </p>
@@ -182,8 +182,8 @@ const Client = () => {
                   </div>
                </div>
             </div>
-            <div className=" dark:bg-neutral-900   lg:flex flex-col items-center justify-center  hidden py-10  ">
-               <div className=" grid grid-cols-4 place-items-center child:mx-8   child:my-8  select-none opacity-60 dark:opacity-70 ">
+            <div className="   lg:flex flex-col items-center justify-center  hidden py-10  ">
+               <div className=" grid grid-cols-4 place-items-center child:mx-8   child:my-8  select-none opacity-60 ">
                   <img
                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cornell_University_logo.svg/1280px-Cornell_University_logo.svg.png"
                      className=" w-48  transition duration-500"
@@ -234,7 +234,7 @@ const Client = () => {
                </div>
             </div>
 
-            <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
+            <div className="w-full h-[1px]  bg-neutral-300"></div>
             <Footer></Footer>
          </div>
       </>

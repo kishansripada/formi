@@ -118,7 +118,6 @@ export const FormationControls: React.FC<{
                            })
                         );
                         resumeHistory();
-                        // pushChange();
                      }}
                      className="   text-sm shadow-sm   cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-1 px-3 mr-4 bg-red-500 dark:text-red-400 text-red-600  "
                   >

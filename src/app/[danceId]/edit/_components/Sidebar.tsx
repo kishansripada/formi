@@ -17,7 +17,7 @@ export const Sidebar: React.FC<{
             overscrollBehavior: "none",
             touchAction: "pan-y",
          }}
-         className="md:flex  flex-col hidden  h-full  items-center   text-[10px] dark:bg-black  text-black bg-neutral-100  gap-5   w-20 min-w-[80px] border-r border-neutral-300 dark:border-neutral-700 overflow-y-scroll overflow-x-hidden"
+         className="md:flex  flex-col hidden  h-full py-4  items-center   text-[10px] dark:bg-black  text-black bg-neutral-100  gap-5   w-20 min-w-[80px] border-r border-neutral-300 dark:border-neutral-700 overflow-y-scroll overflow-x-hidden"
       >
          {/* <button onClick={() => setMenuOpen("formations")}>
                <svg
@@ -55,7 +55,7 @@ export const Sidebar: React.FC<{
             <svg
                className={` ${
                   menuOpen === "formations" ? "stroke-pink-600" : "dark:stroke-neutral-300 stroke-neutral-400"
-               } transition duration-300 ease-in-out  w-7 h-7 mt-4`}
+               } transition duration-300 ease-in-out  w-7 h-7 `}
                xmlns="http://www.w3.org/2000/svg"
                fill="none"
                viewBox="0 0 24 24"
