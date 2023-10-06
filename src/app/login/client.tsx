@@ -83,7 +83,7 @@ const Client = () => {
             style={{
                touchAction: "none",
             }}
-            className="flex  flex-row  h-[calc(100dvh)] overflow-hidden relative font-inter"
+            className="flex  flex-row bg-white  text-black h-[calc(100dvh)] overflow-hidden relative font-inter"
          >
             <Toaster></Toaster>
             <div className="flex flex-col items-center w-full lg:w-[40%] justify-center">
@@ -118,7 +118,7 @@ const Client = () => {
                      style={{
                         borderColor: isValidEmail(email) ? "green" : "black",
                      }}
-                     className="w-full px-3 h-12 border-2 border-neutral-200 focus:outline-none  rounded-md placeholder:text-neutral-400 placeholder:text-sm text-sm"
+                     className="w-full px-3 bg-transparent h-12 border-2 border-neutral-200 focus:outline-none  rounded-md placeholder:text-neutral-400 placeholder:text-sm text-sm"
                   />
                   <button
                      onClick={(e) => {
