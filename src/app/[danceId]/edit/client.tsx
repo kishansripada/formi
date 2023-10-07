@@ -17,7 +17,6 @@ import { DancerAlias } from "./_components/DancerAlias";
 import { DancerAliasShadow } from "./_components/DancerAliasShadow";
 import { Canvas } from "./_components/Canvas";
 import { PathEditor } from "./_components/PathEditor";
-import { Share } from "./_components/Modals/Share";
 import { Collision } from "./_components/Collision";
 import { Sidebar } from "./_components/Sidebar";
 import { Settings } from "./_components/SidebarComponents/Settings";
@@ -265,7 +264,7 @@ const Edit = ({
    const [menuOpen, setMenuOpen] = useState<string | null>("formations");
    const [player, setPlayer] = useState(null);
    const [saved, setSaved] = useState<boolean>(true);
-   const [shareIsOpen, setShareIsOpen] = useState(false);
+
    const [isChangingCollisionRadius, setIsChangingCollisionRadius] = useState(false);
    // const [subscriptionStatus, setSubscriptionStatus] = useState("NOT SUBSCRIBED");
    const [isChangingZoom, setIsChangingZoom] = useState(false);
@@ -904,17 +903,6 @@ const Edit = ({
 
          {/* {!hasVisited ? <div className="fixed w-[500px] h-[200px] bg-black">warning</div> : null} */}
 
-         {shareIsOpen ? (
-            <Share
-               danceId={danceId}
-               permissions={permissions}
-               setPermissions={setPermissions}
-               anyoneCanView={anyoneCanView}
-               setAnyoneCanView={setAnyoneCanView}
-               setShareIsOpen={setShareIsOpen}
-            />
-         ) : null}
-
          {helpUrl && <HelpUrl helpUrl={helpUrl} setHelpUrl={setHelpUrl}></HelpUrl>}
 
          {pdfLoading ? (
@@ -1044,11 +1032,14 @@ const Edit = ({
                setLocalSettings={setLocalSettings}
                undo={undo}
                saved={saved}
-               setShareIsOpen={setShareIsOpen}
                dancers={dancers}
                session={session}
                exportThree={exportThree}
                plan={plan}
+               permissions={permissions}
+               setPermissions={setPermissions}
+               anyoneCanView={anyoneCanView}
+               setAnyoneCanView={setAnyoneCanView}
             />
 
             <MobileSidebar setLocalSettings={setLocalSettings} setHelpUrl={setHelpUrl} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></MobileSidebar>

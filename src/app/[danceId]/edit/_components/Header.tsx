@@ -20,16 +20,13 @@ import { useTheme } from "next-themes";
 import { Input } from "../../../../../@/components/ui/input";
 import { Button } from "../../../../../@/components/ui/button";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { Share } from "./Modals/Share";
 
 export const Header: React.FC<{
    saved: boolean;
-
    undo: Function;
-   setShareIsOpen: Function;
-   // viewOnly: boolean;
    folder: any;
    exportPdf: Function;
-
    localSettings: localSettings;
    setLocalSettings: Function;
    setSelectedFormation: Function;
@@ -50,15 +47,15 @@ export const Header: React.FC<{
    exportThree: Function;
    fullscreenContainer: any;
    plan: string | null;
+   permissions: any;
+   setPermissions: Function;
+   anyoneCanView: boolean;
+   setAnyoneCanView: Function;
 }> = ({
    saved,
 
-   setShareIsOpen,
-   // viewOnly,
-
    undo,
    exportPdf,
-
    localSettings,
    setLocalSettings,
    setSelectedFormation,
@@ -70,7 +67,6 @@ export const Header: React.FC<{
    isCommenting,
    isChangingCollisionRadius,
    setIsChangingCollisionRadius,
-   // formations,
    dropDownToggle,
    folder,
    dancers,
@@ -79,10 +75,11 @@ export const Header: React.FC<{
    exportThree,
    fullscreenContainer,
    plan,
+   permissions,
+   setPermissions,
+   anyoneCanView,
+   setAnyoneCanView,
 }) => {
-   const router = useRouter();
-   // const posthog = usePostHog();
-
    const {
       formations,
       viewOnly,
@@ -98,13 +95,13 @@ export const Header: React.FC<{
       copiedPositions,
       liveblocks,
    } = useStore();
-   const isIOS = useIsIOS();
-   const supabase = createClientComponentClient();
-
-   const redo = liveblocks.room?.history.redo;
-   const others = useStore((state) => state.liveblocks.others);
 
    const { setTheme, theme } = useTheme();
+   const isIOS = useIsIOS();
+   const supabase = createClientComponentClient();
+   const router = useRouter();
+   const others = useStore((state) => state.liveblocks.others);
+   const redo = liveblocks.room?.history.redo;
 
    const [rosterName, setRosterName] = useState("");
 
@@ -229,7 +226,7 @@ export const Header: React.FC<{
                                              setRosterName(e.target.value);
                                           }}
                                           className=""
-                                          // type="text"
+                                          type="text"
                                           placeholder="Roster name"
                                        />
                                        <DialogClose className="ml-auto">
@@ -256,7 +253,7 @@ export const Header: React.FC<{
                               <MenubarContent className="dark:bg-black">
                                  <MenubarItem
                                     onClick={() => {
-                                       // if (!selectedFormations.length) return;
+                                       if (!selectedFormations.length) return;
                                        // e.preventDefault();
                                        setSelectedDancers([...formations?.[0]?.positions?.map((position) => position.id)] || []);
                                     }}
@@ -353,9 +350,6 @@ export const Header: React.FC<{
                            </MenubarItem>
                            <MenubarItem
                               onClick={() => {
-                                 // setLocalSettings((localSettings: localSettings) => {
-                                 //    return { ...localSettings, isDarkMode: !localSettings.isDarkMode };
-                                 // });
                                  if (theme === "dark") {
                                     setTheme("light");
                                  } else {
@@ -406,33 +400,6 @@ export const Header: React.FC<{
                      </svg>
                   </button>
                ) : null}
-
-               {/* {isChangingCollisionRadius ? (
-                  <div
-                     className="w-[200px] left-12 h-[80px] bg-neutral-800 absolute top-14 flex flex-col z-[50] text-sm shadow-2xl"
-                     id="dropdown-menu"
-                  >
-                     <p className="font-semibold ml-2 mt-1">Collision Radius</p>
-                     <div className="flex flex-row items-center  border border-neutral-200 mt-auto m-1">
-                        <input
-                           value={localSettings.collisionRadius}
-                           type="number"
-                           step="0.1"
-                           onChange={(e) => {
-                              if (parseFloat(e.target.value) > 3 || parseFloat(e.target.value) < 0) return;
-                              setLocalSettings((localSettings: localSettings) => {
-                                 return { ...localSettings, collisionRadius: parseFloat(e.target.value) };
-                              });
-                           }}
-                           style={{
-                              borderRadius: 0,
-                           }}
-                           className="w-full p-1 focus:outline-none rounded-none text-center text-white bg-transparent  "
-                        />
-                        <p className="mx-1">Squares</p>
-                     </div>
-                  </div>
-               ) : null} */}
 
                {!viewOnlyInitial && !isMobileView ? (
                   <button
@@ -571,14 +538,23 @@ export const Header: React.FC<{
                </div>
 
                {!viewOnly ? (
-                  <button
-                     onClick={() => setShareIsOpen((state: boolean) => !state)}
-                     className="dark:bg-pink-600 bg-pink-300  text-xs rounded-md px-3 py-2"
-                  >
-                     <div className="flex flex-row items-center text-black dark:text-white ">
-                        <p className="">Share</p>
-                     </div>
-                  </button>
+                  <Dialog>
+                     <DialogTrigger>
+                        <Button className="px-3 h-8 text-xs">Share</Button>
+                     </DialogTrigger>
+                     <DialogContent>
+                        <DialogTitle>Permission settings</DialogTitle>
+
+                        <Share
+                           danceId={danceId}
+                           permissions={permissions}
+                           setPermissions={setPermissions}
+                           anyoneCanView={anyoneCanView}
+                           setAnyoneCanView={setAnyoneCanView}
+                           plan={plan}
+                        ></Share>
+                     </DialogContent>
+                  </Dialog>
                ) : null}
             </div>
          </div>
