@@ -29,8 +29,7 @@ export const ObjectControls: React.FC<{
    setPlaybackRate: Function;
    localSettings: localSettings;
    setLocalSettings: Function;
-   isChangingZoom: boolean;
-   setIsChangingZoom: Function;
+
    zoom: number;
    selectedDancers: string[];
    cloudSettings: cloudSettings;
@@ -56,8 +55,7 @@ export const ObjectControls: React.FC<{
    setPlaybackRate,
    localSettings,
    setLocalSettings,
-   isChangingZoom,
-   setIsChangingZoom,
+
    zoom,
    selectedDancers,
    cloudSettings,

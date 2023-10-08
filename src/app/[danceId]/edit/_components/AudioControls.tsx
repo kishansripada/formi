@@ -16,12 +16,8 @@ export const AudioControls: React.FC<{
    player: any;
    isPlaying: boolean;
    setIsPlaying: Function;
-   // formations: formation[];
    position: number | null;
-   // setFormations: Function;
    songDuration: number | null;
-
-   // viewOnly: boolean;
    addToStack: Function;
    pushChange: Function;
    setPixelsPerSecond: Function;
@@ -30,31 +26,19 @@ export const AudioControls: React.FC<{
    setPlaybackRate: Function;
    localSettings: localSettings;
    setLocalSettings: Function;
-   isChangingZoom: boolean;
-   setIsChangingZoom: Function;
    setHelpUrl: Function;
 }> = ({
    player,
    isPlaying,
    setIsPlaying,
-   // formations,
    position,
-   // setFormations,
    songDuration,
-
-   // viewOnly,
-   addToStack,
-   pushChange,
    setPixelsPerSecond,
    pixelsPerSecond,
-   localSource,
    setPlaybackRate,
    localSettings,
    setLocalSettings,
-   isChangingZoom,
-   setIsChangingZoom,
    setHelpUrl,
-   dancers,
 }) => {
    const {
       formations,
@@ -68,6 +52,7 @@ export const AudioControls: React.FC<{
       pauseHistory,
       resumeHistory,
    } = useStore();
+
    const [defaultVolume, setDefaultVolume] = useState(100);
 
    useEffect(() => {
@@ -79,32 +64,8 @@ export const AudioControls: React.FC<{
    const [playbackRateIndex, setPlaybackRateIndex] = useState(2);
    const playbackRates = [0.25, 0.5, 1, 1.5, 2];
 
-   let minPixelsPerSecond = songDuration ? ((window.screen.width - 10) * 1000) / songDuration : 10;
-   let percentZoom = (pixelsPerSecond - minPixelsPerSecond) / (MAX_PIXELS_PER_SECOND - minPixelsPerSecond);
-
-   useEffect(() => {
-      let animationFrameId;
-
-      const handleMouseMove = (e) => {
-         if (isChangingZoom) {
-            cancelAnimationFrame(animationFrameId);
-            animationFrameId = requestAnimationFrame(() => {
-               let newPixelsPerSecond = pixelsPerSecond + (e.movementX / 96) * (MAX_PIXELS_PER_SECOND - minPixelsPerSecond);
-               if (newPixelsPerSecond > minPixelsPerSecond && newPixelsPerSecond < MAX_PIXELS_PER_SECOND) {
-                  setPixelsPerSecond(newPixelsPerSecond);
-               }
-            });
-         }
-      };
-      window.addEventListener("mousemove", handleMouseMove);
-
-      return () => {
-         cancelAnimationFrame(animationFrameId);
-         window.removeEventListener("mousemove", handleMouseMove);
-      };
-   }, [isChangingZoom, pixelsPerSecond, MAX_PIXELS_PER_SECOND]);
-
    const newFormation = () => {
+      ß;
       let id = uuidv4();
       // if (formations.length) {
       setFormations([
@@ -122,31 +83,12 @@ export const AudioControls: React.FC<{
             notes: "",
          },
       ]);
-      // } else {
-      // console.log("fire");
-      // setFormations([
-      //       {
-      //          id: id,
-      //          name: `Untitled`,
-      //          positions: dancers.map((dancer) => {
-      //             return { id: dancer.id, position: { x: 0, y: 0 } };
-      //          }),
-      //          notes: "",
-      //          durationSeconds: 5,
-      //          transition: {
-      //             durationSeconds: 5,
-      //          },
-      //       },
-      //    ]);
-      // }
 
       setSelectedFormations([get().formations[get().formations.length - 1]?.id]);
-      // pushChange();
    };
    const totalDurationOfFormations = formations
       .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
       .reduce((a, b) => a + b, 0);
-   // const timelineWidth = (songDuration ? Math.max(totalDurationOfFormations, songDuration / 1000) : totalDurationOfFormations) * pixelsPerSecond;
 
    const playPause = () => {
       if (player) {
@@ -287,6 +229,7 @@ export const AudioControls: React.FC<{
                                  }}
                                  defaultValue={[defaultVolume]}
                                  max={100}
+                                 min={0}
                                  step={1}
                               />
                            </DropdownMenuItem>
@@ -326,8 +269,7 @@ export const AudioControls: React.FC<{
                      </DropdownMenuItem>
                   </DropdownMenuContent>
                </DropdownMenu>
-
-               <div className=" flex-row items-center ml-7 text-neutral-700 dark:text-neutral-200 lg:flex hidden">
+               <div className="lg:flex hidden flex-row items-center ml-4">
                   <svg
                      xmlns="http://www.w3.org/2000/svg"
                      fill="none"
@@ -342,19 +284,21 @@ export const AudioControls: React.FC<{
                         d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM13.5 10.5h-6"
                      />
                   </svg>
-
-                  <div className="w-24 rounded-full h-1 dark:bg-neutral-600 bg-neutral-200 mx-2 relative ">
-                     <div
-                        onMouseDown={() => {
-                           setIsChangingZoom(true);
-                        }}
-                        style={{
-                           left: `${Math.round(percentZoom * 100)}%`,
-                        }}
-                        className="h-4  w-4 border-[3px] dark:border-pink-600 border-pink-300 rounded-full hover:shadow absolute box-border -translate-y-1/2 -translate-x-1/2 bg-white dark:bg-black cursor-pointer top-[2px]"
-                     ></div>
-                  </div>
-
+                  <Slider
+                     className="w-24 mx-2 "
+                     onValueChange={(e) => {
+                        setPixelsPerSecond(e[0] || 0);
+                     }}
+                     defaultValue={[pixelsPerSecond]}
+                     max={MAX_PIXELS_PER_SECOND}
+                     min={
+                        Math.max((songDuration || 0) / 1000, totalDurationOfFormations)
+                           ? (window.screen.width - 90) / Math.max((songDuration || 0) / 1000, totalDurationOfFormations)
+                           : 10
+                     }
+                     value={[pixelsPerSecond]}
+                     step={1}
+                  />
                   <svg
                      xmlns="http://www.w3.org/2000/svg"
                      fill="none"
@@ -425,7 +369,6 @@ export const AudioControls: React.FC<{
                            })
                         );
                         resumeHistory();
-                        // pushChange();
                      }}
                      className=" ml-auto   text-xs shadow-sm grid cursor-pointer select-none rounded-md font-semibold   place-items-center  bg-opacity-20 py-1 px-3 mr-4 bg-red-500 dark:text-red-400 text-red-600  "
                   >

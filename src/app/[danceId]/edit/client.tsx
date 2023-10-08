@@ -267,7 +267,7 @@ const Edit = ({
 
    const [isChangingCollisionRadius, setIsChangingCollisionRadius] = useState(false);
    // const [subscriptionStatus, setSubscriptionStatus] = useState("NOT SUBSCRIBED");
-   const [isChangingZoom, setIsChangingZoom] = useState(false);
+
    const [isThreeDancerDragging, setIsThreeDancerDragging] = useState(false);
    const [pdfLoading, setPdfLoading] = useState(false);
    const [assetsOpen, setAssetsOpen] = useState(false);
@@ -949,7 +949,6 @@ const Edit = ({
             position={position}
             setPosition={setPosition}
             selectedPropIds={selectedPropIds}
-            setIsChangingZoom={setIsChangingZoom}
             setIsScrollingTimeline={setIsScrollingTimeline}
             setIsChangingCollisionRadius={setIsChangingCollisionRadius}
             dancers={dancers}
@@ -1158,8 +1157,6 @@ const Edit = ({
                         <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-100 dark:bg-neutral-900 relative `}>
                            <ObjectControls
                               zoom={zoom}
-                              setIsChangingZoom={setIsChangingZoom}
-                              isChangingZoom={isChangingZoom}
                               localSettings={localSettings}
                               setLocalSettings={setLocalSettings}
                               setPlaybackRate={setPlaybackRate}
@@ -1416,8 +1413,6 @@ const Edit = ({
                            </div>
                            <FormationControls
                               zoom={zoom}
-                              setIsChangingZoom={setIsChangingZoom}
-                              isChangingZoom={isChangingZoom}
                               localSettings={localSettings}
                               setLocalSettings={setLocalSettings}
                               setPlaybackRate={setPlaybackRate}
@@ -1441,8 +1436,6 @@ const Edit = ({
                      <AudioControls
                         dancers={dancers}
                         setHelpUrl={setHelpUrl}
-                        setIsChangingZoom={setIsChangingZoom}
-                        isChangingZoom={isChangingZoom}
                         localSettings={localSettings}
                         setLocalSettings={setLocalSettings}
                         setPlaybackRate={setPlaybackRate}
