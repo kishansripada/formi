@@ -11,6 +11,7 @@ import {
    DropdownMenuSeparator,
    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Slider } from "../../../../../@/components/ui/slider";
 export const AudioControls: React.FC<{
    player: any;
    isPlaying: boolean;
@@ -67,6 +68,13 @@ export const AudioControls: React.FC<{
       pauseHistory,
       resumeHistory,
    } = useStore();
+   const [defaultVolume, setDefaultVolume] = useState(100);
+
+   useEffect(() => {
+      if (player) {
+         setDefaultVolume(player.getVolume() * 100);
+      }
+   }, [player?.getVolume()]);
 
    const [playbackRateIndex, setPlaybackRateIndex] = useState(2);
    const playbackRates = [0.25, 0.5, 1, 1.5, 2];
@@ -254,14 +262,36 @@ export const AudioControls: React.FC<{
                   <span>{formatTime(position || 0)}</span>
                </p>
 
-               <DropdownMenu>
+               <DropdownMenu className="">
                   <DropdownMenuTrigger asChild className=" cursor-pointer rounded-md">
                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                         <path d="M10 3.75a2 2 0 10-4 0 2 2 0 004 0zM17.25 4.5a.75.75 0 000-1.5h-5.5a.75.75 0 000 1.5h5.5zM5 3.75a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5a.75.75 0 01.75.75zM4.25 17a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5h1.5zM17.25 17a.75.75 0 000-1.5h-5.5a.75.75 0 000 1.5h5.5zM9 10a.75.75 0 01-.75.75h-5.5a.75.75 0 010-1.5h5.5A.75.75 0 019 10zM17.25 10.75a.75.75 0 000-1.5h-1.5a.75.75 0 000 1.5h1.5zM14 10a2 2 0 10-4 0 2 2 0 004 0zM10 16.25a2 2 0 10-4 0 2 2 0 004 0z" />
                      </svg>
                   </DropdownMenuTrigger>
 
-                  <DropdownMenuContent side="top" className="DropdownMenuContent ">
+                  <DropdownMenuContent side="top" className="DropdownMenuContent w-[300px] ">
+                     {player ? (
+                        <>
+                           <DropdownMenuLabel>Volume</DropdownMenuLabel>
+                           <DropdownMenuItem
+                              onClick={() => {
+                                 setLocalSettings((s) => ({ ...s, autoScroll: !s.autoScroll }));
+                              }}
+                              className={`w-full pb-2 pt-1  flex flex-row items-center justify-between  text-sm   ${
+                                 localSettings.autoScroll ? "" : ""
+                              }`}
+                           >
+                              <Slider
+                                 onValueChange={(e) => {
+                                    player.setVolume((e[0] || 0) / 100);
+                                 }}
+                                 defaultValue={[defaultVolume]}
+                                 max={100}
+                                 step={1}
+                              />
+                           </DropdownMenuItem>
+                        </>
+                     ) : null}
                      <DropdownMenuItem
                         onClick={() => {
                            setLocalSettings((s) => ({ ...s, autoScroll: !s.autoScroll }));
