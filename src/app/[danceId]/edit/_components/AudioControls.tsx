@@ -65,7 +65,6 @@ export const AudioControls: React.FC<{
    const playbackRates = [0.25, 0.5, 1, 1.5, 2];
 
    const newFormation = () => {
-      ß;
       let id = uuidv4();
       // if (formations.length) {
       setFormations([
