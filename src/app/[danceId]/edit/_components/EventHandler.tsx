@@ -33,7 +33,6 @@ export const EventHandler: React.FC<{
    setIsChangingCollisionRadius: Function;
    selectedPropIds: string[];
    setIsScrollingTimeline: Function;
-   setIsChangingZoom: Function;
    setPosition: Function;
    position: number;
    setLocalSettings: Function;
@@ -52,7 +51,6 @@ export const EventHandler: React.FC<{
    dancers,
    setIsChangingCollisionRadius,
    setIsScrollingTimeline,
-   setIsChangingZoom,
    selectedPropIds,
    setPosition,
    position,
@@ -91,7 +89,6 @@ export const EventHandler: React.FC<{
 
    const pointerUp = (e: PointerEvent) => {
       setIsScrollingTimeline(false);
-      setIsChangingZoom(false);
    };
 
    const pointerDown = (e: PointerEvent) => {

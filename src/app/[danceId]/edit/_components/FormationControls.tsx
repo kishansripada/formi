@@ -23,8 +23,6 @@ export const FormationControls: React.FC<{
    setPlaybackRate: Function;
    localSettings: localSettings;
    setLocalSettings: Function;
-   isChangingZoom: boolean;
-   setIsChangingZoom: Function;
    zoom: number;
    selectedDancers: string[];
 }> = ({
@@ -46,8 +44,6 @@ export const FormationControls: React.FC<{
    setPlaybackRate,
    localSettings,
    setLocalSettings,
-   isChangingZoom,
-   setIsChangingZoom,
    zoom,
    selectedDancers,
 }) => {
