@@ -21,6 +21,7 @@ import { Input } from "../../../../../@/components/ui/input";
 import { Button } from "../../../../../@/components/ui/button";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Share } from "./Modals/Share";
+import { Toggle } from "../../../../../@/components/ui/toggle";
 
 export const Header: React.FC<{
    saved: boolean;
@@ -365,7 +366,23 @@ export const Header: React.FC<{
                   </Menubar>
                </div>
 
-               <button
+               <Toggle
+                  onPressedChange={(pressed) => {
+                     setLocalSettings((localSettings: localSettings) => {
+                        return { ...localSettings, viewingTwo: !pressed, viewingThree: pressed };
+                     });
+                  }}
+                  pressed={localSettings.viewingThree}
+                  size="lg"
+                  // variant={"outline"}
+                  className="px-3 py-1 rounded-sm"
+                  aria-label="Toggle 3D"
+               >
+                  {/* <p className="">{localSettings.viewingTwo ? "3D" : "2D"}</p> */}
+                  <p className="">3D</p>
+               </Toggle>
+
+               {/* <button
                   onClick={() =>
                      setLocalSettings((localSettings: localSettings) => {
                         return { ...localSettings, viewingTwo: true, viewingThree: false };
@@ -391,7 +408,7 @@ export const Header: React.FC<{
                   }  group   h-full  text-sm font-bold place-items-center  min-w-[48px] `}
                >
                   <p className="">{"3D"}</p>
-               </button>
+               </button> */}
 
                {isIOS && localSettings.viewingThree ? (
                   <button onClick={() => exportThree()} className="min-w-[48px] grid place-items-center">
