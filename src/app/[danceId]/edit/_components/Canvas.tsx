@@ -1055,12 +1055,12 @@ export const Canvas: React.FC<{
                      </>
                   ) : null}
 
-                  {!isPlaying && !localSettings.stageFlipped && (
+                        {!localSettings.stageFlipped && (
                      <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
                         <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
                      </div>
                   )}
-                  {!isPlaying && localSettings.stageFlipped && (
+                        {localSettings.stageFlipped && (
                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10">
                         <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
                      </div>
