@@ -5,7 +5,7 @@ import { DndContext, useDroppable } from "@dnd-kit/core";
 import dynamic from "next/dynamic";
 import { useState, useEffect, useRef, useCallback, lazy } from "react";
 import Head from "next/head";
-import { useRouter } from "next/navigation";
+import { ThemeProvider } from "@/components/theme-provider.tsx";
 import { useLocalStorage } from "../../../hooks";
 import debounce from "lodash.debounce";
 import toast, { Toaster } from "react-hot-toast";
@@ -880,6 +880,7 @@ const Edit = ({
    // };
    return (
       <>
+         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
          <Toaster></Toaster>
          <Head>
             <title>Edit | FORMI</title>
@@ -1484,6 +1485,7 @@ const Edit = ({
                </div>
             </div>
          </div>
+         </ThemeProvider>
       </>
    );
 };
