@@ -1,73 +1,45 @@
-import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
-import logo from "../../../public/logo.svg";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 export const Header = () => {
+   const router = useRouter();
    return (
-      <>
-         <div className="sticky top-0 z-50  bg-neutral-900 ">
-            {/* <Link href={"/pricing"}>
-               <div className="h-12 bg-pink-600 cursor-pointer text-sm w-full text-neutral-100 flex flex-row items-center justify-center hidden lg:flex">
-                  👨‍🎓 Get 80% off with a registered .edu email address for a limited time
-               </div>
-            </Link> */}
+      <div className="bg-neutral-950  lg:pt-7 lg:pb-5 pt-8  w-full lg:px-36 px-10 gap-5 flex flex-row items-center">
+         <Link href={"/"}>
+            <img className="lg:h-10 h-8 " src="/logo.png" alt="" />
+         </Link>
 
-            <nav className="flex flex-row  justify-between text-white items-center  px-[5%]     border-b-neutral-200  dark:bg-neutral-900  ">
-               {/* <div className="lg:flex flex-row items-center justify-center w-1/3 hidden ">
-                  <a target="_black" href="https://www.tiktok.com/@formistudio.app/">
-                     {" "}
-                     <img
-                        className="w-10 mr-7"
-                        src="https://cdn4.iconfinder.com/data/icons/social-media-flat-7/64/Social-media_Tiktok-512.png"
-                        alt=""
-                     />
-                  </a>
-                  <a target="_black" href="https://instagram.com/formistudio.app">
-                     <img className="w-10" src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="" />
-                  </a>
-
-                
-               </div> */}
-               <div className="flex flex-row  items-center justify-start w-full lg:w-1/3">
-                  {/* <Link href={"/features"} className="z-50">
-                     <button className="  text-medium hidden lg:block ">features</button>
-                  </Link> */}
-
-                  <Link href={"/"}>
-                     <div className=" cursor-pointer ">
-                        {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
-                     <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
-                        <h1 className="text-5xl font-bold z-10 dark:text-neutral-200 relative">FORMI</h1>
-                        {/* <p className="font-bold text-5xl">FORMI</p> */}
-                        {/* <img className="lg:w-12 min-w-10 w-10" src="/logo.png" alt="" /> */}
-                        {/* <div className=" bg-pink-600 relative h-2  top-[-10px] mr-auto w-[100%]"></div> */}
-                     </div>
-                  </Link>
-
-                  {/* <Link href={"/features"} className="z-50">
-                     <button className="  text-medium hidden lg:block ">pricing</button>
-                  </Link> */}
-               </div>
-
-               {/* <div>
-                     <h1 className="text-7xl font-bold z-10 relative">n</h1>
-                     <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-full"></div>
-                  </div> */}
-               <div className=" flex-row items-center justify-end w-1/3 lg:flex hidden">
-                  {/* <Link href={"/upgrade"} className="z-50">
-                        <button className=" border-pink-600 border-2 mr-3 px-4 py-1 hidden lg:block  rounded-md ">pricing</button>
-                     </Link> */}
-
-                  <Link href={"/login"} className="z-50">
-                     <p className=" mr-5 cursor-pointer">Login</p>
-                  </Link>
-                  <Link href={"/login"} className="z-50">
-                     <button className="bg-pink-600 text-white  px-4 py-2 hidden lg:block  rounded-md">Get started</button>
-                  </Link>
-               </div>
-            </nav>
+         <div className="lg:flex hidden flex-row items-center gap-6 ml-6 text-sm">
+            <Link className=" text-neutral-400 hover:text-white transition " href={"#features"}>
+               Features
+            </Link>
+            <Link className="text-neutral-400 hover:text-white transition" href={"/upgrade"}>
+               Pricing
+            </Link>
          </div>
-      </>
+
+         <button
+            onClick={() => {
+               router.push("/207/edit");
+            }}
+            className="text-neutral-400 hidden lg:flex hover:text-white transition ml-auto text-sm"
+         >
+            View Demo
+         </button>
+
+         <Link
+            href={"/login"}
+            className="bg-neutral-700/50 group hover:bg-neutral-600/50  text-neutral-200 py-2 flex flex-row items-center text-sm h-full rounded-full px-3  transition ml-auto lg:ml-[0]"
+         >
+            <p className="mr-2 ml-2">Log In</p>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 group-hover:translate-x-1 transition">
+               <path
+                  fillRule="evenodd"
+                  d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                  clipRule="evenodd"
+               />
+            </svg>
+         </Link>
+      </div>
    );
 };

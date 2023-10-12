@@ -1,62 +1,14 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { Footer } from "./NonAppComponents/Footer";
 import { motion } from "framer-motion";
-// import { usePostHog } from "posthog-js/react";
-// import { useEffect } from "react";
-// import { useRouter } from "next/navigation";
+import { Header } from "./NonAppComponents/Header";
 
 const Client = () => {
-   // const posthog = usePostHog();
-   // const router = useRouter();
-   // useEffect(() => {
-   //    posthog.init("phc_alA4RuylphhhJUBjGj89zQLubtkopv3QXbfkKGfcuV4", { api_host: "https://app.posthog.com" });
-   // }, []);
    return (
       <>
          <div className="overflow-hidden  bg-neutral-50 flex flex-col items-center ">
-            <div className="bg-neutral-950  lg:pt-7 lg:pb-5 pt-8  w-full lg:px-36 px-10 gap-5 flex flex-row items-center">
-               {/* <div className=" p-1 "> */}
-               <img className="lg:h-10 h-8 " src="/logo.png" alt="" />
-               {/* </div> */}
-               <div className="lg:flex hidden flex-row items-center gap-6 ml-6 text-sm">
-                  <Link className=" text-neutral-400 hover:text-white transition " href={"#features"}>
-                     Features
-                  </Link>
-                  <Link className="text-neutral-400 hover:text-white transition" href={"/upgrade"}>
-                     Pricing
-                  </Link>
-               </div>
-
-               <button
-                  onClick={() => {
-                     router.push("/207/edit");
-                  }}
-                  className="text-neutral-400 hidden lg:flex hover:text-white transition ml-auto text-sm"
-               >
-                  View Demo
-               </button>
-
-               <Link
-                  href={"/login"}
-                  className="bg-neutral-700/50 group hover:bg-neutral-600/50  text-neutral-200 py-2 flex flex-row items-center text-sm h-full rounded-full px-3  transition ml-auto lg:ml-[0]"
-               >
-                  <p className="mr-2 ml-2">Log In</p>
-                  <svg
-                     xmlns="http://www.w3.org/2000/svg"
-                     viewBox="0 0 20 20"
-                     fill="currentColor"
-                     className="w-4 h-4 group-hover:translate-x-1 transition"
-                  >
-                     <path
-                        fillRule="evenodd"
-                        d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                        clipRule="evenodd"
-                     />
-                  </svg>
-               </Link>
-            </div>
+            <Header></Header>
             <div className="bg-neutral-950 w-full text-white   flex flex-col ">
                <motion.div
                   initial={{ opacity: 0, scale: 1, y: -25 }}
@@ -64,7 +16,6 @@ const Client = () => {
                   transition={{ duration: 0.5 }}
                   className=" mt-[50px] top-[170px] text-center flex flex-col items-center justify-center z-50 "
                >
-                  {/* <div className="bg-neutral-500/50 w-full rounded-full h-16"></div> */}
                   <div className="rounded-full  px-5 text-xs font-medium  text-neutral-200 py-2 border border-neutral-700">
                      <p>Join 10,000+ dancers and choreographers</p>
                   </div>

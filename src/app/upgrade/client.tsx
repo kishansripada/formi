@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Footer } from "../NonAppComponents/Footer";
+import { Header } from "../NonAppComponents/Header";
 
 const Client = () => {
    return (
@@ -30,34 +31,16 @@ const Client = () => {
             <meta property="og:site_name" content="FORMI: Online stage performance planning software." />
          </Head> */}
          {/* <Header></Header> */}
-         <div className="bg-neutral-800/50 backdrop-blur-3xl py-1 px-1  w-[90vw] left-1/2 -translate-x-1/2 z-[60] rounded-full h-12 fixed top-[100px] hidden lg:flex flex-row items-center">
-            {/* <img src="/logobg.png" className="h-full" alt="" /> */}
+         <Header></Header>
 
-            <Link href={"/"} className="text-white ml-4 font-bold">
-               FORMI
-            </Link>
-            <button className="px-6 text-neutral-300 hover:text-white ml-auto">Pricing</button>
-
-            <Link
-               href={"/207/edit"}
-               className="bg-neutral-700/50 h-full rounded-full px-6 hover:text-white transition grid place-items-center text-neutral-400 "
-            >
-               View Demo
-            </Link>
-
-            <Link href={"/login"} className="bg-neutral-400/50 grid place-items-center h-full rounded-full px-6 text-white transition ml-2">
-               Log In
-            </Link>
-         </div>
          <div className="overflow-hidden relative bg-neutral-50 flex flex-col items-center ">
             <div className="bg-black  w-full text-white  relative flex flex-col justify-center items-center  ">
-               <div className=" mt-[120px] top-[170px] text-center flex flex-col items-center justify-center z-50  ">
-                  {/* <div className="bg-neutral-500/50 w-full rounded-full h-16"></div> */}
+               <div className="  text-center flex flex-col items-center justify-center z-50  ">
                   <p className="text-center tracking-widest text-pink-500 mt-24 font-bold">PRICING</p>
                   <p className="  lg:text-6xl  text-2xl font-semibold  w-full  ">Want more performances?</p>
                   <p className="  lg:text-xl  text-xl font-semibold  w-full mt-5  ">Early Bird Pricing</p>
                </div>
-               <div className="lg:max-w-4xl  w-full mt-24  lg:h-[400px] mb-52 ">
+               <div className="lg:max-w-5xl  w-full mt-24  lg:h-[450px] mb-52 ">
                   <div className="flex lg:flex-row flex-col h-full justify-center w-full ">
                      <div className=" border border-neutral-800 rounded-xl w-1/3 mx-3 py-5 px-6  flex flex-col  ">
                         <div className="flex flex-row justify-between items-center">
@@ -80,7 +63,7 @@ const Client = () => {
                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                     </svg>
 
-                                    <p className="text-xs text-neutral-300">{text}</p>
+                                    <p className="text-sm text-neutral-300">{text}</p>
                                  </div>
                               );
                            })}
@@ -108,7 +91,7 @@ const Client = () => {
                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                     </svg>
 
-                                    <p className="text-xs text-neutral-300">{text}</p>
+                                    <p className="text-sm text-neutral-300">{text}</p>
                                  </div>
                               );
                            })}
@@ -157,7 +140,7 @@ const Client = () => {
                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                     </svg>
 
-                                    <p className="text-xs text-neutral-400">{text}</p>
+                                    <p className="text-sm text-neutral-400">{text}</p>
                                  </div>
                               );
                            })}
