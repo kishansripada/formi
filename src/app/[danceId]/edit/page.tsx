@@ -55,6 +55,8 @@ const getServerSideProps = async (danceId: string) => {
 
          // DAREN
          "darrengundling18@gmail.com",
+
+         "gtramblinraas@gmail.com",
       ];
       if (!session) return null;
       if (session.user.email?.endsWith("@umich.edu") || EXEMPT_EMAILS.includes(session.user.email)) return "choreographer";

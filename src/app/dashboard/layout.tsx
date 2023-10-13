@@ -53,6 +53,8 @@ const getServerSideProps = async (projectId: string) => {
 
       // DAREN
       "darrengundling18@gmail.com",
+
+      "gtramblinraas@gmail.com",
    ];
 
    async function getRosters(session: Session) {
