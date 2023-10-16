@@ -301,7 +301,7 @@ export const Formation: React.FC<{
                   duration={formation.transition.durationSeconds}
                   className={` flex flex-row border-t dark:border-neutral-600  box-border  mt-auto   `}
                   style={{
-                     height: isMobileView ? "100%" : "40%",
+                           height: isMobileView ? "100%" : "50%",
                   }}
                >
                   {index !== 0 ? (
