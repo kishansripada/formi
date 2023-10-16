@@ -1414,6 +1414,7 @@ const Edit = ({
                               ) : null}
                            </div>
                            <FormationControls
+                                 setZoom={setZoom}
                               zoom={zoom}
                               localSettings={localSettings}
                               setLocalSettings={setLocalSettings}

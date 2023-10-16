@@ -3,50 +3,13 @@ import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useStore } from "../store";
+import { Slider } from "../../../../../@/components/ui/slider";
 
 export const FormationControls: React.FC<{
-   // setSelectedFormation: Function;
-   player: any;
-   isPlaying: boolean;
-   setIsPlaying: Function;
-   // formations: formation[];
-   position: number | null;
-   // setFormations: Function;
-   songDuration: number | null;
-   // selectedFormation: number | null;
-   // viewOnly: boolean;
-   addToStack: Function;
-   pushChange: Function;
-   setPixelsPerSecond: Function;
-   pixelsPerSecond: number;
-   localSource: string | null;
-   setPlaybackRate: Function;
-   localSettings: localSettings;
-   setLocalSettings: Function;
    zoom: number;
    selectedDancers: string[];
-}> = ({
-   // setSelectedFormation,
-   player,
-   isPlaying,
-   setIsPlaying,
-   // formations,
-   position,
-   // setFormations,
-   songDuration,
-   // selectedFormation,
-   // viewOnly,
-   addToStack,
-   pushChange,
-   setPixelsPerSecond,
-   pixelsPerSecond,
-   localSource,
-   setPlaybackRate,
-   localSettings,
-   setLocalSettings,
-   zoom,
-   selectedDancers,
-}) => {
+   setZoom: Function;
+}> = ({ zoom, selectedDancers, setZoom }) => {
    const {
       formations,
       setFormations,
@@ -60,7 +23,7 @@ export const FormationControls: React.FC<{
    } = useStore();
    return (
       <>
-         <div className="w-full h-[40px] min-h-[40px] max-h-[40px]  border-t-neutral-300 border-t bg-white md:flex hidden flex-row items-center justify-between px-3 dark:bg-neutral-800 mt-auto dark:border-neutral-700 dark:text-white">
+         <div className="w-full h-[40px] min-h-[40px] max-h-[40px]  border-t-neutral-300 border-t bg-white md:flex hidden flex-row items-center justify-between px-3 dark:bg-black/40 backdrop-blur-md mt-auto   dark:border-neutral-700 dark:text-white">
             {!viewOnly ? (
                <div className="flex flex-row items-center">
                   <button
@@ -177,7 +140,7 @@ export const FormationControls: React.FC<{
                            ]);
                         });
 
-                        pushChange();
+                        // pushChange();
                      }}
                      className="rounded-md  hidden transition duration-300  lg:flex  flex-row items-center    cursor-pointer "
                   >
@@ -217,7 +180,7 @@ export const FormationControls: React.FC<{
                            })
                         );
 
-                        pushChange();
+                        // pushChange();
                      }}
                      className="rounded-md  hidden transition duration-300 ml-3 lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
                   >
@@ -245,7 +208,7 @@ export const FormationControls: React.FC<{
                            })
                         );
 
-                        pushChange();
+                        // pushChange();
                      }}
                      className="rounded-md  hidden transition duration-300    lg:flex  flex-row items-center  px-2 py-2  cursor-pointer "
                   >
@@ -290,17 +253,20 @@ export const FormationControls: React.FC<{
 
                <div className="w-[1px] bg-neutral-300 dark:bg-neutral-700 h-[70%]"></div>
                <div className="lg:flex hidden flex-row items-center ml-7 text-neutral-700 dark:text-neutral-200 mr-5">
-                  <div className="w-24 rounded-full h-1 dark:bg-neutral-600 bg-neutral-200 mx-2 relative">
-                     <div
-                        style={{
-                           left: `${((zoom - 0.4) / 3.6) * 100}%`,
-                        }}
-                        className="h-4  w-4 border-[3px] dark:border-pink-600 border-pink-300 rounded-full hover:shadow absolute box-border -translate-y-1/2 -translate-x-1/2 bg-white dark:bg-black cursor-pointer top-[2px]"
-                     ></div>
-                  </div>
+                  <Slider
+                     className="w-36 mx-2 "
+                     onValueChange={(e) => {
+                        setZoom(e[0] || 0);
+                     }}
+                     defaultValue={[zoom]}
+                     max={6}
+                     min={0.1}
+                     value={[zoom]}
+                     step={0.01}
+                  />
 
                   <div className="grid place-items-center w-10 ml-4">
-                     <p className="text-sm font-semibold">{`${Math.round(((zoom - 0.4) / 3.6) * 100)}%`}</p>
+                     <p className="text-sm font-semibold">{`${Math.round(((zoom - 0.1) / 6) * 100)}%`}</p>
                   </div>
                </div>
             </div>
