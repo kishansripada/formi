@@ -108,7 +108,7 @@ const Client = () => {
                            // prefetch={true}
                            className="w-full mt-auto bg-pink-500 py-2 text-sm  text-center rounded-md"
                         >
-                           Try free for 7 days
+                           Get Started
                         </a>
                      </div>
                      <div className=" border border-neutral-800 rounded-xl w-1/3 mx-3 py-5 px-6  flex flex-col  ">
