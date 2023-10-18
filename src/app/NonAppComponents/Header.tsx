@@ -18,18 +18,18 @@ export const Header = () => {
             </Link>
          </div>
 
-         <button
+         {/* <button
             onClick={() => {
                router.push("/207/edit");
             }}
             className="text-neutral-400 hidden lg:flex hover:text-white transition ml-auto text-sm"
          >
             View Demo
-         </button>
+         </button> */}
 
          <Link
             href={"/login"}
-            className="bg-neutral-700/50 group hover:bg-neutral-600/50  text-neutral-200 py-2 flex flex-row items-center text-sm h-full rounded-full px-3  transition ml-auto lg:ml-[0]"
+            className="bg-neutral-700/50 group hover:bg-neutral-600/50 ml-auto  text-neutral-200 py-2 flex flex-row items-center text-sm h-full rounded-full px-3  transition  "
          >
             <p className="mr-2 ml-2">Log In</p>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 group-hover:translate-x-1 transition">
