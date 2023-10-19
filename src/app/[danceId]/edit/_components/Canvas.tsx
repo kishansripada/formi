@@ -675,6 +675,8 @@ export const Canvas: React.FC<{
                               if (
                                  selectedDancers.includes(dancerPosition.id) &&
                                  dancerPosition?.controlPointStart?.x !== null &&
+                                 dancerPosition?.controlPointStart?.y !== null &&
+                                 dancerPosition?.controlPointEnd?.x !== null &&
                                  dancerPosition?.controlPointEnd?.y !== null
                               ) {
                                  return {
