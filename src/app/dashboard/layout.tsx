@@ -111,13 +111,13 @@ const getServerSideProps = async (projectId: string, onboarded: boolean) => {
       const userData = await supabase.from("user_data").select("*").eq("user_id", session.user?.id);
       // console.log({ onboarded });
       if (onboarded) {
+         console.log({ onboarded });
          return userData?.data[0];
-      }
-      if (!userData?.data?.length) {
+      } else if (!userData?.data?.length) {
          return redirect("/welcome/1");
-      }
-
+      } else {
       return userData?.data[0];
+      }
    }
    // async function getProject(session: Session) {
    //    if (!projectId) return;
