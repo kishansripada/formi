@@ -1,5 +1,6 @@
 // import { useState, useEffect } from "react";
 import { Metadata } from "next";
+import { headers } from "next/headers";
 
 import { createClientComponentClient, Session } from "@supabase/auth-helpers-nextjs";
 export const metadata: Metadata = {
@@ -12,7 +13,9 @@ import { Sidebar } from "./_components/Sidebar";
 import Header from "./_components/Header";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-const getServerSideProps = async (projectId: string) => {
+// import PostHogClient from "../posthog";
+import { ThemeProvider } from "../../../@/components/theme-provider";
+const getServerSideProps = async (projectId: string, onboarded: boolean) => {
    const supabase = createServerComponentClient(
       { cookies },
       {
@@ -104,6 +107,18 @@ const getServerSideProps = async (projectId: string) => {
       return data?.data || [];
    }
 
+   async function getUserData(session: Session) {
+      const userData = await supabase.from("user_data").select("*").eq("user_id", session.user?.id);
+      // console.log({ onboarded });
+      if (onboarded) {
+         return userData?.data[0];
+      }
+      if (!userData?.data?.length) {
+         return redirect("/welcome/1");
+      }
+
+      return userData?.data[0];
+   }
    // async function getProject(session: Session) {
    //    if (!projectId) return;
    //    let data = await supabase.from("projects").select("*").eq("user_id", session.user.id).eq("id", projectId).single();
@@ -111,36 +126,60 @@ const getServerSideProps = async (projectId: string) => {
    //    return data?.data || [];
    // }
 
-   let [rosters, plan, myDances] = await Promise.all([getRosters(session), getStripe(session), getMyDances(session)]);
+   let [rosters, plan, myDances, userData] = await Promise.all([getRosters(session), getStripe(session), getMyDances(session), getUserData(session)]);
 
-   return { rosters, session, plan, myDances };
+   return { rosters, session, plan, myDances, userData };
 };
-export default async function RootLayout({ children, params }: { children: React.ReactNode; params: { projectId: string } }) {
-   const { rosters, session, plan, myDances } = await getServerSideProps(params.projectId);
+export default async function RootLayout({
+   children,
+   params,
+   searchParams,
+}: {
+   children: React.ReactNode;
+   params: { projectId: string };
+   searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+   // const posthog = PostHogClient();
+   // set post hog user
+   const headersList = headers();
+
+   // console.log();
+   const urlParams = new URLSearchParams((headersList.get("referer") || "").split("?")[1]);
+   const onboarded = urlParams.get("onboarded") === "true";
+   const { rosters, session, plan, myDances, userData } = await getServerSideProps(params.projectId, onboarded);
+   // posthog?.capture({
+   //    event: "dashboard visited",
+   //    distinctId: session.user.id,
+   // });
+
+   // await posthog.shutdownAsync();
+
    return (
-      <div>
-         <style>
-            {`
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+         <div>
+            <style>
+               {`
              html, body {
                 overscroll-behavior: none;
                 user-select: none;
              }
           `}
-         </style>
+            </style>
 
-         <div className="h-[calc(100dvh)] flex flex-col font-inter overscroll-none overflow-hidden bg-[#09090b] text-white">
-            {/* <div className="h-10 bg-pink-600 w-full grid place-items-center">
+            <div className="h-[calc(100dvh)] flex flex-col font-inter overscroll-none overflow-hidden bg-[#09090b] text-white">
+               {/* <div className="h-10 bg-pink-600 w-full grid place-items-center">
                <p className="text-xs text-white">try editing with your friends in real-time by sending them a link to your performance!</p>
             </div> */}
-            <div className="flex flex-row font-inter overscroll-none overflow-hidden bg-[#09090b] text-white">
-               <Sidebar myDances={myDances} plan={plan} session={session} rosters={rosters}></Sidebar>
-               {/* {JSON.stringify(project)} */}
-               <div className="flex flex-col bg-neutral  h-full  overflow-hidden  w-full justify-start  ">
-                  <Header plan={plan}></Header>
-                  <div className="px-6 pt-5 w-full h-full overflow-hidden">{children}</div>
+               <div className="flex flex-row font-inter overscroll-none overflow-hidden bg-[#09090b] text-white">
+                  <Sidebar myDances={myDances} plan={plan} session={session} rosters={rosters} userData={userData}></Sidebar>
+                  {/* {JSON.stringify(project)} */}
+                  <div className="flex flex-col bg-neutral  h-full  overflow-hidden  w-full justify-start  ">
+                     <Header session={session} plan={plan}></Header>
+                     <div className="px-6 pt-5 w-full h-full overflow-hidden">{children}</div>
+                  </div>
                </div>
             </div>
          </div>
-      </div>
+      </ThemeProvider>
    );
 }

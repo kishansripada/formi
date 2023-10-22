@@ -18,7 +18,8 @@ export const Sidebar: React.FC<{
    session: AuthSession;
    plan: string | null;
    myDances: any;
-}> = ({ rosters, session, plan, myDances }) => {
+   userData: any;
+}> = ({ rosters, session, plan, myDances, userData }) => {
    const { setPlan, setNumberOfDances } = useStore();
    useEffect(() => {
       setPlan(plan);
@@ -118,7 +119,7 @@ export const Sidebar: React.FC<{
                ) : null}
 
                <div className="flex flex-col items-start justify-center w-full">
-                  <p className="font-semibold">{session?.user.user_metadata?.full_name || session.user.email}</p>
+                  <p className="font-semibold">{userData?.name || session?.user?.user_metadata?.full_name || session?.user?.email}</p>
                   <div className="text-neutral-300 text-[10px] flex flex-row items-center justify-between w-full">
                      {plan ? "Choreographer" : null}
                   </div>
