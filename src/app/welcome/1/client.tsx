@@ -11,6 +11,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 export default function Client({ session }: { session: AuthSession }) {
    const [selectedUses, setSelectedUses] = useState<string[]>([]);
    const [name, setName] = useState<string>(session?.user?.user_metadata?.full_name ? session.user.user_metadata.full_name.split(" ")[0] : "");
+   const [other, setOther] = useState<string>("");
    const supabase = createClientComponentClient();
    const router = useRouter();
    return (
@@ -40,7 +41,7 @@ export default function Client({ session }: { session: AuthSession }) {
                      </div>
                      <div>
                         <p className="text-sm font-medium mb-1">What do you plan on using FORMI for? (select all that apply)</p>
-                        <div className="flex flex-row flex-wrap mb-6 mt-3	 gap-4">
+                        <div className="flex flex-row flex-wrap mb-1 mt-3	 gap-4">
                            {[
                               "🕺 Dance Company",
                               "🩰 Ballet",
@@ -75,10 +76,28 @@ export default function Client({ session }: { session: AuthSession }) {
                            })}
                         </div>
                      </div>
+                     <div className="mb-6">
+                        <p className="text-sm font-medium mb-1">Other</p>
+                        <Input
+                           value={other}
+                           className="bg-transparent"
+                           placeholder="School"
+                           onChange={(e) => {
+                              setOther(e.target.value);
+                           }}
+                        ></Input>
+                     </div>
 
                      <Button
                         onClick={async () => {
-                           const _ = await supabase.from("user_data").insert({ user_id: session.user.id, response_data: { selectedUses }, name });
+                           let uses = selectedUses;
+                           if (other !== "") {
+                              uses = [...selectedUses, other];
+                           }
+
+                           const _ = await supabase
+                              .from("user_data")
+                              .insert({ user_id: session.user.id, response_data: { selectedUses: uses }, name });
                            router.push("/dashboard?onboarded=true");
                         }}
                      >
