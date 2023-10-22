@@ -86,10 +86,10 @@ export const Formation: React.FC<{
                   ) {
                      return {
                         ...formation,
-                        durationSeconds: formation.durationSeconds - state.delta[0] / pixelsPerSecond,
+                        durationSeconds: roundToHundredth(formation.durationSeconds - state.delta[0] / pixelsPerSecond),
                         transition: {
                            ...formation.transition,
-                           durationSeconds: formation.transition.durationSeconds + state.delta[0] / pixelsPerSecond,
+                           durationSeconds: roundToHundredth(formation.transition.durationSeconds + state.delta[0] / pixelsPerSecond),
                         },
                      };
                   }
@@ -120,7 +120,7 @@ export const Formation: React.FC<{
                   if (formation.id === state.target.id) {
                      // console.log(formation);
                      if (formation.durationSeconds + state.delta[0] / pixelsPerSecond >= 0) {
-                        return { ...formation, durationSeconds: formation.durationSeconds + state.delta[0] / pixelsPerSecond };
+                        return { ...formation, durationSeconds: roundToHundredth(formation.durationSeconds + state.delta[0] / pixelsPerSecond) };
                      } else {
                         // transition should be longer than 0.5 seconds
                         if (formation.transition.durationSeconds + state.delta[0] / pixelsPerSecond > MIN_TRANSITION_DURATION) {
@@ -129,7 +129,7 @@ export const Formation: React.FC<{
                               durationSeconds: 0,
                               transition: {
                                  ...formation.transition,
-                                 durationSeconds: formation.transition.durationSeconds + state.delta[0] / pixelsPerSecond,
+                                 durationSeconds: roundToHundredth(formation.transition.durationSeconds + state.delta[0] / pixelsPerSecond),
                               },
                            };
                         } else {
@@ -150,7 +150,7 @@ export const Formation: React.FC<{
                         formation.durationSeconds - state.delta[0] / pixelsPerSecond >= 0 &&
                         !(formations[i - 1]?.transition.durationSeconds === MIN_TRANSITION_DURATION && formations[i - 1]?.durationSeconds === 0)
                      ) {
-                        return { ...formation, durationSeconds: formation.durationSeconds - state.delta[0] / pixelsPerSecond };
+                        return { ...formation, durationSeconds: roundToHundredth(formation.durationSeconds - state.delta[0] / pixelsPerSecond) };
                      } else {
                         return formation;
                         // transition should be longer than 0.5 seconds
@@ -357,51 +357,6 @@ export const Formation: React.FC<{
    );
 };
 
-function averageHex(colors) {
-   if (colors.length === 1) {
-      return colors[0];
-   }
-   // transform all hex codes to integer arrays, e.g. [[R, G, B], [R,G,B], ...]
-   let numbers = colors.map(function (hex) {
-      // split in seperate R, G and B
-      let split = hex.match(/[\da-z]{2}/gi);
-
-      // transform to integer values
-      return split.map(function (toInt) {
-         return parseInt(toInt, 16);
-      });
-   });
-
-   // reduce the array by averaging all values, resulting in an average [R, G, B]
-   let averages = numbers.reduce(function (total, amount, index, array) {
-      return total.map(function (subtotal, subindex) {
-         // if we reached the last color, average it out and return the hex value
-         if (index == array.length - 1) {
-            let result = Math.round((subtotal + amount[subindex]) / array.length).toString(16);
-
-            // add a leading 0 if it is only one character
-            return result.length == 2 ? "" + result : "0" + result;
-         } else {
-            return subtotal + amount[subindex];
-         }
-      });
-   });
-
-   // return them as a single hex string
-   return "#" + averages.join("");
-}
-
-function formatNames(names: string[]): string {
-   const length = names.length;
-
-   if (length === 1) {
-      return names[0];
-   } else if (length === 2) {
-      return `${names[0]} & ${names[1]}`;
-   } else if (length > 2) {
-      const allButLast = names.slice(0, length - 1).join(", ");
-      return `${allButLast} & ${names[length - 1]}`;
-   }
-
-   return "";
+function roundToHundredth(num: number): number {
+   return Math.round(num * 100) / 100;
 }
