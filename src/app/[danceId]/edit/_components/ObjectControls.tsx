@@ -270,11 +270,9 @@ export const ObjectControls: React.FC<{
       <>
          <div className="w-full md:h-[40px] md:min-h-[40px] md:max-h-[40px] h-[30px] min-h-[30px] max-h-[30px] border-b-neutral-300 border-b bg-white flex flex-row items-center  px-3 dark:bg-neutral-800 dark:border-neutral-700 dark:text-white">
             <p className="md:text-sm text-[10px] mr-auto font-bold">
-               {selectedDancers.length === 1
-                  ? dancers.find((dancer) => dancer.id === selectedDancers[0])?.name
-                  : selectedDancers.length === 0
-                  ? ""
-                  : "Multiple dancers selected"}
+            {selectedDancers.length === dancers.length
+               ? "Everyone"
+               : formatNames(dancers.filter((dancer) => selectedDancers.includes(dancer.id)).map((dancer) => dancer.name))}
             </p>
 
             {selectedDancers.length && selectedFormations.length ? (
@@ -467,3 +465,15 @@ export const ObjectControls: React.FC<{
       </>
    );
 };
+
+function formatNames(names: string[]): string {
+   if (names.length === 0) return "";
+
+   if (names.length === 1) return names[0];
+
+   if (names.length === 2) return `${names[0]} & ${names[1]}`;
+
+   if (names.length === 3) return `${names[0]}, ${names[1]} & ${names[2]}`;
+
+   return `${names[0]}, ${names[1]}, ${names[2]} & ${names.length - 3} others`;
+}
