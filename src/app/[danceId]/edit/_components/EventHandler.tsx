@@ -65,11 +65,11 @@ export const EventHandler: React.FC<{
       incrementSelectedFormation,
       decrementSelectedFormation,
       getSelectedFormationIndex,
-      getFirstSelectedFormation,
       commandHeld,
       copiedPositions,
-      setCopiedPositions,
       setCommandHeld,
+      copySelectedPositions,
+      pasteCopiedPositions,
    } = useStore();
 
    // const [copiedPositions, setCopiedPositions] = useState<dancerPosition[]>([]);
@@ -241,23 +241,7 @@ export const EventHandler: React.FC<{
       // console.log(copiedPositions);
       // on paste, filter out all of the dancers that are being pasted before splicing them into the array of positions
       if (e.key === "v" && copiedPositions.length) {
-         if (!selectedFormations.length) return;
-         setFormations(
-            formations.map((formation, i) => {
-               if (selectedFormations.includes(formation.id)) {
-                  return {
-                     ...formation,
-                     positions: [
-                        ...formation.positions.filter((dancerPosition) => {
-                           return !copiedPositions.map((dancerPositionCopy: dancerPosition) => dancerPositionCopy.id).includes(dancerPosition.id);
-                        }),
-                        ...copiedPositions,
-                     ],
-                  };
-               }
-               return formation;
-            })
-         );
+         pasteCopiedPositions();
          // pushChange();
       }
       if (e.key === "a") {
@@ -281,11 +265,9 @@ export const EventHandler: React.FC<{
          );
       }
 
-      if (e.key === "c" && selectedDancers.length) {
-         if (!selectedFormations.length) return;
-         // addToStack();
+      if (e.key === "c") {
          e.preventDefault();
-         setCopiedPositions(getFirstSelectedFormation()?.positions?.filter((dancerPosition) => selectedDancers.includes(dancerPosition.id)) || []);
+         copySelectedPositions();
       }
 
       if (e.key === "z") {

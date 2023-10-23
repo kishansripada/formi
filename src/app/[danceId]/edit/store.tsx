@@ -3,9 +3,14 @@ import { cloudSettings, dancer, dancerPosition, formation, item, prop, segment }
 import { liveblocks } from "@liveblocks/zustand";
 import type { WithLiveblocks } from "@liveblocks/zustand";
 import { Status, createClient } from "@liveblocks/client";
+import { v4 as uuidv4 } from "uuid";
 interface Store {
    copiedPositions: dancerPosition[];
    setCopiedPositions: (copiedPositions: dancerPosition[]) => void;
+
+   copySelectedPositions: () => void;
+   pasteCopiedPositions: () => void;
+   splitSelectedFormations: () => void;
 
    isMobileView: boolean;
    setIsMobileView: (isMobileView: boolean) => void;
@@ -71,6 +76,8 @@ interface Store {
    setSoundCloudTrackId: (soundCloudTrackId: string | null) => void;
    pauseHistory: () => void;
    resumeHistory: () => void;
+
+   deleteSelectedFormations: () => void;
    get: () => Store; // For direct state retrieval
 }
 
@@ -92,6 +99,101 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
       (set, get) => ({
          copiedPositions: [],
          setCopiedPositions: (copiedPositions: dancerPosition[]) => set({ copiedPositions }),
+
+         copySelectedPositions: () => {
+            const { selectedDancers, getFirstSelectedFormation, selectedFormations } = get();
+
+            if (!selectedFormations.length) return;
+            set({
+               copiedPositions:
+                  getFirstSelectedFormation()?.positions?.filter((dancerPosition) =>
+                     selectedDancers.length ? selectedDancers.includes(dancerPosition.id) : true
+                  ) || [],
+            });
+         },
+         pasteCopiedPositions: () => {
+            const { selectedFormations, copiedPositions, formations } = get();
+            if (!selectedFormations.length) return;
+            if (!copiedPositions) return;
+            set({
+               formations: formations.map((formation, i) => {
+                  if (selectedFormations.includes(formation.id)) {
+                     return {
+                        ...formation,
+                        positions: [
+                           ...formation.positions.filter((dancerPosition) => {
+                              return !copiedPositions.map((dancerPositionCopy: dancerPosition) => dancerPositionCopy.id).includes(dancerPosition.id);
+                           }),
+                           ...copiedPositions,
+                        ],
+                     };
+                  }
+                  return formation;
+               }),
+            });
+         },
+         splitSelectedFormations: () => {
+            const { selectedFormations, pauseHistory, resumeHistory } = get();
+            if (!selectedFormations.length) return;
+            pauseHistory();
+            selectedFormations.forEach((selectedFormationId) => {
+               const selectedFormation = get().formations.findIndex((formation) => formation.id === selectedFormationId);
+               const lastIsSelected = selectedFormation === get().formations.length - 1;
+               let oldTotalDuration =
+                  get().formations[selectedFormation].durationSeconds + get().formations[selectedFormation].transition.durationSeconds;
+
+               if (selectedFormation === 0) {
+                  let oldTotalDuration = get().formations[selectedFormation].durationSeconds;
+                  set({
+                     formations: [
+                        {
+                           ...get().formations[selectedFormation],
+                           durationSeconds: 0,
+                           durationSeconds: oldTotalDuration / (lastIsSelected ? 1 : 2),
+                           transition: {
+                              durationSeconds: 0,
+                           },
+                        },
+                        {
+                           ...get().formations[selectedFormation],
+                           id: uuidv4(),
+                           name: get().formations[selectedFormation].name + " copy",
+                           durationSeconds: 0,
+                           transition: {
+                              durationSeconds: oldTotalDuration / (lastIsSelected ? 1 : 2),
+                           },
+                        },
+                        ...get().formations.slice(selectedFormation + 1),
+                     ],
+                  });
+                  return;
+               }
+
+               set({
+                  formations: [
+                     ...get().formations.slice(0, selectedFormation),
+                     {
+                        ...get().formations[selectedFormation],
+                        durationSeconds: 0,
+                        transition: {
+                           durationSeconds: oldTotalDuration / (lastIsSelected ? 1 : 2),
+                        },
+                     },
+                     {
+                        ...get().formations[selectedFormation],
+                        id: uuidv4(),
+                        name: get().formations[selectedFormation].name + " copy",
+                        durationSeconds: 0,
+                        transition: {
+                           durationSeconds: oldTotalDuration / (lastIsSelected ? 1 : 2),
+                        },
+                     },
+                     ...get().formations.slice(selectedFormation + 1),
+                  ],
+               });
+            });
+            resumeHistory();
+         },
 
          isMobileView: false,
          setIsMobileView: (isMobileView: boolean) => set({ isMobileView }),
@@ -146,11 +248,11 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             set({ items });
          },
 
-            imageBlobs: {},
-            setImageBlobs: (imageBlobs: any) => {
-               // if (get().viewOnly) return;
-               set({ imageBlobs });
-            },
+         imageBlobs: {},
+         setImageBlobs: (imageBlobs: any) => {
+            // if (get().viewOnly) return;
+            set({ imageBlobs });
+         },
 
          cloudSettings: {
             stageDimensions: { width: 40, height: 32 },
@@ -244,6 +346,54 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             const room = get().liveblocks.room!;
             room.history.resume();
          },
+
+         deleteSelectedFormations: () => {
+            const { pauseHistory, selectedFormations, resumeHistory, formations } = get();
+            if (!selectedFormations.length || formations.length === 1) return;
+            pauseHistory();
+
+            selectedFormations.forEach((selectedFormationId) => {
+               if (selectedFormationId === formations[0].id) {
+                  set({
+                     formations: get().formations.map((formation, index) => {
+                        if (index === 1) {
+                           return {
+                              ...formation,
+                              durationSeconds: formation.transition.durationSeconds + formation.durationSeconds + formations[0].durationSeconds,
+                           };
+                        }
+                        return formation;
+                     }),
+                  });
+               } else if (selectedFormationId !== get().formations[get().formations.length - 1].id) {
+                  // console.log("trigger");
+                  set({
+                     formations: get().formations.map((formation, index) => {
+                        if (index === formations.findIndex((formation) => formation.id === selectedFormationId) - 1) {
+                           return {
+                              ...formation,
+                              durationSeconds:
+                                 formation.durationSeconds +
+                                 get().formations.find((formation) => formation.id === selectedFormationId)?.transition.durationSeconds +
+                                 get().formations.find((formation) => formation.id === selectedFormationId).durationSeconds,
+                           };
+                        }
+                        return formation;
+                     }),
+                  });
+               }
+            });
+
+            set({ selectedFormations: [] });
+            // remove the formation
+            set({
+               formations: get().formations.filter((formation) => {
+                  return !selectedFormations.includes(formation.id);
+               }),
+            });
+            resumeHistory();
+         },
+
          get,
       }),
       {

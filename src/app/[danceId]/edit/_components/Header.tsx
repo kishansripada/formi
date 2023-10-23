@@ -31,7 +31,6 @@ export const Header: React.FC<{
    localSettings: localSettings;
    setLocalSettings: Function;
    setSelectedFormation: Function;
-
    viewOnlyInitial: boolean;
    setIsCommenting: Function;
    selectedDancers: string[];
@@ -40,7 +39,6 @@ export const Header: React.FC<{
    isCommenting: boolean;
    isChangingCollisionRadius: boolean;
    setIsChangingCollisionRadius: Function;
-   // formations: formation[];
    dropDownToggle: Function;
    dancers: dancer[];
    danceId: string;
@@ -54,21 +52,14 @@ export const Header: React.FC<{
    setAnyoneCanView: Function;
 }> = ({
    saved,
-
    undo,
    exportPdf,
    localSettings,
    setLocalSettings,
-   setSelectedFormation,
    viewOnlyInitial,
    setIsCommenting,
    selectedDancers,
-   selectedFormation,
-   pushChange,
    isCommenting,
-   isChangingCollisionRadius,
-   setIsChangingCollisionRadius,
-   dropDownToggle,
    folder,
    dancers,
    danceId,
@@ -90,11 +81,10 @@ export const Header: React.FC<{
       isMobileView,
       selectedFormations,
       setSelectedDancers,
-      setCopiedPositions,
-      getFirstSelectedFormation,
-      setFormations,
       copiedPositions,
       liveblocks,
+      copySelectedPositions,
+      pasteCopiedPositions,
    } = useStore();
 
    const { setTheme, theme } = useTheme();
@@ -263,47 +253,21 @@ export const Header: React.FC<{
                                     Select all positions <MenubarShortcut>⌘A</MenubarShortcut>
                                  </MenubarItem>
                                  <MenubarItem
-                                    style={{
-                                       opacity: !selectedDancers?.length ? 0.5 : 1,
-                                    }}
                                     onClick={() => {
                                        if (!selectedFormations.length) return;
 
-                                       setCopiedPositions(
-                                          getFirstSelectedFormation()?.positions?.filter((dancerPosition: dancerPosition) =>
-                                             selectedDancers.includes(dancerPosition.id)
-                                          ) || []
-                                       );
+                                       copySelectedPositions();
                                     }}
                                     className="py-1 hover:bg-neutral-200 "
                                  >
-                                    Copy positions <MenubarShortcut>⌘C</MenubarShortcut>
+                                    Copy {!selectedDancers.length ? "all" : ""} positions <MenubarShortcut>⌘C</MenubarShortcut>
                                  </MenubarItem>
                                  <MenubarItem
                                     style={{
                                        opacity: !copiedPositions?.length ? 0.5 : 1,
                                     }}
                                     onClick={() => {
-                                       if (!selectedFormations.length) return;
-                                       if (!copiedPositions) return;
-                                       setFormations(
-                                          formations.map((formation, i) => {
-                                             if (selectedFormations.includes(formation.id)) {
-                                                return {
-                                                   ...formation,
-                                                   positions: [
-                                                      ...formation.positions.filter((dancerPosition) => {
-                                                         return !copiedPositions
-                                                            .map((dancerPositionCopy: dancerPosition) => dancerPositionCopy.id)
-                                                            .includes(dancerPosition.id);
-                                                      }),
-                                                      ...copiedPositions,
-                                                   ],
-                                                };
-                                             }
-                                             return formation;
-                                          })
-                                       );
+                                       pasteCopiedPositions();
                                     }}
                                     className="py-1 hover:bg-neutral-200 "
                                  >
@@ -315,7 +279,6 @@ export const Header: React.FC<{
                                  </MenubarItem>
                                  <MenubarItem onClick={() => (redo ? redo() : null)} className="py-1 hover:bg-neutral-200 ">
                                     Redo
-                                    {/* <MenubarShortcut>⇧⌘Z</MenubarShortcut> */}
                                  </MenubarItem>
                               </MenubarContent>
                            </MenubarMenu>
