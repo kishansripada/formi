@@ -381,15 +381,21 @@ export const AudioControls: React.FC<{
 };
 
 function formatTime(seconds: number): string {
-   const totalMilliseconds = Math.round(seconds * 1000);
-   const totalSeconds = Math.round(totalMilliseconds / 1000);
-   const minutes = Math.floor(totalSeconds / 60);
-   const remainingSeconds = totalSeconds % 60;
-   const deciseconds = Math.floor(totalMilliseconds / 100) % 10;
+   // Get minutes
+   const minutes = Math.floor(seconds / 60);
+   // Remaining seconds after extracting minutes
+   const remainingSeconds = seconds % 60;
+   // Get whole seconds
+   let wholeSeconds = Math.floor(remainingSeconds);
+   // Get the tenth of a second
+   let tenthOfSecond = Math.round((remainingSeconds - wholeSeconds) * 10);
 
-   const formattedMinutes = minutes.toString().padStart(2, "0");
-   const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
-   const formattedDeciseconds = deciseconds.toString();
+   // If tenthOfSecond is 10, reset it to 0 and increment wholeSeconds
+   if (tenthOfSecond === 10) {
+      tenthOfSecond = 0;
+      wholeSeconds++;
+   }
 
-   return `${formattedMinutes}:${formattedSeconds}:${formattedDeciseconds}`;
+   // Format the string to MM:SS:D
+   return `${String(minutes).padStart(2, "0")}:${String(wholeSeconds).padStart(2, "0")}:${tenthOfSecond}`;
 }
