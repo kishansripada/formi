@@ -110,14 +110,15 @@ const getServerSideProps = async (projectId: string, onboarded: boolean) => {
    async function getUserData(session: Session) {
       const userData = await supabase.from("user_data").select("*").eq("user_id", session.user?.id);
       // console.log({ onboarded });
-      if (onboarded) {
-         console.log({ onboarded });
-         return userData?.data[0];
-      } else if (!userData?.data?.length) {
-         return redirect("/welcome/1");
-      } else {
-      return userData?.data[0];
-      }
+      // if (onboarded) {
+      //    console.log({ onboarded });
+      //    return userData?.data[0];
+      // } else if (!userData?.data?.length) {
+      //    return redirect("/welcome/1");
+      // } else {
+      //    return userData?.data[0];
+      // }
+      return {};
    }
    // async function getProject(session: Session) {
    //    if (!projectId) return;
