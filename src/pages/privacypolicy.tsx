@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { type } from "os";
 import Link from "next/link";
-import { Header } from "../components/NonAppComponents/Header";
+import { Header } from "../app/_components/Header";
 import { Session } from "@supabase/supabase-js";
 import toast, { Toaster } from "react-hot-toast";
 
