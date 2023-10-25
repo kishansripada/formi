@@ -460,6 +460,7 @@ export const ObjectControls: React.FC<{
                </>
             ) : null}
          </div>
+      </>
    );
 };
 
