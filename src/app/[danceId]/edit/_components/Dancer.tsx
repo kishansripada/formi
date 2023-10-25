@@ -68,10 +68,12 @@ export const Dancer: React.FC<{
             <p className="font-semibold   text-sm "> {index + 1}</p>
             <div className="relative">
                <input
-                  style={{
-                     backgroundColor: amSelected ? (isDarkMode ? "#db2777" : "#fbcfe8") : "transparent",
-                  }}
-                  className="h-6 w-full    px-2 py-4  text-sm rounded-md  ml-2    outline-none cursor-default"
+                  style={
+                     {
+                        // backgroundColor: amSelected ? (isDarkMode ? "#db2777" : "#fbcfe8") : "transparent",
+                     }
+                  }
+                  className="h-6 w-full    px-2 py-4  text-sm rounded-md  ml-2 bg-transparent   outline-none cursor-default"
                   value={name}
                   // onBlur={pushChange}
                   disabled={viewOnly}

@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
-import { Footer } from "./NonAppComponents/Footer";
+import { Footer } from "./_components/Footer";
 import { motion } from "framer-motion";
-import { Header } from "./NonAppComponents/Header";
+import { Header } from "./_components/Header";
+import { useSession } from "@supabase/auth-helpers-react";
 
 const Client = () => {
    return (

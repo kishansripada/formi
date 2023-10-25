@@ -459,10 +459,7 @@ export const ObjectControls: React.FC<{
                   ) : null}
                </>
             ) : null}
-
-            {/* {!viewOnly ? <div className="mt-auto p-2"></div> : null} */}
          </div>
-      </>
    );
 };
 

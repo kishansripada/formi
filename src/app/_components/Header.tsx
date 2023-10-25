@@ -1,8 +1,12 @@
+import { useSession, useSessionContext } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export const Header = () => {
    const router = useRouter();
+   const { isLoading, session, error } = useSessionContext();
+
+   console.log(session);
    return (
       <div className="bg-neutral-950  lg:pt-7 lg:pb-5 pt-8  w-full lg:px-36 px-10 gap-5 flex flex-row items-center">
          <Link href={"/"}>
@@ -31,7 +35,8 @@ export const Header = () => {
             href={"/login"}
             className="bg-neutral-700/50 group hover:bg-neutral-600/50 ml-auto  text-neutral-200 py-2 flex flex-row items-center text-sm h-full rounded-full px-3  transition  "
          >
-            <p className="mr-2 ml-2">Log In</p>
+            {}
+            <p className="mr-2 ml-2">{session ? "Dashboard" : "Log in"}</p>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 group-hover:translate-x-1 transition">
                <path
                   fillRule="evenodd"

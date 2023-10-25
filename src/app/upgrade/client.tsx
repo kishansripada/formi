@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { Footer } from "../NonAppComponents/Footer";
-import { Header } from "../NonAppComponents/Header";
+import { Footer } from "../_components/Footer";
+import { Header } from "../_components/Header";
 
 const Client = () => {
    return (

@@ -12,7 +12,7 @@ const Client = () => {
    const email = searchParams?.get("email");
    const supabase = createClientComponentClient();
    const signInWithCode = async () => {
-      console.log(email);
+      // console.log(email);
       if (!email) return;
       const { data, error } = await supabase.auth.verifyOtp({ email, token: code, type: "email" });
       if (error) return;
