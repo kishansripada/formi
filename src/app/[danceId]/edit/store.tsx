@@ -137,33 +137,34 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             if (!selectedFormations.length) return;
             pauseHistory();
             selectedFormations.forEach((selectedFormationId) => {
-               const selectedFormation = get().formations.findIndex((formation) => formation.id === selectedFormationId);
-               const lastIsSelected = selectedFormation === get().formations.length - 1;
-               let oldTotalDuration =
-                  get().formations[selectedFormation].durationSeconds + get().formations[selectedFormation].transition.durationSeconds;
+               const selectedFormationIndex = get().formations.findIndex((formation) => formation.id === selectedFormationId);
+               const formationAtIndex = get().formations[selectedFormationIndex];
+               if (formationAtIndex === undefined) return;
+               const isLastFormationSelected = selectedFormationIndex === get().formations.length - 1;
 
-               if (selectedFormation === 0) {
-                  let oldTotalDuration = get().formations[selectedFormation].durationSeconds;
+               let oldTotalDuration = formationAtIndex.durationSeconds + formationAtIndex.transition.durationSeconds;
+
+               if (selectedFormationIndex === 0) {
+                  let oldTotalDuration = formationAtIndex.durationSeconds;
                   set({
                      formations: [
                         {
-                           ...get().formations[selectedFormation],
-                           durationSeconds: 0,
-                           durationSeconds: oldTotalDuration / (lastIsSelected ? 1 : 2),
+                           ...formationAtIndex,
+                           durationSeconds: oldTotalDuration / (isLastFormationSelected ? 1 : 2),
                            transition: {
                               durationSeconds: 0,
                            },
                         },
                         {
-                           ...get().formations[selectedFormation],
+                           ...formationAtIndex,
                            id: uuidv4(),
-                           name: get().formations[selectedFormation].name + " copy",
+                           name: formationAtIndex.name + " copy",
                            durationSeconds: 0,
                            transition: {
-                              durationSeconds: oldTotalDuration / (lastIsSelected ? 1 : 2),
+                              durationSeconds: oldTotalDuration / (isLastFormationSelected ? 1 : 2),
                            },
                         },
-                        ...get().formations.slice(selectedFormation + 1),
+                        ...get().formations.slice(selectedFormationIndex + 1),
                      ],
                   });
                   return;
@@ -171,24 +172,24 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
 
                set({
                   formations: [
-                     ...get().formations.slice(0, selectedFormation),
+                     ...get().formations.slice(0, selectedFormationIndex),
                      {
-                        ...get().formations[selectedFormation],
-                        durationSeconds: 0,
+                        ...formationAtIndex,
+                        durationSeconds: isLastFormationSelected ? formationAtIndex.durationSeconds : 0,
                         transition: {
-                           durationSeconds: oldTotalDuration / (lastIsSelected ? 1 : 2),
+                           durationSeconds: isLastFormationSelected ? formationAtIndex.transition.durationSeconds : oldTotalDuration / 2,
                         },
                      },
                      {
-                        ...get().formations[selectedFormation],
+                        ...formationAtIndex,
                         id: uuidv4(),
-                        name: get().formations[selectedFormation].name + " copy",
-                        durationSeconds: 0,
+                        name: formationAtIndex.name + " copy",
+                        durationSeconds: isLastFormationSelected ? formationAtIndex.durationSeconds : 0,
                         transition: {
-                           durationSeconds: oldTotalDuration / (lastIsSelected ? 1 : 2),
+                           durationSeconds: isLastFormationSelected ? formationAtIndex.transition.durationSeconds : oldTotalDuration / 2,
                         },
                      },
-                     ...get().formations.slice(selectedFormation + 1),
+                     ...get().formations.slice(selectedFormationIndex + 1),
                   ],
                });
             });
