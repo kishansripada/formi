@@ -290,7 +290,20 @@ export const Header: React.FC<{
                         <MenubarContent>
                            <MenubarItem
                               onClick={() => {
+                                 if (fullscreenContainer.current) {
+                                    if (fullscreenContainer.current.requestFullscreen) {
                                  fullscreenContainer.current.requestFullscreen();
+                                    } else if (fullscreenContainer.current.mozRequestFullScreen) {
+                                       /* Firefox */
+                                       fullscreenContainer.current.mozRequestFullScreen();
+                                    } else if (fullscreenContainer.current.webkitRequestFullscreen) {
+                                       /* Chrome, Safari and Opera */
+                                       fullscreenContainer.current.webkitRequestFullscreen();
+                                    } else if (fullscreenContainer.current.msRequestFullscreen) {
+                                       /* IE/Edge */
+                                       fullscreenContainer.current.msRequestFullscreen();
+                                    }
+                                 }
                                  setLocalSettings((localSettings: localSettings) => {
                                     return { ...localSettings, fullScreen: false };
                                  });
