@@ -759,12 +759,6 @@ const Edit = ({
          }
       });
 
-      // let flippedComments = formation.comments
-      //    ? formation.comments.map((comment: comment) => {
-      //         return { ...comment, position: { x: -comment.position.x, y: -comment.position.y } };
-      //      })
-      //    : [];
-
       return { ...formation, positions: flippedPositions };
    });
 
@@ -780,20 +774,6 @@ const Edit = ({
          setVideoPosition(over.id);
       }
    }
-   // useEffect(() => {
-   //    if (typeof window !== "undefined") {
-   //       document.cookie = "hasSeenCollab=true; expires=" + new Date(new Date().getTime() + 86409000).toUTCString() + "; path=/";
-   //    }
-   // }, []);
-   // useEffect(() => {
-   //    document.body.addEventListener(
-   //       "touchmove",
-   //       (event) => {
-   //          event.preventDefault();
-   //       },
-   //       { passive: false }
-   //    );
-   // }, []);
 
    useEffect(() => {
       let vh = window.innerHeight * 0.01;
@@ -829,55 +809,7 @@ const Edit = ({
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
    };
-   // const roundPositions = () => {
-   //    const { stageBackground, gridSubdivisions, horizontalGridSubdivisions, verticalFineDivisions, horizontalFineDivisions, stageDimensions } =
-   //       cloudSettings;
-   //    const { gridSnap } = localSettings;
-   //    let gridSizeX = 1;
-   //    let gridSizeY = 1;
-   //    let verticalOffset = 0;
-   //    let horizontalOffset = 0;
-   //    if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
-   //       // Determine the total number of divisions along each axis.
-   //       const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
-   //       const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
 
-   //       // Calculate the width and height of each grid cell.
-   //       gridSizeX = stageDimensions.width / totalVerticalDivisions / gridSnap;
-   //       gridSizeY = stageDimensions.height / totalHorizontalDivisions / gridSnap;
-   //       let isOddVerticalDivisions = (gridSubdivisions * verticalFineDivisions) % 2 !== 0;
-   //       let isOddHorizontalDivisions = (horizontalGridSubdivisions * horizontalFineDivisions) % 2 !== 0;
-
-   //       verticalOffset = isOddVerticalDivisions ? gridSizeX / 2 : 0;
-   //       horizontalOffset = isOddHorizontalDivisions ? gridSizeY / 2 : 0;
-   //       if (gridSnap % 2 === 0) {
-   //          verticalOffset = 0;
-   //          horizontalOffset = 0;
-   //       }
-   //    } else {
-   //       gridSizeX = 1 / gridSnap;
-   //       gridSizeY = 1 / gridSnap;
-   //    }
-
-   //    // console.log(gridSizeX);
-   //    setFormations(
-   //       formations.map((formation) => {
-   //          // Use the grid cell dimensions to round the dancer positions to the nearest grid position.
-   //          return {
-   //             ...formation,
-   //             positions: formation.positions.map((position) => {
-   //                return {
-   //                   ...position,
-   //                   position: {
-   //                      x: roundToHundredth(Math.round((position.position.x - verticalOffset) / gridSizeX) * gridSizeX + verticalOffset),
-   //                      y: roundToHundredth(Math.round((position.position.y - horizontalOffset) / gridSizeY) * gridSizeY + horizontalOffset),
-   //                   },
-   //                };
-   //             }),
-   //          };
-   //       })
-   //    );
-   // };
    return (
       <>
          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
