@@ -225,7 +225,7 @@ export const Layer: React.FC<{
    );
 };
 
-function numbersBetween(a: number, b: number): number[] {
+function numbersBetweenInclusive(a: number, b: number): number[] {
    const start = Math.min(a, b);
    const end = Math.max(a, b);
 
