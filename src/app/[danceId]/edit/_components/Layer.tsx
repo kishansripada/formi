@@ -148,15 +148,23 @@ export const Layer: React.FC<{
                         onClick={(e: any) => {
                            if (shiftHeld) {
                               if (selectedFormations.includes(formation.id)) {
+                                 // click on a selection formation, then unselect it
                                  setSelectedFormations(selectedFormations.filter((id) => id !== formation.id));
                               } else {
+                                 // click on a formation that is not already selected
                                  if (selectedFormations.length) {
+                                    // find the first selected formation
                                     const firstSelectedFormation = Math.min(
                                        ...selectedFormations.map((id) => formations.findIndex((formation) => formation.id === id))
                                     );
-                                    const numbersToSelect = numbersBetween(firstSelectedFormation, index);
-                                    // console.log(numbersToSelect);
-                                    setSelectedFormations([...numbersToSelect.map((i) => formations[i].id)]);
+                                    const numbersToSelect = numbersBetweenInclusive(firstSelectedFormation, index);
+                                    // const idsToSelect = numbersToSelect.map((i) => formations[i]?.id);
+
+                                    const idsToSelect = numbersToSelect
+                                       .map((i) => formations[i]?.id)
+                                       .filter((id): id is string => typeof id === "string");
+
+                                    setSelectedFormations(idsToSelect);
                                  } else {
                                     setSelectedFormations([formation.id]);
                                  }
