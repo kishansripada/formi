@@ -518,16 +518,6 @@ const Edit = ({
    const pushChange = () => {
       return;
    };
-   const removeDancer = (id: string) => {
-      // remove dancer and all their positions
-      setFormations(
-         formations.map((formation) => {
-            return { ...formation, positions: formation.positions.filter((dancerPosition) => dancerPosition.id !== id) };
-         })
-      );
-      setDancers(dancers.filter((dancer) => dancer.id !== id));
-      // pushChange();
-   };
 
    const roundPositions = () => {
       const { stageBackground, gridSubdivisions, horizontalGridSubdivisions, verticalFineDivisions, horizontalFineDivisions, stageDimensions } =
@@ -992,7 +982,6 @@ const Edit = ({
                               {menuOpen === "dancers" ? (
                                  <Roster
                                     session={session}
-                                    removeDancer={removeDancer}
                                     setSelectedDancers={setSelectedDancers}
                                     addToStack={addToStack}
                                     pushChange={pushChange}

@@ -14,12 +14,21 @@ export const Roster: React.FC<{
    addToStack: Function;
    pushChange: Function;
    selectedDancers: string[];
-   removeDancer: Function;
+
    setSelectedDancers: Function;
    localSettings: localSettings;
    session: AuthSession | null;
-}> = ({ pushChange, selectedDancers, removeDancer, setSelectedDancers, localSettings, session }) => {
+}> = ({ pushChange, selectedDancers, setSelectedDancers, localSettings, session }) => {
    const { formations, setFormations, cloudSettings, pauseHistory, resumeHistory } = useStore();
+   const removeDancer = (id: string) => {
+      // remove dancer and all their positions
+      setFormations(
+         formations.map((formation) => {
+            return { ...formation, positions: formation.positions.filter((dancerPosition) => dancerPosition.id !== id) };
+         })
+      );
+      setDancers(dancers.filter((dancer) => dancer.id !== id));
+   };
 
    const { dancers, setDancers, viewOnly } = useStore();
    let { stageDimensions } = cloudSettings;
