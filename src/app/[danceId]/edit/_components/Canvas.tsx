@@ -674,10 +674,10 @@ export const Canvas: React.FC<{
                            positions: formation.positions.map((dancerPosition) => {
                               if (
                                  selectedDancers.includes(dancerPosition.id) &&
-                                 dancerPosition?.controlPointStart?.x !== null &&
-                                 dancerPosition?.controlPointStart?.y !== null &&
-                                 dancerPosition?.controlPointEnd?.x !== null &&
-                                 dancerPosition?.controlPointEnd?.y !== null
+                                 dancerPosition?.controlPointStart !== undefined &&
+                                 dancerPosition?.controlPointStart !== undefined &&
+                                 dancerPosition?.controlPointEnd !== undefined &&
+                                 dancerPosition?.controlPointEnd !== undefined
                               ) {
                                  return {
                                     ...dancerPosition,
