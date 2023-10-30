@@ -51,7 +51,6 @@ export function ThreeDancer({
    /**
     * Text always looks at the camera
     */
-   if (!selectedFormations.length) return null;
 
    const textRef = useRef();
 
