@@ -4,7 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { formation, prop } from "../../../../../types/types";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import { useStore } from "../../store";
 export const Props: React.FC<{
    audioFiles: any;
@@ -30,7 +30,7 @@ export const Props: React.FC<{
                   // pointerEvents: viewOnly ? "none" : "all",
                }
             }
-            className="flex   w-[260px]  min-w-[260px] h-full  flex-col   bg-white  overflow-scroll dark:bg-neutral-800 dark:text-white  pt-6 "
+            className="flex w-full h-full  flex-col overflow-scroll  dark:text-white  pt-6 "
          >
             <div className=" font-medium mb-2 flex flex-row  items-center  px-4 text-sm ">
                <p>Set pieces</p>

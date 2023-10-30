@@ -893,7 +893,7 @@ export const Canvas: React.FC<{
          ) : null}
          <div
             // flex
-            className="  relative  bg-neutral-100  dark:bg-neutral-900  h-full  w-full overflow-scroll  overscroll-none  flex flex-row items-center justify-center "
+                  className="  relative  bg-neutral-50  dark:bg-neutral-900  h-full  w-full overflow-scroll  overscroll-none  flex flex-row items-center justify-center "
             id="stage"
             ref={container}
             // {...bind()}
@@ -945,7 +945,7 @@ export const Canvas: React.FC<{
                   ref={stage}
                   id="stage-cutout"
                   onPointerDown={pointerDown}
-                  className="relative  border-2 dark:border-pink-600 border-pink-300 rounded-xl bg-white dark:bg-neutral-800 box-content "
+                        className="relative  border-2 dark:border-pink-600 border-pink-300 rounded-xl bg-white dark:bg-neutral-900 box-content "
                   // border-pink-600 border-4 box-border
                   style={{
                      // margin: 400,

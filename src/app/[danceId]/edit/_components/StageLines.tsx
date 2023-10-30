@@ -42,7 +42,7 @@ export const StageLines: React.FC<{
                      y1={myYOffset}
                      x2={stageDimensions.width}
                      y2={myYOffset}
-                     className="dark:stroke-neutral-600 stroke-neutral-300"
+                     className="dark:stroke-neutral-700 stroke-neutral-300"
                      strokeWidth={
                         // differenceFromCenter % cloudSettings.gridSubdivisions === 0
                         //    ? 0.05 * 1.2
@@ -64,7 +64,7 @@ export const StageLines: React.FC<{
                      y1="0"
                      x2={myXOffset}
                      y2={stageDimensions.height}
-                     className="dark:stroke-neutral-600 stroke-neutral-300"
+                     className="dark:stroke-neutral-700 stroke-neutral-300"
                      strokeWidth={
                         // differenceFromCenter % cloudSettings.gridSubdivisions === 0
                         //    ? 0.05 * 1.2

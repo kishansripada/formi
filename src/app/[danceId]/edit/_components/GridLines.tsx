@@ -41,7 +41,7 @@ export const GridLines: React.FC<{
                      y1={myYOffset}
                      x2={stageDimensions.width}
                      y2={myYOffset}
-                     className="dark:stroke-neutral-600 stroke-neutral-300"
+                     className="dark:stroke-neutral-700 stroke-neutral-300"
                      strokeWidth={
                         // differenceFromCenter % cloudSettings.gridSubdivisions === 0
                         //    ? 0.05 * 1.2
@@ -65,7 +65,7 @@ export const GridLines: React.FC<{
                         y1="0"
                         x2={myXOffset}
                         y2={stageDimensions.height}
-                        className="dark:stroke-neutral-600 stroke-neutral-300"
+                        className="dark:stroke-neutral-700 stroke-neutral-300"
                         strokeWidth={
                            // differenceFromCenter % cloudSettings.gridSubdivisions === 0
                            //    ? 0.05 * 1.2
@@ -136,12 +136,3 @@ export const GridLines: React.FC<{
       </>
    );
 };
-
-function roundToNearestEven(n: number): number {
-   // If n is an even number, return it as is.
-   if (n % 2 === 0) {
-      return n;
-   } else {
-      return n + 1;
-   }
-}

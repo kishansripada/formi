@@ -30,7 +30,7 @@ export const EventHandler: React.FC<{
    setShiftHeld: Function;
    setDropDownToggle: Function;
    dancers: dancer[];
-   setIsChangingCollisionRadius: Function;
+
    selectedPropIds: string[];
    setIsScrollingTimeline: Function;
    setPosition: Function;
@@ -49,7 +49,7 @@ export const EventHandler: React.FC<{
    setShiftHeld,
    setDropDownToggle,
    dancers,
-   setIsChangingCollisionRadius,
+
    setIsScrollingTimeline,
    selectedPropIds,
    setPosition,
@@ -99,7 +99,6 @@ export const EventHandler: React.FC<{
             .includes("dropdown-menu")
       ) {
          setDropDownToggle((x: boolean) => !x);
-         setIsChangingCollisionRadius(false);
       }
    };
 

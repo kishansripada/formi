@@ -46,7 +46,7 @@ export const Layer: React.FC<{
    // setSelectedFormations,
    // selectedFormations,
 }) => {
-   const { formations, setFormations, viewOnly, selectedFormations, setSelectedFormations, commandHeld } = useStore();
+   const { formations, setFormations, viewOnly, selectedFormations, setSelectedFormations, commandHeld, getSelectedFormationIndex } = useStore();
    const [activeId, setActiveId] = useState(null);
    // const keyboardCodes = {
    //    start: ["$"],
@@ -135,7 +135,7 @@ export const Layer: React.FC<{
    return (
       <>
          <div
-            className=" flex flex-row  items-center w-full bg-neutral-100 dark:bg-black  dark:border-neutral-600  "
+            className=" flex flex-row  items-center w-full bg-neutral-50 dark:bg-neutral-900  dark:border-neutral-600  "
             id="outside"
             onClick={clickOutsideFormations}
          >

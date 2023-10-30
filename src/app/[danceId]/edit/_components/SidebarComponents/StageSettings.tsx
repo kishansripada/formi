@@ -118,7 +118,7 @@ export const StageSettings: React.FC<{
             style={{
                pointerEvents: viewOnly ? "none" : "all",
             }}
-            className=" w-[260px]  min-w-[260px]  block bg-white dark:bg-neutral-800 dark:text-white h-full  py-4 overflow-y-scroll overflow-x-hidden"
+            className="w-full  block dark:text-white h-full  py-4 overflow-y-scroll overflow-x-hidden"
          >
             <div className=" px-4">
                <p className="text-sm font-medium">Stage Dimensions (feet)</p>

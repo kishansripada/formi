@@ -8,22 +8,22 @@ import dynamic from "next/dynamic";
 import { NoFilePlayer } from "./NoFilePlayer";
 import { useStore } from "../store";
 import { useGesture } from "@use-gesture/react";
-
-const FileAudioPlayer = dynamic<{
-   setPosition: Function;
-   setIsPlaying: Function;
-   setSongDuration: Function;
-   songDuration: number | null;
-   soundCloudTrackId: string | null;
-   setSelectedFormation: Function;
-   setFormations: Function;
-   viewOnly: boolean;
-   pixelsPerSecond: number;
-   player: any;
-   setPlayer: Function;
-}>(() => import("./FileAudioPlayer").then((mod) => mod.FileAudioPlayer), {
-   ssr: false,
-});
+import { FileAudioPlayer } from "./FileAudioPlayer";
+// const FileAudioPlayer = dynamic<{
+//    setPosition: Function;
+//    setIsPlaying: Function;
+//    setSongDuration: Function;
+//    songDuration: number | null;
+//    soundCloudTrackId: string | null;
+//    setSelectedFormation: Function;
+//    setFormations: Function;
+//    viewOnly: boolean;
+//    pixelsPerSecond: number;
+//    player: any;
+//    setPlayer: Function;
+// }>(() => import("./FileAudioPlayer").then((mod) => mod.FileAudioPlayer), {
+//    ssr: false,
+// });
 
 export const Timeline: React.FC<{
    // formations: formation[];
@@ -295,7 +295,7 @@ export const Timeline: React.FC<{
                }
             `}
          </style>
-         <div className="w-full h-[10px] bg-neutral-100 dark:bg-black select-none hidden lg:block  ">
+         <div className="w-full h-[10px] bg-neutral-50 dark:bg-neutral-900 select-none hidden lg:block  ">
             <div
                onMouseDown={() => {
                   setIsScrollingTimeline(true);
@@ -305,16 +305,13 @@ export const Timeline: React.FC<{
                   width: (scrollInfo.clientWidth / scrollInfo.scrollWidth) * scrollInfo.clientWidth + pixelsPerSecond * 0,
                   left: (scrollInfo.scrollLeft / scrollInfo.scrollWidth) * scrollInfo.clientWidth,
                }}
-               className="h-[10px] cursor-pointer rounded-full bg-neutral-400 flex flex-row items-center  relative "
-            >
-               <div className="rounded-l-full  bg-pink-600 w-[10px] mr-auto h-[10px]"></div>
-               <div className="rounded-r-full bg-pink-600 w-[10px] ml-auto h-[10px]"></div>
-            </div>
+               className="h-[10px] cursor-pointer  dark:bg-neutral-700 bg-neutral-300 flex flex-row items-center  relative "
+            ></div>
          </div>
 
          <div
             ref={scrollRef}
-            className=" overflow-y-hidden overflow-x-scroll   removeScrollBar bg-neutral-100 dark:bg-black   pl-3 "
+            className=" overflow-y-hidden overflow-x-scroll relative  removeScrollBar bg-neutral-50 dark:bg-neutral-900   pl-3 "
             style={{
                overscrollBehavior: "none",
                touchAction: "pan-x",
@@ -332,7 +329,7 @@ export const Timeline: React.FC<{
                   style={{
                      width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
                   }}
-                  className={` relative   py-1 ${!soundCloudTrackId ? "h-[15px]" : ""} `}
+                  className={` relative   py-1 ${!soundCloudTrackId ? "min-h-[18px]" : ""} `}
                   id="wave-timeline"
                ></div>
 
@@ -393,21 +390,20 @@ export const Timeline: React.FC<{
                localSettings={localSettings}
                shiftHeld={shiftHeld}
                hasVisited={hasVisited}
-               // setSelectedFormations={setSelectedFormations}
-               // selectedFormations={selectedFormations}
             />
+
             {segments.length ? (
                <div
                   style={{
                      width: timelineWidth,
                   }}
-                  className=" md:h-[20px] h-[15px] bg-white dark:bg-black relative  overflow-hidden  flex flex-row justify-start  "
+                  className=" h-[16px]  relative z-[10] mt-1   overflow-hidden  flex flex-row justify-start   "
                >
                   {segments.map((section, index) => {
                      return (
                         <div
                            key={section.id}
-                           className="h-full border-2 box-border  grid rounded-md place-items-center dark:text-white md:text-[10px] text-[8px] relative cursor-pointer "
+                           className={`h-full  box-border rounded-sm px-2 dark:text-white md:text-[10px] text-[8px] relative cursor-pointer `}
                            onClick={(e: any) => {
                               if (menuOpen === "segments") return;
 
@@ -426,13 +422,18 @@ export const Timeline: React.FC<{
                               width: section.duration * pixelsPerSecond - 4,
                               marginRight: 4,
                               minWidth: section.duration * pixelsPerSecond - 4,
-                              borderColor: section.color,
+                              // width: section.duration * pixelsPerSecond,
+
+                              backgroundColor: hexToRgba(section.color, 0.4),
+                              // borderColor: section.color,
                            }}
                         >
-                           {section.name} - ({Math.round(section.duration)}s)
+                           <p className=" font-semibold">
+                              {section.name} - ({Math.round(section.duration)}s)
+                           </p>
                            {menuOpen === "segments" && !viewOnly ? (
                               <div
-                                 className="h-full  w-[15px] right-0 absolute cursor-ew-resize flex flex-row justify-center"
+                                 className="h-full  w-[15px] z-10 right-0 top-0 absolute cursor-ew-resize flex flex-row justify-center"
                                  data-type="segment-resize"
                                  id={section.id}
                               >
@@ -445,6 +446,7 @@ export const Timeline: React.FC<{
                   })}
                </div>
             ) : null}
+
             {soundCloudTrackId || localSource ? (
                <div
                   className="relative "
@@ -492,16 +494,39 @@ export const Timeline: React.FC<{
                </>
             )}
          </div>
-
-         {/* <div
-            style={{
-               width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
-            }}
-            className="w-full h-[5px] bg-neutral-500 dark:bg-neutral-700 "
-         ></div> */}
       </>
    );
 };
 function roundToHundredth(value: number): number {
    return Math.round(value * 100) / 100;
+}
+
+function hexToRgba(hex: string, opacity: number): string {
+   // Ensure the hex code starts with a '#'
+   if (hex.charAt(0) !== "#") {
+      hex = "#" + hex;
+   }
+
+   // Parse the r, g, b values
+   let bigint = parseInt(hex.slice(1), 16);
+   let r = (bigint >> 16) & 255;
+   let g = (bigint >> 8) & 255;
+   let b = bigint & 255;
+
+   // Ensure opacity is between 0 and 1
+   if (opacity < 0) {
+      opacity = 0;
+   }
+   if (opacity > 1) {
+      opacity = 1;
+   }
+
+   // Convert opacity from 0-1 to 0-255
+   const alpha = Math.round(opacity * 255);
+
+   // Convert alpha value to hex
+   const alphaHex = (alpha + 0x10000).toString(16).substr(-2).toUpperCase();
+
+   // Return the rgba color
+   return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}${alphaHex}`;
 }

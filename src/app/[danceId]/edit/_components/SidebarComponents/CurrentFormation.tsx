@@ -2,7 +2,9 @@ import { comment, dancer, dancerPosition, formation, formationGroup, initials, i
 import toast, { Toaster } from "react-hot-toast";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { useStore } from "../../store";
-
+// import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+// import { Comment as LiveComment, Timestamp } from "@liveblocks/react-comments/primitives";
+// import { createThread } from "@liveblocks/react-comments/primatives";
 export const CurrentFormation: React.FC<{
    // selectedFormation: number | null;
    // formations: formation[];
@@ -62,7 +64,7 @@ export const CurrentFormation: React.FC<{
 
    return (
       <>
-         <div className=" flex   w-[260px] bg-white  min-w-[260px] flex-col h-full  dark:bg-neutral-800 dark:text-neutral-100  ">
+         <div className=" flex w-full   flex-col h-full   dark:text-neutral-100  ">
             {selectedFormations.length && getFirstSelectedFormation() ? (
                <>
                   {/* <div className="px-6">
@@ -181,10 +183,10 @@ export const CurrentFormation: React.FC<{
                         </div>
                      </div>
                   </div> */}
-                  <div className="flex flex-row items-center  px-3 pt-4 ">
+                  <div className="flex flex-row items-center border-b dark:border-neutral-700  border-neutral-300  h-[40px]  ">
                      <input
                         // onBlur={pushChange}
-                        className="font-medium w-full focus:ring-pink-600 ring-transparent ring-[2px] px-2 py-2 bg rounded-md  h-8 transition text-xl dark:bg-neutral-800 dark:text-white   text-neutral-800  outline-none cursor-pointer "
+                        className="font-medium w-full  h-full px-2 bg-transparent  focus:border-pink-600 border-transparent border  transition text-lg   outline-none  "
                         onChange={(e) =>
                            setFormations(
                               formations.map((formation, i) => {
@@ -209,8 +211,6 @@ export const CurrentFormation: React.FC<{
                               {comment.user.avatar_url ? (
                                  <img
                                     referrerPolicy="no-referrer"
-                                    //   id={dancer.id}
-                                    //   data-type={"dancer"}
                                     className="w-[32px] h-[32px] rounded-full select-none pointer-events-none mr-3"
                                     src={comment.user.avatar_url}
                                  />
@@ -248,35 +248,58 @@ export const CurrentFormation: React.FC<{
                         );
                      })}
                   </div>
+                  {/* <Accordion type="single" collapsible className="w-full overflow-y-scroll">
+                     <AccordionItem className="px-2 text-xs border-neutral-700" value="item-1">
+                        <AccordionTrigger className=" ">
+                           <div className="flex flex-row items-center gap-3">
+                              <div
+                                 style={{
+                                    backgroundColor: "green",
+                                 }}
+                                 className="rounded-full w-3 h-3"
+                              ></div>{" "}
+                              <p>Jumps down</p>
+                           </div>
+                        </AccordionTrigger>
+                        <AccordionContent>Yes. It adheres to the WAI-ARIA design pattern.</AccordionContent>
+                     </AccordionItem>
+                     <AccordionItem className="px-2 text-xs border-neutral-700" value="item-2">
+                        <AccordionTrigger>Jumps up</AccordionTrigger>
+                        <AccordionContent>Yes. It comes with default styles that matches the other components&apos; aesthetic.</AccordionContent>
+                     </AccordionItem>
+                  </Accordion> */}
 
-                  <div
+                  {/* <div
                      style={{
                         touchAction: "none",
                      }}
-                     className="w-full pb-3 px-3  "
-                  >
-                     <textarea
-                        value={getFirstSelectedFormation()?.notes || ""}
-                        onChange={(e) => {
-                           setFormations(
-                              formations.map((formation) => {
-                                 if (selectedFormations.includes(formation.id)) {
-                                    return {
-                                       ...formation,
-                                       notes: e.target.value,
-                                    };
-                                 }
-                                 return formation;
-                              })
-                           );
-                        }}
-                        readOnly={viewOnly}
-                        className="dark:bg-neutral-700 transition bg-neutral-100  w-full focus:outline-none p-3 text-sm border-2 border-neutral-300 focus:border-pink-300 dark:border-neutral-600 dark:focus:border-pink-600 resize-none rounded-md"
-                        cols={30}
-                        rows={13}
-                        placeholder="Formation notes..."
-                     ></textarea>
-                  </div>
+                     className="w-full    "
+                  > */}
+                  <textarea
+                     value={getFirstSelectedFormation()?.notes || ""}
+                     onChange={(e) => {
+                        setFormations(
+                           formations.map((formation) => {
+                              if (selectedFormations.includes(formation.id)) {
+                                 return {
+                                    ...formation,
+                                    notes: e.target.value,
+                                 };
+                              }
+                              return formation;
+                           })
+                        );
+                     }}
+                     readOnly={viewOnly}
+                     style={{
+                        minHeight: 180,
+                     }}
+                     className="dark:bg-neutral-900 transition bg-neutral-50 mt-auto w-full focus:outline-none p-3 text-sm border-t border-neutral-300 focus:border-pink-300 dark:border-neutral-600 dark:focus:border-pink-600 resize-none "
+                     cols={30}
+                     rows={9}
+                     placeholder="Formation notes..."
+                  ></textarea>
+                  {/* </div> */}
                </>
             ) : (
                <>

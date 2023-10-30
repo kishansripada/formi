@@ -109,7 +109,7 @@ export const Settings: React.FC<{
       pushChange();
    };
 
-   const setStageBackground = (val: string) => {
+   const setStageBackground = (val: "gridfluid" | "none" | "grid" | "cheer9" | "custom") => {
       if (val === "cheer9") {
          setCloudSettings({ ...cloudSettings, stageDimensions: { width: 36, height: 28 } });
       }
@@ -131,7 +131,7 @@ export const Settings: React.FC<{
             `}
          </style>
          <Toaster></Toaster>
-         <div className=" w-[260px]  min-w-[260px]  block bg-white dark:bg-neutral-800 dark:text-white h-full  py-4 overflow-y-scroll pl-1">
+         <div className="   block  w-full dark:text-white h-full  py-4 overflow-y-scroll pl-1">
             <p className=" pl-3  font-medium mb-1 text-sm flex flex-row justify-between">
                Previous Formation's Avatars{" "}
                <svg

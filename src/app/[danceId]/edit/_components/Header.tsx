@@ -37,8 +37,7 @@ export const Header: React.FC<{
    selectedFormation: number | null;
    pushChange: Function;
    isCommenting: boolean;
-   isChangingCollisionRadius: boolean;
-   setIsChangingCollisionRadius: Function;
+
    dropDownToggle: Function;
    dancers: dancer[];
    danceId: string;
@@ -116,9 +115,9 @@ export const Header: React.FC<{
 
    return (
       <>
-         <div className=" min-h-[50px] dark:bg-black bg-neutral-100  flex flex-row items-center w-full text-neutral-800 border-b  dark:text-white  dark:border-neutral-700 border-neutral-300 ">
+         <div className=" min-h-[50px] dark:bg-neutral-900 bg-neutral-50  flex flex-row items-center w-full text-neutral-800 border-b  dark:text-white  dark:border-neutral-700 border-neutral-300 ">
             <div className="flex flex-row items-center justify-start w-2/5 h-full">
-               <div className="w-20 min-w-[80px] border-r border-neutral-300 h-full dark:border-neutral-700 grid place-items-center relative">
+               <div className="w-[70px] min-w-[70px] border-r border-neutral-300 h-full dark:border-neutral-700 grid place-items-center relative">
                   <a
                      // onClick={async () => {
                      //    // revalidatePath("/dashboard");
@@ -156,7 +155,7 @@ export const Header: React.FC<{
                   <p className="text-[10px] dark:text-neutral-300 text-neutral-700 font-medium absolute right-[6px] bottom-1">Beta</p>
                </div>
                <div className="md:px-1 h-full">
-                  <Menubar className="dark:bg-black h-full border-none bg-neutral-100 ">
+                  <Menubar className="dark:bg-neutral-900 h-full border-none bg-neutral-50 ">
                      {session ? (
                         <>
                            <MenubarMenu>
@@ -292,7 +291,7 @@ export const Header: React.FC<{
                               onClick={() => {
                                  if (fullscreenContainer.current) {
                                     if (fullscreenContainer.current.requestFullscreen) {
-                                 fullscreenContainer.current.requestFullscreen();
+                                       fullscreenContainer.current.requestFullscreen();
                                     } else if (fullscreenContainer.current.mozRequestFullScreen) {
                                        /* Firefox */
                                        fullscreenContainer.current.mozRequestFullScreen();

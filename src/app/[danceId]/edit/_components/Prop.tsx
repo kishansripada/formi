@@ -35,7 +35,7 @@ export const Prop: React.FC<{
    localSettings: localSettings;
    index: number;
    collisions: any;
-   isChangingCollisionRadius: boolean;
+
    selectedPropIds: string[];
    setResizingPropId: Function;
    dropDownToggle: boolean;
@@ -61,7 +61,7 @@ export const Prop: React.FC<{
    localSettings,
    collisions,
    index,
-   isChangingCollisionRadius,
+
    selectedPropIds,
    setResizingPropId,
    dropDownToggle,

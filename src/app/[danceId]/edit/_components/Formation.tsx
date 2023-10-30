@@ -53,8 +53,8 @@ export const Formation: React.FC<{
 
    const MIN_TRANSITION_DURATION = 0.3;
    // const [changingFormation, setChangingFormation] = useState(false);
-   const preventScrollRef = useRef();
-   function usePreventScroll(preventScrollRef) {
+   const preventScrollRef = useRef<boolean>(false);
+   function usePreventScroll(preventScrollRef: React.RefObject<boolean>) {
       useEffect(() => {
          const preventScrolling = (e) => {
             if (preventScrollRef.current) {
@@ -68,6 +68,7 @@ export const Formation: React.FC<{
          return () => document.removeEventListener("touchmove", preventScrolling);
       }, []);
    }
+
    usePreventScroll(preventScrollRef);
 
    useGesture(
@@ -79,6 +80,7 @@ export const Formation: React.FC<{
             } else {
                preventScrollRef.current = false;
             }
+
             setFormations(
                get().formations.map((formation) => {
                   if (
@@ -260,20 +262,20 @@ export const Formation: React.FC<{
                   borderRadius: 8,
                   // touchAction: changingFormation ? "none" : "pan-x",
                }}
-               className="relative  border-2 border-transparent  overflow-hidden group  bg-neutral-100 dark:bg-neutral-800  "
+               className="relative  border-2 border-transparent  overflow-hidden group  bg-neutral-50 dark:bg-neutral-800  "
                ref={setNodeRef}
             >
                <style jsx>{``}</style>
 
                <div
-                  className={`  cursor-pointer    dark:bg-black  md:h-[50px] h-[40px]  dark:text-white    overflow-hidden border-neutral-300 dark:border-neutral-600  border-2 flex flex-col  relative   `}
+                  className={`  cursor-pointer  rounded-sm  dark:bg-neutral-900  md:h-[45ppx] h-[40px]  dark:text-white    overflow-hidden border-neutral-300 dark:border-neutral-600  border-2 flex flex-col  relative   `}
                   style={{
                      borderColor: selectedFormations.includes(formation.id)
                         ? "#db2777"
                         : othersOnThisFormation.length
                         ? COLORS[othersOnThisFormation[0]?.connectionId % COLORS.length]
                         : "",
-                     borderRadius: 8,
+                     // borderRadius: 8,
                      // borderBottomColor:
                      // formationGroups.find((formationGroup) => formationGroup.id === formation?.group)?.color ||
                      // (colorsOnThisFormation.length ? averageHex(colorsOnThisFormation) : localSettings.isDarkMode ? "#a3a3a3" : "#d4d4d4"),
@@ -377,7 +379,7 @@ export const Formation: React.FC<{
                                     // borderBottomRightRadius: isMobileView ? 99 : 0,
                                  }
                               }
-                              className="flex flex-row relative  dark:bg-pink-600 bg-pink-600   h-full  "
+                              className="flex flex-row relative  dark:bg-pink-600/80 bg-pink-600   h-full  "
                            >
                               {!viewOnly ? (
                                  <>
@@ -387,7 +389,7 @@ export const Formation: React.FC<{
                                           id={formation.id}
                                           ref={transitionResize}
                                           onMouseDown={(e) => e.preventDefault()}
-                                          className={`h-full  ml-auto  grid place-items-center bg-pink-200 justify-between  w-[25px] rounded-md transition   cursor-col-resize	z-[99]`}
+                                          className={`h-full  ml-auto  grid place-items-center bg-pink-200 justify-between  w-[25px] rounded-sm transition   cursor-col-resize	z-[99]`}
                                        ></div>
                                     ) : (
                                        <div

@@ -67,7 +67,10 @@ export const Roster: React.FC<{
                }
             }
 
-            return { ...formation, positions: [...formation.positions, { id, position }] };
+            return {
+               ...formation,
+               positions: [...formation.positions, { id, position }],
+            };
          })
       );
       resumeHistory();
@@ -100,7 +103,26 @@ export const Roster: React.FC<{
    };
    return (
       <>
-         <div className="flex  w-[260px]  min-w-[260px] flex-col   bg-white dark:bg-neutral-800 dark:text-white h-full ">
+         <div className="flex h-full w-full flex-col   dark:text-white ">
+            {!viewOnly ? (
+               <>
+                  <div className="flex flex-row items-center justify-start border-b border-neutral-200 px-2 py-2 text-xs dark:border-neutral-700 min-h-[40px]">
+                     <button onClick={createNewDancer} className=" flex flex-row items-center ">
+                        <p className="ml-auto mr-2">New Dancer</p>
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
+                           stroke="currentColor"
+                           className="h-5 w-5"
+                        >
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                     </button>
+                  </div>
+               </>
+            ) : null}
             <div
                style={{
                   touchAction: "pan-y",
@@ -123,36 +145,16 @@ export const Roster: React.FC<{
             </div>
             {/* <div className="bg-blue-200 flex-grow  overflow-y-auto"></div> */}
 
-            <div className=" min-h-[250px] h-[250px]  flex flex-col   ">
-               {!viewOnly ? (
-                  <>
-                     <div className="flex flex-row items-center text-xs justify-end py-2 border-y border-neutral-200 dark:border-neutral-700 px-2">
-                        <button onClick={createNewDancer} className=" flex flex-row items-center ">
-                           <p className="ml-auto mr-2">New Dancer</p>
-                           <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-5 h-5"
-                           >
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                           </svg>
-                        </button>
-                     </div>
-                  </>
-               ) : null}
-
+            <div className=" flex h-[250px]  min-h-[250px] flex-col   ">
                {selectedDancers.length ? (
                   <div
-                     className="px-3 mt-3"
+                     className="mt-3 px-3"
                      style={{
                         pointerEvents: viewOnly ? "none" : "auto",
                      }}
                   >
-                     <p className="   text-sm mb-2 font-medium">Height</p>
-                     <div className="flex flex-row items-center  w-full ">
+                     <p className="   mb-2 text-sm font-medium">Height</p>
+                     <div className="flex w-full flex-row  items-center ">
                         <div className="flex flex-row items-center border border-neutral-200 dark:border-neutral-700">
                            <input
                               // onBlur={pushChange}
@@ -164,7 +166,10 @@ export const Roster: React.FC<{
                                  setDancers(
                                     dancers.map((dancer) => {
                                        if (selectedDancers.includes(dancer.id)) {
-                                          return { ...dancer, height: convertToCentimeters(parseInt(e.target.value), height.inches) };
+                                          return {
+                                             ...dancer,
+                                             height: convertToCentimeters(parseInt(e.target.value), height.inches),
+                                          };
                                        }
                                        return dancer;
                                     })
@@ -173,11 +178,11 @@ export const Roster: React.FC<{
                               style={{
                                  borderRadius: 0,
                               }}
-                              className="w-[45px] p-1 focus:outline-none rounded-none text-center dark:bg-neutral-800  "
+                              className="w-[45px] rounded-none p-1 text-center focus:outline-none dark:bg-neutral-800  "
                            />
                            <p className="mx-1">ft</p>
                         </div>
-                        <div className="flex flex-row items-center border border-neutral-200 ml-4 dark:border-neutral-700">
+                        <div className="ml-4 flex flex-row items-center border border-neutral-200 dark:border-neutral-700">
                            <input
                               // onBlur={pushChange}
                               type="number"
@@ -188,7 +193,10 @@ export const Roster: React.FC<{
                                  setDancers(
                                     dancers.map((dancer) => {
                                        if (selectedDancers.includes(dancer.id)) {
-                                          return { ...dancer, height: convertToCentimeters(height.feet, parseInt(e.target.value)) };
+                                          return {
+                                             ...dancer,
+                                             height: convertToCentimeters(height.feet, parseInt(e.target.value)),
+                                          };
                                        }
                                        return dancer;
                                     })
@@ -197,22 +205,22 @@ export const Roster: React.FC<{
                               style={{
                                  borderRadius: 0,
                               }}
-                              className="w-[45px] p-1 focus:outline-none rounded-none text-center  dark:bg-neutral-800"
+                              className="w-[45px] rounded-none p-1 text-center focus:outline-none  dark:bg-neutral-800"
                            />
                            <p className="mx-1">in</p>
                         </div>
                      </div>
-                     <div className="flex flex-row items-center justify-between">
+                     <div className="flex flex-row items-center justify-between   ">
                         <div className="flex flex-col ">
-                           <p className=" text-neutral-800 dark:text-white  text-sm mb-2 mt-2 font-medium">Shape</p>
+                           <p className=" mb-2 mt-2  text-sm font-medium text-neutral-800 dark:text-white">Shape</p>
 
-                           <div className="w-full flex flex-row items-center gap-2">
+                           <div className="flex w-full flex-row items-center gap-2">
                               <button
                                  onClick={() => {
                                     setDancerShape("circle");
                                  }}
                               >
-                                 <svg className="w-8 h-8 dark:fill-white  " xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                                 <svg className="h-8 w-8 dark:fill-white  " xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
                                     <path d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-156t86-127Q252-817 325-848.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82-31.5 155T763-197.5q-54 54.5-127 86T480-80Zm0-60q142 0 241-99.5T820-480q0-142-99-241t-241-99q-141 0-240.5 99T140-480q0 141 99.5 240.5T480-140Zm0-340Z" />
                                  </svg>
                               </button>
@@ -222,7 +230,7 @@ export const Roster: React.FC<{
                                     setDancerShape("square");
                                  }}
                               >
-                                 <svg className="w-8 h-8 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                                 <svg className="h-8 w-8 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
                                     <path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600v-600H180v600Z" />
                                  </svg>
                               </button>
@@ -231,7 +239,7 @@ export const Roster: React.FC<{
                                     setDancerShape("triangle");
                                  }}
                               >
-                                 <svg className="w-8 h-8 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                                 <svg className="h-8 w-8 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
                                     <path d="m80-160 401-640 399 640H80Zm107-60h586L481-685 187-220Zm293-233Z" />
                                  </svg>
                               </button>
@@ -240,7 +248,7 @@ export const Roster: React.FC<{
                         </div>
 
                         <div className="flex flex-col justify-end">
-                           <p className=" text-neutral-800 dark:text-white  text-sm mb-2 mt-2 font-medium">Color</p>
+                           <p className=" mb-2 mt-2  text-sm font-medium text-neutral-800 dark:text-white">Color</p>
                            <PopoverPicker
                               dancers={dancers}
                               color={dancers.find((dancer) => dancer.id === selectedDancers[0])?.color || null}
@@ -252,7 +260,7 @@ export const Roster: React.FC<{
                      </div>
                   </div>
                ) : (
-                  <p className="h-full w-full grid place-items-center">No Dancers Selected</p>
+                  <p className="grid h-full w-full place-items-center">No Dancers Selected</p>
                )}
                {!viewOnly ? (
                   // <div
@@ -287,7 +295,7 @@ export const Roster: React.FC<{
                            // console.log(selectedDancers);
                            pushChange();
                         }}
-                        className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-red-500 dark:text-red-400 text-red-600  "
+                        className="  grid w-full cursor-pointer select-none place-items-center rounded-md bg-red-500  bg-opacity-20 py-2  text-sm font-semibold text-red-600 shadow-sm dark:text-red-400  "
                      >
                         {selectedDancers.length > 1 ? "Delete Dancers" : "Delete Dancer"}
                      </div>
@@ -306,7 +314,10 @@ function convertToCentimeters(feet: number, inches: number): number {
    return Math.round(totalCentimeters * 10) / 10;
 }
 
-function convertToFeetAndInches(centimeters: number): { feet: number; inches: number } {
+function convertToFeetAndInches(centimeters: number): {
+   feet: number;
+   inches: number;
+} {
    const inchesToCentimeters = 2.54;
    const inches = Math.round(centimeters / inchesToCentimeters);
    const feet = Math.floor(inches / 12);

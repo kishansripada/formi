@@ -231,7 +231,7 @@ export const FileAudioPlayer: React.FC<{
       return (
          <>
             {!ready ? (
-               <div className="h-[35px] flex flex-row items-center justify-center bg-[#fafafa] dark:bg-black w-screen">
+               <div className="h-[30px] flex flex-row items-center justify-center bg-neutral-50 dark:bg-neutral-900 w-screen">
                   <p className="font-semibold text-lg  dark:text-white">loading audio...</p>
                </div>
             ) : null}
@@ -241,12 +241,12 @@ export const FileAudioPlayer: React.FC<{
                   display: ready ? "flex" : "none",
                }}
                ref={trackRef}
-               className="flex flex-row items-center"
+               className="flex flex-row items-center h-[30px]"
             >
                <div
-                  className="py-[10px] dark:bg-black pointer-events-none"
+                  className=" dark:bg-neutral-900 pointer-events-none"
                   ref={containerRef}
-                  style={{ minHeight: "35px", width: ((songDuration || 0) / 1000) * pixelsPerSecond }}
+                  style={{ minHeight: "15px", width: ((songDuration || 0) / 1000) * pixelsPerSecond }}
                />
 
                <div
@@ -256,7 +256,7 @@ export const FileAudioPlayer: React.FC<{
                      width: timelineWidth - ((songDuration || 0) / 1000) * pixelsPerSecond,
                   }}
                >
-                  <div className={` h-[35px]   flex-col justify-end w-full`}></div>
+                  <div className={` h-[30px]   flex-col justify-end w-full`}></div>
                </div>
             </div>
          </>

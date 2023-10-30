@@ -66,9 +66,9 @@ export const ChooseAudioSource: React.FC<{
 
    return (
       <>
-         <div className="flex  overflow-y-scroll w-[260px]  min-w-[260px] h-full  flex-col   bg-white   dark:bg-neutral-800 dark:text-white  px-4 py-6 overflow-hidden">
-            <div className="flex flex-col ">
-               <div className="text-xl font-medium   flex flex-row justify-between items-center">
+         <div className="flex  overflow-y-scroll w-full  h-full  flex-col      pb-6 overflow-hidden">
+            <div className="flex flex-col  ">
+               <div className="text-xl px-4 font-medium h-[40px] border-b border-neutral-300 dark:border-neutral-700  flex flex-row justify-between items-center">
                   <button onClick={(e) => {}} className="text-sm w-30 font-normal relative cursor-pointer">
                      <input
                         accept="audio/mp3, audio/wav, video/mp4, video/avi"
@@ -105,7 +105,7 @@ export const ChooseAudioSource: React.FC<{
                </div>
             </div>
 
-            <div>
+            <div className="px-4">
                <p className=" font-medium mb-2 mt-4 text-sm ">Selected File</p>
                <div className="px-2 py-2  rounded-md my-1 cursor-pointer w-full flex flex-row items-center justify-center whitespace-nowrap bg-pink-100 ">
                   {soundCloudTrackId ? (
@@ -149,8 +149,8 @@ export const ChooseAudioSource: React.FC<{
                </div>
             </div>
 
-            <p className=" font-medium mb-2 mt-6 px-2 text-sm ">Uploaded Media</p>
-            <div className="h-[300px]">
+            <p className=" font-medium mb-2 mt-6 text-sm px-4 ">Uploaded Media</p>
+            <div className="h-[300px] px-4">
                <div className=" flex flex-col overflow-scroll removeScrollBar ">
                   {audioFiles?.data?.length ? (
                      [...audioFiles.data].reverse().map((audiofile) => {

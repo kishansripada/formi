@@ -24,7 +24,7 @@ export const FormationControls: React.FC<{
       splitSelectedFormations,
    } = useStore();
    return (
-      <div className="w-full h-[40px] min-h-[40px] max-h-[40px]  border-t-neutral-300 border-t bg-white md:flex hidden flex-row items-center justify-between px-3 dark:bg-black/40 backdrop-blur-md mt-auto   dark:border-neutral-700 dark:text-white">
+      <div className="w-full h-[40px] min-h-[40px] max-h-[40px]  border-t-neutral-300 border-t bg-neutral-50 md:flex hidden flex-row items-center justify-between px-3 dark:bg-neutral-900 backdrop-blur-md mt-auto   dark:border-neutral-700 dark:text-white">
          {!viewOnly ? (
             <div className="flex flex-row items-center">
                <button
