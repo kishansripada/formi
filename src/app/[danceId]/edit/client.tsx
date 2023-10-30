@@ -49,32 +49,8 @@ import { cubic, linear } from "./animationFunctions";
 
 const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => (
-      <div className="flex items-center justify-center h-screen bg-neutral-100 dark:bg-neutral-900  w-full">
-         <style>
-            {`
-               /* Define the keyframes for the animation */
-               @keyframes width-animation {
-                  0% {
-                     width: 0;
-                  }
-                  100% {
-                     width: 300px;
-                  }
-               }
-
-               /* Create a CSS class that applies the animation */
-               .animate-width {
-                  animation: width-animation 0.5s linear forwards;
-               }
-            `}
-         </style>
-         <div className="w-[300px] cursor-pointer ">
-            {/* <h1 className="text-6xl font-bold z-10 relative">naach.app</h1>
- <div className="bg-pink-600 relative h-3 opacity-40 top-[-15px] mr-auto w-[58%]"></div> */}
-            <h1 className="text-4xl font-bold z-10 text-center text-neutral-200 relative">FORMI</h1>
-
-            <div className="bg-pink-600 relative h-1 mt-3 rounded-full animate-width"></div>
-         </div>
+      <div className="flex items-center justify-center h-screen bg-neutral-900 ">
+         <img src="/logo.png" className="w-12" alt="" />
       </div>
    ),
 });
@@ -387,16 +363,6 @@ const Edit = ({
       if (!isPlaying) return;
       setSelectedFormations([formations.find((formation, i) => i === currentFormationIndex)?.id]);
    }, [currentFormationIndex, isPlaying]);
-
-   // useEffect(() => {
-   //    // Add event listener for beforeunload event
-   //    window.addEventListener("beforeunload", handleBeforeUnload);
-
-   //    // Cleanup event listener on unmount
-   //    return () => {
-   //       window.removeEventListener("beforeunload", handleBeforeUnload);
-   //    };
-   // }, [saved]);
 
    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -825,8 +791,6 @@ const Edit = ({
             {/* <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta> */}
          </Head>
 
-         {/* {!hasVisited ? <div className="fixed w-[500px] h-[200px] bg-black">warning</div> : null} */}
-
          {helpUrl && <HelpUrl helpUrl={helpUrl} setHelpUrl={setHelpUrl}></HelpUrl>}
 
          {pdfLoading ? (
@@ -834,12 +798,6 @@ const Edit = ({
                <p className="text-center">Loading PDF. This may take a while.</p>
             </div>
          ) : null}
-
-         {/* {isLoading ? (
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] bg-black/80 text-white border border-neutral-600  rounded-xl h-[100px] bg-white z-50 grid place-items-center">
-               <p className="text-center">Connected</p>
-            </div>
-         ) : null} */}
 
          {isCommenting ? (
             <>
@@ -874,7 +832,6 @@ const Edit = ({
             setPosition={setPosition}
             selectedPropIds={selectedPropIds}
             setIsScrollingTimeline={setIsScrollingTimeline}
-            setIsChangingCollisionRadius={setIsChangingCollisionRadius}
             dancers={dancers}
             setDropDownToggle={setDropDownToggle}
             shiftHeld={shiftHeld}
@@ -913,7 +870,8 @@ const Edit = ({
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
             <style>
                {`
-               html, body {
+                     html,
+                     body {
                   overscroll-behavior: none;
                   overscroll-behavior-y: none;
                   overflow-y: overlay;
@@ -924,17 +882,6 @@ const Edit = ({
                height: 100vh; /* Fallback for browsers that do not support Custom Properties */
                height: calc(var(--vh, 1vh) * 100);
              }
-
-         //      select{
-         //       background: url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0Ljk1IDEwIj48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2ZmZjt9LmNscy0ye2ZpbGw6IzQ0NDt9PC9zdHlsZT48L2RlZnM+PHRpdGxlPmFycm93czwvdGl0bGU+PHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iNC45NSIgaGVpZ2h0PSIxMCIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtMiIgcG9pbnRzPSIxLjQxIDQuNjcgMi40OCAzLjE4IDMuNTQgNC42NyAxLjQxIDQuNjciLz48cG9seWdvbiBjbGFzcz0iY2xzLTIiIHBvaW50cz0iMy41NCA1LjMzIDIuNDggNi44MiAxLjQxIDUuMzMgMy41NCA1LjMzIi8+PC9zdmc+) no-repeat 95% 50%;
-         //       -moz-appearance: none; 
-         //       -webkit-appearance: none; 
-         //       appearance: none;
-         //       /* and then whatever styles you want*/
-         //       height: 30px; 
-         //       width: 100px;
-         //       padding: 5px;
-         //   }
                `}
             </style>
 
@@ -944,8 +891,6 @@ const Edit = ({
                folder={initialData?.project_id}
                exportPdf={exportPdf}
                dropDownToggle={dropDownToggle}
-               isChangingCollisionRadius={isChangingCollisionRadius}
-               setIsChangingCollisionRadius={setIsChangingCollisionRadius}
                isCommenting={isCommenting}
                pushChange={pushChange}
                selectedDancers={selectedDancers}
@@ -965,7 +910,12 @@ const Edit = ({
                setAnyoneCanView={setAnyoneCanView}
             />
 
-            <MobileSidebar setLocalSettings={setLocalSettings} setHelpUrl={setHelpUrl} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></MobileSidebar>
+               <MobileSidebar
+                  setLocalSettings={setLocalSettings}
+                  setHelpUrl={setHelpUrl}
+                  setMenuOpen={setMenuOpen}
+                  menuOpen={menuOpen}
+               ></MobileSidebar>
 
             <div className="flex flex-row overflow-hidden w-screen h-full">
                <Sidebar setLocalSettings={setLocalSettings} setHelpUrl={setHelpUrl} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
@@ -978,7 +928,9 @@ const Edit = ({
                            }}
                            className="flex flex-row absolute md:static bottom-0 top-[100px] md:w-auto w-full md:z-auto z-[65] "
                         >
-                           <div className="border-r border-neutral-300 dark:border-neutral-700">
+                              {menuOpen ? (
+                                 <>
+                                    <div className="border-r border-neutral-300 dark:border-neutral-700 min-w-[240px] w-[240px] dark:bg-neutral-900 bg-neutral-50 dark:text-white">
                               {menuOpen === "dancers" ? (
                                  <Roster
                                     session={session}
@@ -1074,10 +1026,12 @@ const Edit = ({
                                  />
                               ) : null}
                            </div>
+                                 </>
+                              ) : null}
                         </div>
                      ) : null}
                      <DndContext id="1" onDragEnd={handleDragEnd}>
-                        <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-100 dark:bg-neutral-900 relative `}>
+                           <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-50 dark:bg-neutral-900 relative `}>
                            <ObjectControls
                               zoom={zoom}
                               localSettings={localSettings}
@@ -1208,25 +1162,6 @@ const Edit = ({
                                        <></>
                                     )}
 
-                                    {/* {dancerPositions.map((position, index) => {
-                                       return (
-                                       <DancerAlias
-                                             item={items.find((item) => item.id === position?.itemId) || null}
-                                             key={position.id}
-                                             isPlaying={isPlaying}
-                                             position={position.position}
-                                             color={position.color}
-                                             index={dancers.findIndex((dancer) => dancer.id === position.id)}
-                                          coordsToPosition={coordsToPosition}
-                                             amSelected={selectedDancers.includes(position.id)}
-                                             dancer={dancers.find((dancer) => dancer.id === position.id)}
-                                          draggingDancerId={draggingDancerId}
-                                          localSettings={localSettings}
-                                             zoom={zoom}
-                                       />
-                                       );
-                                    })} */}
-
                                     {dancers.map((dancer, index) => (
                                        <DancerAlias
                                           roundPositions={roundPositions}
@@ -1245,7 +1180,6 @@ const Edit = ({
                                           localSettings={localSettings}
                                           index={index}
                                           collisions={collisions}
-                                          isChangingCollisionRadius={isChangingCollisionRadius}
                                        />
                                     ))}
 
