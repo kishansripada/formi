@@ -453,9 +453,6 @@ export const Header: React.FC<{
                <input
                   value={danceName}
                   onChange={(e) => setDanceName(e.target.value)}
-                  onClick={(e) => {
-                     e.target.select();
-                  }}
                   placeholder={"Performance name"}
                   disabled={viewOnly}
                   className={`h-6 text-center  px-3 py-4 w-full  mx-auto text-sm hidden bg-transparent rounded-md  lg:block   outline-none   `}
