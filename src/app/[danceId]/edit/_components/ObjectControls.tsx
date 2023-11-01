@@ -268,7 +268,7 @@ export const ObjectControls: React.FC<{
          gridSizeY = 1;
       }
 
-      return { x: stageFlippedFactor * Math.round(pos.x / gridSizeX), y: stageFlippedFactor * Math.round(pos.y / gridSizeY) };
+      return { x: Math.round(pos.x / gridSizeX), y: Math.round(pos.y / gridSizeY) };
    };
 
    return (
