@@ -37,34 +37,15 @@ export const ObjectControls: React.FC<{
    // items: item[];
    dancers: dancer[];
 }> = ({
-   // setSelectedFormation,
-   player,
-   isPlaying,
-   setIsPlaying,
-
-   position,
-
-   songDuration,
-   // selectedFormation,
-
-   addToStack,
    pushChange,
-   setPixelsPerSecond,
-   pixelsPerSecond,
-   localSource,
-   setPlaybackRate,
-   localSettings,
-   setLocalSettings,
 
-   zoom,
    selectedDancers,
-   cloudSettings,
-   dropDownToggle,
-   // items,
+
    dancers,
-   // viewOnlyInitial,
+   localSettings,
 }) => {
-   const { formations, setFormations, viewOnly, items, selectedFormations, getFirstSelectedFormation, get, isMobileView, imageBlobs } = useStore();
+   const { formations, setFormations, viewOnly, items, selectedFormations, getFirstSelectedFormation, get, isMobileView, imageBlobs, cloudSettings } =
+      useStore();
 
    // if (!selectedFormations.length) return null;
    const setLinear = () => {
@@ -265,6 +246,30 @@ export const ObjectControls: React.FC<{
       );
       pushChange();
    };
+   const pos = getFirstSelectedFormation()?.positions.find((position) => position.id === selectedDancers[0])?.position;
+   const stageFlippedFactor = localSettings.stageFlipped ? -1 : 1;
+   const getRealPosition = (pos, cloudSettings) => {
+      if (!pos) return;
+      const { stageBackground, gridSubdivisions, horizontalGridSubdivisions, verticalFineDivisions, horizontalFineDivisions, stageDimensions } =
+         cloudSettings;
+      let gridSizeX = 1;
+      let gridSizeY = 1;
+
+      if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
+         // Determine the total number of divisions along each axis.
+         const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
+         const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
+
+         // Calculate the width and height of each grid cell.
+         gridSizeX = stageDimensions.width / totalVerticalDivisions;
+         gridSizeY = stageDimensions.height / totalHorizontalDivisions;
+      } else {
+         gridSizeX = 1;
+         gridSizeY = 1;
+      }
+
+      return { x: stageFlippedFactor * Math.round(pos.x / gridSizeX), y: stageFlippedFactor * Math.round(pos.y / gridSizeY) };
+   };
 
    return (
       <>
@@ -275,7 +280,12 @@ export const ObjectControls: React.FC<{
                      ? "Everyone"
                      : formatNames(dancers.filter((dancer) => selectedDancers.includes(dancer.id)).map((dancer) => dancer.name))}
                </span>
-               {/* <span>{getFirstSelectedFormation()?.positions.find((position) => position.id === selectedDancers[0])?.position.x}</span> */}
+
+               {selectedDancers.length === 1 ? (
+                  <span className="ml-3 font-light text-neutral-400 text-sm">
+                     ({getRealPosition(pos, cloudSettings)?.x}, {getRealPosition(pos, cloudSettings)?.y})
+                  </span>
+               ) : null}
                {/* <span className="text-neutral-400 text-xs px-1">in</span>
             <span className=" text-xs ">Jumps up</span> */}
             </div>
@@ -349,7 +359,7 @@ export const ObjectControls: React.FC<{
                                  <svg className="w-5 h-5 mr-4  " xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                                     <path d="M170 666q-37.8 0-63.9-26.141t-26.1-64Q80 538 106.1 512t63.9-26q29.086 0 52.543 17T255 546h625v60H255q-9 26-32.457 43T170 666Z" />
                                  </svg>
-                                 <p>Linear</p>
+                                 <p>Straight</p>
                               </div>
                            </DropdownMenuItem>
                            <DropdownMenuItem className="w-full  hover:bg-neutral-200">
@@ -479,4 +489,8 @@ function formatNames(names: string[]): string {
    if (names.length === 3) return `${names[0]}, ${names[1]} & ${names[2]}`;
 
    return `${names[0]}, ${names[1]}, ${names[2]} & ${names.length - 3} others`;
+}
+
+function roundToHundredth(num) {
+   return parseFloat(num.toFixed(2));
 }
