@@ -236,7 +236,8 @@ export const EventHandler: React.FC<{
       }
       if (e.key === "Escape") {
          setSelectedDancers([]);
-
+         setShiftHeld(false);
+         setCommandHeld(false);
          setIsCommenting(false);
       }
 
