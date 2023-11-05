@@ -350,7 +350,10 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
 
          deleteSelectedFormations: () => {
             const { pauseHistory, selectedFormations, resumeHistory, formations } = get();
+
             if (!selectedFormations.length || formations.length === 1) return;
+
+            if (selectedFormations.length === formations.length) return;
             pauseHistory();
 
             selectedFormations.forEach((selectedFormationId) => {
