@@ -157,11 +157,11 @@ export function ThreeDancer({
       let x = myPosition.x;
       let y = -myPosition.y;
       dancerPos = { position: [x, dancerPosition?.level || 0, y] };
-      textPos = { position: [x, (dancer?.height || 182.88) / 28, y] };
+      textPos = { position: [x, (dancer?.height || 182.88) / 28 + (dancerPosition?.level || 0), y] };
       // selectedPos = { position: [x, 0, y] };
       bgPos = { position: [x, (dancer?.height || 182.88) / 28, y] };
-      itemPos = { position: [x, (dancer?.height || 182.88) / 28, y] };
-      itemPos = { position: [x, (dancer?.height || 182.88) / 28 / 2, y + 0.5] };
+      // itemPos = { position: [x, (dancer?.height || 182.88) / 28, y] };
+      itemPos = { position: [x, (dancer?.height || 182.88) / 28 / 2 + (dancerPosition?.level || 0), y + 0.5] };
    }
 
    const thisItem = items.find((item) => item.id === dancerPosition?.itemId) || null;
@@ -230,7 +230,7 @@ export function ThreeDancer({
                                           opacity={opacity}
                                           attach="material"
                                           color={
-                                             (selectedDancers.includes(dancer.id) ? "#ffffff" : null) ||
+                                             (selectedDancers.includes(dancer.id) && !isPlaying ? "#ffffff" : null) ||
                                              dancerPosition.color ||
                                              dancer?.color ||
                                              "#db2777"
