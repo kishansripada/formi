@@ -1032,7 +1032,7 @@ const Edit = ({
                      ) : null}
                      <DndContext id="1" onDragEnd={handleDragEnd}>
                            <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-50 dark:bg-neutral-900 relative `}>
-                           <ObjectControls
+                              {/* <ObjectControls
                               zoom={zoom}
                               localSettings={localSettings}
                               setLocalSettings={setLocalSettings}
@@ -1052,7 +1052,8 @@ const Edit = ({
                               dropDownToggle={dropDownToggle}
                               dancers={dancers}
                               viewOnlyInitial={viewOnlyInitial}
-                           ></ObjectControls>
+                                 localSettings={localSettings}
+                              ></ObjectControls> */}
 
                            <div
                               style={{
@@ -1288,6 +1289,38 @@ const Edit = ({
                            ></FormationControls>
                         </div>
                      </DndContext>
+                        <div className="h-full bg-neutral-900 max-w-[200px] w-[200px] min-w-[200px] border-l border-neutral-700">
+                           {selectedDancers.length ? (
+                              <ObjectControls
+                                 zoom={zoom}
+                                 localSettings={localSettings}
+                                 setLocalSettings={setLocalSettings}
+                                 setPlaybackRate={setPlaybackRate}
+                                 addToStack={addToStack}
+                                 pushChange={pushChange}
+                                 songDuration={songDuration}
+                                 soundCloudTrackId={soundCloudTrackId}
+                                 player={player}
+                                 isPlaying={isPlaying}
+                                 setIsPlaying={setIsPlaying}
+                                 position={position}
+                                 setPixelsPerSecond={setPixelsPerSecond}
+                                 pixelsPerSecond={pixelsPerSecond}
+                                 localSource={localSource}
+                                 selectedDancers={selectedDancers}
+                                 dropDownToggle={dropDownToggle}
+                                 dancers={dancers}
+                                 viewOnlyInitial={viewOnlyInitial}
+                                 localSettings={localSettings}
+                              ></ObjectControls>
+                           ) : (
+                              <>
+                                 {/* <div className="text-neutral-200 text-lg p-2">
+                                    <span className="font-bold">20 dancers</span> <span className="font-light">on stage</span>
+                                 </div> */}
+                              </>
+                           )}
+                        </div>
                   </div>
 
                   <div className="  bg-black">

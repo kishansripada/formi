@@ -12,6 +12,9 @@ import {
    DropdownMenuSeparator,
    DropdownMenuTrigger,
 } from "../../../../../@/components/ui/dropdown-menu";
+
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "../../../../../@/components/ui/input";
 export const ObjectControls: React.FC<{
    // setSelectedFormation: Function;
    player: any;
@@ -43,6 +46,7 @@ export const ObjectControls: React.FC<{
 
    dancers,
    localSettings,
+   setLocalSettings,
 }) => {
    const { formations, setFormations, viewOnly, items, selectedFormations, getFirstSelectedFormation, get, isMobileView, imageBlobs, cloudSettings } =
       useStore();
@@ -273,207 +277,260 @@ export const ObjectControls: React.FC<{
 
    return (
       <>
-         <div className="w-full md:h-[40px] md:min-h-[40px] md:max-h-[40px] h-[30px] min-h-[30px] max-h-[30px] border-b-neutral-300 border-b bg-neutral-50 flex flex-row items-center px-3 dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
-            <div className="mr-auto">
-               <span className="md:text-sm text-[10px]  font-bold">
+         {/* md:h-[40px] md:min-h-[40px] md:max-h-[40px] h-[30px] min-h-[30px] max-h-[30px] */}
+         <div className="w-full  h-full bg-neutral-50 flex flex-col  pb-2  dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
+            <div className=" border-b border-neutral-700 w-full py-2 px-3 flex flex-row items-center">
+               <p className="md:text-sm text-[10px]  font-bold">
                   {selectedDancers.length === dancers.length
                      ? "Everyone"
                      : formatNames(dancers.filter((dancer) => selectedDancers.includes(dancer.id)).map((dancer) => dancer.name))}
-               </span>
+               </p>
 
                {selectedDancers.length === 1 ? (
-                  <span className="ml-3 font-light text-neutral-400 text-sm">
+                  <p className="font-light text-neutral-400 text-sm ml-auto ">
                      ({getRealPosition(pos, cloudSettings)?.x}, {getRealPosition(pos, cloudSettings)?.y})
-                  </span>
+                  </p>
                ) : null}
                {/* <span className="text-neutral-400 text-xs px-1">in</span>
             <span className=" text-xs ">Jumps up</span> */}
             </div>
+            <div className="px-3 gap-3 flex flex-col py-2">
+               {selectedDancers.length && selectedFormations.length ? (
+                  <>
+                     {selectedDancers.length === 2 && !viewOnly ? (
+                        <button
+                           onClick={() => {
+                              selectedFormations.forEach((selectedFormation: string) => {
+                                 const positions = selectedDancers.map((dancerId) => {
+                                    return formations
+                                       .find((formation) => formation.id === selectedFormation)
+                                       ?.positions.find((dancerPosition: dancerPosition) => dancerPosition.id === dancerId).position;
+                                 });
 
-            {selectedDancers.length && selectedFormations.length ? (
-               <>
-                  {selectedDancers.length === 2 && !viewOnly ? (
-                     <button
-                        onClick={() => {
-                           selectedFormations.forEach((selectedFormation: string) => {
-                              const positions = selectedDancers.map((dancerId) => {
-                                 return formations
-                                    .find((formation) => formation.id === selectedFormation)
-                                    ?.positions.find((dancerPosition: dancerPosition) => dancerPosition.id === dancerId).position;
-                              });
-
-                              setFormations(
-                                 get().formations.map((formation, index: number) => {
-                                    if (formation.id === selectedFormation) {
-                                       return {
-                                          ...formation,
-                                          positions: formation.positions.map((dancerPosition) => {
-                                             if (selectedDancers.includes(dancerPosition.id)) {
-                                                return {
-                                                   ...dancerPosition,
-                                                   position: positions[0] === dancerPosition.position ? positions[1] : positions[0],
-                                                };
-                                             }
-                                             return dancerPosition;
-                                          }),
-                                       };
-                                    }
-                                    return formation;
-                                 })
-                              );
-                           });
-                           // swap the positions of the two dancers
-                        }}
-                        className="flex flex-row justify-between dark:text-neutral-300 text-neutral-500 hover:text-black dark:hover:text-white transition items-center px-5"
-                     >
-                        <p className="text-xs font-semibold mr-3">Swap 2 Positions</p>
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-5 h-5"
-                        >
-                           <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
-                           />
-                        </svg>
-                     </button>
-                  ) : null}
-
-                  <div className="flex flex-row justify-between items-center md:px-5 px-1 ">
-                     <p className="text-xs  font-semibold mr-3">Path</p>
-                     <DropdownMenu>
-                        <DropdownMenuTrigger asChild className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md">
-                           <div className=" py-1 px-3 h-[32px] w-38  flex flex-row items-center  ">
-                              <p className=" text-xs ">{pathSelectionDropdownValue()}</p>
-                           </div>
-                        </DropdownMenuTrigger>
-
-                        <DropdownMenuContent className=" dark:fill-white ">
-                           <DropdownMenuItem className="w-full  hover:bg-neutral-200 ">
-                              <div className="  py-1  text-xs   flex flex-row items-center" onClick={setLinear}>
-                                 <svg className="w-5 h-5 mr-4  " xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                                    <path d="M170 666q-37.8 0-63.9-26.141t-26.1-64Q80 538 106.1 512t63.9-26q29.086 0 52.543 17T255 546h625v60H255q-9 26-32.457 43T170 666Z" />
-                                 </svg>
-                                 <p>Straight</p>
-                              </div>
-                           </DropdownMenuItem>
-                           <DropdownMenuItem className="w-full  hover:bg-neutral-200">
-                              <div className="  py-1  text-xs   flex flex-row items-center" onClick={setCurved}>
-                                 <svg className="w-5 h-5 mr-4  " xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                                    <path d="M766 936q-41 0-71.5-24.5T656 852H443q-66 0-109.5-43.5T290 699q0-66 43.5-109.5T443 546h77q41 0 67-26t26-67q0-41-26-67t-67-26H304q-9 35-39 59.5T194 444q-48 0-81-33t-33-81q0-48 33-81t81-33q41 0 71 24.5t39 59.5h216q66 0 109.5 43.5T673 453q0 66-43.5 109.5T520 606h-77q-41 0-67 26t-26 67q0 41 26 67t67 26h213q9-35 39-59.5t71-24.5q48 0 81 33t33 81q0 48-33 81t-81 33ZM194 384q23 0 38.5-15.5T248 330q0-23-15.5-38.5T194 276q-23 0-38.5 15.5T140 330q0 23 15.5 38.5T194 384Z" />
-                                 </svg>
-                                 <p>Curved</p>
-                              </div>
-                           </DropdownMenuItem>
-                           <DropdownMenuItem className="w-full  hover:bg-neutral-200">
-                              <div className="  py-1  text-xs   flex flex-row items-center" onClick={setTeleport}>
-                                 <svg className="w-5 h-5 mr-4 " xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
-                                    <path d="m794 922-42-42 73-74H620v-60h205l-73-74 42-42 146 146-146 146ZM340 686q51.397 0 92.699-24Q474 638 499 598q-34-26-74.215-39t-85-13Q295 546 255 559t-74 39q25 40 66.301 64 41.302 24 92.699 24Zm.089-200Q369 486 389.5 465.411q20.5-20.588 20.5-49.5Q410 387 389.411 366.5q-20.588-20.5-49.5-20.5Q311 346 290.5 366.589q-20.5 20.588-20.5 49.5Q270 445 290.589 465.5q20.588 20.5 49.5 20.5ZM340 897q133-121 196.5-219.5T600 504q0-117.79-75.292-192.895Q449.417 236 340 236t-184.708 75.105Q80 386.21 80 504q0 75 65 173.5T340 897Zm0 79Q179 839 99.5 721.5T20 504q0-150 96.5-239T340 176q127 0 223.5 89T660 504q0 100-79.5 217.5T340 976Zm0-410Z" />
-                                 </svg>
-                                 <p>Teleport</p>
-                              </div>
-                           </DropdownMenuItem>
-                        </DropdownMenuContent>
-                     </DropdownMenu>
-                  </div>
-
-                  <div className="flex flex-row justify-between items-center md:px-3 px-1 ">
-                     <p className="text-xs font-semibold mr-3 hidden md:block">Prop</p>
-
-                     <DropdownMenu>
-                        <DropdownMenuTrigger asChild className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md">
-                           <div className=" py-1 px-3 h-[32px] w-38  flex flex-row items-center  ">
-                              <p className=" text-xs">{itemSelectionDropdownValue()}</p>
-                           </div>
-                        </DropdownMenuTrigger>
-
-                        <DropdownMenuContent className={`grid ${items.length > 10 ? "grid-cols-2 " : ""}`}>
-                           {items.map((item: item) => {
-                              return (
-                                 <DropdownMenuItem key={item.id} onClick={() => setDancerItem(item.id)} className="w-full  hover:bg-neutral-200">
-                                    <div className="  py-1  text-xs   flex flex-row items-center">
-                                       <div className="w-7 h-7 mr-5 ">
-                                          <img
-                                             className="h-full w-full object-contain"
-                                             src={imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`]}
-                                             alt=""
-                                          />
-                                       </div>
-
-                                       <p>{item.name}</p>
-                                    </div>
-                                 </DropdownMenuItem>
-                              );
-                           })}
-                           <DropdownMenuSeparator />
-                           <DropdownMenuItem onClick={() => setDancerItem(null)} className="w-full  hover:bg-neutral-200">
-                              <div className="  py-1  text-xs   flex flex-row items-center">
-                                 <p>No prop</p>
-                              </div>
-                           </DropdownMenuItem>
-                        </DropdownMenuContent>
-                     </DropdownMenu>
-                  </div>
-                  {!isMobileView ? (
-                     <>
-                        <div className="px-3">
-                           <PopoverPicker
-                              dancers={dancers}
-                              color={
-                                 getFirstSelectedFormation()?.positions.find(
-                                    (dancerPosition: dancerPosition) => dancerPosition.id === selectedDancers[0]
-                                 )?.color || dancers.find((dancer: dancer) => dancer.id === selectedDancers[0])?.color
-                              }
-                              selectedDancers={selectedDancers}
-                              setColor={setColor}
-                              position="bottom"
-                              text="Color only applies to this formation"
-                           ></PopoverPicker>
-                        </div>
-                        {formations
-                           .filter((formation: formation) => selectedFormations.includes(formation.id))
-                           .map((formation: formation) => formation.positions)
-                           .flat()
-                           .filter((dancerPosition: dancerPosition) => selectedDancers.includes(dancerPosition.id) && dancerPosition.color)
-                           ?.map((dancerPosition: dancerPosition) => dancerPosition.color).length && !viewOnly ? (
-                           <button
-                              onClick={() => {
                                  setFormations(
-                                    formations.map((formation: formation, index: number) => {
-                                       // remove color from dancer position
-                                       if (selectedFormations.includes(formation.id)) {
+                                    get().formations.map((formation, index: number) => {
+                                       if (formation.id === selectedFormation) {
                                           return {
                                              ...formation,
-                                             positions: formation.positions.map((dancerPosition: dancerPosition) => {
+                                             positions: formation.positions.map((dancerPosition) => {
                                                 if (selectedDancers.includes(dancerPosition.id)) {
                                                    return {
                                                       ...dancerPosition,
-                                                      color: null,
+                                                      position: positions[0] === dancerPosition.position ? positions[1] : positions[0],
                                                    };
-                                                } else {
-                                                   return dancerPosition;
                                                 }
+                                                return dancerPosition;
                                              }),
                                           };
                                        }
                                        return formation;
                                     })
                                  );
-                              }}
-                              className="bg-white rounded-md text-black md:text-xs text-[10px] py-2 md:px-3 px-1"
+                              });
+                              // swap the positions of the two dancers
+                           }}
+                           className="flex flex-row justify-between dark:text-neutral-300 text-neutral-500 hover:text-black dark:hover:text-white transition items-center "
+                        >
+                           <p className="text-xs font-semibold mr-3">Swap 2 Positions</p>
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-5 h-5"
                            >
-                              Remove color override
-                           </button>
-                        ) : null}{" "}
-                     </>
-                  ) : null}
-               </>
-            ) : null}
+                              <path
+                                 strokeLinecap="round"
+                                 strokeLinejoin="round"
+                                 d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
+                              />
+                           </svg>
+                        </button>
+                     ) : null}
+
+                     <div className="flex flex-row justify-between items-center  ">
+                        <p className="text-xs  font-semibold">Path</p>
+                        <DropdownMenu>
+                           <DropdownMenuTrigger asChild className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md">
+                              <div className=" py-1 px-3 h-[32px] w-38  flex flex-row items-center  ">
+                                 <p className=" text-xs ">{pathSelectionDropdownValue()}</p>
+                              </div>
+                           </DropdownMenuTrigger>
+
+                           <DropdownMenuContent className=" dark:fill-white ">
+                              <DropdownMenuItem className="w-full  hover:bg-neutral-200 ">
+                                 <div className="  py-1  text-xs   flex flex-row items-center" onClick={setLinear}>
+                                    <svg className="w-5 h-5 mr-4  " xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                                       <path d="M170 666q-37.8 0-63.9-26.141t-26.1-64Q80 538 106.1 512t63.9-26q29.086 0 52.543 17T255 546h625v60H255q-9 26-32.457 43T170 666Z" />
+                                    </svg>
+                                    <p>Straight</p>
+                                 </div>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="w-full  hover:bg-neutral-200">
+                                 <div className="  py-1  text-xs   flex flex-row items-center" onClick={setCurved}>
+                                    <svg className="w-5 h-5 mr-4  " xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                                       <path d="M766 936q-41 0-71.5-24.5T656 852H443q-66 0-109.5-43.5T290 699q0-66 43.5-109.5T443 546h77q41 0 67-26t26-67q0-41-26-67t-67-26H304q-9 35-39 59.5T194 444q-48 0-81-33t-33-81q0-48 33-81t81-33q41 0 71 24.5t39 59.5h216q66 0 109.5 43.5T673 453q0 66-43.5 109.5T520 606h-77q-41 0-67 26t-26 67q0 41 26 67t67 26h213q9-35 39-59.5t71-24.5q48 0 81 33t33 81q0 48-33 81t-81 33ZM194 384q23 0 38.5-15.5T248 330q0-23-15.5-38.5T194 276q-23 0-38.5 15.5T140 330q0 23 15.5 38.5T194 384Z" />
+                                    </svg>
+                                    <p>Curved</p>
+                                 </div>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="w-full  hover:bg-neutral-200">
+                                 <div className="  py-1  text-xs   flex flex-row items-center" onClick={setTeleport}>
+                                    <svg className="w-5 h-5 mr-4 " xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
+                                       <path d="m794 922-42-42 73-74H620v-60h205l-73-74 42-42 146 146-146 146ZM340 686q51.397 0 92.699-24Q474 638 499 598q-34-26-74.215-39t-85-13Q295 546 255 559t-74 39q25 40 66.301 64 41.302 24 92.699 24Zm.089-200Q369 486 389.5 465.411q20.5-20.588 20.5-49.5Q410 387 389.411 366.5q-20.588-20.5-49.5-20.5Q311 346 290.5 366.589q-20.5 20.588-20.5 49.5Q270 445 290.589 465.5q20.588 20.5 49.5 20.5ZM340 897q133-121 196.5-219.5T600 504q0-117.79-75.292-192.895Q449.417 236 340 236t-184.708 75.105Q80 386.21 80 504q0 75 65 173.5T340 897Zm0 79Q179 839 99.5 721.5T20 504q0-150 96.5-239T340 176q127 0 223.5 89T660 504q0 100-79.5 217.5T340 976Zm0-410Z" />
+                                    </svg>
+                                    <p>Teleport</p>
+                                 </div>
+                              </DropdownMenuItem>
+                           </DropdownMenuContent>
+                        </DropdownMenu>
+                     </div>
+
+                     <div className="flex flex-row justify-between items-center  ">
+                        <p className="text-xs font-semibold  hidden md:block">Prop</p>
+
+                        <DropdownMenu>
+                           <DropdownMenuTrigger asChild className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md">
+                              <div className=" py-1 px-3 h-[32px] w-38  flex flex-row items-center  ">
+                                 <p className=" text-xs">{itemSelectionDropdownValue()}</p>
+                              </div>
+                           </DropdownMenuTrigger>
+
+                           <DropdownMenuContent className={`grid ${items.length > 10 ? "grid-cols-2 " : ""}`}>
+                              {items.map((item: item) => {
+                                 return (
+                                    <DropdownMenuItem key={item.id} onClick={() => setDancerItem(item.id)} className="w-full  hover:bg-neutral-200">
+                                       <div className="  py-1  text-xs   flex flex-row items-center">
+                                          <div className="w-7 h-7 mr-5 ">
+                                             <img
+                                                className="h-full w-full object-contain"
+                                                src={
+                                                   imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`]
+                                                }
+                                                alt=""
+                                             />
+                                          </div>
+
+                                          <p>{item.name}</p>
+                                       </div>
+                                    </DropdownMenuItem>
+                                 );
+                              })}
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => setDancerItem(null)} className="w-full  hover:bg-neutral-200">
+                                 <div className="  py-1  text-xs   flex flex-row items-center">
+                                    <p>No prop</p>
+                                 </div>
+                              </DropdownMenuItem>
+                           </DropdownMenuContent>
+                        </DropdownMenu>
+                     </div>
+                     <div className="flex flex-row justify-between items-center  ">
+                        <p className="text-xs font-semibold  hidden md:block">Level (feet)</p>
+
+                        <Input
+                           type="number"
+                           className="w-[70px] h-8 dark:bg-neutral-900 text-xs"
+                           size={1}
+                           onChange={(e) => {
+                              setLocalSettings((localSettings: localSettings) => {
+                                 return { ...localSettings, viewingThree: true, viewingTwo: false };
+                              });
+                              setFormations(
+                                 formations.map((formation) => {
+                                    if (selectedFormations.includes(formation.id)) {
+                                       return {
+                                          ...formation,
+                                          positions: formation.positions.map((position) => {
+                                             if (selectedDancers.includes(position.id)) {
+                                                return { ...position, level: parseFloat(e.target.value) };
+                                             }
+                                             return position;
+                                          }),
+                                       };
+                                    }
+                                    return formation;
+                                 })
+                              );
+                           }}
+                           value={
+                              getFirstSelectedFormation()?.positions.find((position: dancerPosition) => {
+                                 return position.id === selectedDancers[0];
+                              })?.level || 0
+                           }
+                        />
+                     </div>
+                     {!isMobileView ? (
+                        <>
+                           <div className=" flex flex-row justify-between items-center">
+                              <p className="text-xs  font-semibold mr-3">Color in this formation</p>
+                              <PopoverPicker
+                                 dancers={dancers}
+                                 color={
+                                    getFirstSelectedFormation()?.positions.find(
+                                       (dancerPosition: dancerPosition) => dancerPosition.id === selectedDancers[0]
+                                    )?.color || dancers.find((dancer: dancer) => dancer.id === selectedDancers[0])?.color
+                                 }
+                                 selectedDancers={selectedDancers}
+                                 setColor={setColor}
+                                 position="bottom"
+                                 text="Color only applies to this formation"
+                              ></PopoverPicker>
+                           </div>
+                           {formations
+                              .filter((formation: formation) => selectedFormations.includes(formation.id))
+                              .map((formation: formation) => formation.positions)
+                              .flat()
+                              .filter((dancerPosition: dancerPosition) => selectedDancers.includes(dancerPosition.id) && dancerPosition.color)
+                              ?.map((dancerPosition: dancerPosition) => dancerPosition.color).length && !viewOnly ? (
+                              <button
+                                 onClick={() => {
+                                    setFormations(
+                                       formations.map((formation: formation, index: number) => {
+                                          // remove color from dancer position
+                                          if (selectedFormations.includes(formation.id)) {
+                                             return {
+                                                ...formation,
+                                                positions: formation.positions.map((dancerPosition: dancerPosition) => {
+                                                   if (selectedDancers.includes(dancerPosition.id)) {
+                                                      return {
+                                                         ...dancerPosition,
+                                                         color: null,
+                                                      };
+                                                   } else {
+                                                      return dancerPosition;
+                                                   }
+                                                }),
+                                             };
+                                          }
+                                          return formation;
+                                       })
+                                    );
+                                 }}
+                                 className="bg-white rounded-md text-black md:text-xs text-[10px] py-2 mt-2 "
+                              >
+                                 Remove color override
+                              </button>
+                           ) : null}
+                        </>
+                     ) : null}
+                     {/* <div className=" flex flex-row justify-between items-center">
+                        <p className="text-xs  font-semibold mr-3">Group</p>
+                        <Select className="text-xs">
+                           <SelectTrigger className="w-full h-8 dark:bg-neutral-900  rounded-md text-xs">
+                              <SelectValue className="" placeholder="Theme" />
+                           </SelectTrigger>
+                           <SelectContent>
+                              <SelectItem value="light">Jumps up</SelectItem>
+                              <SelectItem value="dark">Jumps down</SelectItem>
+                              <SelectItem value="system">Stays still</SelectItem>
+                           </SelectContent>
+                        </Select>
+                     </div> */}
+                  </>
+               ) : null}
+            </div>
          </div>
       </>
    );
@@ -484,11 +541,12 @@ function formatNames(names: string[]): string {
 
    if (names.length === 1) return names[0];
 
-   if (names.length === 2) return `${names[0]} & ${names[1]}`;
+   // if (names.length === 2) return `${names[0]} & ${names[1]}`;
 
-   if (names.length === 3) return `${names[0]}, ${names[1]} & ${names[2]}`;
+   // if (names.length === 3) return `${names[0]}, ${names[1]} & ${names[2]}`;
 
-   return `${names[0]}, ${names[1]}, ${names[2]} & ${names.length - 3} others`;
+   return `${names[0]} & ${names.length - 1} others`;
+   //  ${names[1]}, ${names[2]}
 }
 
 function roundToHundredth(num) {

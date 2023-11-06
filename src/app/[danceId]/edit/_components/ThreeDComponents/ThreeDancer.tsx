@@ -38,7 +38,7 @@ export function ThreeDancer({
    setSelectedDancers: Function;
    setScene: Function;
 }) {
-   const { formations, setFormations, get, viewOnly, items, selectedFormations } = useStore();
+   const { formations, setFormations, get, viewOnly, items, selectedFormations, selectedDancers } = useStore();
 
    const { scene } = useThree((state) => state);
 
@@ -65,12 +65,13 @@ export function ThreeDancer({
    let dancer = dancers?.find((dancer) => dancer.id === dancerPosition.id);
    let planeIntersectPoint = new Vector3();
    const floorPlane = new Plane(new Vector3(0, 1, 0), 0);
-
+   // const { viewport } = useThree();
+   // const { width, height, factor } = viewport;
    const bind = useDrag(
       ({ active, movement: [x, y], timeStamp, event }) => {
          if (viewOnly || isPlaying) return;
          event.stopPropagation();
-
+         // console.log({ x });
          if (active) {
             document.body.style.cursor = "grabbing";
             event.ray.intersectPlane(floorPlane, planeIntersectPoint);
@@ -120,7 +121,7 @@ export function ThreeDancer({
 
          return timeStamp;
       },
-      { delay: true }
+      { threshold: 10 }
    );
    const { nodes, materials } = useGLTF("/roblox.glb");
 
@@ -128,11 +129,17 @@ export function ThreeDancer({
    let textPos;
    let bgPos;
    let itemPos;
-
-   dancerPos = useSpring({ position: [dancerPosition.position.x, 0, -dancerPosition.position.y] });
-   textPos = useSpring({ position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28, -dancerPosition.position.y] });
+   // console.log(dancerPosition);
+   dancerPos = useSpring({
+      position: [dancerPosition.position.x, dancerPosition?.level || 0, -dancerPosition.position.y],
+   });
+   textPos = useSpring({
+      position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28 + (dancerPosition?.level || 0), -dancerPosition.position.y],
+   });
    bgPos = useSpring({ position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28, -dancerPosition.position.y - 0.02] });
-   itemPos = useSpring({ position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28 / 2, -dancerPosition.position.y + 0.5] });
+   itemPos = useSpring({
+      position: [dancerPosition.position.x, (dancer?.height || 182.88) / 28 / 2 + (dancerPosition?.level || 0), -dancerPosition.position.y + 0.5],
+   });
 
    // selectedPos = useSpring({ position: [dancerPosition.position.x, 0, -dancerPosition.position.y] });
    if (isThreeDancerDragging) {
@@ -149,7 +156,7 @@ export function ThreeDancer({
       if (myPosition === null) return <></>;
       let x = myPosition.x;
       let y = -myPosition.y;
-      dancerPos = { position: [x, 0, y] };
+      dancerPos = { position: [x, dancerPosition?.level || 0, y] };
       textPos = { position: [x, (dancer?.height || 182.88) / 28, y] };
       // selectedPos = { position: [x, 0, y] };
       bgPos = { position: [x, (dancer?.height || 182.88) / 28, y] };
@@ -168,7 +175,7 @@ export function ThreeDancer({
                   color={selectedDancers.includes(dancer.id) ? "#db2777" : localSettings.isDarkMode ? "white" : "#3f3f46"}
                />
             </RoundedBox>
-         </animated.mesh>  */}
+         </animated.mesh> */}
 
          <animated.mesh position={textPos.position}>
             <Text ref={textRef} scale={[0.4, 0.4, 0.4]} color={`${localSettings.isDarkMode ? "white" : "black"}`} anchorX="center" anchorY="middle">
@@ -181,7 +188,11 @@ export function ThreeDancer({
          <animated.mesh
             // {...spring}
             {...bind()}
-            scale={[0.6, (dancer?.height || 182.88) / 156, 0.7]}
+            scale={[
+               0.6 * (Math.random() * (0.01 - 0.001 + 0.001) + 1),
+               (dancer?.height || 182.88) / 156,
+               0.7 * (Math.random() * (0.01 - 0.001 + 0.001) + 1),
+            ]}
             // scale={[0.25, ((dancer.height || 182.88) / maxHeight) * 0.35, 0.3]}
 
             // rotation={[0, Math.PI / 2, 0]}
@@ -218,7 +229,12 @@ export function ThreeDancer({
                                        <meshStandardMaterial
                                           opacity={opacity}
                                           attach="material"
-                                          color={dancerPosition.color || dancer?.color || "#db2777"}
+                                          color={
+                                             (selectedDancers.includes(dancer.id) ? "#ffffff" : null) ||
+                                             dancerPosition.color ||
+                                             dancer?.color ||
+                                             "#db2777"
+                                          }
                                           transparent
                                        />
                                     </mesh>
