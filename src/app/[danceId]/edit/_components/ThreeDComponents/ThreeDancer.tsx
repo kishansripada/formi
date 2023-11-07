@@ -209,7 +209,7 @@ export function ThreeDancer({
                               name="RootNode"
                               onPointerDown={(e) => {
                                  if (viewOnly) return;
-                                 e.stopPropagation();
+                                 // e.stopPropagation();
                                  setSelectedDancers([dancer.id]);
                                  setIsThreeDancerDragging(true);
                                  // addToStack();
