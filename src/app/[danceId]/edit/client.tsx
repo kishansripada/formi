@@ -25,11 +25,9 @@ import { Roster } from "./_components/SidebarComponents/Roster";
 import { CurrentFormation } from "./_components/SidebarComponents/CurrentFormation";
 import { AuthSession, RealtimeChannel } from "@supabase/supabase-js";
 import { Collisions } from "./_components/SidebarComponents/Collisions";
-import { Props } from "./_components/SidebarComponents/Props";
 import { Timeline } from "./_components/Timeline";
 import { FormationControls } from "./_components/FormationControls";
 import { EventHandler } from "./_components/EventHandler";
-import { Items } from "./_components/SidebarComponents/Items";
 import { Assets } from "./_components/Modals/Assets";
 // could be dynamic imports
 import { Prop } from "./_components/Prop";
@@ -46,6 +44,7 @@ import { useStore } from "./store";
 import { MobileSidebar } from "./_components/MobileSidebar";
 import * as Sentry from "@sentry/browser";
 import { cubic, linear } from "./animationFunctions";
+import { ItemsAndProps } from "./_components/SidebarComponents/ItemsAndProps/Layout";
 
 const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => (
