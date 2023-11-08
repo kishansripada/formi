@@ -9,19 +9,12 @@ import {
    prop,
    propPosition,
 } from "../../../../types/types";
-import { useEffect, useState } from "react";
-
-import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { useStore } from "../store";
 
 export const Prop: React.FC<{
    prop: prop;
-   // props: prop[];
    currentFormationIndex: number | null;
    percentThroughTransition: number;
-
-   // selectedFormation: number | null;
-
    isPlaying: boolean;
    position: number | null;
 
@@ -39,62 +32,12 @@ export const Prop: React.FC<{
    selectedPropIds: string[];
    setResizingPropId: Function;
    dropDownToggle: boolean;
-   // setProps: Function;
+
    pushChange: Function;
-}> = ({
-   prop,
-   // props,
-   currentFormationIndex,
-   percentThroughTransition,
-
-   // selectedFormation,
-   isPlaying,
-   position,
-
-   selectedDancers,
-   coordsToPosition,
-   draggingDancerId,
-   cloudSettings,
-
-   zoom,
-   setZoom,
-   localSettings,
-   collisions,
-   index,
-
-   selectedPropIds,
-   setResizingPropId,
-   dropDownToggle,
-   // setProps,
-   pushChange,
-}) => {
-   let { formations, setFormations, setProps, props, selectedFormations, getFirstSelectedFormation } = useStore();
+}> = ({ prop, currentFormationIndex, percentThroughTransition, isPlaying, position, coordsToPosition, zoom, localSettings, selectedPropIds }) => {
+   let { formations, selectedFormations, getFirstSelectedFormation } = useStore();
    const { stageFlipped } = localSettings;
-   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-   // if (stageFlipped) {
-   //    formations = formations.map((formation: formation) => {
-   //       let flippedPositions = formation.positions.map((position) => {
-   //          if (position.controlPointEnd && position.controlPointStart) {
-   //             return {
-   //                ...position,
-   //                position: { x: -position.position.x, y: -position.position.y },
-   //                controlPointEnd: { x: -position.controlPointEnd.x, y: -position.controlPointEnd.y },
-   //                controlPointStart: { x: -position.controlPointStart.x, y: -position.controlPointStart.y },
-   //             };
-   //          } else {
-   //             return {
-   //                ...position,
-   //                position: { x: -position.position.x, y: -position.position.y },
-   //             };
-   //          }
-   //       });
 
-   //       return { ...formation, positions: flippedPositions };
-   //    });
-   // }
-   useEffect(() => {
-      setIsDropdownOpen(false);
-   }, [dropDownToggle]);
    if (!selectedFormations.length) return <></>;
 
    let myPosition;
@@ -113,11 +56,11 @@ export const Prop: React.FC<{
       myPosition = propPosition.position;
    } else if (isPlaying && position !== null) {
       myPosition = animate(formations, prop.id, currentFormationIndex, percentThroughTransition);
+      if (!myPosition) return null;
+      myPosition = { x: (stageFlipped ? -1 : 1) * myPosition.x, y: (stageFlipped ? -1 : 1) * myPosition.y };
    } else {
-      //   const propPosition = (formations[selectedFormation]?.props || [])?.find((propPosition: propPosition) => propPosition.id === prop.id);
-
       if (!propPosition) return <></>;
-      myPosition = propPosition.position;
+      myPosition = { x: propPosition?.position.x, y: propPosition?.position.y };
    }
    // if there is no formation selected and the track is not playing, then just return nothing
 
@@ -139,10 +82,6 @@ export const Prop: React.FC<{
                borderWidth: selectedPropIds.includes(prop.id) && !isPlaying ? 4 / zoom : 0,
                transition: isPlaying ? "width 0.2s ease-in-out" : "",
                // opacity: isPlaying ? 1 : 0.5,
-            }}
-            onContextMenu={(e) => {
-               e.preventDefault();
-               setIsDropdownOpen(true);
             }}
             data-type="prop"
             id={prop.id}
