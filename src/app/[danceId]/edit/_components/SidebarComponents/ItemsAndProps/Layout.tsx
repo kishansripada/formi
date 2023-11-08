@@ -1,11 +1,11 @@
 import { useRef, useCallback } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../../../../../@/components/ui/tabs";
 
 import { useStore } from "../../../store";
 import { Props } from "./Props";
-import { useClickOutside } from "../../../../../../hooks";
+
 import { Items } from "./Items";
 export const ItemsAndProps: React.FC<{
    audioFiles: any;
