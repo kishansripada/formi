@@ -13,7 +13,7 @@ export const MobileSidebar: React.FC<{
    const { viewOnly } = useStore();
    return (
       <>
-         <div className="flex md:hidden justify-around   flex-row    items-center   text-[9px] dark:bg-black  text-black bg-neutral-50   w-full h-[60px] border-neutral-300 dark:border-neutral-700 overflow-y-scroll">
+         <div className="flex md:hidden justify-around   flex-row  border-b  items-center   text-[9px] dark:bg-neutral-900  text-black bg-neutral-50   w-full h-[60px] border-neutral-300 dark:border-neutral-700 overflow-y-scroll">
             {/* <button onClick={() => setMenuOpen("formations")}>
                <svg
                   className={` ${

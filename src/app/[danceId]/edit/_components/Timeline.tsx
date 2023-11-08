@@ -302,8 +302,8 @@ export const Timeline: React.FC<{
                }}
                id="scrollbar"
                style={{
-                  width: (scrollInfo.clientWidth / scrollInfo.scrollWidth) * scrollInfo.clientWidth + pixelsPerSecond * 0,
-                  left: (scrollInfo.scrollLeft / scrollInfo.scrollWidth) * scrollInfo.clientWidth,
+                  width: (scrollInfo.clientWidth / scrollInfo.scrollWidth) * scrollInfo.clientWidth + pixelsPerSecond * 0 || 0,
+                  left: (scrollInfo.scrollLeft / scrollInfo.scrollWidth) * scrollInfo.clientWidth || 0,
                }}
                className="h-[10px] cursor-pointer  dark:bg-neutral-700 bg-neutral-300 flex flex-row items-center  relative "
             ></div>
@@ -395,7 +395,7 @@ export const Timeline: React.FC<{
             {segments.length ? (
                <div
                   style={{
-                     width: timelineWidth,
+                     width: timelineWidth || 0,
                   }}
                   className=" h-[16px]  relative z-[10] mt-1   overflow-hidden  flex flex-row justify-start   "
                >

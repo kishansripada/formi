@@ -926,11 +926,30 @@ const Edit = ({
                            style={{
                               pointerEvents: menuOpen ? "auto" : "none",
                            }}
-                           className="flex flex-row absolute md:static bottom-0 top-[100px] md:w-auto w-full md:z-auto z-[65] "
+                              className="flex flex-row absolute md:static bottom-0 top-[100px] md:w-auto w-full md:z-auto z-[65]  "
                         >
+                              <>
                               {menuOpen ? (
-                                 <>
-                                    <div className="border-r border-neutral-300 dark:border-neutral-700 min-w-[240px] w-[240px] dark:bg-neutral-900 bg-neutral-50 dark:text-white">
+                                 <div className="border-r border-neutral-300 dark:border-neutral-700 min-w-[240px]  w-[240px] dark:bg-neutral-900 bg-neutral-50 dark:text-white relative">
+                                    {menuOpen ? (
+                                       <button
+                                          onClick={() => setMenuOpen(null)}
+                                          className="absolute right-0 w-6 h-6 border border-neutral-700  hover:bg-neutral-700 transition  rounded-full top-1/2 -translate-y-1/2 bg-neutral-900 translate-x-1/2 z-10 hidden md:grid place-items-center"
+                                       >
+                                          <svg
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 20 20"
+                                             fill="currentColor"
+                                             className="w-5 h-5 fill-neutral-400 mr-1"
+                                          >
+                                             <path
+                                                fillRule="evenodd"
+                                                d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                                                clipRule="evenodd"
+                                             />
+                                          </svg>
+                                       </button>
+                                    ) : null}
                               {menuOpen === "dancers" ? (
                                  <Roster
                                     session={session}
@@ -1026,8 +1045,8 @@ const Edit = ({
                                  />
                               ) : null}
                            </div>
-                                 </>
                               ) : null}
+                              </>
                         </div>
                      ) : null}
                      <DndContext id="1" onDragEnd={handleDragEnd}>
@@ -1289,7 +1308,8 @@ const Edit = ({
                            ></FormationControls>
                         </div>
                      </DndContext>
-                        <div className="h-full bg-neutral-900 max-w-[200px] w-[200px] min-w-[200px] border-l border-neutral-700">
+
+                        <div className="h-full bg-neutral-900 max-w-[200px] w-[200px] min-w-[200px] border-l border-neutral-700 hidden md:flex">
                            {selectedDancers.length ? (
                               <ObjectControls
                                  zoom={zoom}

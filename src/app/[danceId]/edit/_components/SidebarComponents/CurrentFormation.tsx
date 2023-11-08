@@ -64,7 +64,7 @@ export const CurrentFormation: React.FC<{
 
    return (
       <>
-         <div className=" flex w-full   flex-col h-full   dark:text-neutral-100  ">
+         <div className=" flex w-full   flex-col h-full   dark:text-neutral-200  ">
             {selectedFormations.length && getFirstSelectedFormation() ? (
                <>
                   {/* <div className="px-6">
