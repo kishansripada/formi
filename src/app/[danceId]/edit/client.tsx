@@ -138,7 +138,7 @@ const Edit = ({
       //    },
       // });
       Sentry.setUser(session ? { email: session?.user.email, id: session?.user.id } : null);
-      Sentry.setTag("plan", plan);
+      Sentry.setTag("plan", plan || "free tier");
       
       setSegments(initialData.segments);
       setDancers(initialData.dancers);
