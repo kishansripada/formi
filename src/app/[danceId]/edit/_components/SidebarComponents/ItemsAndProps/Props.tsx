@@ -3,9 +3,9 @@ import { useEffect, useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { memo } from "react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { formation, prop } from "../../../../../types/types";
+import { formation, prop } from "../../../../../../types/types";
 // import { v4 as uuidv4 } from "uuid";
-import { useStore } from "../../store";
+import { useStore } from "../../../store";
 export const Props: React.FC<{
    audioFiles: any;
 
@@ -24,15 +24,8 @@ export const Props: React.FC<{
 
    return (
       <>
-         <div
-            style={
-               {
-                  // pointerEvents: viewOnly ? "none" : "all",
-               }
-            }
-            className="flex w-full h-full  flex-col overflow-scroll  dark:text-white  pt-6 "
-         >
-            <div className=" font-medium mb-2 flex flex-row  items-center  px-4 text-sm ">
+         <div className="flex w-full h-full  flex-col overflow-scroll  dark:text-white  ">
+            <div className=" font-medium mb-2 flex flex-row  items-center  px-2 text-sm ">
                <p>Set pieces</p>
                <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -56,7 +49,7 @@ export const Props: React.FC<{
                   <button
                      onClick={() => {
                         if (viewOnly) return;
-                        setAssetsOpen("newProp");
+                        setAssetsOpen({ type: "prop" });
                      }}
                      className="ml-auto text-xs flex flex-row items-center"
                   >
@@ -75,30 +68,26 @@ export const Props: React.FC<{
                ) : null}
             </div>
 
-            <div
-               style={
-                  {
-                     // pointerEvents: viewOnly ? "none" : "all",
-                  }
-               }
-               className=" flex flex-col overflow-scroll removeScrollBar  h-full "
-            >
+            <div className=" flex flex-col overflow-scroll removeScrollBar  h-full ">
                {props.length ? (
                   [...props].reverse().map((prop: prop) => {
                      return (
                         <div
                            key={prop.url}
                            onClick={() => {
-                              setSelectedPropIds(prop.id);
+                              setSelectedPropIds([prop.id]);
+                              // setAssetsOpen({ type: "prop", id: prop.id });
                            }}
                            className={`  ${
-                              selectedPropIds.includes(prop.id) ? "bg-pink-200 dark:bg-pink-600" : " hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                              selectedPropIds.includes(prop.id)
+                                 ? "bg-pink-200 dark:bg-dark-secondary"
+                                 : " hover:bg-neutral-100 dark:hover:bg-neutral-700"
                            }  w-full h-[55px] min-h-[55px] relative  group cursor-pointer  px-2   flex flex-row items-center  whitespace-nowrap  `}
                         >
                            <img
                               onClick={() => {
                                  if (viewOnly) return;
-                                 setAssetsOpen(prop.id);
+                                 setAssetsOpen({ type: "prop", id: prop.id });
                               }}
                               className="h-[55px] w-[55px]  object-contain  cursor-pointer  z-10 "
                               src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${prop.user_id}/${prop.url}`}

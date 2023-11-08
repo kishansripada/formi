@@ -997,7 +997,9 @@ const Edit = ({
                                     localSettings={localSettings}
                                  ></Collisions>
                               ) : menuOpen === "props" ? (
-                                 <Props
+                                          <></>
+                                       ) : menuOpen === "items" ? (
+                                          <ItemsAndProps
                                     setAssetsOpen={setAssetsOpen}
                                     setHelpUrl={setHelpUrl}
                                     pushChange={pushChange}
@@ -1012,24 +1014,7 @@ const Edit = ({
                                     audioFiles={audioFiles}
                                     setAudiofiles={setAudiofiles}
                                     setLocalSource={setLocalSource}
-                                 ></Props>
-                              ) : menuOpen === "items" ? (
-                                 <Items
-                                    setAssetsOpen={setAssetsOpen}
-                                    setHelpUrl={setHelpUrl}
-                                    pushChange={pushChange}
-                                    setSelectedPropIds={setSelectedPropIds}
-                                    invalidatePropUploads={invalidatePropUploads}
-                                    // selectedPropIds={selectedPropIds}
-                                    propUploads={propUploads}
-                                    player={player}
-                                    setIsPlaying={setIsPlaying}
-                                    soundCloudTrackId={soundCloudTrackId}
-                                    setSoundCloudTrackId={setSoundCloudTrackId}
-                                    audioFiles={audioFiles}
-                                    setAudiofiles={setAudiofiles}
-                                    setLocalSource={setLocalSource}
-                                 ></Items>
+                                          ></ItemsAndProps>
                               ) : menuOpen === "segments" ? (
                                  <Segments pushChange={pushChange}></Segments>
                               ) : menuOpen === "formations" ? (
