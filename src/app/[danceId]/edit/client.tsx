@@ -1316,6 +1316,7 @@ const Edit = ({
                                  dancers={dancers}
                                  viewOnlyInitial={viewOnlyInitial}
                                  localSettings={localSettings}
+                                 setAssetsOpen={setAssetsOpen}
                               ></ObjectControls>
                            ) : (
                               <>
