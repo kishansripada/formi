@@ -80,7 +80,6 @@ export const Formation: React.FC<{
             } else {
                preventScrollRef.current = false;
             }
-
             setFormations(
                get().formations.map((formation) => {
                   if (
@@ -335,6 +334,7 @@ export const Formation: React.FC<{
                               data-type="formation-resize"
                               id={formation.id}
                               ref={formationResize}
+                              onClick={(e) => e.stopPropagation()}
                               onMouseDown={(e) => e.preventDefault()}
                               className={`h-full  ml-auto  grid place-items-center bg-pink-200 justify-between  w-[25px] transition rounded-md  cursor-col-resize	z-[99]`}
                            ></div>
@@ -343,6 +343,7 @@ export const Formation: React.FC<{
                               data-type="formation-resize"
                               id={formation.id}
                               ref={formationResize}
+                              onClick={(e) => e.stopPropagation()}
                               onMouseDown={(e) => e.preventDefault()}
                               className={` top-0 absolute right-[0px] flex flex-row items-center bg-black/50 justify-between    ${
                                  isMobileView ? "h-full" : "opacity-0 h-[60%]"
@@ -388,6 +389,7 @@ export const Formation: React.FC<{
                                           data-type="transition-resize"
                                           id={formation.id}
                                           ref={transitionResize}
+                                          onClick={(e) => e.stopPropagation()}
                                           onMouseDown={(e) => e.preventDefault()}
                                           className={`h-full  ml-auto  grid place-items-center bg-pink-200 justify-between  w-[25px] rounded-sm transition   cursor-col-resize	z-[99]`}
                                        ></div>
@@ -396,6 +398,7 @@ export const Formation: React.FC<{
                                           data-type="transition-resize"
                                           id={formation.id}
                                           ref={transitionResize}
+                                          onClick={(e) => e.stopPropagation()}
                                           onMouseDown={(e) => e.preventDefault()}
                                           className={`h-full absolute right-[7px]  flex flex-row items-center bg-black/50 justify-between  ${"opacity-0 w-[7px]"} group-hover:opacity-100 transition   cursor-col-resize	z-[99]`}
                                        >
