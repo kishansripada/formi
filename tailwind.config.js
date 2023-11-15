@@ -9,6 +9,7 @@ module.exports = {
     "./@/**/*.{ts,tsx}"
   ],
   theme: {
+
     container: {
       center: true,
       padding: "2rem",
@@ -26,6 +27,11 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+      },
+      colors: {
+        "dark-primary": '#db2777',
+        "dark-secondary": '#5F253D',
+
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

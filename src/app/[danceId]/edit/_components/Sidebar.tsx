@@ -17,7 +17,7 @@ export const Sidebar: React.FC<{
             overscrollBehavior: "none",
             touchAction: "pan-y",
          }}
-         className="md:flex  flex-col hidden  h-full py-4  items-center   text-[10px] dark:bg-neutral-900  text-black bg-neutral-50  gap-5   w-20 min-w-[70px] max-w-[70px] border-r border-neutral-300 dark:border-neutral-700 overflow-y-scroll overflow-x-hidden"
+         className="md:flex  flex-col hidden  h-full py-4  items-center   text-[10px] dark:bg-neutral-900  text-black bg-neutral-50  gap-5   w-20 min-w-[70px] max-w-[70px] border-r border-neutral-300 dark:border-neutral-700 overflow-y-scroll overflow-x-hidden removeScrollBar"
       >
          {/* <button onClick={() => setMenuOpen("formations")}>
                <svg

@@ -61,8 +61,8 @@ export const Dancer: React.FC<{
             onClick={() => {
                setSelectedDancers([id]);
             }}
-            className={`flex flex-row items-center px-5 box-border ${
-               amSelected ? "bg-pink-200 dark:bg-pink-600" : !isMobileView ? "hover:bg-neutral-100 dark:hover:bg-neutral-700" : ""
+            className={`flex flex-row items-center px-3 box-border ${
+               amSelected ? "bg-pink-200 dark:bg-dark-secondary" : !isMobileView ? "hover:bg-neutral-100 dark:hover:bg-neutral-700" : ""
             }  group  select-none   min-h-[40px] `}
          >
             <p className="font-semibold   text-sm "> {index + 1}</p>
@@ -73,6 +73,7 @@ export const Dancer: React.FC<{
                         // backgroundColor: amSelected ? (isDarkMode ? "#db2777" : "#fbcfe8") : "transparent",
                      }
                   }
+                  spellCheck={false}
                   className="h-6 w-full    px-2 py-4  text-sm rounded-md  ml-2 bg-transparent   outline-none cursor-default"
                   value={name}
                   // onBlur={pushChange}

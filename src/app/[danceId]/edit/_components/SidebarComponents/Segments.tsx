@@ -26,7 +26,7 @@ export const Segments: React.FC<{
                      }}
                      key={segment.id}
                      className={`flex flex-row items-center px-5 box-border ${
-                        selectedSegment === segment.id ? "bg-pink-200 dark:bg-pink-600" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                        selectedSegment === segment.id ? "bg-pink-200 dark:bg-dark-secondary" : "hover:bg-neutral-100 dark:hover:bg-neutral-700"
                      }  group  select-none   min-h-[40px] `}
                   >
                      <p className="font-semibold   text-sm "> {index + 1}</p>

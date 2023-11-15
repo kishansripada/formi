@@ -14,6 +14,7 @@ export const Assets: React.FC<{
    menuOpen: string;
    session: AuthSession | null;
 }> = ({ setAssetsOpen, propUploads, invalidatePropUploads, pushChange, assetsOpen, menuOpen, session }) => {
+   console.log({ assetsOpen });
    const { setProps, props, setItems, items, setCloudSettings, cloudSettings } = useStore();
    const [file, setFile] = useState<File | null>();
    const [selectedAsset, setSelectedAsset] = useState(null);
@@ -78,58 +79,62 @@ export const Assets: React.FC<{
          // https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/stagebackgrounds/f30197ba-cf06-4234-bcdb-5d40d83c7999/demoFigma.png
       }
 
-      if (menuOpen === "props") {
-         if (!session?.user.id) return;
-         if (assetsOpen === "newProp") {
-            setProps([
-               ...props,
-               {
-                  id: uuidv4(),
-                  type: "static",
-                  url: `${id || selectedAsset}`,
-                  user_id: session?.user?.id,
-                  static: {
-                     width: 5,
-                     position: {
-                        x: 0,
-                        y: 0,
-                     },
+      // if (menuOpen === "props") {
+      if (!session?.user.id) return;
+      if (assetsOpen.type === "prop" && !assetsOpen.id) {
+         setProps([
+            ...props,
+            {
+               id: uuidv4(),
+               type: "static",
+               url: `${id || selectedAsset}`,
+               user_id: session?.user?.id,
+               static: {
+                  width: 5,
+                  position: {
+                     x: 0,
+                     y: 0,
                   },
                },
-            ]);
-         } else {
-            setProps(
-               props.map((prop: prop) => {
-                  if (prop.id === assetsOpen) {
-                     return {
-                        ...prop,
-                        url: `${id || selectedAsset}`,
-                        user_id: session?.user.id,
-                     };
-                  }
-                  return prop;
-               })
-            );
-         }
+            },
+         ]);
+      }
+      if (assetsOpen.type === "prop" && assetsOpen.id) {
+         setProps(
+            props.map((prop: prop) => {
+               if (prop.id === assetsOpen.id) {
+                  return {
+                     ...prop,
+                     url: `${id || selectedAsset}`,
+                     user_id: session?.user.id,
+                  };
+               }
+               return prop;
+            })
+         );
+      }
+      // }
+
+      // if (menuOpen === "items") {
+      if (assetsOpen.type === "item" && !assetsOpen.id) {
+         setItems([...items, { id: uuidv4(), name: "New prop", url: `${session?.user.id}/${id || selectedAsset}` }]);
+         // } else {
+      }
+      if (assetsOpen.type === "item" && assetsOpen.id) {
+         setItems(
+            items.map((item: item) => {
+               if (item.id === assetsOpen.id) {
+                  return {
+                     ...item,
+                     url: `${session?.user.id}/${id || selectedAsset}`,
+                  };
+               }
+               return item;
+            })
+         );
       }
 
-      if (menuOpen === "items") {
-         if (assetsOpen === "newItem") {
-            setItems([...items, { id: uuidv4(), name: "New prop", url: `${session?.user.id}/${id || selectedAsset}` }]);
-         } else {
-            setItems(
-               items.map((item: item) => {
-                  if (item.id === assetsOpen) {
-                     return {
-                        ...item,
-                        url: `${session?.user.id}/${id || selectedAsset}`,
-                     };
-                  }
-                  return item;
-               })
-            );
-         }
-      }
+      // }
 
       pushChange();
       setAssetsOpen(false);

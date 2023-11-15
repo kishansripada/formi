@@ -105,14 +105,12 @@ export const ChooseAudioSource: React.FC<{
                </div>
             </div>
 
-            <div className="px-4  ">
+            <div className="px-2  ">
                <p className=" font-medium mb-2 mt-4 text-sm ">Selected File</p>
-               <div className="px-2 py-2  rounded-md my-1 cursor-pointer w-full flex flex-row items-center justify-center whitespace-nowrap bg-pink-100 ">
+               <div className="px-2 py-2  rounded-md my-1 cursor-pointer w-full flex flex-row items-center justify-center whitespace-nowrap bg-pink-100 dark:bg-dark-secondary ">
                   {soundCloudTrackId ? (
                      <>
-                        <p className=" text-xs font-medium w-full text-ellipsis text-black overflow-hidden">
-                           {soundCloudTrackId?.split("/").slice(-1)[0]}
-                        </p>
+                        <p className=" text-sm  w-full text-ellipsis  overflow-hidden">{soundCloudTrackId?.split("/").slice(-1)[0]}</p>
 
                         <button
                            onClick={async (e) => {
@@ -131,7 +129,7 @@ export const ChooseAudioSource: React.FC<{
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
                               stroke="currentColor"
-                              className="w-6 h-6 ml-auto text-black"
+                              className="w-6 h-6 ml-auto "
                            >
                               <path
                                  strokeLinecap="round"
@@ -143,14 +141,14 @@ export const ChooseAudioSource: React.FC<{
                      </>
                   ) : (
                      <>
-                        <p className=" text-xs text-black">No File Selected</p>
+                        <p className=" text-xs ">No File Selected</p>
                      </>
                   )}
                </div>
             </div>
 
-            <p className=" font-medium mb-2 mt-6 text-sm px-4 ">Uploaded Media</p>
-            <div className="h-full px-4 overflow-y-scroll">
+            <p className=" font-medium mb-2 mt-4 text-sm px-2 ">Uploaded Media</p>
+            <div className="h-full px-2 overflow-y-scroll">
                <div className=" flex flex-col overflow-scroll removeScrollBar ">
                   {audioFiles?.data?.length ? (
                      [...audioFiles.data].reverse().map((audiofile) => {
