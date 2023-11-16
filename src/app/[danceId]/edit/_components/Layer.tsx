@@ -1,4 +1,10 @@
-import { ReactEventHandler } from "react";
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuSeparator,
+   DropdownMenuTrigger,
+} from "../../../../../@/components/ui/dropdown-menu";
 import { Formation } from "./Formation";
 import { useCallback, useEffect, useState } from "react";
 import { dancer, dancerPosition, formation, formationGroup, localSettings } from "../../../../types/types";
@@ -12,7 +18,7 @@ export const Layer: React.FC<{
    selectedFormation: number | null;
    setSelectedFormation: Function;
    // setFormations: Function;
-   songDuration: number | null;
+
    position: number | null;
    isPlaying: boolean;
 
@@ -20,33 +26,23 @@ export const Layer: React.FC<{
    setSelectedDancers: Function;
    addToStack: Function;
    pushChange: Function;
-   player: any;
+
    localSettings: localSettings;
    setPosition: Function;
    shiftHeld: boolean;
-   // setSelectedFormations: Function;
-   // selectedFormations: number[];
 }> = ({
-   // formations,
    selectedFormation,
-   setSelectedFormation,
-   // setFormations,
-   songDuration,
-   position,
-   isPlaying,
 
    pixelsPerSecond,
-   setSelectedDancers,
+
    pushChange,
    addToStack,
-   player,
+
    setPosition,
    localSettings,
    shiftHeld,
-   // setSelectedFormations,
-   // selectedFormations,
 }) => {
-   const { formations, setFormations, viewOnly, selectedFormations, setSelectedFormations, commandHeld, getSelectedFormationIndex } = useStore();
+   const { formations, setFormations, selectedFormations, setSelectedFormations, commandHeld, newFormationFromLast, goToFormation } = useStore();
    const [activeId, setActiveId] = useState(null);
    // const keyboardCodes = {
    //    start: ["$"],
@@ -176,19 +172,8 @@ export const Layer: React.FC<{
                                  setSelectedFormations([...selectedFormations, formation.id]);
                               }
                            } else {
-                              setSelectedFormations([formation.id]);
+                              goToFormation(formation.id);
                            }
-
-                           let position = formations
-                              .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
-                              .slice(0, index)
-                              .reduce((a, b) => a + b, 0);
-
-                           setPosition(position);
-
-                           if (!(songDuration && player)) return;
-
-                           player.seekTo(Math.min(Math.max(0, position / (songDuration / 1000)), 1));
                         }}
                      >
                         <Formation
@@ -203,21 +188,44 @@ export const Layer: React.FC<{
                         />
                      </div>
                   ))}
-                  {/* <button
-                     onClick={newFormation}
-                     className="w-20 h-[47px] dark:text-white rounded-md dark:bg-neutral-600 bg-neutral-200 ml-2 grid place-items-center"
+                  <div
+                     // onClick={newFormation}
+                     className="w-28 h-[43px] border dark:text-white rounded-md overflow-hidden border-neutral-400 ml-2 flex flex-row items-center justify-between"
                   >
-                     <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-6 h-6"
+                     <button
+                        onClick={() => newFormationFromLast(true)}
+                        className="grid place-items-center w-full hover:bg-neutral-700 transition h-full"
                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                     </svg>
-                  </button> */}
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
+                           stroke="currentColor"
+                           className="w-6 h-6"
+                        >
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                     </button>
+                     <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                           <button className="border-l w-10 hover:bg-neutral-700 transition h-full border-neutral-500 grid place-items-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                 <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                              </svg>
+                           </button>
+                        </DropdownMenuTrigger>
+
+                        <DropdownMenuContent>
+                           <DropdownMenuItem onClick={() => newFormationFromLast(false)} className="hover:bg-neutral-700 transition">
+                              New formation and no groups
+                           </DropdownMenuItem>
+                           <DropdownMenuItem onClick={() => newFormationFromLast(true)} className="hover:bg-neutral-700 transition">
+                              New formation with same groups
+                           </DropdownMenuItem>
+                        </DropdownMenuContent>
+                     </DropdownMenu>
+                  </div>
                </SortableContext>
             </DndContext>
          </div>

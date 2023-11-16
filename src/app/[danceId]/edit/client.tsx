@@ -1,4 +1,5 @@
 "use client";
+import { roundToHundredth } from "../../../utls";
 import { detectCollisions } from "../../../types/collisionDetector";
 import { Video } from "./_components/Video";
 import { DndContext, useDroppable } from "@dnd-kit/core";
@@ -93,7 +94,7 @@ const Edit = ({
       dancers,
       setDancers,
       selectedFormation,
-      setSelectedFormation,
+
       formations,
       setFormations,
       viewOnly,
@@ -121,10 +122,9 @@ const Edit = ({
       isMobileView,
       setImageBlobs,
       imageBlobs,
+      shiftHeld,
+      setShiftHeld,
    } = useStore();
-
-   // console.log(liveblocks);
-   // console.log({ liveStatus });
 
    useEffect(() => {
       // Sentry.init({
@@ -183,15 +183,9 @@ const Edit = ({
       };
    }, [enterRoom, leaveRoom]);
 
-   const supabase = createClientComponentClient<Database>();
-
    const videoPlayer = useRef();
-
    const fullscreenContainer = useRef();
-   const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
-   const [permissions, setPermissions] = useState(initialPermissions);
-   // const [selectedDancers, setSelectedDancers] = useState<string[]>([]);
-   // local
+
    const [localSettings, setLocalSettings] = useLocalStorage<localSettings>("localSettings", {
       gridSnap: 1,
       previousFormationView: "none",
@@ -222,13 +216,15 @@ const Edit = ({
       });
    }
    const hasVisited = true;
-   const [shiftHeld, setShiftHeld] = useState(false);
+   const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
+   const [permissions, setPermissions] = useState(initialPermissions);
+   // const [shiftHeld, setShiftHeld] = useState(false);
    const [playbackRate, setPlaybackRate] = useState(1);
    const [selectedPropIds, setSelectedPropIds] = useState<string[]>([]);
    const [dropDownToggle, setDropDownToggle] = useState<boolean>(false);
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
    const [localSource, setLocalSource] = useState(null);
-   const [songDuration, setSongDuration] = useState<number | null>(null);
+   // const [songDuration, setSongDuration] = useState<number | null>(null);
    const [zoom, setZoom] = useState(1);
    const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [isCommenting, setIsCommenting] = useState<boolean>(false);
@@ -845,10 +841,8 @@ const Edit = ({
             pushChange={pushChange}
             undo={undo}
             addToStack={addToStack}
-            player={player}
             draggingDancerId={draggingDancerId}
             setDraggingDancerId={setDraggingDancerId}
-            songDuration={songDuration}
             selectedDancers={selectedDancers}
             setSelectedDancers={setSelectedDancers}
             setIsPlaying={setIsPlaying}
@@ -962,8 +956,6 @@ const Edit = ({
                               ) : menuOpen === "audio" ? (
                                  <ChooseAudioSource
                                     session={session}
-                                    player={player}
-                                    setPlayer={setPlayer}
                                     setIsPlaying={setIsPlaying}
                                     soundCloudTrackId={soundCloudTrackId}
                                     setSoundCloudTrackId={setSoundCloudTrackId}
@@ -1006,7 +998,6 @@ const Edit = ({
                                     invalidatePropUploads={invalidatePropUploads}
                                     selectedPropIds={selectedPropIds}
                                     propUploads={propUploads}
-                                    player={player}
                                     setIsPlaying={setIsPlaying}
                                     soundCloudTrackId={soundCloudTrackId}
                                     setSoundCloudTrackId={setSoundCloudTrackId}
@@ -1102,10 +1093,8 @@ const Edit = ({
                                     pushChange={pushChange}
                                     undo={undo}
                                     addToStack={addToStack}
-                                    player={player}
                                     draggingDancerId={draggingDancerId}
                                     setDraggingDancerId={setDraggingDancerId}
-                                    songDuration={songDuration}
                                     selectedDancers={selectedDancers}
                                     setSelectedDancers={setSelectedDancers}
                                     setIsPlaying={setIsPlaying}
@@ -1138,10 +1127,8 @@ const Edit = ({
                                     pushChange={pushChange}
                                     undo={undo}
                                     addToStack={addToStack}
-                                    player={player}
                                     draggingDancerId={draggingDancerId}
                                     setDraggingDancerId={setDraggingDancerId}
-                                    songDuration={songDuration}
                                     selectedDancers={selectedDancers}
                                     setSelectedDancers={setSelectedDancers}
                                     setIsPlaying={setIsPlaying}
@@ -1272,6 +1259,7 @@ const Edit = ({
                                  </Canvas>
                               ) : null}
                            </div>
+
                            <FormationControls
                                  setZoom={setZoom}
                               zoom={zoom}
@@ -1280,8 +1268,6 @@ const Edit = ({
                               setPlaybackRate={setPlaybackRate}
                               addToStack={addToStack}
                               pushChange={pushChange}
-                              songDuration={songDuration}
-                              player={player}
                               isPlaying={isPlaying}
                               setIsPlaying={setIsPlaying}
                               position={position}
@@ -1302,9 +1288,7 @@ const Edit = ({
                                  setPlaybackRate={setPlaybackRate}
                                  addToStack={addToStack}
                                  pushChange={pushChange}
-                                 songDuration={songDuration}
                                  soundCloudTrackId={soundCloudTrackId}
-                                 player={player}
                                  isPlaying={isPlaying}
                                  setIsPlaying={setIsPlaying}
                                  position={position}
@@ -1337,8 +1321,6 @@ const Edit = ({
                         setPlaybackRate={setPlaybackRate}
                         addToStack={addToStack}
                         pushChange={pushChange}
-                        songDuration={songDuration}
-                        player={player}
                         isPlaying={isPlaying}
                         setIsPlaying={setIsPlaying}
                         position={position}
@@ -1358,14 +1340,10 @@ const Edit = ({
                         addToStack={addToStack}
                         pushChange={pushChange}
                         setSelectedDancers={setSelectedDancers}
-                        songDuration={songDuration}
                         isPlaying={isPlaying}
                         position={position}
                         soundCloudTrackId={soundCloudTrackId}
                         pixelsPerSecond={pixelsPerSecond}
-                        player={player}
-                        setPlayer={setPlayer}
-                        setSongDuration={setSongDuration}
                         setIsPlaying={setIsPlaying}
                         setPosition={setPosition}
                         videoPlayer={videoPlayer}
@@ -1449,8 +1427,4 @@ function BottomRight() {
    });
 
    return <div className="w-1/2 h-1/2 bottom-0 right-0  absolute z-10 opacity-40 pointer-events-none" ref={setNodeRef}></div>;
-}
-
-function roundToHundredth(value: number): number {
-   return Math.round(value * 100) / 100;
 }

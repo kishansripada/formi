@@ -38,7 +38,7 @@ export function ThreeDancer({
    setSelectedDancers: Function;
    setScene: Function;
 }) {
-   const { formations, setFormations, get, viewOnly, items, selectedFormations, selectedDancers } = useStore();
+   const { formations, setFormations, get, viewOnly, items, selectedFormations, selectedDancers, getFirstSelectedFormation, shiftHeld } = useStore();
 
    const { scene } = useThree((state) => state);
 
@@ -54,7 +54,6 @@ export function ThreeDancer({
 
    const textRef = useRef();
 
-   // const changeStateDancerDragging = useDancerDragging((state) => state.changeStateDancerDragging);
    useFrame((state, dt) => {
       if (textRef?.current != null) {
          textRef.current.lookAt(state.camera.position);
@@ -166,6 +165,10 @@ export function ThreeDancer({
 
    const thisItem = items.find((item) => item.id === dancerPosition?.itemId) || null;
 
+   const dancerGroup = (getFirstSelectedFormation()?.groups || []).find((group) => group.id === dancerPosition?.groupId);
+
+   const dancerColor = dancerPosition?.color || dancerGroup?.color || dancer?.color || "#db2777";
+
    return (
       <>
          {/* <animated.mesh position={bgPos.position}>
@@ -210,7 +213,7 @@ export function ThreeDancer({
                               onPointerDown={(e) => {
                                  if (viewOnly) return;
                                  // e.stopPropagation();
-                                 setSelectedDancers([dancer.id]);
+                                 setSelectedDancers([...(shiftHeld ? selectedDancers : []), dancer.id]);
                                  setIsThreeDancerDragging(true);
                                  // addToStack();
                               }}
@@ -229,12 +232,7 @@ export function ThreeDancer({
                                        <meshStandardMaterial
                                           opacity={opacity}
                                           attach="material"
-                                          color={
-                                             (selectedDancers.includes(dancer.id) && !isPlaying ? "#ffffff" : null) ||
-                                             dancerPosition.color ||
-                                             dancer?.color ||
-                                             "#db2777"
-                                          }
+                                          color={(selectedDancers.includes(dancer.id) && !isPlaying ? "#ffffff" : null) || dancerColor}
                                           transparent
                                        />
                                     </mesh>
@@ -242,52 +240,27 @@ export function ThreeDancer({
                                  <group scale={[0.7, 1, 1]}>
                                     <group name="Model5">
                                        <mesh castShadow name="Model5_b0b0b0_0" geometry={nodes.Model5_b0b0b0_0.geometry} material={materials.b0b0b0}>
-                                          <meshStandardMaterial
-                                             opacity={opacity}
-                                             attach="material"
-                                             color={dancerPosition.color || dancer?.color || "#db2777"}
-                                             transparent
-                                          />
+                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancerColor} transparent />
                                        </mesh>
                                     </group>
                                     <group name="Model7">
                                        <mesh castShadow name="Model7_b0b0b0_0" geometry={nodes.Model7_b0b0b0_0.geometry} material={materials.b0b0b0}>
-                                          <meshStandardMaterial
-                                             opacity={opacity}
-                                             attach="material"
-                                             color={dancerPosition.color || dancer?.color || "#db2777"}
-                                             transparent
-                                          />
+                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancerColor} transparent />
                                        </mesh>
                                     </group>
                                     <group name="Model6">
                                        <mesh castShadow name="Model6_b0b0b0_0" geometry={nodes.Model6_b0b0b0_0.geometry} material={materials.b0b0b0}>
-                                          <meshStandardMaterial
-                                             opacity={opacity}
-                                             attach="material"
-                                             color={dancerPosition.color || dancer?.color || "#db2777"}
-                                             transparent
-                                          />
+                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancerColor} transparent />
                                        </mesh>
                                     </group>
                                     <group name="Model4">
                                        <mesh castShadow name="Model4_b0b0b0_0" geometry={nodes.Model4_b0b0b0_0.geometry} material={materials.b0b0b0}>
-                                          <meshStandardMaterial
-                                             opacity={opacity}
-                                             attach="material"
-                                             color={dancerPosition.color || dancer?.color || "#db2777"}
-                                             transparent
-                                          />
+                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancerColor} transparent />
                                        </mesh>
                                     </group>
                                     <group name="Model8">
                                        <mesh castShadow name="Model8_b0b0b0_0" geometry={nodes.Model8_b0b0b0_0.geometry} material={materials.b0b0b0}>
-                                          <meshStandardMaterial
-                                             opacity={opacity}
-                                             attach="material"
-                                             color={dancerPosition.color || dancer?.color || "#db2777"}
-                                             transparent
-                                          />
+                                          <meshStandardMaterial opacity={opacity} attach="material" color={dancerColor} transparent />
                                        </mesh>
                                     </group>
                                  </group>

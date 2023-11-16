@@ -8,7 +8,7 @@ export const Layers: React.FC<{
    selectedFormation: number | null;
    setSelectedFormation: Function;
    // setFormations: Function;
-   songDuration: number | null;
+
    position: number | null;
    isPlaying: boolean;
 
@@ -19,18 +19,11 @@ export const Layers: React.FC<{
 
    formationGroups: formationGroup[];
    setPosition: Function;
-   player: any;
+
    localSettings: localSettings;
    shiftHeld: boolean;
    hasVisited: boolean;
-   // setSelectedFormations: Function;
-   // selectedFormations: number[];
 }> = ({
-   // formations,
-   selectedFormation,
-   setSelectedFormation,
-   // setFormations,
-   songDuration,
    position,
    isPlaying,
 
@@ -40,14 +33,14 @@ export const Layers: React.FC<{
    addToStack,
    formationGroups,
    setPosition,
-   player,
+
    localSettings,
    shiftHeld,
    hasVisited,
    // setSelectedFormations,
    // selectedFormations,
 }) => {
-   const { formations, setFormations, get, viewOnly, pauseHistory, resumeHistory } = useStore();
+   const { formations, setFormations, get, viewOnly, pauseHistory, resumeHistory, songDuration } = useStore();
    const [resizingTransition, setResizingTransition] = useState<string | null>(null);
    const [resizingFormation, setResizingFormation] = useState<string | null>(null);
    const [showTutorial, setShowTutorial] = useState<boolean | "shown">(false);
@@ -98,9 +91,7 @@ export const Layers: React.FC<{
          </>
          <Layer
             setPosition={setPosition}
-            player={player}
             setSelectedDancers={setSelectedDancers}
-            songDuration={songDuration}
             isPlaying={isPlaying}
             position={position}
             pixelsPerSecond={pixelsPerSecond}

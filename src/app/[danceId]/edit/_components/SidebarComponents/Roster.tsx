@@ -1,20 +1,14 @@
 import { dancer, dancerPosition, formation, localSettings, stageDimensions } from "../../../../../types/types";
-import toast, { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
 import { Dancer } from "../Dancer";
-import dynamic from "next/dynamic";
-
 import { v4 as uuidv4 } from "uuid";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AuthSession } from "@supabase/supabase-js";
 import { PopoverPicker } from "../ColorPicker";
 import { useStore } from "../../store";
-
+import { convertToCentimeters, convertToFeetAndInches } from "../../../../../utls";
 export const Roster: React.FC<{
    addToStack: Function;
    pushChange: Function;
    selectedDancers: string[];
-
    setSelectedDancers: Function;
    localSettings: localSettings;
    session: AuthSession | null;
@@ -306,20 +300,3 @@ export const Roster: React.FC<{
       </>
    );
 };
-
-function convertToCentimeters(feet: number, inches: number): number {
-   const inchesToCentimeters = inches * 2.54;
-   const feetToCentimeters = feet * 12 * 2.54;
-   const totalCentimeters = inchesToCentimeters + feetToCentimeters;
-   return Math.round(totalCentimeters * 10) / 10;
-}
-
-function convertToFeetAndInches(centimeters: number): {
-   feet: number;
-   inches: number;
-} {
-   const inchesToCentimeters = 2.54;
-   const inches = Math.round(centimeters / inchesToCentimeters);
-   const feet = Math.floor(inches / 12);
-   return { feet, inches: inches % 12 };
-}

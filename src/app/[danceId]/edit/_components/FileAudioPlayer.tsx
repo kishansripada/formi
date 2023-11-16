@@ -10,13 +10,11 @@ import { useGesture } from "@use-gesture/react";
 export const FileAudioPlayer: React.FC<{
    setPosition: Function;
    setIsPlaying: Function;
-   setSongDuration: Function;
-   songDuration: number | null;
+
    soundCloudTrackId: string | null;
    setSelectedFormation: Function;
    pixelsPerSecond: number;
-   player: any;
-   setPlayer: Function;
+
    localSettings: localSettings;
    videoPlayer: any;
    // formations: formation[];
@@ -27,23 +25,21 @@ export const FileAudioPlayer: React.FC<{
    ({
       setPosition,
       setIsPlaying,
-      setSongDuration,
-      // songDuration,
+
       soundCloudTrackId,
       setSelectedFormation,
       // viewOnly,
       pixelsPerSecond,
-      player,
-      setPlayer,
+
       videoPlayer,
       localSettings,
       // formations,
       isPlaying,
-      songDuration,
+
       position,
       currentFormationIndex,
    }) => {
-      const { formations, get, setSelectedFormations, isMobileView } = useStore();
+      let { formations, get, setSelectedFormations, isMobileView, setPlayer, player, songDuration, setSongDuration } = useStore();
       const { isDarkMode } = localSettings;
 
       const useWavesurfer = (containerRef: MutableRefObject<undefined>, options: WaveShaperOptions) => {

@@ -1,8 +1,5 @@
-import { cloudSettings, dancer, dancerPosition, formation, item, localSettings, PIXELS_PER_SECOND } from "../../../../types/types";
+import { dancer, dancerPosition, item, localSettings } from "../../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import Dropdown from "./Dropdown";
 import { PopoverPicker } from "./ColorPicker";
 import { useStore } from "../store";
 import {
@@ -13,94 +10,43 @@ import {
    DropdownMenuTrigger,
 } from "../../../../../@/components/ui/dropdown-menu";
 
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "../../../../../@/components/ui/input";
+
+const RemovePropertyButton = ({ setSelectedPositionProperty, propertyKey }: { setSelectedPositionProperty: Function; propertyKey: string }) => {
+   return (
+      <button
+         onClick={() => {
+            setSelectedPositionProperty(propertyKey, null);
+         }}
+         className="  md:text-xs text-[10px] hover:bg-neutral-800 p-1  "
+      >
+         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+            <path fillRule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clipRule="evenodd" />
+         </svg>
+      </button>
+   );
+};
+
 export const ObjectControls: React.FC<{
-   // setSelectedFormation: Function;
-   player: any;
-   isPlaying: boolean;
-   setIsPlaying: Function;
-   position: number | null;
-   songDuration: number | null;
-   // selectedFormation: number | null;
-
-   addToStack: Function;
-   pushChange: Function;
-   setPixelsPerSecond: Function;
-   pixelsPerSecond: number;
-   localSource: string | null;
-   setPlaybackRate: Function;
-   localSettings: localSettings;
    setLocalSettings: Function;
-
-   zoom: number;
-   selectedDancers: string[];
-   cloudSettings: cloudSettings;
-   dropDownToggle: boolean;
-   // items: item[];
    dancers: dancer[];
+   selectedDancers: string[];
    setAssetsOpen: Function;
-}> = ({
-   pushChange,
-
-   selectedDancers,
-
-   dancers,
-   localSettings,
-   setLocalSettings,
-   setAssetsOpen,
-}) => {
-   const { formations, setFormations, viewOnly, items, selectedFormations, getFirstSelectedFormation, get, isMobileView, imageBlobs, cloudSettings } =
-      useStore();
-
-   // if (!selectedFormations.length) return null;
-   const setLinear = () => {
-      if (viewOnly) return;
-      setFormations(
-         formations.map((formation) => {
-            if (selectedFormations.includes(formation.id)) {
-               return {
-                  ...formation,
-                  positions: formation.positions.map((dancerPosition) => {
-                     if (selectedDancers.includes(dancerPosition.id)) {
-                        return {
-                           ...dancerPosition,
-                           transitionType: "linear",
-                        };
-                     }
-                     return dancerPosition;
-                  }),
-               };
-            }
-            return formation;
-         })
-      );
-      pushChange();
-   };
-
-   const setTeleport = () => {
-      if (viewOnly) return;
-      setFormations(
-         formations.map((formation, index: number) => {
-            if (selectedFormations.includes(formation.id)) {
-               return {
-                  ...formation,
-                  positions: formation.positions.map((dancerPosition) => {
-                     if (selectedDancers.includes(dancerPosition.id)) {
-                        return {
-                           ...dancerPosition,
-                           transitionType: "teleport",
-                        };
-                     }
-                     return dancerPosition;
-                  }),
-               };
-            }
-            return formation;
-         })
-      );
-      pushChange();
-   };
+}> = ({ selectedDancers, dancers, setLocalSettings, setAssetsOpen }) => {
+   const {
+      formations,
+      setFormations,
+      viewOnly,
+      items,
+      selectedFormations,
+      getFirstSelectedFormation,
+      get,
+      imageBlobs,
+      cloudSettings,
+      setSelectedPositionProperty,
+      getSelectedPositionsProperty,
+      newGroupOnSelectedFormation,
+   } = useStore();
 
    const setCurved = () => {
       if (viewOnly) return;
@@ -171,8 +117,6 @@ export const ObjectControls: React.FC<{
             );
          });
       });
-      // da8d50fe-02d8-4274-aad7-39a0e8eed5f7
-      // console.log(formations);
    };
 
    const pathSelectionDropdownValue = () => {
@@ -192,68 +136,8 @@ export const ObjectControls: React.FC<{
       return "Mixed";
    };
 
-   const itemSelectionDropdownValue = () => {
-      if (!selectedFormations.length || !selectedDancers.length) return "";
-      let dancers = getFirstSelectedFormation()?.positions.filter((position: dancerPosition) => selectedDancers.includes(position.id));
-      if (!dancers?.length) return "";
-      if (dancers.every((dancer: dancerPosition) => !dancer.itemId)) {
-         return "No prop";
-      }
-      if (dancers.every((dancer: dancerPosition) => dancer.itemId === dancers[0].itemId)) {
-         return items.find((item) => item.id === dancers[0].itemId)?.name || "";
-      }
-      return "Mixed";
-   };
-
-   const setDancerItem = (itemId: string | null) => {
-      if (viewOnly) return;
-      setFormations(
-         formations.map((formation, index: number) => {
-            if (selectedFormations.includes(formation.id)) {
-               return {
-                  ...formation,
-                  positions: formation.positions.map((dancerPosition) => {
-                     if (selectedDancers.includes(dancerPosition.id)) {
-                        return {
-                           ...dancerPosition,
-                           itemId: itemId || null,
-                        };
-                     }
-                     return dancerPosition;
-                  }),
-               };
-            }
-            return formation;
-         })
-      );
-      pushChange();
-   };
-
-   const setColor = (color: string) => {
-      if (viewOnly) return;
-      setFormations(
-         formations.map((formation, index: number) => {
-            if (selectedFormations.includes(formation.id)) {
-               return {
-                  ...formation,
-                  positions: formation.positions.map((dancerPosition) => {
-                     if (selectedDancers.includes(dancerPosition.id)) {
-                        return {
-                           ...dancerPosition,
-                           color,
-                        };
-                     }
-                     return dancerPosition;
-                  }),
-               };
-            }
-            return formation;
-         })
-      );
-      pushChange();
-   };
    const pos = getFirstSelectedFormation()?.positions.find((position) => position.id === selectedDancers[0])?.position;
-   const stageFlippedFactor = localSettings.stageFlipped ? -1 : 1;
+
    const getRealPosition = (pos, cloudSettings) => {
       if (!pos) return;
       const { stageBackground, gridSubdivisions, horizontalGridSubdivisions, verticalFineDivisions, horizontalFineDivisions, stageDimensions } =
@@ -277,23 +161,22 @@ export const ObjectControls: React.FC<{
       return { x: Math.round(pos.x / gridSizeX), y: Math.round(pos.y / gridSizeY) };
    };
 
-   const selectedPositions = formations
-      .filter((formation: formation) => selectedFormations.includes(formation.id))
-      .map((formation: formation) => formation.positions)
-      .flat()
-      .filter((dancerPosition: dancerPosition) => selectedDancers.includes(dancerPosition.id));
-
-   const selectedPositionsHaveColorOverrides = selectedPositions?.filter((dancerPosition: dancerPosition) => dancerPosition.color).length;
+   // return groups.find((group) => group.id === properties[0])?.name || "Error";
+   const dropdownGroup = getFirstSelectedFormation()?.groups?.find((group) => group.id === getSelectedPositionsProperty("groupId")) || {
+      name: "Mixed",
+      color: null,
+   };
 
    return (
       <>
-         {/* md:h-[40px] md:min-h-[40px] md:max-h-[40px] h-[30px] min-h-[30px] max-h-[30px] */}
          <div className="w-full  h-full bg-neutral-50 flex flex-col  pb-2  dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
             <div className="  border-neutral-700 w-full py-2 px-3 flex flex-row items-center">
                <p className="md:text-sm text-[10px]  font-bold">
                   {selectedDancers.length === dancers.length
                      ? "Everyone"
-                     : formatNames(dancers.filter((dancer) => selectedDancers.includes(dancer.id)).map((dancer) => dancer.name))}
+                     : // : ![null, "Mixed"].includes(getSelectedPositionsProperty("groupId"))
+                       // ? getSelectedPositionsProperty("groupId")
+                       formatNames(dancers.filter((dancer) => selectedDancers.includes(dancer.id)).map((dancer) => dancer.name))}
                </p>
 
                {selectedDancers.length === 1 ? (
@@ -301,10 +184,8 @@ export const ObjectControls: React.FC<{
                      ({getRealPosition(pos, cloudSettings)?.x}, {getRealPosition(pos, cloudSettings)?.y})
                   </p>
                ) : null}
-               {/* <span className="text-neutral-400 text-xs px-1">in</span>
-            <span className=" text-xs ">Jumps up</span> */}
             </div>
-            <div className="  flex flex-col ">
+            <div className="  flex flex-col border-b border-neutral-700 ">
                {selectedDancers.length && selectedFormations.length ? (
                   <>
                      {selectedDancers.length === 2 && !viewOnly ? (
@@ -339,7 +220,7 @@ export const ObjectControls: React.FC<{
                               });
                               // swap the positions of the two dancers
                            }}
-                           className="flex flex-row justify-between dark:text-neutral-300 text-neutral-500 hover:text-black dark:hover:text-white transition items-center px-2 py-2 "
+                           className="flex flex-row justify-between dark:text-neutral-300 text-neutral-500 hover:text-black dark:hover:text-white transition items-center px-2 py-3 border-t border-neutral-700 "
                         >
                            <p className="text-xs font-semibold mr-3">Swap 2 Positions</p>
                            <svg
@@ -363,7 +244,7 @@ export const ObjectControls: React.FC<{
                         .map((selectedFormationId) => {
                            return formations.findIndex((formation) => formation.id === selectedFormationId);
                         })
-                        .includes(0) && selectedFormations.length === 1 ? (
+                        .includes(0) ? (
                         <div className="flex flex-row justify-between items-center py-2 px-2 border-t border-neutral-700 ">
                            <p className="text-xs  font-semibold">Path</p>
                            <DropdownMenu>
@@ -377,24 +258,30 @@ export const ObjectControls: React.FC<{
                               </DropdownMenuTrigger>
 
                               <DropdownMenuContent className=" dark:fill-white ">
-                                 <DropdownMenuItem className="w-full  hover:bg-neutral-200 ">
-                                    <div className="  py-1  text-xs   flex flex-row items-center" onClick={setLinear}>
+                                 <DropdownMenuItem>
+                                    <div
+                                       className="    text-xs   flex flex-row items-center"
+                                       onClick={() => setSelectedPositionProperty("transitionType", "linear")}
+                                    >
                                        <svg className="w-5 h-5 mr-4  " xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                                           <path d="M170 666q-37.8 0-63.9-26.141t-26.1-64Q80 538 106.1 512t63.9-26q29.086 0 52.543 17T255 546h625v60H255q-9 26-32.457 43T170 666Z" />
                                        </svg>
                                        <p>Straight</p>
                                     </div>
                                  </DropdownMenuItem>
-                                 <DropdownMenuItem className="w-full  hover:bg-neutral-200">
-                                    <div className="  py-1  text-xs   flex flex-row items-center" onClick={setCurved}>
+                                 <DropdownMenuItem>
+                                    <div className="   text-xs   flex flex-row items-center" onClick={setCurved}>
                                        <svg className="w-5 h-5 mr-4  " xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                                           <path d="M766 936q-41 0-71.5-24.5T656 852H443q-66 0-109.5-43.5T290 699q0-66 43.5-109.5T443 546h77q41 0 67-26t26-67q0-41-26-67t-67-26H304q-9 35-39 59.5T194 444q-48 0-81-33t-33-81q0-48 33-81t81-33q41 0 71 24.5t39 59.5h216q66 0 109.5 43.5T673 453q0 66-43.5 109.5T520 606h-77q-41 0-67 26t-26 67q0 41 26 67t67 26h213q9-35 39-59.5t71-24.5q48 0 81 33t33 81q0 48-33 81t-81 33ZM194 384q23 0 38.5-15.5T248 330q0-23-15.5-38.5T194 276q-23 0-38.5 15.5T140 330q0 23 15.5 38.5T194 384Z" />
                                        </svg>
                                        <p>Curved</p>
                                     </div>
                                  </DropdownMenuItem>
-                                 <DropdownMenuItem className="w-full  hover:bg-neutral-200">
-                                    <div className="  py-1  text-xs   flex flex-row items-center" onClick={setTeleport}>
+                                 <DropdownMenuItem>
+                                    <div
+                                       className="  text-xs   flex flex-row items-center"
+                                       onClick={() => setSelectedPositionProperty("transitionType", "teleport")}
+                                    >
                                        <svg className="w-5 h-5 mr-4 " xmlns="http://www.w3.org/2000/svg" viewBox="0 96 960 960">
                                           <path d="m794 922-42-42 73-74H620v-60h205l-73-74 42-42 146 146-146 146ZM340 686q51.397 0 92.699-24Q474 638 499 598q-34-26-74.215-39t-85-13Q295 546 255 559t-74 39q25 40 66.301 64 41.302 24 92.699 24Zm.089-200Q369 486 389.5 465.411q20.5-20.588 20.5-49.5Q410 387 389.411 366.5q-20.588-20.5-49.5-20.5Q311 346 290.5 366.589q-20.5 20.588-20.5 49.5Q270 445 290.589 465.5q20.588 20.5 49.5 20.5ZM340 897q133-121 196.5-219.5T600 504q0-117.79-75.292-192.895Q449.417 236 340 236t-184.708 75.105Q80 386.21 80 504q0 75 65 173.5T340 897Zm0 79Q179 839 99.5 721.5T20 504q0-150 96.5-239T340 176q127 0 223.5 89T660 504q0 100-79.5 217.5T340 976Zm0-410Z" />
                                        </svg>
@@ -409,7 +296,7 @@ export const ObjectControls: React.FC<{
                      <div className="flex flex-col justify-between items-center  px-2 gap-3 border-t border-neutral-700 py-2 ">
                         <div className="flex flex-row items-center justify-between w-full">
                            <p className="text-xs font-semibold  ">Prop</p>
-                           {!selectedPositions.filter((position) => position.itemId).length ? (
+                           {!getSelectedPositionsProperty("itemId") ? (
                               <button
                                  onClick={() => {
                                     if (!items.length) {
@@ -417,22 +304,7 @@ export const ObjectControls: React.FC<{
                                        toast("Create your first prop");
                                        return;
                                     }
-                                    setFormations(
-                                       formations.map((formation) => {
-                                          if (selectedFormations.includes(formation.id)) {
-                                             return {
-                                                ...formation,
-                                                positions: formation.positions.map((position) => {
-                                                   if (selectedDancers.includes(position.id)) {
-                                                      return { ...position, itemId: items[0].id };
-                                                   }
-                                                   return position;
-                                                }),
-                                             };
-                                          }
-                                          return formation;
-                                       })
-                                    );
+                                    setSelectedPositionProperty("itemId", items[0].id);
                                  }}
                                  className="hover:bg-neutral-800 p-1"
                               >
@@ -443,7 +315,7 @@ export const ObjectControls: React.FC<{
                            ) : null}
                         </div>
 
-                        {selectedPositions.filter((position) => position.itemId).length ? (
+                        {getSelectedPositionsProperty("itemId") ? (
                            <div className="flex flex-row items-center justify-between w-full">
                               <DropdownMenu>
                                  <DropdownMenuTrigger
@@ -451,19 +323,15 @@ export const ObjectControls: React.FC<{
                                     className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md border border-neutral-700"
                                  >
                                     <div className=" py-1 px-3 h-[32px] w-38  flex flex-row items-center  ">
-                                       <p className=" text-xs">{itemSelectionDropdownValue()}</p>
+                                       <p className=" text-xs">{getSelectedPositionsProperty("itemId")}</p>
                                     </div>
                                  </DropdownMenuTrigger>
 
                                  <DropdownMenuContent className={`grid ${items.length > 10 ? "grid-cols-2 " : ""}`}>
                                     {items.map((item: item) => {
                                        return (
-                                          <DropdownMenuItem
-                                             key={item.id}
-                                             onClick={() => setDancerItem(item.id)}
-                                             className="w-full  hover:bg-neutral-200"
-                                          >
-                                             <div className="  py-1  text-xs   flex flex-row items-center">
+                                          <DropdownMenuItem key={item.id} onClick={() => setSelectedPositionProperty("itemId", item.id)}>
+                                             <div className="text-xs   flex flex-row items-center">
                                                 <div className="w-7 h-7 mr-5 ">
                                                    <img
                                                       className="h-full w-full object-contain"
@@ -481,73 +349,21 @@ export const ObjectControls: React.FC<{
                                           </DropdownMenuItem>
                                        );
                                     })}
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={() => setDancerItem(null)} className="w-full  hover:bg-neutral-200">
-                                       <div className="  py-1  text-xs   flex flex-row items-center">
-                                          <p>No prop</p>
-                                       </div>
-                                    </DropdownMenuItem>
                                  </DropdownMenuContent>
                               </DropdownMenu>
-                              <button
-                                 onClick={() => {
-                                    setFormations(
-                                       formations.map((formation: formation, index: number) => {
-                                          // remove color from dancer position
-                                          if (selectedFormations.includes(formation.id)) {
-                                             return {
-                                                ...formation,
-                                                positions: formation.positions.map((dancerPosition: dancerPosition) => {
-                                                   if (selectedDancers.includes(dancerPosition.id)) {
-                                                      return {
-                                                         ...dancerPosition,
-                                                         itemId: null,
-                                                      };
-                                                   } else {
-                                                      return dancerPosition;
-                                                   }
-                                                }),
-                                             };
-                                          }
-                                          return formation;
-                                       })
-                                    );
-                                 }}
-                                 className="  md:text-xs text-[10px] hover:bg-neutral-800 p-1  "
-                              >
-                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                                    <path
-                                       fillRule="evenodd"
-                                       d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
-                                       clipRule="evenodd"
-                                    />
-                                 </svg>
-                              </button>
+
+                              <RemovePropertyButton setSelectedPositionProperty={setSelectedPositionProperty} propertyKey="itemId" />
                            </div>
                         ) : null}
                      </div>
+
                      <div className="flex flex-col justify-between items-start px-2 py-2 border-t border-neutral-700 gap-3  ">
                         <div className="flex flex-row items-center justify-between w-full">
                            <p className="text-xs font-semibold">Elevation</p>
-                           {!selectedPositions.filter((position) => position.level !== null && position.level !== undefined).length ? (
+                           {!(getSelectedPositionsProperty("level") !== null) ? (
                               <button
                                  onClick={() => {
-                                    setFormations(
-                                       formations.map((formation) => {
-                                          if (selectedFormations.includes(formation.id)) {
-                                             return {
-                                                ...formation,
-                                                positions: formation.positions.map((position) => {
-                                                   if (selectedDancers.includes(position.id)) {
-                                                      return { ...position, level: 0 };
-                                                   }
-                                                   return position;
-                                                }),
-                                             };
-                                          }
-                                          return formation;
-                                       })
-                                    );
+                                    setSelectedPositionProperty("level", 0);
                                  }}
                                  className="hover:bg-neutral-800 p-1"
                               >
@@ -557,7 +373,7 @@ export const ObjectControls: React.FC<{
                               </button>
                            ) : null}
                         </div>
-                        {selectedPositions.filter((position) => position.level !== null && position.level !== undefined).length ? (
+                        {getSelectedPositionsProperty("level") !== null ? (
                            <div className="flex flex-row items-center justify-between w-full">
                               <Input
                                  type="number"
@@ -567,97 +383,145 @@ export const ObjectControls: React.FC<{
                                     setLocalSettings((localSettings: localSettings) => {
                                        return { ...localSettings, viewingThree: true, viewingTwo: false };
                                     });
-                                    setFormations(
-                                       formations.map((formation) => {
-                                          if (selectedFormations.includes(formation.id)) {
-                                             return {
-                                                ...formation,
-                                                positions: formation.positions.map((position) => {
-                                                   if (selectedDancers.includes(position.id)) {
-                                                      return { ...position, level: parseFloat(e.target.value) };
-                                                   }
-                                                   return position;
-                                                }),
-                                             };
-                                          }
-                                          return formation;
-                                       })
-                                    );
+                                    setSelectedPositionProperty("level", parseInt(e.target.value));
                                  }}
-                                 value={
-                                    getFirstSelectedFormation()?.positions.find((position: dancerPosition) => {
-                                       return position.id === selectedDancers[0];
-                                    })?.level || 0
-                                 }
+                                 value={getSelectedPositionsProperty("level")}
                               />
 
-                              <button
-                                 onClick={() => {
-                                    setFormations(
-                                       formations.map((formation: formation, index: number) => {
-                                          // remove color from dancer position
-                                          if (selectedFormations.includes(formation.id)) {
-                                             return {
-                                                ...formation,
-                                                positions: formation.positions.map((dancerPosition: dancerPosition) => {
-                                                   if (selectedDancers.includes(dancerPosition.id)) {
-                                                      return {
-                                                         ...dancerPosition,
-                                                         level: null,
-                                                      };
-                                                   } else {
-                                                      return dancerPosition;
-                                                   }
-                                                }),
-                                             };
-                                          }
-                                          return formation;
-                                       })
-                                    );
-                                 }}
-                                 className="  md:text-xs text-[10px] hover:bg-neutral-800 p-1  "
-                              >
-                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                                    <path
-                                       fillRule="evenodd"
-                                       d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
-                                       clipRule="evenodd"
-                                    />
-                                 </svg>
-                              </button>
+                              <RemovePropertyButton setSelectedPositionProperty={setSelectedPositionProperty} propertyKey="level" />
                            </div>
                         ) : null}
                      </div>
 
-                     <div className="flex flex-col py-3 px-2 border-y border-neutral-700 gap-3">
+                     {selectedFormations.length === 1 ? (
+                        <div className="flex flex-col py-3 px-2 border-t border-neutral-700 gap-3">
+                           <div className=" flex flex-row justify-between items-center h-6">
+                              <p className="text-xs  font-semibold  ">Group</p>
+
+                              <div className="flex flex-row items-center gap-2">
+                                 {getFirstSelectedFormation()?.groups?.length && !getSelectedPositionsProperty("groupId") ? (
+                                    <DropdownMenu>
+                                       <DropdownMenuTrigger asChild>
+                                          <button className="hover:bg-neutral-800 p-1">
+                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                                <path d="M3.75 3A1.75 1.75 0 002 4.75v3.26a3.235 3.235 0 011.75-.51h12.5c.644 0 1.245.188 1.75.51V6.75A1.75 1.75 0 0016.25 5h-4.836a.25.25 0 01-.177-.073L9.823 3.513A1.75 1.75 0 008.586 3H3.75zM3.75 9A1.75 1.75 0 002 10.75v4.5c0 .966.784 1.75 1.75 1.75h12.5A1.75 1.75 0 0018 15.25v-4.5A1.75 1.75 0 0016.25 9H3.75z" />
+                                             </svg>
+                                          </button>
+                                       </DropdownMenuTrigger>
+
+                                       <DropdownMenuContent>
+                                          {(getFirstSelectedFormation().groups || []).map((group) => {
+                                             return (
+                                                <DropdownMenuItem
+                                                   key={group.id}
+                                                   onClick={() => {
+                                                      setSelectedPositionProperty("groupId", group.id);
+                                                   }}
+                                                >
+                                                   <div
+                                                      style={{
+                                                         backgroundColor: group?.color,
+                                                      }}
+                                                      className="w-2 h-2 rounded-full mr-2"
+                                                   ></div>
+                                                   <p className="text-xs">{group.name}</p>
+                                                </DropdownMenuItem>
+                                             );
+                                          })}
+                                       </DropdownMenuContent>
+                                    </DropdownMenu>
+                                 ) : null}
+                                 <button
+                                    // new group
+                                    onClick={() => {
+                                       const groupId = newGroupOnSelectedFormation();
+                                       setSelectedPositionProperty("groupId", groupId);
+                                    }}
+                                    className="hover:bg-neutral-800 p-1"
+                                 >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                       <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                                    </svg>
+                                 </button>
+                              </div>
+                           </div>
+
+                           {getSelectedPositionsProperty("groupId") ? (
+                              <div className="flex flex-row items-center justify-between">
+                                 <>
+                                    <DropdownMenu>
+                                       <DropdownMenuTrigger asChild className="  rounded-md border border-neutral-700">
+                                          <div className=" py-1 px-3 h-[32px] w-38  flex flex-row items-center  ">
+                                             {dropdownGroup?.color ? (
+                                                <div
+                                                   style={{
+                                                      backgroundColor: dropdownGroup?.color,
+                                                   }}
+                                                   className="w-2 h-2 rounded-full mr-2"
+                                                ></div>
+                                             ) : null}
+
+                                             <p className=" text-xs"> {dropdownGroup?.name}</p>
+                                          </div>
+                                       </DropdownMenuTrigger>
+
+                                       <DropdownMenuContent>
+                                          {(getFirstSelectedFormation().groups || []).map((group) => {
+                                             return (
+                                                <DropdownMenuItem
+                                                   key={group.id}
+                                                   onClick={() => {
+                                                      setSelectedPositionProperty("groupId", group.id);
+                                                   }}
+                                                >
+                                                   <div
+                                                      style={{
+                                                         backgroundColor: group?.color,
+                                                      }}
+                                                      className="w-2 h-2 rounded-full mr-2"
+                                                   ></div>
+                                                   <p className="text-xs">{group.name}</p>
+                                                </DropdownMenuItem>
+                                             );
+                                          })}
+                                          <DropdownMenuSeparator></DropdownMenuSeparator>
+                                          <DropdownMenuItem
+                                             onClick={() => {
+                                                const groupId = newGroupOnSelectedFormation();
+                                                setSelectedPositionProperty("groupId", groupId);
+                                             }}
+                                          >
+                                             <div className="   text-xs  w-full flex flex-row items-center">
+                                                <p>New group</p>
+                                                <svg
+                                                   xmlns="http://www.w3.org/2000/svg"
+                                                   viewBox="0 0 20 20"
+                                                   fill="currentColor"
+                                                   className="w-5 h-5 ml-auto"
+                                                >
+                                                   <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                                                </svg>
+                                             </div>
+                                          </DropdownMenuItem>
+                                       </DropdownMenuContent>
+                                    </DropdownMenu>
+
+                                    <RemovePropertyButton setSelectedPositionProperty={setSelectedPositionProperty} propertyKey="groupId" />
+                                 </>
+                              </div>
+                           ) : null}
+                        </div>
+                     ) : null}
+
+                     <div className="flex flex-col py-3 px-2 border-t border-neutral-700 gap-3">
                         <div className=" flex flex-row justify-between items-center h-6">
-                           <p className="text-xs  font-semibold  ">
-                              Color on this formation
-                              {/* Color <span className="text-neutral-300 font-normal ">(this formation)</span> */}
-                           </p>
-                           {!selectedPositionsHaveColorOverrides ? (
+                           <p className="text-xs  font-semibold  ">Color override</p>
+                           {!getSelectedPositionsProperty("color") ? (
                               <button
                                  onClick={() => {
-                                    setFormations(
-                                       formations.map((formation: formation, index: number) => {
-                                          // remove color from dancer position
-                                          if (selectedFormations.includes(formation.id)) {
-                                             return {
-                                                ...formation,
-                                                positions: formation.positions.map((dancerPosition: dancerPosition) => {
-                                                   if (selectedDancers.includes(dancerPosition.id)) {
-                                                      return {
-                                                         ...dancerPosition,
-                                                         color: dancers.find((dancer) => dancer.id === dancerPosition.id)?.color || "#db2777",
-                                                      };
-                                                   } else {
-                                                      return dancerPosition;
-                                                   }
-                                                }),
-                                             };
-                                          }
-                                          return formation;
-                                       })
+                                    setSelectedPositionProperty(
+                                       "color",
+                                       dancers.find((dancer) => dancer.id === selectedDancers[0])?.color || "#db2777"
                                     );
                                  }}
                                  className="hover:bg-neutral-800 p-1"
@@ -669,152 +533,18 @@ export const ObjectControls: React.FC<{
                            ) : null}
                         </div>
 
-                        {selectedPositionsHaveColorOverrides && !viewOnly ? (
-                           // remove color override
+                        {getSelectedPositionsProperty("color") ? (
                            <div className="flex flex-row items-center justify-between">
-                              <>
-                                 <PopoverPicker
-                                    dancers={dancers}
-                                    color={
-                                       getFirstSelectedFormation()?.positions.find(
-                                          (dancerPosition: dancerPosition) => dancerPosition.id === selectedDancers[0]
-                                       )?.color || dancers.find((dancer: dancer) => dancer.id === selectedDancers[0])?.color
-                                    }
-                                    selectedDancers={selectedDancers}
-                                    setColor={setColor}
-                                    position="bottom"
-                                    text="Color only applies to this formation"
-                                 ></PopoverPicker>
-                                 <button
-                                    onClick={() => {
-                                       setFormations(
-                                          formations.map((formation: formation, index: number) => {
-                                             // remove color from dancer position
-                                             if (selectedFormations.includes(formation.id)) {
-                                                return {
-                                                   ...formation,
-                                                   positions: formation.positions.map((dancerPosition: dancerPosition) => {
-                                                      if (selectedDancers.includes(dancerPosition.id)) {
-                                                         return {
-                                                            ...dancerPosition,
-                                                            color: null,
-                                                         };
-                                                      } else {
-                                                         return dancerPosition;
-                                                      }
-                                                   }),
-                                                };
-                                             }
-                                             return formation;
-                                          })
-                                       );
-                                    }}
-                                    className="  md:text-xs text-[10px] hover:bg-neutral-800 p-1  "
-                                 >
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                                       <path
-                                          fillRule="evenodd"
-                                          d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
-                                          clipRule="evenodd"
-                                       />
-                                    </svg>
-                                 </button>
-                              </>
+                              <PopoverPicker
+                                 dancers={dancers}
+                                 color={getSelectedPositionsProperty("color")}
+                                 setColor={(color: string) => setSelectedPositionProperty("color", color)}
+                                 position="bottom"
+                              ></PopoverPicker>
+                              <RemovePropertyButton setSelectedPositionProperty={setSelectedPositionProperty} propertyKey="color" />
                            </div>
                         ) : null}
                      </div>
-
-                     {/* <div className="flex flex-col py-3 px-2 border-y border-neutral-700 gap-3">
-                        <div className=" flex flex-row justify-between items-center h-6">
-                           <p className="text-xs  font-semibold  ">Group</p>
-                           {!selectedPositionsHaveColorOverrides ? (
-                              <button
-                                 onClick={() => {
-                                    setFormations(
-                                       formations.map((formation: formation, index: number) => {
-                                          // remove color from dancer position
-                                          if (selectedFormations.includes(formation.id)) {
-                                             return {
-                                                ...formation,
-                                                positions: formation.positions.map((dancerPosition: dancerPosition) => {
-                                                   if (selectedDancers.includes(dancerPosition.id)) {
-                                                      return {
-                                                         ...dancerPosition,
-                                                         color: dancers.find((dancer) => dancer.id === dancerPosition.id)?.color || "#db2777",
-                                                      };
-                                                   } else {
-                                                      return dancerPosition;
-                                                   }
-                                                }),
-                                             };
-                                          }
-                                          return formation;
-                                       })
-                                    );
-                                 }}
-                                 className="hover:bg-neutral-800 p-1"
-                              >
-                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                                    <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                                 </svg>
-                              </button>
-                           ) : null}
-                        </div>
-
-                        {selectedPositionsHaveColorOverrides && !viewOnly ? (
-                           // remove color override
-                           <div className="flex flex-row items-center justify-between">
-                              <>
-                                 <PopoverPicker
-                                    dancers={dancers}
-                                    color={
-                                       getFirstSelectedFormation()?.positions.find(
-                                          (dancerPosition: dancerPosition) => dancerPosition.id === selectedDancers[0]
-                                       )?.color || dancers.find((dancer: dancer) => dancer.id === selectedDancers[0])?.color
-                                    }
-                                    selectedDancers={selectedDancers}
-                                    setColor={setColor}
-                                    position="bottom"
-                                    text="Color only applies to this formation"
-                                 ></PopoverPicker>
-                                 <button
-                                    onClick={() => {
-                                       setFormations(
-                                          formations.map((formation: formation, index: number) => {
-                                             // remove color from dancer position
-                                             if (selectedFormations.includes(formation.id)) {
-                                                return {
-                                                   ...formation,
-                                                   positions: formation.positions.map((dancerPosition: dancerPosition) => {
-                                                      if (selectedDancers.includes(dancerPosition.id)) {
-                                                         return {
-                                                            ...dancerPosition,
-                                                            color: null,
-                                                         };
-                                                      } else {
-                                                         return dancerPosition;
-                                                      }
-                                                   }),
-                                                };
-                                             }
-                                             return formation;
-                                          })
-                                       );
-                                    }}
-                                    className="  md:text-xs text-[10px] hover:bg-neutral-800 p-1  "
-                                 >
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                                       <path
-                                          fillRule="evenodd"
-                                          d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
-                                          clipRule="evenodd"
-                                       />
-                                    </svg>
-                                 </button>
-                              </>
-                           </div>
-                        ) : null}
-                     </div> */}
                   </>
                ) : null}
             </div>
@@ -828,14 +558,7 @@ function formatNames(names: string[]): string {
 
    if (names.length === 1) return names[0];
 
-   // if (names.length === 2) return `${names[0]} & ${names[1]}`;
-
-   // if (names.length === 3) return `${names[0]}, ${names[1]} & ${names[2]}`;
+   if (names.length === 2) return `${names[0]} & ${names[1]}`;
 
    return `${names[0]} & ${names.length - 1} others`;
-   //  ${names[1]}, ${names[2]}
-}
-
-function roundToHundredth(num) {
-   return parseFloat(num.toFixed(2));
 }

@@ -5,12 +5,11 @@ import type { WithLiveblocks } from "@liveblocks/zustand";
 import { Status, createClient } from "@liveblocks/client";
 import { v4 as uuidv4 } from "uuid";
 interface Store {
-   copiedPositions: dancerPosition[];
-   setCopiedPositions: (copiedPositions: dancerPosition[]) => void;
+   copiedPositions: { from: string | null; positions: dancerPosition[] };
+   setCopiedPositions: (copiedPositions: { from: string | null; positions: dancerPosition[] }) => void;
 
    copySelectedPositions: () => void;
    pasteCopiedPositions: () => void;
-   splitSelectedFormations: () => void;
 
    isMobileView: boolean;
    setIsMobileView: (isMobileView: boolean) => void;
@@ -22,6 +21,7 @@ interface Store {
    segments: segment[];
    setSegments: (segments: segment[]) => void;
    updateSegmentProperty: (id: string, propertyKey: keyof segment, value: any) => void;
+   newSegment: () => void;
 
    imageBlobs: any;
    setImageBlobs: (imageBlobs: any) => void;
@@ -33,13 +33,26 @@ interface Store {
    // formation
    formations: formation[];
    setFormations: (formations: formation[]) => void;
-   //    updateDancerProperty: (id: string, propertyKey: keyof dancer, value: any) => void;
+   newGroupOnSelectedFormation: () => string;
+   setSelectedPositionProperty: (propertyKey: keyof dancerPosition, value: any) => void;
+   getSelectedPositionsProperty: (propertyKey: keyof dancerPosition) => string;
+   deleteSelectedFormations: () => void;
+   splitSelectedFormations: () => void;
+   deleteGroup: (groupId: string) => void;
 
    selectedFormations: string[];
    setSelectedFormations: (selectedFormations: string[]) => void;
+   incrementSelectedFormation: () => void;
+   decrementSelectedFormation: () => void;
+   getSelectedFormationIndex: () => number | null;
+   getFirstSelectedFormation: () => formation | undefined;
+   getPreviousFormation: () => formation | undefined;
 
    props: prop[];
    setProps: (props: prop[]) => void;
+
+   hoveringDancerIds: string[];
+   setHoveringDancerIds: (hoveringDancerIds: string[]) => void;
 
    items: item[];
    setItems: (items: item[]) => void;
@@ -59,25 +72,26 @@ interface Store {
    commandHeld: boolean;
    setCommandHeld: (commandHeld: boolean) => void;
 
+   shiftHeld: boolean;
+   setShiftHeld: (shiftHeld: boolean) => void;
+
    selectedDancers: string[];
    setSelectedDancers: (selectedDancers: string[]) => void;
-
-   getFirstSelectedFormation: () => formation | undefined;
-   getPreviousFormation: () => formation | undefined;
-
-   incrementSelectedFormation: () => void;
-   decrementSelectedFormation: () => void;
-   getSelectedFormationIndex: () => number | null;
 
    position: number;
    setPosition: (position: number) => void;
 
    soundCloudTrackId: string | null;
    setSoundCloudTrackId: (soundCloudTrackId: string | null) => void;
+
    pauseHistory: () => void;
    resumeHistory: () => void;
 
-   deleteSelectedFormations: () => void;
+   player: any;
+   setPlayer: (player: any) => void;
+
+   newFormationFromLast: () => void;
+
    get: () => Store; // For direct state retrieval
 }
 
@@ -97,41 +111,70 @@ type Presence = {
 export const useStore = create<WithLiveblocks<Store, Presence>>(
    liveblocks(
       (set, get) => ({
-         copiedPositions: [],
-         setCopiedPositions: (copiedPositions: dancerPosition[]) => set({ copiedPositions }),
+         hoveringDancerIds: [],
+         setHoveringDancerIds: (hoveringDancerIds: string[]) => set({ hoveringDancerIds }),
+
+         copiedPositions: { from: null, positions: [] },
+         setCopiedPositions: (copiedPositions: { from: string | null; positions: dancerPosition[] }) => set({ copiedPositions }),
 
          copySelectedPositions: () => {
             const { selectedDancers, getFirstSelectedFormation, selectedFormations } = get();
 
             if (!selectedFormations.length) return;
+
             set({
-               copiedPositions:
-                  getFirstSelectedFormation()?.positions?.filter((dancerPosition) =>
-                     selectedDancers.length ? selectedDancers.includes(dancerPosition.id) : true
-                  ) || [],
+               copiedPositions: {
+                  from: getFirstSelectedFormation()?.id,
+                  positions:
+                     getFirstSelectedFormation()?.positions?.filter((dancerPosition) =>
+                        selectedDancers.length ? selectedDancers.includes(dancerPosition.id) : true
+                     ) || [],
+               },
             });
          },
          pasteCopiedPositions: () => {
-            const { selectedFormations, copiedPositions, formations } = get();
+            const { selectedFormations, copiedPositions, formations, getFirstSelectedFormation } = get();
+
             if (!selectedFormations.length) return;
-            if (!copiedPositions) return;
+
+            if (!copiedPositions.positions || !copiedPositions.from) return;
+            const originFormation = formations.find((formation) => formation.id === copiedPositions.from);
+            const targetFormation = getFirstSelectedFormation();
+
+            const originGroupIds = [
+               ...new Set(
+                  (copiedPositions.positions || [])
+                     .map((copiedPosition) => copiedPosition.groupId)
+                     .filter((groupId) => groupId !== null && groupId !== undefined)
+               ),
+            ];
+
+            const groupsToTransfer = originGroupIds
+               .filter((groupId) => !(targetFormation?.groups || []).map((group) => group.id).includes(groupId))
+               .map((groupId) => (originFormation?.groups || [])?.find((group) => group.id === groupId))
+               .filter((group) => group);
+
             set({
-               formations: formations.map((formation, i) => {
+               formations: formations.map((formation) => {
                   if (selectedFormations.includes(formation.id)) {
                      return {
                         ...formation,
                         positions: [
                            ...formation.positions.filter((dancerPosition) => {
-                              return !copiedPositions.map((dancerPositionCopy: dancerPosition) => dancerPositionCopy.id).includes(dancerPosition.id);
+                              return !copiedPositions.positions
+                                 .map((dancerPositionCopy: dancerPosition) => dancerPositionCopy.id)
+                                 .includes(dancerPosition.id);
                            }),
-                           ...copiedPositions,
+                           ...copiedPositions.positions,
                         ],
+                        groups: [...(formation.groups || []), ...(groupsToTransfer || [])],
                      };
                   }
                   return formation;
                }),
             });
          },
+
          splitSelectedFormations: () => {
             const { selectedFormations, pauseHistory, resumeHistory } = get();
             if (!selectedFormations.length) return;
@@ -209,11 +252,9 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
 
          segments: [],
          setSegments: (segments: segment[]) => {
-            // if (get().viewOnly) return;
             set({ segments });
          },
          updateSegmentProperty: (id: string, propertyKey: keyof segment, value: any) => {
-            // if (get().viewOnly) return;
             const updatedSegments = get().segments.map((seg) => {
                if (seg.id === id) {
                   return { ...seg, [propertyKey]: value };
@@ -222,64 +263,106 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             });
             set({ segments: updatedSegments });
          },
+         newSegment: () => {
+            const { segments } = get();
+            set({
+               segments: [
+                  ...segments,
+                  {
+                     name: `Segment ${segments.length + 1}`,
+                     duration: 10,
+                     color: getRandomColorWithMaxHueDistance(segments.map((segment) => segment.color)),
+                     id: uuidv4(),
+                  },
+               ],
+            });
+         },
 
-         //dancers
          dancers: [],
-
          setDancers: (dancers) => {
-            // if (get().viewOnly) return;
             set({ dancers });
          },
 
          formations: [],
          setFormations: (formations: formation[]) => {
-            // if (get().viewOnly) return;
             set({ formations });
          },
+         newGroupOnSelectedFormation: () => {
+            const { selectedFormations, formations } = get();
+            const groupId = uuidv4();
 
-         props: [],
-         setProps: (props: prop[]) => {
-            // if (get().viewOnly) return;
-            set({ props });
+            set({
+               formations: formations.map((formation: formation) => {
+                  if (selectedFormations.includes(formation.id)) {
+                     return {
+                        ...formation,
+                        groups: [
+                           ...(formation?.groups || []),
+                           {
+                              name: `Group ${(formation?.groups?.length || 0) + 1}`,
+                              id: groupId,
+                              color: getRandomColorWithMaxHueDistance(formation?.groups.map((group) => group?.color)),
+                           },
+                        ],
+                     };
+                  }
+                  return formation;
+               }),
+            });
+            return groupId;
          },
+         newFormationFromLast: (keepGroups: boolean) => {
+            const { formations } = get();
 
-         items: [],
-         setItems: (items: item[]) => {
-            // if (get().viewOnly) return;
-            set({ items });
+            set({
+               formations: [
+                  ...formations,
+                  {
+                     ...formations[formations.length - 1],
+                     id: uuidv4(),
+                     name: `Formation ${formations.length + 1}`,
+                     positions: formations[formations.length - 1]?.positions.map((dancer: dancerPosition) => {
+                        return {
+                           ...dancer,
+                           transitionType: "linear",
+                        };
+                     }),
+                     comments: [],
+                     notes: "",
+                     groups: keepGroups ? formations[formations.length - 1]?.groups : [],
+                  },
+               ],
+            });
+            set({ selectedFormations: [formations[formations.length - 1]?.id] });
          },
+         deleteGroup: (groupId: string) => {
+            // delete group and remove group id from all dancers in that group and unhover all dancers
+            const { formations, selectedFormations } = get();
 
-         imageBlobs: {},
-         setImageBlobs: (imageBlobs: any) => {
-            // if (get().viewOnly) return;
-            set({ imageBlobs });
+            set({
+               formations: formations.map((formation) => {
+                  if (selectedFormations.includes(formation.id)) {
+                     return {
+                        ...formation,
+                        groups: (formation?.groups || []).filter((groupx) => groupId !== groupx.id),
+                        positions: formation.positions.map((position) => {
+                           if (position.groupId === groupId) {
+                              return { ...position, groupId: null };
+                           }
+                           return position;
+                        }),
+                     };
+                  }
+                  return formation;
+               }),
+               hoveringDancerIds: [],
+            });
          },
+         getFirstSelectedFormation: () => {
+            const { formations, selectedFormations } = get();
 
-         cloudSettings: {
-            stageDimensions: { width: 40, height: 32 },
-            horizontalFineDivisions: 4,
-            verticalFineDivisions: 4,
-            gridSubdivisions: 8,
-            horizontalGridSubdivisions: 4,
-         },
-         setCloudSettings: (cloudSettings: cloudSettings) => {
-            // if (get().viewOnly) return;
-            set({ cloudSettings });
-         },
-
-         soundCloudTrackId: null,
-         setSoundCloudTrackId: (soundCloudTrackId: string | null) => {
-            // if (get().viewOnly) return;
-            set({ soundCloudTrackId });
-         },
-
-         viewOnly: false,
-         setViewOnly: (viewOnly: boolean) => set({ viewOnly }),
-
-         getFirstSelectedFormation: (formations?: formation[]) => {
-            formations = formations || get().formations;
-            if (get().selectedFormations.length === 1) {
-               return formations.find((formation) => formation.id === get().selectedFormations[0]);
+            if (selectedFormations.length === 1) {
+               return formations.find((formation) => formation.id === selectedFormations[0]);
             } else {
                return formations[Math.min(...get().selectedFormations.map((id: string) => formations.findIndex((formation) => formation.id === id)))];
             }
@@ -292,27 +375,15 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
          },
 
          incrementSelectedFormation: () => {
-            const selectedFormationId =
-               get().formations[
-                  Math.min(...get().selectedFormations.map((id: string) => get().formations.findIndex((formation) => formation.id === id)))
-               ]?.id;
-            if (!selectedFormationId) return;
-            const index = get().formations.findIndex((formation) => formation.id === selectedFormationId);
-            const formationToSelect = get().formations[index + 1]?.id;
-            if (!formationToSelect) return;
-            set({ selectedFormations: [formationToSelect] });
+            const { getSelectedFormationIndex, goToFormation, formations, selectedFormations } = get();
+            if (!selectedFormations.length || getSelectedFormationIndex() === formations.length - 1) return;
+            goToFormation(formations[getSelectedFormationIndex() + 1]?.id);
          },
 
          decrementSelectedFormation: () => {
-            const selectedFormationId =
-               get().formations[
-                  Math.min(...get().selectedFormations.map((id: string) => get().formations.findIndex((formation) => formation.id === id)))
-               ]?.id;
-            if (!selectedFormationId) return;
-            const index = get().formations.findIndex((formation) => formation.id === selectedFormationId);
-            const formationToSelect = get().formations[index - 1]?.id;
-            if (!formationToSelect) return;
-            set({ selectedFormations: [formationToSelect] });
+            const { getSelectedFormationIndex, goToFormation, formations, selectedFormations } = get();
+            if (!selectedFormations.length || getSelectedFormationIndex() === 0) return;
+            goToFormation(formations[getSelectedFormationIndex() - 1]?.id);
          },
 
          getSelectedFormationIndex: () => {
@@ -323,29 +394,49 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             if (!selectedFormationId) return null;
             return get().formations.findIndex((formation) => formation.id === selectedFormationId);
          },
+         setSelectedPositionProperty: (propertyKey: keyof dancerPosition, value: any) => {
+            const { selectedDancers, selectedFormations, formations } = get();
+            if (!selectedDancers.length || !selectedFormations.length) return;
 
-         danceName: "initialName",
-         setDanceName: (danceName: string) => {
-            // if (get().viewOnly) return;
-            set({ danceName });
+            set({
+               formations: formations.map((formation) => {
+                  if (selectedFormations.includes(formation.id)) {
+                     return {
+                        ...formation,
+                        positions: formation.positions.map((position) => {
+                           if (selectedDancers.includes(position.id)) {
+                              return { ...position, [propertyKey]: value };
+                           }
+                           return position;
+                        }),
+                     };
+                  }
+                  return formation;
+               }),
+            });
          },
 
-         commandHeld: false,
-         setCommandHeld: (commandHeld: boolean) => set({ commandHeld }),
+         getSelectedPositionsProperty: (propertyKey: keyof dancerPosition) => {
+            const { selectedDancers, selectedFormations, formations, items } = get();
+            if (!selectedDancers.length || !selectedFormations.length) return;
+            const properties = formations
+               .filter((formation: formation) => selectedFormations.includes(formation.id))
+               .map((formation: formation) => formation.positions)
+               .flat()
+               .filter((dancerPosition: dancerPosition) => selectedDancers.includes(dancerPosition.id))
+               .map((dancerPosition: dancerPosition) => dancerPosition[propertyKey]);
 
-         nameOrEmail: "",
-         setNameOrEmail: (nameOrEmail: string) => set({ nameOrEmail }),
+            if (properties.every((val) => val === null || val === undefined)) {
+               return null;
+            }
+            if (properties.every((val) => val === properties[0])) {
+               if (propertyKey === "itemId") {
+                  return items.find((item) => item.id === properties[0])?.name || "Error";
+               }
 
-         position: 0,
-         setPosition: (position: number) => set({ position }),
-
-         pauseHistory: () => {
-            const room = get().liveblocks.room!;
-            room.history.pause();
-         },
-         resumeHistory: () => {
-            const room = get().liveblocks.room!;
-            room.history.resume();
+               return properties[0];
+            }
+            return "Mixed";
          },
 
          deleteSelectedFormations: () => {
@@ -353,7 +444,6 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
 
             if (!selectedFormations.length || formations.length === 1) return;
 
-            if (selectedFormations.length === formations.length) return;
             pauseHistory();
 
             selectedFormations.forEach((selectedFormationId) => {
@@ -398,6 +488,88 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             resumeHistory();
          },
 
+         props: [],
+         setProps: (props: prop[]) => {
+            set({ props });
+         },
+
+         items: [],
+         setItems: (items: item[]) => {
+            set({ items });
+         },
+
+         player: null,
+         setPlayer: (player: any) => {
+            set({ player });
+         },
+         goToFormation: (formationId: string) => {
+            const { formations, songDuration, player } = get();
+            const index = formations.findIndex((formation) => formation.id === formationId);
+            let position = formations
+               .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
+               .slice(0, index)
+               .reduce((a, b) => a + b, 0);
+
+            set({ position, selectedFormations: [formationId] });
+            if (!(songDuration && player) || position > songDuration / 1000) return;
+            player.seekTo(Math.min(Math.max(0, position / (songDuration / 1000)), 1));
+         },
+
+         imageBlobs: {},
+         setImageBlobs: (imageBlobs: any) => {
+            set({ imageBlobs });
+         },
+
+         cloudSettings: {
+            stageDimensions: { width: 40, height: 32 },
+            horizontalFineDivisions: 4,
+            verticalFineDivisions: 4,
+            gridSubdivisions: 8,
+            horizontalGridSubdivisions: 4,
+            stageBackground: "gridfluid",
+            collisionRadius: 1,
+         },
+         setCloudSettings: (cloudSettings: cloudSettings) => {
+            set({ cloudSettings });
+         },
+
+         soundCloudTrackId: null,
+         setSoundCloudTrackId: (soundCloudTrackId: string | null) => {
+            set({ soundCloudTrackId });
+         },
+
+         viewOnly: false,
+         setViewOnly: (viewOnly: boolean) => set({ viewOnly }),
+
+         danceName: "initialName",
+         setDanceName: (danceName: string) => {
+            set({ danceName });
+         },
+
+         commandHeld: false,
+         setCommandHeld: (commandHeld: boolean) => set({ commandHeld }),
+
+         shiftHeld: false,
+         setShiftHeld: (shiftHeld: boolean) => set({ shiftHeld }),
+
+         nameOrEmail: "",
+         setNameOrEmail: (nameOrEmail: string) => set({ nameOrEmail }),
+
+         position: 0,
+         setPosition: (position: number) => set({ position }),
+
+         songDuration: null,
+         setSongDuration: (songDuration: number | null) => set({ songDuration }),
+
+         pauseHistory: () => {
+            const room = get().liveblocks.room!;
+            room.history.pause();
+         },
+         resumeHistory: () => {
+            const room = get().liveblocks.room!;
+            room.history.resume();
+         },
+
          get,
       }),
       {
@@ -421,3 +593,91 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
       }
    )
 );
+
+function hslToHex(h, s, l) {
+   l /= 100;
+   const a = (s * Math.min(l, 1 - l)) / 100;
+   const f = (n) => {
+      const k = (n + h / 30) % 12;
+      const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+      return Math.round(255 * color)
+         .toString(16)
+         .padStart(2, "0");
+   };
+   return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function hueDistance(hue1: number, hue2: number) {
+   var diff = Math.abs(hue1 - hue2);
+   return Math.min(diff, 360 - diff);
+}
+
+function getRandomColorWithMaxHueDistance(existingColors: string[]) {
+   const saturation = 50;
+   const lightness = 57;
+   const existingHues = existingColors.map((color) => hexToHSL(color).h);
+
+   if (existingHues.length === 0) {
+      var randomHue = Math.floor(Math.random() * 360);
+      return hslToHex(randomHue, saturation, lightness);
+   }
+   var maxDistance = 0;
+   var furthestHue = 0;
+
+   for (var i = 0; i < 360; i++) {
+      // Check every hue
+      var minDistance = existingHues.reduce((min, existingHue) => {
+         var distance = hueDistance(i, existingHue);
+         return Math.min(min, distance);
+      }, 360);
+
+      if (minDistance > maxDistance) {
+         maxDistance = minDistance;
+         furthestHue = i;
+      }
+   }
+
+   return hslToHex(furthestHue, saturation, lightness); // hslToHex from previous example
+}
+
+function hexToHSL(H: string) {
+   // Convert hex to RGB first
+   let r = 0,
+      g = 0,
+      b = 0;
+   if (H.length == 4) {
+      r = "0x" + H[1] + H[1];
+      g = "0x" + H[2] + H[2];
+      b = "0x" + H[3] + H[3];
+   } else if (H.length == 7) {
+      r = "0x" + H[1] + H[2];
+      g = "0x" + H[3] + H[4];
+      b = "0x" + H[5] + H[6];
+   }
+   // Then to HSL
+   r /= 255;
+   g /= 255;
+   b /= 255;
+   let cmin = Math.min(r, g, b),
+      cmax = Math.max(r, g, b),
+      delta = cmax - cmin,
+      h = 0,
+      s = 0,
+      l = 0;
+
+   if (delta == 0) h = 0;
+   else if (cmax == r) h = ((g - b) / delta) % 6;
+   else if (cmax == g) h = (b - r) / delta + 2;
+   else h = (r - g) / delta + 4;
+
+   h = Math.round(h * 60);
+
+   if (h < 0) h += 360;
+
+   l = (cmax + cmin) / 2;
+   s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+   s = +(s * 100).toFixed(1);
+   l = +(l * 100).toFixed(1);
+
+   return { h, s, l };
+}

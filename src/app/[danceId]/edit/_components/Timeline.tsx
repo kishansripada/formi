@@ -1,36 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { COLORS, dancer, dancerPosition, formation, formationGroup, localSettings, MAX_PIXELS_PER_SECOND, segment } from "../../../../types/types";
-import { useHorizontalScrollInfo } from "../../../../hooks";
-import { Layer } from "./Layer";
+import { useHorizontalScrollInfo } from "../../../../utls";
 import { Layers } from "./Layers";
-
-import dynamic from "next/dynamic";
 import { NoFilePlayer } from "./NoFilePlayer";
 import { useStore } from "../store";
 import { useGesture } from "@use-gesture/react";
 import { FileAudioPlayer } from "./FileAudioPlayer";
-// const FileAudioPlayer = dynamic<{
-//    setPosition: Function;
-//    setIsPlaying: Function;
-//    setSongDuration: Function;
-//    songDuration: number | null;
-//    soundCloudTrackId: string | null;
-//    setSelectedFormation: Function;
-//    setFormations: Function;
-//    viewOnly: boolean;
-//    pixelsPerSecond: number;
-//    player: any;
-//    setPlayer: Function;
-// }>(() => import("./FileAudioPlayer").then((mod) => mod.FileAudioPlayer), {
-//    ssr: false,
-// });
-
+import { roundToHundredth } from "../../../../utls";
 export const Timeline: React.FC<{
-   // formations: formation[];
    selectedFormation: number | null;
    setSelectedFormation: Function;
    // setFormations: Function;
-   songDuration: number | null;
+
    position: number;
    isPlaying: boolean;
    soundCloudTrackId: string | null;
@@ -41,9 +22,7 @@ export const Timeline: React.FC<{
    pushChange: Function;
 
    formationGroups: formationGroup[];
-   player: any;
-   setPlayer: Function;
-   setSongDuration: Function;
+
    setIsPlaying: Function;
    setPosition: Function;
    videoPlayer: any;
@@ -58,11 +37,6 @@ export const Timeline: React.FC<{
    menuOpen: string | null;
    currentFormationIndex: number;
 }> = ({
-   // formations,
-   selectedFormation,
-   setSelectedFormation,
-   // setFormations,
-   songDuration,
    position,
    isPlaying,
    soundCloudTrackId,
@@ -73,9 +47,7 @@ export const Timeline: React.FC<{
    addToStack,
 
    formationGroups,
-   player,
-   setPlayer,
-   setSongDuration,
+
    setIsPlaying,
    setPosition,
    videoPlayer,
@@ -90,7 +62,20 @@ export const Timeline: React.FC<{
    menuOpen,
    currentFormationIndex,
 }) => {
-   const { segments, setSegments, get, formations, viewOnly, resumeHistory, pauseHistory, setSelectedFormations, isMobileView } = useStore();
+   let {
+      segments,
+      setSegments,
+      get,
+      formations,
+      viewOnly,
+      resumeHistory,
+      pauseHistory,
+      setSelectedFormations,
+      isMobileView,
+      player,
+      songDuration,
+      setSongDuration,
+   } = useStore();
    const others = useStore((state) => state.liveblocks.others);
    const [resizingSegment, setResizingSegment] = useState<string | null>(null);
 
@@ -380,7 +365,6 @@ export const Timeline: React.FC<{
                addToStack={addToStack}
                pushChange={pushChange}
                setSelectedDancers={setSelectedDancers}
-               songDuration={songDuration}
                isPlaying={isPlaying}
                position={position}
                soundCloudTrackId={soundCloudTrackId}
@@ -460,7 +444,6 @@ export const Timeline: React.FC<{
                      key={localSource || soundCloudTrackId}
                      soundCloudTrackId={localSource || soundCloudTrackId}
                      player={player}
-                     setPlayer={setPlayer}
                      setSongDuration={setSongDuration}
                      setIsPlaying={setIsPlaying}
                      setPosition={setPosition}
@@ -479,7 +462,6 @@ export const Timeline: React.FC<{
                      playbackRate={playbackRate}
                      player={player}
                      isPlaying={isPlaying}
-                     setPlayer={setPlayer}
                      key={localSource || soundCloudTrackId}
                      soundCloudTrackId={localSource || soundCloudTrackId}
                      setSongDuration={setSongDuration}
@@ -497,9 +479,6 @@ export const Timeline: React.FC<{
       </>
    );
 };
-function roundToHundredth(value: number): number {
-   return Math.round(value * 100) / 100;
-}
 
 function hexToRgba(hex: string, opacity: number): string {
    // Ensure the hex code starts with a '#'

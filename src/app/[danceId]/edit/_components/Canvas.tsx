@@ -23,7 +23,7 @@ import { OldGridLines } from "./OldGridLines";
 import { useStore } from "../store";
 import { AuthSession } from "@supabase/supabase-js";
 import { createUseGesture, dragAction, pinchAction, useGesture, usePinch, wheelAction } from "@use-gesture/react";
-import { useIsDesktop } from "../../../../hooks";
+import { useIsDesktop } from "../../../../utls";
 export const Canvas: React.FC<{
    children: React.ReactNode;
    selectedDancers: string[];

@@ -14,7 +14,7 @@ export const Segments: React.FC<{
    pushChange: Function;
 }> = ({ pushChange }) => {
    const [selectedSegment, setSelectedSegment] = useState<string | null>(null);
-   const { segments, setSegments, updateSegmentProperty, viewOnly } = useStore();
+   const { segments, setSegments, updateSegmentProperty, viewOnly, newSegment } = useStore();
    return (
       <>
          <div className="flex flex-col overflow-hidden  dark:text-white h-full ">
@@ -55,15 +55,7 @@ export const Segments: React.FC<{
                               pointerEvents: viewOnly ? "none" : "all",
                            }}
                            onClick={() => {
-                              setSegments([
-                                 ...segments,
-                                 {
-                                    name: "New segment",
-                                    duration: 10,
-                                    color: "#db2777",
-                                    id: uuidv4(),
-                                 },
-                              ]);
+                              newSegment();
                            }}
                            className=" flex flex-row items-center "
                         >

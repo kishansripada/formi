@@ -11,7 +11,7 @@ export const ItemsAndProps: React.FC<{
    audioFiles: any;
 
    setAudiofiles: Function;
-   player: any;
+
    setIsPlaying: Function;
    setLocalSource: Function;
 
@@ -36,7 +36,7 @@ export const ItemsAndProps: React.FC<{
    invalidatePropUploads,
    selectedPropIds,
    propUploads,
-   player,
+
    setIsPlaying,
    soundCloudTrackId,
    setSoundCloudTrackId,
@@ -82,7 +82,6 @@ export const ItemsAndProps: React.FC<{
                      invalidatePropUploads={invalidatePropUploads}
                      selectedPropIds={selectedPropIds}
                      propUploads={propUploads}
-                     player={player}
                      setIsPlaying={setIsPlaying}
                      soundCloudTrackId={soundCloudTrackId}
                      setSoundCloudTrackId={setSoundCloudTrackId}
@@ -101,7 +100,6 @@ export const ItemsAndProps: React.FC<{
                      invalidatePropUploads={invalidatePropUploads}
                      selectedPropIds={selectedPropIds}
                      propUploads={propUploads}
-                     player={player}
                      setIsPlaying={setIsPlaying}
                      soundCloudTrackId={soundCloudTrackId}
                      setSoundCloudTrackId={setSoundCloudTrackId}

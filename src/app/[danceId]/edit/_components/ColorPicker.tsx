@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 
-import { useClickOutside } from "../../../../hooks";
+import { useClickOutside } from "../../../../utls";
 import { dancer } from "../../../../types/types";
 
 export const PopoverPicker = ({
@@ -53,10 +53,10 @@ export const PopoverPicker = ({
                }
 
                .swatch {
-                  width: 28px;
-                  height: 28px;
-                  border-radius: 8px;
-                  border: 3px solid #fff;
+                  width: 22px;
+                  height: 22px;
+                  border-radius: 2px;
+                  // border: 3px solid #fff;
                   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0, 0, 0, 0.1);
                   cursor: pointer;
                }

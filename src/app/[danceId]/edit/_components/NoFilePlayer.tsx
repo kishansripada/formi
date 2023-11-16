@@ -10,13 +10,11 @@ import { useGesture } from "@use-gesture/react";
 export const NoFilePlayer: React.FC<{
    setPosition: Function;
    setIsPlaying: Function;
-   setSongDuration: Function;
 
    setSelectedFormation: Function;
 
    pixelsPerSecond: number;
-   player: any;
-   setPlayer: Function;
+
    // formations: formation[];
    videoPlayer: any;
    isPlaying: boolean;
@@ -27,22 +25,18 @@ export const NoFilePlayer: React.FC<{
    ({
       setPosition,
       setIsPlaying,
-      setSongDuration,
 
       setSelectedFormation,
 
       pixelsPerSecond,
-      player,
-      setPlayer,
-      videoPlayer,
-      // formations,
+
       isPlaying,
       position,
       playbackRate,
       currentFormationIndex,
    }) => {
-      const { formations, get, setSelectedFormations, isMobileView } = useStore();
-      let songDuration = formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0);
+      let { formations, get, setSelectedFormations, isMobileView, player, songDuration } = useStore();
+      songDuration = formations.map((formation) => formation.durationSeconds + formation.transition.durationSeconds).reduce((a, b) => a + b, 0);
       // console.log({ playbackRate });
       useEffect(() => {
          let interval;

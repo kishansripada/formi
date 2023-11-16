@@ -96,12 +96,3 @@ export const OldGridLines: React.FC<{
       </>
    );
 };
-
-function roundToNearestEven(n: number): number {
-   // If n is an even number, return it as is.
-   if (n % 2 === 0) {
-      return n;
-   } else {
-      return n + 1;
-   }
-}

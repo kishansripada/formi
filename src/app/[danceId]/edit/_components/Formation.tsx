@@ -4,6 +4,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "../store";
 import { useGesture } from "@use-gesture/react";
+import { roundToHundredth } from "../../../../utls";
 import {
    ContextMenu,
    ContextMenuContent,
@@ -423,7 +424,3 @@ export const Formation: React.FC<{
       </ContextMenu>
    );
 };
-
-function roundToHundredth(num: number): number {
-   return Math.round(num * 100) / 100;
-}

@@ -9,13 +9,13 @@ export const ChooseAudioSource: React.FC<{
    soundCloudTrackId: string | null;
    setSoundCloudTrackId: Function;
    setAudiofiles: Function;
-   player: any;
+
    setIsPlaying: Function;
    setLocalSource: Function;
-   setPlayer: Function;
+
    session: AuthSession | null;
-}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, setAudiofiles, setIsPlaying, player, setLocalSource, setPlayer, session }) => {
-   const { viewOnly } = useStore();
+}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, setAudiofiles, setIsPlaying, setLocalSource, session }) => {
+   const { viewOnly, setPlayer, player } = useStore();
    const [file, setFile] = useState<File | null>();
 
    const supabase = createClientComponentClient();
@@ -228,22 +228,4 @@ function isValidKey(key: string): boolean {
    // only allow s3 safe characters and characters which require special handling for now
    // https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html
    return /^(\w|\/|!|-|\.|\*|'|\(|\)| |&|\$|@|=|;|:|\+|,|\?)*$/.test(key);
-}
-
-function getExtension(filename: string) {
-   var parts = filename.split(".");
-   return parts[parts.length - 1];
-}
-function isVideo(filename: string) {
-   if (!filename) return false;
-   var ext = getExtension(filename);
-   switch (ext.toLowerCase()) {
-      case "m4v":
-      case "avi":
-      case "mpg":
-      case "mp4":
-         // etc
-         return true;
-   }
-   return false;
 }

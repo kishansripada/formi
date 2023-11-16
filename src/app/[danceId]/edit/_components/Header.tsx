@@ -11,7 +11,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useStore } from "../store";
 import styles from "./Status.module.css";
 import { AuthSession } from "@supabase/supabase-js";
-import { useIsDesktop, useIsIOS } from "../../../../hooks";
+import { useIsDesktop, useIsIOS } from "../../../../utls";
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarShortcut, MenubarTrigger } from "@/components/ui/menubar";
 import { revalidatePath } from "next/cache";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -559,31 +559,6 @@ const horizontalLineFormation = (formations: formation[], selectedFormation: num
    let numberOfDancers = previousFormation.positions.length;
    let possiblePositions = previousFormation.positions.map((position, i) => {
       return { x: i - Math.round(numberOfDancers / 2), y: 0 };
-   });
-
-   let newPositions = previousFormation?.positions.map((position) => {
-      let distances = possiblePositions.map((possiblePosition) => {
-         return calculateDistance(position.position, possiblePosition);
-      });
-      let positionIndex = distances.indexOf(Math.min(...distances));
-      let newPosition = possiblePositions.splice(positionIndex, 1);
-      return { ...position, position: newPosition[0] };
-   });
-
-   return formations.map((formation, i) => {
-      if (i === selectedFormation) {
-         return { ...formation, positions: newPositions };
-      }
-      return formation;
-   });
-};
-
-const verticalLineFormation = (formations: formation[], selectedFormation: number | null) => {
-   let previousFormation = selectedFormation === 0 ? formations[selectedFormation] : formations[selectedFormation - 1];
-
-   let numberOfDancers = previousFormation.positions.length;
-   let possiblePositions = previousFormation.positions.map((position, i) => {
-      return { y: i - Math.round(numberOfDancers / 2), x: 0 };
    });
 
    let newPositions = previousFormation?.positions.map((position) => {

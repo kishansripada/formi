@@ -1,8 +1,9 @@
-import { dancer, dancerPosition, formation, localSettings, MAX_PIXELS_PER_SECOND } from "../../../../types/types";
+import { dancer, dancerPosition, formation, localSettings, MAX_PIXELS_PER_SECOND, segment } from "../../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useStore } from "../store";
+import { hexToRgba } from "../../../../utls";
 import {
    DropdownMenu,
    DropdownMenuContent,
@@ -13,11 +14,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Slider } from "../../../../../@/components/ui/slider";
 export const AudioControls: React.FC<{
-   player: any;
    isPlaying: boolean;
    setIsPlaying: Function;
    position: number | null;
-   songDuration: number | null;
+
    addToStack: Function;
    pushChange: Function;
    setPixelsPerSecond: Function;
@@ -28,11 +28,10 @@ export const AudioControls: React.FC<{
    setLocalSettings: Function;
    setHelpUrl: Function;
 }> = ({
-   player,
    isPlaying,
    setIsPlaying,
    position,
-   songDuration,
+
    setPixelsPerSecond,
    pixelsPerSecond,
    setPlaybackRate,
@@ -51,6 +50,10 @@ export const AudioControls: React.FC<{
       incrementSelectedFormation,
       pauseHistory,
       resumeHistory,
+      segments,
+      newFormationFromLast,
+      player,
+      songDuration,
    } = useStore();
 
    const [defaultVolume, setDefaultVolume] = useState(100);
@@ -64,27 +67,7 @@ export const AudioControls: React.FC<{
    const [playbackRateIndex, setPlaybackRateIndex] = useState(2);
    const playbackRates = [0.25, 0.5, 1, 1.5, 2];
 
-   const newFormation = () => {
-      let id = uuidv4();
-      // if (formations.length) {
-      setFormations([
-         ...formations,
-         {
-            ...formations[formations.length - 1],
-            id,
-            name: `Untitled ${formations.length + 1}`,
-            positions: formations[formations.length - 1]?.positions.map((dancer: dancerPosition) => {
-               return {
-                  ...dancer,
-                  transitionType: "linear",
-               };
-            }),
-            notes: "",
-         },
-      ]);
-
-      setSelectedFormations([get().formations[get().formations.length - 1]?.id]);
-   };
+   // };
    const totalDurationOfFormations = formations
       .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
       .reduce((a, b) => a + b, 0);
@@ -100,16 +83,46 @@ export const AudioControls: React.FC<{
          setIsPlaying(!isPlaying);
       }
    };
+   // function calculateFormationsInSegments(formations: formation[], segments: segment[]): segment[] {
+   //    // Initialize formations array for each segment
+   //    segments.forEach((segment) => (segment.formations = []));
 
+   //    let currentTime = 0;
+
+   //    formations.forEach((formation, index) => {
+   //       // Calculate the total duration of the formation
+   //       let formationDuration = formation.durationSeconds + (index === 0 ? 0 : formation.transition.durationSeconds);
+   //       let formationStartTime = currentTime;
+   //       let formationEndTime = formationStartTime + formationDuration;
+   //       let formationMidPoint = formationStartTime + Math.ceil(formationDuration / 2);
+
+   //       // Update currentTime for the next formation
+   //       currentTime = formationEndTime;
+
+   //       // Find the segment where the majority of the formation lies
+   //       let segmentEndTime = 0;
+   //       for (let segment of segments) {
+   //          segmentEndTime += segment.duration;
+   //          if (formationMidPoint <= segmentEndTime) {
+   //             segment.formations.push(formation);
+   //             break;
+   //          }
+   //       }
+   //    });
+
+   //    return segments;
+   // }
+
+   // console.log(calculateFormationsInSegments(formations, segments));
    return (
       <>
          <div className="min-h-[45px]  dark:bg-neutral-900 dark:text-neutral-100  bg-neutral-50 w-full border-t dark:border-neutral-700  border-neutral-300 flex flex-row items-center justify-between select-none">
             <div className="w-[45%] flex flex-col items-center justify-center   pl-4">
                {!viewOnly ? (
                   <>
-                     <div className="flex flex-row  items-center justify-center mr-auto ">
-                        <button
-                           onClick={newFormation}
+                     <div className="flex flex-row  items-center justify-center mr-auto gap-3 ">
+                        {/* <button
+                           onClick={() => newFormationFromLast()}
                            className=" rounded-md   transition duration-300   mr-4  flex  flex-row items-center   cursor-pointer  "
                         >
                            <svg
@@ -125,7 +138,53 @@ export const AudioControls: React.FC<{
 
                            <p className="text-sm hidden md:block">New Formation </p>
                            <p className="text-sm md:hidden block">New </p>
-                        </button>
+                        </button> */}
+
+                        {/* <DropdownMenu className=" ">
+                           <DropdownMenuTrigger asChild className=" text-sm border border-neutral-700 rounded-md py-1 px-2 ">
+                              <p>Jump to formation</p>
+                           </DropdownMenuTrigger>
+
+                           <DropdownMenuContent side="top" className="DropdownMenuContent  p-0 overflow-scroll  ">
+                              {calculateFormationsInSegments(formations, segments).map((segment) => {
+                                 return (
+                                    <>
+                                       <DropdownMenuItem
+                                          onClick={() => {
+                                             setLocalSettings((s) => ({ ...s, autoScroll: !s.autoScroll }));
+                                          }}
+                                          style={{
+                                             backgroundColor: hexToRgba(segment.color, 0.2),
+                                             // backgroundOpacity: 0.2,
+                                          }}
+                                          className={`w-full   flex flex-row items-center justify-between  text-xs `}
+                                       >
+                                          {segment.name}
+                                       </DropdownMenuItem>
+
+                                       {segment.formations.map((formation) => {
+                                          return (
+                                             <DropdownMenuItem
+                                                onClick={() => {
+                                                   setLocalSettings((s) => ({ ...s, autoScroll: !s.autoScroll }));
+                                                }}
+                                                style={
+                                                   {
+                                                      // backgroundColor: hexToRgba(segment.color, 0.2),
+                                                      // backgroundOpacity: 0.2,
+                                                   }
+                                                }
+                                                className={`w-full  pl-5 flex flex-row items-center justify-between  text-xs `}
+                                             >
+                                                {formation.name}
+                                             </DropdownMenuItem>
+                                          );
+                                       })}
+                                    </>
+                                 );
+                              })}
+                           </DropdownMenuContent>
+                        </DropdownMenu> */}
                         <svg
                            xmlns="http://www.w3.org/2000/svg"
                            fill="none"

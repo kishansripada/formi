@@ -12,7 +12,7 @@ import {
    item,
 } from "../../../../types/types";
 import dynamic from "next/dynamic";
-
+import { roundToHundredth } from "../../../../utls";
 import { Canvas } from "@react-three/fiber";
 import { Grid, OrbitControls, Text } from "@react-three/drei";
 
@@ -37,11 +37,11 @@ export const ThreeD: React.FC<{
    setIsPlaying: Function;
 
    setPixelsPerSecond: Function;
-   songDuration: number | null;
+
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
    draggingDancerId: string | null;
    setDraggingDancerId: Function;
-   player: any;
+
    undo: Function;
    addToStack: Function;
    pushChange: Function;
@@ -68,7 +68,6 @@ export const ThreeD: React.FC<{
    setScene: any;
    // comments: comment[];
 }> = ({
-   player,
    children,
    // setFormations,
    selectedFormation,
@@ -79,7 +78,7 @@ export const ThreeD: React.FC<{
    setIsPlaying,
 
    setPixelsPerSecond,
-   songDuration,
+
    // cloudSettings,
    coordsToPosition,
    draggingDancerId,
@@ -135,6 +134,9 @@ export const ThreeD: React.FC<{
 
    return (
       <Canvas
+         // onClick={(e) => {
+         //    console.log(e.target);
+         // }}
          onPointerUp={() => {
             if (viewOnly) return;
             setIsThreeDancerDragging(false);
@@ -592,7 +594,3 @@ export const ThreeD: React.FC<{
       </Canvas>
    );
 };
-
-function roundToHundredth(value: number): number {
-   return Math.round(value * 100) / 100;
-}

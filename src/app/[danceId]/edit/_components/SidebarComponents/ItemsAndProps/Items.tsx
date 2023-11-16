@@ -9,12 +9,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { useStore } from "../../../store";
 import { Props } from "./Props";
-import { useClickOutside } from "../../../../../../hooks";
+import { useClickOutside } from "../../../../../../utls";
 export const Items: React.FC<{
    audioFiles: any;
 
    setAudiofiles: Function;
-   player: any;
+
    setIsPlaying: Function;
    setLocalSource: Function;
 
@@ -31,22 +31,7 @@ export const Items: React.FC<{
    // formations: formation[];
    setHelpUrl: Function;
    setAssetsOpen: Function;
-}> = ({
-   setAssetsOpen,
-   setHelpUrl,
-   pushChange,
-   setSelectedPropIds,
-   invalidatePropUploads,
-   selectedPropIds,
-   propUploads,
-   player,
-   setIsPlaying,
-   // soundCloudTrackId,
-   // setSoundCloudTrackId,
-   audioFiles,
-   setAudiofiles,
-   setLocalSource,
-}) => {
+}> = ({ setAssetsOpen, setHelpUrl, pushChange }) => {
    const { setFormations, formations, viewOnly, items, setItems, pauseHistory, resumeHistory } = useStore();
 
    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
