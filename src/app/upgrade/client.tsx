@@ -74,7 +74,7 @@ const Client = () => {
                         <div className="flex flex-row justify-between items-center">
                            <p className="text-pink-500 font-medium ">Choreographer</p>
                         </div>
-                        <p className="text-4xl mt-3 font-medium">$6.99</p>
+                        <p className="text-4xl mt-3 font-medium">$4.99</p>
                         <p className="text-sm mt-1 font-medium">per month</p>
                         <div className="mt-3">
                            {["Unlimited performances", "Unlimited media uploads", "Export PDF", "Save roster"].map((text) => {
@@ -97,7 +97,7 @@ const Client = () => {
                            })}
                         </div>
                         <a
-                           href={"/upgrade/checkout/price_1OC9mGHvC3w6e8fc6gGdBkgO"}
+                           href={"/upgrade/checkout/price_1ODBDgHvC3w6e8fcLHwIA71e"}
                            //    onClick={() => {
                            //       if (!session) {
                            //          router.push("/login");
