@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 import { useState, useEffect, useRef, useCallback, lazy } from "react";
 import Head from "next/head";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
-import { useLocalStorage } from "../../../hooks";
+import { useLocalStorage, useUploadToSupabase } from "../../../utls";
 import debounce from "lodash.debounce";
 import toast, { Toaster } from "react-hot-toast";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
