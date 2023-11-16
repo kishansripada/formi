@@ -167,9 +167,8 @@ const Edit = ({
       setMenuOpen(is_touch_enabled() ? null : "formations");
    }, []);
 
-   // useEffect(() => {
-   //    document.documentElement.style.setProperty("--vh", window.innerHeight * 0.01 + "px");
-   // }, []);
+
+   const supabase = createClientComponentClient<Database>();
 
    const enterRoom = useStore((state) => state.liveblocks.enterRoom);
    const leaveRoom = useStore((state) => state.liveblocks.leaveRoom);
