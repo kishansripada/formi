@@ -149,25 +149,29 @@ export const Formation: React.FC<{
                         }
                      }
                   }
+                  // if shift held, then ripple the change to all formations
                   if (shiftHeld) return formation;
+
                   if (i === formations.findIndex((f) => f.id === state.target.id) + 1) {
                      if (
                         formation.durationSeconds - state.delta[0] / pixelsPerSecond >= 0 &&
                         !(formations[i - 1]?.transition.durationSeconds === MIN_TRANSITION_DURATION && formations[i - 1]?.durationSeconds === 0)
                      ) {
-                        return { ...formation, durationSeconds: roundToHundredth(formation.durationSeconds - state.delta[0] / pixelsPerSecond) };
+                        return {
+                           ...formation,
+                           durationSeconds: roundToHundredth(formation.durationSeconds - state.delta[0] / pixelsPerSecond),
+                        };
                      } else {
-                        return formation;
-                        // transition should be longer than 0.5 seconds
-                        // if (formation.transition.durationSeconds + e.movementX / pixelsPerSecond > 0.5) {
-                        //    return {
-                        //       ...formation,
-                        //       transition: {
-                        //          ...formation.transition,
-                        //          durationSeconds: formation.transition.durationSeconds + e.movementX / pixelsPerSecond,
-                        //       },
-                        //    };
-                        // }
+                        //   when dragging a formation to the right (state.delta[0] > 0), collapse the transition of the formation to the right once you hit it
+                        if (formation.transition.durationSeconds + state.delta[0] / pixelsPerSecond > MIN_TRANSITION_DURATION && state.delta[0] > 0) {
+                           return {
+                              ...formation,
+                              transition: {
+                                 ...formation.transition,
+                                 durationSeconds: formation.transition.durationSeconds - state.delta[0] / pixelsPerSecond,
+                              },
+                           };
+                        }
                      }
                   }
 
