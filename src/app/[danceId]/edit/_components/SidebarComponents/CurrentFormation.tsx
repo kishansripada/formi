@@ -9,6 +9,7 @@ import { PopoverPicker } from "../ColorPicker";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { DoubleClickInput } from "../../../../../../@/components/ui/double-click-input";
+import { Button } from "../../../../../../@/components/ui/button";
 
 export const CurrentFormation: React.FC<{}> = ({}) => {
    const {
@@ -135,10 +136,10 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
                                              style={{
                                                 backgroundColor: group?.color,
                                              }}
-                                             className="h-5 w-5 rounded-sm"
+                                             className={`h-5 w-5 rounded-sm ${!group.color ? "border border-white" : ""}`}
                                           ></div>
                                        </PopoverTrigger>
-                                       <PopoverContent side="right" className="p-0 w-min">
+                                       <PopoverContent side="right" className="p-0 w-min flex flex-col items-center justify-center gap-3 p-2">
                                           <HexColorPicker
                                              onChange={(color) => {
                                                 setFormations(
@@ -160,6 +161,30 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
                                              }}
                                              color={group?.color}
                                           ></HexColorPicker>
+
+                                          <Button
+                                             onClick={() => {
+                                                setFormations(
+                                                   formations.map((formation) => {
+                                                      if (formation.id === thisFormation.id) {
+                                                         return {
+                                                            ...formation,
+                                                            groups: (formation.groups || []).map((groupx) => {
+                                                               if (group.id === groupx.id) {
+                                                                  return { ...groupx, color: "" };
+                                                               }
+                                                               return groupx;
+                                                            }),
+                                                         };
+                                                      }
+                                                      return formation;
+                                                   })
+                                                );
+                                             }}
+                                             size={"sm"}
+                                          >
+                                             Set no color on group
+                                          </Button>
                                        </PopoverContent>
                                     </Popover>
 
