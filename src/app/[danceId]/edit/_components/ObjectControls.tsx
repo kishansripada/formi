@@ -46,6 +46,8 @@ export const ObjectControls: React.FC<{
       setSelectedPositionProperty,
       getSelectedPositionsProperty,
       newGroupOnSelectedFormation,
+      pauseHistory,
+      resumeHistory,
    } = useStore();
 
    const setCurved = () => {
@@ -434,8 +436,10 @@ export const ObjectControls: React.FC<{
                                  <button
                                     // new group
                                     onClick={() => {
+                                       pauseHistory();
                                        const groupId = newGroupOnSelectedFormation();
                                        setSelectedPositionProperty("groupId", groupId);
+                                       resumeHistory();
                                     }}
                                     className="hover:bg-neutral-800 p-1"
                                  >
@@ -487,8 +491,10 @@ export const ObjectControls: React.FC<{
                                           <DropdownMenuSeparator></DropdownMenuSeparator>
                                           <DropdownMenuItem
                                              onClick={() => {
+                                                pauseHistory();
                                                 const groupId = newGroupOnSelectedFormation();
                                                 setSelectedPositionProperty("groupId", groupId);
+                                                resumeHistory();
                                              }}
                                           >
                                              <div className="   text-xs  w-full flex flex-row items-center">

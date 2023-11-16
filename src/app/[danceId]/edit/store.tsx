@@ -301,7 +301,7 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
                            {
                               name: `Group ${(formation?.groups?.length || 0) + 1}`,
                               id: groupId,
-                              color: getRandomColorWithMaxHueDistance(formation?.groups.map((group) => group?.color)),
+                              color: getRandomColorWithMaxHueDistance((formation?.groups || []).map((group) => group?.color)),
                            },
                         ],
                      };
