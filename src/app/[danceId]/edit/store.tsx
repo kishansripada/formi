@@ -613,7 +613,7 @@ function hueDistance(hue1: number, hue2: number) {
 }
 
 function getRandomColorWithMaxHueDistance(existingColors: string[]) {
-   const saturation = 50;
+   const saturation = 65;
    const lightness = 57;
    const existingHues = existingColors.map((color) => hexToHSL(color).h);
 
