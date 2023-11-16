@@ -1,5 +1,7 @@
-import React, { useDebugValue, useEffect, useState, useRef } from "react";
-
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import debounce from "lodash.debounce";
+import React, { useDebugValue, useEffect, useState, useRef, useCallback } from "react";
+const supabase = createClientComponentClient();
 export const useLocalStorage = <S,>(key: string, initialState?: S | (() => S)): [S, React.Dispatch<React.SetStateAction<S>>] => {
    const [state, setState] = useState<S>(initialState as S);
    useDebugValue(state);
@@ -130,4 +132,82 @@ export function useIsIOS() {
    }, []);
 
    return isIOS;
+}
+
+export const useUploadToSupabase = (dataKey: string, dataValue: any, danceId: string, enabled: boolean) => {
+   const [saved, setSaved] = useState(true);
+   // If viewOnlyInitial is true, immediately exit from the hook
+
+   const upload = useCallback(
+      debounce(async (dataValue) => {
+         console.log(`uploading ${dataKey}`);
+         const { data, error } = await supabase
+            .from("dances")
+            .update({ [dataKey]: dataValue, last_edited: new Date() })
+            .eq("id", danceId);
+         console.log({ data });
+         console.log({ error });
+         setSaved(true);
+      }, 1000),
+      [danceId]
+   );
+
+   useEffect(() => {
+      if (!enabled) return;
+
+      setSaved(false);
+      upload(dataValue);
+   }, [dataValue]);
+   return saved;
+};
+
+export function convertToCentimeters(feet: number, inches: number): number {
+   const inchesToCentimeters = inches * 2.54;
+   const feetToCentimeters = feet * 12 * 2.54;
+   const totalCentimeters = inchesToCentimeters + feetToCentimeters;
+   return Math.round(totalCentimeters * 10) / 10;
+}
+
+export function convertToFeetAndInches(centimeters: number): {
+   feet: number;
+   inches: number;
+} {
+   const inchesToCentimeters = 2.54;
+   const inches = Math.round(centimeters / inchesToCentimeters);
+   const feet = Math.floor(inches / 12);
+   return { feet, inches: inches % 12 };
+}
+
+export function hexToRgba(hex: string, opacity: number): string {
+   // Ensure the hex code starts with a '#'
+   if (hex.charAt(0) !== "#") {
+      hex = "#" + hex;
+   }
+
+   // Parse the r, g, b values
+   let bigint = parseInt(hex.slice(1), 16);
+   let r = (bigint >> 16) & 255;
+   let g = (bigint >> 8) & 255;
+   let b = bigint & 255;
+
+   // Ensure opacity is between 0 and 1
+   if (opacity < 0) {
+      opacity = 0;
+   }
+   if (opacity > 1) {
+      opacity = 1;
+   }
+
+   // Convert opacity from 0-1 to 0-255
+   const alpha = Math.round(opacity * 255);
+
+   // Convert alpha value to hex
+   const alphaHex = (alpha + 0x10000).toString(16).substr(-2).toUpperCase();
+
+   // Return the rgba color
+   return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}${alphaHex}`;
+}
+
+export function roundToHundredth(value: number): number {
+   return Math.round(value * 100) / 100;
 }
