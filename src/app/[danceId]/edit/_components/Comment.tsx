@@ -23,7 +23,19 @@ export const Comment: React.FC<{
    // if the dancer does not have any coordinates right now, return nothing since it shouln't be displayed
    let { left, top } = coordsToPosition({ x: (stageFlipped ? -1 : 1) * comment.position.x, y: (stageFlipped ? -1 : 1) * comment.position.y });
    if (!left || !top) return <></>;
-
+   const deleteComment = (id: string) => {
+      setFormations(
+         formations.map((formation) => {
+            if (selectedFormations.includes(formation.id)) {
+               return {
+                  ...formation,
+                  comments: formation.comments?.filter((comment) => comment.id !== id),
+               };
+            }
+            return formation;
+         })
+      );
+   };
    return (
       <>
          <style jsx>{`
@@ -91,9 +103,26 @@ export const Comment: React.FC<{
                </div>
             )}
 
-            <div className={` flex-col h-full justify-center ml-4  font-medium  w-full	 pointer-events-none ${isOpen ? "flex" : "hidden"}  `}>
-               <div className="flex flex-row items-center text-sm  ">
-                  <p>{comment.user.name}</p>
+            <div className={` flex-col h-full justify-center ml-4  font-medium  w-full	  ${isOpen ? "flex" : "hidden"}  `}>
+               <div className="flex flex-row items-center text-sm py-1  ">
+                  <p className="pointer-events-none">{comment.user.name}</p>
+                  <button
+                     onClick={() => {
+                        deleteComment(comment.id);
+                     }}
+                     className="ml-auto mt-auto mb-auto p-2 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300 rounded-xl group-hover:opacity-100 opacity-0"
+                  >
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-5 h-5 stroke-neutral-600 dark:stroke-neutral-300 shrink-0  "
+                     >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                     </svg>
+                  </button>
                </div>
 
                {isEditing ? (
