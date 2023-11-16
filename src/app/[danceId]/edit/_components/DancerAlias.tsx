@@ -51,8 +51,21 @@ export const DancerAlias: React.FC<{
    // items,
    roundPositions,
 }) => {
-   let { formations, items, cloudSettings, selectedFormations, getFirstSelectedFormation, setFormations, get, isMobileView, viewOnly, imageBlobs } =
-      useStore();
+   let {
+      formations,
+      items,
+      cloudSettings,
+      selectedFormations,
+      getFirstSelectedFormation,
+      setFormations,
+      get,
+      isMobileView,
+      viewOnly,
+      imageBlobs,
+      dancers,
+      setDancers,
+      hoveringDancerIds,
+   } = useStore();
    const container = useRef<HTMLDivElement>();
    const stageFlippedFactor = localSettings.stageFlipped ? -1 : 1;
    const horizontalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
@@ -93,6 +106,9 @@ export const DancerAlias: React.FC<{
    const thisItem = items.find((item) => item.id === dancerPos?.itemId) || null;
 
    const HUMAN_WIDTH_FEET = 1.5;
+   const dancerGroup = (getFirstSelectedFormation()?.groups || []).find((group) => group.id === dancerPos?.groupId);
+
+   const dancerColor = dancerPos?.color || dancerGroup?.color || dancer?.color || "#db2777";
    return (
       <>
          {/* {othersOnThisDancer.length && !isPlaying ? (
@@ -154,13 +170,14 @@ export const DancerAlias: React.FC<{
                transformOrigin: "center",
                // height: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
                touchAction: "none",
+                     border: hoveringDancerIds.includes(dancer.id) && !isPlaying ? `${2 / zoom}px solid #db2777` : `${2 / zoom}px solid transparent`,
             }}
             ref={container}
             // onMouseDown={(e) => e.preventDefault()}
             id={dancer.id}
             // {...bind()}
             data-type={"dancer"}
-            className={`   group   lg:pointer-events-auto  flex   flex-row justify-center items-center absolute z-[30] mr-auto ml-auto cursor-default `}
+                  className={`   group  rounded-md lg:pointer-events-auto  flex   flex-row justify-center items-center absolute z-[30] mr-auto ml-auto cursor-default `}
          >
             {thisItem && (
                <div
@@ -242,22 +259,22 @@ export const DancerAlias: React.FC<{
                      style={{
                         transition: "fill 0.5s ease",
                      }}
-                     className="group-hover:stroke-[20px]"
-                     fill={dancerPos?.color || dancer?.color || "#db2777"}
+                           // className="group-hover:stroke-[30px]"
+                           fill={dancerColor}
                      stroke={
                         selectedDancers.includes(dancer.id) && !isPlaying
                            ? localSettings.isDarkMode
                               ? "white"
                               : "#404040"
-                           : hexToRGBA(dancerPos?.color || dancer?.color || "#db2777", 0.5)
+                                 : hexToRGBA(dancerColor, 0.5)
                      }
-                     strokeWidth={selectedDancers.includes(dancer.id) ? 20 : 8}
+                           strokeWidth={15 / zoom}
                      d="M3.5 3.5h133v133H3.5z"
                   />
                </svg>
             ) : dancer.shape === "triangle" ? (
                <svg
-                  className={` w-full h-full select-none  pointer-events-none relative bottom-2 flex  flex-row justify-center items-center  z-[40] mr-auto ml-auto cursor-default `}
+                        className={` w-full h-full select-none  pointer-events-none relative  flex  flex-row justify-center items-center  z-[40] mr-auto ml-auto cursor-default `}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 134 116"
@@ -267,16 +284,16 @@ export const DancerAlias: React.FC<{
                         style={{
                            transition: "fill 0.5s ease",
                         }}
-                        className="group-hover:stroke-[20px] "
-                        fill={dancerPos?.color || dancer?.color || "#db2777"}
+                              // className="group-hover:stroke-[30px] "
+                              fill={dancerColor}
                         stroke={
                            selectedDancers.includes(dancer.id) && !isPlaying
                               ? localSettings.isDarkMode
                                  ? "white"
                                  : "#404040"
-                              : hexToRGBA(dancerPos?.color || dancer?.color || "#db2777", 0.5)
+                                    : hexToRGBA(dancerColor, 0.5)
                         }
-                        strokeWidth={selectedDancers.includes(dancer.id) ? 20 : 8}
+                              strokeWidth={15 / zoom}
                         d="M191.66 35 183 20l-8.66 15L26.2494 291.5l-8.6603 15H348.411l-8.66-15L191.66 35Z"
                      />
                   </svg>
@@ -295,16 +312,16 @@ export const DancerAlias: React.FC<{
                      style={{
                         transition: "fill 0.5s ease",
                      }}
-                     className="group-hover:stroke-[20px] "
-                     fill={dancerPos?.color || dancer?.color || "#db2777"}
+                           // className="group-hover:stroke-[30px] "
+                           fill={dancerColor}
                      stroke={
                         selectedDancers.includes(dancer.id) && !isPlaying
                            ? localSettings.isDarkMode
                               ? "white"
                               : "#404040"
-                           : hexToRGBA(dancerPos?.color || dancer?.color || "#db2777", 0.5)
+                                 : hexToRGBA(dancerColor, 0.5)
                      }
-                     strokeWidth="8"
+                           strokeWidth={15 / zoom}
                   />
                </svg>
             )}
