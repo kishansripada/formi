@@ -330,6 +330,7 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
                         return {
                            ...dancer,
                            transitionType: "linear",
+                           groupId: keepGroups ? dancer.groupId : null,
                         };
                      }),
                      comments: [],
