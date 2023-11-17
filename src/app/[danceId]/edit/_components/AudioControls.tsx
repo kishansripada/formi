@@ -121,7 +121,7 @@ export const AudioControls: React.FC<{
                {!viewOnly ? (
                   <>
                      <div className="flex flex-row  items-center justify-center mr-auto gap-3 ">
-                        {/* <button
+                        <button
                            onClick={() => newFormationFromLast()}
                            className=" rounded-md   transition duration-300   mr-4  flex  flex-row items-center   cursor-pointer  "
                         >
@@ -138,7 +138,7 @@ export const AudioControls: React.FC<{
 
                            <p className="text-sm hidden md:block">New Formation </p>
                            <p className="text-sm md:hidden block">New </p>
-                        </button> */}
+                        </button>
 
                         {/* <DropdownMenu className=" ">
                            <DropdownMenuTrigger asChild className=" text-sm border border-neutral-700 rounded-md py-1 px-2 ">
