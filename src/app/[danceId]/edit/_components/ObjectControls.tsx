@@ -41,7 +41,8 @@ export const ObjectControls: React.FC<{
    dancers: dancer[];
    selectedDancers: string[];
    setAssetsOpen: Function;
-}> = ({ selectedDancers, dancers, setLocalSettings, setAssetsOpen }) => {
+   setMenuOpen: Function;
+}> = ({ selectedDancers, dancers, setLocalSettings, setAssetsOpen, setMenuOpen }) => {
    const {
       formations,
       setFormations,
@@ -459,6 +460,7 @@ export const ObjectControls: React.FC<{
                                           pauseHistory();
                                           const groupId = newGroupOnSelectedFormation();
                                           setSelectedPositionProperty("groupId", groupId);
+                                          setMenuOpen("formations");
                                           resumeHistory();
                                        }}
                                        className="hover:bg-neutral-800 p-1"
@@ -497,6 +499,7 @@ export const ObjectControls: React.FC<{
                                                    key={group.id}
                                                    onClick={() => {
                                                       setSelectedPositionProperty("groupId", group.id);
+                                                      setMenuOpen("formations");
                                                    }}
                                                 >
                                                    <div
@@ -515,6 +518,7 @@ export const ObjectControls: React.FC<{
                                                 pauseHistory();
                                                 const groupId = newGroupOnSelectedFormation();
                                                 setSelectedPositionProperty("groupId", groupId);
+                                                setMenuOpen("formations");
                                                 resumeHistory();
                                              }}
                                           >

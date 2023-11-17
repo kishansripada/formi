@@ -1300,6 +1300,7 @@ const Edit = ({
                                  viewOnlyInitial={viewOnlyInitial}
                                  localSettings={localSettings}
                                  setAssetsOpen={setAssetsOpen}
+                                 setMenuOpen={setMenuOpen}
                               ></ObjectControls>
                            ) : (
                               <>
