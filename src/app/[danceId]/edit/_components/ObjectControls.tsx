@@ -306,7 +306,7 @@ export const ObjectControls: React.FC<{
                      ) : null}
 
                      <div className="flex flex-col justify-between items-center  px-2 gap-3 border-t border-neutral-700 py-2 ">
-                        <div className="flex flex-row items-center justify-between w-full">
+                        <div className="flex flex-row items-center justify-between w-full min-h-[28px]">
                            <p className="text-xs font-semibold  ">Prop</p>
                            {!getSelectedPositionsProperty("itemId") && !viewOnly ? (
                               <button
@@ -376,7 +376,7 @@ export const ObjectControls: React.FC<{
 
                      <div className="flex flex-col justify-between items-start px-2 py-2 border-t border-neutral-700 gap-3  ">
                         <div className="flex flex-row items-center justify-between w-full">
-                           <p className="text-xs font-semibold">Elevation</p>
+                           <p className="text-xs font-semibold min-h-[28px] flex flex-row items-center">Elevation</p>
                            {!(getSelectedPositionsProperty("level") !== null) && !viewOnly ? (
                               <button
                                  onClick={() => {

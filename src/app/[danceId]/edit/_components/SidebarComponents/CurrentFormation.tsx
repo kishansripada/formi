@@ -251,7 +251,7 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
                                     </p>
                                  </div>
                                  <textarea
-                                    disabled={viewOnly}
+                                    readOnly={viewOnly}
                                     onChange={(e) => {
                                        setFormations(
                                           formations.map((formation) => {

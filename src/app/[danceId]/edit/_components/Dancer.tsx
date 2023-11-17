@@ -83,7 +83,7 @@ export const Dancer: React.FC<{
                   className="h-6 w-full    px-2 py-4  text-sm rounded-md  ml-2 bg-transparent   outline-none cursor-default"
                   value={name}
                   // onBlur={pushChange}
-                  disabled={viewOnly}
+                  readOnly={viewOnly}
                   onChange={(e) => {
                      if (viewOnly) return;
                      setDancers(dancers.map((dancer) => (dancer.id === id ? { ...dancer, name: e.target.value } : dancer)));
