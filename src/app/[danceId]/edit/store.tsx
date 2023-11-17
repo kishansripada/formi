@@ -133,7 +133,8 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             });
          },
          pasteCopiedPositions: () => {
-            const { selectedFormations, copiedPositions, formations, getFirstSelectedFormation } = get();
+            const { selectedFormations, copiedPositions, formations, getFirstSelectedFormation, viewOnly } = get();
+            if (viewOnly) return;
 
             if (!selectedFormations.length) return;
 
@@ -176,7 +177,8 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
          },
 
          splitSelectedFormations: () => {
-            const { selectedFormations, pauseHistory, resumeHistory } = get();
+            const { selectedFormations, pauseHistory, resumeHistory, viewOnly } = get();
+            if (viewOnly) return;
             if (!selectedFormations.length) return;
             pauseHistory();
             selectedFormations.forEach((selectedFormationId) => {
@@ -264,7 +266,8 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             set({ segments: updatedSegments });
          },
          newSegment: () => {
-            const { segments } = get();
+            const { segments, viewOnly } = get();
+            if (viewOnly) return;
             set({
                segments: [
                   ...segments,
@@ -288,7 +291,8 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             set({ formations });
          },
          newGroupOnSelectedFormation: () => {
-            const { selectedFormations, formations } = get();
+            const { selectedFormations, formations, viewOnly } = get();
+            if (viewOnly) return;
             const groupId = uuidv4();
 
             set({
@@ -312,7 +316,8 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             return groupId;
          },
          newFormationFromLast: (keepGroups: boolean) => {
-            const { formations } = get();
+            const { formations, viewOnly } = get();
+            if (viewOnly) return;
 
             set({
                formations: [
@@ -333,11 +338,13 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
                   },
                ],
             });
-            set({ selectedFormations: [formations[formations.length - 1]?.id] });
+
+            set({ selectedFormations: [get().formations[get().formations.length - 1]?.id] });
          },
          deleteGroup: (groupId: string) => {
             // delete group and remove group id from all dancers in that group and unhover all dancers
-            const { formations, selectedFormations } = get();
+            const { formations, selectedFormations, viewOnly } = get();
+            if (viewOnly) return;
 
             set({
                formations: formations.map((formation) => {
@@ -395,7 +402,8 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             return get().formations.findIndex((formation) => formation.id === selectedFormationId);
          },
          setSelectedPositionProperty: (propertyKey: keyof dancerPosition, value: any) => {
-            const { selectedDancers, selectedFormations, formations } = get();
+            const { selectedDancers, selectedFormations, formations, viewOnly } = get();
+            if (viewOnly) return;
             if (!selectedDancers.length || !selectedFormations.length) return;
 
             set({
@@ -440,7 +448,8 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
          },
 
          deleteSelectedFormations: () => {
-            const { pauseHistory, selectedFormations, resumeHistory, formations } = get();
+            const { pauseHistory, selectedFormations, resumeHistory, formations, viewOnly } = get();
+            if (viewOnly) return;
 
             if (!selectedFormations.length || formations.length === 1) return;
 
