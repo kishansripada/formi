@@ -42,7 +42,8 @@ export const Layer: React.FC<{
    localSettings,
    shiftHeld,
 }) => {
-   const { formations, setFormations, selectedFormations, setSelectedFormations, commandHeld, newFormationFromLast, goToFormation } = useStore();
+   const { formations, setFormations, selectedFormations, setSelectedFormations, commandHeld, newFormationFromLast, goToFormation, viewOnly } =
+      useStore();
    const [activeId, setActiveId] = useState(null);
    // const keyboardCodes = {
    //    start: ["$"],
@@ -188,44 +189,43 @@ export const Layer: React.FC<{
                         />
                      </div>
                   ))}
-                  <div
-                     // onClick={newFormation}
-                     className="w-28 h-[43px] border dark:text-white rounded-md overflow-hidden border-neutral-400 ml-2 flex flex-row items-center justify-between"
-                  >
-                     <button
-                        onClick={() => newFormationFromLast(true)}
-                        className="grid place-items-center w-full hover:bg-neutral-700 transition h-full"
-                     >
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-6 h-6"
+                  {!viewOnly ? (
+                     <div className="w-28 h-[43px] border dark:text-white rounded-md overflow-hidden border-neutral-400 ml-2 flex flex-row items-center justify-between">
+                        <button
+                           onClick={() => newFormationFromLast(true)}
+                           className="grid place-items-center w-full hover:bg-neutral-700 transition h-full"
                         >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                     </button>
-                     <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                           <button className="border-l w-10 hover:bg-neutral-700 transition h-full border-neutral-500 grid place-items-center">
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                                 <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
-                              </svg>
-                           </button>
-                        </DropdownMenuTrigger>
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-6 h-6"
+                           >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                           </svg>
+                        </button>
+                        <DropdownMenu>
+                           <DropdownMenuTrigger asChild>
+                              <button className="border-l w-10 hover:bg-neutral-700 transition h-full border-neutral-500 grid place-items-center">
+                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                    <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                                 </svg>
+                              </button>
+                           </DropdownMenuTrigger>
 
-                        <DropdownMenuContent>
-                           <DropdownMenuItem onClick={() => newFormationFromLast(false)} className="hover:bg-neutral-700 transition">
-                              New formation and no groups
-                           </DropdownMenuItem>
-                           <DropdownMenuItem onClick={() => newFormationFromLast(true)} className="hover:bg-neutral-700 transition">
-                              New formation with same groups
-                           </DropdownMenuItem>
-                        </DropdownMenuContent>
-                     </DropdownMenu>
-                  </div>
+                           <DropdownMenuContent>
+                              <DropdownMenuItem onClick={() => newFormationFromLast(false)} className="hover:bg-neutral-700 transition">
+                                 New formation and no groups
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => newFormationFromLast(true)} className="hover:bg-neutral-700 transition">
+                                 New formation with same groups
+                              </DropdownMenuItem>
+                           </DropdownMenuContent>
+                        </DropdownMenu>
+                     </div>
+                  ) : null}
                </SortableContext>
             </DndContext>
          </div>

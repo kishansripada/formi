@@ -12,7 +12,16 @@ import {
 
 import { Input } from "../../../../../@/components/ui/input";
 
-const RemovePropertyButton = ({ setSelectedPositionProperty, propertyKey }: { setSelectedPositionProperty: Function; propertyKey: string }) => {
+const RemovePropertyButton = ({
+   setSelectedPositionProperty,
+   propertyKey,
+   viewOnly,
+}: {
+   setSelectedPositionProperty: Function;
+   propertyKey: string;
+   viewOnly: boolean;
+}) => {
+   if (viewOnly) return <></>;
    return (
       <button
          onClick={() => {
@@ -251,6 +260,7 @@ export const ObjectControls: React.FC<{
                            <p className="text-xs  font-semibold">Path</p>
                            <DropdownMenu>
                               <DropdownMenuTrigger
+                                 disabled={viewOnly}
                                  asChild
                                  className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md border border-neutral-700 "
                               >
@@ -298,7 +308,7 @@ export const ObjectControls: React.FC<{
                      <div className="flex flex-col justify-between items-center  px-2 gap-3 border-t border-neutral-700 py-2 ">
                         <div className="flex flex-row items-center justify-between w-full">
                            <p className="text-xs font-semibold  ">Prop</p>
-                           {!getSelectedPositionsProperty("itemId") ? (
+                           {!getSelectedPositionsProperty("itemId") && !viewOnly ? (
                               <button
                                  onClick={() => {
                                     if (!items.length) {
@@ -321,6 +331,7 @@ export const ObjectControls: React.FC<{
                            <div className="flex flex-row items-center justify-between w-full">
                               <DropdownMenu>
                                  <DropdownMenuTrigger
+                                    disabled={viewOnly}
                                     asChild
                                     className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md border border-neutral-700"
                                  >
@@ -354,7 +365,11 @@ export const ObjectControls: React.FC<{
                                  </DropdownMenuContent>
                               </DropdownMenu>
 
-                              <RemovePropertyButton setSelectedPositionProperty={setSelectedPositionProperty} propertyKey="itemId" />
+                              <RemovePropertyButton
+                                 viewOnly={viewOnly}
+                                 setSelectedPositionProperty={setSelectedPositionProperty}
+                                 propertyKey="itemId"
+                              />
                            </div>
                         ) : null}
                      </div>
@@ -362,7 +377,7 @@ export const ObjectControls: React.FC<{
                      <div className="flex flex-col justify-between items-start px-2 py-2 border-t border-neutral-700 gap-3  ">
                         <div className="flex flex-row items-center justify-between w-full">
                            <p className="text-xs font-semibold">Elevation</p>
-                           {!(getSelectedPositionsProperty("level") !== null) ? (
+                           {!(getSelectedPositionsProperty("level") !== null) && !viewOnly ? (
                               <button
                                  onClick={() => {
                                     setSelectedPositionProperty("level", 0);
@@ -390,7 +405,11 @@ export const ObjectControls: React.FC<{
                                  value={getSelectedPositionsProperty("level")}
                               />
 
-                              <RemovePropertyButton setSelectedPositionProperty={setSelectedPositionProperty} propertyKey="level" />
+                              <RemovePropertyButton
+                                 viewOnly={viewOnly}
+                                 setSelectedPositionProperty={setSelectedPositionProperty}
+                                 propertyKey="level"
+                              />
                            </div>
                         ) : null}
                      </div>
@@ -403,7 +422,7 @@ export const ObjectControls: React.FC<{
                               <div className="flex flex-row items-center gap-2">
                                  {getFirstSelectedFormation()?.groups?.length && !getSelectedPositionsProperty("groupId") ? (
                                     <DropdownMenu>
-                                       <DropdownMenuTrigger asChild>
+                                       <DropdownMenuTrigger disabled={viewOnly} asChild>
                                           <button className="hover:bg-neutral-800 p-1">
                                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                                                 <path d="M3.75 3A1.75 1.75 0 002 4.75v3.26a3.235 3.235 0 011.75-.51h12.5c.644 0 1.245.188 1.75.51V6.75A1.75 1.75 0 0016.25 5h-4.836a.25.25 0 01-.177-.073L9.823 3.513A1.75 1.75 0 008.586 3H3.75zM3.75 9A1.75 1.75 0 002 10.75v4.5c0 .966.784 1.75 1.75 1.75h12.5A1.75 1.75 0 0018 15.25v-4.5A1.75 1.75 0 0016.25 9H3.75z" />
@@ -433,20 +452,22 @@ export const ObjectControls: React.FC<{
                                        </DropdownMenuContent>
                                     </DropdownMenu>
                                  ) : null}
-                                 <button
-                                    // new group
-                                    onClick={() => {
-                                       pauseHistory();
-                                       const groupId = newGroupOnSelectedFormation();
-                                       setSelectedPositionProperty("groupId", groupId);
-                                       resumeHistory();
-                                    }}
-                                    className="hover:bg-neutral-800 p-1"
-                                 >
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                                       <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                                    </svg>
-                                 </button>
+                                 {!viewOnly ? (
+                                    <button
+                                       // new group
+                                       onClick={() => {
+                                          pauseHistory();
+                                          const groupId = newGroupOnSelectedFormation();
+                                          setSelectedPositionProperty("groupId", groupId);
+                                          resumeHistory();
+                                       }}
+                                       className="hover:bg-neutral-800 p-1"
+                                    >
+                                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                          <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                                       </svg>
+                                    </button>
+                                 ) : null}
                               </div>
                            </div>
 
@@ -454,7 +475,7 @@ export const ObjectControls: React.FC<{
                               <div className="flex flex-row items-center justify-between">
                                  <>
                                     <DropdownMenu>
-                                       <DropdownMenuTrigger asChild className="  rounded-md border border-neutral-700">
+                                       <DropdownMenuTrigger disabled={viewOnly} asChild className="  rounded-md border border-neutral-700">
                                           <div className=" py-1 px-3 h-[32px] w-38  flex flex-row items-center  ">
                                              {dropdownGroup?.color ? (
                                                 <div
@@ -512,7 +533,11 @@ export const ObjectControls: React.FC<{
                                        </DropdownMenuContent>
                                     </DropdownMenu>
 
-                                    <RemovePropertyButton setSelectedPositionProperty={setSelectedPositionProperty} propertyKey="groupId" />
+                                    <RemovePropertyButton
+                                       viewOnly={viewOnly}
+                                       setSelectedPositionProperty={setSelectedPositionProperty}
+                                       propertyKey="groupId"
+                                    />
                                  </>
                               </div>
                            ) : null}
@@ -522,7 +547,7 @@ export const ObjectControls: React.FC<{
                      <div className="flex flex-col py-3 px-2 border-t border-neutral-700 gap-3">
                         <div className=" flex flex-row justify-between items-center h-6">
                            <p className="text-xs  font-semibold  ">Color override</p>
-                           {!getSelectedPositionsProperty("color") ? (
+                           {!getSelectedPositionsProperty("color") && !viewOnly ? (
                               <button
                                  onClick={() => {
                                     setSelectedPositionProperty(
@@ -547,7 +572,11 @@ export const ObjectControls: React.FC<{
                                  setColor={(color: string) => setSelectedPositionProperty("color", color)}
                                  position="bottom"
                               ></PopoverPicker>
-                              <RemovePropertyButton setSelectedPositionProperty={setSelectedPositionProperty} propertyKey="color" />
+                              <RemovePropertyButton
+                                 viewOnly={viewOnly}
+                                 setSelectedPositionProperty={setSelectedPositionProperty}
+                                 propertyKey="color"
+                              />
                            </div>
                         ) : null}
                      </div>

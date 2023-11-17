@@ -209,10 +209,11 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
                                           );
                                        }}
                                        value={(thisFormation.groups || [])?.find((groupx) => groupx.id === group?.id)?.name || ""}
+                                       disabled={viewOnly}
                                     />
 
                                     <DropdownMenu>
-                                       <DropdownMenuTrigger asChild className="  ">
+                                       <DropdownMenuTrigger disabled={viewOnly} asChild className="  ">
                                           <button className="transition hover:bg-neutral-700 p-1">
                                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                                                 <path d="M3 10a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM8.5 10a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM15.5 8.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" />
@@ -250,6 +251,7 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
                                     </p>
                                  </div>
                                  <textarea
+                                    disabled={viewOnly}
                                     onChange={(e) => {
                                        setFormations(
                                           formations.map((formation) => {
