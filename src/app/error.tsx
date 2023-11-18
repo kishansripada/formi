@@ -8,7 +8,8 @@ import { Button } from "../../@/components/ui/button";
 
 const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) => {
    useEffect(() => {
-      // Log the error to an error reporting service
+      Sentry.captureException(error);
+      //   Log the error to an error reporting service
       console.error(error);
    }, [error]);
    return (
@@ -24,15 +25,6 @@ const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: ()
          </Button>
       </div>
    );
-};
-
-Error.getInitialProps = async (contextData) => {
-   // In case this is running in a serverless function, await this in order to give Sentry
-   // time to send the error before the lambda exits
-   await Sentry.captureUnderscoreErrorException(contextData);
-
-   // This will contain the status code of the response
-   return Error.getInitialProps(contextData);
 };
 
 export default Error;
