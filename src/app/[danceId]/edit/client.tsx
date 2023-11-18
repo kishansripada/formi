@@ -1279,7 +1279,7 @@ const Edit = ({
                      </DndContext>
 
                         <div className="h-full bg-neutral-900 max-w-[200px] w-[200px] min-w-[200px] border-l border-neutral-700 hidden md:flex">
-                           {selectedDancers.length ? (
+                           {selectedDancers?.length ? (
                               <ObjectControls
                                  zoom={zoom}
                                  localSettings={localSettings}
