@@ -454,6 +454,11 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
 
             if (!selectedFormations.length || formations.length === 1) return;
 
+            if (selectedFormations.length === formations.length) {
+               set({ formations: [formations[0]] });
+               return;
+            }
+
             pauseHistory();
 
             selectedFormations.forEach((selectedFormationId) => {

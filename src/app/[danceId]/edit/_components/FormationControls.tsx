@@ -39,15 +39,16 @@ export const FormationControls: React.FC<{
                }}
                className="flex flex-row items-center gap-4"
             >
-               <button
-                  onClick={() => {
-                     deleteSelectedFormations();
-                  }}
-                  className="   text-sm shadow-sm   cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-1 px-3  bg-red-500 dark:text-red-400 text-red-600  "
-               >
-                  {selectedFormations.length === 1 ? "Delete Formation" : "Delete Formations"}
-               </button>
-
+               {formations.length !== 1 ? (
+                  <button
+                     onClick={() => {
+                        deleteSelectedFormations();
+                     }}
+                     className="   text-sm shadow-sm   cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-1 px-3  bg-red-500 dark:text-red-400 text-red-600  "
+                  >
+                     {selectedFormations.length === 1 ? "Delete Formation" : "Delete Formations"}
+                  </button>
+               ) : null}
                <button
                   onClick={() => {
                      splitSelectedFormations();
