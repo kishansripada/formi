@@ -526,9 +526,9 @@ export const Header: React.FC<{
                   </TooltipProvider>
                </div>
 
-               {!viewOnly ? (
+               {!viewOnlyInitial ? (
                   <Dialog>
-                     <DialogTrigger>
+                     <DialogTrigger suppressHydrationWarning={true} r>
                         <Button className="px-3 h-8 text-xs">Share</Button>
                      </DialogTrigger>
                      <DialogContent>
