@@ -247,7 +247,11 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
          selectedFormation: 0,
 
          selectedDancers: [],
-         setSelectedDancers: (selectedDancers: string[]) => set({ selectedDancers }),
+         setSelectedDancers: (selectedDancers: string[]) => {
+            if (Array.isArray(selectedDancers)) {
+               set({ selectedDancers });
+            }
+         },
 
          selectedFormations: [],
          setSelectedFormations: (selectedFormations: string[]) => set({ selectedFormations }),
