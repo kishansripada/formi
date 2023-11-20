@@ -272,7 +272,7 @@ export const Formation: React.FC<{
                <style jsx>{``}</style>
 
                <div
-                  className={`  cursor-pointer  rounded-sm  dark:bg-neutral-900  md:h-[45ppx] h-[40px]  dark:text-white    overflow-hidden border-neutral-300 dark:border-neutral-600  border-2 flex flex-col  relative   `}
+                  className={`cursor-default  rounded-sm  dark:bg-neutral-900  md:h-[45ppx] h-[40px]  dark:text-white    overflow-hidden border-neutral-300 dark:border-neutral-600  border-2 flex flex-col  relative   `}
                   style={{
                      borderColor: selectedFormations.includes(formation.id)
                         ? "#db2777"
@@ -291,45 +291,9 @@ export const Formation: React.FC<{
                   }}
                >
                   {!isMobileView ? (
-                     <input
-                        id="drag-handle"
-                        {...attributes}
-                        // onKeyDown={(e) => {
-                        //    if (e.key === " ") {
-                        //       e.preventDefault();
-                        //    }
-                        // }}
-                        {...listeners}
-                        readOnly={!editingName}
-                        onBlur={(e) => {
-                           setEditingName(false);
-                        }}
-                        onClick={(e) => {
-                           e.preventDefault();
-                           // e.stopPropagation();
-                        }}
-                        onDoubleClick={(e) => {
-                           if (viewOnly) return;
-                           setEditingName(true);
-                        }}
-                        onFocus={(e) => {
-                           if (!editingName) {
-                              e.target.blur();
-                           }
-                        }}
-                        value={formation.name || ""}
-                        onChange={(e) => {
-                           setFormations(
-                              formations.map((f: formation) => {
-                                 if (f.id === formation.id) {
-                                    return { ...f, name: e.target.value };
-                                 }
-                                 return f;
-                              })
-                           );
-                        }}
-                        className="text-[10px] select-none px-1 my-auto bg-transparent cursor-pointer  font-semibold   relative whitespace-nowrap  focus:outline-none  "
-                     />
+                     <p className="text-[10px] select-none px-1 my-auto bg-transparent   font-semibold   relative whitespace-nowrap  focus:outline-none  ">
+                        {formation.name || ""}
+                     </p>
                   ) : null}
 
                   {!viewOnly ? (
