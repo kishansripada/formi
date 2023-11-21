@@ -46,7 +46,19 @@ import { MobileSidebar } from "./_components/MobileSidebar";
 import * as Sentry from "@sentry/browser";
 import { cubic, linear } from "./animationFunctions";
 import { ItemsAndProps } from "./_components/SidebarComponents/ItemsAndProps/Layout";
-
+if (typeof Node === "function" && Node.prototype) {
+   const originalRemoveChild = Node.prototype.removeChild;
+   Node.prototype.removeChild = function (child) {
+      // debugger;
+      if (child.parentNode !== this) {
+         if (console) {
+            console.error("Cannot remove a child from a different parent", child, this);
+         }
+         return child;
+      }
+      return originalRemoveChild.apply(this, arguments);
+   };
+}
 const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => (
       <div className="flex items-center justify-center h-screen bg-neutral-900 ">
