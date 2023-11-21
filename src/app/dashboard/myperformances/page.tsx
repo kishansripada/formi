@@ -13,6 +13,7 @@ import { default as nextDynamic } from "next/dynamic";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 import { Database } from "../../../types/supabase";
+import { redirect } from "next/navigation";
 
 const PageClient = nextDynamic(() => import("./client"), {
    ssr: false,
@@ -36,7 +37,7 @@ async function getServerSideProps() {
       throw error;
    }
    if (!session) {
-      return { props: {} };
+      redirect("/login");
    }
 
    async function getMyDances(session: Session) {
