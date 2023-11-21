@@ -164,7 +164,7 @@ export const Formation: React.FC<{
                         };
                      } else {
                         //   when dragging a formation to the right (state.delta[0] > 0), collapse the transition of the formation to the right once you hit it
-                        if (formation.transition.durationSeconds + state.delta[0] / pixelsPerSecond > MIN_TRANSITION_DURATION && state.delta[0] > 0) {
+                        if (formation.transition.durationSeconds - state.delta[0] / pixelsPerSecond > MIN_TRANSITION_DURATION && state.delta[0] > 0) {
                            return {
                               ...formation,
                               transition: {
