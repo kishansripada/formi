@@ -775,6 +775,7 @@ export const Canvas: React.FC<{
             }));
          },
          onDragEnd: () => {
+            if (viewOnly) return;
             roundPositions();
          },
       },
