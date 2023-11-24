@@ -193,9 +193,12 @@ export const Timeline: React.FC<{
          pinch: {
             from: () => [pixelsPerSecond, pixelsPerSecond],
             scaleBounds: {
-               min: Math.max((songDuration || 0) / 1000, totalDurationOfFormations)
-                  ? (window.screen.width - 90) / Math.max((songDuration || 0) / 1000, totalDurationOfFormations)
+               min: Math.min(
+                  Math.max((songDuration || 0) / 1000, totalDurationOfFormations)
+                     ? (window.screen.width - (69 + 12)) / Math.max((songDuration || 0) / 1000, totalDurationOfFormations)
                   : 10,
+                  10
+               ),
                max: MAX_PIXELS_PER_SECOND,
             },
          },
