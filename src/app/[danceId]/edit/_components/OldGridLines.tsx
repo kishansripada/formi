@@ -27,7 +27,7 @@ export const OldGridLines: React.FC<{
             viewBox={`0 0 ${stageDimensions.width} ${stageDimensions.height}`}
          >
             {/* Horizontal lines */}
-            {new Array(stageDimensions.height).fill(0).map((_, i) => {
+            {new Array(Math.floor(stageDimensions.height)).fill(0).map((_, i) => {
                const centerPos = stageDimensions.height / 2;
                const myYOffset = centerPos + (i > centerPos ? i - Math.floor(centerPos) : -i);
                const differenceFromCenter = Math.round(Math.abs(myYOffset - centerPos));
