@@ -1,12 +1,8 @@
 import { comment, initials } from "../../../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useStore } from "../../store";
-import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger } from "@/components/ui/dropdown-menu";
 import { HexColorPicker } from "react-colorful";
-import { PopoverPicker } from "../ColorPicker";
-import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { DoubleClickInput } from "../../../../../../@/components/ui/double-click-input";
 import { Button } from "../../../../../../@/components/ui/button";
@@ -16,19 +12,17 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
       formations,
       setFormations,
       viewOnly,
-      getFirstSelectedFormation,
       selectedFormations,
       selectedDancers,
       setSelectedDancers,
       deleteGroup,
-      dancers,
       setHoveringDancerIds,
       shiftHeld,
       pauseHistory,
       resumeHistory,
    } = useStore();
 
-   const thisFormation = getFirstSelectedFormation();
+   const thisFormation = useStore((state) => state.getFirstSelectedFormation());
 
    return (
       <>
@@ -211,8 +205,19 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
                                        value={(thisFormation.groups || [])?.find((groupx) => groupx.id === group?.id)?.name || ""}
                                        disabled={viewOnly}
                                     />
-
-                                    <DropdownMenu>
+                                    <button
+                                       onClick={() => deleteGroup(group.id)}
+                                       className="  md:text-xs text-[10px] hover:bg-neutral-800 p-1  cursor-default "
+                                    >
+                                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                          <path
+                                             fillRule="evenodd"
+                                             d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
+                                             clipRule="evenodd"
+                                          />
+                                       </svg>
+                                    </button>
+                                    {/* <DropdownMenu>
                                        <DropdownMenuTrigger disabled={viewOnly} asChild className="  ">
                                           <button className="transition hover:bg-neutral-700 p-1">
                                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -240,7 +245,7 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
                                              </div>
                                           </DropdownMenuItem>
                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                                    </DropdownMenu> */}
                                  </div>
                               </div>
 
