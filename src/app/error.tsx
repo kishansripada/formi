@@ -20,7 +20,7 @@ const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: ()
       <div className="flex flex-col h-screen items-center justify-center gap-4">
          <h2>Oops! Something went wrong</h2>
          <p className="text-sm">This error was reported to us and we are currently investigating </p>
-         <p className="text-sm">Email us at: kishansripada@formistudio.app and we will solve it ASAP</p>
+         <p className="text-sm">If this issue persists, email us at tara.ross@formistudio.app and we will solve it ASAP</p>
 
          <Button
             onClick={

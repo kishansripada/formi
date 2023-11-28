@@ -123,8 +123,6 @@ const Client = () => {
                               // "Shared performances and assets",
                               "Collaborative editing",
                               "Accounts for you and your team",
-                              "Custom watermark",
-                              "Custom branding",
                               "Priority support",
                            ].map((text) => {
                               return (
@@ -146,11 +144,12 @@ const Client = () => {
                            })}
                         </div>
                         <a
-                           href="mailto:kishansripada@formistudio.app"
+                           href="mailto:inquiries@formistudio.app"
                            className="w-full mt-auto bg-neutral-600 py-2 flex flex-row justify-center text-sm bg-opacity-30 rounded-md"
                         >
                            Contact us
                         </a>
+                        <p className="text-center text-xs text-neutral-300 mt-2">inquiries@formistudio.app</p>
                      </div>
                      {/* <div className=" border border-neutral-800 rounded-xl w-1/3 mx-3 py-5 px-6  flex flex-col  ">
                         <div className="flex flex-row justify-between items-center">
