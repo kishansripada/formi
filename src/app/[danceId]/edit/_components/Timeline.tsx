@@ -313,6 +313,7 @@ export const Timeline: React.FC<{
                className=" relative  "
                ref={timeline}
             >
+               <div className="min-h-[18px]">
                <div
                   style={{
                      width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
@@ -320,6 +321,7 @@ export const Timeline: React.FC<{
                   className={` relative   py-1 ${!soundCloudTrackId ? "min-h-[18px]" : ""} `}
                   id="wave-timeline"
                ></div>
+               </div>
 
                {others
                   .filter((other) => other.canWrite)
