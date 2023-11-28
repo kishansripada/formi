@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const NumberToggle = ({ count, setCount, min, max, label }) => {
+const NumberToggle = ({ count, setCount, min, max, label }: { count: number; setCount: Function; min: number; max: number; label: string }) => {
    const [newVal, setNewVal] = useState(count);
+
+   useEffect(() => {
+      setNewVal(count);
+   }, [count]);
 
    const decrement = () => {
       if (count > min) {
