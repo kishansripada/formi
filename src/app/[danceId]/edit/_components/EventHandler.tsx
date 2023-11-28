@@ -8,7 +8,7 @@ export const EventHandler: React.FC<{
    selectedDancers: string[];
    setSelectedDancers: Function;
    setSelectedFormation: Function;
-   setIsPlaying: Function;
+
    // viewOnly: boolean;
    setPixelsPerSecond: Function;
 
@@ -40,7 +40,6 @@ export const EventHandler: React.FC<{
 }> = ({
    setSelectedDancers,
    selectedDancers,
-   setIsPlaying,
 
    undo,
    setIsCommenting,
@@ -75,6 +74,7 @@ export const EventHandler: React.FC<{
       setSelectedFormations,
       player,
       songDuration,
+      togglePlayPause,
    } = useStore();
 
    // const [copiedPositions, setCopiedPositions] = useState<dancerPosition[]>([]);
@@ -84,13 +84,21 @@ export const EventHandler: React.FC<{
       window.addEventListener("keyup", upHandler);
       window.addEventListener("pointerdown", pointerDown);
       window.addEventListener("pointerup", pointerUp);
+      window.addEventListener("focus", handleWindowFocus);
+
       return () => {
          window.removeEventListener("keydown", downHandler);
          window.removeEventListener("keyup", upHandler);
          window.removeEventListener("pointerdown", pointerDown);
          window.removeEventListener("pointerup", pointerUp);
+         window.removeEventListener("focus", handleWindowFocus);
       };
    }, [selectedFormations, commandHeld, selectedDancers, formations, copiedPositions, songDuration, position, shiftHeld]);
+
+   function handleWindowFocus() {
+      setCommandHeld(false);
+      setShiftHeld(false);
+   }
 
    const pointerUp = (e: PointerEvent) => {
       setIsScrollingTimeline(false);
@@ -113,18 +121,12 @@ export const EventHandler: React.FC<{
       // console.log(e.key);
       if (e.key === " ") {
          e.preventDefault();
-
-         if (player) {
-            if (position < songDuration / 1000) {
-               player.isPlaying() ? player.pause() : player.play();
-            }
-
-            setIsPlaying((isPlaying) => !isPlaying);
-         } else {
-            setIsPlaying((isPlaying) => !isPlaying);
-         }
+         togglePlayPause();
       }
 
+      if (e.key === "a" && shiftHeld) {
+         console.log("auto layout");
+      }
       if (e.key === "2") {
          setLocalSettings((localSettings: localSettings) => {
             return {
