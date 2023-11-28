@@ -17,7 +17,13 @@ export function StageBackground({ url }: { url: string }) {
    return (
       <mesh position={[0, 0, 0]} rotation={[Math.PI * 1.5, 0, 0]}>
          <planeGeometry attach="geometry" args={[dimensions.width, dimensions.height]} />
-         <meshBasicMaterial opacity={0.7} transparent={true} attach="material" map={texture} side={DoubleSide} />
+         <meshBasicMaterial
+            opacity={cloudSettings.backgroundImageOpacity === undefined ? 100 : cloudSettings.backgroundImageOpacity / 100}
+            transparent={true}
+            attach="material"
+            map={texture}
+            side={DoubleSide}
+         />
       </mesh>
    );
 }

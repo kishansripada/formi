@@ -42,6 +42,8 @@ export type dancerPosition = {
    controlPointEnd?: { x: number; y: number };
    itemId?: string | null;
    color?: string | null;
+   level?: number | null; // elevation off the ground
+   groupId?: string | null;
 };
 
 export type formation = {
@@ -97,6 +99,9 @@ export type cloudSettings = {
 
    backgroundUrl: string;
    collisionRadius: number;
+
+   backgroundImageOpacity: number;
+   hideSubdivisions: boolean;
 };
 
 export type comment = {

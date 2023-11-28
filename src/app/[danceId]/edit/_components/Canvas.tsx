@@ -985,19 +985,24 @@ export const Canvas: React.FC<{
                   ) : (
                      <></>
                   )}
-                  {cloudSettings.backgroundUrl && cloudSettings.stageBackground === "custom" ? (
+                  {cloudSettings.backgroundUrl ? (
                      <img
                         draggable={false}
-                        className="w-full h-full object-contain  select-none opacity-40 "
+                        className="w-full h-full object-contain absolute select-none  "
                         src={cloudSettings.backgroundUrl}
                         alt=""
+                        style={{
+                           opacity: (cloudSettings.backgroundImageOpacity === undefined ? 100 : cloudSettings.backgroundImageOpacity) / 100,
+                        }}
                      />
                   ) : null}
 
                   <div className="transition duration-300">
                      {cloudSettings.stageBackground === "gridfluid" || stageBackground === "cheer9" ? (
                         <>
+                           {!cloudSettings.hideSubdivisions ? (
                            <GridLines localSettings={localSettings} zoom={zoom} stageDimensions={stageDimensions} />
+                           ) : null}
                            <StageLines localSettings={localSettings} divisions={{ y: 4, x: 8 }} zoom={zoom} stageDimensions={stageDimensions} />
                         </>
                      ) : null}

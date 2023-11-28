@@ -34,7 +34,6 @@ export const ThreeD: React.FC<{
    selectedDancers: string[];
    setSelectedDancers: Function;
    setSelectedFormation: Function;
-   setIsPlaying: Function;
 
    setPixelsPerSecond: Function;
 
@@ -57,7 +56,7 @@ export const ThreeD: React.FC<{
    setShiftHeld: Function;
    setIsThreeDancerDragging: Function;
    isThreeDancerDragging: boolean;
-   isPlaying: boolean;
+
    currentFormationIndex: number;
    percentThroughTransition: number;
    dancers: dancer[];
@@ -74,38 +73,20 @@ export const ThreeD: React.FC<{
    // formations,
    setSelectedDancers,
    selectedDancers,
-   setSelectedFormation,
-   setIsPlaying,
 
-   setPixelsPerSecond,
-
-   // cloudSettings,
-   coordsToPosition,
-   draggingDancerId,
-   setDraggingDancerId,
-   undo,
    addToStack,
    pushChange,
    localSettings,
-   isCommenting,
-   setIsCommenting,
-   zoom,
-   setZoom,
-   stageFlipped,
-   shiftHeld,
-   setShiftHeld,
+
    setIsThreeDancerDragging,
    isThreeDancerDragging,
-   isPlaying,
+
    currentFormationIndex,
    percentThroughTransition,
    dancers,
    position,
-   // props,
-   // items,
-   isIntro,
+
    setScene,
-   // comments,
 }) => {
    const {
       formations,
@@ -123,6 +104,7 @@ export const ThreeD: React.FC<{
          horizontalFineDivisions,
       },
       getFirstSelectedFormation,
+      isPlaying,
    } = useStore();
    const { gridSnap } = localSettings;
 
@@ -212,7 +194,7 @@ export const ThreeD: React.FC<{
                   setIsThreeDancerDragging={setIsThreeDancerDragging}
                   isThreeDancerDragging={isThreeDancerDragging}
                   
-                  isPlaying={isPlaying}
+                  
                   
                  
                   
@@ -277,38 +259,7 @@ export const ThreeD: React.FC<{
             </>
          ) : null}
 
-         {stageBackground === "cheer9" ? (
-            <>
-               {new Array(Math.floor(cloudSettings.gridSubdivisions)).fill(0).map((_: number, index: number) => {
-                  // index = cloudSettings.stageDimensions.width / 2 - index;
-                  return (
-                     <Text
-                        scale={[0.7, 0.7, 0.7]}
-                        position={[
-                           index * cloudSettings.verticalFineDivisions * squareWidthFeet -
-                              stageDimensions.width / 2 +
-                              (cloudSettings.verticalFineDivisions * squareWidthFeet) / 2,
-                           0,
-                           cloudSettings.stageDimensions.height / 2,
-                        ]}
-                        rotation={[Math.PI * 1.5, 0, 0]}
-                        fillOpacity={0.7}
-                        color={`${localSettings.isDarkMode ? "white" : "black"}`}
-                        anchorX="center"
-                        // anchorY="middle"
-                     >
-                        {/* {index % 2 === 0 && index !== 0 ? index : ""} */}
-                        {index + 1}
-                        {/* {(Math.floor(stageDimensions.width / 2) - index - 1) % 2 === 0 ? Math.floor(stageDimensions.width / 2) - index - 1 : ""} */}
-                     </Text>
-                  );
-               })}
-            </>
-         ) : null}
-
-         {/* {cloudSettings.gridSystem === "fixed" ? ( */}
-
-         {stageBackground === "custom" || stageBackground === "grid" ? (
+         {stageBackground === "grid" ? (
             <>
                <Grid
                   receiveShadow
@@ -364,38 +315,6 @@ export const ThreeD: React.FC<{
             </>
          ) : null}
 
-         {/* {stageBackground === "cheer9" ? (
-            <>
-               <CheerLines
-                  localSettings={localSettings}
-                  stageWidth={cloudSettings.stageDimensions.width}
-                  stageHeight={cloudSettings.stageDimensions.height}
-               />
-               {new Array(Math.floor(cloudSettings.gridSubdivisions)).fill(0).map((_: number, index: number) => {
-                  // index = cloudSettings.stageDimensions.width / 2 - index;
-                  return (
-                     <Text
-                        scale={[0.7, 0.7, 0.7]}
-                        position={[
-                           (index * stageDimensions.width) / cloudSettings.gridSubdivisions -
-                              stageDimensions.width / 2 +
-                              stageDimensions.width / cloudSettings.gridSubdivisions / 2,
-                           0,
-                           cloudSettings.stageDimensions.height / 2,
-                        ]}
-                        rotation={[Math.PI * 1.5, 0, 0]}
-                        fillOpacity={0.7}
-                        color={`${localSettings.isDarkMode ? "white" : "black"}`}
-                        anchorX="center"
-                        // anchorY="middle"
-                     >
-                        {index + 1}
-                     </Text>
-                  );
-               })}
-            </>
-         ) : null} */}
-
          {/* ) : null} */}
 
          {/* <mesh receiveShadow castShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
@@ -404,9 +323,7 @@ export const ThreeD: React.FC<{
          </mesh> */}
 
          {/* <ThreeGrid localSettings={localSettings} ></ThreeGrid> */}
-         {cloudSettings?.backgroundUrl && cloudSettings.stageBackground === "custom" ? (
-            <StageBackground url={cloudSettings.backgroundUrl}></StageBackground>
-         ) : null}
+         {cloudSettings?.backgroundUrl ? <StageBackground url={cloudSettings.backgroundUrl}></StageBackground> : null}
 
          {props
             .filter((prop) => prop.url && prop.url !== "null")
@@ -414,7 +331,6 @@ export const ThreeD: React.FC<{
                return (
                   <ThreeSetPiece
                      key={prop.id}
-                     isPlaying={isPlaying}
                      position={position}
                      currentFormationIndex={currentFormationIndex}
                      percentThroughTransition={percentThroughTransition}
@@ -475,7 +391,6 @@ export const ThreeD: React.FC<{
                        selectedDancers={selectedDancers}
                        setIsThreeDancerDragging={setIsThreeDancerDragging}
                        isThreeDancerDragging={isThreeDancerDragging}
-                       isPlaying={isPlaying}
                        currentFormationIndex={currentFormationIndex}
                        percentThroughTransition={percentThroughTransition}
                        dancers={dancers}

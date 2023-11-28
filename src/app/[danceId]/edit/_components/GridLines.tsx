@@ -75,7 +75,7 @@ export const GridLines: React.FC<{
                         }
                      />
 
-                     {cloudSettings.stageBackground === "gridfluid" ? (
+                     {cloudSettings.stageBackground === "gridfluid" || cloudSettings.stageBackground === "cheer9" ? (
                         <>
                            {localSettings ? (
                               <text
@@ -101,28 +101,6 @@ export const GridLines: React.FC<{
                                  y={localSettings.stageFlipped ? 0.7 : stageDimensions.height - 0.4}
                                  textAnchor="middle"
                                  className="dark:fill-neutral-400 fill-neutral-600 font-bold z-10"
-                              >
-                                 {i}
-                              </text>
-                           ) : null}
-                        </>
-                     ) : null}
-
-                     {cloudSettings.stageBackground === "cheer9" ? (
-                        <>
-                           {localSettings ? (
-                              <text
-                                 style={{
-                                    fontSize: zoom < 0.2 && i % 4 === 0 ? 0 : Math.min(0.3 / zoom, 30),
-                                 }}
-                                 opacity={0.8}
-                                 x={
-                                    (i - 1) * (stageDimensions.width / cloudSettings.gridSubdivisions) +
-                                    stageDimensions.width / cloudSettings.gridSubdivisions / 2
-                                 }
-                                 y={localSettings.stageFlipped ? 0.7 : stageDimensions.height - 0.4}
-                                 textAnchor="middle"
-                                 className="dark:fill-neutral-400 fill-neutral-600 font-bold"
                               >
                                  {i}
                               </text>

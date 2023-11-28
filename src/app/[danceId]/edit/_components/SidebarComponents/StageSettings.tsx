@@ -1,25 +1,13 @@
 import { cloudSettings, dancer, dancerPosition, formation, localSettings, stageDimensions } from "../../../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
-import Dropdown from "../Dropdown";
 import { useStore } from "../../store";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+import NumberToggle from "../../../../../../@/components/NumberToggle";
+
 export const StageSettings: React.FC<{
-   setLocalSettings: Function;
-   localSettings: any;
-   dropDownToggle: boolean;
-   pushChange: Function;
-
-   setHelpUrl: Function;
    setAssetsOpen: Function;
-}> = ({
-   setLocalSettings,
-   localSettings,
-   dropDownToggle,
-   pushChange,
-
-   setHelpUrl,
-   setAssetsOpen,
-}) => {
+}> = ({ setAssetsOpen }) => {
    const {
       viewOnly,
       cloudSettings: { stageBackground, stageDimensions },
@@ -27,14 +15,6 @@ export const StageSettings: React.FC<{
       setCloudSettings,
       get,
    } = useStore();
-
-   const [newWidth, setNewWidth] = useState(stageDimensions.width.toString());
-   const [newHeight, setNewHeight] = useState(stageDimensions.height.toString());
-
-   useEffect(() => {
-      setNewWidth(stageDimensions.width.toString());
-      setNewHeight(stageDimensions.height.toString());
-   }, [stageDimensions]);
 
    const changeWidth = (amount: number) => {
       // for (let i = 0; i < formations.length; i++) {
@@ -69,8 +49,6 @@ export const StageSettings: React.FC<{
       // });
 
       setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width + amount } });
-
-      pushChange();
    };
 
    const changeHeight = (amount: number) => {
@@ -89,13 +67,12 @@ export const StageSettings: React.FC<{
       // }
 
       setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height + amount } });
-      pushChange();
    };
 
    const setStageBackground = (val: string) => {
-      if (val === "cheer9") {
-         setCloudSettings({ ...cloudSettings, stageDimensions: { width: 36, height: 28 }, gridSubdivisions: 9 });
-      }
+      // if (val === "cheer9") {
+      //    setCloudSettings({ ...cloudSettings, stageDimensions: { width: 36, height: 28 }, gridSubdivisions: 9 });
+      // }
       setCloudSettings({
          ...get().cloudSettings,
          stageBackground: val,
@@ -114,402 +91,277 @@ export const StageSettings: React.FC<{
             `}
          </style>
          <Toaster></Toaster>
+
          <div
             style={{
                pointerEvents: viewOnly ? "none" : "all",
             }}
-            className="w-full  block dark:text-white h-full  py-4 overflow-y-scroll overflow-x-hidden"
+            className="w-full   dark:text-white h-full flex flex-col overflow-y-scroll overflow-x-hidden "
          >
-            <div className=" px-4">
-               <p className="text-sm font-medium">Stage Dimensions (feet)</p>
-               <div className="flex flex-col   ">
-                  {/* <p className="text-neutral-800 font-medium text-sm dark:text-neutral-200">Width</p> */}
-                  <div className=" flex flex-row  items-center border border-neutral-200 dark:border-neutral-700 mt-2  w-min">
-                     <p className="p-2 text-xs">Width</p>
-                     <button className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300" onClick={() => changeWidth(-1)}>
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-4 h-4"
-                        >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
-                        </svg>
-                     </button>
-                     <input
-                        value={newWidth}
-                        className="py-1 h-full text-xs w-7 text-neutral-700 dark:text-neutral-200 bg-transparent transition focus:outline-none border-2 border-transparent focus:border-pink-600 rounded-sm text-center"
-                        type="number"
-                        step="1"
-                        onChange={(e) => {
-                           setNewWidth(e.target.value);
-                           if (parseFloat(e.target.value) > 5) {
-                              setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, width: parseFloat(e.target.value) } });
-                           }
-                        }}
-                        onBlur={() => {
-                           const newValue = parseFloat(newWidth);
-                           if (newValue < 5 || !newValue) {
-                              toast.error("Stage width must be at least 5 feet");
-                              setNewWidth(stageDimensions.width.toString());
-                              return;
-                           }
-                           setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, width: newValue } });
-                        }}
-                     />
+            <div className=" px-2 flex flex-col gap-2 py-2">
+               <div className="flex flex-row items-center justify-between">
+                  <p className="text-xs font-medium py-1">Stage</p>
 
-                     <button className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300" onClick={() => changeWidth(1)}>
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-4 h-4"
-                        >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                     </button>
-                  </div>
-
-                  <div className=" flex flex-row items-center border border-neutral-200 dark:border-neutral-700  mt-2 w-min">
-                     <p className="p-2 text-xs">Height</p>
-                     <button
-                        className="p-2  hover:bg-neutral-100  dark:hover:bg-neutral-700 transition duration-300"
-                        onClick={() => changeHeight(-1)}
+                  {/* <div className="hover:bg-neutral-800 p-1  cursor-default ">
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-5 h-5 "
                      >
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-4 h-4"
-                        >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
-                        </svg>
-                     </button>
-
-                     <input
-                        value={newHeight}
-                        className=" py-1 h-full text-xs w-7 text-neutral-700 dark:text-neutral-200 bg-transparent transition focus:outline-none border-2 border-transparent focus:border-pink-600 rounded-sm text-center"
-                        type="number"
-                        step="1"
-                        onChange={(e) => {
-                           setNewHeight(e.target.value);
-                           if (parseFloat(e.target.value) > 5) {
-                              setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, height: parseFloat(e.target.value) } });
-                           }
-                        }}
-                        onBlur={() => {
-                           const newValue = parseFloat(newHeight);
-                           if (newValue < 5 || !newValue) {
-                              toast.error("Stage width must be at least 5 feet");
-                              setNewHeight(stageDimensions.height.toString());
-                              return;
-                           }
-                           setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, height: newValue } });
-                        }}
-                     />
-
-                     <button className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300" onClick={() => changeHeight(1)}>
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-4 h-4"
-                        >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                     </button>
-                  </div>
+                        <path
+                           strokeLinecap="round"
+                           strokeLinejoin="round"
+                           d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+                        />
+                     </svg>
+                  </div> */}
                </div>
+            </div>
+            <div className=" px-2 flex flex-col gap-2 pb-2 border-neutral-700 ">
+               <p className="text-xs font-medium py-1">Dimensions (feet)</p>
 
-               <p className="text-neutral-800 dark:text-neutral-200 font-medium text-sm mb-2 mt-3">Stage Background</p>
-               <Dropdown
-                  dropDownToggle={dropDownToggle}
-                  value={
-                     cloudSettings.stageBackground === "none"
-                        ? "None"
-                        : cloudSettings.stageBackground === "grid"
-                        ? "Grid"
-                        : cloudSettings.stageBackground === "cheer9"
-                        ? "Cheer (9 Rolls)"
-                        : cloudSettings.stageBackground === "gridfluid"
-                        ? "Fluid Grid"
-                        : "Custom"
-                  }
-                  options={["None", "Grid", "Cheer (9 rolls)", "Custom", "Fluid Grid"]}
-                  actions={[
-                     () => setStageBackground("none"),
-                     () => setStageBackground("grid"),
-                     () => setStageBackground("cheer9"),
-                     () => setStageBackground("custom"),
-                     () => setStageBackground("gridfluid"),
-                  ]}
-               ></Dropdown>
-               <div className="mb-3"></div>
+               <div className="flex flex-row items-center justify-between">
+                  <NumberToggle
+                     count={stageDimensions.width}
+                     label={"Width"}
+                     setCount={(count: number) => {
+                        setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, width: count } });
+                     }}
+                     min={5}
+                     max={300}
+                  ></NumberToggle>
+                  <div className="h-full w-[1px] bg-neutral-700"></div>
+                  <NumberToggle
+                     count={stageDimensions.height}
+                     label={"Height"}
+                     setCount={(count: number) => {
+                        setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, height: count } });
+                     }}
+                     min={5}
+                     max={300}
+                  ></NumberToggle>
+               </div>
+            </div>
+            <div className="w-full bg-neutral-700 min-h-[1px]"></div>
+            <div className="px-2 flex flex-col gap-2 py-2">
+               <div className="flex flex-row items-center justify-between">
+                  <p className=" font-medium text-xs ">Grid</p>
+                  {stageBackground !== "none" && stageBackground !== "custom" && stageBackground ? (
+                     <button
+                        onClick={() => {
+                           // setSelectedPositionProperty(propertyKey, null);
+                           setStageBackground("none");
+                        }}
+                        className="  md:text-xs text-[10px] hover:bg-neutral-800 p-1  cursor-default "
+                     >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                           <path fillRule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clipRule="evenodd" />
+                        </svg>
+                     </button>
+                  ) : (
+                     <button
+                        onClick={() => {
+                           setCloudSettings({ ...cloudSettings, stageBackground: "gridfluid" });
+                           // setAssetsOpen("stagebackground");
+                        }}
+                        className="hover:bg-neutral-800 p-1 cursor-default"
+                     >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                           <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                        </svg>
+                     </button>
+                  )}
+               </div>
+               {/* custom is deprecated */}
+               {stageBackground !== "none" && stageBackground !== "custom" && stageBackground ? (
+                  <div className="flex flex-row items-center justify-between">
+                     <Select
+                        size={"1"}
+                        onValueChange={(value: "none" | "grid" | "gridfluid") => {
+                           setStageBackground(value);
+                        }}
+                        // deprecating cheer9 & custom
+                        value={stageBackground === "cheer9" ? "gridfluid" : stageBackground}
+                     >
+                        <SelectTrigger className=" dark:bg-neutral-900 text-xs h-8 w-min">
+                           <SelectValue placeholder="Theme" />
+                        </SelectTrigger>
+                        <SelectContent className="text-xs">
+                           <SelectItem value="grid">Strict Grid</SelectItem>
+                           <SelectItem value="gridfluid">Flex Grid</SelectItem>
+                        </SelectContent>
+                     </Select>
+                  </div>
+               ) : null}
             </div>
 
-            <hr className=" dark:border-neutral-700 border-neutral-200" />
-
-            {stageBackground === "gridfluid" || stageBackground === "cheer9" ? (
+            {stageBackground === "cheer9" || stageBackground === "gridfluid" ? (
                <>
-                  <>
-                     <div className="relative  text-left  p-4">
-                        <p className=" font-medium text-sm mb-3">Stage Lines</p>
-
-                        <div className=" flex flex-row  items-center border border-neutral-200 dark:border-neutral-700 mt-2  w-min ">
-                           <p className="p-2 text-xs">Vertical</p>
-                           <button
-                              className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
-                              onClick={() => {
-                                 if (cloudSettings.gridSubdivisions === 1) return;
-                                 setCloudSettings({ ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions - 1 });
-                              }}
-                           >
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth={1.5}
-                                 stroke="currentColor"
-                                 className="w-4 h-4"
-                              >
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
-                              </svg>
-                           </button>
-                           <p className=" px-4 text-xs  h-full text-neutral-700 dark:text-neutral-200">{cloudSettings.gridSubdivisions}</p>
-
-                           <button
-                              className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
-                              onClick={() => {
-                                 if (cloudSettings.gridSubdivisions === 15) return;
-                                 setCloudSettings({ ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions + 1 });
-                              }}
-                           >
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth={1.5}
-                                 stroke="currentColor"
-                                 className="w-4 h-4"
-                              >
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                              </svg>
-                           </button>
-                        </div>
-
-                        <div className=" flex flex-row  items-center border border-neutral-200 dark:border-neutral-700 mt-2  w-min ">
-                           <p className="p-2 text-xs">Horizontal</p>
-                           <button
-                              className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
-                              onClick={() => {
-                                 if (cloudSettings.horizontalGridSubdivisions === 1) return;
-                                 setCloudSettings({ ...cloudSettings, horizontalGridSubdivisions: cloudSettings.horizontalGridSubdivisions - 1 });
-                              }}
-                           >
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth={1.5}
-                                 stroke="currentColor"
-                                 className="w-4 h-4"
-                              >
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
-                              </svg>
-                           </button>
-                           <p className=" px-4 text-xs  h-full text-neutral-700 dark:text-neutral-200">{cloudSettings.horizontalGridSubdivisions}</p>
-
-                           <button
-                              className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
-                              onClick={() => {
-                                 if (cloudSettings.gridSubdivisions === 15) return;
-                                 setCloudSettings({ ...cloudSettings, horizontalGridSubdivisions: cloudSettings.horizontalGridSubdivisions + 1 });
-                              }}
-                           >
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth={1.5}
-                                 stroke="currentColor"
-                                 className="w-4 h-4"
-                              >
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                              </svg>
-                           </button>
-                        </div>
-
-                        <p className="text-sm font-medium mb-3 mt-3">Subdivisions (grid snap)</p>
-
-                        <div className=" flex flex-row  items-center border border-neutral-200 dark:border-neutral-700 mt-2  w-min ">
-                           <p className="p-2 text-xs">Vertical</p>
-                           <button
-                              className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
-                              onClick={() => {
-                                 if (cloudSettings.verticalFineDivisions === 1) return;
-                                 setCloudSettings({ ...cloudSettings, verticalFineDivisions: cloudSettings.verticalFineDivisions - 1 });
-                              }}
-                           >
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth={1.5}
-                                 stroke="currentColor"
-                                 className="w-4 h-4"
-                              >
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
-                              </svg>
-                           </button>
-                           <p className=" px-4 text-xs  h-full text-neutral-700 dark:text-neutral-200">{cloudSettings.verticalFineDivisions}</p>
-
-                           <button
-                              className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
-                              onClick={() => {
-                                 if (cloudSettings.verticalFineDivisions === 15) return;
-                                 setCloudSettings({ ...cloudSettings, verticalFineDivisions: cloudSettings.verticalFineDivisions + 1 });
-                              }}
-                           >
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth={1.5}
-                                 stroke="currentColor"
-                                 className="w-4 h-4"
-                              >
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                              </svg>
-                           </button>
-                        </div>
-
-                        <div className=" flex flex-row  items-center border border-neutral-200 dark:border-neutral-700 mt-2  w-min ">
-                           <p className="p-2 text-xs">Horizontal</p>
-                           <button
-                              className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
-                              onClick={() => {
-                                 if (cloudSettings.horizontalFineDivisions === 1) return;
-                                 setCloudSettings({ ...cloudSettings, horizontalFineDivisions: cloudSettings.horizontalFineDivisions - 1 });
-                              }}
-                           >
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth={1.5}
-                                 stroke="currentColor"
-                                 className="w-4 h-4"
-                              >
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
-                              </svg>
-                           </button>
-                           <p className=" px-4 text-xs  h-full text-neutral-700 dark:text-neutral-200">{cloudSettings.horizontalFineDivisions}</p>
-
-                           <button
-                              className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
-                              onClick={() => {
-                                 if (cloudSettings.horizontalFineDivisions === 15) return;
-                                 setCloudSettings({ ...cloudSettings, horizontalFineDivisions: cloudSettings.horizontalFineDivisions + 1 });
-                              }}
-                           >
-                              <svg
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 strokeWidth={1.5}
-                                 stroke="currentColor"
-                                 className="w-4 h-4"
-                              >
-                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                              </svg>
-                           </button>
-                        </div>
+                  <div className=" px-2 flex flex-col gap-2 py-2 border-t border-neutral-700 ">
+                     <div className="flex flex-row items-center justify-between py-1">
+                        <p className=" font-medium text-xs">Divisions</p>
                      </div>
-                  </>
+
+                     <div className="flex flex-row items-center justify-between">
+                        <NumberToggle
+                           count={cloudSettings.gridSubdivisions}
+                           label={"Vertical"}
+                           setCount={(count: number) => {
+                              setCloudSettings({ ...cloudSettings, gridSubdivisions: count });
+                           }}
+                           min={1}
+                           max={20}
+                        ></NumberToggle>
+                        <div className="h-full w-[1px] bg-neutral-700"></div>
+                        <NumberToggle
+                           count={cloudSettings.horizontalGridSubdivisions}
+                           label={"Horizontal"}
+                           setCount={(count: number) => {
+                              setCloudSettings({ ...cloudSettings, horizontalGridSubdivisions: count });
+                           }}
+                           min={1}
+                           max={20}
+                        ></NumberToggle>
+                     </div>
+                  </div>
+                  <div className="px-2 flex flex-col gap-2 border-neutral-700 border-t py-2 ">
+                     <div className="flex flex-row items-center justify-between">
+                        <p className=" font-medium text-xs">Subdivisions</p>
+                        {!cloudSettings.hideSubdivisions ? (
+                           <button
+                              onClick={() => {
+                                 // setSelectedPositionProperty(propertyKey, null);
+                                 setCloudSettings({ ...cloudSettings, hideSubdivisions: true });
+                              }}
+                              className="  md:text-xs text-[10px] hover:bg-neutral-800 p-1  cursor-default "
+                           >
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                 <path
+                                    fillRule="evenodd"
+                                    d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
+                                    clipRule="evenodd"
+                                 />
+                              </svg>
+                           </button>
+                        ) : (
+                           <button
+                              onClick={() => {
+                                 setCloudSettings({ ...cloudSettings, hideSubdivisions: false });
+                                 // setAssetsOpen("stagebackground");
+                              }}
+                              className="hover:bg-neutral-800 p-1 cursor-default"
+                           >
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                 <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                              </svg>
+                           </button>
+                        )}
+                     </div>
+
+                     {!cloudSettings.hideSubdivisions ? (
+                        <>
+                           <div className="flex flex-row items-center justify-between">
+                              {" "}
+                              <NumberToggle
+                                 count={cloudSettings.verticalFineDivisions}
+                                 label={"Vertical"}
+                                 setCount={(count: number) => {
+                                    setCloudSettings({ ...cloudSettings, verticalFineDivisions: count });
+                                 }}
+                                 min={1}
+                                 max={20}
+                              ></NumberToggle>
+                              <div className="h-full w-[1px] bg-neutral-700"></div>
+                              <NumberToggle
+                                 count={cloudSettings.horizontalFineDivisions}
+                                 label={"Horizontal"}
+                                 setCount={(count: number) => {
+                                    setCloudSettings({ ...cloudSettings, horizontalFineDivisions: count });
+                                 }}
+                                 min={1}
+                                 max={20}
+                              ></NumberToggle>
+                           </div>
+                        </>
+                     ) : null}
+                  </div>
                </>
             ) : null}
 
             {stageBackground === "grid" ? (
-               <>
-                  <div className=" flex flex-row  items-center border border-neutral-200 dark:border-neutral-700 mt-2 ml-4 w-min ">
-                     <p className="p-2 text-xs">Subdivisions</p>
+               <div className="flex flex-row items-center justify-center py-2">
+                  <NumberToggle
+                     count={cloudSettings.gridSubdivisions}
+                     label={"Subdivisions"}
+                     setCount={(count: number) => {
+                        setCloudSettings({ ...cloudSettings, gridSubdivisions: count });
+                     }}
+                     min={1}
+                     max={20}
+                  ></NumberToggle>
+               </div>
+            ) : null}
+
+            {/* <div className="flex items-center space-x-2 px-2">
+               <Switch id="airplane-mode" />
+               <p className="text-xs">Show numbered line</p>
+            </div> */}
+            <div className="flex flex-col w-full px-2 border-y border-neutral-700 ">
+               <div className=" flex flex-row items-center w-full justify-between h-12 ">
+                  <p className="text-xs font-medium ">Stage background image</p>
+                  {!cloudSettings.backgroundUrl ? (
                      <button
-                        className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
                         onClick={() => {
-                           if (cloudSettings.gridSubdivisions === 1) return;
-                           setCloudSettings({ ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions - 1 });
+                           // setCloudSettings({ ...cloudSettings, backgroundUrl: null });
+                           setAssetsOpen("stagebackground");
                         }}
+                        className="hover:bg-neutral-800 p-1"
                      >
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-4 h-4"
-                        >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                           <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                         </svg>
                      </button>
-                     <p className=" px-4 text-xs  h-full text-neutral-700 dark:text-neutral-200">{cloudSettings.gridSubdivisions}</p>
+                  ) : null}
+               </div>
+               {cloudSettings.backgroundUrl ? (
+                  <div className="w-full pb-2 flex flex-row items-center justify-between">
+                     <div
+                        onClick={() => {
+                           // setCloudSettings({ ...cloudSettings, backgroundUrl: null });
+                           setAssetsOpen("stagebackground");
+                        }}
+                        className="h-9 w-9 grid place-items-center"
+                     >
+                        <img className=" object-contain " src={cloudSettings.backgroundUrl} alt="" />
+                     </div>
+                     <input
+                        value={(cloudSettings.backgroundImageOpacity === undefined ? "100" : cloudSettings.backgroundImageOpacity) + "%"}
+                        onChange={(e) => {
+                           setCloudSettings({
+                              ...cloudSettings,
+                              backgroundImageOpacity: e.target.value.replace("%", ""),
+                           });
+                        }}
+                        className="w-16 text-xs bg-transparent border text-center border-transparent focus:outline-none px-2 py-1 focus:border-neutral-700 cursor-default "
+                        type="text"
+                     />
 
                      <button
-                        className="p-2  hover:bg-neutral-100 dark:hover:bg-neutral-700 transition duration-300"
                         onClick={() => {
-                           if (cloudSettings.gridSubdivisions === 15) return;
-                           setCloudSettings({ ...cloudSettings, gridSubdivisions: cloudSettings.gridSubdivisions + 1 });
+                           setCloudSettings({ ...cloudSettings, backgroundUrl: null });
                         }}
+                        className="  md:text-xs text-[10px] hover:bg-neutral-800 p-1  cursor-default "
                      >
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-4 h-4"
-                        >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                           <path fillRule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clipRule="evenodd" />
                         </svg>
                      </button>
                   </div>
-               </>
-            ) : null}
-
-            {cloudSettings.stageBackground === "custom" ? (
-               <>
-                  {cloudSettings.backgroundUrl ? (
-                     <div className=" mx-auto border  border-solid   relative">
-                        <div
-                           onClick={() => {
-                              setAssetsOpen("stagebackground");
-                           }}
-                           className="opacity-0  hover:opacity-100  cursor-pointer transition left-0 top-0 absolute h-full w-full bg-black/40 grid place-items-center"
-                        >
-                           Replace
-                        </div>
-                        <img className="w-full " src={cloudSettings.backgroundUrl} alt="" />
-                     </div>
-                  ) : (
-                     <div className="grid place-items-center">
-                        <button
-                           onClick={() => {
-                              setAssetsOpen("stagebackground");
-                           }}
-                        >
-                           Upload image
-                        </button>
-                     </div>
-                  )}
-               </>
-            ) : null}
+               ) : null}
+            </div>
          </div>
       </>
    );
