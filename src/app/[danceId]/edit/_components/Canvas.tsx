@@ -768,9 +768,9 @@ export const Canvas: React.FC<{
          },
          onWheel: ({ pinching, delta }) => {
             if (pinching) return;
-            const newY = scrollOffset.y - delta[1] / zoom / 1.5;
+            const newY = scrollOffset.y - (delta[1] / zoom) * 1.3;
             setScrollOffset((scrollOffset) => ({
-               x: scrollOffset.x - delta[0] / zoom / 1.5,
+               x: scrollOffset.x - (delta[0] / zoom) * 1.3,
                y: newY,
             }));
          },
