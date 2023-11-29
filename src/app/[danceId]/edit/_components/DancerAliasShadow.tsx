@@ -3,12 +3,12 @@ import { useStore } from "../store";
 
 export const DancerAliasShadow: React.FC<{
    dancer: dancer;
-   isPlaying: boolean;
+
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
    localSettings: localSettings;
-}> = ({ dancer, isPlaying, coordsToPosition, localSettings }) => {
+}> = ({ dancer, coordsToPosition, localSettings }) => {
    const { stageFlipped } = localSettings;
-   const { formations, getPreviousFormation, selectedFormations } = useStore();
+   const { formations, getPreviousFormation, selectedFormations, isPlaying } = useStore();
    let initials = dancer.name
       .split(" ")
       .map((word) => word[0])

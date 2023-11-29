@@ -4,6 +4,7 @@ import { liveblocks } from "@liveblocks/zustand";
 import type { WithLiveblocks } from "@liveblocks/zustand";
 import { Status, createClient } from "@liveblocks/client";
 import { v4 as uuidv4 } from "uuid";
+import { whereInFormation } from "../../../utls";
 interface Store {
    copiedPositions: { from: string | null; positions: dancerPosition[] };
    setCopiedPositions: (copiedPositions: { from: string | null; positions: dancerPosition[] }) => void;
@@ -81,6 +82,11 @@ interface Store {
    position: number;
    setPosition: (position: number) => void;
 
+   isPlaying: boolean;
+   setIsPlaying: (isPlaying: boolean) => void;
+
+   togglePlayPause: () => void;
+
    soundCloudTrackId: string | null;
    setSoundCloudTrackId: (soundCloudTrackId: string | null) => void;
 
@@ -91,6 +97,10 @@ interface Store {
    setPlayer: (player: any) => void;
 
    newFormationFromLast: () => void;
+
+   goToPosition: (position: number) => void;
+   songDuration: number | null;
+   getTotalDurationOfFormations: () => number;
 
    get: () => Store; // For direct state retrieval
 }
@@ -339,7 +349,7 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
                      }),
                      comments: [],
                      notes: "",
-                     groups: keepGroups ? formations[formations.length - 1]?.groups : [],
+                     groups: keepGroups ? formations[formations.length - 1]?.groups || [] : [],
                   },
                ],
             });
@@ -522,16 +532,60 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             set({ player });
          },
          goToFormation: (formationId: string) => {
-            const { formations, songDuration, player } = get();
+            const { formations, goToPosition } = get();
             const index = formations.findIndex((formation) => formation.id === formationId);
-            let position = formations
+            let position =
+               formations
                .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
                .slice(0, index)
-               .reduce((a, b) => a + b, 0);
+                  .reduce((a, b) => a + b, 0) + 0.01;
 
-            set({ position, selectedFormations: [formationId] });
-            if (!(songDuration && player) || position > songDuration / 1000) return;
-            player.seekTo(Math.min(Math.max(0, position / (songDuration / 1000)), 1));
+            set({ selectedFormations: [formationId] });
+            goToPosition(position, false);
+         },
+
+         goToPosition: (clickToSeconds: number, triggerFormationChange: boolean) => {
+            if (clickToSeconds < 0) return;
+            const { songDuration, player, isPlaying, position, formations } = get();
+            const { currentFormationIndex } = whereInFormation(formations, position);
+            if (currentFormationIndex !== null && !(triggerFormationChange === false)) {
+               set({ selectedFormations: [formations[currentFormationIndex].id] });
+            }
+            set({ position: clickToSeconds });
+
+            if (!songDuration || !player) return;
+            if (clickToSeconds < songDuration / 1000) {
+               player.seekTo(Math.min(Math.max(0, clickToSeconds / (songDuration / 1000)), 1));
+            }
+
+            // for blending the no file player and file player together
+            if (isPlaying) {
+               if (clickToSeconds < songDuration / 1000 && position > songDuration / 1000) {
+                  // console.log("exiting file");
+                  player.play();
+               }
+               if (clickToSeconds > songDuration / 1000 && position < songDuration / 1000) {
+                  var pausePromise = player.pause();
+
+                  if (pausePromise !== undefined) {
+                     pausePromise.then((_) => {
+                        set({ position: clickToSeconds });
+                     });
+                  }
+               }
+            }
+         },
+
+         togglePlayPause: () => {
+            const { player, songDuration, position, isPlaying } = get();
+            if (player && songDuration) {
+               if (position < songDuration / 1000) {
+                  player.isPlaying() ? player.pause() : player.play();
+               }
+               set({ isPlaying: !isPlaying });
+            } else {
+               set({ isPlaying: !isPlaying });
+            }
          },
 
          imageBlobs: {},
@@ -568,6 +622,9 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
          commandHeld: false,
          setCommandHeld: (commandHeld: boolean) => set({ commandHeld }),
 
+         isPlaying: false,
+         setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
+
          shiftHeld: false,
          setShiftHeld: (shiftHeld: boolean) => set({ shiftHeld }),
 
@@ -590,6 +647,14 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
          },
 
          get,
+
+         getTotalDurationOfFormations: () => {
+            const { formations } = get();
+
+            return formations
+               .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
+               .reduce((a, b) => a + b, 0);
+         },
       }),
       {
          client,

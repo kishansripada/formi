@@ -11,7 +11,7 @@ export const Props: React.FC<{
 
    setAudiofiles: Function;
    player: any;
-   setIsPlaying: Function;
+
    setLocalSource: Function;
    selectedPropIds: string[];
    invalidatePropUploads: Function;

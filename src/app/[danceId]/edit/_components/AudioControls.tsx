@@ -14,8 +14,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Slider } from "../../../../../@/components/ui/slider";
 export const AudioControls: React.FC<{
-   isPlaying: boolean;
-   setIsPlaying: Function;
    position: number | null;
 
    addToStack: Function;
@@ -28,8 +26,6 @@ export const AudioControls: React.FC<{
    setLocalSettings: Function;
    setHelpUrl: Function;
 }> = ({
-   isPlaying,
-   setIsPlaying,
    position,
 
    setPixelsPerSecond,
@@ -54,6 +50,10 @@ export const AudioControls: React.FC<{
       newFormationFromLast,
       player,
       songDuration,
+      togglePlayPause,
+      isPlaying,
+      setPosition,
+      setIsPlaying,
    } = useStore();
 
    const [defaultVolume, setDefaultVolume] = useState(100);
@@ -68,21 +68,8 @@ export const AudioControls: React.FC<{
    const playbackRates = [0.25, 0.5, 1, 1.5, 2];
 
    // };
-   const totalDurationOfFormations = formations
-      .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
-      .reduce((a, b) => a + b, 0);
+   const totalDurationOfFormations = useStore((state) => state.getTotalDurationOfFormations());
 
-   const playPause = () => {
-      if (player) {
-         if (position < songDuration / 1000) {
-            player.isPlaying() ? player.pause() : player.play();
-         }
-
-         setIsPlaying(!isPlaying);
-      } else {
-         setIsPlaying(!isPlaying);
-      }
-   };
    // function calculateFormationsInSegments(formations: formation[], segments: segment[]): segment[] {
    //    // Initialize formations array for each segment
    //    segments.forEach((segment) => (segment.formations = []));
@@ -216,7 +203,7 @@ export const AudioControls: React.FC<{
                {isPlaying ? (
                   <div
                      className={`hover:bg-neutral-100 dark:hover:bg-neutral-800  transition duration-300 cursor-pointer p-1 rounded-2xl mx-3 select-none`}
-                     onClick={playPause}
+                     onClick={togglePlayPause}
                   >
                      <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -234,7 +221,7 @@ export const AudioControls: React.FC<{
                ) : (
                   <div
                      className={`hover:bg-neutral-100 dark:hover:bg-neutral-800  transition duration-300 p-1 rounded-2xl mx-3 select-none cursor-pointer `}
-                     onClick={playPause}
+                     onClick={togglePlayPause}
                   >
                      <svg
                         xmlns="http://www.w3.org/2000/svg"

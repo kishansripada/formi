@@ -9,7 +9,6 @@ import { useGesture } from "@use-gesture/react";
 
 export const FileAudioPlayer: React.FC<{
    setPosition: Function;
-   setIsPlaying: Function;
 
    soundCloudTrackId: string | null;
    setSelectedFormation: Function;
@@ -18,28 +17,36 @@ export const FileAudioPlayer: React.FC<{
    localSettings: localSettings;
    videoPlayer: any;
    // formations: formation[];
-   isPlaying: boolean;
+
    position: number;
    currentFormationIndex: number;
 }> = memo(
    ({
       setPosition,
-      setIsPlaying,
 
       soundCloudTrackId,
-      setSelectedFormation,
-      // viewOnly,
+
       pixelsPerSecond,
 
       videoPlayer,
       localSettings,
-      // formations,
-      isPlaying,
 
       position,
       currentFormationIndex,
    }) => {
-      let { formations, get, setSelectedFormations, isMobileView, setPlayer, player, songDuration, setSongDuration } = useStore();
+      let {
+         formations,
+         get,
+         setSelectedFormations,
+         isMobileView,
+         setPlayer,
+         player,
+         songDuration,
+         setSongDuration,
+         goToPosition,
+         setIsPlaying,
+         isPlaying,
+      } = useStore();
       const { isDarkMode } = localSettings;
 
       const useWavesurfer = (containerRef: MutableRefObject<undefined>, options: WaveShaperOptions) => {
@@ -67,9 +74,7 @@ export const FileAudioPlayer: React.FC<{
 
       const [ready, setReady] = useState(false);
 
-      const totalDurationOfFormations = formations
-         .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
-         .reduce((a, b) => a + b, 0);
+      const totalDurationOfFormations = useStore((state) => state.getTotalDurationOfFormations());
 
       const timelineWidth = (songDuration ? Math.max(totalDurationOfFormations, songDuration / 1000) : totalDurationOfFormations) * pixelsPerSecond;
       const formationsAreLongerThanAudio = totalDurationOfFormations > (songDuration || 0) / 1000;
@@ -82,6 +87,7 @@ export const FileAudioPlayer: React.FC<{
                let newTime = prevTime;
                if (prevTime < totalDurationOfFormations) {
                   //  console.log("adding 0.5 sec");
+
                   newTime = prevTime + 0.02;
                   // playbackRate
                } else {
@@ -99,57 +105,19 @@ export const FileAudioPlayer: React.FC<{
          {
             onDrag: ({ event: e, cancel }) => {
                if (isMobileView) cancel();
-               const formationIdToSelect = formations.find((formation, i) => i === currentFormationIndex)?.id || null;
-               setSelectedFormations(formationIdToSelect ? [formationIdToSelect] : []);
-
                e.preventDefault();
                if (!e.currentTarget) return;
                var rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-
                var x = (e as MouseEvent).clientX - rect.left; //x position within the element.
-
-               songDuration = (songDuration || 0) / 1000;
-               const clickEventSeconds = x / pixelsPerSecond;
-               if (clickEventSeconds < 0) return;
-               setPosition(clickEventSeconds);
-               if (clickEventSeconds < songDuration && player) {
-                  player.seekTo(Math.max(Math.min(1, clickEventSeconds / songDuration), 0));
-               }
-               if (isPlaying) {
-                  if (clickEventSeconds < songDuration && position > songDuration) {
-                     player.play();
-                  }
-                  if (clickEventSeconds > songDuration && position < songDuration) {
-                     player.pause();
-                  }
-               }
+               goToPosition(x / pixelsPerSecond);
             },
             onClick: ({ event: e }) => {
                if (!isMobileView) return;
-               const formationIdToSelect = formations.find((formation, i) => i === currentFormationIndex)?.id || null;
-               setSelectedFormations(formationIdToSelect ? [formationIdToSelect] : []);
-
                e.preventDefault();
                if (!e.currentTarget) return;
                var rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-
                var x = (e as MouseEvent).clientX - rect.left; //x position within the element.
-
-               songDuration = (songDuration || 0) / 1000;
-               const clickEventSeconds = x / pixelsPerSecond;
-               if (clickEventSeconds < 0) return;
-               setPosition(clickEventSeconds);
-               if (clickEventSeconds < songDuration && player) {
-                  player.seekTo(Math.max(Math.min(1, clickEventSeconds / songDuration), 0));
-               }
-               if (isPlaying) {
-                  if (clickEventSeconds < songDuration && position > songDuration) {
-                     player.play();
-                  }
-                  if (clickEventSeconds > songDuration && position < songDuration) {
-                     player.pause();
-                  }
-               }
+               goToPosition(x / pixelsPerSecond);
             },
          },
 

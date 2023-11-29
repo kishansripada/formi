@@ -17,19 +17,8 @@ export const FormationControls: React.FC<{
    selectedDancers: string[];
    setZoom: Function;
 }> = ({ zoom, selectedDancers, setZoom }) => {
-   const {
-      formations,
-      setFormations,
-      pauseHistory,
-      resumeHistory,
-      selectedFormations,
-      setSelectedFormations,
-      get,
-      viewOnly,
-      getFirstSelectedFormation,
-      deleteSelectedFormations,
-      splitSelectedFormations,
-   } = useStore();
+   const { formations, setFormations, selectedFormations, viewOnly, getFirstSelectedFormation, deleteSelectedFormations, splitSelectedFormations } =
+      useStore();
    return (
       <div className="w-full h-[40px] min-h-[40px] max-h-[40px]  border-t-neutral-300 border-t bg-neutral-50 md:flex hidden flex-row items-center justify-between px-3  dark:bg-neutral-900 backdrop-blur-md mt-auto   dark:border-neutral-700 dark:text-neutral-200">
          {!viewOnly ? (

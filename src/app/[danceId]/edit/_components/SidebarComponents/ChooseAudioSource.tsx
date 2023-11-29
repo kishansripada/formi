@@ -9,13 +9,10 @@ export const ChooseAudioSource: React.FC<{
    soundCloudTrackId: string | null;
    setSoundCloudTrackId: Function;
    setAudiofiles: Function;
-
-   setIsPlaying: Function;
    setLocalSource: Function;
-
    session: AuthSession | null;
-}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, setAudiofiles, setIsPlaying, setLocalSource, session }) => {
-   const { viewOnly, setPlayer, player } = useStore();
+}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, setAudiofiles, setLocalSource, session }) => {
+   const { viewOnly, setPlayer, player, setIsPlaying } = useStore();
    const [file, setFile] = useState<File | null>();
 
    const supabase = createClientComponentClient();

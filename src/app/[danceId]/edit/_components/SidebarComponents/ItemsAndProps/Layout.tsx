@@ -12,7 +12,6 @@ export const ItemsAndProps: React.FC<{
 
    setAudiofiles: Function;
 
-   setIsPlaying: Function;
    setLocalSource: Function;
 
    // items: item[];
@@ -37,14 +36,13 @@ export const ItemsAndProps: React.FC<{
    selectedPropIds,
    propUploads,
 
-   setIsPlaying,
    soundCloudTrackId,
    setSoundCloudTrackId,
    audioFiles,
    setAudiofiles,
    setLocalSource,
 }) => {
-   const { setFormations, formations, viewOnly, items, setItems, pauseHistory, resumeHistory } = useStore();
+   const { setFormations, formations, viewOnly, items, setItems, pauseHistory, resumeHistory, setIsPlaying } = useStore();
 
    // const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
    // console.log({ items });
@@ -82,7 +80,6 @@ export const ItemsAndProps: React.FC<{
                      invalidatePropUploads={invalidatePropUploads}
                      selectedPropIds={selectedPropIds}
                      propUploads={propUploads}
-                     setIsPlaying={setIsPlaying}
                      soundCloudTrackId={soundCloudTrackId}
                      setSoundCloudTrackId={setSoundCloudTrackId}
                      audioFiles={audioFiles}
@@ -100,7 +97,6 @@ export const ItemsAndProps: React.FC<{
                      invalidatePropUploads={invalidatePropUploads}
                      selectedPropIds={selectedPropIds}
                      propUploads={propUploads}
-                     setIsPlaying={setIsPlaying}
                      soundCloudTrackId={soundCloudTrackId}
                      setSoundCloudTrackId={setSoundCloudTrackId}
                      audioFiles={audioFiles}

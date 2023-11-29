@@ -13,7 +13,7 @@ export const Timeline: React.FC<{
    // setFormations: Function;
 
    position: number;
-   isPlaying: boolean;
+
    soundCloudTrackId: string | null;
 
    pixelsPerSecond: number;
@@ -23,7 +23,6 @@ export const Timeline: React.FC<{
 
    formationGroups: formationGroup[];
 
-   setIsPlaying: Function;
    setPosition: Function;
    videoPlayer: any;
    localSource: any;
@@ -38,7 +37,7 @@ export const Timeline: React.FC<{
    currentFormationIndex: number;
 }> = ({
    position,
-   isPlaying,
+
    soundCloudTrackId,
 
    pixelsPerSecond,
@@ -48,7 +47,6 @@ export const Timeline: React.FC<{
 
    formationGroups,
 
-   setIsPlaying,
    setPosition,
    videoPlayer,
    localSource,
@@ -62,26 +60,23 @@ export const Timeline: React.FC<{
    menuOpen,
    currentFormationIndex,
 }) => {
-   let {
-      segments,
-      setSegments,
-      get,
-      formations,
-      viewOnly,
-      resumeHistory,
-      pauseHistory,
-      setSelectedFormations,
-      isMobileView,
-      player,
-      songDuration,
-      setSongDuration,
-   } = useStore();
+   const segments = useStore((state) => state.segments);
+   const setSegments = useStore((state) => state.setSegments);
+   const get = useStore((state) => state.get);
+   const formations = useStore((state) => state.formations);
+   const viewOnly = useStore((state) => state.viewOnly);
+   const resumeHistory = useStore((state) => state.resumeHistory);
+   const pauseHistory = useStore((state) => state.pauseHistory);
+   const isMobileView = useStore((state) => state.isMobileView);
+   const player = useStore((state) => state.player);
+   const songDuration = useStore((state) => state.songDuration);
+   const setSongDuration = useStore((state) => state.setSongDuration);
+   const goToPosition = useStore((state) => state.goToPosition);
+   const isPlaying = useStore((state) => state.isPlaying);
    const others = useStore((state) => state.liveblocks.others);
-   const [resizingSegment, setResizingSegment] = useState<string | null>(null);
 
-   const totalDurationOfFormations = formations
-      .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
-      .reduce((a, b) => a + b, 0);
+   const totalDurationOfFormations = useStore((state) => state.getTotalDurationOfFormations());
+   const [resizingSegment, setResizingSegment] = useState<string | null>(null);
 
    const timelineWidth = (songDuration ? Math.max(totalDurationOfFormations, songDuration / 1000) : totalDurationOfFormations) * pixelsPerSecond;
 
@@ -210,57 +205,19 @@ export const Timeline: React.FC<{
       {
          onDrag: ({ event: e, cancel }) => {
             if (isMobileView) cancel();
-            const formationIdToSelect = formations.find((formation, i) => i === currentFormationIndex)?.id || null;
-            setSelectedFormations(formationIdToSelect ? [formationIdToSelect] : []);
-
             e.preventDefault();
             if (!e.currentTarget) return;
             var rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-
             var x = (e as MouseEvent).clientX - rect.left; //x position within the element.
-
-            songDuration = (songDuration || 0) / 1000;
-            const clickEventSeconds = x / pixelsPerSecond;
-            if (clickEventSeconds < 0) return;
-            setPosition(clickEventSeconds);
-            if (clickEventSeconds < songDuration && player) {
-               player.seekTo(Math.max(Math.min(1, clickEventSeconds / songDuration), 0));
-            }
-            if (isPlaying) {
-               if (clickEventSeconds < songDuration && position > songDuration) {
-                  player.play();
-               }
-               if (clickEventSeconds > songDuration && position < songDuration) {
-                  player.pause();
-               }
-            }
+            goToPosition(x / pixelsPerSecond);
          },
          onClick: ({ event: e }) => {
             if (!isMobileView) return;
-            const formationIdToSelect = formations.find((formation, i) => i === currentFormationIndex)?.id || null;
-            setSelectedFormations(formationIdToSelect ? [formationIdToSelect] : []);
-
             e.preventDefault();
             if (!e.currentTarget) return;
             var rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-
             var x = (e as MouseEvent).clientX - rect.left; //x position within the element.
-
-            songDuration = (songDuration || 0) / 1000;
-            const clickEventSeconds = x / pixelsPerSecond;
-            if (clickEventSeconds < 0) return;
-            setPosition(clickEventSeconds);
-            if (clickEventSeconds < songDuration && player) {
-               player.seekTo(Math.max(Math.min(1, clickEventSeconds / songDuration), 0));
-            }
-            if (isPlaying) {
-               if (clickEventSeconds < songDuration && position > songDuration) {
-                  player.play();
-               }
-               if (clickEventSeconds > songDuration && position < songDuration) {
-                  player.pause();
-               }
-            }
+            goToPosition(x / pixelsPerSecond);
          },
       },
 
@@ -370,7 +327,6 @@ export const Timeline: React.FC<{
                addToStack={addToStack}
                pushChange={pushChange}
                setSelectedDancers={setSelectedDancers}
-               isPlaying={isPlaying}
                position={position}
                soundCloudTrackId={soundCloudTrackId}
                pixelsPerSecond={pixelsPerSecond}
@@ -402,10 +358,7 @@ export const Timeline: React.FC<{
                                  .slice(0, index)
                                  .reduce((a, b) => a + b, 0);
 
-                              setPosition(position);
-
-                              if (!(songDuration && player)) return;
-                              player.seekTo(Math.min(Math.max(0, position / (songDuration / 1000)), 1));
+                              goToPosition(position);
                            }}
                            style={{
                               width: section.duration * pixelsPerSecond - 4,
@@ -450,13 +403,11 @@ export const Timeline: React.FC<{
                      soundCloudTrackId={localSource || soundCloudTrackId}
                      player={player}
                      setSongDuration={setSongDuration}
-                     setIsPlaying={setIsPlaying}
                      setPosition={setPosition}
                      songDuration={songDuration}
                      videoPlayer={videoPlayer}
                      pixelsPerSecond={pixelsPerSecond}
                      localSettings={localSettings}
-                     isPlaying={isPlaying}
                      position={position}
                      currentFormationIndex={currentFormationIndex}
                   ></FileAudioPlayer>
@@ -466,12 +417,10 @@ export const Timeline: React.FC<{
                   <NoFilePlayer
                      playbackRate={playbackRate}
                      player={player}
-                     isPlaying={isPlaying}
                      key={localSource || soundCloudTrackId}
                      soundCloudTrackId={localSource || soundCloudTrackId}
                      setSongDuration={setSongDuration}
                      songDuration={songDuration}
-                     setIsPlaying={setIsPlaying}
                      setPosition={setPosition}
                      pixelsPerSecond={pixelsPerSecond}
                      videoPlayer={videoPlayer}

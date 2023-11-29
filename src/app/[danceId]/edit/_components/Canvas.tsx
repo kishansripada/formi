@@ -29,13 +29,13 @@ export const Canvas: React.FC<{
    selectedDancers: string[];
    setSelectedDancers: Function;
    setSelectedFormation: Function;
-   setIsPlaying: Function;
+
    setPixelsPerSecond: Function;
-   songDuration: number | null;
+
    coordsToPosition: (coords: { x: number; y: number }) => { left: number; top: number };
    draggingDancerId: string | null;
    setDraggingDancerId: Function;
-   player: any;
+
    undo: Function;
    addToStack: Function;
    pushChange: Function;
@@ -46,7 +46,6 @@ export const Canvas: React.FC<{
    setZoom: Function;
    shiftHeld: boolean;
    setShiftHeld: Function;
-   isPlaying: boolean;
 
    setSelectedPropIds: Function;
    selectedPropIds: string[];
@@ -69,7 +68,7 @@ export const Canvas: React.FC<{
    zoom,
    setZoom,
    shiftHeld,
-   isPlaying,
+
    session,
    setSelectedPropIds,
    selectedPropIds,
@@ -96,6 +95,7 @@ export const Canvas: React.FC<{
          horizontalGridSubdivisions,
       },
       isMobileView,
+      isPlaying,
    } = useStore();
    // const undo = useStore((state) => state.liveblocks.room?.history.undo);
    let { selectedFormations, getFirstSelectedFormation } = useStore();

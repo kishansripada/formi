@@ -14,7 +14,7 @@ export function ThreeDancer({
    position,
    currentFormationIndex,
    percentThroughTransition,
-   isPlaying,
+
    opacity,
    localSettings,
    setIsThreeDancerDragging,
@@ -27,7 +27,7 @@ export function ThreeDancer({
    position: number | null;
    currentFormationIndex: number | null;
    percentThroughTransition: number;
-   isPlaying: boolean;
+
    opacity: number;
    localSettings: localSettings;
    pushChange: Function;
@@ -38,7 +38,8 @@ export function ThreeDancer({
    setSelectedDancers: Function;
    setScene: Function;
 }) {
-   const { formations, setFormations, get, viewOnly, items, selectedFormations, selectedDancers, getFirstSelectedFormation, shiftHeld } = useStore();
+   const { formations, setFormations, get, viewOnly, items, selectedFormations, selectedDancers, getFirstSelectedFormation, shiftHeld, isPlaying } =
+      useStore();
 
    const { scene } = useThree((state) => state);
 

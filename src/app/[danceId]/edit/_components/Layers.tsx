@@ -10,7 +10,6 @@ export const Layers: React.FC<{
    // setFormations: Function;
 
    position: number | null;
-   isPlaying: boolean;
 
    pixelsPerSecond: number;
    setSelectedDancers: Function;
@@ -25,7 +24,6 @@ export const Layers: React.FC<{
    hasVisited: boolean;
 }> = ({
    position,
-   isPlaying,
 
    pixelsPerSecond,
    setSelectedDancers,
@@ -40,15 +38,12 @@ export const Layers: React.FC<{
    // setSelectedFormations,
    // selectedFormations,
 }) => {
-   const { formations, setFormations, get, viewOnly, pauseHistory, resumeHistory, songDuration } = useStore();
+   const { formations, setFormations, get, viewOnly, pauseHistory, resumeHistory, songDuration, isPlaying } = useStore();
    const [resizingTransition, setResizingTransition] = useState<string | null>(null);
    const [resizingFormation, setResizingFormation] = useState<string | null>(null);
    const [showTutorial, setShowTutorial] = useState<boolean | "shown">(false);
 
-   const totalDurationOfFormations = formations
-      .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
-      .reduce((a, b) => a + b, 0);
-
+   const totalDurationOfFormations = useStore((state) => state.getTotalDurationOfFormations());
    const timelineWidth = (songDuration ? Math.max(totalDurationOfFormations, songDuration / 1000) : totalDurationOfFormations) * pixelsPerSecond;
 
    return (
@@ -92,7 +87,6 @@ export const Layers: React.FC<{
          <Layer
             setPosition={setPosition}
             setSelectedDancers={setSelectedDancers}
-            isPlaying={isPlaying}
             position={position}
             pixelsPerSecond={pixelsPerSecond}
             addToStack={addToStack}

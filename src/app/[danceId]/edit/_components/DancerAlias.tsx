@@ -65,6 +65,7 @@ export const DancerAlias: React.FC<{
       dancers,
       setDancers,
       hoveringDancerIds,
+      isPlaying,
    } = useStore();
    const container = useRef<HTMLDivElement>();
    const stageFlippedFactor = localSettings.stageFlipped ? -1 : 1;

@@ -122,20 +122,78 @@ export const EventHandler: React.FC<{
       // console.log(e.key);
       if (e.key === " ") {
          e.preventDefault();
-         if (player) {
-            if (position < songDuration / 1000) {
-               player.isPlaying() ? player.pause() : player.play();
-            }
-
-            setIsPlaying((isPlaying) => !isPlaying);
-         } else {
-            setIsPlaying((isPlaying) => !isPlaying);
-         }
+         togglePlayPause();
       }
 
-      if (e.key === "a" && shiftHeld) {
-         console.log("auto layout");
+      if (e.key === "A") {
+         // align dancers
+         setFormations(
+            formations.map((formation) => {
+               if (!selectedFormations.includes(formation.id)) return formation;
+
+               const selectedDancersPositions = formation.positions
+                  .filter((position) => selectedDancers.includes(position.id))
+                  .map((position) => position.position);
+
+               if (selectedDancersPositions.length < 2) return formation;
+
+               let maxDistance = 0;
+               let extremePoints = [null, null];
+
+               // Identifying extreme points
+               for (let i = 0; i < selectedDancersPositions.length; i++) {
+                  for (let j = i + 1; j < selectedDancersPositions.length; j++) {
+                     const distance = Math.hypot(
+                        selectedDancersPositions[j].x - selectedDancersPositions[i].x,
+                        selectedDancersPositions[j].y - selectedDancersPositions[i].y
+                     );
+
+                     if (distance > maxDistance) {
+                        maxDistance = distance;
+                        extremePoints = [selectedDancersPositions[i], selectedDancersPositions[j]];
+                     }
+                  }
+               }
+
+               const slope = (extremePoints[1].y - extremePoints[0].y) / (extremePoints[1].x - extremePoints[0].x);
+               const yIntercept = extremePoints[0].y - slope * extremePoints[0].x;
+
+               const lineLength = Math.hypot(extremePoints[1].x - extremePoints[0].x, extremePoints[1].y - extremePoints[0].y);
+               const numDancers = selectedDancers.length;
+               const spaceBetween = lineLength / (numDancers - 1);
+
+               // Calculate evenly spaced points
+               const evenlySpacedPoints = [];
+               for (let i = 0; i < numDancers; i++) {
+                  const x = ((i * spaceBetween) / lineLength) * (extremePoints[1].x - extremePoints[0].x) + extremePoints[0].x;
+                  const y = slope * x + yIntercept;
+                  evenlySpacedPoints.push({ x, y });
+               }
+
+               return {
+                  ...formation,
+                  positions: formation.positions.map((position) => {
+                     if (!selectedDancers.includes(position.id)) return position;
+
+                     // Find the nearest point among the evenly spaced points
+                     let nearestPoint = evenlySpacedPoints[0];
+                     let minDistance = Number.MAX_VALUE;
+
+                     evenlySpacedPoints.forEach((point) => {
+                        const distance = Math.hypot(point.x - position.position.x, point.y - position.position.y);
+                        if (distance < minDistance) {
+                           minDistance = distance;
+                           nearestPoint = point;
+                        }
+                     });
+
+                     return { ...position, position: nearestPoint };
+                  }),
+               };
+            })
+         );
       }
+
       if (e.key === "2") {
          setLocalSettings((localSettings: localSettings) => {
             return {

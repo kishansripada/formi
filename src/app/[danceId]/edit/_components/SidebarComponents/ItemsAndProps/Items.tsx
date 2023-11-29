@@ -15,7 +15,6 @@ export const Items: React.FC<{
 
    setAudiofiles: Function;
 
-   setIsPlaying: Function;
    setLocalSource: Function;
 
    // items: item[];

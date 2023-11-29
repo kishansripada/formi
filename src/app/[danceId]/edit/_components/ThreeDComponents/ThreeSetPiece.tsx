@@ -8,7 +8,7 @@ export function ThreeSetPiece({
    prop,
    // formations,
    selectedFormation,
-   isPlaying,
+
    position,
    currentFormationIndex,
    percentThroughTransition,
@@ -17,12 +17,12 @@ export function ThreeSetPiece({
    prop: prop;
    // formations: formation[];
    selectedFormation: number | null;
-   isPlaying: boolean;
+
    position: number | null;
    currentFormationIndex: number;
    percentThroughTransition: number;
 }) {
-   const { formations } = useStore();
+   const { formations, isPlaying } = useStore();
    const url = `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${prop.user_id}/${prop?.url}`;
    const texture = useLoader(TextureLoader, url);
    const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });

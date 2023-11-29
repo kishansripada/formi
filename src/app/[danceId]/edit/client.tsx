@@ -136,6 +136,8 @@ const Edit = ({
       imageBlobs,
       shiftHeld,
       setShiftHeld,
+      isPlaying,
+      setIsPlaying,
    } = useStore();
 
    useEffect(() => {
@@ -237,7 +239,7 @@ const Edit = ({
    const [localSource, setLocalSource] = useState(null);
    // const [songDuration, setSongDuration] = useState<number | null>(null);
    const [zoom, setZoom] = useState(1);
-   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+   // const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [isCommenting, setIsCommenting] = useState<boolean>(false);
    // const [position, setPosition] = useState<number>(0);
    const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(35);
@@ -967,7 +969,6 @@ const Edit = ({
                               ) : menuOpen === "audio" ? (
                                  <ChooseAudioSource
                                     session={session}
-                                    setIsPlaying={setIsPlaying}
                                     soundCloudTrackId={soundCloudTrackId}
                                     setSoundCloudTrackId={setSoundCloudTrackId}
                                     audioFiles={audioFiles}
@@ -1009,7 +1010,6 @@ const Edit = ({
                                     invalidatePropUploads={invalidatePropUploads}
                                     selectedPropIds={selectedPropIds}
                                     propUploads={propUploads}
-                                    setIsPlaying={setIsPlaying}
                                     soundCloudTrackId={soundCloudTrackId}
                                     setSoundCloudTrackId={setSoundCloudTrackId}
                                     audioFiles={audioFiles}
@@ -1088,7 +1088,6 @@ const Edit = ({
                                     setScene={setScene}
                                     setIsThreeDancerDragging={setIsThreeDancerDragging}
                                     isThreeDancerDragging={isThreeDancerDragging}
-                                    isPlaying={isPlaying}
                                     currentFormationIndex={currentFormationIndex}
                                     percentThroughTransition={percentThroughTransition}
                                     dancers={dancers}
@@ -1108,7 +1107,6 @@ const Edit = ({
                                     setDraggingDancerId={setDraggingDancerId}
                                     selectedDancers={selectedDancers}
                                     setSelectedDancers={setSelectedDancers}
-                                    setIsPlaying={setIsPlaying}
                                     setPixelsPerSecond={setPixelsPerSecond}
                                     coordsToPosition={coordsToPosition}
                                     currentFormationIndex={currentFormationIndex}
@@ -1126,7 +1124,6 @@ const Edit = ({
                                     setResizingPropId={setResizingPropId}
                                     setSelectedPropIds={setSelectedPropIds}
                                     selectedPropIds={selectedPropIds}
-                                    isPlaying={isPlaying}
                                     shiftHeld={shiftHeld}
                                     setShiftHeld={setShiftHeld}
                                     stageFlipped={localSettings.stageFlipped}
@@ -1142,7 +1139,6 @@ const Edit = ({
                                     setDraggingDancerId={setDraggingDancerId}
                                     selectedDancers={selectedDancers}
                                     setSelectedDancers={setSelectedDancers}
-                                    setIsPlaying={setIsPlaying}
                                     setPixelsPerSecond={setPixelsPerSecond}
                                     coordsToPosition={coordsToPosition}
                                     currentFormationIndex={currentFormationIndex}
@@ -1171,7 +1167,6 @@ const Edit = ({
                                           setZoom={setZoom}
                                           coordsToPosition={coordsToPosition}
                                           selectedDancers={selectedDancers}
-                                          isPlaying={isPlaying}
                                           position={position}
                                           key={dancer.id}
                                           dancer={dancer}
@@ -1197,7 +1192,6 @@ const Edit = ({
                                                   coordsToPosition={coordsToPosition}
                                                   prop={prop}
                                                   percentThroughTransition={percentThroughTransition}
-                                                  isPlaying={isPlaying}
                                                   position={position}
                                                   currentFormationIndex={currentFormationIndex}
                                                   zoom={zoom}
@@ -1234,10 +1228,8 @@ const Edit = ({
                                                   <DancerAliasShadow
                                                      coordsToPosition={coordsToPosition}
                                                      currentFormationIndex={currentFormationIndex}
-                                                     isPlaying={isPlaying}
                                                      key={"shadow" + dancer.id}
                                                      dancer={dancer}
-                                                     //   formations={localSettings.stageFlipped ? flippedFormations : formations}
                                                      localSettings={localSettings}
                                                   />
                                                ))
@@ -1257,10 +1249,8 @@ const Edit = ({
                                                         <DancerAliasShadow
                                                            coordsToPosition={coordsToPosition}
                                                            currentFormationIndex={currentFormationIndex}
-                                                           isPlaying={isPlaying}
                                                            key={"shadow" + dancer.id}
                                                            dancer={dancer}
-                                                           //   formations={localSettings.stageFlipped ? flippedFormations : formations}
                                                            localSettings={localSettings}
                                                         />
                                                      );
@@ -1279,8 +1269,6 @@ const Edit = ({
                               setPlaybackRate={setPlaybackRate}
                               addToStack={addToStack}
                               pushChange={pushChange}
-                              isPlaying={isPlaying}
-                              setIsPlaying={setIsPlaying}
                               position={position}
                               setPixelsPerSecond={setPixelsPerSecond}
                               pixelsPerSecond={pixelsPerSecond}
@@ -1300,8 +1288,6 @@ const Edit = ({
                                  addToStack={addToStack}
                                  pushChange={pushChange}
                                  soundCloudTrackId={soundCloudTrackId}
-                                 isPlaying={isPlaying}
-                                 setIsPlaying={setIsPlaying}
                                  position={position}
                                  setPixelsPerSecond={setPixelsPerSecond}
                                  pixelsPerSecond={pixelsPerSecond}
@@ -1333,8 +1319,6 @@ const Edit = ({
                         setPlaybackRate={setPlaybackRate}
                         addToStack={addToStack}
                         pushChange={pushChange}
-                        isPlaying={isPlaying}
-                        setIsPlaying={setIsPlaying}
                         position={position}
                         setPixelsPerSecond={setPixelsPerSecond}
                         pixelsPerSecond={pixelsPerSecond}
@@ -1352,11 +1336,9 @@ const Edit = ({
                         addToStack={addToStack}
                         pushChange={pushChange}
                         setSelectedDancers={setSelectedDancers}
-                        isPlaying={isPlaying}
                         position={position}
                         soundCloudTrackId={soundCloudTrackId}
                         pixelsPerSecond={pixelsPerSecond}
-                        setIsPlaying={setIsPlaying}
                         setPosition={setPosition}
                         videoPlayer={videoPlayer}
                         localSource={localSource}
