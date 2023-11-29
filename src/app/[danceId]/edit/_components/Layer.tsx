@@ -20,7 +20,6 @@ export const Layer: React.FC<{
    // setFormations: Function;
 
    position: number | null;
-   isPlaying: boolean;
 
    pixelsPerSecond: number;
    setSelectedDancers: Function;
@@ -69,32 +68,9 @@ export const Layer: React.FC<{
    //    //    coordinateGetter: sortableKeyboardCoordinates,
    //    // })
    // );
-   function handleDragStart(event) {
-      const index = event?.active?.data?.current?.sortable?.index || 0;
-      // setSelectedFormation();
-
-      // if (selectedFormation !== index) {
-      //    setSelectedDancers([]);
-      // }
-
-      // if (isPlaying) {
-      // let position = formations
-      //    .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
-      //    .slice(0, index)
-      //    .reduce((a, b) => a + b, 0);
-
-      // if (songDuration && player) {
-      //    console.log(position / (songDuration / 1000));
-      // }
-      // position = position + formations[index]?.transition.durationSeconds;
-      // console.log(position);
-      // setPosition(position);
-      // setSelectedFormation(index);
-      // if (!(songDuration && player)) return;
-
-      // player.seekTo(position / (songDuration / 1000));
-      // setActiveId(event.active.id);
-   }
+   // function handleDragStart(event) {
+   //    const index = event?.active?.data?.current?.sortable?.index || 0;
+   // }
 
    function handleDragEnd(event) {
       const { active, over } = event;
@@ -136,7 +112,7 @@ export const Layer: React.FC<{
             id="outside"
             onClick={clickOutsideFormations}
          >
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                <SortableContext items={formations} strategy={horizontalListSortingStrategy}>
                   {formations.map((formation, index) => (
                      <div
