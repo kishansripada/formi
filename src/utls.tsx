@@ -211,3 +211,24 @@ export function hexToRgba(hex: string, opacity: number): string {
 export function roundToHundredth(value: number): number {
    return Math.round(value * 100) / 100;
 }
+
+export const whereInFormation = (formations: formation[], position: number) => {
+   let sum = 0;
+   let currentFormationIndex = null;
+
+   let percentThroughTransition;
+   for (let i = 0; i < formations.length; i++) {
+      sum = sum + formations[i].durationSeconds + (i === 0 ? 0 : formations[i]?.transition.durationSeconds);
+      if (position < sum) {
+         currentFormationIndex = i;
+         if (currentFormationIndex === 0) break;
+         let durationThroughTransition = position - (sum - formations[i]?.transition?.durationSeconds - formations[i].durationSeconds);
+
+         if (durationThroughTransition < formations[i]?.transition?.durationSeconds) {
+            percentThroughTransition = durationThroughTransition / formations[i]?.transition?.durationSeconds;
+         }
+         break;
+      }
+   }
+   return { currentFormationIndex, percentThroughTransition };
+};
