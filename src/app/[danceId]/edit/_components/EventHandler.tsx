@@ -55,6 +55,7 @@ export const EventHandler: React.FC<{
    setLocalSettings,
    // shiftHeld,
    fullscreenContainer,
+   setIsPlaying,
 }) => {
    const {
       formations,
@@ -121,7 +122,15 @@ export const EventHandler: React.FC<{
       // console.log(e.key);
       if (e.key === " ") {
          e.preventDefault();
-         togglePlayPause();
+         if (player) {
+            if (position < songDuration / 1000) {
+               player.isPlaying() ? player.pause() : player.play();
+            }
+
+            setIsPlaying((isPlaying) => !isPlaying);
+         } else {
+            setIsPlaying((isPlaying) => !isPlaying);
+         }
       }
 
       if (e.key === "a" && shiftHeld) {
