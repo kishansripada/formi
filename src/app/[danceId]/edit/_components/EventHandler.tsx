@@ -125,7 +125,7 @@ export const EventHandler: React.FC<{
          togglePlayPause();
       }
 
-      if (e.key === "A") {
+      if (e.key === "A" && false) {
          // align dancers
          setFormations(
             formations.map((formation) => {
