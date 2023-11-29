@@ -36,9 +36,8 @@ export const DancerAlias: React.FC<{
    dancer,
    currentFormationIndex,
    percentThroughTransition,
-   isPlaying,
-   position,
 
+   position,
    selectedDancers,
    coordsToPosition,
    draggingDancerId,
