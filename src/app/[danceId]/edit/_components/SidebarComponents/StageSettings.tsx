@@ -172,20 +172,24 @@ export const StageSettings: React.FC<{
                               Basketball court
                            </DropdownMenuItem>
 
-                           <DropdownMenuSeparator />
-                           <DropdownMenuLabel>My other stages</DropdownMenuLabel>
-                           <DropdownMenuSeparator />
-                           {myDances.map((dance) => {
-                              return (
-                                 <DropdownMenuItem
-                                    onClick={() => {
-                                       setCloudSettings({ ...cloudSettings, ...dance.settings });
-                                    }}
-                                 >
-                                    {dance.name}
-                                 </DropdownMenuItem>
-                              );
-                           })}
+                           {myDances.length ? (
+                              <>
+                                 <DropdownMenuSeparator />
+                                 <DropdownMenuLabel>Import stage from</DropdownMenuLabel>
+                                 <DropdownMenuSeparator />
+                                 {myDances.map((dance) => {
+                                    return (
+                                       <DropdownMenuItem
+                                          onClick={() => {
+                                             setCloudSettings({ ...cloudSettings, ...dance.settings });
+                                          }}
+                                       >
+                                          {dance.name}
+                                       </DropdownMenuItem>
+                                    );
+                                 })}
+                              </>
+                           ) : null}
                         </DropdownMenuContent>
                      </DropdownMenu>
                   ) : null}
