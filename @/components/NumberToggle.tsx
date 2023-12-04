@@ -23,7 +23,10 @@ const NumberToggle = ({ count, setCount, min, max, label }: { count: number; set
 
    return (
       <div className="flex flex-row justify-between items-center text-black gap-2 w-min">
-         <button onClick={decrement} className=" border-white rounded-md w-6 h-6 grid place-items-center cursor-default text-white">
+         <button
+            onClick={decrement}
+            className=" border-white rounded-md w-6 h-6 grid place-items-center cursor-default text-white hover:bg-neutral-700 transition"
+         >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
             </svg>
@@ -50,7 +53,10 @@ const NumberToggle = ({ count, setCount, min, max, label }: { count: number; set
             />
             <p className="text-[10px] text-neutral-400">{label}</p>
          </div>
-         <button onClick={increment} className=" border-white rounded-md w-6 h-6 grid place-items-center cursor-default text-white">
+         <button
+            onClick={increment}
+            className=" border-white rounded-md w-6 h-6 grid place-items-center cursor-default text-white hover:bg-neutral-700 transition"
+         >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
