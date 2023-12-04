@@ -1,13 +1,24 @@
 import { cloudSettings, dancer, dancerPosition, formation, localSettings, stageDimensions } from "../../../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useStore } from "../../store";
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuLabel,
+   DropdownMenuSeparator,
+   DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
 import NumberToggle from "../../../../../../@/components/NumberToggle";
+import { useEffect, useState } from "react";
 
+import { Session, SupabaseClient } from "@supabase/supabase-js";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 export const StageSettings: React.FC<{
    setAssetsOpen: Function;
-}> = ({ setAssetsOpen }) => {
+   session: Session;
+}> = ({ setAssetsOpen, session }) => {
    const {
       viewOnly,
       cloudSettings: { stageBackground, stageDimensions },
@@ -15,60 +26,8 @@ export const StageSettings: React.FC<{
       setCloudSettings,
       get,
    } = useStore();
-
-   const changeWidth = (amount: number) => {
-      // for (let i = 0; i < formations.length; i++) {
-      //    for (let j = 0; j < formations[i].positions.length; j++) {
-      //       if (
-      //          (formations[i].positions[j]?.position.x === stageDimensions.width / 2 - 3 ||
-      //             formations[i].positions[j]?.position.x === -stageDimensions.width / 2 + 3) &&
-      //          amount < 0
-      //       ) {
-      //          toast.error("Dancers are too close to the edge");
-      //          return;
-      //       }
-      //    }
-      // }
-
-      // move dancers that are too close to the edge
-      // setFormations((formations: formation[]) => {
-      //    return formations.map((formation, i) => {
-      //       return {
-      //          ...formation,
-      //          positions: formation.positions.map((position) => {
-      //             if (position.position.x < -(stageDimensions.width / 2 - 3)) {
-      //                return { ...position, position: { ...position.position, x: position.position.x - amount / 2 } };
-      //             }
-      //             if (position.position.x > stageDimensions.width / 2 - 3) {
-      //                return { ...position, position: { ...position.position, x: position.position.x + amount / 2 } };
-      //             }
-      //             return position;
-      //          }),
-      //       };
-      //    });
-      // });
-
-      setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, width: cloudSettings.stageDimensions.width + amount } });
-   };
-
-   const changeHeight = (amount: number) => {
-      // check to make sure dancers won't fall off the stage
-      // for (let i = 0; i < formations.length; i++) {
-      //    for (let j = 0; j < formations[i].positions.length; j++) {
-      //       if (
-      //          (formations[i].positions[j]?.position.y === stageDimensions.height / 2 - 1 ||
-      //             formations[i].positions[j]?.position.y === -stageDimensions.height / 2 + 1) &&
-      //          amount < 0
-      //       ) {
-      //          toast.error("dancers will fall off the stage");
-      //          return;
-      //       }
-      //    }
-      // }
-
-      setCloudSettings({ ...cloudSettings, stageDimensions: { ...stageDimensions, height: cloudSettings.stageDimensions.height + amount } });
-   };
-
+   const supabase = createClientComponentClient();
+   const [myDances, setMyDances] = useState([]);
    const setStageBackground = (val: string) => {
       // if (val === "cheer9") {
       //    setCloudSettings({ ...cloudSettings, stageDimensions: { width: 36, height: 28 }, gridSubdivisions: 9 });
@@ -78,6 +37,71 @@ export const StageSettings: React.FC<{
          stageBackground: val,
       });
    };
+   const templates = {
+      cheer9: {
+         stageDimensions: { width: 54, height: 42 },
+         horizontalGridSubdivisions: 4,
+         horizontalFineDivisions: 4,
+         verticalFineDivisions: 4,
+         gridSubdivisions: 9,
+         backgroundUrl: "",
+         hideSubdivisions: false,
+         stageBackground: "gridfluid",
+         // backgroundUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/f30197ba-cf06-4234-bcdb-5d40d83c7999/IMG_1130.png",
+      },
+      nba: {
+         stageDimensions: { width: 94, height: 50 },
+         horizontalGridSubdivisions: 4,
+         horizontalFineDivisions: 4,
+         verticalFineDivisions: 4,
+         gridSubdivisions: 9,
+         stageBackground: "gridfluid",
+         hideSubdivisions: false,
+         backgroundUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/f30197ba-cf06-4234-bcdb-5d40d83c7999/basketball.png",
+      },
+      nfl: { stageDimensions: { width: 330, height: 160 } },
+      default: {
+         stageDimensions: { width: 36, height: 24 },
+         horizontalGridSubdivisions: 4,
+         horizontalFineDivisions: 4,
+         verticalFineDivisions: 4,
+         gridSubdivisions: 8,
+         backgroundUrl: "",
+         stageBackground: "gridfluid",
+         backgroundImageOpacity: 100,
+         hideSubdivisions: false,
+      },
+   } as { [key: string]: Partial<cloudSettings> };
+
+   useEffect(() => {
+      if (!session) return;
+      const getStages = async () => {
+         async function getMyDancesMetadata(session: Session, supabase: SupabaseClient) {
+            let data = await supabase
+               .from("dances")
+               .select(
+                  `
+                        id,
+                        created_at,
+                        user,
+                        name,
+                        last_edited,
+                        settings,
+                        isInTrash,
+                        project_id
+                        `
+               )
+               .eq("user", session.user.id);
+
+            return data?.data || [];
+         }
+         const data = await getMyDancesMetadata(session, supabase);
+         if (data.length) {
+            setMyDances(data);
+         }
+      };
+      getStages();
+   }, []);
 
    return (
       <>
@@ -102,22 +126,69 @@ export const StageSettings: React.FC<{
                <div className="flex flex-row items-center justify-between">
                   <p className="text-xs font-medium py-1">Stage</p>
 
-                  {/* <div className="hover:bg-neutral-800 p-1  cursor-default ">
-                     <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-5 h-5 "
-                     >
-                        <path
-                           strokeLinecap="round"
-                           strokeLinejoin="round"
-                           d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
-                        />
-                     </svg>
-                  </div> */}
+                  {!viewOnly ? (
+                     <DropdownMenu>
+                        <DropdownMenuTrigger>
+                           {" "}
+                           <div className="hover:bg-neutral-800 p-1  cursor-default ">
+                              <svg
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 strokeWidth={1.5}
+                                 stroke="currentColor"
+                                 className="w-5 h-5 "
+                              >
+                                 <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+                                 />
+                              </svg>
+                           </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="max-h-[500px] overflow-scroll">
+                           <DropdownMenuLabel>Presets</DropdownMenuLabel>
+                           <DropdownMenuSeparator />
+                           <DropdownMenuItem
+                              onClick={() => {
+                                 setCloudSettings({ ...cloudSettings, ...templates.default });
+                              }}
+                           >
+                              Default
+                           </DropdownMenuItem>
+                           <DropdownMenuItem
+                              onClick={() => {
+                                 setCloudSettings({ ...cloudSettings, ...templates.cheer9 });
+                              }}
+                           >
+                              Cheer floor - 9 Rolls
+                           </DropdownMenuItem>
+                           <DropdownMenuItem
+                              onClick={() => {
+                                 setCloudSettings({ ...cloudSettings, ...templates.nba });
+                              }}
+                           >
+                              Basketball court
+                           </DropdownMenuItem>
+
+                           <DropdownMenuSeparator />
+                           <DropdownMenuLabel>My other stages</DropdownMenuLabel>
+                           <DropdownMenuSeparator />
+                           {myDances.map((dance) => {
+                              return (
+                                 <DropdownMenuItem
+                                    onClick={() => {
+                                       setCloudSettings({ ...cloudSettings, ...dance.settings });
+                                    }}
+                                 >
+                                    {dance.name}
+                                 </DropdownMenuItem>
+                              );
+                           })}
+                        </DropdownMenuContent>
+                     </DropdownMenu>
+                  ) : null}
                </div>
             </div>
             <div className=" px-2 flex flex-col gap-2 pb-2 border-neutral-700 ">

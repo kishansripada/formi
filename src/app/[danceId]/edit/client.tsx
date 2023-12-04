@@ -992,6 +992,7 @@ const Edit = ({
                                     localSettings={localSettings}
                                     pushChange={pushChange}
                                     setAssetsOpen={setAssetsOpen}
+                                             session={session}
                                  ></StageSettings>
                               ) : menuOpen === "collisions" ? (
                                  <Collisions
