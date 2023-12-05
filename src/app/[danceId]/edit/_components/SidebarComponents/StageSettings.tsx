@@ -129,7 +129,6 @@ export const StageSettings: React.FC<{
                   {!viewOnly ? (
                      <DropdownMenu>
                         <DropdownMenuTrigger>
-                           {" "}
                            <div className="hover:bg-neutral-800 p-1  cursor-default ">
                               <svg
                                  xmlns="http://www.w3.org/2000/svg"
@@ -200,6 +199,7 @@ export const StageSettings: React.FC<{
 
                <div className="flex flex-row items-center justify-between">
                   <NumberToggle
+                     readOnly={viewOnly}
                      count={stageDimensions.width}
                      label={"Width"}
                      setCount={(count: number) => {
@@ -210,6 +210,7 @@ export const StageSettings: React.FC<{
                   ></NumberToggle>
                   <div className="h-full w-[1px] bg-neutral-700"></div>
                   <NumberToggle
+                     readOnly={viewOnly}
                      count={stageDimensions.height}
                      label={"Height"}
                      setCount={(count: number) => {
@@ -282,6 +283,7 @@ export const StageSettings: React.FC<{
 
                      <div className="flex flex-row items-center justify-between">
                         <NumberToggle
+                           readOnly={viewOnly}
                            count={cloudSettings.gridSubdivisions}
                            label={"Vertical"}
                            setCount={(count: number) => {
@@ -292,6 +294,7 @@ export const StageSettings: React.FC<{
                         ></NumberToggle>
                         <div className="h-full w-[1px] bg-neutral-700"></div>
                         <NumberToggle
+                           readOnly={viewOnly}
                            count={cloudSettings.horizontalGridSubdivisions}
                            label={"Horizontal"}
                            setCount={(count: number) => {
@@ -341,6 +344,7 @@ export const StageSettings: React.FC<{
                            <div className="flex flex-row items-center justify-between">
                               {" "}
                               <NumberToggle
+                                 readOnly={viewOnly}
                                  count={cloudSettings.verticalFineDivisions}
                                  label={"Vertical"}
                                  setCount={(count: number) => {
@@ -351,6 +355,7 @@ export const StageSettings: React.FC<{
                               ></NumberToggle>
                               <div className="h-full w-[1px] bg-neutral-700"></div>
                               <NumberToggle
+                                 readOnly={viewOnly}
                                  count={cloudSettings.horizontalFineDivisions}
                                  label={"Horizontal"}
                                  setCount={(count: number) => {
