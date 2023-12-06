@@ -77,8 +77,8 @@ export const ChooseAudioSource: React.FC<{
    const upload = useRef(null);
 
    return (
-      <VStack className="overflow-hidden w-full h-full ">
-         <HStack className="justify-between items-center text-xl px-2  py-2 font-medium">
+      <VStack className="overflow-hidden w-full h-full">
+         <HStack className="justify-between items-center text-xl px-2 py-2 font-medium">
             <button onClick={(e) => {}} className="text-sm w-30 font-normal relative cursor-pointer">
                <input
                   ref={upload}
@@ -146,20 +146,7 @@ export const ChooseAudioSource: React.FC<{
                         <DropdownMenuContent>
                            <DropdownMenuLabel>Uploads</DropdownMenuLabel>
                            <DropdownMenuSeparator />
-                           {!audioFiles.data.length ? (
-                              <DropdownMenuItem
-                                 onClick={() => {
-                                    upload.current.click();
-                                 }}
-                              >
-                                 <HStack className="items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                                       <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                                    </svg>
-                                    <p> Upload your first file</p>
-                                 </HStack>
-                              </DropdownMenuItem>
-                           ) : null}
+
                            {[...audioFiles.data].reverse().map((audiofile) => {
                               return (
                                  <DropdownMenuItem className="">
@@ -187,6 +174,19 @@ export const ChooseAudioSource: React.FC<{
                                  </DropdownMenuItem>
                               );
                            })}
+
+                           <DropdownMenuItem
+                              onClick={() => {
+                                 upload.current.click();
+                              }}
+                           >
+                              <HStack className="items-center gap-2">
+                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                    <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                                 </svg>
+                                 <p> Upload your first file</p>
+                              </HStack>
+                           </DropdownMenuItem>
                         </DropdownMenuContent>
                      </DropdownMenu>
                   ) : null}
@@ -218,14 +218,7 @@ export const ChooseAudioSource: React.FC<{
                      className={`flex flex-row items-center px-2  box-border over:bg-neutral-100 dark:hover:bg-neutral-700  group  select-none w-full  min-h-[35px] `}
                   >
                      <p className="font-semibold   text-xs w-7 "> {index + 1}</p>
-                     {/* <PopoverPicker
-                        dancers={segments}
-                        color={segment?.color || "#db2777"}
-                        setColor={(color: string) => {
-                           updateSegmentProperty(segment.id, "color", color);
-                        }}
-                        position="top"
-                     ></PopoverPicker> */}
+
                      <Popover>
                         <PopoverTrigger>
                            <div
