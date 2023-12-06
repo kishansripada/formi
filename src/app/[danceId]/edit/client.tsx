@@ -1,6 +1,7 @@
 "use client";
 import { roundToHundredth } from "../../../utls";
 import { detectCollisions } from "../../../types/collisionDetector";
+import { useIsDesktop } from "../../../utls";
 import { Video } from "./_components/Video";
 import { DndContext, useDroppable } from "@dnd-kit/core";
 import dynamic from "next/dynamic";
