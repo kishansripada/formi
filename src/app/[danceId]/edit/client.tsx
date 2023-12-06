@@ -47,6 +47,7 @@ import { MobileSidebar } from "./_components/MobileSidebar";
 import * as Sentry from "@sentry/browser";
 import { cubic, linear } from "./animationFunctions";
 import { ItemsAndProps } from "./_components/SidebarComponents/ItemsAndProps/Layout";
+import { Button } from "../../../../@/components/ui/button";
 if (typeof Node === "function" && Node.prototype) {
    const originalRemoveChild = Node.prototype.removeChild;
    Node.prototype.removeChild = function (child) {
