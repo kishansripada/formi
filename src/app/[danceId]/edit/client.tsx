@@ -773,6 +773,7 @@ const Edit = ({
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
    };
+   const isDesktop = useIsDesktop();
 
    return (
       <>
