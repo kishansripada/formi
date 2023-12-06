@@ -806,6 +806,41 @@ const Edit = ({
                <p className="text-center">Loading PDF. This may take a while.</p>
             </div>
          ) : null}
+            {formations.some((formation, i) => (formation.transition.durationSeconds < 0.3 && i !== 0) || formation.durationSeconds < 0) &&
+            isDesktop &&
+            formations.length &&
+            !viewOnly ? (
+               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] bg-black text-white border border-neutral-600  rounded-xl h-[200px] px-3  z-50 grid place-items-center">
+                  <p className="text-center">
+                     We noticed a bug where some of your formation durations are too short. Please click below to resolve the issue.
+                  </p>
+                  <Button
+                     onClick={async () => {
+                        const { data } = await supabase.from("clicked_button").upsert({ dance_id: danceId });
+                        console.log(data);
+                        setFormations(
+                           formations.map((formation, i) => {
+                              const transitionToSmall = formation.transition.durationSeconds < 0.3;
+
+                              return {
+                                 ...formation,
+                                 transition: { durationSeconds: Math.max(formation.transition.durationSeconds, 0.3) },
+                                 durationSeconds: Math.max(
+                                    formation.durationSeconds - (transitionToSmall && i !== 0 ? 0.3 - formation.transition.durationSeconds : 0),
+                                    0
+                                 ),
+                              };
+                           })
+                        );
+                     }}
+                  >
+                     Click here to fix the issue!
+                  </Button>
+                  <p className="text-xs text-neutral-300">
+                     if this popup doesn't go away after clicking the button, please email us immediately at kishansripada@formistudio.app
+                  </p>
+               </div>
+            ) : null}
 
          {isCommenting ? (
             <>
