@@ -342,7 +342,7 @@ export const Timeline: React.FC<{
                   style={{
                      width: timelineWidth || 0,
                   }}
-                  className=" h-[16px]  relative z-[10] mt-1   overflow-hidden  flex flex-row justify-start   "
+                  className=" h-[16px]  relative z-[10] mt-1     flex flex-row justify-start   "
                >
                   {segments.map((section, index) => {
                      return (
@@ -370,10 +370,10 @@ export const Timeline: React.FC<{
                               // borderColor: section.color,
                            }}
                         >
-                           <p className=" font-semibold">
+                           <p className=" font-semibold whitespace-nowrap overflow-hidden">
                               {section.name} - ({Math.round(section.duration)}s)
                            </p>
-                           {menuOpen === "segments" && !viewOnly ? (
+                           {menuOpen === "audio" && !viewOnly ? (
                               <div
                                  className="h-full  w-[15px] z-10 right-0 top-0 absolute cursor-ew-resize flex flex-row justify-center"
                                  data-type="segment-resize"
