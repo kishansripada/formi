@@ -5,6 +5,7 @@ import { AuthSession } from "@supabase/supabase-js";
 import { PopoverPicker } from "../ColorPicker";
 import { useStore } from "../../store";
 import { convertToCentimeters, convertToFeetAndInches } from "../../../../../utls";
+import { Add } from "../../../../../../@/components/ui/button";
 export const Roster: React.FC<{
    addToStack: Function;
    pushChange: Function;
@@ -100,20 +101,9 @@ export const Roster: React.FC<{
          <div className="flex h-full w-full flex-col   dark:text-white ">
             {!viewOnly ? (
                <>
-                  <div className="flex flex-row items-center justify-start border-b border-neutral-200 px-2 py-2 text-xs dark:border-neutral-700 min-h-[40px]">
-                     <button onClick={createNewDancer} className=" flex flex-row items-center ">
-                        <p className="ml-auto mr-2">New Dancer</p>
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="h-5 w-5"
-                        >
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                     </button>
+                  <div className="flex flex-row items-center justify-between border-b border-neutral-200 px-2 py-2 text-xs dark:border-neutral-700 min-h-[40px] w-full">
+                     <p className="font-medium">Performers</p>
+                     <Add onClick={createNewDancer}></Add>
                   </div>
                </>
             ) : null}
