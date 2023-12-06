@@ -3,7 +3,20 @@ import toast, { Toaster } from "react-hot-toast";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AuthSession } from "@supabase/supabase-js";
 import { useStore } from "../../store";
-
+import PropertyAdd from "../../../../../../@/components/PropertyAdd";
+import {
+   DropdownMenu,
+   DropdownMenuContent,
+   DropdownMenuItem,
+   DropdownMenuLabel,
+   DropdownMenuSeparator,
+   DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { HStack, VStack } from "../../../../../../@/components/ui/stacks";
+import { HDivider } from "../../../../../../@/components/ui/hdivider";
+import { PopoverPicker } from "../ColorPicker";
+import { Popover, PopoverContent, PopoverTrigger } from "../../../../../../@/components/ui/popover";
+import { HexColorPicker } from "react-colorful";
 export const ChooseAudioSource: React.FC<{
    audioFiles: any;
    soundCloudTrackId: string | null;
@@ -12,7 +25,7 @@ export const ChooseAudioSource: React.FC<{
    setLocalSource: Function;
    session: AuthSession | null;
 }> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, setAudiofiles, setLocalSource, session }) => {
-   const { viewOnly, setPlayer, player, setIsPlaying } = useStore();
+   const { viewOnly, setPlayer, player, setIsPlaying, segments, setSegments, newSegment, updateSegmentProperty } = useStore();
    const [file, setFile] = useState<File | null>();
 
    const supabase = createClientComponentClient();
@@ -61,163 +74,201 @@ export const ChooseAudioSource: React.FC<{
          });
    }, [file]);
 
+   const upload = useRef(null);
+
    return (
-      <>
-         <div className="flex  w-full  h-full  flex-col      pb-6 overflow-hidden">
-            <div className="flex flex-col  ">
-               <div className="text-xl px-4 font-medium h-[40px] border-b border-neutral-300 dark:border-neutral-700  flex flex-row justify-between items-center">
-                  <button onClick={(e) => {}} className="text-sm w-30 font-normal relative cursor-pointer">
-                     <input
-                        accept="audio/mp3, audio/wav, video/mp4, video/avi"
-                        type="file"
-                        autoComplete="off"
-                        tabIndex={-1}
-                        className="cursor-pointer absolute w-32 left-0 opacity-0 z-50"
-                        onChange={(event) => {
-                           if (event.target.files && event.target.files[0]) {
-                              const i = event.target.files[0];
-                              setFile(i);
-                           }
-                        }}
+      <VStack className="overflow-hidden w-full h-full ">
+         <HStack className="justify-between items-center text-xl px-2  py-2 font-medium">
+            <button onClick={(e) => {}} className="text-sm w-30 font-normal relative cursor-pointer">
+               <input
+                  ref={upload}
+                  accept="audio/mp3, audio/wav, video/mp4, video/avi"
+                  type="file"
+                  autoComplete="off"
+                  tabIndex={-1}
+                  className="cursor-pointer absolute w-32 left-0 opacity-0 z-50"
+                  onChange={(event) => {
+                     if (event.target.files && event.target.files[0]) {
+                        const i = event.target.files[0];
+                        setFile(i);
+                     }
+                  }}
+               />
+               <div className="flex flex-row items-center cursor-pointer">
+                  <svg
+                     xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     strokeWidth={1.5}
+                     stroke="currentColor"
+                     className="w-4 h-4 mr-2"
+                  >
+                     <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
                      />
-                     <div className="flex flex-row items-center cursor-pointer">
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-4 h-4 mr-2"
-                        >
-                           <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                           />
+                  </svg>
+
+                  <p className="relative cursor-pointer ">Upload Media</p>
+               </div>
+            </button>
+         </HStack>
+         <HDivider />
+         <VStack className="gap-2 py-2">
+            <div className="flex flex-row items-center justify-between px-2">
+               <p className=" font-medium text-xs">Audio track</p>
+               <div className="flex flex-row items-center gap-2">
+                  {Boolean(soundCloudTrackId) ? (
+                     <button
+                        onClick={() => {
+                           setSoundCloudTrackId(null);
+                           setLocalSource(null);
+                           setPlayer(null);
+                        }}
+                        className="  md:text-xs text-[10px] hover:bg-neutral-800 p-1  cursor-default "
+                     >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                           <path fillRule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clipRule="evenodd" />
                         </svg>
+                     </button>
+                  ) : null}
 
-                        <p className="relative cursor-pointer ">Upload Media</p>
-                     </div>
-                  </button>
-               </div>
-            </div>
-
-            <div className="px-2  ">
-               <p className=" font-medium mb-2 mt-4 text-sm ">Selected File</p>
-               <div className="px-2 py-2  rounded-md my-1 cursor-pointer w-full flex flex-row items-center justify-center whitespace-nowrap bg-pink-100 dark:bg-dark-secondary ">
-                  {soundCloudTrackId ? (
-                     <>
-                        <p className=" text-sm  w-full text-ellipsis  overflow-hidden">{soundCloudTrackId?.split("/").slice(-1)[0]}</p>
-
-                        <button
-                           onClick={async (e) => {
-                              e.stopPropagation();
-
-                              setSoundCloudTrackId(null);
-                              setLocalSource(null);
-                              setPlayer(null);
-
-                              toast.success("Deselected Track");
-                           }}
-                        >
-                           <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-6 h-6 ml-auto "
-                           >
-                              <path
-                                 strokeLinecap="round"
-                                 strokeLinejoin="round"
-                                 d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                           </svg>
-                        </button>
-                     </>
-                  ) : (
-                     <>
-                        <p className=" text-xs ">No File Selected</p>
-                     </>
-                  )}
-               </div>
-            </div>
-
-            <p className=" font-medium mb-2 mt-4 text-sm px-2 ">Uploaded Media</p>
-            <div className="h-full px-2 overflow-y-scroll">
-               <div className=" flex flex-col overflow-scroll removeScrollBar ">
-                  {audioFiles?.data?.length ? (
-                     [...audioFiles.data].reverse().map((audiofile) => {
-                        return (
-                           <div
-                              key={audiofile.name}
-                              onClick={() => {
-                                 if (viewOnly) return;
-                                 try {
-                                    player ? player.pause() : null;
-                                 } catch {
-                                    console.log("player not found");
-                                 }
-                                 setIsPlaying(false);
-                                 setSoundCloudTrackId(
-                                    `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/audiofiles/${session?.user.id}/${audiofile.name}`
-                                 );
-                                 setLocalSource(null);
-                              }}
-                              className={` ${
-                                 audiofile.name === soundCloudTrackId?.split("/").slice(-1)[0] ? "opacity-50 pointer-events-none" : ""
-                              }   rounded-md my-1 px-2 group hover:bg-neutral-100 dark:hover:bg-neutral-700 cursor-pointer w-full min-h-[40px] flex flex-row items-center  whitespace-nowrap  `}
-                           >
-                              <p className=" text-xs  text-left text-ellipsis overflow-hidden">{audiofile.name}</p>
-
-                              <button
-                                 className="ml-auto mr-2"
-                                 onClick={async (e) => {
-                                    e.stopPropagation();
-                                    const { data, error } = await supabase.storage
-                                       .from("audiofiles")
-                                       .remove([`${session?.user?.id}/${audiofile.name}`]);
-
-                                    await supabase.storage
-                                       .from("audiofiles")
-                                       .list(session?.user.id, {})
-                                       .then((r) => {
-                                          setAudiofiles(r);
-                                       });
-                                    if (!error) {
-                                       toast.success("deleted file");
-                                    }
+                  {!soundCloudTrackId ? (
+                     <DropdownMenu>
+                        <DropdownMenuTrigger>
+                           <button className="hover:bg-neutral-800 p-1 cursor-default pointer-events-auto">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                 <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                              </svg>
+                           </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                           <DropdownMenuLabel>Uploads</DropdownMenuLabel>
+                           <DropdownMenuSeparator />
+                           {!audioFiles.data.length ? (
+                              <DropdownMenuItem
+                                 onClick={() => {
+                                    upload.current.click();
                                  }}
                               >
-                                 <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="w-5 h-5 group-hover:opacity-100 opacity-0 "
-                                 >
-                                    <path
-                                       strokeLinecap="round"
-                                       strokeLinejoin="round"
-                                       d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                                    />
-                                 </svg>
-                              </button>
-                           </div>
-                        );
-                     })
-                  ) : (
-                     <>
-                        <p className=" text-sm">No Uploaded Files</p>
-                     </>
-                  )}
+                                 <HStack className="items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                       <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                                    </svg>
+                                    <p> Upload your first file</p>
+                                 </HStack>
+                              </DropdownMenuItem>
+                           ) : null}
+                           {[...audioFiles.data].reverse().map((audiofile) => {
+                              return (
+                                 <DropdownMenuItem className="">
+                                    <div
+                                       key={audiofile.name}
+                                       onClick={() => {
+                                          if (viewOnly) return;
+                                          try {
+                                             player ? player.pause() : null;
+                                          } catch {
+                                             console.log("player not found");
+                                          }
+                                          setIsPlaying(false);
+                                          setSoundCloudTrackId(
+                                             `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/audiofiles/${session?.user.id}/${audiofile.name}`
+                                          );
+                                          setLocalSource(null);
+                                       }}
+                                       className={` ${
+                                          audiofile.name === soundCloudTrackId?.split("/").slice(-1)[0] ? "opacity-50 pointer-events-none" : ""
+                                       }    `}
+                                    >
+                                       {audiofile.name}
+                                    </div>
+                                 </DropdownMenuItem>
+                              );
+                           })}
+                        </DropdownMenuContent>
+                     </DropdownMenu>
+                  ) : null}
                </div>
             </div>
-         </div>
-         <Toaster />
-      </>
+
+            {Boolean(soundCloudTrackId) ? <p className="px-2 text-xs">{soundCloudTrackId?.split("/").slice(-1)[0]}</p> : null}
+         </VStack>
+
+         <PropertyAdd
+            canAdd={true}
+            canSubtract={segments.length > 0}
+            isOpen={segments.length > 0}
+            onAdd={() => {
+               newSegment();
+            }}
+            onSubtract={() => {
+               setSegments([]);
+            }}
+            label="Audio segments"
+         >
+            <VStack>
+               {segments.map((segment, index) => (
+                  <div
+                     onClick={() => {
+                        // setSelectedSegment(segment.id);
+                     }}
+                     key={segment.id}
+                     className={`flex flex-row items-center px-2  box-border over:bg-neutral-100 dark:hover:bg-neutral-700  group  select-none w-full  min-h-[35px] `}
+                  >
+                     <p className="font-semibold   text-xs w-7 "> {index + 1}</p>
+                     {/* <PopoverPicker
+                        dancers={segments}
+                        color={segment?.color || "#db2777"}
+                        setColor={(color: string) => {
+                           updateSegmentProperty(segment.id, "color", color);
+                        }}
+                        position="top"
+                     ></PopoverPicker> */}
+                     <Popover>
+                        <PopoverTrigger>
+                           <div
+                              style={{
+                                 backgroundColor: segment?.color,
+                              }}
+                              className={`h-5 w-5 rounded-sm ${!segment.color ? "border border-white" : ""}`}
+                           ></div>
+                        </PopoverTrigger>
+                        <PopoverContent side="right" className="p-0 w-min flex flex-col items-center justify-center gap-3 p-2">
+                           <HexColorPicker
+                              onChange={(color) => {
+                                 updateSegmentProperty(segment.id, "color", color);
+                              }}
+                              color={segment?.color}
+                           ></HexColorPicker>
+                        </PopoverContent>
+                     </Popover>
+                     <input
+                        className="h-6 w-full  bg-transparent   px-2 py-4  text-xs rounded-md    outline-none cursor-default"
+                        value={segment.name}
+                        spellCheck={false}
+                        autoCorrect="off"
+                        onChange={(e) => {
+                           updateSegmentProperty(segment.id, "name", e.target.value);
+                        }}
+                        readOnly={viewOnly}
+                     />
+
+                     <button
+                        onClick={() => setSegments(segments.filter((s) => s.id !== segment.id))}
+                        className="  md:text-xs text-[10px] hover:bg-neutral-800 p-1  cursor-default "
+                     >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                           <path fillRule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clipRule="evenodd" />
+                        </svg>
+                     </button>
+                  </div>
+               ))}
+            </VStack>
+         </PropertyAdd>
+         <HDivider />
+      </VStack>
    );
 };
 

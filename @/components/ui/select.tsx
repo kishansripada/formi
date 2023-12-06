@@ -19,7 +19,7 @@ const SelectTrigger = React.forwardRef<
    <SelectPrimitive.Trigger
       ref={ref}
       className={cn(
-         "flex h-10 whitespace-nowrap items-center cursor-default justify-between rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-neutral-500 focus:outline-none  focus:ring-0 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-950 dark:ring-offset-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-neutral-300",
+         "flex h-10 whitespace-nowrap items-center cursor-default justify-between rounded-md border border-neutral-200 bg-white px-3 py-2 text-xs ring-offset-white placeholder:text-neutral-500 focus:outline-none  focus:ring-0 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-950 dark:ring-offset-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-neutral-300",
          className
       )}
       {...props}
@@ -60,7 +60,7 @@ SelectContent.displayName = SelectPrimitive.Content.displayName;
 
 const SelectLabel = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Label>, React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>>(
    ({ className, ...props }, ref) => (
-      <SelectPrimitive.Label ref={ref} className={cn("py-1.5 pl-8 pr-2 text-sm font-semibold", className)} {...props} />
+      <SelectPrimitive.Label ref={ref} className={cn("py-1.5 pl-8 pr-2 text-xs font-semibold", className)} {...props} />
    )
 );
 SelectLabel.displayName = SelectPrimitive.Label.displayName;

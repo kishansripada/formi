@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from "react";
 
-const NumberToggle = ({ count, setCount, min, max, label }: { count: number; setCount: Function; min: number; max: number; label: string }) => {
+const NumberToggle = ({
+   count,
+   setCount,
+   min,
+   max,
+   label,
+   readOnly = false,
+}: {
+   count: number;
+   setCount: Function;
+   min: number;
+   max: number;
+   label: string;
+   readOnly: boolean;
+}) => {
    const [newVal, setNewVal] = useState(count);
 
    useEffect(() => {
@@ -24,6 +38,9 @@ const NumberToggle = ({ count, setCount, min, max, label }: { count: number; set
    return (
       <div className="flex flex-row justify-between items-center text-black gap-2 w-min">
          <button
+            style={{
+               visibility: readOnly ? "hidden" : "visible",
+            }}
             onClick={decrement}
             className=" border-white rounded-md w-6 h-6 grid place-items-center cursor-default text-white hover:bg-neutral-700 transition"
          >
@@ -31,6 +48,7 @@ const NumberToggle = ({ count, setCount, min, max, label }: { count: number; set
                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
             </svg>
          </button>
+
          <div className="flex flex-col items-center justify-center">
             <input
                value={newVal}
@@ -53,7 +71,11 @@ const NumberToggle = ({ count, setCount, min, max, label }: { count: number; set
             />
             <p className="text-[10px] text-neutral-400">{label}</p>
          </div>
+
          <button
+            style={{
+               visibility: readOnly ? "hidden" : "visible",
+            }}
             onClick={increment}
             className=" border-white rounded-md w-6 h-6 grid place-items-center cursor-default text-white hover:bg-neutral-700 transition"
          >

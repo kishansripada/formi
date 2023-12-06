@@ -350,7 +350,7 @@ export const Timeline: React.FC<{
                            key={section.id}
                            className={`h-full  box-border rounded-sm px-2 dark:text-white md:text-[10px] text-[8px] relative cursor-pointer `}
                            onClick={(e: any) => {
-                              if (menuOpen === "segments") return;
+                              if (menuOpen === "audio") return;
 
                               // if (isPlaying) {
                               let position = segments
