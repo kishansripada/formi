@@ -207,7 +207,7 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
                            ...formationAtIndex,
                            durationSeconds: oldTotalDuration / (isLastFormationSelected ? 1 : 2),
                            transition: {
-                              durationSeconds: 0,
+                              durationSeconds: oldTotalDuration / (isLastFormationSelected ? 1 : 2),
                            },
                         },
                         {
