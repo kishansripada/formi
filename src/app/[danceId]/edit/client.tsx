@@ -925,6 +925,7 @@ const Edit = ({
                `}
             </style>
 
+               {!localSettings.fullScreen && (
             <Header
                fullscreenContainer={fullscreenContainer}
                danceId={danceId}
@@ -949,6 +950,7 @@ const Edit = ({
                anyoneCanView={anyoneCanView}
                setAnyoneCanView={setAnyoneCanView}
             />
+               )}
 
                <MobileSidebar
                   setLocalSettings={setLocalSettings}
@@ -958,9 +960,12 @@ const Edit = ({
                ></MobileSidebar>
 
             <div className="flex flex-row overflow-hidden w-screen h-full">
+                  {!localSettings.fullScreen && (
                <Sidebar setLocalSettings={setLocalSettings} setHelpUrl={setHelpUrl} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
+                  )}
                <div className="flex flex-col w-full h-full overflow-hidden">
                   <div className="flex flex-row   overflow-hidden w-full h-full">
+                        {!localSettings.fullScreen && (
                         <div
                            style={{
                               pointerEvents: menuOpen ? "auto" : "none",
@@ -1047,12 +1052,14 @@ const Edit = ({
                                     soundCloudTrackId={soundCloudTrackId}
                                     setSoundCloudTrackId={setSoundCloudTrackId}
                                     audioFiles={audioFiles}
-                                    setAudiofiles={setAudiofiles}
+                                             // setAudiofiles={setAudiofiles}
                                     setLocalSource={setLocalSource}
                                           ></ItemsAndProps>
-                              ) : menuOpen === "segments" ? (
-                                 <Segments pushChange={pushChange}></Segments>
-                              ) : menuOpen === "formations" ? (
+                                       ) : // : menuOpen === "segments" ? (
+                                       //    <Segments pushChange={pushChange}></Segments>
+                                       // )
+
+                                       menuOpen === "formations" ? (
                                  <CurrentFormation
                                     dropDownToggle={dropDownToggle}
                                     isCommenting={isCommenting}
@@ -1068,6 +1075,7 @@ const Edit = ({
                               ) : null}
                               </>
                         </div>
+                        )}
 
                      <DndContext id="1" onDragEnd={handleDragEnd}>
                            <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-50 dark:bg-neutral-900 relative `}>
@@ -1108,32 +1116,23 @@ const Edit = ({
 
                               {localSettings.viewingTwo ? (
                                  <Canvas
-                                    menuOpen={menuOpen}
+                                       setSelectedDancers={setSelectedDancers}
+                                       selectedDancers={selectedDancers}
+                                       coordsToPosition={coordsToPosition}
+                                       setDraggingDancerId={setDraggingDancerId}
+                                       undo={undo}
+                                       localSettings={localSettings}
+                                       isCommenting={isCommenting}
+                                       setIsCommenting={setIsCommenting}
+                                       zoom={zoom}
+                                       setZoom={setZoom}
+                                       shiftHeld={shiftHeld}
                                     session={session}
-                                    resizingPropId={resizingPropId}
-                                    setResizingPropId={setResizingPropId}
                                     setSelectedPropIds={setSelectedPropIds}
                                     selectedPropIds={selectedPropIds}
-                                    shiftHeld={shiftHeld}
-                                    setShiftHeld={setShiftHeld}
-                                    stageFlipped={localSettings.stageFlipped}
-                                    zoom={zoom}
-                                    setZoom={setZoom}
-                                    isCommenting={isCommenting}
-                                    setIsCommenting={setIsCommenting}
-                                    localSettings={localSettings}
-                                    pushChange={pushChange}
-                                    undo={undo}
-                                    addToStack={addToStack}
-                                    draggingDancerId={draggingDancerId}
-                                    setDraggingDancerId={setDraggingDancerId}
-                                    selectedDancers={selectedDancers}
-                                    setSelectedDancers={setSelectedDancers}
-                                    setPixelsPerSecond={setPixelsPerSecond}
-                                    coordsToPosition={coordsToPosition}
-                                    currentFormationIndex={currentFormationIndex}
-                                    percentThroughTransition={percentThroughTransition}
-                                    dancers={dancers}
+                                       resizingPropId={resizingPropId}
+                                       setResizingPropId={setResizingPropId}
+                                       menuOpen={menuOpen}
                                  >
                                     {selectedFormations.length === 1 && getFirstSelectedFormation()?.id !== formations[0]?.id && !isPlaying ? (
                                        <PathEditor
@@ -1249,6 +1248,7 @@ const Edit = ({
                               ) : null}
                            </div>
 
+                              {!localSettings.fullScreen && (
                            <FormationControls
                                  setZoom={setZoom}
                               zoom={zoom}
@@ -1263,11 +1263,12 @@ const Edit = ({
                               localSource={localSource}
                               selectedDancers={selectedDancers}
                            ></FormationControls>
+                              )}
                         </div>
                      </DndContext>
 
+                        {!localSettings.fullScreen && (
                         <div className="h-full bg-neutral-900 max-w-[200px] w-[200px] min-w-[200px] border-l border-neutral-700 hidden md:flex">
-                           {selectedDancers?.length ? (
                               <ObjectControls
                                  selectedDancers={selectedDancers}
                                  dancers={dancers}
@@ -1275,8 +1276,8 @@ const Edit = ({
                                  setAssetsOpen={setAssetsOpen}
                                  setMenuOpen={setMenuOpen}
                               ></ObjectControls>
-                           ) : null}
                         </div>
+                        )}
                   </div>
 
                   <div className="  bg-black">

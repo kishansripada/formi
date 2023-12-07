@@ -284,6 +284,13 @@ export const EventHandler: React.FC<{
 
       if (!commandHeld) return;
 
+      if (e.key === "\\") {
+         e.preventDefault();
+         setLocalSettings((localSettings: localSettings) => {
+            return { ...localSettings, fullScreen: !localSettings.fullScreen };
+         });
+      }
+
       if (e.key === "=") {
          e.preventDefault();
          setZoom((zoom: number) => zoom * 1.1);

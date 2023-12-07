@@ -309,8 +309,19 @@ export const Header: React.FC<{
                               }}
                               className="py-1 hover:bg-neutral-200"
                            >
-                              Enter full screen
+                              Presentation mode
                               <MenubarShortcut>F</MenubarShortcut>
+                           </MenubarItem>
+                           <MenubarItem
+                              onClick={() => {
+                                 setLocalSettings((localSettings: localSettings) => {
+                                    return { ...localSettings, fullScreen: !localSettings.fullScreen };
+                                 });
+                              }}
+                              className="py-1 hover:bg-neutral-200"
+                           >
+                              Fullscreen
+                              <MenubarShortcut> ⌘ \</MenubarShortcut>
                            </MenubarItem>
 
                            <MenubarItem
@@ -336,6 +347,71 @@ export const Header: React.FC<{
                            >
                               Switch to {theme === "light" ? "dark" : "light"} mode
                            </MenubarItem>
+                        </MenubarContent>
+                     </MenubarMenu>
+
+                     <MenubarMenu className="">
+                        <MenubarTrigger className="hidden md:block dark:hover:bg-neutral-800 hover:bg-neutral-200 h-full">Help</MenubarTrigger>
+
+                        <MenubarContent>
+                           <Dialog>
+                              <DialogTrigger>
+                                 <MenubarItem onSelect={(e) => e.preventDefault()} className="py-1 hover:bg-neutral-200 w-full">
+                                    Keyboard shortcuts
+                                 </MenubarItem>
+                              </DialogTrigger>
+                              <DialogContent className="min-w-[75%]">
+                                 <DialogHeader>
+                                    <DialogTitle>Keyboard shortcuts</DialogTitle>
+                                 </DialogHeader>
+
+                                 <VStack className="gap-20 mt-4">
+                                    <HStack className="gap-10">
+                                       <LearnKeyboardShortcut
+                                          action="Show/Hide UI"
+                                          description="Press it now to quickly hide the panes and focus on your work"
+                                          shortcut={["⌘", "\\"]}
+                                       />
+                                       <LearnKeyboardShortcut
+                                          action="Rotate stage"
+                                          description="Press it to flip the stage 180 degrees and view dancers from the other side"
+                                          shortcut={["R"]}
+                                       />
+                                       <div className="w-full"></div>
+                                    </HStack>
+                                    <HStack className="gap-10">
+                                       <LearnKeyboardShortcut
+                                          action="Switch to 3D view"
+                                          description="Press it to switch to viewing dancers in 3D"
+                                          shortcut={["3"]}
+                                       />
+                                       <LearnKeyboardShortcut
+                                          action="Switch to 2D view"
+                                          description="Press it to switch to viewing dancers in 2D"
+                                          shortcut={["2"]}
+                                       />
+                                       <div className="w-full"></div>
+                                    </HStack>
+                                    <HStack className="gap-10">
+                                       <LearnKeyboardShortcut
+                                          action="Select all dancers"
+                                          description="Press it to select all dancers in the current formation"
+                                          shortcut={["⌘", "A"]}
+                                       />
+                                       <LearnKeyboardShortcut
+                                          action="Copy all dancers"
+                                          description="Press it to copy the properties and positions of the selected dancers on the current formation"
+                                          shortcut={["⌘", "C"]}
+                                       />
+                                       <LearnKeyboardShortcut
+                                          action="Paste all dancers"
+                                          description="Press it to paste the properties and positions of the selected dancers on the current formation"
+                                          shortcut={["⌘", "V"]}
+                                       />
+                                    </HStack>
+                                 </VStack>
+                              </DialogContent>
+                           </Dialog>
                         </MenubarContent>
                      </MenubarMenu>
                   </Menubar>
