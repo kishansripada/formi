@@ -276,6 +276,7 @@ const Edit = ({
    const [propUploads, setPropUploads] = useState([]);
    // hasVisited ? null : { url: "https://www.youtube.com/shorts/JRS1tPHJKAI" }
    const [helpUrl, setHelpUrl] = useState(null);
+   const [saved, setSaved] = useState(true)
    useEffect(() => {
       const allImages = items.map((item) => `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`);
 
