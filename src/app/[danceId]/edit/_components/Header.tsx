@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { HStack, VStack } from "../../../../../@/components/ui/stacks";
 import LearnKeyboardShortcut from "../../../../../@/components/LearnKeyboardShortcut";
+import { KeyboardShortcuts } from "./Modals/KeyboardShortcuts";
 
 export const Header: React.FC<{
    saved: boolean;
@@ -108,7 +109,7 @@ export const Header: React.FC<{
    const router = useRouter();
    const others = useStore((state) => state.liveblocks.others);
    const redo = liveblocks.room?.history.redo;
-
+   const isDesktop = useIsDesktop();
    const [rosterName, setRosterName] = useState("");
 
    const createNewRoster = async () => {
