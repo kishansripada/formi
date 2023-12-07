@@ -258,28 +258,17 @@ const Edit = ({
    const hasVisited = true;
    const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
    const [permissions, setPermissions] = useState(initialPermissions);
-   // const [shiftHeld, setShiftHeld] = useState(false);
    const [playbackRate, setPlaybackRate] = useState(1);
    const [selectedPropIds, setSelectedPropIds] = useState<string[]>([]);
    const [dropDownToggle, setDropDownToggle] = useState<boolean>(false);
    const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
    const [localSource, setLocalSource] = useState(null);
-   // const [songDuration, setSongDuration] = useState<number | null>(null);
    const [zoom, setZoom] = useState(1);
-   // const [isPlaying, setIsPlaying] = useState<boolean>(false);
    const [isCommenting, setIsCommenting] = useState<boolean>(false);
-   // const [position, setPosition] = useState<number>(0);
    const [pixelsPerSecond, setPixelsPerSecond] = useState<number>(35);
-
    const [isScrollingTimeline, setIsScrollingTimeline] = useState(false);
    const [draggingDancerId, setDraggingDancerId] = useState<null | string>(null);
    const [menuOpen, setMenuOpen] = useState<string | null>("formations");
-   const [player, setPlayer] = useState(null);
-   const [saved, setSaved] = useState<boolean>(true);
-
-   const [isChangingCollisionRadius, setIsChangingCollisionRadius] = useState(false);
-   // const [subscriptionStatus, setSubscriptionStatus] = useState("NOT SUBSCRIBED");
-
    const [isThreeDancerDragging, setIsThreeDancerDragging] = useState(false);
    const [pdfLoading, setPdfLoading] = useState(false);
    const [assetsOpen, setAssetsOpen] = useState(false);
@@ -898,36 +887,18 @@ const Edit = ({
             ></Assets>
          ) : null}
          <EventHandler
-            fullscreenContainer={fullscreenContainer}
-            position={position}
-            setPosition={setPosition}
-            selectedPropIds={selectedPropIds}
-            setIsScrollingTimeline={setIsScrollingTimeline}
-            dancers={dancers}
-            setDropDownToggle={setDropDownToggle}
-            shiftHeld={shiftHeld}
-            setShiftHeld={setShiftHeld}
-            stageFlipped={localSettings.stageFlipped}
-            soundCloudTrackId={soundCloudTrackId}
-            zoom={zoom}
-            setZoom={setZoom}
-            isCommenting={isCommenting}
-            setIsCommenting={setIsCommenting}
-            localSettings={localSettings}
-            pushChange={pushChange}
-            undo={undo}
-            addToStack={addToStack}
-            draggingDancerId={draggingDancerId}
-            setDraggingDancerId={setDraggingDancerId}
-            selectedDancers={selectedDancers}
             setSelectedDancers={setSelectedDancers}
-            setIsPlaying={setIsPlaying}
-            setPixelsPerSecond={setPixelsPerSecond}
-            coordsToPosition={coordsToPosition}
-            currentFormationIndex={currentFormationIndex}
-            percentThroughTransition={percentThroughTransition}
+               selectedDancers={selectedDancers}
+               undo={undo}
+               setIsCommenting={setIsCommenting}
+               setZoom={setZoom}
+               setDropDownToggle={setDropDownToggle}
             dancers={dancers}
+               setIsScrollingTimeline={setIsScrollingTimeline}
+               selectedPropIds={selectedPropIds}
+               position={position}
             setLocalSettings={setLocalSettings}
+               fullscreenContainer={fullscreenContainer}
          ></EventHandler>
 
          <div
@@ -990,7 +961,6 @@ const Edit = ({
                <Sidebar setLocalSettings={setLocalSettings} setHelpUrl={setHelpUrl} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
                <div className="flex flex-col w-full h-full overflow-hidden">
                   <div className="flex flex-row   overflow-hidden w-full h-full">
-                     {!localSettings.fullScreen ? (
                         <div
                            style={{
                               pointerEvents: menuOpen ? "auto" : "none",
@@ -1098,32 +1068,9 @@ const Edit = ({
                               ) : null}
                               </>
                         </div>
-                     ) : null}
+
                      <DndContext id="1" onDragEnd={handleDragEnd}>
                            <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-50 dark:bg-neutral-900 relative `}>
-                              {/* <ObjectControls
-                              zoom={zoom}
-                              localSettings={localSettings}
-                              setLocalSettings={setLocalSettings}
-                              setPlaybackRate={setPlaybackRate}
-                              addToStack={addToStack}
-                              pushChange={pushChange}
-                              songDuration={songDuration}
-                              soundCloudTrackId={soundCloudTrackId}
-                              player={player}
-                              isPlaying={isPlaying}
-                              setIsPlaying={setIsPlaying}
-                              position={position}
-                              setPixelsPerSecond={setPixelsPerSecond}
-                              pixelsPerSecond={pixelsPerSecond}
-                              localSource={localSource}
-                              selectedDancers={selectedDancers}
-                              dropDownToggle={dropDownToggle}
-                              dancers={dancers}
-                              viewOnlyInitial={viewOnlyInitial}
-                                 localSettings={localSettings}
-                              ></ObjectControls> */}
-
                            <div
                               style={{
                                  flexDirection: localSettings.videoPlacement === "above" ? "column" : "row",
@@ -1143,46 +1090,25 @@ const Edit = ({
                               <TopRight></TopRight>
                               <BottomLeft></BottomLeft>
                               <BottomRight></BottomRight>
-                              {/* <video
-                                 className="w-1/4"
-                                 src="https://res.cloudinary.com/dxavpfwki/video/upload/q_auto:eco,vc_auto/v1692378451/IMG_2428_j6ymhd.mp4"
-                              ></video> */}
+
                               {localSettings.viewingThree ? (
                                  <ThreeD
-                                    setScene={setScene}
+                                       setSelectedDancers={setSelectedDancers}
+                                       selectedDancers={selectedDancers}
+                                       localSettings={localSettings}
                                     setIsThreeDancerDragging={setIsThreeDancerDragging}
                                     isThreeDancerDragging={isThreeDancerDragging}
                                     currentFormationIndex={currentFormationIndex}
                                     percentThroughTransition={percentThroughTransition}
                                     dancers={dancers}
                                     position={position}
-                                    shiftHeld={shiftHeld}
-                                    setShiftHeld={setShiftHeld}
-                                    stageFlipped={localSettings.stageFlipped}
-                                    zoom={zoom}
-                                    setZoom={setZoom}
-                                    isCommenting={isCommenting}
-                                    setIsCommenting={setIsCommenting}
-                                    localSettings={localSettings}
-                                    pushChange={pushChange}
-                                    undo={undo}
-                                    addToStack={addToStack}
-                                    draggingDancerId={draggingDancerId}
-                                    setDraggingDancerId={setDraggingDancerId}
-                                    selectedDancers={selectedDancers}
-                                    setSelectedDancers={setSelectedDancers}
-                                    setPixelsPerSecond={setPixelsPerSecond}
-                                    coordsToPosition={coordsToPosition}
-                                    currentFormationIndex={currentFormationIndex}
-                                    percentThroughTransition={percentThroughTransition}
-                                    // comments={comments}
+                                       setScene={setScene}
                                  ></ThreeD>
                               ) : null}
 
                               {localSettings.viewingTwo ? (
                                  <Canvas
                                     menuOpen={menuOpen}
-                                    // selectedFormations={selectedFormations}
                                     session={session}
                                     resizingPropId={resizingPropId}
                                     setResizingPropId={setResizingPropId}
@@ -1215,7 +1141,6 @@ const Edit = ({
                                           collisions={collisions}
                                           dancers={dancers}
                                           currentFormationIndex={currentFormationIndex}
-                                          // formations={localSettings.stageFlipped ? flippedFormations : formations}
                                           selectedDancers={selectedDancers}
                                           localSettings={localSettings}
                                           coordsToPosition={coordsToPosition}
@@ -1234,7 +1159,6 @@ const Edit = ({
                                           position={position}
                                           key={dancer.id}
                                           dancer={dancer}
-                                          formations={localSettings.stageFlipped ? flippedFormations : formations}
                                           draggingDancerId={draggingDancerId}
                                           currentFormationIndex={currentFormationIndex}
                                           percentThroughTransition={percentThroughTransition}
@@ -1345,32 +1269,13 @@ const Edit = ({
                         <div className="h-full bg-neutral-900 max-w-[200px] w-[200px] min-w-[200px] border-l border-neutral-700 hidden md:flex">
                            {selectedDancers?.length ? (
                               <ObjectControls
-                                 zoom={zoom}
-                                 localSettings={localSettings}
-                                 setLocalSettings={setLocalSettings}
-                                 setPlaybackRate={setPlaybackRate}
-                                 addToStack={addToStack}
-                                 pushChange={pushChange}
-                                 soundCloudTrackId={soundCloudTrackId}
-                                 position={position}
-                                 setPixelsPerSecond={setPixelsPerSecond}
-                                 pixelsPerSecond={pixelsPerSecond}
-                                 localSource={localSource}
                                  selectedDancers={selectedDancers}
-                                 dropDownToggle={dropDownToggle}
                                  dancers={dancers}
-                                 viewOnlyInitial={viewOnlyInitial}
-                                 localSettings={localSettings}
+                                 setLocalSettings={setLocalSettings}
                                  setAssetsOpen={setAssetsOpen}
                                  setMenuOpen={setMenuOpen}
                               ></ObjectControls>
-                           ) : (
-                              <>
-                                 {/* <div className="text-neutral-200 text-lg p-2">
-                                    <span className="font-bold">20 dancers</span> <span className="font-light">on stage</span>
-                                 </div> */}
-                              </>
-                           )}
+                           ) : null}
                         </div>
                   </div>
 
@@ -1390,8 +1295,6 @@ const Edit = ({
                      ></AudioControls>
 
                      <Timeline
-                        // selectedFormations={selectedFormations}
-                        // setSelectedFormations={setSelectedFormations}
                         shiftHeld={shiftHeld}
                         playbackRate={playbackRate}
                         setIsScrollingTimeline={setIsScrollingTimeline}
