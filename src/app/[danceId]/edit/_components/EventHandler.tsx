@@ -40,22 +40,16 @@ export const EventHandler: React.FC<{
 }> = ({
    setSelectedDancers,
    selectedDancers,
-
    undo,
    setIsCommenting,
    setZoom,
-   // setShiftHeld,
    setDropDownToggle,
    dancers,
-
    setIsScrollingTimeline,
    selectedPropIds,
-   setPosition,
    position,
    setLocalSettings,
-   // shiftHeld,
    fullscreenContainer,
-   setIsPlaying,
 }) => {
    const {
       formations,
@@ -280,6 +274,9 @@ export const EventHandler: React.FC<{
          setIsCommenting(false);
          setHoveringDancerIds([]);
          setSelectedFormations(selectedFormations[0] ? [selectedFormations[0]] : []);
+         setLocalSettings((localSettings: localSettings) => {
+            return { ...localSettings, fullScreen: false };
+         });
       }
 
       if (!commandHeld) return;

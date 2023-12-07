@@ -910,6 +910,11 @@ export const Canvas: React.FC<{
             //    height: `${(stageDimensions.height * PIXELS_PER_SQUARE) / zoom}px`,
             // }}
          >
+            {localSettings.fullScreen && (
+               <div className="absolute top-5 left-5">
+                  <p className="text-sm text-neutral-300">Esc to exit full screen</p>
+               </div>
+            )}
             <Toaster />
             <div
                style={{
