@@ -61,6 +61,31 @@ if (typeof Node === "function" && Node.prototype) {
       return originalRemoveChild.apply(this, arguments);
    };
 }
+
+if (typeof Node === "function" && Node.prototype) {
+   const originalInsertBefore = Node.prototype.insertBefore;
+
+   Node.prototype.insertBefore = function (newNode, referenceNode) {
+      // Validate that newNode is not already in the DOM
+      if (newNode.parentNode) {
+         if (console) {
+            console.error("Cannot insert node that already has a parent", newNode);
+         }
+         return newNode;
+      }
+
+      // Validate that referenceNode is a child of this node
+      if (referenceNode.parentNode !== this) {
+         if (console) {
+            console.error("Cannot insert before a reference node that is not a child", referenceNode);
+         }
+         return newNode;
+      }
+
+      // If validations passed, call original method
+      return originalInsertBefore.call(this, newNode, referenceNode);
+   };
+}
 const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => (
       <div className="flex items-center justify-center h-screen bg-neutral-900 ">
