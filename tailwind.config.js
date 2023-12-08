@@ -30,7 +30,7 @@ module.exports = {
       },
       colors: {
         "dark-primary": '#db2777',
-        "dark-secondary": '#724F5F',
+        "dark-secondary": '#5F253D',
 
       },
       animation: {

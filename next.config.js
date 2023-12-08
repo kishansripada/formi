@@ -4,13 +4,10 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 const { withSentryConfig } = require('@sentry/nextjs');
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: false
-})
+// const withBundleAnalyzer = require('@next/bundle-analyzer')({
+//   enabled: process.env.ANALYZE === 'true',
+// })
 const moduleExports = {
-  // experimental: {
-  //   serverActions: true,
-  // },
   reactStrictMode: false,
   swcMinify: true,
   typescript: {

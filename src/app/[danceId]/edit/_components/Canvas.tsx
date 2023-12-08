@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useSupabaseClient, useSession } from "@supabase/auth-helpers-react";
 import { GridLines } from "./GridLines";
-import { roundToHundredth } from "../../../../utls";
+import Hammer from "hammerjs";
 
 import {
    dancer,
@@ -15,7 +15,6 @@ import {
    prop,
    propPosition,
 } from "../../../../types/types";
-
 import { toast, Toaster } from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 import { Prop } from "./Prop";
@@ -59,6 +58,7 @@ export const Canvas: React.FC<{
    setSelectedDancers,
    selectedDancers,
    coordsToPosition,
+   draggingDancerId,
    setDraggingDancerId,
    undo,
 
@@ -208,45 +208,45 @@ export const Canvas: React.FC<{
          setIsDragging(true);
       }
 
-      // if (dragBoxCoords.start.x && dragBoxCoords.start.y) {
-      //    const target = e.currentTarget;
-      //    const stage = target.querySelector("#stage-cutout");
-      //    // const stage = target;
-      //    // Get the bounding rectangle of target
-      //    const rect = stage.getBoundingClientRect();
+      if (dragBoxCoords.start.x && dragBoxCoords.start.y) {
+         const target = e.currentTarget;
+         const stage = target.querySelector("#stage-cutout");
+         // const stage = target;
+         // Get the bounding rectangle of target
+         const rect = stage.getBoundingClientRect();
 
-      //    // Mouse position
-      //    const x = e.clientX - rect.left;
-      //    const y = e.clientY - rect.top;
+         // Mouse position
+         const x = e.clientX - rect.left;
+         const y = e.clientY - rect.top;
 
-      //    setDragBoxCoords((dragBoxCoords) => {
-      //       return { ...dragBoxCoords, end: { x: x / zoom, y: y / zoom } };
-      //    });
-      //    if (
-      //       dragBoxCoords.start.x !== null &&
-      //       dragBoxCoords.end.y !== null &&
-      //       dragBoxCoords.start.y !== null &&
-      //       dragBoxCoords.end.y !== null &&
-      //       selectedFormations.length
-      //    ) {
-      //       setSelectedDancers(
-      //          getFirstSelectedFormation()
-      //             ?.positions.filter((dancerPosition: dancerPosition) => {
-      //                let localDancerPosition = {
-      //                   x: stageFlippedFactor * dancerPosition.position.x,
-      //                   y: stageFlippedFactor * dancerPosition.position.y,
-      //                };
-      //                return (
-      //                   coordsToPosition(localDancerPosition).left > Math.min(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
-      //                   coordsToPosition(localDancerPosition).left < Math.max(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
-      //                   coordsToPosition(localDancerPosition).top > Math.min(dragBoxCoords.start.y, dragBoxCoords.end.y) &&
-      //                   coordsToPosition(localDancerPosition).top < Math.max(dragBoxCoords.start.y, dragBoxCoords.end.y)
-      //                );
-      //             })
-      //             .map((dancerPosition: dancerPosition) => dancerPosition.id)
-      //       );
-      //    }
-      // }
+         setDragBoxCoords((dragBoxCoords) => {
+            return { ...dragBoxCoords, end: { x: x / zoom, y: y / zoom } };
+         });
+         if (
+            dragBoxCoords.start.x !== null &&
+            dragBoxCoords.end.y !== null &&
+            dragBoxCoords.start.y !== null &&
+            dragBoxCoords.end.y !== null &&
+            selectedFormations.length
+         ) {
+            setSelectedDancers(
+               getFirstSelectedFormation()
+                  ?.positions.filter((dancerPosition: dancerPosition) => {
+                     let localDancerPosition = {
+                        x: stageFlippedFactor * dancerPosition.position.x,
+                        y: stageFlippedFactor * dancerPosition.position.y,
+                     };
+                     return (
+                        coordsToPosition(localDancerPosition).left > Math.min(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
+                        coordsToPosition(localDancerPosition).left < Math.max(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
+                        coordsToPosition(localDancerPosition).top > Math.min(dragBoxCoords.start.y, dragBoxCoords.end.y) &&
+                        coordsToPosition(localDancerPosition).top < Math.max(dragBoxCoords.start.y, dragBoxCoords.end.y)
+                     );
+                  })
+                  .map((dancerPosition: dancerPosition) => dancerPosition.id)
+            );
+         }
+      }
 
       if (draggingCommentId) {
          if (viewOnly) return;
@@ -510,11 +510,8 @@ export const Canvas: React.FC<{
       //    setRotatingDancerId(e.target.id);
       // }
 
-      if (!e.target.id || e.target.id === "stage-cutout") {
-         if (!shiftHeld) {
-            setSelectedDancers([]);
-         }
-
+      if (!e.target.id) {
+         setSelectedDancers([]);
          setSelectedPropIds([]);
          // Get the target
          if (isMobileView) return;
@@ -648,53 +645,10 @@ export const Canvas: React.FC<{
       };
    }, []);
 
-   const zoomable = useRef();
    useGesture(
       {
          onDrag: ({ delta: [movementX, movementY], cancel, touches, event, target, pinching }) => {
             if (pinching) cancel();
-
-            if (dragBoxCoords.start.x) {
-               const target = event.currentTarget;
-
-               const stage = target.querySelector("#stage-cutout");
-               // const stage = target;
-               // Get the bounding rectangle of target
-               const rect = stage.getBoundingClientRect();
-
-               // Mouse position
-               const x = event.clientX - rect.left;
-               const y = event.clientY - rect.top;
-
-               setDragBoxCoords((dragBoxCoords) => {
-                  return { ...dragBoxCoords, end: { x: x / zoom, y: y / zoom } };
-               });
-               if (
-                  dragBoxCoords.start.x !== null &&
-                  dragBoxCoords.end.y !== null &&
-                  dragBoxCoords.start.y !== null &&
-                  dragBoxCoords.end.y !== null &&
-                  selectedFormations.length
-               ) {
-                  setSelectedDancers([
-                     ...(shiftHeld ? selectedDancers : []),
-                     ...(getFirstSelectedFormation()
-                        ?.positions.filter((dancerPosition: dancerPosition) => {
-                           let localDancerPosition = {
-                              x: stageFlippedFactor * dancerPosition.position.x,
-                              y: stageFlippedFactor * dancerPosition.position.y,
-                           };
-                           return (
-                              coordsToPosition(localDancerPosition).left > Math.min(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
-                              coordsToPosition(localDancerPosition).left < Math.max(dragBoxCoords.start.x, dragBoxCoords.end.x) &&
-                              coordsToPosition(localDancerPosition).top > Math.min(dragBoxCoords.start.y, dragBoxCoords.end.y) &&
-                              coordsToPosition(localDancerPosition).top < Math.max(dragBoxCoords.start.y, dragBoxCoords.end.y)
-                           );
-                        })
-                        .map((dancerPosition: dancerPosition) => dancerPosition.id) || []),
-                  ]);
-               }
-            }
 
             if (!target.id && touches === 1 && isMobileView) {
                setScrollOffset((scrollOffset) => ({
@@ -803,24 +757,8 @@ export const Canvas: React.FC<{
                }
             }
          },
-         // onPinch: ({ offset: [d] }) => {
-         //    setZoom(d);
-         // },
-         onPinch: ({ offset: [newZoom], event }) => {
-            // const rect = zoomable.current.getBoundingClientRect();
-            // const zoomRatio = newZoom / zoom;
-
-            // const oldLeft = event.clientX - rect.left;
-            // const oldTop = event.clientY - rect.top;
-
-            setZoom(newZoom);
-
-            // setScrollOffset((prev) => {
-            //    return {
-            //       x: prev.x - (oldLeft / (zoom * zoomRatio) - oldLeft / zoom),
-            //       y: prev.y - (oldTop / (zoom * zoomRatio) - oldTop / zoom),
-            //    };
-            // });
+         onPinch: ({ offset: [d] }) => {
+            setZoom(d);
          },
          onWheel: ({ pinching, delta }) => {
             if (pinching) return;
@@ -948,32 +886,9 @@ export const Canvas: React.FC<{
                </div>
             </div>
          ) : null}
-         {/* <ContextMenu> */}
-         {/* <ContextMenuContent className="">
-            <ContextMenuItem
-               onClick={() => {
-                  setSelectedDancers([...formations?.[0]?.positions?.map((position) => position.id)] || []);
-               }}
-               className=" py-1 w-[250px] "
-            >
-               Select all dancers
-               <ContextMenuShortcut>⌘A</ContextMenuShortcut>
-            </ContextMenuItem>
-            <ContextMenuItem className="text-sm py-2 ml-3">Reset to previous formation</ContextMenuItem>
-               <ContextMenuSeparator className="bg-neutral-800 h-[1px] my-1" />
-               <ContextMenuItem className="text-sm py-2 ml-3 ">
-                  Copy positions <ContextMenuShortcut>⌘C</ContextMenuShortcut>
-               </ContextMenuItem>
-               <ContextMenuItem className="text-sm py-2 ml-3">
-                  Paste positions<ContextMenuShortcut>⌘V</ContextMenuShortcut>
-               </ContextMenuItem>
-               <ContextMenuSeparator className="bg-neutral-800 h-[1px] my-1" />
-               <ContextMenuItem className="text-sm py-2 ml-3">Delete</ContextMenuItem>
-         </ContextMenuContent> */}
-         {/* <ContextMenuTrigger> */}
          <div
             // flex
-            className="  relative  bg-neutral-50  dark:bg-neutral-900  h-full  w-full overflow-scroll  overscroll-none  flex flex-row items-center justify-center "
+                  className="  relative  bg-neutral-50  dark:bg-neutral-900  h-full  w-full overflow-scroll  overscroll-none  flex flex-row items-center justify-center "
             id="stage"
             ref={container}
             // {...bind()}
@@ -998,12 +913,10 @@ export const Canvas: React.FC<{
             <div
                style={{
                   transform: `scale(${zoom}) translate(${scrollOffset.x}px, ${scrollOffset.y}px)`,
-
                   // width: PIXELS_PER_SQUARE * (stageDimensions.width + 30) * zoom,
                   // height: PIXELS_PER_SQUARE * (stageDimensions.height + 10) * zoom,
                   // transform: `scale(${zoom})`,
                }}
-               ref={zoomable}
                // style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0, transform: `scale(${zoom})`, transformOrigin: "center" }}
                className=" flex flex-row items-center justify-center   "
                // transition-[transform]
@@ -1019,13 +932,20 @@ export const Canvas: React.FC<{
                      // transform: `scale(${zoom}) `,
                      // transformOrigin: "center",
                   }}
-               ></div>
-
+               >
+                  {/* <GridLines
+                     
+                     stageDimensions={{
+                        width: roundToNearestEven(stageDimensions.width + 30),
+                        height: roundToNearestEven(stageDimensions.height + 10),
+                     }}
+                  /> */}
+               </div>
                <div
                   ref={stage}
                   id="stage-cutout"
                   onPointerDown={pointerDown}
-                  className="relative  border-2 dark:border-pink-600 border-pink-300 rounded-xl bg-white dark:bg-neutral-900 box-content "
+                        className="relative  border-2 dark:border-pink-600 border-pink-300 rounded-xl bg-white dark:bg-neutral-900 box-content "
                   // border-pink-600 border-4 box-border
                   style={{
                      // margin: 400,
@@ -1080,7 +1000,7 @@ export const Canvas: React.FC<{
                      {cloudSettings.stageBackground === "gridfluid" || stageBackground === "cheer9" ? (
                         <>
                            {!cloudSettings.hideSubdivisions ? (
-                              <GridLines localSettings={localSettings} zoom={zoom} stageDimensions={stageDimensions} />
+                           <GridLines localSettings={localSettings} zoom={zoom} stageDimensions={stageDimensions} />
                            ) : null}
                            <StageLines localSettings={localSettings} divisions={{ y: 4, x: 8 }} zoom={zoom} stageDimensions={stageDimensions} />
                         </>
@@ -1142,12 +1062,12 @@ export const Canvas: React.FC<{
                      </>
                   ) : null}
 
-                  {!localSettings.stageFlipped && (
+                        {!localSettings.stageFlipped && (
                      <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
                         <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
                      </div>
                   )}
-                  {localSettings.stageFlipped && (
+                        {localSettings.stageFlipped && (
                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10">
                         <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
                      </div>
@@ -1188,11 +1108,13 @@ export const Canvas: React.FC<{
                </div>
             </div>
          </div>
-         {/* </ContextMenuTrigger> */}
-         {/* </ContextMenu> */}
       </>
    );
 };
+function getExtension(filename: string) {
+   var parts = filename.split(".");
+   return parts[parts.length - 1];
+}
 
 function roundToNearestEven(n: number): number {
    // If n is an even number, return it as is.
@@ -1201,4 +1123,7 @@ function roundToNearestEven(n: number): number {
    } else {
       return n + 1;
    }
+}
+function roundToHundredth(value: number): number {
+   return Math.round(value * 100) / 100;
 }

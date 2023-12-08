@@ -4,7 +4,6 @@ import { Footer } from "./_components/Footer";
 import { motion } from "framer-motion";
 import { Header } from "./_components/Header";
 import { useSession } from "@supabase/auth-helpers-react";
-import Image from "next/image";
 
 const Client = () => {
    return (
@@ -61,28 +60,14 @@ const Client = () => {
                      // transform: "perspective(500px) rotateX(10deg)"
                      transition={{ duration: 0.5 }}
                      className="z-10 w-[80%] relative mt-20 rounded-lg "
-                     src="/hellacompressed.jpg"
+                     src="/chromewindow.jpg"
                      alt=""
-                  />
-                  {/* <div className="w-[80%] mt-20 relative rounded-lg overflow-hidden z-10 ">
-                     <Image
-                        alt="Mountains"
-                        src={"/chromewindow.jpg"}
-                        // placeholder="blur"
-                        // width={1000}
-                        quality={100}
-                        fill
-                        // sizes="100vw"
-                        style={{
-                           objectFit: "cover",
-                           // width: "80%",
-                        }}
-                     />
-                  </div> */}
 
-                  {/* // https://res.cloudinary.com/dxavpfwki/image/upload/q_auto:low/v1695307271/IMG_0533_afnzcf.png */}
+                     // https://res.cloudinary.com/dxavpfwki/image/upload/q_auto:low/v1695307271/IMG_0533_afnzcf.png
+                  />
                   {/* <Image fill={true} objectFit="contain" className="w-2/3 z-10 relative " src="/desktop.png" alt="" /> */}
                   {/* </div> */}
+
                   {/* <div
                      className="pointer-events-none absolute left-1/2 hidden lg:block  -translate-x-1/2  h-[1000px] w-[1700px]"
                      style={{
@@ -120,7 +105,7 @@ const Client = () => {
                   ></div>
                </div>
 
-               {/* <div id="features" className="flex flex-col justify-center items-center py-20">
+               <div id="features" className="flex flex-col justify-center items-center py-20">
                   <p className="lg:text-7xl text-3xl mb-24 ">Edit formations on the go</p>
                   <div className="flex lg:flex-row  lg:px-24 flex-col items-center">
                      {" "}
@@ -139,49 +124,11 @@ const Client = () => {
                <div className="flex flex-col justify-center items-center py-40">
                   <p className="lg:text-7xl text-3xl mb-24 font-light">Collaborate in real-time</p>
                   <img className="rounded-xl xl:max-w-4xl max-w-md" src="/realtime.png" alt="" />
-               </div> */}
-               <div className="flex flex-row items-center justify-center py-20 gap-10">
-                  <div className="flex flex-col items-center justify-center gap-3">
-                     <img className="w-72 rounded-lg" src="/ballet.webp" alt="" />
-                     <p className="text-neutral-200  text-lg">Ballet</p>
-                  </div>
-                  <div className="flex flex-col items-center justify-center gap-3">
-                     <img className="w-72 rounded-lg" src="/umich.webp" alt="" />
-                     <p className="text-neutral-200  text-lg">Cheerleading</p>
-                  </div>
-                  <div className="flex flex-col items-center justify-center gap-3">
-                     <img className="w-72 rounded-lg" src="/theater.webp" alt="" />
-                     <p className="text-neutral-200  text-lg">Stage Management</p>
-                  </div>
-               </div>
-               <div className="flex lg:flex-row flex-col px-[15%] rounded-lg py-10 h-[500px] gap-10  ">
-                  <div className="lg:w-1/2 flex flex-row justify-center">
-                     <img className="max-h-full max-w-full object-contain rounded-lg block" src="/collabKorean.webp" alt="" />
-                  </div>
-                  <div className="lg:w-1/2 flex flex-col justify-center gap-3">
-                     <p className="font-medium text-4xl">Collaborate</p>
-                     <p className="text-neutral-400">
-                        Collaborate on the same choreography file in real-time, just like Google Docs. Let all your dancers watch changes to their
-                        choreography live.
-                     </p>
-                  </div>
-               </div>
-               <div className="flex lg:flex-row flex-col px-[15%] rounded-lg py-10 h-[500px] gap-10 ">
-                  <div className="lg:w-1/2 flex flex-col justify-center gap-3">
-                     <p className="font-medium text-4xl">Cheerleading</p>
-                     <p className="text-neutral-400">
-                        Design dynamic routines, keep track of eight counts and plan all formations seamlessly. FORMI ensures your squad shines
-                        brighter than ever. Elevate your performance, one move at a time.{" "}
-                     </p>
-                  </div>
-                  <div className="lg:w-1/2 flex flex-row justify-center">
-                     <img className="max-h-full max-w-full object-contain rounded-lg block" src="/umich.webp" alt="" />
-                  </div>
                </div>
             </div>
 
             <p className="text-center font-bold text-3xl mt-12 ">Trusted by</p>
-            <div className="lg:h-40 w-1/4  lg:w-full bg-neutral-50 flex lg:flex-row flex-col justify-center py-10  gap-10  ">
+            <div className="lg:h-40 w-1/4  lg:w-full bg-neutral-50 flex lg:flex-row flex-col justify-center py-10  gap-5  ">
                <img
                   className="   h-full opacity-80 object-cover"
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Los_Angeles_Lakers_logo.svg/1200px-Los_Angeles_Lakers_logo.svg.png"
