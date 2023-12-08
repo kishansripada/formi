@@ -52,12 +52,12 @@ async function getServerSideProps(projectId: string) {
       return data?.data || [];
    }
 
-   let [dances] = await Promise.all([getMyDances(session)]);
+   let [myDances] = await Promise.all([getMyDances(session)]);
 
-   return { dances, session };
+   return { myDances, session };
 }
 
 export default async function Page({ params }: { params: { projectId: string } }) {
-   const { dances: myDances, session } = await getServerSideProps(params.projectId);
+   const { myDances, session } = await getServerSideProps(params.projectId);
    return <Client myDances={myDances} session={session}></Client>;
 }
