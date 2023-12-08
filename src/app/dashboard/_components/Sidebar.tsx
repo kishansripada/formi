@@ -13,13 +13,19 @@ import { v4 as uuidv4 } from "uuid";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { NewFolderModel } from "./NewFolderModel";
 import { useStore } from "../store";
+import { Button } from "../../../../@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "../../../../@/components/ui/input";
+import { DialogClose } from "@radix-ui/react-dialog";
+import { NewPerformanceBuilder } from "./NewPerformanceBuilder";
 export const Sidebar: React.FC<{
    rosters: any;
    session: AuthSession;
    plan: string | null;
    myDances: any;
    userData: any;
-}> = ({ rosters, session, plan, myDances, userData }) => {
+}> = ({ rosters, session, plan, myDances, userData, projects }) => {
    const { setPlan, setNumberOfDances } = useStore();
    useEffect(() => {
       setPlan(plan);
@@ -30,8 +36,6 @@ export const Sidebar: React.FC<{
    const supabase = createClientComponentClient();
    const pathname = usePathname();
    const router = useRouter();
-
-   const [newFolderOpen, setNewFolderOpen] = useState(false);
 
    const [newFolderName, setNewFolderName] = useState("");
    async function createNewDance(roster?: any) {
@@ -86,30 +90,36 @@ export const Sidebar: React.FC<{
       router.push(`/${data.id}/edit`);
    }
 
+   async function createNewProject() {
+      if (session === null) {
+         router.push(`/login`);
+         return;
+      }
+
+      const { error } = await supabase
+         .from("projects")
+         .insert([{ parent_id: session.user.id, name: newFolderName }])
+         .select("id")
+         .single();
+
+      if (!error) {
+         router.push("/dashboard/myperformances");
+         router.refresh();
+         toast.success("New folder created");
+      } else {
+         toast.error("Error creating new folder");
+      }
+   }
+
    return (
       <>
-         {newFolderOpen ? (
-            <NewFolderModel
-               newFolderName={newFolderName}
-               setNewFolderName={setNewFolderName}
-               setNewFolderOpen={setNewFolderOpen}
-               session={session}
-            ></NewFolderModel>
-         ) : null}
-         <div
-            style={
-               {
-                  // backgroundColor: "rgb(16, 16, 16)",
-               }
-            }
-            className="min-w-[280px] bg-black  w-[280px] px-6  border-r border-neutral-800   py-4 h-screen lg:flex hidden flex-col box-border  text-sm  "
-         >
+         <div className="min-w-[250px] bg-neutral-900  w-[250px]  border-r border-neutral-700   pb-4 h-screen lg:flex hidden flex-col box-border  text-sm  ">
             {/* {JSON.stringify(plan)} */}
-            <div className="flex flex-row mt-3 ml-2   ">
+            <div className="flex flex-row items-center px-3  h-[72px] min-h-[72px] border-b border-neutral-700 gap-3 ">
                {session?.user.user_metadata.avatar_url ? (
                   <img
                      referrerPolicy="no-referrer"
-                     className="rounded-md w-10 pointer-events-none select-none mr-3"
+                     className="rounded-md  w-12 h-12 pointer-events-none select-none "
                      src={
                         session?.user.user_metadata.avatar_url ||
                         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjof8tQrQxYWAJQ7ICx4AaaN9rZK_bfgKsFuqssREfxA&s"
@@ -125,91 +135,110 @@ export const Sidebar: React.FC<{
                   </div>
                </div>
             </div>
-            <div className="bg-neutral-800 rounded-xl px-3 py-3 mt-7 text-xs ">
-               <Link
-                  href="/dashboard"
-                  prefetch={true}
-                  className={`flex flex-row justify-between  items-center rounded-xl ${
-                     pathname === "/dashboard" ? "bg-neutral-700" : ""
-                  }   w-full h-9 px-3`}
-               >
-                  <p>Home</p>
-               </Link>
-               <Link
-                  href="/dashboard/myperformances"
-                  prefetch={true}
-                  className={`flex flex-row justify-between rounded-xl items-center ${
-                     pathname === "/dashboard/myperformances" ? "bg-neutral-700" : ""
-                  }   w-full h-9 px-3`}
-               >
-                  <p>My files</p>
-               </Link>
-               <Link
-                  href="/dashboard/sharedwithme"
-                  prefetch={true}
-                  className={`flex flex-row justify-between rounded-xl items-center ${
-                     pathname === "/dashboard/sharedwithme" ? "bg-neutral-700" : ""
-                  }   w-full h-9 px-3`}
-               >
-                  <p>Shared With Me</p>
-               </Link>
-               <Link
-                  href="/dashboard/rosters"
-                  prefetch={true}
-                  className={`flex flex-row justify-between rounded-xl items-center ${
-                     pathname === "/dashboard/rosters" ? "bg-neutral-700" : ""
-                  }   w-full h-9 px-3`}
-               >
-                  <p>Rosters</p>
-               </Link>
-            </div>
-            <button
-               onClick={() => {
-                  setNewFolderOpen(true);
-               }}
-               className=" border border-neutral-800 mt-5 w-full text-white text-xs py-2 px-4 rounded-lg mr-auto "
-            >
-               New folder
-            </button>
-            <button
-               onClick={() => {
-                  if (!plan && myDances.length >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {
-                     router.push("/upgrade");
-                     return;
-                  }
+            <div className=" rounded-xl  py-3  text-xs font-medium px-3  ">
+               <div className="flex flex-col gap-1">
+                  <Link
+                     href="/dashboard"
+                     prefetch={true}
+                     className={`flex flex-row justify-between  items-center rounded-sm  hover:bg-neutral-800 transition cursor-default ${
+                        pathname === "/dashboard" ? "bg-neutral-800" : ""
+                     }   w-full h-9 px-3`}
+                  >
+                     <p>Home</p>
+                  </Link>
+                  <Link
+                     href="/dashboard/myperformances"
+                     prefetch={true}
+                     className={`flex flex-row justify-between rounded-sm items-center hover:bg-neutral-800 transition cursor-default ${
+                        pathname === "/dashboard/myperformances" ? "bg-neutral-800" : ""
+                     }   w-full h-9 px-3`}
+                  >
+                     <p>My files</p>
+                  </Link>
+                  <div className="pl-5">
+                     {projects.map((project) => {
+                        return (
+                           <Link
+                              href={`/dashboard/project/${project.id}`}
+                              prefetch={true}
+                              className={`flex flex-row justify-between rounded-sm  items-center hover:bg-neutral-800 transition cursor-default ${
+                                 pathname === `/dashboard/project/${project.id}` ? "bg-neutral-800" : ""
+                              }   w-full h-8 px-3`}
+                           >
+                              <p>{project.name}</p>
+                           </Link>
+                        );
+                     })}
+                  </div>
 
-                  createNewDance();
-               }}
-               className="bg-pink-600  mt-3 w-full text-white text-xs py-2 px-4  rounded-lg mr-auto "
-            >
-               New performance
-            </button>
-
-            {!plan ? (
-               <div className="bg-neutral-800 h-[170px] rounded-xl mt-4 text-xs flex flex-col items-center justify-between p-3 text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 11.25l-3-3m0 0l-3 3m3-3v7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <p className="mt-3">
-                     {" "}
-                     Ready to go beyond the free plan? Upgrade to create more than {MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN} performances.
-                  </p>
-                  <Link href={"/upgrade"} className="w-full text-center py-2 mt-auto bg-pink-600 text-xs text-white rounded-md">
-                     View plans
+                  <Link
+                     href="/dashboard/sharedwithme"
+                     prefetch={true}
+                     className={`flex flex-row justify-between rounded-sm items-center hover:bg-neutral-800 transition cursor-default ${
+                        pathname === "/dashboard/sharedwithme" ? "bg-neutral-800" : ""
+                     }   w-full h-9 px-3`}
+                  >
+                     <p>Shared With Me</p>
+                  </Link>
+                  <Link
+                     href="/dashboard/rosters"
+                     prefetch={true}
+                     className={`flex flex-row justify-between rounded-sm items-center hover:bg-neutral-800 transition cursor-default ${
+                        pathname === "/dashboard/rosters" ? "bg-neutral-800" : ""
+                     }   w-full h-9 px-3`}
+                  >
+                     <p>Rosters</p>
                   </Link>
                </div>
-            ) : null}
+               <Dialog>
+                  <DialogTrigger className="w-full">
+                     <Button className="  mt-5 w-full  ">New project</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                     <Input
+                        value={newFolderName}
+                        onChange={(e) => {
+                           setNewFolderName(e.target.value);
+                        }}
+                        type="text"
+                        placeholder="My first folder"
+                        className="mt-5"
+                     />
+                     <DialogClose>
+                        {" "}
+                        <Button
+                           onClick={() => {
+                              if (!newFolderName.length) return;
+                              createNewProject();
+                           }}
+                           className="text-white bg-pink-600 text-sm py-2 px-4"
+                        >
+                           Create new project
+                        </Button>
+                     </DialogClose>
+                  </DialogContent>
+               </Dialog>
+               {/* <div className="flex flex-row items-center  bg-white mt-3  rounded-md"> */}
+               <Dialog>
+                  <DialogTrigger className="w-full">
+                     <Button className="w-full mt-3 ">New performance</Button>
+                  </DialogTrigger>
 
-            {rosters.length ? <p className=" text-neutral-300 text-sm mt-5">New performance from roster:</p> : null}
-            {rosters.map((roster: any) => {
-               return (
-                  <button
-                     onClick={() => {
-                        createNewDance(roster);
-                     }}
-                     className="flex flex-row items-center mt-3 justify-between w-full text-neutral-400 px-1 hover:text-white transition "
-                  >
-                     <p className=" text-sm  ">{roster.name} </p>
+                  <DialogContent className="min-w-[600px] ">
+                     <NewPerformanceBuilder
+                        myDances={myDances}
+                        rosters={rosters}
+                        projects={projects}
+                        createNewDance={createNewDance}
+                     ></NewPerformanceBuilder>
+                  </DialogContent>
+               </Dialog>
+               {/* </div> */}
+            </div>
+
+            <div className="px-3">
+               {!plan ? (
+                  <div className="bg-neutral-800 h-[170px] rounded-xl mt-4 text-xs flex flex-col items-center justify-between p-3 text-center">
                      <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -218,11 +247,19 @@ export const Sidebar: React.FC<{
                         stroke="currentColor"
                         className="w-6 h-6"
                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 11.25l-3-3m0 0l-3 3m3-3v7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                      </svg>
-                  </button>
-               );
-            })}
+                     <p className="mt-3">
+                        {" "}
+                        Ready to go beyond the free plan? Upgrade to create more than {MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN} performances.
+                     </p>
+                     <Button className="w-full" size={"sm"}>
+                        <Link href={"/upgrade"}>View plans</Link>
+                     </Button>
+                  </div>
+               ) : null}
+            </div>
+
             <Link
                href={"/dashboard/trash"}
                className={`flex flex-row justify-between rounded-xl mt-auto items-center ${
@@ -234,47 +271,4 @@ export const Sidebar: React.FC<{
          </div>
       </>
    );
-};
-
-var timeSince = function (date: string) {
-   if (typeof date !== "object") {
-      date = new Date(date);
-   }
-
-   var seconds = Math.floor((new Date() - date) / 1000);
-   var intervalType;
-
-   var interval = Math.floor(seconds / 31536000);
-   if (interval >= 1) {
-      intervalType = "year";
-   } else {
-      interval = Math.floor(seconds / 2592000);
-      if (interval >= 1) {
-         intervalType = "month";
-      } else {
-         interval = Math.floor(seconds / 86400);
-         if (interval >= 1) {
-            intervalType = "day";
-         } else {
-            interval = Math.floor(seconds / 3600);
-            if (interval >= 1) {
-               intervalType = "hour";
-            } else {
-               interval = Math.floor(seconds / 60);
-               if (interval >= 1) {
-                  intervalType = "minute";
-               } else {
-                  interval = seconds;
-                  intervalType = "second";
-               }
-            }
-         }
-      }
-   }
-
-   if (interval > 1 || interval === 0) {
-      intervalType += "s";
-   }
-
-   return interval + " " + intervalType;
 };

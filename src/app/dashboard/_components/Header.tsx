@@ -19,7 +19,7 @@ export default function Header({ plan }: { plan: string | null }) {
 
    const supabase = createClientComponentClient();
    return (
-      <div className="flex flex-row items-center  justify-between px-6 py-4 text-neutral-200 ml-auto w-full mt-3">
+      <div className="flex flex-row items-center  justify-between px-6 h-[72px] min-h-[72px] border-neutral-700 border-b  ml-auto w-full ">
          <div className="mr-4 flex flex-row items-center">
             {pathname === "/dashboard" ? (
                <p>Home</p>

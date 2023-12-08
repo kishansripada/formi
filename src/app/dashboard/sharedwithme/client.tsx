@@ -1,38 +1,28 @@
 "use client";
 
-import { dancer, dancerPosition, formation } from "../../../types/types";
-import toast, { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-// import { Dropdown } from "./Dropdown";
-import { useSupabaseClient, useSession, Session } from "@supabase/auth-helpers-react";
-import { ProjectPreview } from "../myperformances/ProjectPreview";
 import { PerformancePreview } from "../_components/PerformancePreview";
-import { DndContext, useDroppable, MouseSensor, useSensors, useSensor } from "@dnd-kit/core";
 
 export default function PageClient({ sharedWithMe }) {
    return (
-      <div className="w-full grid grid-cols-1 gap-[32px]   rounded-xl sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 col-span-4   overscroll-contain items-center">
-         {sharedWithMe.length ? (
-            sharedWithMe
-               .sort((a, b) => new Date(b.last_edited) - new Date(a.last_edited))
-               .filter((dance) => !dance.isInTrash)
-               ?.map((dance) => {
-                  return (
-                     <>
-                        <div
-                           style={{
-                              position: "relative",
-                           }}
-                        >
+      <div className="overflow-y-scroll h-full flex-grow px-4 py-5 flex flex-col gap-5 ">
+         <p className="text-3xl font-semibold">Shared with me</p>
+
+         <div className="w-full grid grid-cols-1 gap-[32px]    rounded-xl sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 col-span-4   overscroll-contain items-center">
+            {sharedWithMe.length ? (
+               sharedWithMe
+                  .sort((a: Dance, b: Dance) => new Date(b.last_edited).getTime() - new Date(a.last_edited).getTime())
+                  .filter((dance) => !dance.isInTrash)
+                  ?.map((dance: Dance) => {
+                     return (
+                        <div key={dance.id}>
                            <PerformancePreview dance={dance}></PerformancePreview>
                         </div>
-                     </>
-                  );
-               })
-         ) : (
-            <p>No performances here 🤷🏽‍♂️</p>
-         )}
+                     );
+                  })
+            ) : (
+               <p className="text-sm font-medium">No performances here</p>
+            )}
+         </div>
       </div>
    );
 }

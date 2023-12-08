@@ -31,6 +31,7 @@ export default function PageClient({ rosters }) {
                            className={`flex rounded-xl mb-1 w-full flex-row items-center h-10 min-h-10 px-3 ${
                               selectedRosterId === roster.id ? "bg-neutral-800" : ""
                            }`}
+                           key={roster.id}
                         >
                            <p>{roster.name}</p>
                         </button>
@@ -70,7 +71,7 @@ export default function PageClient({ rosters }) {
                   <div className="overflow-scroll">
                      {selectedRoster.roster.map((dancer, index) => {
                         return (
-                           <div className="flex flex-row items-center w-full h-16  min-h-[64px] px-6">
+                           <div key={dancer.id} className="flex flex-row items-center w-full h-16  min-h-[64px] px-6">
                               <p className="mr-4 text-xl font-bold">{index + 1}</p>
                               <div
                                  style={{

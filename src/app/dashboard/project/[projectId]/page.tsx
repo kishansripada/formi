@@ -1,15 +1,10 @@
-import { dancer, dancerPosition, formation } from "../../types/types";
-import toast, { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-// import { Dropdown } from "./Dropdown";
-
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 import Client from "./client";
 import { AuthSession } from "@supabase/supabase-js";
+
 async function getServerSideProps(projectId: string) {
    const supabase = createServerComponentClient(
       { cookies },
@@ -47,7 +42,7 @@ async function getServerSideProps(projectId: string) {
                  settings,
                  isInTrash,
                  dancers,
-                 project_id 
+                 project_id ( id, name)
                  `
          )
          .eq("user", session.user.id)

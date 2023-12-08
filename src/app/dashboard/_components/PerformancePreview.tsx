@@ -2,41 +2,47 @@
 
 import { dancer, dancerPosition, formation } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
-import { useState } from "react";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useDraggable } from "@dnd-kit/core";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Dance, Database } from "../../../types/supabase";
 import { useStore } from "../store";
-export const PerformancePreview = ({ dance }: { dance: Dance }) => {
+import { AuthSession } from "@supabase/supabase-js";
+import {
+   ContextMenu,
+   ContextMenuContent,
+   ContextMenuItem,
+   ContextMenuSeparator,
+   ContextMenuSub,
+   ContextMenuSubContent,
+   ContextMenuSubTrigger,
+   ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+
+export const PerformancePreview = ({ dance, session, projects }: { dance: Dance; session: AuthSession }) => {
    const MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN = 3;
    const { plan, numberOfDances } = useStore();
 
-   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-      id: dance.id,
-   });
-
    const supabase = createClientComponentClient<Database>();
    const router = useRouter();
-   const [open, setOpen] = useState(false);
+
    const moveToTrash = async (id: number) => {
       const { data, error } = await supabase.from("dances").update({ isInTrash: true }).eq("id", id);
 
       if (!error) {
-         setOpen(false);
-         toast.success("Moved to trash");
          router.refresh();
+         toast.success("Moved to trash");
       } else {
          toast.error("There was an error moving to trash");
       }
    };
 
    const duplicateDance = async (danceId: number) => {
-      if (!plan && numberOfDances >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {
-         router.push("/upgrade");
-         return;
-      }
+      // if (!plan && numberOfDances >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {
+      //    router.push("/upgrade");
+      //    return;
+      // }
       let dance = await supabase
          .from("dances")
          .select("*")
@@ -81,105 +87,105 @@ export const PerformancePreview = ({ dance }: { dance: Dance }) => {
       router.push(`/${newDance.id}/edit`);
    };
 
-   const style = transform
-      ? {
-           transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-        }
-      : undefined;
-
    return (
       <>
-         {open ? (
-            <>
-               <div
-                  className="fixed top-0 left-0 z-[100] flex transition h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
-                  id="outside"
-                  onClick={(e) => {
-                     if ((e.target as HTMLDivElement).id === "outside") {
-                        setOpen(false);
-                     }
+         <ContextMenu>
+            <ContextMenuContent>
+               <ContextMenuItem
+                  onClick={() => {
+                     duplicateDance(dance.id);
                   }}
                >
-                  <div className="flex z-[50] w-[500px] flex-col relative  bg-neutral-800/90 border border-neutral-500  px-10 pt-6 pb-6   rounded-xl  text-sm ">
-                     <p className="text-xl font-bold">{dance.name}</p>
-                     <div className="flex flex-row mt-10 items-center w-full ">
-                        <button
-                           onClick={() => {
-                              moveToTrash(dance.id);
-                           }}
-                           className="  px-3 text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-red-500 text-red-400  "
-                        >
-                           Move to Trash
-                        </button>
-
-                        <button
-                           onClick={() => {
-                              duplicateRoster(dance);
-                           }}
-                           className="  ml-auto mr-2 px-3 text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-blue-500 text-blue-400  "
-                        >
-                           New From Roster
-                        </button>
-                        <button
-                           onClick={() => {
-                              duplicateDance(dance.id);
-                           }}
-                           className=" px-3 text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 py-2 bg-blue-500 text-blue-400  "
-                        >
-                           Duplicate
-                        </button>
-                     </div>
-                  </div>
-               </div>
-            </>
-         ) : null}
-
-         <div
-            ref={setNodeRef}
-            style={style}
-            {...listeners}
-            {...attributes}
-            key={dance.id}
-            onContextMenu={(e) => {
-               e.preventDefault();
-               setOpen(true);
-            }}
-            className="flex flex-col items-center group   w-full relative cursor-pointer  "
-         >
-            <Toaster></Toaster>
-
-            <Link prefetch={false} className="w-full" href={`/${dance.id}/edit`}>
-               <div className="w-full border-neutral-800 group-hover:border-pink-600 transition border overflow-hidden  bg-neutral-800 rounded-xl">
-                  <div className="bg-neutral-900 rounded-md min-h-[150px]  w-full relative border-transparent transition   ">
-                     {dance.formations.positions?.map((position: dancerPosition) => {
-                        return (
-                           <>
-                              <div
-                                 className="absolute w-2 h-2   rounded-full  pointer-events-none"
-                                 style={{
-                                    backgroundColor: dance?.dancers?.find((dancer: dancer) => dancer.id === position.id)?.color || "#db2777",
-                                    left: `${
-                                       ((position.position.x + dance.settings.stageDimensions.width / 2) / dance.settings.stageDimensions.width) * 100
-                                    }%`,
-                                    top: `${
-                                       ((-position.position.y + dance.settings.stageDimensions.height / 2) / dance.settings.stageDimensions.height) *
-                                       100
-                                    }%`,
+                  Duplicate
+               </ContextMenuItem>
+               <ContextMenuItem
+                  onClick={() => {
+                     duplicateRoster(dance);
+                  }}
+               >
+                  New From Roster
+               </ContextMenuItem>
+               {projects?.length && (
+                  <ContextMenuSub>
+                     <ContextMenuSubTrigger>{dance.project_id ? "Move to" : "Add to project"}</ContextMenuSubTrigger>
+                     <ContextMenuSubContent className="">
+                        {projects.map((project) => {
+                           return (
+                              <ContextMenuItem
+                                 key={project.id}
+                                 onClick={async () => {
+                                    const { data, error } = await supabase.from("dances").update({ project_id: project.id }).eq("id", dance.id);
+                                    if (!error) {
+                                       toast.success("Added to project");
+                                    } else {
+                                       toast.error("There was an error adding to project");
+                                    }
+                                    router.refresh();
                                  }}
-                              ></div>
-                           </>
-                        );
-                     })}
-                  </div>
-                  <div className="flex flex-row justify-start items-center w-full  px-3 py-2 bg-neutral-800 rounded-b-xl">
-                     <div>
-                        <p className="mt-1 mb-1 text-xs font-semibold">{dance.name}</p>
-                        <p className=" text-[10px] text-neutral-400">Edited {timeSince(dance.last_edited)} ago</p>
+                              >
+                                 {project.name}
+                              </ContextMenuItem>
+                           );
+                        })}
+                     </ContextMenuSubContent>
+                  </ContextMenuSub>
+               )}
+               <ContextMenuSeparator></ContextMenuSeparator>
+               <ContextMenuItem
+                  onClick={() => {
+                     moveToTrash(dance.id);
+                  }}
+               >
+                  Delete
+               </ContextMenuItem>
+            </ContextMenuContent>
+
+            <ContextMenuTrigger>
+               <div key={dance.id} className="flex flex-col items-center group   w-full relative cursor-default  ">
+                  <Toaster></Toaster>
+
+                  <Link prefetch={false} className="w-full cursor-default" href={`/${dance.id}/edit`}>
+                     <div className="w-full ">
+                        <div className=" rounded-t-md min-h-[200px]  w-full relative  transition border-neutral-700 group-hover:border-pink-600  border overflow-hidden   rounded-md bg-neutral-800  ">
+                           {dance.formations.positions?.map((position: dancerPosition) => {
+                              return (
+                                 <div
+                                    key={position.id}
+                                    className="absolute w-2 h-2  -translate-x-1/2 -translate-y-1/2 rounded-full  pointer-events-none"
+                                    style={{
+                                       backgroundColor: dance?.dancers?.find((dancer: dancer) => dancer.id === position.id)?.color || "#db2777",
+                                       left: `${
+                                          ((position.position.x + dance.settings.stageDimensions.width / 2) / dance.settings.stageDimensions.width) *
+                                          100
+                                       }%`,
+                                       top: `${
+                                          ((-position.position.y + dance.settings.stageDimensions.height / 2) /
+                                             dance.settings.stageDimensions.height) *
+                                          100
+                                       }%`,
+                                    }}
+                                 ></div>
+                              );
+                           })}
+                        </div>
+                        <div className="flex flex-row justify-start items-center w-full  py-1 rounded-b-xl">
+                           <div className="w-full">
+                              <p className="mt-1 mb-1 text-sm font-semibold">{dance.name}</p>
+                              <div className="flex flex-row items-center text-xs text-neutral-300 justify-between w-full">
+                                 <p className=" ">Edited {timeSince(dance.last_edited)} ago</p>
+                                 {dance.user !== session?.user?.id ? (
+                                    <p>Shared with me</p>
+                                 ) : (
+                                    projects.find((project) => project?.id === dance?.project_id)?.name || ""
+                                 )}
+                              </div>
+                           </div>
+                        </div>
                      </div>
-                  </div>
+                  </Link>
                </div>
-            </Link>
-         </div>
+            </ContextMenuTrigger>
+         </ContextMenu>
       </>
    );
 };

@@ -11,15 +11,10 @@ import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import PageClient from "./client";
 import { redirect } from "next/navigation";
+import { getRosters } from "../api";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 async function getServerSideProps() {
-   // Create authenticated Supabase Client
-   // const supabase = createServerSupabaseClient(ctx, {
-   //    supabaseKey:
-   //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4dHhieGtrdm9zbGNyc3hiZmFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjE0NjM3NDYsImV4cCI6MTk3NzAzOTc0Nn0.caFbFV4Ck7MrTSwsPXyIifjeKWYJWXisKR9-zFA33Ng",
-   //    supabaseUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co",
-   // });
    const supabase = createServerComponentClient(
       { cookies },
       {
@@ -41,17 +36,8 @@ async function getServerSideProps() {
    if (!session) {
       redirect("/login");
    }
-   async function getRosters(session: Session) {
-      let data = await supabase.from("rosters").select("*").eq("user_id", session.user.id);
 
-      return data?.data || [];
-   }
-
-   let [rosters] = await Promise.all([getRosters(session)]);
-   // console.log(projects);
-   // console.log(data);
-
-   // const { data } = await supabase.from("dances").select("*").eq("user", user.id);
+   let [rosters] = await Promise.all([getRosters(session, supabase)]);
 
    return { rosters, session };
 }

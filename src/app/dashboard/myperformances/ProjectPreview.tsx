@@ -12,7 +12,7 @@ export const ProjectPreview: React.FC<{
    project: any;
    myDances: any;
    activeId: string | null;
-}> = ({ project, myDances, activeId }) => {
+}> = ({ project, myDances, activeId, session }) => {
    const supabase = createClientComponentClient();
    const projectPerformances = myDances.filter((performance) => project.id === performance.project_id);
    const { isOver, setNodeRef } = useDroppable({
@@ -33,10 +33,10 @@ export const ProjectPreview: React.FC<{
       <>
          <div
             style={{
-               borderColor: isOver ? "white" : "rgb(38 38 38)",
+               borderColor: isOver ? "white" : "rgb(64 64 64)",
             }}
             ref={setNodeRef}
-            className=" h-[310px] mb-4 p-4 min-h-[310px] border-2 border-neutral-800 flex flex-col  bg-neutral-900 rounded-xl  w-full"
+            className=" h-[310px] p-4 min-h-[310px] border-b border-neutral-700 flex flex-col     w-full"
          >
             <style jsx>{`
                /* This will target the scrollbar track (the space the scrollbar travels along) */
@@ -56,7 +56,7 @@ export const ProjectPreview: React.FC<{
                   background: #555; /* Change to your desired color */
                }
             `}</style>
-            <div className="flex flex-row items-start justify-between    h-10">
+            <div className="flex flex-row items-center justify-between    h-10">
                <Link href={`/dashboard/project/${project.id}`} className="flex group flex-row items-start">
                   <div className="rounded-lg  bg-neutral-800 grid place-items-center p-3 mr-4">
                      <svg
@@ -74,7 +74,7 @@ export const ProjectPreview: React.FC<{
                         />
                      </svg>
                   </div>
-                  <p className="text-xs text-white mt-1 mr-2">{project.name}</p>
+                  <p className="text-xs text-white  mr-2">{project.name}</p>
                   <svg
                      xmlns="http://www.w3.org/2000/svg"
                      fill="none"
@@ -103,8 +103,8 @@ export const ProjectPreview: React.FC<{
                   .map((dance) => {
                      const style = activeId === dance.id ? { zIndex: 10, position: "relative" } : {};
                      return (
-                        <div style={style} className="w-[280px] min-w-[280px] mr-4 ">
-                           <PerformancePreview dance={dance}></PerformancePreview>
+                        <div key={dance.id} style={style} className="w-[280px] min-w-[280px] mr-4 ">
+                           <PerformancePreview session={session} dance={dance}></PerformancePreview>
                         </div>
                      );
                   })}

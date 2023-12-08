@@ -26,7 +26,7 @@ export default function PageClient({ trash }: { trash: Dance[] }) {
          toast.error("There was an issue deleting your dance");
       } else {
          toast.success("Deleted dance");
-         // revalidatePath("/dashboard/trash");
+
          router.refresh();
       }
    };
@@ -39,36 +39,35 @@ export default function PageClient({ trash }: { trash: Dance[] }) {
                   .sort((a, b) => new Date(b.last_edited) - new Date(a.last_edited))
                   ?.map((dance) => {
                      return (
-                        <>
-                           <div
-                              style={{
-                                 position: "relative",
-                              }}
-                              className="group"
-                           >
-                              <div className="absolute cursor-pointer flex flex-col p-2 text-xs group-hover:opacity-100 opacity-0 transition left-0 top-0 z-50 w-full h-full bg-black/70">
-                                 <div
-                                    onClick={(e) => {
-                                       e.stopPropagation();
-                                       removeFromTrash(dance.id.toString());
-                                    }}
-                                    className="h-1/2 border border-white rounded-md mb-1 hover:bg-white/20 grid place-items-center transition"
-                                 >
-                                    Remove from Trash
-                                 </div>
-                                 <div
-                                    onClick={(e) => {
-                                       e.stopPropagation();
-                                       deleteDance(dance.id.toString());
-                                    }}
-                                    className="h-1/2 border border-red-600 rounded-md mt-1 hover:bg-red-600/20 grid place-items-center transition"
-                                 >
-                                    Delete Permanently
-                                 </div>
+                        <div
+                           style={{
+                              position: "relative",
+                           }}
+                           className="group"
+                           key={dance.id}
+                        >
+                           <div className="absolute cursor-pointer flex flex-col p-2 text-xs group-hover:opacity-100 opacity-0 transition left-0 top-0 z-50 w-full h-full bg-black/70">
+                              <div
+                                 onClick={(e) => {
+                                    e.stopPropagation();
+                                    removeFromTrash(dance.id.toString());
+                                 }}
+                                 className="h-1/2 border border-white rounded-md mb-1 hover:bg-white/20 grid place-items-center transition"
+                              >
+                                 Remove from Trash
                               </div>
-                              <PerformancePreview dance={dance}></PerformancePreview>
+                              <div
+                                 onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteDance(dance.id.toString());
+                                 }}
+                                 className="h-1/2 border border-red-600 rounded-md mt-1 hover:bg-red-600/20 grid place-items-center transition"
+                              >
+                                 Delete Permanently
+                              </div>
                            </div>
-                        </>
+                           <PerformancePreview dance={dance}></PerformancePreview>
+                        </div>
                      );
                   })
             ) : (
