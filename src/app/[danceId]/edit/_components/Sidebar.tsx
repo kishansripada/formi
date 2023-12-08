@@ -248,7 +248,7 @@ export const Sidebar: React.FC<{
             </svg>
             <p className=" mt-1">Stage</p>
          </button>
-
+         {/* 
          <button
             className="flex flex-col  mb-2 items-center dark:text-neutral-400 font-semibold text-neutral-600   "
             onClick={() => {
@@ -277,7 +277,7 @@ export const Sidebar: React.FC<{
 
             <p className=" mt-1">Ideas</p>
             <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p>
-         </button>
+         </button> */}
 
          {/* <button
                className="flex flex-col items-center dark:text-neutral-300 font-semibold text-neutral-600   "
