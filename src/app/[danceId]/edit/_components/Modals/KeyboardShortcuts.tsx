@@ -16,7 +16,7 @@ export const KeyboardShortcuts: React.FC<{}> = ({}) => {
             </TabsList>
          </div>
          <TabsContent value="essentials">
-            <VStack className="gap-16 mt-4">
+            <VStack className="gap-12 mt-4">
                <HStack className="gap-10">
                   <LearnKeyboardShortcut
                      action="Show/Hide UI"
@@ -52,20 +52,20 @@ export const KeyboardShortcuts: React.FC<{}> = ({}) => {
                   />
                   <LearnKeyboardShortcut
                      action="Paste selected dancers"
-                     description="Press it to paste the properties and positions of the selected dancers on the current formation"
+                     description="Press it to paste the properties and positions of the copied dancers on the current formation"
                      shortcut={["⌘", "V"]}
                   />
                </HStack>
             </VStack>
          </TabsContent>
          <TabsContent value="timeline">
-            <VStack className="gap-16 mt-4">
+            <VStack className="gap-12 mt-4">
                <HStack className="gap-10">
                   <LearnKeyboardShortcut action="Play/Pause" description="Press space to play/pause the timeline" shortcut={["Spacebar"]} />
 
                   <LearnKeyboardShortcut
                      action="Extend timeline during drag"
-                     description="Holdling shift while dragging on the timeline will extent the entire timeline shinking surrounding formations to fit"
+                     description="Holdling shift while dragging on the timeline will extent the entire timeline instead of shinking surrounding formations to fit"
                      shortcut={["Shift"]}
                   />
 

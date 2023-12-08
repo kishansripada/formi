@@ -67,25 +67,15 @@ export const ThreeD: React.FC<{
    setScene: any;
    // comments: comment[];
 }> = ({
-   children,
-   // setFormations,
-   selectedFormation,
-   // formations,
    setSelectedDancers,
    selectedDancers,
-
-   addToStack,
-   pushChange,
    localSettings,
-
    setIsThreeDancerDragging,
    isThreeDancerDragging,
-
    currentFormationIndex,
    percentThroughTransition,
    dancers,
    position,
-
    setScene,
 }) => {
    const {
@@ -104,6 +94,7 @@ export const ThreeD: React.FC<{
          horizontalFineDivisions,
       },
       getFirstSelectedFormation,
+      selectedFormations,
       isPlaying,
    } = useStore();
    const { gridSnap } = localSettings;
@@ -181,7 +172,6 @@ export const ThreeD: React.FC<{
                   };
                })
             );
-            pushChange();
          }}
          gl={{ logarithmicDepthBuffer: true }}
          camera={{ position: [0, 5, (localSettings.stageFlipped ? -1 : 1) * 10], fov: 40, near: 0.1, far: 1000 }}
@@ -381,7 +371,7 @@ export const ThreeD: React.FC<{
             <meshStandardMaterial attach="material" />
          </mesh>
 
-         {selectedFormation !== null
+         {selectedFormations.length
             ? getFirstSelectedFormation()?.positions.map((dancerPosition: dancerPosition) => {
                  return (
                     <ThreeDancer
@@ -395,8 +385,8 @@ export const ThreeD: React.FC<{
                        percentThroughTransition={percentThroughTransition}
                        dancers={dancers}
                        position={position}
-                       addToStack={addToStack}
-                       pushChange={pushChange}
+                       addToStack={() => {}}
+                       pushChange={() => {}}
                        dancerPosition={dancerPosition}
                        localSettings={localSettings}
                     ></ThreeDancer>

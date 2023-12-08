@@ -15,7 +15,7 @@ export const Prop: React.FC<{
    prop: prop;
    currentFormationIndex: number | null;
    percentThroughTransition: number;
-   isPlaying: boolean;
+
    position: number | null;
 
    selectedDancers: string[];
@@ -34,8 +34,8 @@ export const Prop: React.FC<{
    dropDownToggle: boolean;
 
    pushChange: Function;
-}> = ({ prop, currentFormationIndex, percentThroughTransition, isPlaying, position, coordsToPosition, zoom, localSettings, selectedPropIds }) => {
-   let { formations, selectedFormations, getFirstSelectedFormation } = useStore();
+}> = ({ prop, currentFormationIndex, percentThroughTransition, position, coordsToPosition, zoom, localSettings, selectedPropIds }) => {
+   let { formations, selectedFormations, getFirstSelectedFormation, isPlaying } = useStore();
    const { stageFlipped } = localSettings;
 
    if (!selectedFormations.length) return <></>;

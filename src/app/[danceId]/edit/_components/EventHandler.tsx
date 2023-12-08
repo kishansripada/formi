@@ -305,7 +305,8 @@ export const EventHandler: React.FC<{
       if (e.key === "a") {
          if (!selectedFormations.length) return;
          e.preventDefault();
-         setSelectedDancers([...formations?.[0]?.positions?.map((position) => position.id)] || []);
+
+         setSelectedDancers(dancers.map((dancer) => dancer.id));
       }
 
       if (e.key === "b") {

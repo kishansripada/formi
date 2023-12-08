@@ -240,17 +240,17 @@ export const Timeline: React.FC<{
                }
             `}
          </style>
-         <div className="w-full h-[10px] bg-neutral-50 dark:bg-neutral-900 select-none hidden lg:block  ">
+         <div className="w-full min-h-[10px] max-h-[10px] bg-neutral-50 dark:bg-neutral-900 select-none hidden lg:block  ">
             <div
                onMouseDown={() => {
                   setIsScrollingTimeline(true);
                }}
                id="scrollbar"
-               style={{
-                  width: (scrollInfo.clientWidth / scrollInfo.scrollWidth) * scrollInfo.clientWidth + pixelsPerSecond * 0 || 0,
-                  left: (scrollInfo.scrollLeft / scrollInfo.scrollWidth) * scrollInfo.clientWidth || 0,
-               }}
-               className="h-[10px] cursor-pointer  dark:bg-neutral-700 bg-neutral-300 flex flex-row items-center  relative "
+               // style={{
+               //    width: (scrollInfo.clientWidth / scrollInfo.scrollWidth) * scrollInfo.clientWidth + pixelsPerSecond * 0 || 0,
+               //    left: (scrollInfo.scrollLeft / scrollInfo.scrollWidth) * scrollInfo.clientWidth || 0,
+               // }}
+               className="min-h-[10px] max-h-[10px] cursor-pointer  dark:bg-neutral-700 bg-neutral-300 flex flex-row items-center  relative "
             ></div>
          </div>
 

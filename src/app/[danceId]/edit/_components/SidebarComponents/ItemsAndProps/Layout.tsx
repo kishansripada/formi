@@ -30,7 +30,6 @@ export const ItemsAndProps: React.FC<{
    invalidatePropUploads,
    selectedPropIds,
    propUploads,
-
    soundCloudTrackId,
    setSoundCloudTrackId,
    audioFiles,
