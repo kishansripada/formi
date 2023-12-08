@@ -38,7 +38,7 @@ export const Canvas: React.FC<{
 
    undo: Function;
    addToStack: Function;
-   pushChange: Function;
+
    localSettings: localSettings;
    isCommenting: boolean;
    setIsCommenting: Function;
@@ -61,14 +61,13 @@ export const Canvas: React.FC<{
    draggingDancerId,
    setDraggingDancerId,
    undo,
-   pushChange,
+
    localSettings,
    isCommenting,
    setIsCommenting,
    zoom,
    setZoom,
    shiftHeld,
-
    session,
    setSelectedPropIds,
    selectedPropIds,
@@ -458,7 +457,7 @@ export const Canvas: React.FC<{
                return formation;
             })
          );
-         pushChange();
+
          setIsCommenting(false);
       }
 
@@ -559,7 +558,6 @@ export const Canvas: React.FC<{
          setMovedOnMultipleFormations(false);
       }
       if (changingControlId) {
-         pushChange();
       }
 
       // if (draggingDancerId) {
@@ -569,11 +567,9 @@ export const Canvas: React.FC<{
       // }
 
       if (draggingCommentId) {
-         pushChange();
       }
 
       if (resizingPropId) {
-         pushChange();
       }
 
       if (draggingPropId) {
@@ -612,8 +608,6 @@ export const Canvas: React.FC<{
             })
          );
          // }
-
-         pushChange();
       }
       // if (rotatingDancerId) {
       //    pushChange();
