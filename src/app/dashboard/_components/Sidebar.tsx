@@ -19,13 +19,14 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "../../../../@/components/ui/input";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { NewPerformanceBuilder } from "./NewPerformanceBuilder";
+import { DoubleClickInput } from "../../../../@/components/ui/double-click-input";
 export const Sidebar: React.FC<{
    rosters: any;
    session: AuthSession;
    plan: string | null;
    myDances: any;
    userData: any;
-}> = ({ rosters, session, plan, myDances, userData, projects }) => {
+}> = ({ rosters, session, plan, myDances, userData, projects: initialProjects }) => {
    const { setPlan, setNumberOfDances } = useStore();
    useEffect(() => {
       setPlan(plan);
@@ -111,6 +112,8 @@ export const Sidebar: React.FC<{
       }
    }
 
+   const [projects, setProjects] = useState(initialProjects);
+
    return (
       <>
          <div className="min-w-[250px] bg-neutral-900  w-[250px]  border-r border-neutral-700   pb-4 h-screen lg:flex hidden flex-col box-border  text-sm  ">
@@ -165,7 +168,25 @@ export const Sidebar: React.FC<{
                                  pathname === `/dashboard/project/${project.id}` ? "bg-neutral-800" : ""
                               }   w-full h-8 px-3`}
                            >
-                              <p>{project.name}</p>
+                              <DoubleClickInput
+                                 className="text-xs text-white dark:bg-transparent  font-medium h-5 mx-1 rounded-none border-transparent border-2  px-2  outline-none w-full dark:focus:bg-neutral-900"
+                                 value={project.name}
+                                 onChange={(e) => {
+                                    setProjects(
+                                       projects.map((p) => {
+                                          if (p.id === project.id) {
+                                             return { ...p, name: e.target.value };
+                                          }
+                                          return p;
+                                       })
+                                    );
+                                 }}
+                                 onBlur={async () => {
+                                    const data = await supabase.from("projects").update({ name: project.name }).eq("id", project.id);
+                                    console.log(data);
+                                 }}
+                              />
+                              {/* <p>{project.name}</p> */}
                            </Link>
                         );
                      })}
