@@ -2,7 +2,7 @@
 
 import { PerformancePreview } from "../../_components/PerformancePreview";
 
-export default function PageClient({ myDances }) {
+export default function PageClient({ myDances, session }) {
    return (
       <>
          <div className="px-4 py-5 gap-5 flex flex-col">
@@ -19,7 +19,7 @@ export default function PageClient({ myDances }) {
                               }}
                               key={dance.id}
                            >
-                              <PerformancePreview dance={dance}></PerformancePreview>
+                              <PerformancePreview session={session} dance={dance}></PerformancePreview>
                            </div>
                         );
                      })

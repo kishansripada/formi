@@ -175,8 +175,10 @@ export const PerformancePreview = ({ dance, session, projects }: { dance: Dance;
                                  <p className=" ">Edited {timeSince(dance.last_edited)} ago</p>
                                  {dance.user !== session?.user?.id ? (
                                     <p>Shared with me</p>
-                                 ) : (
+                                 ) : projects?.length ? (
                                     projects.find((project) => project?.id === dance?.project_id)?.name || ""
+                                 ) : (
+                                    <></>
                                  )}
                               </div>
                            </div>

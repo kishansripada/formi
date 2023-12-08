@@ -58,6 +58,6 @@ async function getServerSideProps(projectId: string) {
 }
 
 export default async function Page({ params }: { params: { projectId: string } }) {
-   const { dances: myDances } = await getServerSideProps(params.projectId);
-   return <Client myDances={myDances}></Client>;
+   const { dances: myDances, session } = await getServerSideProps(params.projectId);
+   return <Client myDances={myDances} session={session}></Client>;
 }
