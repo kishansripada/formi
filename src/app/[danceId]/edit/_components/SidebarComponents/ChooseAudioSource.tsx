@@ -190,6 +190,7 @@ export const ChooseAudioSource: React.FC<{
 
             {Boolean(soundCloudTrackId) ? <p className="px-2 text-xs">{soundCloudTrackId?.split("/").slice(-1)[0]}</p> : null}
          </VStack>
+         <HDivider />
 
          <PropertyAdd
             canAdd={true}
