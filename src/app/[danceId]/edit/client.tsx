@@ -1,5 +1,5 @@
 "use client";
-import { roundToHundredth } from "../../../utls";
+import { roundToHundredth, useSupabaseQuery, whereInFormation } from "../../../utls";
 import { detectCollisions } from "../../../types/collisionDetector";
 import { useIsDesktop } from "../../../utls";
 import { Video } from "./_components/Video";
@@ -10,9 +10,9 @@ import Head from "next/head";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import { useLocalStorage, useUploadToSupabase } from "../../../utls";
 import debounce from "lodash.debounce";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { comment, dancer, dancerPosition, formation, PIXELS_PER_SQUARE, localSettings, cloudSettings, prop, item } from "../../../types/types";
+import { comment, PIXELS_PER_SQUARE, localSettings, prop } from "../../../types/types";
 import { AudioControls } from "./_components/AudioControls";
 import { Header } from "./_components/Header";
 import { DancerAlias } from "./_components/DancerAlias";
@@ -25,29 +25,38 @@ import { Settings } from "./_components/SidebarComponents/Settings";
 import { ChooseAudioSource } from "./_components/SidebarComponents/ChooseAudioSource";
 import { Roster } from "./_components/SidebarComponents/Roster";
 import { CurrentFormation } from "./_components/SidebarComponents/CurrentFormation";
-import { AuthSession, RealtimeChannel } from "@supabase/supabase-js";
+import { AuthSession, RealtimeChannel, SupabaseClient } from "@supabase/supabase-js";
 import { Collisions } from "./_components/SidebarComponents/Collisions";
 import { Timeline } from "./_components/Timeline";
 import { FormationControls } from "./_components/FormationControls";
 import { EventHandler } from "./_components/EventHandler";
 import { Assets } from "./_components/Modals/Assets";
-// could be dynamic imports
+
 import { Prop } from "./_components/Prop";
 import { Comment } from "./_components/Comment";
 
 import { HelpUrl } from "./_components/Modals/HelpUrl";
 import { ObjectControls } from "./_components/ObjectControls";
 import { Database } from "../../../types/supabase";
-
 import { StageSettings } from "./_components/SidebarComponents/StageSettings";
 import { Segments } from "./_components/SidebarComponents/Segments";
-
 import { useStore } from "./store";
 import { MobileSidebar } from "./_components/MobileSidebar";
 import * as Sentry from "@sentry/browser";
 import { cubic, linear } from "./animationFunctions";
+import { TemplateOverlay } from "./_components/TemplateOverlay";
+import { FormationIdeas } from "./_components/SidebarComponents/FormationIdeas";
 import { ItemsAndProps } from "./_components/SidebarComponents/ItemsAndProps/Layout";
+
 import { Button } from "../../../../@/components/ui/button";
+import { Scene } from "three";
+import { exportThree } from "../../../utils/augmentedReality";
+import { sleep } from "../../../utils/sleep";
+
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { HStack, VStack } from "../../../../@/components/ui/stacks";
+import LearnKeyboardShortcut from "../../../../@/components/LearnKeyboardShortcut";
+
 if (typeof Node === "function" && Node.prototype) {
    const originalRemoveChild = Node.prototype.removeChild;
    Node.prototype.removeChild = function (child) {
@@ -62,31 +71,6 @@ if (typeof Node === "function" && Node.prototype) {
    };
 }
 
-// if (typeof Node === "function" && Node.prototype) {
-//    const originalInsertBefore = Node.prototype.insertBefore;
-
-//    Node.prototype.insertBefore = function (newNode, referenceNode) {
-//       // Validate that newNode is not already in the DOM
-//       if (newNode.parentNode) {
-//          if (console) {
-//             console.error("Cannot insert node that already has a parent", newNode);
-//          }
-//          return newNode;
-//       }
-
-//       // Validate that referenceNode is a child of this node
-//       if (referenceNode.parentNode !== this) {
-//          if (console) {
-//             console.error("Cannot insert before a reference node that is not a child", referenceNode);
-//          }
-//          return newNode;
-//       }
-
-//       // If validations passed, call original method
-//       return originalInsertBefore.call(this, newNode, referenceNode);
-//    };
-// }
-
 const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.ThreeD), {
    loading: () => (
       <div className="flex items-center justify-center h-screen bg-neutral-900 ">
@@ -94,22 +78,6 @@ const ThreeD = dynamic(() => import("./_components/ThreeD").then((mod) => mod.Th
       </div>
    ),
 });
-
-// var jsondiffpatch = require("jsondiffpatch").create({
-//    objectHash: function (obj) {
-//       return obj.id;
-//    },
-// });
-
-// use effect, but not on initial render
-const useDidMountEffect = (func, deps) => {
-   const didMount = useRef(false);
-
-   useEffect(() => {
-      if (didMount.current) func();
-      else didMount.current = true;
-   }, deps);
-};
 
 const Edit = ({
    initialData,
@@ -134,7 +102,6 @@ const Edit = ({
       dancers,
       setDancers,
       selectedFormation,
-
       formations,
       setFormations,
       viewOnly,
@@ -152,7 +119,6 @@ const Edit = ({
       soundCloudTrackId,
       selectedDancers,
       setSelectedDancers,
-      liveblocks,
       getFirstSelectedFormation,
       selectedFormations,
       setSelectedFormations,
@@ -161,11 +127,9 @@ const Edit = ({
       setIsMobileView,
       isMobileView,
       setImageBlobs,
-      imageBlobs,
       shiftHeld,
       setShiftHeld,
       isPlaying,
-      setIsPlaying,
    } = useStore();
 
    useEffect(() => {
@@ -181,7 +145,7 @@ const Edit = ({
       // });
       Sentry.setUser(session ? { email: session?.user.email, id: session?.user.id } : null);
       Sentry.setTag("plan", plan || "free tier");
-      
+
       setSegments(initialData.segments);
       setDancers(initialData.dancers);
       setFormations(initialData.formations);
@@ -209,6 +173,11 @@ const Edit = ({
       setMenuOpen(is_touch_enabled() ? null : "formations");
    }, []);
 
+   useEffect(() => {
+      let vh = window.innerHeight * 0.01;
+      // Then we set the value in the --vh custom property to the root of the document
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+   }, []);
 
    const supabase = createClientComponentClient<Database>();
 
@@ -256,13 +225,12 @@ const Edit = ({
          autoScroll: false,
       });
    }
-   const hasVisited = true;
+
    const [anyoneCanView, setAnyoneCanView] = useState(initialData.anyonecanview);
    const [permissions, setPermissions] = useState(initialPermissions);
    const [playbackRate, setPlaybackRate] = useState(1);
    const [selectedPropIds, setSelectedPropIds] = useState<string[]>([]);
    const [dropDownToggle, setDropDownToggle] = useState<boolean>(false);
-   const [audioFiles, setAudiofiles] = useState(initialData.audioFiles);
    const [localSource, setLocalSource] = useState(null);
    const [zoom, setZoom] = useState(1);
    const [isCommenting, setIsCommenting] = useState<boolean>(false);
@@ -274,10 +242,25 @@ const Edit = ({
    const [pdfLoading, setPdfLoading] = useState(false);
    const [assetsOpen, setAssetsOpen] = useState(false);
    const [scene, setScene] = useState(null);
-   const [propUploads, setPropUploads] = useState([]);
-   // hasVisited ? null : { url: "https://www.youtube.com/shorts/JRS1tPHJKAI" }
+   const [resizingPropId, setResizingPropId] = useState(null);
+   const [videoPosition, setVideoPosition] = useState<"top-left" | "top-right" | "bottom-left" | "bottom-right">("top-right");
    const [helpUrl, setHelpUrl] = useState(null);
-   const [saved, setSaved] = useState(true)
+   const [currentTemplate, setCurrentTemplate] = useState([]);
+
+   let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
+
+   const coordsToPosition = useCallback(
+      (coords: { x: number; y: number }) => {
+         if (!coords) return null;
+         let { x, y } = coords;
+         return {
+            left: (PIXELS_PER_SQUARE * cloudSettings.stageDimensions.width) / 2 + PIXELS_PER_SQUARE * x,
+            top: (PIXELS_PER_SQUARE * cloudSettings.stageDimensions.height) / 2 + PIXELS_PER_SQUARE * -y,
+         };
+      },
+      [cloudSettings.stageDimensions]
+   );
+
    useEffect(() => {
       const allImages = items.map((item) => `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`);
 
@@ -304,133 +287,143 @@ const Edit = ({
       fetchImages();
    }, [items]);
 
-   const [resizingPropId, setResizingPropId] = useState(null);
-   let { currentFormationIndex, percentThroughTransition } = whereInFormation(formations, position);
-
-   const dancerPositions = (() => {
-      if (!isPlaying && selectedFormations.length === 0) {
-         return [];
-      }
-      if (!isPlaying && selectedFormations.length) return getFirstSelectedFormation()?.positions || [];
-
-      if (currentFormationIndex === null) return [];
-      if (!percentThroughTransition) {
-         return formations[currentFormationIndex]?.positions || [];
-      }
-
-      // worst case animate
-      const previousFormationPositions = formations[currentFormationIndex - 1]?.positions || [];
-      const thisFormationPositions = formations[currentFormationIndex]?.positions || [];
-      const animatedPositions = [];
-
-      for (let i = 0; i < thisFormationPositions.length; i++) {
-         const previousDancer = previousFormationPositions[i];
-         const thisDancer = thisFormationPositions[i];
-         if (!previousDancer || !thisDancer) continue;
-         let animatedPosition;
-         //   console.log(thisDancer);
-         if (thisDancer.transitionType === "cubic" && thisDancer.controlPointStart && thisDancer.controlPointEnd) {
-            animatedPosition = cubic(
-               previousDancer.position,
-               thisDancer.position,
-               percentThroughTransition,
-               thisDancer.controlPointStart,
-               thisDancer.controlPointEnd
-            );
-         } else if (thisDancer.transitionType === "teleport") {
-            animatedPosition = linear(previousDancer.position, thisDancer.position, percentThroughTransition);
-         } else {
-            animatedPosition = linear(previousDancer.position, thisDancer.position, percentThroughTransition);
-         }
-         animatedPositions.push({ ...thisDancer, position: animatedPosition });
-      }
-
-      return animatedPositions;
-   })();
-
-   const [videoPosition, setVideoPosition] = useState<"top-left" | "top-right" | "bottom-left" | "bottom-right">("top-right");
-
-   const coordsToPosition = useCallback(
-      (coords: { x: number; y: number }) => {
-      if (!coords) return null;
-      let { x, y } = coords;
-      return {
-         left: (PIXELS_PER_SQUARE * cloudSettings.stageDimensions.width) / 2 + PIXELS_PER_SQUARE * x,
-         top: (PIXELS_PER_SQUARE * cloudSettings.stageDimensions.height) / 2 + PIXELS_PER_SQUARE * -y,
-      };
-      },
-      [cloudSettings.stageDimensions]
+   const { data: audioFiles, invalidate: invalidateAudioFiles } = useSupabaseQuery(() =>
+      supabase.storage.from("audiofiles").list(session?.user.id, {})
    );
-
-   useEffect(() => {
-      if (!session) return;
-      supabase.storage
-         .from("audiofiles")
-         .list(session?.user.id, {})
-         .then((r) => {
-            if (!r.data) return;
-            setAudiofiles(r);
-         });
-      invalidatePropUploads();
-   }, [session]);
-
-   const invalidatePropUploads = () => {
-      supabase.storage
-         .from("props")
-         .list(session?.user.id, {})
-         .then((r) => {
-            if (!r.data) return;
-            console.log(r.data);
-            setPropUploads(r?.data);
-         });
-   };
+   const { data: propUploads, invalidate: invalidatePropUploads } = useSupabaseQuery(() => supabase.storage.from("props").list(session?.user.id, {}));
 
    useEffect(() => {
       if (!isPlaying) return;
       setSelectedFormations([formations.find((formation, i) => i === currentFormationIndex)?.id]);
    }, [currentFormationIndex, isPlaying]);
 
-   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+   const pushChange = () => {
+      return;
+   };
+   const addToStack = () => {
+      return;
+   };
+
+   const roundPositions = () => {
+      const { stageBackground, gridSubdivisions, horizontalGridSubdivisions, verticalFineDivisions, horizontalFineDivisions, stageDimensions } =
+         cloudSettings;
+      const { gridSnap } = localSettings;
+      let gridSizeX = 1;
+      let gridSizeY = 1;
+      let verticalOffset = 0;
+      let horizontalOffset = 0;
+      if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
+         // Determine the total number of divisions along each axis.
+         const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
+         const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
+
+         // Calculate the width and height of each grid cell.
+         gridSizeX = stageDimensions.width / totalVerticalDivisions / gridSnap;
+         gridSizeY = stageDimensions.height / totalHorizontalDivisions / gridSnap;
+         let isOddVerticalDivisions = (gridSubdivisions * verticalFineDivisions) % 2 !== 0;
+         let isOddHorizontalDivisions = (horizontalGridSubdivisions * horizontalFineDivisions) % 2 !== 0;
+
+         verticalOffset = isOddVerticalDivisions ? gridSizeX / 2 : 0;
+         horizontalOffset = isOddHorizontalDivisions ? gridSizeY / 2 : 0;
+         if (gridSnap % 2 === 0) {
+            verticalOffset = 0;
+            horizontalOffset = 0;
+         }
+      } else {
+         gridSizeX = 1 / gridSnap;
+         gridSizeY = 1 / gridSnap;
+      }
+
+      // console.log(gridSizeX);
+      setFormations(
+         formations.map((formation) => {
+            // Use the grid cell dimensions to round the dancer positions to the nearest grid position.
+            return {
+               ...formation,
+               positions: formation.positions.map((position) => {
+                  return {
+                     ...position,
+                     position: {
+                        x: roundToHundredth(Math.round((position.position.x - verticalOffset) / gridSizeX) * gridSizeX + verticalOffset),
+                        y: roundToHundredth(Math.round((position.position.y - horizontalOffset) / gridSizeY) * gridSizeY + horizontalOffset),
+                     },
+                  };
+               }),
+            };
+         })
+      );
+   };
+
+   const supabaseUploadingEnabled = !viewOnlyInitial && danceName !== "initialName";
+
+   const soundCloudIdSaved = useUploadToSupabase("soundCloudId", soundCloudTrackId, danceId, supabaseUploadingEnabled);
+   const danceNameIsSaved = useUploadToSupabase("name", danceName, danceId, supabaseUploadingEnabled);
+   const cloudSettingsIsSaved = useUploadToSupabase("settings", cloudSettings, danceId, supabaseUploadingEnabled);
+   const dancersIsSaved = useUploadToSupabase("dancers", dancers, danceId, supabaseUploadingEnabled);
+   const formationsIsSaved = useUploadToSupabase("formations", formations, danceId, supabaseUploadingEnabled);
+   const propsIsSaved = useUploadToSupabase("props", props, danceId, supabaseUploadingEnabled);
+   const itemsIsSaved = useUploadToSupabase("items", items, danceId, supabaseUploadingEnabled);
+   const segmentsIsSaved = useUploadToSupabase("segments", segments, danceId, supabaseUploadingEnabled);
+
+   const saved =
+      soundCloudIdSaved &&
+      danceNameIsSaved &&
+      cloudSettingsIsSaved &&
+      dancersIsSaved &&
+      formationsIsSaved &&
+      propsIsSaved &&
+      itemsIsSaved &&
+      segmentsIsSaved;
+
+   let uploadFormations = useCallback(
+      debounce(async (formations) => {
+         // const { data, error } = await supabase.from("dances").update({ formations: formations, last_edited: new Date() }).eq("id", danceId);
+         const { data: danceData, error: danceError } = await supabase.from("activity").upsert({ date: new Date(), performance: danceId }).single();
+      }, 10000),
+      [danceId]
+   );
+
+   useEffect(() => {
+      if (viewOnlyInitial || danceName === "initialName") return;
+
+      uploadFormations(formations);
+   }, [formations]);
+
+   //////////////////////
+   // let flippedFormations = formations.map((formation: formation) => {
+   //    let flippedPositions = formation?.positions.map((position) => {
+   //       if (position.controlPointEnd && position.controlPointStart) {
+   //          return {
+   //             ...position,
+   //             position: { x: -position.position.x, y: -position.position.y },
+   //             controlPointEnd: { x: -position.controlPointEnd.x, y: -position.controlPointEnd.y },
+   //             controlPointStart: { x: -position.controlPointStart.x, y: -position.controlPointStart.y },
+   //          };
+   //       } else {
+   //          return {
+   //             ...position,
+   //             position: { x: -position.position.x, y: -position.position.y },
+   //          };
+   //       }
+   //    });
+
+   //    return { ...formation, positions: flippedPositions };
+   // });
+
+   //////////////////////////
+   const collisions = localSettings.viewCollisions ? detectCollisions(formations, selectedFormations, localSettings.collisionRadius) : [];
+
+   function handleDragEnd(event) {
+      const { active, over } = event;
+
+      if (over && active.data.current.supports.includes(over.data.current.type)) {
+         setVideoPosition(over.id);
+      }
+   }
 
    const exportPdf = async () => {
       setPdfLoading(true);
       setLocalSettings({ ...localSettings, viewingTwo: true, viewingThree: false });
-      // const parentContainer = document.createElement("div");
-      // const extendedFormations = [...formations, { name: "", notes: "" }];
-
-      // for (let index = 0; index < extendedFormations.length; index++) {
-      //    setSelectedFormations([formations[index]?.id]);
-
-      //    // Wait for the formation to be rendered in the DOM
-      //    await sleep(1000); // Delay in milliseconds. Adjust as needed.
-
-      //    const stageElement = document.getElementById("stage");
-      //    const clonedElement = stageElement.cloneNode(true); // Clone the element with its children
-      //    console.log(typeof clonedElement);
-      //    // Add each stage to the parentContainer
-      //    const label = document.createElement("p");
-      //    label.textContent = `${extendedFormations[index].name} (${index + 1} of ${formations.length})`;
-      //    label.style.textAlign = "center";
-      //    // label.style.width = "100%";
-
-      //    const notes = document.createElement("p");
-      //    notes.textContent = `${extendedFormations[index].notes || ""}`;
-      //    notes.style.textAlign = "left";
-      //    // notes.style.width = "100%";
-
-      //    // Create a container for the current formation to force a new page
-      //    const formationContainer = document.createElement("div");
-
-      //    // formationContainer.style.transform = "rotate(90deg)"; // Rotate the content 90 degrees
-
-      //    // Add the label, formation, and notes to the formationContainer
-      //    formationContainer.appendChild(clonedElement);
-      //    formationContainer.appendChild(label);
-      //    formationContainer.appendChild(notes);
-
-      //    // Add the formationContainer to the parentContainer
-      //    parentContainer.appendChild(formationContainer);
-      // }
 
       const canvases = [];
 
@@ -494,337 +487,46 @@ const Edit = ({
       var options = {
          filename: `${danceName}.pdf`,
       };
-
-      // domToPdf(parentContainer, options, (pdf) => {
-      //    setPdfLoading(false);
-      // });
    };
+   // // console.log({ isMobileView });
+   // const [showPopup, setShowPopup] = useTimedPopup(60000 * 0.1); // Replace X with the number of minutes
 
-   async function handleBeforeUnload(event) {
-      if (!saved) {
-         // Prompt the user before closing the tab
-         event.preventDefault();
-      }
-   }
-
-   const pushChange = () => {
-      return;
-   };
-
-   const roundPositions = () => {
-      const { stageBackground, gridSubdivisions, horizontalGridSubdivisions, verticalFineDivisions, horizontalFineDivisions, stageDimensions } =
-         cloudSettings;
-      const { gridSnap } = localSettings;
-      let gridSizeX = 1;
-      let gridSizeY = 1;
-      let verticalOffset = 0;
-      let horizontalOffset = 0;
-      if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
-         // Determine the total number of divisions along each axis.
-         const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
-         const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
-
-         // Calculate the width and height of each grid cell.
-         gridSizeX = stageDimensions.width / totalVerticalDivisions / gridSnap;
-         gridSizeY = stageDimensions.height / totalHorizontalDivisions / gridSnap;
-         let isOddVerticalDivisions = (gridSubdivisions * verticalFineDivisions) % 2 !== 0;
-         let isOddHorizontalDivisions = (horizontalGridSubdivisions * horizontalFineDivisions) % 2 !== 0;
-
-         verticalOffset = isOddVerticalDivisions ? gridSizeX / 2 : 0;
-         horizontalOffset = isOddHorizontalDivisions ? gridSizeY / 2 : 0;
-         if (gridSnap % 2 === 0) {
-            verticalOffset = 0;
-            horizontalOffset = 0;
-         }
-      } else {
-         gridSizeX = 1 / gridSnap;
-         gridSizeY = 1 / gridSnap;
-      }
-
-      // console.log(gridSizeX);
-      setFormations(
-         formations.map((formation) => {
-            // Use the grid cell dimensions to round the dancer positions to the nearest grid position.
-            return {
-               ...formation,
-               positions: formation.positions.map((position) => {
-                  return {
-                     ...position,
-                     position: {
-                        x: roundToHundredth(Math.round((position.position.x - verticalOffset) / gridSizeX) * gridSizeX + verticalOffset),
-                        y: roundToHundredth(Math.round((position.position.y - horizontalOffset) / gridSizeY) * gridSizeY + horizontalOffset),
-                     },
-                  };
-               }),
-            };
-         })
-      );
-   };
-
-   // const undo = () => {
-   //    return;
-
+   // const handleClose = () => {
+   //    setShowPopup(false);
    // };
 
-   const addToStack = () => {
-      return;
-      // setPreviousFormation(formations);
-   };
-
-   ////////////////////////////////////////
-   let uploadSettings = useCallback(
-      debounce(async (cloudSettings) => {
-         console.log("uploading settings");
-         const { data, error } = await supabase.from("dances").update({ settings: cloudSettings, last_edited: new Date() }).eq("id", danceId);
-
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 0),
-      [danceId]
-   );
-
-   useDidMountEffect(() => {
-      if (viewOnlyInitial || danceName === "initialName") return;
-
-      setSaved(false);
-      uploadSettings(cloudSettings);
-   }, [cloudSettings]);
-
-   ////////////////////////////////////////
-   let uploadDancers = useCallback(
-      debounce(async (dancers) => {
-         console.log("uploading dancers");
-         const { data, error } = await supabase.from("dances").update({ dancers: dancers, last_edited: new Date() }).eq("id", danceId);
-
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 2000),
-      [danceId]
-   );
-
-   useDidMountEffect(() => {
-      if (viewOnlyInitial || danceName === "initialName") return;
-
-      setSaved(false);
-
-      uploadDancers(dancers);
-   }, [dancers]);
-
-   let uploadSoundCloudId = useCallback(
-      debounce(async (soundCloudTrackId) => {
-         console.log("uploading soundcloudId");
-         const { data, error } = await supabase.from("dances").update({ soundCloudId: soundCloudTrackId, last_edited: new Date() }).eq("id", danceId);
-
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 0),
-      [danceId]
-   );
-
-   useDidMountEffect(() => {
-      if (viewOnlyInitial || danceName === "initialName") return;
-      setSaved(false);
-      uploadSoundCloudId(soundCloudTrackId);
-   }, [soundCloudTrackId]);
-   // //////////////////////////
-
-   let uploadName = useCallback(
-      debounce(async (danceName) => {
-         console.log("uploading name");
-         const { data, error } = await supabase.from("dances").update({ name: danceName }).eq("id", danceId);
-         console.log({ data });
-         console.log({ error });
-         setSaved(true);
-      }, 500),
-      [danceId]
-   );
-
-   useDidMountEffect(() => {
-      if (viewOnlyInitial || danceName === "initialName") return;
-      setSaved(false);
-      uploadName(danceName);
-   }, [danceName]);
-
-   // // ///////////
-   let uploadFormations = useCallback(
-      debounce(async (formations) => {
-         console.log("uploading formations");
-         const { data, error } = await supabase.from("dances").update({ formations: formations, last_edited: new Date() }).eq("id", danceId);
-         const { data: danceData, error: danceError } = await supabase.from("activity").upsert({ date: new Date(), performance: danceId }).single();
-         console.log({ data });
-         console.log({ error });
-
-         setSaved(true);
-      }, 5000),
-      [danceId]
-   );
-
-   useDidMountEffect(() => {
-      if (viewOnlyInitial || danceName === "initialName") return;
-      setSaved(false);
-
-      uploadFormations(formations);
-   }, [formations]);
-
-   let uploadProps = useCallback(
-      debounce(async (props) => {
-         console.log("uploading props");
-         const { data, error } = await supabase.from("dances").update({ props: props, last_edited: new Date() }).eq("id", danceId);
-         console.log({ data });
-         console.log({ error });
-
-         setSaved(true);
-      }, 1000),
-      [danceId]
-   );
-
-   useDidMountEffect(() => {
-      if (viewOnlyInitial || danceName === "initialName") return;
-      setSaved(false);
-      uploadProps(props);
-   }, [props]);
-
-   let uploadItems = useCallback(
-      debounce(async (items) => {
-         console.log("uploading items");
-         const { data, error } = await supabase.from("dances").update({ items: items, last_edited: new Date() }).eq("id", danceId);
-         console.log({ data });
-         console.log({ error });
-
-         setSaved(true);
-      }, 1000),
-      [danceId]
-   );
-
-   useDidMountEffect(() => {
-      if (viewOnlyInitial || danceName === "initialName") return;
-      setSaved(false);
-      uploadItems(items);
-   }, [items]);
-
-   let uploadSegments = useCallback(
-      debounce(async (segments) => {
-         console.log("uploading segments");
-         const { data, error } = await supabase.from("dances").update({ segments: segments, last_edited: new Date() }).eq("id", danceId);
-         console.log({ data });
-         console.log({ error });
-
-         setSaved(true);
-      }, 1000),
-      [danceId]
-   );
-
-   useDidMountEffect(() => {
-      if (viewOnlyInitial || danceName === "initialName") return;
-      setSaved(false);
-      uploadSegments(segments);
-   }, [segments]);
-
-   //////////////////////
-   let flippedFormations = formations.map((formation: formation) => {
-      let flippedPositions = formation?.positions.map((position) => {
-         if (position.controlPointEnd && position.controlPointStart) {
-            return {
-               ...position,
-               position: { x: -position.position.x, y: -position.position.y },
-               controlPointEnd: { x: -position.controlPointEnd.x, y: -position.controlPointEnd.y },
-               controlPointStart: { x: -position.controlPointStart.x, y: -position.controlPointStart.y },
-            };
-         } else {
-            return {
-               ...position,
-               position: { x: -position.position.x, y: -position.position.y },
-            };
-         }
-      });
-
-      return { ...formation, positions: flippedPositions };
-   });
-
-   //////////////////////////
-   const collisions = localSettings.viewCollisions
-      ? detectCollisions(localSettings.stageFlipped ? flippedFormations : formations, selectedFormations, localSettings.collisionRadius)
-      : [];
-
-   function handleDragEnd(event) {
-      const { active, over } = event;
-
-      if (over && active.data.current.supports.includes(over.data.current.type)) {
-         setVideoPosition(over.id);
-      }
-   }
-
-   useEffect(() => {
-      let vh = window.innerHeight * 0.01;
-      // Then we set the value in the --vh custom property to the root of the document
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-   }, []);
-
-   const exportThree = async () => {
-      const { USDZExporter } = await import("three/addons/exporters/USDZExporter.js");
-
-      const exporter = new USDZExporter();
-      const arraybuffer = await exporter.parse(scene);
-      const blob = new Blob([arraybuffer], { type: "model/vnd.usdz+zip" });
-
-      const url = URL.createObjectURL(blob);
-
-      // Create an anchor element and set its href to the blob's URL
-      const a = document.createElement("a");
-      a.rel = "ar";
-      a.href = url;
-      // a.download = "scene.usdz";
-      const img = document.createElement("img");
-      img.src = "path_to_your_image.jpg"; // Set the image source
-      img.alt = "Description of image";
-      a.appendChild(img);
-      // Append the anchor to the body (this is required for Firefox)
-      document.body.appendChild(a);
-
-      // Trigger a click event on the anchor
-      a.click();
-
-      // Clean up: remove the anchor and revoke the blob URL
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-   };
    const isDesktop = useIsDesktop();
 
    return (
       <>
          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-         <Toaster></Toaster>
-         <Head>
-            <title>Edit | FORMI</title>
-            {/* <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" /> */}
+            <Toaster></Toaster>
+            <Head>
+               <title>Edit | FORMI</title>
 
-            <meta
-               name="description"
-               content="Easily visualize your dance formations. Simply drag and drop dancers onto a canvas of your dancers and see what works best!"
-            />
-            <meta name="keywords" content="dance, choreography, desi, formations" />
-            <meta name="twitter:card" content="summary" />
-            <meta name="twitter:title" content="FORMI — Online performance planning software." />
-            <meta name="twitter:image" content="https://i.imgur.com/83VsfSG.png" />
-            <meta property="og:type" content="song" />
-            <meta property="og:title" content="FORMI — Online performance planning software." />
-            <meta property="og:description" content="automate, animate and visualize your dance formations synced to music" />
-            <meta property="og:image" content="https://i.imgur.com/83VsfSG.png" />
-            <meta property="og:site_name" content="FORMI — Online performance planning software." />
-            {/* <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta> */}
-            {/* <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta> */}
-         </Head>
+               <meta
+                  name="description"
+                  content="Easily visualize your dance formations. Simply drag and drop dancers onto a canvas of your dancers and see what works best!"
+               />
+               <meta name="keywords" content="dance, choreography, desi, formations" />
+               <meta name="twitter:card" content="summary" />
+               <meta name="twitter:title" content="FORMI — Online performance planning software." />
+               <meta name="twitter:image" content="https://i.imgur.com/83VsfSG.png" />
+               <meta property="og:type" content="song" />
+               <meta property="og:title" content="FORMI — Online performance planning software." />
+               <meta property="og:description" content="automate, animate and visualize your dance formations synced to music" />
+               <meta property="og:image" content="https://i.imgur.com/83VsfSG.png" />
+               <meta property="og:site_name" content="FORMI — Online performance planning software." />
+            </Head>
 
-         {helpUrl && <HelpUrl helpUrl={helpUrl} setHelpUrl={setHelpUrl}></HelpUrl>}
+            {<HelpUrl helpUrl={helpUrl} setHelpUrl={setHelpUrl}></HelpUrl>}
 
-         {pdfLoading ? (
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] bg-black/80 text-white border border-neutral-600  rounded-xl h-[100px] bg-white z-50 grid place-items-center">
-               <p className="text-center">Loading PDF. This may take a while.</p>
-            </div>
-         ) : null}
+            {pdfLoading ? (
+               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] bg-black/80 text-white border border-neutral-600  rounded-xl h-[100px] bg-white z-50 grid place-items-center">
+                  <p className="text-center">Loading PDF. This may take a while.</p>
+               </div>
+            ) : null}
+
             {formations.some((formation, i) => (formation.transition.durationSeconds < 0.3 && i !== 0) || formation.durationSeconds < 0) &&
             isDesktop &&
             formations.length &&
@@ -861,57 +563,61 @@ const Edit = ({
                </div>
             ) : null}
 
-         {isCommenting ? (
-            <>
-               <div className="fixed left-1/2 -translate-x-1/2 w-60 h-12 select-none rounded-full shadow-xl bottom-6 bg-black  z-[9999] opacity-70 grid place-items-center">
-                  <p className="text-white text-sm pointer-events-none">Click on the stage to comment</p>
-               </div>
-            </>
-         ) : null}
+            {isCommenting ? (
+               <>
+                  <div className="fixed left-1/2 -translate-x-1/2 w-60 h-12 select-none rounded-full shadow-xl bottom-6 bg-black  z-[9999] opacity-70 grid place-items-center">
+                     <p className="text-white text-sm pointer-events-none">Click on the stage to comment</p>
+                  </div>
+               </>
+            ) : null}
 
-         {selectedFormations.length > 1 ? (
-            <>
-               <div className="fixed left-1/2 -translate-x-1/2 px-5 h-12 select-none rounded-full shadow-xl top-6 bg-black  z-[9999] bg-opacity-60 grid place-items-center">
-                  <p className="text-white text-sm pointer-events-none">Changes will apply to all selected formations</p>
-               </div>
-            </>
-         ) : null}
+            {/* <div className="fixed left-1/2 -translate-x-1/2 w-60 h-12 select-none rounded-full shadow-xl bottom-6 bg-black  z-[9999] opacity-70 grid place-items-center">
+               <p className="text-white text-sm pointer-events-none">Click on the stage to comment</p>
+            </div> */}
 
-         {assetsOpen ? (
-            <Assets
-               menuOpen={menuOpen}
-               pushChange={pushChange}
-               assetsOpen={assetsOpen}
-               invalidatePropUploads={invalidatePropUploads}
-               propUploads={propUploads}
-               setAssetsOpen={setAssetsOpen}
-               session={session}
-            ></Assets>
-         ) : null}
-         <EventHandler
-            setSelectedDancers={setSelectedDancers}
+            {selectedFormations.length > 1 ? (
+               <>
+                  <div className="fixed left-1/2 -translate-x-1/2 px-5 h-12 select-none rounded-full shadow-xl top-6 bg-black  z-[9999] bg-opacity-60 grid place-items-center">
+                     <p className="text-white text-sm pointer-events-none">Changes will apply to all selected formations</p>
+                  </div>
+               </>
+            ) : null}
+
+            {assetsOpen ? (
+               <Assets
+                  menuOpen={menuOpen}
+                  pushChange={pushChange}
+                  assetsOpen={assetsOpen}
+                  invalidatePropUploads={invalidatePropUploads}
+                  propUploads={propUploads}
+                  setAssetsOpen={setAssetsOpen}
+                  session={session}
+               ></Assets>
+            ) : null}
+            <EventHandler
+               setSelectedDancers={setSelectedDancers}
                selectedDancers={selectedDancers}
                undo={undo}
                setIsCommenting={setIsCommenting}
                setZoom={setZoom}
                setDropDownToggle={setDropDownToggle}
-            dancers={dancers}
+               dancers={dancers}
                setIsScrollingTimeline={setIsScrollingTimeline}
                selectedPropIds={selectedPropIds}
                position={position}
-            setLocalSettings={setLocalSettings}
+               setLocalSettings={setLocalSettings}
                fullscreenContainer={fullscreenContainer}
-         ></EventHandler>
+            ></EventHandler>
 
-         <div
-            className={`  full-screen   flex-col   flex  bg-[#fafafa] dark:bg-black overflow-hidden text-neutral-900 select-none `}
-            style={{
-               touchAction: "none",
-            }}
-         >
-            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
-            <style>
-               {`
+            <div
+               className={`  full-screen   flex-col   flex  bg-[#fafafa] dark:bg-black overflow-hidden text-neutral-900 select-none `}
+               style={{
+                  touchAction: "none",
+               }}
+            >
+               <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
+               <style>
+                  {`
                      html,
                      body {
                   overscroll-behavior: none;
@@ -925,33 +631,34 @@ const Edit = ({
                height: calc(var(--vh, 1vh) * 100);
              }
                `}
-            </style>
+               </style>
 
                {!localSettings.fullScreen && (
-            <Header
-               fullscreenContainer={fullscreenContainer}
-               danceId={danceId}
-               folder={initialData?.project_id}
-               exportPdf={exportPdf}
-               dropDownToggle={dropDownToggle}
-               isCommenting={isCommenting}
-               pushChange={pushChange}
-               selectedDancers={selectedDancers}
-               setIsCommenting={setIsCommenting}
-               viewOnlyInitial={viewOnlyInitial}
-               localSettings={localSettings}
-               setLocalSettings={setLocalSettings}
-               undo={undo}
-               saved={saved}
-               dancers={dancers}
-               session={session}
-               exportThree={exportThree}
-               plan={plan}
-               permissions={permissions}
-               setPermissions={setPermissions}
-               anyoneCanView={anyoneCanView}
-               setAnyoneCanView={setAnyoneCanView}
-            />
+                  <Header
+                     fullscreenContainer={fullscreenContainer}
+                     danceId={danceId}
+                     folder={initialData?.project_id}
+                     exportPdf={exportPdf}
+                     dropDownToggle={dropDownToggle}
+                     isCommenting={isCommenting}
+                     pushChange={pushChange}
+                     selectedDancers={selectedDancers}
+                     setIsCommenting={setIsCommenting}
+                     viewOnlyInitial={viewOnlyInitial}
+                     localSettings={localSettings}
+                     setLocalSettings={setLocalSettings}
+                     undo={undo}
+                     saved={saved}
+                     dancers={dancers}
+                     session={session}
+                     exportThree={exportThree}
+                     scene={scene}
+                     plan={plan}
+                     permissions={permissions}
+                     setPermissions={setPermissions}
+                     anyoneCanView={anyoneCanView}
+                     setAnyoneCanView={setAnyoneCanView}
+                  />
                )}
 
                <MobileSidebar
@@ -961,163 +668,173 @@ const Edit = ({
                   menuOpen={menuOpen}
                ></MobileSidebar>
 
-            <div className="flex flex-row overflow-hidden w-screen h-full">
+               <div className="flex flex-row overflow-hidden w-screen h-full">
                   {!localSettings.fullScreen && (
-               <Sidebar setLocalSettings={setLocalSettings} setHelpUrl={setHelpUrl} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
+                     <Sidebar setLocalSettings={setLocalSettings} setHelpUrl={setHelpUrl} setMenuOpen={setMenuOpen} menuOpen={menuOpen}></Sidebar>
                   )}
-               <div className="flex flex-col w-full h-full overflow-hidden">
-                  <div className="flex flex-row   overflow-hidden w-full h-full">
+                  <div className="flex flex-col w-full h-full overflow-hidden">
+                     <div className="flex flex-row   overflow-hidden w-full h-full">
                         {!localSettings.fullScreen && (
-                        <div
-                           style={{
-                              pointerEvents: menuOpen ? "auto" : "none",
-                           }}
+                           <div
+                              style={{
+                                 pointerEvents: menuOpen ? "auto" : "none",
+                              }}
                               className="flex flex-row absolute md:static bottom-0 top-[103px] h-full md:w-auto w-full md:z-auto z-[65]  "
-                        >
+                           >
                               <>
-                              {menuOpen ? (
-                                 <div className="border-r border-neutral-300 dark:border-neutral-700 min-w-[240px]  w-[240px] dark:bg-neutral-900 bg-neutral-50 dark:text-white relative">
-                                    {menuOpen ? (
-                                       <button
-                                          onClick={() => setMenuOpen(null)}
-                                          className="absolute right-0 w-6 h-6 border border-neutral-700  hover:bg-neutral-700 transition  rounded-full top-1/2 -translate-y-1/2 bg-neutral-900 translate-x-1/2 z-10 hidden md:grid place-items-center"
-                                       >
-                                          <svg
-                                             xmlns="http://www.w3.org/2000/svg"
-                                             viewBox="0 0 20 20"
-                                             fill="currentColor"
-                                             className="w-5 h-5 fill-neutral-400 mr-1"
+                                 {menuOpen ? (
+                                    <div className="border-r border-neutral-300 dark:border-neutral-700 min-w-[240px]  w-[240px] dark:bg-neutral-900 bg-neutral-50 dark:text-white relative">
+                                       {menuOpen ? (
+                                          <button
+                                             onClick={() => setMenuOpen(null)}
+                                             className="absolute right-0 w-6 h-6 border border-neutral-700  hover:bg-neutral-700 transition  rounded-full top-1/2 -translate-y-1/2 bg-neutral-900 translate-x-1/2 z-10 hidden md:grid place-items-center"
                                           >
-                                             <path
-                                                fillRule="evenodd"
-                                                d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
-                                                clipRule="evenodd"
-                                             />
-                                          </svg>
-                                       </button>
-                                    ) : null}
-                              {menuOpen === "dancers" ? (
-                                 <Roster
-                                    session={session}
-                                    setSelectedDancers={setSelectedDancers}
-                                    addToStack={addToStack}
-                                    pushChange={pushChange}
-                                    dancers={dancers}
-                                    selectedDancers={selectedDancers}
-                                    localSettings={localSettings}
-                                 ></Roster>
-                              ) : menuOpen === "audio" ? (
-                                 <ChooseAudioSource
-                                    session={session}
-                                    soundCloudTrackId={soundCloudTrackId}
-                                    setSoundCloudTrackId={setSoundCloudTrackId}
-                                    audioFiles={audioFiles}
-                                    setAudiofiles={setAudiofiles}
-                                    setLocalSource={setLocalSource}
-                                 ></ChooseAudioSource>
-                              ) : menuOpen === "settings" ? (
-                                 <Settings
-                                    setHelpUrl={setHelpUrl}
-                                    dropDownToggle={dropDownToggle}
-                                    setLocalSettings={setLocalSettings}
-                                    localSettings={localSettings}
-                                    pushChange={pushChange}
-                                    setAssetsOpen={setAssetsOpen}
-                                 ></Settings>
-                              ) : menuOpen === "stageSettings" ? (
-                                 <StageSettings
-                                    setHelpUrl={setHelpUrl}
-                                    dropDownToggle={dropDownToggle}
-                                    setLocalSettings={setLocalSettings}
-                                    localSettings={localSettings}
-                                    pushChange={pushChange}
-                                    setAssetsOpen={setAssetsOpen}
+                                             <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
+                                                className="w-5 h-5 fill-neutral-400 mr-1"
+                                             >
+                                                <path
+                                                   fillRule="evenodd"
+                                                   d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                                                   clipRule="evenodd"
+                                                />
+                                             </svg>
+                                          </button>
+                                       ) : null}
+                                       {menuOpen === "dancers" ? (
+                                          <Roster
                                              session={session}
-                                 ></StageSettings>
-                              ) : menuOpen === "collisions" ? (
-                                 <Collisions
-                                    dropDownToggle={dropDownToggle}
-                                    setLocalSettings={setLocalSettings}
-                                    localSettings={localSettings}
-                                 ></Collisions>
-                              ) : menuOpen === "props" ? (
+                                             setSelectedDancers={setSelectedDancers}
+                                             addToStack={addToStack}
+                                             pushChange={pushChange}
+                                             dancers={dancers}
+                                             selectedDancers={selectedDancers}
+                                             localSettings={localSettings}
+                                          ></Roster>
+                                       ) : menuOpen === "audio" ? (
+                                          <ChooseAudioSource
+                                             session={session}
+                                             soundCloudTrackId={soundCloudTrackId}
+                                             setSoundCloudTrackId={setSoundCloudTrackId}
+                                             audioFiles={audioFiles}
+                                             invalidateAudioFiles={invalidateAudioFiles}
+                                             setLocalSource={setLocalSource}
+                                          ></ChooseAudioSource>
+                                       ) : menuOpen === "formationideas" ? (
+                                          <FormationIdeas
+                                             setCurrentTemplate={setCurrentTemplate}
+                                             setHelpUrl={setHelpUrl}
+                                             dropDownToggle={dropDownToggle}
+                                             setLocalSettings={setLocalSettings}
+                                             localSettings={localSettings}
+                                             pushChange={pushChange}
+                                             setAssetsOpen={setAssetsOpen}
+                                          ></FormationIdeas>
+                                       ) : menuOpen === "settings" ? (
+                                          <Settings
+                                             setHelpUrl={setHelpUrl}
+                                             dropDownToggle={dropDownToggle}
+                                             setLocalSettings={setLocalSettings}
+                                             localSettings={localSettings}
+                                             pushChange={pushChange}
+                                             setAssetsOpen={setAssetsOpen}
+                                          ></Settings>
+                                       ) : menuOpen === "stageSettings" ? (
+                                          <StageSettings
+                                             setHelpUrl={setHelpUrl}
+                                             dropDownToggle={dropDownToggle}
+                                             setLocalSettings={setLocalSettings}
+                                             localSettings={localSettings}
+                                             pushChange={pushChange}
+                                             setAssetsOpen={setAssetsOpen}
+                                             session={session}
+                                          ></StageSettings>
+                                       ) : menuOpen === "collisions" ? (
+                                          <Collisions
+                                             dropDownToggle={dropDownToggle}
+                                             setLocalSettings={setLocalSettings}
+                                             localSettings={localSettings}
+                                          ></Collisions>
+                                       ) : menuOpen === "props" ? (
                                           <></>
                                        ) : menuOpen === "items" ? (
                                           <ItemsAndProps
-                                    setAssetsOpen={setAssetsOpen}
-                                    setHelpUrl={setHelpUrl}
-                                    pushChange={pushChange}
-                                    setSelectedPropIds={setSelectedPropIds}
-                                    invalidatePropUploads={invalidatePropUploads}
-                                    selectedPropIds={selectedPropIds}
-                                    propUploads={propUploads}
-                                    soundCloudTrackId={soundCloudTrackId}
-                                    setSoundCloudTrackId={setSoundCloudTrackId}
-                                    audioFiles={audioFiles}
+                                             setAssetsOpen={setAssetsOpen}
+                                             setHelpUrl={setHelpUrl}
+                                             pushChange={pushChange}
+                                             setSelectedPropIds={setSelectedPropIds}
+                                             invalidatePropUploads={invalidatePropUploads}
+                                             selectedPropIds={selectedPropIds}
+                                             propUploads={propUploads}
+                                             soundCloudTrackId={soundCloudTrackId}
+                                             setSoundCloudTrackId={setSoundCloudTrackId}
+                                             audioFiles={audioFiles}
                                              // setAudiofiles={setAudiofiles}
-                                    setLocalSource={setLocalSource}
+                                             setLocalSource={setLocalSource}
                                           ></ItemsAndProps>
                                        ) : // : menuOpen === "segments" ? (
                                        //    <Segments pushChange={pushChange}></Segments>
                                        // )
 
                                        menuOpen === "formations" ? (
-                                 <CurrentFormation
-                                    dropDownToggle={dropDownToggle}
-                                    isCommenting={isCommenting}
-                                    setIsCommenting={setIsCommenting}
-                                    addToStack={addToStack}
-                                    pushChange={pushChange}
-                                    selectedDancers={selectedDancers}
-                                    setSelectedDancers={setSelectedDancers}
-                                    dancers={dancers}
-                                 />
-                              ) : null}
-                           </div>
-                              ) : null}
+                                          <CurrentFormation
+                                             dropDownToggle={dropDownToggle}
+                                             isCommenting={isCommenting}
+                                             setIsCommenting={setIsCommenting}
+                                             addToStack={addToStack}
+                                             pushChange={pushChange}
+                                             selectedDancers={selectedDancers}
+                                             setSelectedDancers={setSelectedDancers}
+                                             dancers={dancers}
+                                          />
+                                       ) : null}
+                                    </div>
+                                 ) : null}
                               </>
-                        </div>
+                           </div>
                         )}
 
-                     <DndContext id="1" onDragEnd={handleDragEnd}>
+                        <DndContext id="1" onDragEnd={handleDragEnd}>
                            <div className={`flex flex-col min-w-0 flex-grow items-center bg-neutral-50 dark:bg-neutral-900 relative `}>
-                           <div
-                              style={{
-                                 flexDirection: localSettings.videoPlacement === "above" ? "column" : "row",
-                              }}
-                              ref={fullscreenContainer}
-                              className="flex  h-full overflow-hidden  w-full items-center justify-center"
-                           >
-                              <Video
-                                 localSettings={localSettings}
-                                 videoPlayer={videoPlayer}
-                                 soundCloudTrackId={soundCloudTrackId}
-                                 localSource={localSource}
-                                 videoPosition={videoPosition}
-                              ></Video>
+                              <div
+                                 style={{
+                                    flexDirection: localSettings.videoPlacement === "above" ? "column" : "row",
+                                 }}
+                                 ref={fullscreenContainer}
+                                 className="flex  h-full overflow-hidden  w-full items-center justify-center"
+                              >
+                                 <Video
+                                    localSettings={localSettings}
+                                    videoPlayer={videoPlayer}
+                                    soundCloudTrackId={soundCloudTrackId}
+                                    localSource={localSource}
+                                    videoPosition={videoPosition}
+                                 ></Video>
 
-                              <TopLeft></TopLeft>
-                              <TopRight></TopRight>
-                              <BottomLeft></BottomLeft>
-                              <BottomRight></BottomRight>
+                                 <TopLeft></TopLeft>
+                                 <TopRight></TopRight>
+                                 <BottomLeft></BottomLeft>
+                                 <BottomRight></BottomRight>
 
-                              {localSettings.viewingThree ? (
-                                 <ThreeD
+                                 {localSettings.viewingThree ? (
+                                    <ThreeD
                                        setSelectedDancers={setSelectedDancers}
                                        selectedDancers={selectedDancers}
                                        localSettings={localSettings}
-                                    setIsThreeDancerDragging={setIsThreeDancerDragging}
-                                    isThreeDancerDragging={isThreeDancerDragging}
-                                    currentFormationIndex={currentFormationIndex}
-                                    percentThroughTransition={percentThroughTransition}
-                                    dancers={dancers}
-                                    position={position}
+                                       setIsThreeDancerDragging={setIsThreeDancerDragging}
+                                       isThreeDancerDragging={isThreeDancerDragging}
+                                       currentFormationIndex={currentFormationIndex}
+                                       percentThroughTransition={percentThroughTransition}
+                                       dancers={dancers}
+                                       position={position}
                                        setScene={setScene}
-                                 ></ThreeD>
-                              ) : null}
+                                    ></ThreeD>
+                                 ) : null}
 
-                              {localSettings.viewingTwo ? (
-                                 <Canvas
+                                 {localSettings.viewingTwo ? (
+                                    <Canvas
                                        setSelectedDancers={setSelectedDancers}
                                        selectedDancers={selectedDancers}
                                        coordsToPosition={coordsToPosition}
@@ -1129,148 +846,154 @@ const Edit = ({
                                        zoom={zoom}
                                        setZoom={setZoom}
                                        shiftHeld={shiftHeld}
-                                    session={session}
-                                    setSelectedPropIds={setSelectedPropIds}
-                                    selectedPropIds={selectedPropIds}
+                                       session={session}
+                                       setSelectedPropIds={setSelectedPropIds}
+                                       selectedPropIds={selectedPropIds}
                                        resizingPropId={resizingPropId}
                                        setResizingPropId={setResizingPropId}
                                        menuOpen={menuOpen}
-                                 >
-                                    {selectedFormations.length === 1 && getFirstSelectedFormation()?.id !== formations[0]?.id && !isPlaying ? (
-                                       <PathEditor
-                                          zoom={zoom}
-                                          collisions={collisions}
-                                          dancers={dancers}
-                                          currentFormationIndex={currentFormationIndex}
-                                          selectedDancers={selectedDancers}
+                                    >
+                                       {selectedFormations.length === 1 && getFirstSelectedFormation()?.id !== formations[0]?.id && !isPlaying ? (
+                                          <PathEditor
+                                             zoom={zoom}
+                                             collisions={collisions}
+                                             dancers={dancers}
+                                             currentFormationIndex={currentFormationIndex}
+                                             selectedDancers={selectedDancers}
+                                             localSettings={localSettings}
+                                             coordsToPosition={coordsToPosition}
+                                          />
+                                       ) : (
+                                          <></>
+                                       )}
+
+                                       <TemplateOverlay
+                                          currentTemplate={currentTemplate}
                                           localSettings={localSettings}
                                           coordsToPosition={coordsToPosition}
-                                       />
-                                    ) : (
-                                       <></>
-                                    )}
+                                       ></TemplateOverlay>
 
-                                    {dancers.map((dancer, index) => (
-                                       <DancerAlias
-                                          roundPositions={roundPositions}
-                                          zoom={zoom}
-                                          setZoom={setZoom}
-                                          coordsToPosition={coordsToPosition}
-                                          selectedDancers={selectedDancers}
-                                          position={position}
-                                          key={dancer.id}
-                                          dancer={dancer}
-                                          draggingDancerId={draggingDancerId}
-                                          currentFormationIndex={currentFormationIndex}
-                                          percentThroughTransition={percentThroughTransition}
-                                          localSettings={localSettings}
-                                          index={index}
-                                          collisions={collisions}
-                                       />
-                                    ))}
+                                       {dancers.map((dancer, index) => (
+                                          <DancerAlias
+                                             roundPositions={roundPositions}
+                                             zoom={zoom}
+                                             setZoom={setZoom}
+                                             coordsToPosition={coordsToPosition}
+                                             selectedDancers={selectedDancers}
+                                             position={position}
+                                             key={dancer.id}
+                                             dancer={dancer}
+                                             draggingDancerId={draggingDancerId}
+                                             currentFormationIndex={currentFormationIndex}
+                                             percentThroughTransition={percentThroughTransition}
+                                             localSettings={localSettings}
+                                             index={index}
+                                             collisions={collisions}
+                                          />
+                                       ))}
 
-                                    {selectedFormation !== null
-                                       ? props.map((prop: prop) => {
-                                            return (
-                                               <Prop
-                                                  key={prop.id}
-                                                  pushChange={pushChange}
-                                                  dropDownToggle={dropDownToggle}
-                                                  setResizingPropId={setResizingPropId}
-                                                  selectedPropIds={selectedPropIds}
-                                                  coordsToPosition={coordsToPosition}
-                                                  prop={prop}
-                                                  percentThroughTransition={percentThroughTransition}
-                                                  position={position}
-                                                  currentFormationIndex={currentFormationIndex}
-                                                  zoom={zoom}
-                                                  localSettings={localSettings}
-                                               ></Prop>
-                                            );
-                                         })
-                                       : null}
-
-                                    {localSettings.viewCollisions && selectedFormations.length === 1
-                                       ? collisions.map((collision, i) => {
-                                            return <Collision key={i} coordsToPosition={coordsToPosition} collision={collision}></Collision>;
-                                         })
-                                       : null}
-
-                                    {selectedFormations.length === 1 && !isPlaying && !isMobileView ? (
-                                       <>
-                                          {(getFirstSelectedFormation()?.comments || []).map((comment: comment) => {
-                                             return (
-                                                <Comment
-                                                   zoom={zoom}
-                                                   localSettings={localSettings}
-                                                   coordsToPosition={coordsToPosition}
-                                                   key={comment.id}
-                                                   comment={comment}
-                                                   addToStack={addToStack}
-                                                   pushChange={pushChange}
-                                                />
-                                             );
-                                          })}
-
-                                          {localSettings.previousFormationView !== "none"
-                                             ? dancers.map((dancer, index) => (
-                                                  <DancerAliasShadow
+                                       {selectedFormation !== null
+                                          ? props.map((prop: prop) => {
+                                               return (
+                                                  <Prop
+                                                     key={prop.id}
+                                                     pushChange={pushChange}
+                                                     dropDownToggle={dropDownToggle}
+                                                     setResizingPropId={setResizingPropId}
+                                                     selectedPropIds={selectedPropIds}
                                                      coordsToPosition={coordsToPosition}
+                                                     prop={prop}
+                                                     percentThroughTransition={percentThroughTransition}
+                                                     position={position}
                                                      currentFormationIndex={currentFormationIndex}
-                                                     key={"shadow" + dancer.id}
-                                                     dancer={dancer}
+                                                     zoom={zoom}
                                                      localSettings={localSettings}
-                                                  />
-                                               ))
-                                             : dancers
-                                                  .filter(
-                                                     (dancer) =>
-                                                        selectedDancers.includes(dancer.id) ||
-                                                        (selectedFormation
-                                                           ? collisions
-                                                                ?.map((collision) => collision.dancers)
-                                                                .flat(Infinity)
-                                                                .includes(dancer.id)
-                                                           : false)
-                                                  )
-                                                  .map((dancer, index) => {
-                                                     return (
-                                                        <DancerAliasShadow
-                                                           coordsToPosition={coordsToPosition}
-                                                           currentFormationIndex={currentFormationIndex}
-                                                           key={"shadow" + dancer.id}
-                                                           dancer={dancer}
-                                                           localSettings={localSettings}
-                                                        />
-                                                     );
-                                                  })}
-                                       </>
-                                    ) : null}
-                                 </Canvas>
-                              ) : null}
-                           </div>
+                                                  ></Prop>
+                                               );
+                                            })
+                                          : null}
+
+                                       {localSettings.viewCollisions && selectedFormations.length === 1
+                                          ? collisions.map((collision, i) => {
+                                               return <Collision key={i} coordsToPosition={coordsToPosition} collision={collision}></Collision>;
+                                            })
+                                          : null}
+
+                                       {selectedFormations.length === 1 && !isPlaying && !isMobileView ? (
+                                          <>
+                                             {(getFirstSelectedFormation()?.comments || []).map((comment: comment) => {
+                                                return (
+                                                   <Comment
+                                                      zoom={zoom}
+                                                      localSettings={localSettings}
+                                                      coordsToPosition={coordsToPosition}
+                                                      key={comment.id}
+                                                      comment={comment}
+                                                      addToStack={addToStack}
+                                                      pushChange={pushChange}
+                                                   />
+                                                );
+                                             })}
+
+                                             {localSettings.previousFormationView !== "none"
+                                                ? dancers.map((dancer, index) => (
+                                                     <DancerAliasShadow
+                                                        coordsToPosition={coordsToPosition}
+                                                        currentFormationIndex={currentFormationIndex}
+                                                        key={"shadow" + dancer.id}
+                                                        dancer={dancer}
+                                                        localSettings={localSettings}
+                                                     />
+                                                  ))
+                                                : dancers
+                                                     .filter(
+                                                        (dancer) =>
+                                                           selectedDancers.includes(dancer.id) ||
+                                                           (selectedFormation
+                                                              ? collisions
+                                                                   ?.map((collision) => collision.dancers)
+                                                                   .flat(Infinity)
+                                                                   .includes(dancer.id)
+                                                              : false)
+                                                     )
+                                                     .map((dancer, index) => {
+                                                        return (
+                                                           <DancerAliasShadow
+                                                              coordsToPosition={coordsToPosition}
+                                                              currentFormationIndex={currentFormationIndex}
+                                                              key={"shadow" + dancer.id}
+                                                              dancer={dancer}
+                                                              localSettings={localSettings}
+                                                           />
+                                                        );
+                                                     })}
+                                          </>
+                                       ) : null}
+                                    </Canvas>
+                                 ) : null}
+                              </div>
 
                               {!localSettings.fullScreen && (
-                           <FormationControls
-                                 setZoom={setZoom}
-                              zoom={zoom}
-                              localSettings={localSettings}
-                              setLocalSettings={setLocalSettings}
-                              setPlaybackRate={setPlaybackRate}
-                              addToStack={addToStack}
-                              pushChange={pushChange}
-                              position={position}
-                              setPixelsPerSecond={setPixelsPerSecond}
-                              pixelsPerSecond={pixelsPerSecond}
-                              localSource={localSource}
-                              selectedDancers={selectedDancers}
-                           ></FormationControls>
+                                 <FormationControls
+                                    setZoom={setZoom}
+                                    zoom={zoom}
+                                    localSettings={localSettings}
+                                    setLocalSettings={setLocalSettings}
+                                    setPlaybackRate={setPlaybackRate}
+                                    addToStack={addToStack}
+                                    pushChange={pushChange}
+                                    position={position}
+                                    setPixelsPerSecond={setPixelsPerSecond}
+                                    pixelsPerSecond={pixelsPerSecond}
+                                    localSource={localSource}
+                                    selectedDancers={selectedDancers}
+                                 ></FormationControls>
                               )}
-                        </div>
-                     </DndContext>
+                           </div>
+                        </DndContext>
 
                         {!localSettings.fullScreen && (
-                        <div className="h-full bg-neutral-900 max-w-[200px] w-[200px] min-w-[200px] border-l border-neutral-700 hidden md:flex">
+                           <div className="h-full bg-neutral-900 max-w-[200px] w-[200px] min-w-[200px] border-l border-neutral-700 hidden md:flex">
                               <ObjectControls
                                  selectedDancers={selectedDancers}
                                  dancers={dancers}
@@ -1278,76 +1001,55 @@ const Edit = ({
                                  setAssetsOpen={setAssetsOpen}
                                  setMenuOpen={setMenuOpen}
                               ></ObjectControls>
-                        </div>
+                           </div>
                         )}
-                  </div>
+                     </div>
 
-                  <div className="  bg-black">
-                     <AudioControls
-                        dancers={dancers}
-                        setHelpUrl={setHelpUrl}
-                        localSettings={localSettings}
-                        setLocalSettings={setLocalSettings}
-                        setPlaybackRate={setPlaybackRate}
-                        addToStack={addToStack}
-                        pushChange={pushChange}
-                        position={position}
-                        setPixelsPerSecond={setPixelsPerSecond}
-                        pixelsPerSecond={pixelsPerSecond}
-                        localSource={localSource}
-                     ></AudioControls>
+                     <div className="  bg-black">
+                        <AudioControls
+                           dancers={dancers}
+                           setHelpUrl={setHelpUrl}
+                           localSettings={localSettings}
+                           setLocalSettings={setLocalSettings}
+                           setPlaybackRate={setPlaybackRate}
+                           addToStack={addToStack}
+                           pushChange={pushChange}
+                           position={position}
+                           setPixelsPerSecond={setPixelsPerSecond}
+                           pixelsPerSecond={pixelsPerSecond}
+                           localSource={localSource}
+                        ></AudioControls>
 
-                     <Timeline
-                        shiftHeld={shiftHeld}
-                        playbackRate={playbackRate}
-                        setIsScrollingTimeline={setIsScrollingTimeline}
-                        isScrollingTimeline={isScrollingTimeline}
-                        setPixelsPerSecond={setPixelsPerSecond}
-                        addToStack={addToStack}
-                        pushChange={pushChange}
-                        setSelectedDancers={setSelectedDancers}
-                        position={position}
-                        soundCloudTrackId={soundCloudTrackId}
-                        pixelsPerSecond={pixelsPerSecond}
-                        setPosition={setPosition}
-                        videoPlayer={videoPlayer}
-                        localSource={localSource}
-                        localSettings={localSettings}
-                        hasVisited={hasVisited}
-                        currentFormationIndex={currentFormationIndex}
-                        menuOpen={menuOpen}
-                     ></Timeline>
+                        <Timeline
+                           shiftHeld={shiftHeld}
+                           playbackRate={playbackRate}
+                           setIsScrollingTimeline={setIsScrollingTimeline}
+                           isScrollingTimeline={isScrollingTimeline}
+                           setPixelsPerSecond={setPixelsPerSecond}
+                           addToStack={addToStack}
+                           pushChange={pushChange}
+                           setSelectedDancers={setSelectedDancers}
+                           position={position}
+                           soundCloudTrackId={soundCloudTrackId}
+                           pixelsPerSecond={pixelsPerSecond}
+                           setPosition={setPosition}
+                           videoPlayer={videoPlayer}
+                           localSource={localSource}
+                           localSettings={localSettings}
+                           hasVisited={true}
+                           currentFormationIndex={currentFormationIndex}
+                           menuOpen={menuOpen}
+                        ></Timeline>
+                     </div>
                   </div>
                </div>
             </div>
-         </div>
          </ThemeProvider>
       </>
    );
 };
 
 export default Edit;
-
-const whereInFormation = (formations: formation[], position: number) => {
-   let sum = 0;
-   let currentFormationIndex = null;
-
-   let percentThroughTransition;
-   for (let i = 0; i < formations.length; i++) {
-      sum = sum + formations[i].durationSeconds + (i === 0 ? 0 : formations[i]?.transition.durationSeconds);
-      if (position < sum) {
-         currentFormationIndex = i;
-         if (currentFormationIndex === 0) break;
-         let durationThroughTransition = position - (sum - formations[i]?.transition?.durationSeconds - formations[i].durationSeconds);
-
-         if (durationThroughTransition < formations[i]?.transition?.durationSeconds) {
-            percentThroughTransition = durationThroughTransition / formations[i]?.transition?.durationSeconds;
-         }
-         break;
-      }
-   }
-   return { currentFormationIndex, percentThroughTransition };
-};
 
 function TopLeft() {
    const { setNodeRef } = useDroppable({

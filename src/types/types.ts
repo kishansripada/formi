@@ -57,13 +57,21 @@ export type formation = {
    name: string | null;
    comments?: comment[];
    notes: string;
+   groups: performerGroup[];
 };
 
-export type formationGroup = {
+export type performerGroup = {
    name: string;
    color: string;
    id: string;
+   notes?: string;
 };
+
+// export type formationGroup = {
+//    name: string;
+//    color: string;
+//    id: string;
+// };
 
 export type localSettings = {
    gridSnap: 1 | 2 | 100;
@@ -81,6 +89,8 @@ export type localSettings = {
 };
 
 export type cloudSettings = {
+   collisionRadius: number;
+
    stageBackground: "none" | "grid" | "cheer9" | "custom" | "gridfluid";
    stageDimensions: { width: number; height: number };
 
@@ -98,7 +108,6 @@ export type cloudSettings = {
    horizontalFineDivisions?: number;
 
    backgroundUrl: string;
-   collisionRadius: number;
 
    backgroundImageOpacity: number;
    hideSubdivisions: boolean;
@@ -132,7 +141,7 @@ export const GRID_WIDTH = 26;
 export const GRID_HEIGHT = 20;
 
 /** The max zoom level of the timeline */
-export const MAX_PIXELS_PER_SECOND = 120;
+export const MAX_PIXELS_PER_SECOND = 150;
 
 export const initials = (name: string) => {
    if (!name) return "";

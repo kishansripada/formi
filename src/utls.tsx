@@ -1,6 +1,7 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import debounce from "lodash.debounce";
 import React, { useDebugValue, useEffect, useState, useRef, useCallback } from "react";
+import { formation } from "./types/types";
 const supabase = createClientComponentClient();
 export const useLocalStorage = <S,>(key: string, initialState?: S | (() => S)): [S, React.Dispatch<React.SetStateAction<S>>] => {
    const [state, setState] = useState<S>(initialState as S);
@@ -161,6 +162,22 @@ export const useUploadToSupabase = (dataKey: string, dataValue: any, danceId: st
    return saved;
 };
 
+export const useTimedPopup = (duration: number) => {
+   const [showPopup, setShowPopup] = useState(false);
+
+   useEffect(() => {
+      const timer = setTimeout(() => {
+         setShowPopup(true);
+      }, duration);
+
+      return () => clearTimeout(timer);
+   }, [duration]);
+
+   return [showPopup, setShowPopup];
+};
+
+export default useTimedPopup;
+
 export function convertToCentimeters(feet: number, inches: number): number {
    const inchesToCentimeters = inches * 2.54;
    const feetToCentimeters = feet * 12 * 2.54;
@@ -231,4 +248,35 @@ export const whereInFormation = (formations: formation[], position: number) => {
       }
    }
    return { currentFormationIndex, percentThroughTransition };
+};
+
+export const useSupabaseQuery = (supabaseQueryFn) => {
+   const [data, setData] = useState(null);
+   const [loading, setLoading] = useState(true);
+   const [error, setError] = useState(null);
+   async function invalidate() {
+      try {
+         setLoading(true);
+
+         // Call passed in Supabase query function
+         const { data, error } = await supabaseQueryFn();
+         console.log({ data });
+         setData(data);
+         setError(error);
+      } catch (error) {
+         setError(error);
+      } finally {
+         setLoading(false);
+      }
+   }
+   useEffect(() => {
+      invalidate();
+   }, []);
+
+   return {
+      data: data || [],
+      loading,
+      error,
+      invalidate,
+   };
 };

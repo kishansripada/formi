@@ -12,7 +12,6 @@ import PropertyAdd from "../../../../../../@/components/PropertyAdd";
 import { HStack, VStack } from "../../../../../../@/components/ui/stacks";
 import { HDivider } from "../../../../../../@/components/ui/hdivider";
 import { Subtract } from "../../../../../../@/components/ui/button";
-
 import { cloudSettings } from "../../../../../types/types";
 import { useStore } from "../../store";
 
@@ -258,7 +257,7 @@ export const StageSettings: React.FC<{
                      ></NumberToggle>
                   </div>
                </VStack>
-
+               <HDivider />
                <PropertyAdd
                   label={"Subdivisions"}
                   canAdd={cloudSettings.hideSubdivisions}
@@ -305,7 +304,7 @@ export const StageSettings: React.FC<{
                </HStack>
             </>
          ) : null}
-
+         <HDivider />
          <PropertyAdd
             label={"Stage background image"}
             canAdd={!cloudSettings.backgroundUrl}
@@ -331,7 +330,7 @@ export const StageSettings: React.FC<{
                />
             </HStack>
          </PropertyAdd>
-
+         <HDivider />
          <PropertyAdd
             label={"Set pieces"}
             canAdd={true}
@@ -437,7 +436,7 @@ export const StageSettings: React.FC<{
                })}
             </VStack>
          </PropertyAdd>
-         <HDivider></HDivider>
+         <HDivider />
       </VStack>
    );
 };

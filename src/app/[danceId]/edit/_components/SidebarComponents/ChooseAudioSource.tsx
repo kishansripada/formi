@@ -21,10 +21,10 @@ export const ChooseAudioSource: React.FC<{
    audioFiles: any;
    soundCloudTrackId: string | null;
    setSoundCloudTrackId: Function;
-   setAudiofiles: Function;
+   invalidateAudioFiles: Function;
    setLocalSource: Function;
    session: AuthSession | null;
-}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, setAudiofiles, setLocalSource, session }) => {
+}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, invalidateAudioFiles, setLocalSource, session }) => {
    const { viewOnly, setPlayer, player, setIsPlaying, segments, setSegments, newSegment, updateSegmentProperty } = useStore();
    const [file, setFile] = useState<File | null>();
 
@@ -64,13 +64,8 @@ export const ChooseAudioSource: React.FC<{
             }
          )
          .then((data) => {
-            supabase.storage
-               .from("audiofiles")
-               .list(session?.user.id, {})
-               .then((r) => {
-                  setAudiofiles(r);
-                  setSoundCloudTrackId(`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/audiofiles/${data.data.path}`);
-               });
+            invalidateAudioFiles();
+            setSoundCloudTrackId(`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/audiofiles/${data.data.path}`);
          });
    }, [file]);
 
@@ -147,7 +142,7 @@ export const ChooseAudioSource: React.FC<{
                            <DropdownMenuLabel>Uploads</DropdownMenuLabel>
                            <DropdownMenuSeparator />
 
-                           {[...audioFiles.data].reverse().map((audiofile) => {
+                           {[...audioFiles].reverse().map((audiofile) => {
                               return (
                                  <DropdownMenuItem className="">
                                     <div

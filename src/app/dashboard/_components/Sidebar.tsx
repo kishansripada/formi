@@ -163,14 +163,7 @@ export const Sidebar: React.FC<{
                   <p>Rosters</p>
                </Link>
             </div>
-            <button
-               onClick={() => {
-                  setNewFolderOpen(true);
-               }}
-               className=" border border-neutral-800 mt-5 w-full text-white text-xs py-2 px-4 rounded-lg mr-auto "
-            >
-               New folder
-            </button>
+
             <button
                onClick={() => {
                   if (!plan && myDances.length >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {

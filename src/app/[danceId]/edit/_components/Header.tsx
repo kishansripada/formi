@@ -87,6 +87,7 @@ export const Header: React.FC<{
    setPermissions,
    anyoneCanView,
    setAnyoneCanView,
+   scene,
 }) => {
    const {
       formations,
@@ -130,6 +131,22 @@ export const Header: React.FC<{
       }
    };
 
+   const [folders, setFolders] = useState([]);
+   useEffect(() => {
+      if (session) {
+         getProjects(session, supabase).then((projects) => {
+            if (projects.length) {
+               setFolders(projects);
+            }
+         });
+      }
+   }, []);
+
+   async function getProjects(session: Session, supabase: SupabaseClient) {
+      let data = await supabase.from("projects").select("*").eq("parent_id", session.user.id);
+
+      return data?.data || [];
+   }
    return (
       <>
          <div className=" min-h-[50px] dark:bg-neutral-900 bg-neutral-50  flex flex-row items-center w-full text-neutral-800 border-b  dark:text-white  dark:border-neutral-700 border-neutral-300 ">
@@ -368,25 +385,25 @@ export const Header: React.FC<{
                      </MenubarMenu>
 
                      {isDesktop && (
-                     <MenubarMenu className="">
-                        <MenubarTrigger className="hidden md:block dark:hover:bg-neutral-800 hover:bg-neutral-200 h-full">Help</MenubarTrigger>
+                        <MenubarMenu className="">
+                           <MenubarTrigger className="hidden md:block dark:hover:bg-neutral-800 hover:bg-neutral-200 h-full">Help</MenubarTrigger>
 
-                        <MenubarContent>
-                           <Dialog>
-                              <DialogTrigger>
-                                 <MenubarItem onSelect={(e) => e.preventDefault()} className="py-1 hover:bg-neutral-200 w-full">
-                                    Keyboard shortcuts
-                                 </MenubarItem>
-                              </DialogTrigger>
-                              <DialogContent className="min-w-[75%]">
-                                 <DialogHeader>
-                                    <DialogTitle>Keyboard shortcuts</DialogTitle>
-                                 </DialogHeader>
+                           <MenubarContent>
+                              <Dialog>
+                                 <DialogTrigger>
+                                    <MenubarItem onSelect={(e) => e.preventDefault()} className="py-1 hover:bg-neutral-200 w-full">
+                                       Keyboard shortcuts
+                                    </MenubarItem>
+                                 </DialogTrigger>
+                                 <DialogContent className="min-w-[75%]">
+                                    <DialogHeader>
+                                       <DialogTitle>Keyboard shortcuts</DialogTitle>
+                                    </DialogHeader>
                                     <KeyboardShortcuts />
-                              </DialogContent>
-                           </Dialog>
-                        </MenubarContent>
-                     </MenubarMenu>
+                                 </DialogContent>
+                              </Dialog>
+                           </MenubarContent>
+                        </MenubarMenu>
                      )}
                   </Menubar>
                </div>
@@ -436,7 +453,7 @@ export const Header: React.FC<{
                </button> */}
 
                {isIOS && localSettings.viewingThree ? (
-                  <button onClick={() => exportThree()} className="min-w-[48px] grid place-items-center">
+                  <button onClick={() => exportThree(scene)} className="min-w-[48px] grid place-items-center">
                      <svg className="w-6 h-6 dark:fill-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
                         <path d="M440-181 240-296q-19-11-29.5-29T200-365v-230q0-22 10.5-40t29.5-29l200-115q19-11 40-11t40 11l200 115q19 11 29.5 29t10.5 40v230q0 22-10.5 40T720-296L520-181q-19 11-40 11t-40-11Zm0-92v-184l-160-93v185l160 92Zm80 0 160-92v-185l-160 93v184ZM80-680v-120q0-33 23.5-56.5T160-880h120v80H160v120H80ZM280-80H160q-33 0-56.5-23.5T80-160v-120h80v120h120v80Zm400 0v-80h120v-120h80v120q0 33-23.5 56.5T800-80H680Zm120-600v-120H680v-80h120q33 0 56.5 23.5T880-800v120h-80ZM480-526l158-93-158-91-158 91 158 93Zm0 45Zm0-45Zm40 69Zm-80 0Z" />
                      </svg>
@@ -516,18 +533,49 @@ export const Header: React.FC<{
                   </Link>
                ) : null}
 
-               {folder?.name && (
-                  <Link
-                     href={`/dashboard/project/${folder.id}`}
-                     className="text-xs border dark:border-neutral-600 border-neutral-300 text-neutral-800 dark:text-neutral-300 rounded-full py-1  px-2 md:flex flex-row items-center hidden"
-                  >
-                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-2">
-                        <path d="M3.75 3A1.75 1.75 0 002 4.75v3.26a3.235 3.235 0 011.75-.51h12.5c.644 0 1.245.188 1.75.51V6.75A1.75 1.75 0 0016.25 5h-4.836a.25.25 0 01-.177-.073L9.823 3.513A1.75 1.75 0 008.586 3H3.75zM3.75 9A1.75 1.75 0 002 10.75v4.5c0 .966.784 1.75 1.75 1.75h12.5A1.75 1.75 0 0018 15.25v-4.5A1.75 1.75 0 0016.25 9H3.75z" />
-                     </svg>
-
-                     <p>{folder?.name}</p>
-                  </Link>
-               )}
+               <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                     <div className="text-sm border dark:border-neutral-600 border-neutral-300 text-neutral-800 dark:text-neutral-300 rounded-md py-1 gap-2  px-2 md:flex flex-row items-center hidden">
+                        <button className="flex flex-row items-center ">
+                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                              <path d="M3.75 3A1.75 1.75 0 002 4.75v3.26a3.235 3.235 0 011.75-.51h12.5c.644 0 1.245.188 1.75.51V6.75A1.75 1.75 0 0016.25 5h-4.836a.25.25 0 01-.177-.073L9.823 3.513A1.75 1.75 0 008.586 3H3.75zM3.75 9A1.75 1.75 0 002 10.75v4.5c0 .966.784 1.75 1.75 1.75h12.5A1.75 1.75 0 0018 15.25v-4.5A1.75 1.75 0 0016.25 9H3.75z" />
+                           </svg>
+                           <p className="text-xs">{folder?.name}</p>
+                        </button>
+                     </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="">
+                     <DropdownMenuGroup>
+                        {folder?.name && (
+                           <>
+                              <DropdownMenuItem>
+                                 <Link href={`/dashboard/project/${folder.id}`} className="">
+                                    {" "}
+                                    <span className="mr-1">In </span> <span className="font-bold ">{folder?.name}</span>
+                                 </Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator></DropdownMenuSeparator>
+                           </>
+                        )}
+                        <DropdownMenuSub>
+                           <DropdownMenuSubTrigger>
+                              <span className="">{folder?.name ? "Move to" : "Add to"}</span>
+                           </DropdownMenuSubTrigger>
+                           <DropdownMenuPortal>
+                              <DropdownMenuSubContent>
+                                 {folders.map((folder) => {
+                                    return (
+                                       <DropdownMenuItem>
+                                          <span>{folder.name}</span>
+                                       </DropdownMenuItem>
+                                    );
+                                 })}
+                              </DropdownMenuSubContent>
+                           </DropdownMenuPortal>
+                        </DropdownMenuSub>
+                     </DropdownMenuGroup>
+                  </DropdownMenuContent>
+               </DropdownMenu>
 
                {status ? (
                   <div className="">

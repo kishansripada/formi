@@ -179,9 +179,11 @@ export const AudioControls: React.FC<{
                            strokeWidth={1.5}
                            stroke="currentColor"
                            className="w-5 h-5 ml-1  cursor-pointer hidden md:block"
-                           onClick={(e) => {
-                              setHelpUrl({ url: "https://www.youtube.com/shorts/m4uBCon7VR4", event: e });
-                           }}
+                           video-url="https://player.vimeo.com/video/891135369?badge=0&amp;autopause=0&amp;quality_selector=1&amp;player_id=0&amp;app_id=58479"
+
+                           // onClick={(e) => {
+                           //    setHelpUrl({ url: "https://www.youtube.com/shorts/m4uBCon7VR4", event: e });
+                           // }}
                         >
                            <path
                               strokeLinecap="round"

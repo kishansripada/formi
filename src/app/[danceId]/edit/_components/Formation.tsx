@@ -264,9 +264,10 @@ export const Formation: React.FC<{
                   // marginLeft: 2 / pixelsPerSecond,
                   // marginRight: 2 / pixelsPerSecond,
                   borderRadius: 8,
+                  borderWidth: myWidth > 4 ? 2 : 0,
                   // touchAction: changingFormation ? "none" : "pan-x",
                }}
-               className="relative  border-2 border-transparent  overflow-hidden group  bg-neutral-50 dark:bg-neutral-800  "
+               className="relative   border-transparent  overflow-hidden group  bg-neutral-50 dark:bg-neutral-800  "
                ref={setNodeRef}
             >
                <style jsx>{``}</style>

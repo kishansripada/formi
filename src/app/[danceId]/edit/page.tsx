@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Edit from "./client";
 import { Database } from "../../../types/supabase";
 import Link from "next/link";
+import { getStripe } from "../../dashboard/api";
 // import { getPlan } from "../../api/get-plan/route";
 export const metadata: Metadata = {
    title: "Edit Performance",
