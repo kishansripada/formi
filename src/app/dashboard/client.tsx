@@ -171,6 +171,7 @@ export default function Client({ myDances, sharedWithMe, session, rosters, proje
          <div className="w-full grid grid-cols-1 gap-[32px]    rounded-xl sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 col-span-4   overscroll-contain items-center">
             {[...myDances, ...sharedWithMe].length ? (
                [...myDances, ...sharedWithMe]
+                  .filter((dance) => !dance.isInTrash)
                   .sort((a: Dance, b: Dance) => new Date(b.last_edited).getTime() - new Date(a.last_edited).getTime())
                   ?.map((dance: Dance) => {
                      return (

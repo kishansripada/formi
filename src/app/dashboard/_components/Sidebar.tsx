@@ -183,7 +183,12 @@ export const Sidebar: React.FC<{
                                  }}
                                  onBlur={async () => {
                                     const data = await supabase.from("projects").update({ name: project.name }).eq("id", project.id);
-                                    console.log(data);
+                                    if (!data.error) {
+                                       toast.success("Folder name updated");
+                                    } else {
+                                       toast.error("Error updating folder name");
+                                    }
+                                    router.refresh();
                                  }}
                               />
                               {/* <p>{project.name}</p> */}

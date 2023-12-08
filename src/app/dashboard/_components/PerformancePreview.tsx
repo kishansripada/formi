@@ -31,11 +31,11 @@ export const PerformancePreview = ({ dance, session, projects }: { dance: Dance;
       const { data, error } = await supabase.from("dances").update({ isInTrash: true }).eq("id", id);
 
       if (!error) {
-         router.refresh();
          toast.success("Moved to trash");
       } else {
          toast.error("There was an error moving to trash");
       }
+      router.refresh();
    };
 
    const duplicateDance = async (danceId: number) => {
@@ -146,7 +146,7 @@ export const PerformancePreview = ({ dance, session, projects }: { dance: Dance;
 
                   <Link prefetch={false} className="w-full cursor-default" href={`/${dance.id}/edit`}>
                      <div className="w-full ">
-                        <div className=" rounded-t-md min-h-[200px]  w-full relative  transition border-neutral-700 group-hover:border-pink-600  border overflow-hidden   rounded-md bg-neutral-800  ">
+                        <div className=" rounded-t-md min-h-[200px]  w-full relative  transition border-transparent group-hover:border-pink-600  border overflow-hidden   rounded-md bg-neutral-800  ">
                            {dance.formations.positions?.map((position: dancerPosition) => {
                               return (
                                  <div

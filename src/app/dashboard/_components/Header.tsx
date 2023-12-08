@@ -1,23 +1,12 @@
 "use client";
 
-import { dancer, dancerPosition, formation } from "../../../types/types";
-import toast, { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
 import Link from "next/link";
-// import { Dropdown } from "./Dropdown";
-import { useSupabaseClient, useSession, Session } from "@supabase/auth-helpers-react";
-
-import { ProjectPreview } from "../myperformances/ProjectPreview";
-import { PerformancePreview } from "./PerformancePreview";
-import { DndContext, useDroppable, MouseSensor, useSensors, useSensor } from "@dnd-kit/core";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 export default function Header({ plan }: { plan: string | null }) {
    const pathname = usePathname();
-   const router = useRouter();
 
-   const supabase = createClientComponentClient();
    return (
       <div className="flex flex-row items-center  justify-between px-6 h-[72px] min-h-[72px] border-neutral-700 border-b  ml-auto w-full ">
          <div className="mr-4 flex flex-row items-center">
@@ -36,7 +25,7 @@ export default function Header({ plan }: { plan: string | null }) {
 
          <div>
             {plan ? (
-               <a href={"/upgrade/customerportal"} className="mr-5 text-xs">
+               <a href={"/upgrade/customerportal"} className="mr-5 text-sm">
                   Manage Subscription
                </a>
             ) : null}
@@ -45,16 +34,7 @@ export default function Header({ plan }: { plan: string | null }) {
                   Upgrade
                </Link>
             ) : null}
-            <Link
-               prefetch={false}
-               href={"/auth/logout"}
-               // onClick={() => {
-               //    supabase.auth.signOut().then((r) => {
-               //       router.push("/login");
-               //    });
-               // }}
-               className="mr-5  text-xs"
-            >
+            <Link prefetch={false} href={"/auth/logout"} className="mr-5  text-sm">
                Sign Out
             </Link>
          </div>
