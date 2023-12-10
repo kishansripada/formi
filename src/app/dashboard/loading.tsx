@@ -1,6 +1,6 @@
 export default function Loading() {
    return (
-      <div className="w-full grid grid-cols-1 gap-[32px]  opacity-20  rounded-xl sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 col-span-4   overscroll-contain items-center">
+      <div className="w-full grid grid-cols-1 gap-[32px]  opacity-20  rounded-xl sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 col-span-4   overscroll-contain items-center">
          {[1, 1, 1, 1, 1, 1, 1, 1].map((dance) => {
             return (
                <>

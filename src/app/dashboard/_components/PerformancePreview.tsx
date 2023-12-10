@@ -109,35 +109,43 @@ export const PerformancePreview = ({ dance, session, projects }: { dance: Dance;
                   <ContextMenuSub>
                      <ContextMenuSubTrigger>{dance.project_id ? "Move to" : "Add to project"}</ContextMenuSubTrigger>
                      <ContextMenuSubContent className="">
-                        {projects.map((project) => {
-                           return (
-                              <ContextMenuItem
-                                 key={project.id}
-                                 onClick={async () => {
-                                    const { data, error } = await supabase.from("dances").update({ project_id: project.id }).eq("id", dance.id);
-                                    if (!error) {
-                                       toast.success("Added to project");
-                                    } else {
-                                       toast.error("There was an error adding to project");
-                                    }
-                                    router.refresh();
-                                 }}
-                              >
-                                 {project.name}
-                              </ContextMenuItem>
-                           );
-                        })}
+                        {projects
+                           .filter((project) => project.id !== dance.project_id)
+                           .map((project) => {
+                              return (
+                                 <ContextMenuItem
+                                    key={project.id}
+                                    onClick={async () => {
+                                       const { data, error } = await supabase.from("dances").update({ project_id: project.id }).eq("id", dance.id);
+                                       if (!error) {
+                                          toast.success("Added to project");
+                                       } else {
+                                          toast.error("There was an error adding to project");
+                                       }
+                                       router.refresh();
+                                    }}
+                                 >
+                                    {project.name}
+                                 </ContextMenuItem>
+                              );
+                           })}
                      </ContextMenuSubContent>
                   </ContextMenuSub>
                )}
-               <ContextMenuSeparator></ContextMenuSeparator>
-               <ContextMenuItem
-                  onClick={() => {
-                     moveToTrash(dance.id);
-                  }}
-               >
-                  Delete
-               </ContextMenuItem>
+
+               {session && session.user.id === dance.user ? (
+                  <>
+                     {" "}
+                     <ContextMenuSeparator></ContextMenuSeparator>
+                     <ContextMenuItem
+                        onClick={() => {
+                           moveToTrash(dance.id);
+                        }}
+                     >
+                        Delete
+                     </ContextMenuItem>
+                  </>
+               ) : null}
             </ContextMenuContent>
 
             <ContextMenuTrigger>
