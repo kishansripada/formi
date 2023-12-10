@@ -255,7 +255,7 @@ export const ObjectControls: React.FC<{
             })
             .includes(0) ? (
             <>
-               <div className="flex flex-row justify-between items-center py-2 px-2  ">
+               <div className="flex flex-row justify-between items-center py-2 px-2 max-h-[44px] h-[44px] ">
                   <p className="text-xs  font-semibold">Path</p>
                   <DropdownMenu>
                      <DropdownMenuTrigger

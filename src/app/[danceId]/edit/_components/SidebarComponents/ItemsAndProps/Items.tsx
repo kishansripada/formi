@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useStore } from "../../../store";
 import { Props } from "./Props";
 import { useClickOutside } from "../../../../../../utls";
+import { Add } from "../../../../../../../@/components/ui/button";
 export const Items: React.FC<{
    audioFiles: any;
 
@@ -55,31 +56,30 @@ export const Items: React.FC<{
 
    return (
       <div className="h-full flex flex-col min-h-0 oveflow-hidden  ">
-         <div className=" font-medium mb-2 flex flex-row  items-center  text-sm px-2">
-            <button
-               video-url="https://player.vimeo.com/video/891149507?badge=0&amp;autopause=0&amp;quality_selector=1&amp;player_id=0&amp;app_id=58479"
-               allow="autoplay; fullscreen; picture-in-picture"
-            >
-               What's a prop?
-            </button>
-            <svg
-               xmlns="http://www.w3.org/2000/svg"
-               fill="none"
-               viewBox="0 0 24 24"
-               strokeWidth={1.5}
-               stroke="currentColor"
-               className="w-5 h-5 ml-1  cursor-pointer"
+         <div className=" font-medium mb-2 flex flex-row justify-between  items-center  text-xs px-2">
+            <div
+               className="flex flex-row item-center gap-2"
                video-url="https://player.vimeo.com/video/891149507?badge=0&amp;autopause=0&amp;quality_selector=1&amp;player_id=0&amp;app_id=58479"
             >
-               <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
-               />
-            </svg>
+               <button allow="autoplay; fullscreen; picture-in-picture">Props</button>
+               <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-4 h-4 cursor-pointer"
+               >
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+                  />
+               </svg>
+            </div>
 
             {!viewOnly ? (
-               <button
+               <Add
                   onClick={() => {
                      if (viewOnly) return;
                      // setItems([...items, { id: newId, name: "New prop" }]);
@@ -87,20 +87,7 @@ export const Items: React.FC<{
                      // setSelectedItemId(newId);
                      setAssetsOpen({ type: "item" });
                   }}
-                  className="ml-auto text-xs flex flex-row items-center"
-               >
-                  <svg
-                     xmlns="http://www.w3.org/2000/svg"
-                     fill="none"
-                     viewBox="0 0 24 24"
-                     strokeWidth={1.5}
-                     stroke="currentColor"
-                     className="w-6 h-6 mr-1"
-                  >
-                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
-                  </svg>
-                  New prop
-               </button>
+               ></Add>
             ) : null}
          </div>
 
@@ -364,7 +351,6 @@ export const Items: React.FC<{
                      setItems(items.filter((p) => p.id !== selectedItemId));
                      setSelectedItemId(null);
                      resumeHistory();
-                     pushChange();
                   }}
                   className="  w-full text-sm shadow-sm cursor-pointer select-none rounded-md font-semibold  grid place-items-center  bg-opacity-20 hover:bg-opacity-50 transition py-2 bg-red-500 dark:text-red-400 text-red-600   "
                >
