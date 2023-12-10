@@ -52,7 +52,6 @@ export const ObjectControls: React.FC<{
       viewOnly,
       items,
       selectedFormations,
-      getFirstSelectedFormation,
       get,
       imageBlobs,
       cloudSettings,
@@ -62,7 +61,9 @@ export const ObjectControls: React.FC<{
       pauseHistory,
       resumeHistory,
    } = useStore();
+   const thisFormation = useStore((state) => state.getFirstSelectedFormation());
 
+   if (!thisFormation) return <></>;
    const setCurved = () => {
       if (viewOnly) return;
       selectedFormations.forEach((selectedFormation: string) => {
@@ -136,7 +137,7 @@ export const ObjectControls: React.FC<{
 
    const pathSelectionDropdownValue = () => {
       if (!selectedFormations.length || !selectedDancers.length) return "";
-      let dancers = getFirstSelectedFormation()?.positions.filter((position: dancerPosition) => selectedDancers.includes(position.id));
+      let dancers = thisFormation.positions.filter((position: dancerPosition) => selectedDancers.includes(position.id));
       if (!dancers?.length) return "";
 
       if (dancers.every((position: dancerPosition) => position.transitionType === "linear" || !position.transitionType)) {
@@ -151,7 +152,7 @@ export const ObjectControls: React.FC<{
       return "Mixed";
    };
 
-   const pos = getFirstSelectedFormation()?.positions.find((position) => position.id === selectedDancers[0])?.position;
+   const pos = thisFormation.positions.find((position) => position.id === selectedDancers[0])?.position;
 
    const getRealPosition = (pos, cloudSettings) => {
       if (!pos) return;
@@ -177,7 +178,7 @@ export const ObjectControls: React.FC<{
    };
 
    // return groups.find((group) => group.id === properties[0])?.name || "Error";
-   const dropdownGroup = getFirstSelectedFormation()?.groups?.find((group) => group.id === getSelectedPositionsProperty("groupId")) || {
+   const dropdownGroup = thisFormation.groups?.find((group) => group.id === getSelectedPositionsProperty("groupId")) || {
       name: "Mixed",
       color: null,
    };
@@ -206,14 +207,14 @@ export const ObjectControls: React.FC<{
                <button
                   onClick={() => {
                      selectedFormations.forEach((selectedFormation: string) => {
-                        const positions = selectedDancers.map((dancerId) => {
-                           return formations
-                              .find((formation) => formation.id === selectedFormation)
-                              ?.positions.find((dancerPosition: dancerPosition) => dancerPosition.id === dancerId).position;
-                        });
+                        const positions = thisFormation.positions
+                           .filter((position) => selectedDancers.includes(position.id))
+                           .map((position) => position.position);
+
+                        if (!(positions.length === 2)) return;
 
                         setFormations(
-                           get().formations.map((formation, index: number) => {
+                           formations.map((formation) => {
                               if (formation.id === selectedFormation) {
                                  return {
                                     ...formation,
@@ -234,7 +235,7 @@ export const ObjectControls: React.FC<{
                      });
                      // swap the positions of the two dancers
                   }}
-                  className="flex flex-row justify-between dark:text-neutral-300 text-neutral-500 hover:text-black dark:hover:text-white transition items-center px-2 py-3  "
+                  className="flex flex-row justify-between  transition items-center px-2 py-3 max-h-[44px] h-[44px] "
                >
                   <p className="text-xs font-semibold mr-3">Swap 2 Positions</p>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -386,7 +387,7 @@ export const ObjectControls: React.FC<{
                   <p className="text-xs  font-semibold  ">Group</p>
 
                   <div className="flex flex-row items-center gap-2">
-                     {getFirstSelectedFormation()?.groups?.length && !getSelectedPositionsProperty("groupId") ? (
+                     {thisFormation.groups?.length && !getSelectedPositionsProperty("groupId") ? (
                         <DropdownMenu>
                            <DropdownMenuTrigger disabled={viewOnly} asChild>
                               <button className="hover:bg-neutral-800 p-1">
@@ -397,7 +398,7 @@ export const ObjectControls: React.FC<{
                            </DropdownMenuTrigger>
 
                            <DropdownMenuContent>
-                              {(getFirstSelectedFormation().groups || []).map((group) => {
+                              {(thisFormation.groups || []).map((group) => {
                                  return (
                                     <DropdownMenuItem
                                        key={group.id}
@@ -458,7 +459,7 @@ export const ObjectControls: React.FC<{
                            </DropdownMenuTrigger>
 
                            <DropdownMenuContent>
-                              {(getFirstSelectedFormation().groups || []).map((group) => {
+                              {(thisFormation.groups || []).map((group) => {
                                  return (
                                     <DropdownMenuItem
                                        key={group.id}
