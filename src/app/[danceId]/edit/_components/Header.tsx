@@ -536,7 +536,7 @@ export const Header: React.FC<{
                <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                      <div className="text-sm border dark:border-neutral-600 border-neutral-300 text-neutral-800 dark:text-neutral-300 rounded-md py-1 gap-2  px-2 md:flex flex-row items-center hidden">
-                        <button className="flex flex-row items-center ">
+                        <button className="flex flex-row items-center gap-2 ">
                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                               <path d="M3.75 3A1.75 1.75 0 002 4.75v3.26a3.235 3.235 0 011.75-.51h12.5c.644 0 1.245.188 1.75.51V6.75A1.75 1.75 0 0016.25 5h-4.836a.25.25 0 01-.177-.073L9.823 3.513A1.75 1.75 0 008.586 3H3.75zM3.75 9A1.75 1.75 0 002 10.75v4.5c0 .966.784 1.75 1.75 1.75h12.5A1.75 1.75 0 0018 15.25v-4.5A1.75 1.75 0 0016.25 9H3.75z" />
                            </svg>
@@ -563,13 +563,27 @@ export const Header: React.FC<{
                            </DropdownMenuSubTrigger>
                            <DropdownMenuPortal>
                               <DropdownMenuSubContent>
-                                 {folders.map((folder) => {
-                                    return (
-                                       <DropdownMenuItem>
-                                          <span>{folder.name}</span>
-                                       </DropdownMenuItem>
-                                    );
-                                 })}
+                                 {folders
+                                    .filter((f) => f?.id !== folder?.id)
+                                    .map((folder) => {
+                                       return (
+                                          <DropdownMenuItem
+                                             onClick={async () => {
+                                                const { data, error } = await supabase
+                                                   .from("dances")
+                                                   .update({ project_id: folder?.id })
+                                                   .eq("id", danceId);
+                                                if (!error) {
+                                                   toast.success("Added to project");
+                                                } else {
+                                                   toast.error("There was an error adding to project");
+                                                }
+                                             }}
+                                          >
+                                             <span>{folder?.name}</span>
+                                          </DropdownMenuItem>
+                                       );
+                                    })}
                               </DropdownMenuSubContent>
                            </DropdownMenuPortal>
                         </DropdownMenuSub>
