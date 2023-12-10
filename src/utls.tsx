@@ -149,7 +149,7 @@ export const useUploadToSupabase = (dataKey: string, dataValue: any, danceId: st
          console.log({ data });
          console.log({ error });
          setSaved(true);
-      }, 1000),
+      }, 4000),
       [danceId]
    );
 

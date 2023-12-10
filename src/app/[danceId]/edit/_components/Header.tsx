@@ -568,6 +568,7 @@ export const Header: React.FC<{
                                     .map((folder) => {
                                        return (
                                           <DropdownMenuItem
+                                             key={folder.id}
                                              onClick={async () => {
                                                 const { data, error } = await supabase
                                                    .from("dances")

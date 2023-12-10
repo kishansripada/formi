@@ -55,13 +55,13 @@ export const Items: React.FC<{
    useClickOutside(ref, close);
 
    return (
-      <div className="h-full flex flex-col min-h-0 oveflow-hidden  ">
+      <div className="flex flex-col h-full oveflow-hidde py-2  ">
          <div className=" font-medium mb-2 flex flex-row justify-between  items-center  text-xs px-2">
             <div
                className="flex flex-row item-center gap-2"
                video-url="https://player.vimeo.com/video/891149507?badge=0&amp;autopause=0&amp;quality_selector=1&amp;player_id=0&amp;app_id=58479"
             >
-               <button allow="autoplay; fullscreen; picture-in-picture">Props</button>
+               <button allow="autoplay; fullscreen; picture-in-picture">Handheld props</button>
                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -108,10 +108,10 @@ export const Items: React.FC<{
                         //    selectedPropIds.includes(item.id)
                         className={`  ${
                            selectedItemId === item.id ? "dark:bg-dark-secondary " : " hover:bg-neutral-100 dark:hover:bg-neutral-700"
-                        }  w-full h-[55px] min-h-[55px] relative  group cursor-pointer   px-3  flex flex-row items-center   whitespace-nowrap  `}
+                        }  w-full h-[44px] min-h-[44px] relative  group cursor-pointer  px-2  flex flex-row items-center   whitespace-nowrap  `}
                      >
                         <input
-                           className="text-sm px-1 focus:outline-none bg-transparent w-full "
+                           className="text-xs  focus:outline-none bg-transparent w-full "
                            onChange={(e) => {
                               setItems(
                                  items.map((itemx) => {
@@ -135,7 +135,7 @@ export const Items: React.FC<{
                                  if (viewOnly) return;
                                  setAssetsOpen({ type: "item", id: item.id });
                               }}
-                              className="h-[55px] w-[55px]  object-contain  cursor-pointer  z-10 "
+                              className="h-[44px] w-[44px]  object-contain  cursor-pointer  z-10 "
                               src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item.url}`}
                               alt=""
                            />
@@ -174,7 +174,7 @@ export const Items: React.FC<{
          </div>
 
          {selectedItemId ? (
-            <div className=" h-[250px]  min-h-[250px] ">
+            <div className=" h-[250px]  min-h-[250px] mt-auto ">
                <div
                   className="px-3 mt-3 "
                   style={{

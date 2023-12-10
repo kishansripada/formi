@@ -76,22 +76,22 @@ export const ItemsAndProps: React.FC<{
                </TabsContent>
             </Tabs>
          </div> */}
-         <div className="py-2">
-            <Items
-               setAssetsOpen={setAssetsOpen}
-               setHelpUrl={setHelpUrl}
-               pushChange={pushChange}
-               setSelectedPropIds={setSelectedPropIds}
-               invalidatePropUploads={invalidatePropUploads}
-               selectedPropIds={selectedPropIds}
-               propUploads={propUploads}
-               soundCloudTrackId={soundCloudTrackId}
-               setSoundCloudTrackId={setSoundCloudTrackId}
-               audioFiles={audioFiles}
-               setAudiofiles={setAudiofiles}
-               setLocalSource={setLocalSource}
-            ></Items>
-         </div>
+
+         <Items
+            setAssetsOpen={setAssetsOpen}
+            setHelpUrl={setHelpUrl}
+            pushChange={pushChange}
+            setSelectedPropIds={setSelectedPropIds}
+            invalidatePropUploads={invalidatePropUploads}
+            selectedPropIds={selectedPropIds}
+            propUploads={propUploads}
+            soundCloudTrackId={soundCloudTrackId}
+            setSoundCloudTrackId={setSoundCloudTrackId}
+            audioFiles={audioFiles}
+            setAudiofiles={setAudiofiles}
+            setLocalSource={setLocalSource}
+         ></Items>
+
          <Toaster />
       </>
    );

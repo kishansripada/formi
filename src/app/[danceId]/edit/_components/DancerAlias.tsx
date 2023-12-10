@@ -1,18 +1,6 @@
-import { useGesture } from "@use-gesture/react";
-import {
-   cloudSettings,
-   dancer,
-   dancerPosition,
-   formation,
-   stageDimensions,
-   PIXELS_PER_SQUARE,
-   localSettings,
-   item,
-   COLORS,
-} from "../../../../types/types";
+import { dancer, dancerPosition, formation, stageDimensions, PIXELS_PER_SQUARE, COLORS } from "../../../../types/types";
 import { useStore } from "../store";
 import { useEffect, useRef } from "react";
-import { useIsDesktop } from "../../../../hooks";
 
 export const DancerAlias: React.FC<{
    dancer: dancer;
@@ -47,7 +35,7 @@ export const DancerAlias: React.FC<{
    collisions,
    index,
    isChangingCollisionRadius,
-   // items,
+
    roundPositions,
 }) => {
    let {
@@ -170,14 +158,14 @@ export const DancerAlias: React.FC<{
                transformOrigin: "center",
                // height: selectedDancers.includes(dancer.id) && !isPlaying ? 41 : 38,
                touchAction: "none",
-                     border: hoveringDancerIds.includes(dancer.id) && !isPlaying ? `${2 / zoom}px solid #db2777` : `${2 / zoom}px solid transparent`,
+               border: hoveringDancerIds.includes(dancer.id) && !isPlaying ? `${2 / zoom}px solid #db2777` : `${2 / zoom}px solid transparent`,
             }}
             ref={container}
             // onMouseDown={(e) => e.preventDefault()}
             id={dancer.id}
             // {...bind()}
             data-type={"dancer"}
-                  className={`   group  rounded-md lg:pointer-events-auto  flex   flex-row justify-center items-center absolute z-[30] mr-auto ml-auto cursor-default `}
+            className={`   group   lg:pointer-events-auto  flex   flex-row justify-center items-center absolute z-[30] mr-auto ml-auto cursor-default `}
          >
             {thisItem && (
                <div
@@ -259,22 +247,22 @@ export const DancerAlias: React.FC<{
                      style={{
                         transition: "fill 0.5s ease",
                      }}
-                           // className="group-hover:stroke-[30px]"
-                           fill={dancerColor}
+                     // className="group-hover:stroke-[30px]"
+                     fill={dancerColor}
                      stroke={
                         selectedDancers.includes(dancer.id) && !isPlaying
                            ? localSettings.isDarkMode
                               ? "white"
                               : "#404040"
-                                 : hexToRGBA(dancerColor, 0.5)
+                           : hexToRGBA(dancerColor, 0.5)
                      }
-                           strokeWidth={15 / zoom}
+                     strokeWidth={15 / zoom}
                      d="M3.5 3.5h133v133H3.5z"
                   />
                </svg>
             ) : dancer.shape === "triangle" ? (
                <svg
-                        className={` w-full h-full select-none  pointer-events-none relative  flex  flex-row justify-center items-center  z-[40] mr-auto ml-auto cursor-default `}
+                  className={` w-full h-full select-none  pointer-events-none relative  flex  flex-row justify-center items-center  z-[40] mr-auto ml-auto cursor-default `}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 134 116"
@@ -284,16 +272,16 @@ export const DancerAlias: React.FC<{
                         style={{
                            transition: "fill 0.5s ease",
                         }}
-                              // className="group-hover:stroke-[30px] "
-                              fill={dancerColor}
+                        // className="group-hover:stroke-[30px] "
+                        fill={dancerColor}
                         stroke={
                            selectedDancers.includes(dancer.id) && !isPlaying
                               ? localSettings.isDarkMode
                                  ? "white"
                                  : "#404040"
-                                    : hexToRGBA(dancerColor, 0.5)
+                              : hexToRGBA(dancerColor, 0.5)
                         }
-                              strokeWidth={15 / zoom}
+                        strokeWidth={15 / zoom}
                         d="M191.66 35 183 20l-8.66 15L26.2494 291.5l-8.6603 15H348.411l-8.66-15L191.66 35Z"
                      />
                   </svg>
@@ -312,16 +300,16 @@ export const DancerAlias: React.FC<{
                      style={{
                         transition: "fill 0.5s ease",
                      }}
-                           // className="group-hover:stroke-[30px] "
-                           fill={dancerColor}
+                     // className="group-hover:stroke-[30px] "
+                     fill={dancerColor}
                      stroke={
                         selectedDancers.includes(dancer.id) && !isPlaying
                            ? localSettings.isDarkMode
                               ? "white"
                               : "#404040"
-                                 : hexToRGBA(dancerColor, 0.5)
+                           : hexToRGBA(dancerColor, 0.5)
                      }
-                           strokeWidth={15 / zoom}
+                     strokeWidth={15 / zoom}
                   />
                </svg>
             )}
@@ -329,13 +317,13 @@ export const DancerAlias: React.FC<{
             {dancerStyle !== "initials" ? (
                <p
                   style={{
-                     bottom: item?.side === "bottom" ? null : 0,
-                     top: item?.side === "bottom" ? 0 : null,
+                     bottom: thisItem?.side === "bottom" ? null : 0,
+                     top: thisItem?.side === "bottom" ? 0 : null,
                      // bottom: 0,
                      opacity: zoom < 0.2 ? 0 : 1,
                      // transform: `scale(${(1 / zoom) * 0.8}) translate(0%, 100%)`,
-                     transform: `scale(${(1 / zoom) * 0.7}) translate(0%, ${100 * (item?.side === "bottom" ? -1 : 1) * zoom * (1 / 0.7)}%)`,
-                     transformOrigin: `${item?.side === "bottom" ? "bottom" : "top"} center`,
+                     transform: `scale(${(1 / zoom) * 0.7}) translate(0%, ${100 * (thisItem?.side === "bottom" ? -1 : 1) * zoom * (1 / 0.7)}%)`,
+                     transformOrigin: `${thisItem?.side === "bottom" ? "bottom" : "top"} center`,
                   }}
                   className="absolute  text-center select-none pointer-events-none dark:text-white   rounded-full px-1"
                >

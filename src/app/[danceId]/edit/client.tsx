@@ -439,7 +439,6 @@ const Edit = ({
          // Wait for the formation to be rendered in the DOM
          await sleep(1000); // Delay in milliseconds. Adjust as needed.
 
-         console.log(stageElement?.clientWidth);
          const canvas = await html2canvas(stageElement);
          // canvases.push(canvas);
 
@@ -488,12 +487,6 @@ const Edit = ({
          filename: `${danceName}.pdf`,
       };
    };
-   // // console.log({ isMobileView });
-   // const [showPopup, setShowPopup] = useTimedPopup(60000 * 0.1); // Replace X with the number of minutes
-
-   // const handleClose = () => {
-   //    setShowPopup(false);
-   // };
 
    const isDesktop = useIsDesktop();
 
