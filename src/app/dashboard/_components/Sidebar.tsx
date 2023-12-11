@@ -110,7 +110,7 @@ export const Sidebar: React.FC<{
 
    return (
       <>
-         <div className="min-w-[250px] bg-neutral-900  w-[250px]  border-r border-neutral-700   pb-4 h-screen lg:flex hidden flex-col box-border  text-sm  ">
+         <div className="min-w-[250px]   w-[250px]  border-r border-neutral-700   pb-4 h-screen lg:flex hidden flex-col box-border  text-sm  ">
             {/* {JSON.stringify(plan)} */}
             <div className="flex flex-row items-center px-3  h-[72px] min-h-[72px] border-b border-neutral-700 gap-3 ">
                {session?.user.user_metadata.avatar_url ? (

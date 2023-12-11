@@ -3,38 +3,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { Footer } from "../_components/Footer";
 import { Header } from "../_components/Header";
+import { ColorSplotch } from "../../../@/components/ui/color-splotch";
+import { HDivider } from "../../../@/components/ui/hdivider";
 
 const Client = () => {
    return (
       <>
-         {/* <Head>
-            <title>FORMI: the collaborative whiteboard for choreographers.</title>
-            <meta
-               name="description"
-               content="Dance formation and choreography app. Easily build, create and visualize your dance and cheer formations synced to music. FORMI is the ultimate choreographer formation tool."
-            />
-            <meta
-               name="keywords"
-               content="dance, choreography, choreographer, formations, cheer, cheerleading, formation building tool, dance formation app, color guard, color guard app, dance formation maker, app for dance formations, formation app for dance"
-            />
-            <meta name="twitter:card" content="summary" />
-            <meta name="twitter:title" content="FORMI: Online stage performance planning software." />
-            <meta name="twitter:image" content="https://i.imgur.com/83VsfSG.png" />
-            <meta property="og:type" content="song" />
-            <meta property="og:title" content="FORMI: Online stage performance planning software." />
-            <meta
-               property="og:description"
-               content="Easily build, create and visualize your dance and cheer formations synced to music. Formi is the ultimate choreographer formation tool."
-            />
-            <meta property="og:image" content="https://i.imgur.com/83VsfSG.png" />
-
-            <meta property="og:site_name" content="FORMI: Online stage performance planning software." />
-         </Head> */}
-         {/* <Header></Header> */}
          <Header></Header>
-
-         <div className="overflow-hidden relative bg-neutral-50 flex flex-col items-center ">
-            <div className="bg-black  w-full text-white  relative flex flex-col justify-center items-center  ">
+         <HDivider></HDivider>
+         <div className="  flex flex-col items-center relative ">
+            <div className=" z-10  w-full text-white  relative flex flex-col justify-center items-center  ">
                <div className="  text-center flex flex-col items-center justify-center z-50  ">
                   <p className="text-center tracking-widest text-pink-500 mt-24 font-bold">PRICING</p>
                   <p className="  lg:text-6xl  text-2xl font-semibold  w-full  ">Want more performances?</p>
@@ -226,6 +204,50 @@ const Client = () => {
                </div>
             </div>
 
+            {/* <div
+               className="pointer-events-none absolute left-[-1000px] top-0   h-[1000px] w-[1700px]"
+               style={{
+                  //    backgroundImage: "-o-radial-gradient(47.64% 52.94%, 37.66% 48.2%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
+                  backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
+                  // right: -400,
+                  top: -700,
+                  // top: -150,
+
+                  opacity: 0.2,
+               }}
+            ></div> */}
+            {/* <div
+               className="pointer-events-none absolute right-[-1000px] top-0   h-[1000px] w-[1700px]"
+               style={{
+                  //    backgroundImage: "-o-radial-gradient(47.64% 52.94%, 37.66% 48.2%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
+                  backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #9333ea 0%, rgba(239, 255, 250, 0) 100%)",
+                  // right: -400,
+                  top: -200,
+                  // top: -150,
+
+                  opacity: 0.3,
+               }}
+            ></div> */}
+
+            <div
+               className="pointer-events-none absolute right-[-200px] top-0   h-[1000px] w-[1700px]"
+               style={{
+                  //    backgroundImage: "-o-radial-gradient(47.64% 52.94%, 37.66% 48.2%, #db2777 0%, rgba(239, 255, 250, 0) 100%)",
+                  backgroundImage: "radial-gradient(37.66% 48.2% at 47.64% 52.94%, #9333ea 0%, rgba(239, 255, 250, 0) 100%)",
+                  // right: -400,
+                  top: 500,
+                  // top: -150,
+
+                  opacity: 0.1,
+               }}
+            ></div>
+            <ColorSplotch
+               style={{
+                  right: -100,
+                  top: -600,
+               }}
+               color={"#FEA3E5"}
+            ></ColorSplotch>
             {/* FOOTER */}
             <div className="w-full h-[1px] dark:bg-neutral-700 bg-neutral-300"></div>
             <Footer></Footer>

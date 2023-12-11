@@ -6,7 +6,7 @@ import Image from "next/image";
 export const Footer = () => {
    return (
       <>
-         <div className=" bg-neutral-900 py-16 px-12  w-full ">
+         <div className="  py-16 px-12  w-full ">
             <img src="/logo.png" className="h-12" alt="" />
             <p className="text-sm dark:text-neutral-200 text-neutral-50 mt-3">© 2023 HOLYFEET, LLC. All Rights Reserved</p>
             <p className="text-neutral-500  max-w-[300px] text-sm mt-2">Contact us at: inquiries@formistudio.app</p>
