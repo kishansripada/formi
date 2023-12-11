@@ -39,12 +39,13 @@ import {
 import { HStack, VStack } from "../../../../../@/components/ui/stacks";
 import LearnKeyboardShortcut from "../../../../../@/components/LearnKeyboardShortcut";
 import { KeyboardShortcuts } from "./Modals/KeyboardShortcuts";
+import { sleep } from "../../../../utils/sleep";
 
 export const Header: React.FC<{
    saved: boolean;
    undo: Function;
    folder: any;
-   exportPdf: Function;
+
    localSettings: localSettings;
    setLocalSettings: Function;
    setSelectedFormation: Function;
@@ -69,7 +70,7 @@ export const Header: React.FC<{
 }> = ({
    saved,
    undo,
-   exportPdf,
+
    localSettings,
    setLocalSettings,
    viewOnlyInitial,
@@ -102,6 +103,7 @@ export const Header: React.FC<{
       liveblocks,
       copySelectedPositions,
       pasteCopiedPositions,
+      setSelectedFormations,
    } = useStore();
 
    const { setTheme, theme } = useTheme();
@@ -141,6 +143,69 @@ export const Header: React.FC<{
          });
       }
    }, []);
+
+   const exportPdf = async () => {
+      // setPdfLoading(true);
+      setLocalSettings({ ...localSettings, viewingTwo: true, viewingThree: false });
+
+      const canvases = [];
+
+      // dynamically import html2canvas and jspdf
+      const [html2canvasinit, jsPDFinit] = await Promise.all([import("html2canvas"), import("jspdf")]);
+      const html2canvas = html2canvasinit.default;
+      const jsPDF = jsPDFinit.default;
+
+      const stageElement = document.getElementById("stage");
+      for (let index = 0; index < formations.length; index++) {
+         setSelectedFormations([formations[index]?.id]);
+
+         // Wait for the formation to be rendered in the DOM
+         await sleep(1000); // Delay in milliseconds. Adjust as needed.
+
+         const canvas = await html2canvas(stageElement);
+         // canvases.push(canvas);
+
+         // const formationContainer = document.createElement("div");
+
+         const label = document.createElement("p");
+         label.textContent = `${formations[index].name} (${index + 1} of ${formations.length})`;
+         label.style.textAlign = "center";
+
+         // label.style.width = "100%";
+
+         const notes = document.createElement("p");
+         notes.textContent = `${formations[index].notes || ""}`;
+         notes.style.textAlign = "left";
+         // notes.style.width = "100%";
+         // formationContainer.appendChild(canvas);
+         // formationContainer.appendChild(label);
+         // formationContainer.appendChild(notes);
+         // formationContainer.appendChild(formationContainer);
+         canvases.push({ canvas, label, notes });
+         // document.body.appendChild(canvas);
+      }
+
+      // Now export the canvases to a PDF
+      const pdf = new jsPDF({
+         orientation: "landscape",
+         unit: "px",
+         format: [stageElement?.clientWidth, stageElement?.clientHeight + 100],
+      });
+
+      for (let i = 0; i < canvases.length; i++) {
+         const imgData = canvases[i].canvas.toDataURL("image/png");
+         // pdf.addImage(imgData, "PNG", 0, 0);
+         pdf.addImage(imgData, "PNG", 0, 0, stageElement?.clientWidth, stageElement?.clientHeight);
+         pdf.text(canvases[i].label.textContent, 10, stageElement?.clientHeight + 20);
+         pdf.text(canvases[i].notes.textContent, 10, stageElement?.clientHeight + 40);
+         if (i < canvases.length - 1) {
+            pdf.addPage(); // Add new page for next image if there is one
+         }
+      }
+
+      pdf.save(`${danceName}.pdf`);
+      // setPdfLoading(false);
+   };
 
    async function getProjects(session: Session, supabase: SupabaseClient) {
       let data = await supabase.from("projects").select("*").eq("parent_id", session.user.id);

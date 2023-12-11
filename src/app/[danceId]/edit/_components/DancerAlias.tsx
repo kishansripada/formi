@@ -35,25 +35,9 @@ export const DancerAlias: React.FC<{
    collisions,
    index,
    isChangingCollisionRadius,
-
-   roundPositions,
 }) => {
-   let {
-      formations,
-      items,
-      cloudSettings,
-      selectedFormations,
-      getFirstSelectedFormation,
-      setFormations,
-      get,
-      isMobileView,
-      viewOnly,
-      imageBlobs,
-      dancers,
-      setDancers,
-      hoveringDancerIds,
-      isPlaying,
-   } = useStore();
+   let { formations, items, cloudSettings, selectedFormations, getFirstSelectedFormation, isMobileView, imageBlobs, hoveringDancerIds, isPlaying } =
+      useStore();
    const container = useRef<HTMLDivElement>();
    const stageFlippedFactor = localSettings.stageFlipped ? -1 : 1;
    const horizontalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
