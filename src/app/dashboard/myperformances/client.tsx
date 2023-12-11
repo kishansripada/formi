@@ -18,6 +18,7 @@ export default function Client({ projects, myDances, session }: { projects: Proj
             {myDances.length ? (
                myDances
                   .sort((a: Dance, b: Dance) => new Date(b.last_edited).getTime() - new Date(a.last_edited).getTime())
+                  .filter((dance: Dance) => !dance.isInTrash)
                   ?.map((dance: Dance) => {
                      return (
                         <div key={dance.id}>

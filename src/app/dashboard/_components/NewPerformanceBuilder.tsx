@@ -353,8 +353,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                   onClick={async () => {
                      setCreatingPerformanceLoading(true);
                      const data = await createNewDance(roster, stage, selectedProjectId);
-                     router.refresh();
-                     router.push(`/${data.id}/edit`);
+
                      setCreatingPerformanceLoading(false);
                   }}
                   style={{

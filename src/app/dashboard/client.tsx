@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { NewPerformanceBuilder } from "./_components/NewPerformanceBuilder";
 import useCookie, { useIsDesktop } from "../../utls";
-import { cloudSettings, dancer } from "../../types/types";
+import { MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN, cloudSettings, dancer } from "../../types/types";
 import { Dance } from "../../types/supabase";
 import { HStack, VStack } from "../../../@/components/ui/stacks";
 import Link from "next/link";
@@ -20,8 +20,6 @@ type Cookies = {
 };
 
 export default function Client({ myDances, sharedWithMe, session, rosters, projects, plan, myCookies }) {
-   const MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN = 3;
-
    const [cookies, setCookies] = useCookies<Cookies>(myCookies);
 
    const supabase = createClientComponentClient();
@@ -32,6 +30,7 @@ export default function Client({ myDances, sharedWithMe, session, rosters, proje
          router.push("/upgrade");
          return;
       }
+
       if (!session) {
          router.push(`/login`);
          return;
@@ -124,7 +123,8 @@ export default function Client({ myDances, sharedWithMe, session, rosters, proje
          .single();
 
       if (!data?.id) return;
-      return data;
+      router.refresh();
+      router.push(`/${data.id}/edit`);
    }
 
    const isDesktop = useIsDesktop();
@@ -138,8 +138,6 @@ export default function Client({ myDances, sharedWithMe, session, rosters, proje
             onClick={async () => {
                // mobile create new default dance no options
                const data = await createNewDance(null, null, null);
-               router.refresh();
-               router.push(`/${data.id}/edit`);
             }}
             className="bg-pink-600  mb-6 lg:hidden  mt-3 w-full text-white text-xs py-2 px-4  rounded-lg mr-auto "
          >

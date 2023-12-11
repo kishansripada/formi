@@ -10,6 +10,7 @@ export default function PageClient({ myDances, session }) {
             {myDances.length ? (
                myDances
                   .sort((a, b) => new Date(b.last_edited) - new Date(a.last_edited))
+                  .filter((dance: Dance) => !dance.isInTrash)
                   ?.map((dance) => {
                      return (
                         <div

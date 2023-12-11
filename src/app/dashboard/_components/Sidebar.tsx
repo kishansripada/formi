@@ -1,20 +1,15 @@
 "use client";
 
-import { dancer, dancerPosition, formation } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AuthSession } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-import { PerformancePreview } from "./PerformancePreview";
-import { useDroppable } from "@dnd-kit/core";
 import { usePathname } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { NewFolderModel } from "./NewFolderModel";
 import { useStore } from "../store";
 import { Button } from "../../../../@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "../../../../@/components/ui/input";
 import { DialogClose } from "@radix-ui/react-dialog";
@@ -104,12 +99,11 @@ export const Sidebar: React.FC<{
          .single();
 
       if (!error) {
-         router.push("/dashboard/myperformances");
-         router.refresh();
          toast.success("New folder created");
       } else {
          toast.error("Error creating new folder");
       }
+      router.refresh();
    }
 
    const [projects, setProjects] = useState(initialProjects);

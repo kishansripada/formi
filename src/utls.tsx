@@ -162,22 +162,6 @@ export const useUploadToSupabase = (dataKey: string, dataValue: any, danceId: st
    return saved;
 };
 
-export const useTimedPopup = (duration: number) => {
-   const [showPopup, setShowPopup] = useState(false);
-
-   useEffect(() => {
-      const timer = setTimeout(() => {
-         setShowPopup(true);
-      }, duration);
-
-      return () => clearTimeout(timer);
-   }, [duration]);
-
-   return [showPopup, setShowPopup];
-};
-
-export default useTimedPopup;
-
 export function convertToCentimeters(feet: number, inches: number): number {
    const inchesToCentimeters = inches * 2.54;
    const feetToCentimeters = feet * 12 * 2.54;

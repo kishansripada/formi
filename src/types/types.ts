@@ -143,6 +143,8 @@ export const GRID_HEIGHT = 20;
 /** The max zoom level of the timeline */
 export const MAX_PIXELS_PER_SECOND = 150;
 
+export const MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN = 3;
+
 export const initials = (name: string) => {
    if (!name) return "";
    return name
