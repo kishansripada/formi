@@ -8,16 +8,16 @@ export const Header = () => {
 
    console.log(session);
    return (
-      <div className="bg-neutral-950  lg:pt-7 lg:pb-5 pt-8  w-full lg:px-36 px-10 gap-5 flex flex-row items-center">
+      <div className="bg-neutral-900  lg:pt-7 lg:pb-5 pt-8  w-full lg:px-36 px-10 gap-5 flex flex-row items-center">
          <Link href={"/"}>
             <img className="lg:h-10 h-8 " src="/logo.png" alt="" />
          </Link>
 
          <div className="lg:flex hidden flex-row items-center gap-6 ml-6 text-sm">
-            <Link className=" text-neutral-400 hover:text-white transition " href={"#features"}>
+            <Link className=" text-neutral-300 hover:text-white transition " href={"#features"}>
                Features
             </Link>
-            <Link className="text-neutral-400 hover:text-white transition" href={"/upgrade"}>
+            <Link className="text-neutral-300 hover:text-white transition" href={"/upgrade"}>
                Pricing
             </Link>
          </div>
