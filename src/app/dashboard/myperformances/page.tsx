@@ -1,23 +1,11 @@
-import { dancer, dancerPosition, formation } from "../../../types/types";
-import toast, { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-// import { Dropdown } from "./Dropdown";
-import { useSupabaseClient, useSession, Session } from "@supabase/auth-helpers-react";
-import { ProjectPreview } from "./ProjectPreview";
-import { PerformancePreview } from "../_components/PerformancePreview";
-import { DndContext, useDroppable, MouseSensor, useSensors, useSensor } from "@dnd-kit/core";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
-import { default as nextDynamic } from "next/dynamic";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 import { Database } from "../../../types/supabase";
 import { redirect } from "next/navigation";
-
-const PageClient = nextDynamic(() => import("./client"), {
-   ssr: false,
-});
+import { getMyDances, getProjects } from "../api";
+import Client from "./client";
 
 async function getServerSideProps() {
    const supabase = createServerComponentClient<Database>(
@@ -40,42 +28,13 @@ async function getServerSideProps() {
       redirect("/login");
    }
 
-   async function getMyDances(session: Session) {
-      let data = await supabase
-         .from("dances")
-         .select(
-            `
-                 id,
-                 created_at,
-                 user,
-                 formations: formations->0,
-                 name,
-                 last_edited,
-                 settings,
-                 isInTrash,
-                 dancers,
-                 project_id
-                 `
-         )
-         .eq("user", session.user.id)
-         .eq("isInTrash", false);
+   let [myDances, projects] = await Promise.all([getMyDances(session, supabase), getProjects(session, supabase)]);
 
-      return data?.data || [];
-   }
-
-   async function getProjects(session: Session) {
-      let data = await supabase.from("projects").select("*").eq("parent_id", session.user.id);
-
-      return data?.data || [];
-   }
-
-   let [dances, projects] = await Promise.all([getMyDances(session), getProjects(session)]);
-
-   return { dances, projects, session };
+   return { myDances, projects, session };
 }
 
 export default async function Page({}) {
-   const { dances: myDances, projects } = await getServerSideProps();
+   const { myDances, projects, session } = await getServerSideProps();
 
-   return <PageClient myDances={myDances} projects={projects}></PageClient>;
+   return <Client session={session} myDances={myDances} projects={projects}></Client>;
 }

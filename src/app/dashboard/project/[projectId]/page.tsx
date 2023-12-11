@@ -1,15 +1,10 @@
-import { dancer, dancerPosition, formation } from "../../types/types";
-import toast, { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-// import { Dropdown } from "./Dropdown";
-
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 import Client from "./client";
 import { AuthSession } from "@supabase/supabase-js";
+
 async function getServerSideProps(projectId: string) {
    const supabase = createServerComponentClient(
       { cookies },
@@ -47,7 +42,7 @@ async function getServerSideProps(projectId: string) {
                  settings,
                  isInTrash,
                  dancers,
-                 project_id 
+                 project_id ( id, name)
                  `
          )
          .eq("user", session.user.id)
@@ -57,12 +52,12 @@ async function getServerSideProps(projectId: string) {
       return data?.data || [];
    }
 
-   let [dances] = await Promise.all([getMyDances(session)]);
+   let [myDances] = await Promise.all([getMyDances(session)]);
 
-   return { dances, session };
+   return { myDances, session };
 }
 
 export default async function Page({ params }: { params: { projectId: string } }) {
-   const { dances: myDances } = await getServerSideProps(params.projectId);
-   return <Client myDances={myDances}></Client>;
+   const { myDances, session } = await getServerSideProps(params.projectId);
+   return <Client myDances={myDances} session={session}></Client>;
 }

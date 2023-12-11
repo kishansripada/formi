@@ -1,143 +1,225 @@
 "use client";
 
-import Link from "next/link";
 import { PerformancePreview } from "./_components/PerformancePreview";
 import { v4 as uuidv4 } from "uuid";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
-import { useStore } from "./store";
-export default function Client({ myDances, sharedWithMe, session }) {
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { NewPerformanceBuilder } from "./_components/NewPerformanceBuilder";
+import useCookie, { useIsDesktop } from "../../utls";
+import { cloudSettings, dancer } from "../../types/types";
+import { Dance } from "../../types/supabase";
+import { HStack, VStack } from "../../../@/components/ui/stacks";
+import Link from "next/link";
+import { UpgradeBanner } from "./_components/UpgradeBanner";
+import { useState } from "react";
+import useCookies from "../../utls";
+
+type Cookies = {
+   hideUpgradeBanner: string;
+};
+
+export default function Client({ myDances, sharedWithMe, session, rosters, projects, plan, myCookies }) {
    const MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN = 3;
-   const { plan } = useStore();
+
+   const [cookies, setCookies] = useCookies<Cookies>(myCookies);
+
    const supabase = createClientComponentClient();
    const router = useRouter();
-   const videos = [
-      { url: "uiTwpkpsL1E", title: "Tutorial/Demo" },
-      { url: "JRS1tPHJKAI", title: "Welcome to FORMI" },
-      { url: "pY0IUM1ebHE", title: "Previous formation settings" },
-      { url: "rhGn486vJJc", title: "What's a set piece?" },
-   ];
-   async function createNewDance(roster?: any) {
+
+   async function createNewDance(roster, stage, projectId: string | null) {
       if (!plan && myDances.length >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {
          router.push("/upgrade");
          return;
       }
-      if (session === null) {
+      if (!session) {
          router.push(`/login`);
          return;
       }
 
-      if (roster?.roster?.length) {
-         roster.roster = roster.roster.map((dancer) => {
+      const defaultRoster = new Array(10)
+         .fill(0)
+         .map((_, index) => ({ name: `Dancer-${index + 1}` }))
+         .map((dancer) => {
             return { ...dancer, id: uuidv4() };
          });
-         const { data, error } = await supabase
-            .from("dances")
-            .insert([
-               {
-                  user: session.user.id,
-                  last_edited: new Date(),
-                  dancers: roster.roster,
-                  formations: [
-                     {
-                        name: "First formation",
-                        id: uuidv4(),
-                        positions: roster.roster.map((dancer, index) => {
-                           return { id: dancer.id, position: { x: index - 18, y: 0 } };
-                        }),
-                        durationSeconds: 3,
-                        transition: { durationSeconds: 3 },
-                     },
-                  ],
-               },
-            ])
-            .select("id")
-            .single();
-         if (!data?.id) return;
-         router.refresh();
-         router.push(`/${data.id}/edit`);
-         return;
-      }
+
+      const settings = {
+         gridSnap: 1,
+         previousFormationView: "ghostDancersAndPaths",
+
+         // default stage
+         stageBackground: "gridfluid",
+         gridSubdivisions: 8,
+         verticalFineDivisions: 4,
+         horizontalFineDivisions: 4,
+         horizontalGridSubdivisions: 4,
+         stageDimensions: { width: 36, height: 24 },
+         ...stage,
+      };
+
+      const { gridSizeX, gridSizeY } = getGridCellSize(settings);
+
       const { data, error } = await supabase
          .from("dances")
-         .insert([{ user: session.user.id, last_edited: new Date() }])
-         .select("id")
+         .insert([
+            {
+               user: session.user.id,
+               last_edited: new Date(),
+               dancers: roster || defaultRoster,
+               formations: [
+                  {
+                     name: "First formation",
+                     id: uuidv4(),
+                     positions: (roster || defaultRoster).map((dancer, index) => {
+                        const numDancersPerCol = stage?.stageDimensions?.height / gridSizeY;
+                        const currentCol = Math.floor(index / numDancersPerCol);
+                        const oddIndex = index % 2 === 0;
+                        const x = oddIndex
+                           ? -settings.stageDimensions.width / 2 - gridSizeX * currentCol * 2
+                           : settings.stageDimensions.width / 2 + gridSizeX * currentCol * 2;
+                        const cycle = Math.floor((index % numDancersPerCol) / 2);
+
+                        const y = settings.stageDimensions.height / 2 - cycle * gridSizeY * 2;
+                        return {
+                           ...dancer,
+                           position: { x, y },
+                        };
+                     }),
+
+                     durationSeconds: 3,
+                     transition: { durationSeconds: 3 },
+                  },
+                  {
+                     name: "Second formation",
+                     id: uuidv4(),
+                     positions: (roster || defaultRoster).map((dancer, index) => {
+                        const numDancersPerCol = stage?.stageDimensions?.height / gridSizeY;
+                        const currentCol = Math.floor(index / numDancersPerCol) + 1;
+                        const oddIndex = index % 2 === 0;
+                        let x = oddIndex
+                           ? -settings.stageDimensions.width / 2 - gridSizeX * currentCol * 2
+                           : settings.stageDimensions.width / 2 + gridSizeX * currentCol * 2;
+
+                        // in second formation, dancers are closer to the center
+                        x = x / 2;
+                        const cycle = Math.floor((index % numDancersPerCol) / 2);
+
+                        const y = settings.stageDimensions.height / 2 - cycle * gridSizeY * 2;
+                        return {
+                           ...dancer,
+                           position: { x, y },
+                        };
+                     }),
+
+                     durationSeconds: 3,
+                     transition: { durationSeconds: 3 },
+                  },
+               ],
+               settings,
+               project_id: projectId || null,
+            },
+         ])
+         .select("*")
          .single();
 
       if (!data?.id) return;
-      router.push(`/${data.id}/edit`);
+      return data;
    }
-   return (
-      <>
-         <div className=" pb-10 h-full flex flex-col overflow-hidden">
-            <button
-               onClick={() => {
-                  createNewDance();
-               }}
-               className="bg-pink-600  mb-6 lg:hidden  mt-3 w-full text-white text-xs py-2 px-4  rounded-lg mr-auto "
-            >
-               New performance
-            </button>
-            <div className="lg:h-[310px] lg:min-h-[310px] h-full  overflow-scroll bg-neutral-900 rounded-xl border-2 border-neutral-800 ">
-               <div className="flex flex-row items-center justify-between p-5">
-                  <p className=" text-sm">Recents</p>
-                  <Link
-                     href={"/dashboard/myperformances"}
-                     className="flex flex-row items-center text-xs border border-neutral-700 px-3 py-1 rounded-full"
-                  >
-                     <p>All my files</p>
-                     <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-4 h-4 ml-2"
-                     >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                     </svg>
-                  </Link>
-               </div>
 
-               <div className="flex lg:flex-row flex-col  px-5">
-                  {myDances.length ? (
-                     [...myDances.filter((dance) => !dance.isInTrash), ...sharedWithMe.filter((dance) => !dance.isInTrash)]
-                        .sort((a, b) => new Date(b.last_edited) - new Date(a.last_edited))
-                        .slice(0, 4)
-                        ?.map((dance) => {
-                           return (
-                              <>
-                                 <div className="w-full mr-5 max-w-[300px]">
-                                    <PerformancePreview dance={dance}></PerformancePreview>
-                                 </div>
-                              </>
-                           );
-                        })
-                  ) : (
-                     <p className="text-sm">Click new performance to create your first performance</p>
-                  )}
-               </div>
-            </div>
-            <div className=" h-full bg-neutral-900 mt-10 py-5 hidden lg:block  rounded-xl border-2 border-neutral-800">
-               {/* <p className=" text-sm">Tutorials</p> */}
-               <div className="flex flex-row  h-full px-6">
-                  {videos.map((video) => {
-                     return (
-                        <iframe
-                           src={`https://www.youtube.com/embed/${video.url}?rel=0&modestbranding=1&showinfo=0&controls=0`}
-                           title="YouTube video player"
-                           width="200"
-                           allow="accelerometer; autoplay; clipboard-write; encrypted-media;
-gyroscope; picture-in-picture;
-web-share"
-                           height="100%"
-                           className=" rounded-xl  mr-6"
-                        ></iframe>
-                     );
-                  })}
-               </div>
-            </div>
+   const isDesktop = useIsDesktop();
+
+   return (
+      <div className="overflow-y-scroll h-full flex-grow px-4 py-5 flex flex-col gap-5 ">
+         {/* {!cookies.hideUpgradeBanner && <UpgradeBanner setCookies={setCookies} />} */}
+
+         <p className="text-3xl font-semibold">Recents</p>
+         <button
+            onClick={async () => {
+               // mobile create new default dance no options
+               const data = await createNewDance(null, null, null);
+               router.refresh();
+               router.push(`/${data.id}/edit`);
+            }}
+            className="bg-pink-600  mb-6 lg:hidden  mt-3 w-full text-white text-xs py-2 px-4  rounded-lg mr-auto "
+         >
+            New performance
+         </button>
+
+         <div className="flex flex-row items-center gap-5">
+            <Dialog>
+               {isDesktop ? (
+                  <DialogTrigger>
+                     <button className="w-[230px] bg-white h-[50px] rounded-md flex flex-row items-center pl-5 text-black">
+                        <svg
+                           xmlns="http://www.w3.org/2000/svg"
+                           fill="none"
+                           viewBox="0 0 24 24"
+                           strokeWidth={1.5}
+                           stroke="currentColor"
+                           className="w-4 h-4 mr-3"
+                        >
+                           <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
+                           />
+                        </svg>
+                        <p className="text-sm font-medium">New performance</p>
+                     </button>
+                  </DialogTrigger>
+               ) : null}
+
+               <DialogContent className="min-w-[600px] ">
+                  <NewPerformanceBuilder
+                     myDances={myDances}
+                     rosters={rosters}
+                     projects={projects}
+                     createNewDance={createNewDance}
+                  ></NewPerformanceBuilder>
+               </DialogContent>
+            </Dialog>
          </div>
-      </>
+
+         <div className="w-full grid grid-cols-1 gap-[32px]    rounded-xl sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 col-span-4   overscroll-contain items-center">
+            {[...myDances, ...sharedWithMe].length ? (
+               [...myDances, ...sharedWithMe]
+                  .filter((dance) => !dance.isInTrash)
+                  .sort((a: Dance, b: Dance) => new Date(b.last_edited).getTime() - new Date(a.last_edited).getTime())
+                  ?.map((dance: Dance) => {
+                     return (
+                        <div key={dance.id}>
+                           <PerformancePreview projects={projects} dance={dance} session={session}></PerformancePreview>
+                        </div>
+                     );
+                  })
+            ) : (
+               <p className="text-sm font-medium">No performances here</p>
+            )}
+         </div>
+      </div>
    );
 }
+
+const getGridCellSize = (cloudSettings: cloudSettings) => {
+   const { stageBackground, gridSubdivisions, horizontalGridSubdivisions, verticalFineDivisions, horizontalFineDivisions, stageDimensions } =
+      cloudSettings;
+
+   let gridSizeX = 1;
+   let gridSizeY = 1;
+
+   if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
+      // Determine the total number of divisions along each axis.
+      const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
+      const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
+
+      // Calculate the width and height of each grid cell.
+      gridSizeX = stageDimensions.width / totalVerticalDivisions;
+      gridSizeY = stageDimensions.height / totalHorizontalDivisions;
+   } else {
+      gridSizeX = 1;
+      gridSizeY = 1;
+   }
+
+   return { gridSizeX, gridSizeY };
+};

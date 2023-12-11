@@ -1,73 +1,34 @@
 "use client";
-
-import { dancer, dancerPosition, formation } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-// import { Dropdown } from "./Dropdown";
-import { useSupabaseClient, useSession, Session } from "@supabase/auth-helpers-react";
-import { ProjectPreview } from "./ProjectPreview";
+import { useState } from "react";
+
 import { PerformancePreview } from "../_components/PerformancePreview";
 import dynamic from "next/dynamic";
-import { useRef } from "react";
 import { DndContext, useDroppable, MouseSensor, useSensors, useSensor } from "@dnd-kit/core";
 import { Dance, Project } from "../../../types/supabase";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-const NotInFolder = dynamic(() => import("./NotInFolder"), {
-   ssr: false,
-});
-export default function PageClient({ projects, myDances: initialMyDances }: { projects: Project[]; myDances: Dance[] }) {
-   const [myDances, setMyDances] = useState(initialMyDances);
+import { AuthSession } from "@supabase/supabase-js";
 
-   const supabase = createClientComponentClient();
-   const [activeId, setActiveId] = useState<string | null>(null);
-   const mouseSensor = useSensor(MouseSensor, {
-      // Require the mouse to move by 10 pixels before activating
-      activationConstraint: {
-         distance: 10,
-      },
-   });
-
-   const sensors = useSensors(mouseSensor);
-
-   async function handleDragEnd(event: any) {
-      //   console.log(event);
-      setActiveId(null);
-      if (event.over) {
-         setMyDances((myDances) => {
-            return myDances.map((dance) => {
-               if (dance.id === event.active.id) {
-                  return {
-                     ...dance,
-                     project_id: event.over.id === "no folder" ? null : event.over.id,
-                  };
-               }
-               return dance;
-            });
-         });
-         const { error } = await supabase
-            .from("dances")
-            .update({ project_id: event.over.id === "no folder" ? null : event.over.id })
-            .eq("id", event.active.id);
-
-         if (error) {
-            toast.error("There was an error moving the performance");
-         }
-      }
-   }
-
+export default function Client({ projects, myDances, session }: { projects: Project[]; myDances: Dance[]; session: AuthSession }) {
    return (
-      <>
-         <DndContext id="test" sensors={sensors} onDragStart={(e) => setActiveId(e.active.id.toString())} onDragEnd={handleDragEnd}>
-            <div className="overflow-y-scroll h-full flex-grow  ">
-               {projects
-                  ? projects.map((project) => {
-                       return <ProjectPreview key={project.id} activeId={activeId} myDances={myDances} project={project}></ProjectPreview>;
-                    })
-                  : null}
-               <NotInFolder activeId={activeId} myDances={myDances}></NotInFolder>
-            </div>
-         </DndContext>
-      </>
+      <div className="overflow-y-scroll h-full flex-grow px-4 py-5 flex flex-col gap-5 ">
+         <p className="text-3xl font-semibold">Owned by me</p>
+
+         <div className="w-full grid grid-cols-1 gap-[32px]    rounded-xl sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 col-span-4   overscroll-contain items-center">
+            {myDances.length ? (
+               myDances
+                  .sort((a: Dance, b: Dance) => new Date(b.last_edited).getTime() - new Date(a.last_edited).getTime())
+                  ?.map((dance: Dance) => {
+                     return (
+                        <div key={dance.id}>
+                           <PerformancePreview projects={projects} dance={dance} session={session}></PerformancePreview>
+                        </div>
+                     );
+                  })
+            ) : (
+               <p className="text-sm font-medium">No performances here</p>
+            )}
+         </div>
+      </div>
    );
 }

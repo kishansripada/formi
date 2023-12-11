@@ -23,7 +23,7 @@ const DoubleClickInput = React.forwardRef<HTMLInputElement, InputProps>(({ class
          //  onChange={handleChange}
          onBlur={handleBlur}
          className={cn(
-            "flex h-4 w-full cursor-default bg-transparent rounded-md border-2  box-content border-neutral-200 bg-white px-3 text-sm  focus:border-pink-600",
+            "flex h-4 w-full cursor-default  rounded-md border-2  box-content border-neutral-200 bg-transparent px-3 text-sm  focus:border-pink-600",
             className
          )}
          autoFocus

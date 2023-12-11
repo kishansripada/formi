@@ -1,18 +1,10 @@
-import { dancer, dancerPosition, formation } from "../../types/types";
-import toast, { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-// import { Dropdown } from "./Dropdown";
-import { useSupabaseClient, useSession, Session } from "@supabase/auth-helpers-react";
-import { ProjectPreview } from "./myperformances/ProjectPreview";
-import { PerformancePreview } from "./_components/PerformancePreview";
-import { DndContext, useDroppable, MouseSensor, useSensors, useSensor } from "@dnd-kit/core";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 import Client from "./client";
+import { getMyDances, getProjects, getRosters, getSharedWithMe, getStripe } from "./api";
 
 async function getServerSideProps() {
    const supabase = createServerComponentClient(
@@ -36,78 +28,38 @@ async function getServerSideProps() {
    if (!session) {
       redirect("/login");
    }
-   async function getStripe(session: Session) {
-      const plan = fetch(
-         `https://api.stripe.com/v1/customers/search?query=metadata['supabase_id']:'${session.user.id}'&expand[]=data.subscriptions.data`,
-         {
-            headers: {
-               Authorization:
-                  "Basic cmtfbGl2ZV81MUxhajV0SHZDM3c2ZThmY21zVklCRjlKMjRLUWFFYlgwVUs0SHE0b245QTVXMUNIaWlHaHAwVzlrbHg5dDU3OW9WcWVibFJGOHh3cE8xc3FlUmFMOHBzYjAwMmhLNFl0NEU6",
-            },
-         }
-      )
-         .then((r) => r.json())
-         .then((r) => {
-            // customerExists = Boolean(r.data.length);
+   const cookieStore = cookies();
 
-            let plan = r?.data?.[0]?.subscriptions.data[0];
-            return plan;
-         });
-      return plan;
-   }
+   let myCookies = cookieStore.getAll();
 
-   async function getMyDances(session: Session) {
-      let data = await supabase
-         .from("dances")
-         .select(
-            `
-                 id,
-                 created_at,
-                 user,
-                 formations: formations->0,
-                 name,
-                 last_edited,
-                 settings,
-                 isInTrash,
-                 dancers,
-                 project_id
-                 `
-         )
-         .eq("user", session.user.id);
+   // convert cookie store to object where key is cookie name and value is cookie value
+   myCookies = myCookies.reduce((acc, cookie) => {
+      return { ...acc, [cookie.name]: cookie.value };
+   }, {});
 
-      return data?.data || [];
-   }
+   let [myDances, sharedWithMe, plan, rosters, projects] = await Promise.all([
+      getMyDances(session, supabase),
+      getSharedWithMe(session, supabase),
+      getStripe(session),
+      getRosters(session, supabase),
+      getProjects(session, supabase),
+   ]);
 
-   async function getSharedWithMe(session: Session) {
-      let data = await supabase
-         .from("permissions")
-         .select(
-            `
-                 performance_id (
-                 id,
-                 created_at,
-                 user,
-                 formations: formations->0,
-                 name,
-                 last_edited,
-                 settings,
-                 isInTrash,
-                 dancers
-                 )
-                 
-                 `
-         )
-         .eq("email", session.user.email);
-
-      return data?.data?.map((x) => x?.performance_id) || [];
-   }
-
-   let [dances, sharedWithMe, plan] = await Promise.all([getMyDances(session), getSharedWithMe(session), getStripe(session)]);
-
-   return { dances, sharedWithMe, session, plan };
+   return { myDances, sharedWithMe, plan, rosters, projects, session, myCookies };
 }
 
 export default async function Page({}) {
-   const { dances: myDances, sharedWithMe, session, plan } = await getServerSideProps();
-   return <Client sharedWithMe={sharedWithMe} myDances={myDances} session={session} plan={plan}></Client>;
+   const { myDances, sharedWithMe, session, plan, rosters, projects, myCookies } = await getServerSideProps();
+
+   return (
+      <Client
+         myCookies={myCookies}
+         sharedWithMe={sharedWithMe}
+         myDances={myDances}
+         session={session}
+         plan={plan}
+         rosters={rosters}
+         projects={projects}
+      ></Client>
+   );
 }

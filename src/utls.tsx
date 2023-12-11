@@ -250,6 +250,38 @@ export const whereInFormation = (formations: formation[], position: number) => {
    return { currentFormationIndex, percentThroughTransition };
 };
 
+type CookiesType = { [key: string]: string };
+
+const getAllCookies = (): CookiesType => {
+   return document.cookie.split(";").reduce((cookies, cookie) => {
+      const [name, value] = cookie.split("=").map((c) => c.trim());
+      if (name && value) {
+         cookies[name] = value;
+      }
+      return cookies;
+   }, {} as CookiesType);
+};
+
+const setAllCookies = (cookies: CookiesType): void => {
+   for (const [name, value] of Object.entries(cookies)) {
+      document.cookie = `${name}=${value}; path=/`;
+   }
+};
+
+const useCookies = <T extends CookiesType>(initialCookies: T = {} as T): [T, React.Dispatch<React.SetStateAction<T>>] => {
+   const [cookies, setCookies] = useState<T>(() => {
+      return { ...initialCookies, ...getAllCookies() } as T;
+   });
+
+   useEffect(() => {
+      setAllCookies(cookies);
+   }, [cookies]);
+
+   return [cookies, setCookies];
+};
+
+export default useCookies;
+
 export const useSupabaseQuery = (supabaseQueryFn) => {
    const [data, setData] = useState(null);
    const [loading, setLoading] = useState(true);

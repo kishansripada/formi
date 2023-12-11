@@ -2,7 +2,8 @@
 
 import { DndContext, useDroppable, MouseSensor, useSensors, useSensor } from "@dnd-kit/core";
 import { PerformancePreview } from "../_components/PerformancePreview";
-export default function NotInFolder({ myDances, activeId }: { myDances: any; activeId: string | null }) {
+import { Dance } from "../../../types/supabase";
+export default function NotInFolder({ myDances, activeId, session }: { myDances: any; activeId: string | null; session }) {
    const { isOver, setNodeRef } = useDroppable({
       id: "no folder",
    });
@@ -12,25 +13,23 @@ export default function NotInFolder({ myDances, activeId }: { myDances: any; act
          style={{
             borderColor: isOver ? "white" : "transparent",
          }}
-         className="w-full grid grid-cols-1 gap-[32px] border  rounded-xl sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 col-span-4   overscroll-contain items-center"
+         className="w-full grid grid-cols-1 gap-[32px] border px-4 py-5  rounded-xl sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 col-span-4   overscroll-contain items-center"
       >
          {myDances.length ? (
             myDances
-               .filter((dance) => !dance.project_id)
-               .sort((a, b) => new Date(b.last_edited) - new Date(a.last_edited))
-               ?.map((dance) => {
-                  const style = activeId === dance.id ? { zIndex: 10, position: "relative" } : {};
+               // .filter((dance: Dance) => !dance.project_id)
+               .sort((a: Dance, b: Dance) => new Date(b.last_edited).getTime() - new Date(a.last_edited).getTime())
+               ?.map((dance: Dance) => {
+                  const style = activeId === dance.id.toString() ? { zIndex: 10, position: "relative" } : {};
 
                   return (
-                     <>
-                        <div key={dance.id} style={style}>
-                           <PerformancePreview dance={dance}></PerformancePreview>
-                        </div>
-                     </>
+                     <div key={dance.id} style={style}>
+                        <PerformancePreview dance={dance} session={session}></PerformancePreview>
+                     </div>
                   );
                })
          ) : (
-            <p>No performances here 🤷🏽‍♂️</p>
+            <p className="text-sm font-medium">No performances here</p>
          )}
       </div>
    );
