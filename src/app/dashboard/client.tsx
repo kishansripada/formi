@@ -6,12 +6,23 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { NewPerformanceBuilder } from "./_components/NewPerformanceBuilder";
-import { useIsDesktop } from "../../utls";
+import useCookie, { useIsDesktop } from "../../utls";
 import { cloudSettings, dancer } from "../../types/types";
 import { Dance } from "../../types/supabase";
+import { HStack, VStack } from "../../../@/components/ui/stacks";
+import Link from "next/link";
+import { UpgradeBanner } from "./_components/UpgradeBanner";
+import { useState } from "react";
+import useCookies from "../../utls";
 
-export default function Client({ myDances, sharedWithMe, session, rosters, projects, plan }) {
+type Cookies = {
+   hideUpgradeBanner: string;
+};
+
+export default function Client({ myDances, sharedWithMe, session, rosters, projects, plan, myCookies }) {
    const MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN = 3;
+
+   const [cookies, setCookies] = useCookies<Cookies>(myCookies);
 
    const supabase = createClientComponentClient();
    const router = useRouter();
@@ -120,6 +131,8 @@ export default function Client({ myDances, sharedWithMe, session, rosters, proje
 
    return (
       <div className="overflow-y-scroll h-full flex-grow px-4 py-5 flex flex-col gap-5 ">
+         {!cookies.hideUpgradeBanner && <UpgradeBanner setCookies={setCookies} />}
+
          <p className="text-3xl font-semibold">Recents</p>
          <button
             onClick={async () => {

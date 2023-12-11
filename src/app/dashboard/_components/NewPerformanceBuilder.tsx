@@ -212,7 +212,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                                     backgroundPosition: "center",
                                     width: letterboxDimensions(198, 98, 36, 24).width,
                                     height: letterboxDimensions(198, 98, 36, 24).height,
-                                    outline: selectedTemplate === "default" ? "2px solid #db2777" : "none",
+                                    outline: selectedTemplate === "default" ? "2px solid #FCA3FE" : "none",
                                  }}
                                  className="relative  rounded-md opacity-100 bg-neutral-900 flex flex-col items-center justify-end text-xs py-1 "
                               >
@@ -254,7 +254,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                                                    dance.settings.stageDimensions.height
                                                 ).height,
 
-                                                outline: selectedTemplate === dance.id ? "2px solid #db2777" : "none",
+                                                outline: selectedTemplate === dance.id ? "2px solid #FCA3FE" : "none",
                                              }}
                                              className="rounded-md opacity-100 flex flex-col overflow-hidden  bg-neutral-900 items-center justify-end text-xs py-1 "
                                           >
@@ -282,7 +282,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                                  setSelectedTemplate("cheer9");
                               }}
                               style={{
-                                 borderColor: selectedTemplate === "cheer9" ? "#db2777" : "transparent",
+                                 borderColor: selectedTemplate === "cheer9" ? "#FCA3FE" : "transparent",
                               }}
                               className="flex flex-col gap-1 w-max border-2 rounded-md p-2 pt-1 border-transparent"
                            >
@@ -295,7 +295,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                                  setSelectedTemplate("nba");
                               }}
                               style={{
-                                 borderColor: selectedTemplate === "nba" ? "#db2777" : "transparent",
+                                 borderColor: selectedTemplate === "nba" ? "#FCA3FE" : "transparent",
                               }}
                               className="flex flex-col gap-1 w-max border-2 rounded-md p-2 border-transparent"
                            >

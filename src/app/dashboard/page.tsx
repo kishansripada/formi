@@ -28,6 +28,14 @@ async function getServerSideProps() {
    if (!session) {
       redirect("/login");
    }
+   const cookieStore = cookies();
+
+   let myCookies = cookieStore.getAll();
+
+   // convert cookie store to object where key is cookie name and value is cookie value
+   myCookies = myCookies.reduce((acc, cookie) => {
+      return { ...acc, [cookie.name]: cookie.value };
+   }, {});
 
    let [myDances, sharedWithMe, plan, rosters, projects] = await Promise.all([
       getMyDances(session, supabase),
@@ -37,11 +45,21 @@ async function getServerSideProps() {
       getProjects(session, supabase),
    ]);
 
-   return { myDances, sharedWithMe, plan, rosters, projects, session };
+   return { myDances, sharedWithMe, plan, rosters, projects, session, myCookies };
 }
 
 export default async function Page({}) {
-   const { myDances, sharedWithMe, session, plan, rosters, projects } = await getServerSideProps();
+   const { myDances, sharedWithMe, session, plan, rosters, projects, myCookies } = await getServerSideProps();
 
-   return <Client sharedWithMe={sharedWithMe} myDances={myDances} session={session} plan={plan} rosters={rosters} projects={projects}></Client>;
+   return (
+      <Client
+         myCookies={myCookies}
+         sharedWithMe={sharedWithMe}
+         myDances={myDances}
+         session={session}
+         plan={plan}
+         rosters={rosters}
+         projects={projects}
+      ></Client>
+   );
 }

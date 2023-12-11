@@ -218,7 +218,9 @@ export const Sidebar: React.FC<{
                </div>
                <Dialog>
                   <DialogTrigger className="w-full">
-                     <Button className="  mt-5 w-full  ">New project</Button>
+                     <Button variant={"secondary"} className="  mt-5 w-full  ">
+                        New project
+                     </Button>
                   </DialogTrigger>
                   <DialogContent>
                      <Input
@@ -285,15 +287,17 @@ export const Sidebar: React.FC<{
                   </div>
                ) : null}
             </div>
-
-            <Link
-               href={"/dashboard/trash"}
-               className={`flex flex-row justify-between rounded-xl mt-auto items-center ${
-                  pathname === "/dashboard/trash" ? "bg-neutral-700" : ""
-               }   w-full h-9 px-3`}
-            >
-               <p>Trash</p>
-            </Link>
+            <div className="px-3 mt-auto">
+               <Link
+                  href={"/dashboard/trash"}
+                  prefetch={true}
+                  className={`flex flex-row text-xs font-medium justify-between rounded-sm items-center hover:bg-neutral-800 transition cursor-default ${
+                     pathname === "/dashboard/trash" ? "bg-neutral-800" : ""
+                  }   w-full h-9 px-3`}
+               >
+                  <p>Trash</p>
+               </Link>
+            </div>
          </div>
       </>
    );
