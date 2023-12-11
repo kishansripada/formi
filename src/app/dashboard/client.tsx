@@ -131,7 +131,7 @@ export default function Client({ myDances, sharedWithMe, session, rosters, proje
 
    return (
       <div className="overflow-y-scroll h-full flex-grow px-4 py-5 flex flex-col gap-5 ">
-         {!cookies.hideUpgradeBanner && <UpgradeBanner setCookies={setCookies} />}
+         {/* {!cookies.hideUpgradeBanner && <UpgradeBanner setCookies={setCookies} />} */}
 
          <p className="text-3xl font-semibold">Recents</p>
          <button
