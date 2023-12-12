@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-export const AppWrapper = ({ className, children, ...props }) => {
+export const AppWrapper = ({ className, children, style, ...props }) => {
    React.useEffect(() => {
       let vh = window.innerHeight * 0.01;
       // Then we set the value in the --vh custom property to the root of the document
@@ -10,10 +10,11 @@ export const AppWrapper = ({ className, children, ...props }) => {
    }, []);
    return (
       <div
+         className={cn(" overflow-hidden select-none full-screen overscroll-none", className)}
          style={{
             touchAction: "none",
+            ...style,
          }}
-         className={cn(" overflow-hidden select-none full-screen overscroll-none", className)}
          {...props}
       >
          <style>
