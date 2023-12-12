@@ -109,7 +109,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                               <SelectContent className="max-h-[300px]">
                                  <SelectGroup>
                                     <SelectItem value={null}>
-                                       <p className="text-sm">No roster</p>
+                                       <p className="">No roster</p>
                                     </SelectItem>
                                  </SelectGroup>
                                  {rosters.length ? (
@@ -122,7 +122,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                                        {rosters.map((roster) => {
                                           return (
                                              <SelectItem value={roster.id}>
-                                                <p className="text-sm">{roster.name}</p>
+                                                <p className="">{roster.name}</p>
                                              </SelectItem>
                                           );
                                        })}
@@ -141,7 +141,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                                           .map((dance) => {
                                              return (
                                                 <SelectItem value={dance.id}>
-                                                   <p className="text-sm">{dance.name}</p>
+                                                   <p className="">{dance.name}</p>
                                                 </SelectItem>
                                              );
                                           })}
@@ -212,9 +212,9 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                                     backgroundPosition: "center",
                                     width: letterboxDimensions(198, 98, 36, 24).width,
                                     height: letterboxDimensions(198, 98, 36, 24).height,
-                                    outline: selectedTemplate === "default" ? "2px solid #FCA3FE" : "none",
+                                    outline: selectedTemplate === "default" ? "2px solid #FCA3FE" : "2px solid #404040",
                                  }}
-                                 className="relative  rounded-md opacity-100 bg-neutral-900 flex flex-col items-center justify-end text-xs py-1 "
+                                 className="relative pointer-events-none  rounded-md opacity-100 bg-neutral-800 flex flex-col items-center justify-end text-xs py-1 "
                               >
                                  <p className="text-neutral-300">{"Default"}</p>
                                  <div className=" text-xl font-semibold absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 ">
@@ -254,11 +254,11 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                                                    dance.settings.stageDimensions.height
                                                 ).height,
 
-                                                outline: selectedTemplate === dance.id ? "2px solid #FCA3FE" : "none",
+                                                outline: selectedTemplate === dance.id ? "2px solid #FCA3FE" : "2px solid #404040",
                                              }}
-                                             className="rounded-md opacity-100 flex flex-col overflow-hidden  bg-neutral-900 items-center justify-end text-xs py-1 "
+                                             className="rounded-md opacity-100 flex pointer-events-none  flex-col overflow-hidden bg-neutral-800  items-center justify-end text-xs py-1 "
                                           >
-                                             <p className="text-neutral-300 whitespace-nowrap">{dance.name}</p>
+                                             <p className="text-neutral-300  whitespace-nowrap">{dance.name}</p>
                                           </div>
                                           <p className="absolute text-xl font-semibold">
                                              {dance.settings.stageDimensions.width}x{dance.settings.stageDimensions.height}
@@ -335,12 +335,12 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                         </SelectTrigger>
                         <SelectContent>
                            <SelectItem value={null}>
-                              <p className="text-sm">None</p>
+                              <p className="">None</p>
                            </SelectItem>
                            {projects.map((project) => {
                               return (
                                  <SelectItem value={project.id}>
-                                    <p className="text-sm">{project.name}</p>
+                                    <p className="">{project.name}</p>
                                  </SelectItem>
                               );
                            })}

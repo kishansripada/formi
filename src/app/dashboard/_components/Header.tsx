@@ -1,43 +1,45 @@
 "use client";
-
 import Link from "next/link";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { HStack } from "../../../../@/components/ui/stacks";
+import { HDivider } from "../../../../@/components/ui/hdivider";
 export default function Header({ plan }: { plan: string | null }) {
    const pathname = usePathname();
 
    return (
-      <div className="flex flex-row items-center  justify-between px-6 h-[72px] min-h-[72px] border-neutral-700 border-b  ml-auto w-full ">
-         <div className="mr-4 flex flex-row items-center">
-            {pathname === "/dashboard" ? (
-               <p>Home</p>
-            ) : pathname === "/dashboard/myperformances" ? (
-               <p>My files</p>
-            ) : pathname === "/dashboard/sharedwithme" ? (
-               <p>Shared With Me</p>
-            ) : pathname === "/dashboard/trash" ? (
-               <p>Trash</p>
-            ) : pathname === "/dashboard/rosters" ? (
-               "Rosters"
-            ) : null}
-         </div>
+      <>
+         <HStack className="justify-between px-5 h-[71px] min-h-[71px] w-full ">
+            <HStack>
+               {pathname === "/dashboard" ? (
+                  <p>Home</p>
+               ) : pathname === "/dashboard/myperformances" ? (
+                  <p>My files</p>
+               ) : pathname === "/dashboard/sharedwithme" ? (
+                  <p>Shared With Me</p>
+               ) : pathname === "/dashboard/trash" ? (
+                  <p>Trash</p>
+               ) : pathname === "/dashboard/rosters" ? (
+                  "Rosters"
+               ) : null}
+            </HStack>
 
-         <div>
-            {plan ? (
-               <a href={"/upgrade/customerportal"} className="mr-5 text-sm">
-                  Manage Subscription
-               </a>
-            ) : null}
-            {!plan ? (
-               <Link href={"/upgrade"} className="mr-5 text-pink-300 text-sm font-semibold">
-                  Upgrade
+            <HStack className="text-sm gap-5">
+               {plan ? (
+                  <a href={"/upgrade/customerportal"} className="">
+                     Manage Subscription
+                  </a>
+               ) : null}
+               {!plan ? (
+                  <Link href={"/upgrade"} className="text-pink-300 font-semibold">
+                     Upgrade
+                  </Link>
+               ) : null}
+               <Link prefetch={false} href={"/auth/logout"} className="t">
+                  Sign Out
                </Link>
-            ) : null}
-            <Link prefetch={false} href={"/auth/logout"} className="mr-5  text-sm">
-               Sign Out
-            </Link>
-         </div>
-      </div>
+            </HStack>
+         </HStack>
+         <HDivider></HDivider>
+      </>
    );
 }

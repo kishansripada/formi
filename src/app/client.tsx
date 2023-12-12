@@ -173,14 +173,14 @@ const Client = () => {
                   </div>
                </div>
                <HDivider></HDivider>
-               <div className="py-24 text-center text-2xl z-10 flex flex-col gap-1 pointer-events-none select-none ">
+               <div className="py-24 text-center md:text-2xl text-base z-10 flex flex-col gap-1 pointer-events-none select-none ">
                   <p className="text-neutral-400">Powering the world’s greatest performance teams. </p>
                   <p>From small dance studios to established enterprises.</p>
 
                   <div className="flex md:flex-row flex-col items-center justify-between w-full mt-10 gap-10 ">
                      {["disney.png", "miami-heat.png", "la-lakers.png", "florida-panthers.png"].map((image) => {
                         return (
-                           <div className=" w-24">
+                           <div className=" md:w-24 w-16">
                               <img src={"/trusted-by/" + image} alt="" />
                            </div>
                         );
@@ -189,15 +189,15 @@ const Client = () => {
                </div>
                <HDivider></HDivider>
                <div className="py-24 text-center items-center  z-10 flex flex-col gap-8 pointer-events-none select-none  ">
-                  <div className="w-[600px]">
-                     <p className="text-5xl ">Unlike any tool you've used before</p>
-                     <p className="text-neutral-400 mt-1 text-xl">
+                  <div className="md:w-[600px] px-4">
+                     <p className="md:text-5xl text-2xl ">Unlike any tool you've used before</p>
+                     <p className="text-neutral-400 mt-2 md:text-xl text-sm">
                         Designed to the last pixel and engineered with unforgiving precision, FORMI combines UI elegance with world-class performance.
                      </p>
                   </div>
 
-                  <div className="flex md:flex-row items-start flex-col  justify-between w-full mt-10 gap-36 ">
-                     <div className="w-1/2 text-lg flex flex-col gap-3  text-neutral-300">
+                  <div className="flex md:flex-row md:items-start items-center flex-col  justify-between w-full mt-10 gap-36 ">
+                     <div className="md:w-1/2 text-lg flex flex-col gap-3  text-neutral-300">
                         <div className="flex flex-row items-center gap-4">
                            <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -294,7 +294,7 @@ const Client = () => {
                            </Button>
                         </Link>
                      </div>
-                     <div className="w-1/2">
+                     <div className="md:w-1/2">
                         <img src="/dalle_collab.png" className="w-[500px] rounded-md border border-neutral-700" alt="" />
                      </div>
                   </div>
