@@ -295,11 +295,7 @@ const Client = () => {
                         </Link>
                      </div>
                      <div className="w-1/2">
-                        <img
-                           src="https://files.oaiusercontent.com/file-kT7VOmoj56go9o5ucKj7qpit?se=2023-12-11T21%3A19%3A41Z&sp=r&sv=2021-08-06&sr=b&rscc=max-age%3D31536000%2C%20immutable&rscd=attachment%3B%20filename%3D93abf867-327e-4029-aabc-ff7087299e67.webp&sig=zPdLo8WTd8d042wXGz1wFmKKL/3F1MkgPWGMoOCd5IY%3D"
-                           className="w-[500px] rounded-md border border-neutral-700"
-                           alt=""
-                        />
+                        <img src="/dalle_collab.png" className="w-[500px] rounded-md border border-neutral-700" alt="" />
                      </div>
                   </div>
                </div>
