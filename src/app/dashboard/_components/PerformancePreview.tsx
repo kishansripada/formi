@@ -1,6 +1,6 @@
 "use client";
 
-import { dancer, dancerPosition, formation } from "../../../types/types";
+import { MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN, dancer, dancerPosition, formation } from "../../../types/types";
 import toast, { Toaster } from "react-hot-toast";
 
 import Link from "next/link";
@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/context-menu";
 
 export const PerformancePreview = ({ dance, session, projects }: { dance: Dance; session: AuthSession }) => {
-   const MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN = 3;
    const { plan, numberOfDances } = useStore();
 
    const supabase = createClientComponentClient<Database>();
@@ -39,10 +38,10 @@ export const PerformancePreview = ({ dance, session, projects }: { dance: Dance;
    };
 
    const duplicateDance = async (danceId: number) => {
-      // if (!plan && numberOfDances >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {
-      //    router.push("/upgrade");
-      //    return;
-      // }
+      if (!plan && numberOfDances >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {
+         router.push("/upgrade");
+         return;
+      }
       let dance = await supabase
          .from("dances")
          .select("*")
