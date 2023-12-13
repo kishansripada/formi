@@ -132,7 +132,7 @@ export const deleteLiveblocksRoom = async (roomId: string) => {
    const options = {
       method: "DELETE",
       headers: {
-         Authorization: "Bearer sk_prod_4KyaW_oX6LrE5PlWMvb3S79GNxTyTyBJqgG1g9caEJ_p5gGL4TZw3EDupgNeiDf0",
+         Authorization: `Bearer ${process.env.LIVEBLOCKS_API_KEY}`,
       },
    };
 

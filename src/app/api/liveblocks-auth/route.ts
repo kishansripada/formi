@@ -3,8 +3,9 @@ import { Liveblocks } from "@liveblocks/node";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+
 const liveblocks = new Liveblocks({
-   secret: "sk_prod_4KyaW_oX6LrE5PlWMvb3S79GNxTyTyBJqgG1g9caEJ_p5gGL4TZw3EDupgNeiDf0",
+   secret: process.env.LIVEBLOCKS_API_KEY,
 });
 
 export async function POST(request: Request) {
