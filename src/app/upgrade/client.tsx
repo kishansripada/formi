@@ -245,6 +245,7 @@ const Client = () => {
                style={{
                   right: -100,
                   top: -600,
+                  opacity: 0.1,
                }}
                color={"#FEA3E5"}
             ></ColorSplotch>
