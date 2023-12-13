@@ -5,6 +5,11 @@ import { useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { AppWrapper } from "../../../../@/components/ui/app-wrapper";
+import { Input } from "../../../../@/components/ui/input";
+import { Button } from "../../../../@/components/ui/button";
+import { ThemeProvider } from "../../../../@/components/theme-provider";
+import { Toaster } from "react-hot-toast";
 const Client = () => {
    const [code, setCode] = useState("");
    const searchParams = useSearchParams();
@@ -30,52 +35,41 @@ const Client = () => {
    };
 
    return (
-      <>
-         <div className="flex  flex-row  h-screen overflow-hidden relative font-inter">
-            <div className="lg:w-[60%] w-0 lg:visible invisible max-h-full relative flex flex-col justify-center">
-               <div className="p-4 w-full max-h-full h-full">
-                  <div
-                     className="h-full w-full rounded-tl-[100px] rounded-br-[100px] bg-cover bg-center	"
-                     style={{
-                        backgroundImage:
-                           "url(https://images.unsplash.com/photo-1535525153412-5a42439a210d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80)",
-                     }}
-                  ></div>
-                  {/* <img className="rounded-xl pointer-events-none select-none w-full object-cover" src="" alt="" /> */}
-               </div>
-            </div>
-            <div className="flex flex-col items-center w-full lg:w-[40%] justify-center">
-               <div className="flex flex-col items-center w-96">
-                  <p className="text-2xl  mb-10 font-bold text-center">Check your email for a verfication code</p>
+      <AppWrapper
+         className={"flex flex-col items-center justify-center h-screen w-full text-white"}
+         style={{
+            backgroundImage: "linear-gradient(180deg, #3A2C34 0%, #22191E 51.04%, #231A1F 97.92%)",
+         }}
+      >
+         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+            <Toaster></Toaster>
+            <div className="flex flex-col items-center w-96">
+               <p className="text-2xl  mb-5 font-semibold text-center">Check your email for a verfication code</p>
 
-                  <p>Enter your 6 digit verification code:</p>
-                  <input
-                     value={code}
-                     onChange={(e) => {
-                        if (e.target.value.length > 6) return;
-                        if (isNaN(Number(e.target.value))) return;
+               <p>Enter your 6 digit verification code:</p>
+               <Input
+                  value={code}
+                  onChange={(e) => {
+                     if (e.target.value.length > 6) return;
+                     if (isNaN(Number(e.target.value))) return;
 
-                        setCode(e.target.value);
-                     }}
-                     style={{
-                        borderColor: code.length === 6 ? "green" : "black",
-                     }}
-                     className="border-2 border-black w-full h-12 rounded-md mt-4 text-center px-3 focus:outline-none text-2xl"
-                     type="text"
-                  />
-                  <button
-                     onClick={() => {
-                        signInWithCode();
-                     }}
-                     className="w-full h-12 bg-black text-white rounded-md mt-4 text-sm"
-                  >
-                     {" "}
-                     Sign In
-                  </button>
-               </div>
+                     setCode(e.target.value);
+                  }}
+                  className=" w-full  mt-4 dark:border-neutral-300 border"
+                  type="text"
+               />
+               <Button
+                  onClick={() => {
+                     signInWithCode();
+                  }}
+                  className="w-full h-12 bg-black text-white rounded-md mt-4 text-sm"
+               >
+                  {" "}
+                  Sign In
+               </Button>
             </div>
-         </div>
-      </>
+         </ThemeProvider>
+      </AppWrapper>
    );
 };
 export default Client;

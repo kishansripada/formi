@@ -3,9 +3,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HStack } from "../../../../@/components/ui/stacks";
 import { HDivider } from "../../../../@/components/ui/hdivider";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 export default function Header({ plan }: { plan: string | null }) {
    const pathname = usePathname();
-
+   const supabase = createClientComponentClient();
    return (
       <>
          <HStack className="justify-between px-5 h-[71px] min-h-[71px] w-full ">
@@ -34,9 +35,15 @@ export default function Header({ plan }: { plan: string | null }) {
                      Upgrade
                   </Link>
                ) : null}
-               <Link prefetch={false} href={"/auth/logout"} className="t">
+               <button
+                  onClick={async () => {
+                     await supabase.auth.signOut().then((_) => {
+                        window.location.href = "/login";
+                     });
+                  }}
+               >
                   Sign Out
-               </Link>
+               </button>
             </HStack>
          </HStack>
          <HDivider></HDivider>

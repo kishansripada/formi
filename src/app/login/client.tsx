@@ -10,6 +10,7 @@ import { AppWrapper } from "../../../@/components/ui/app-wrapper";
 import { VStack } from "../../../@/components/ui/stacks";
 import { HDivider } from "../../../@/components/ui/hdivider";
 import { ThemeProvider } from "../../../@/components/theme-provider";
+import Link from "next/link";
 const Client = () => {
    const router = useRouter();
    const supabase = createClientComponentClient();
@@ -58,7 +59,9 @@ const Client = () => {
          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
             <Toaster></Toaster>
             <VStack className="max-w-[330px] w-[330px] items-center gap-6">
-               <img className="w-8" src="/logo.png" alt="" />
+               <Link href={"/"}>
+                  <img className="w-8" src="/logo.png" alt="" />
+               </Link>
                <p className="text-xl w-full  font-semibold text-center">Sign in to FORMI</p>
 
                <VStack className="w-full gap-3">
@@ -74,7 +77,7 @@ const Client = () => {
                               setEmail(e.target.value);
                            }}
                            placeholder="Enter your email address..."
-                           className="bg-transparent text-white"
+                           className="bg-transparent text-white border dark:border-neutral-700"
                         ></Input>
                      </>
                   )}
