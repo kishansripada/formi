@@ -55,7 +55,13 @@ const Client = () => {
                         <p className="text-4xl mt-3 font-medium">$4.99</p>
                         <p className="text-sm mt-1 font-medium">per month</p>
                         <div className="mt-3">
-                           {["Unlimited performances", "Unlimited media uploads", "Export PDF", "Save roster"].map((text) => {
+                           {[
+                              "Unlimited performances",
+                              "Unlimited media uploads",
+                              "Export PDF",
+                              "Access to 100+ curated formation templates",
+                              "Save roster",
+                           ].map((text) => {
                               return (
                                  <div className="flex flex-row items-center mt-3">
                                     <svg

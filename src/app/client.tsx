@@ -34,7 +34,7 @@ const Client = () => {
                   </p>
 
                   <Link href={"/login"} className=" mt-7">
-                     <Button>
+                     <Button className="cursor-pointer">
                         <div className=" lg:flex flex-row items-center justify-center hidden text-sm">
                            <span className="font-semibold">Get started</span>
                            <span className="px-1">—</span>

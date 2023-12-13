@@ -13,35 +13,13 @@ import {
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { HStack } from "../../../../../../@/components/ui/stacks";
 import { Subtract } from "../../../../../../@/components/ui/button";
+import Link from "next/link";
 export const FormationIdeas: React.FC<{
-   setLocalSettings: Function;
-   localSettings: any;
-   dropDownToggle: boolean;
-   pushChange: Function;
-
-   setHelpUrl: Function;
-   setAssetsOpen: Function;
    setCurrentTemplate: Function;
    danceId: string;
-}> = ({
-   setLocalSettings,
-   localSettings,
-   dropDownToggle,
-   pushChange,
-
-   setHelpUrl,
-   setAssetsOpen,
-   setCurrentTemplate,
-   danceId,
-}) => {
-   const {
-      viewOnly,
-      //   cloudSettings: { stageBackground, stageDimensions },
-      cloudSettings,
-      setCloudSettings,
-      get,
-      dancers,
-   } = useStore();
+   plan: string | null;
+}> = ({ setCurrentTemplate, danceId, plan }) => {
+   const { dancers } = useStore();
    const [numDancers, setNumDancers] = useState(Math.min(Math.max(5, dancers.length), 15));
    const [templates, setTemplates] = useState([]);
 
@@ -140,9 +118,16 @@ export const FormationIdeas: React.FC<{
             ></Subtract>
          </HStack>
 
-         <div className="overflow-y-scroll h-full ">
-            <div className="flex flex-col gap-3 p-3 ">
-               {templates.map((template: formation) => {
+         <div className="overflow-y-scroll overflow-x-hidden h-full ">
+            <div className="flex flex-col gap-3 p-3 relative ">
+               {!plan && (
+                  <div className="absolute top-[150px] left-0  grid place-items-center z-10 w-full ">
+                     <Link href={"/upgrade"} className="text-sm font-medium text-center text-neutral-200">
+                        Upgrade for access to 100+ templates
+                     </Link>
+                  </div>
+               )}
+               {templates.map((template: formation, i: number) => {
                   return (
                      <button
                         style={{
@@ -151,7 +136,9 @@ export const FormationIdeas: React.FC<{
                         onClick={() => {
                            setCurrentTemplate(template);
                         }}
-                        className="w-full  bg-neutral-800 rounded-md relative hover:bg-neutral-700 transition"
+                        className={`w-full  bg-neutral-800 rounded-md relative hover:bg-neutral-700 transition ${
+                           i !== 0 && !plan ? "blur-sm pointer-events-none" : ""
+                        }`}
                      >
                         <p className="text-neutral-300 text-xs font-medium left-2 top-1 absolute">{template.name}</p>
                         {template.positions.map((position) => {

@@ -39,9 +39,6 @@ const getServerSideProps = async (danceId: string) => {
 
    async function getStripe(session: Session) {
       const EXEMPT_EMAILS = [
-         // MINE
-         "kishansripada@formistudio.app",
-
          // KIRSTEN
          "kirsten.e.collison@gmail.com",
          "courtney.j.laney@gmail.com",
