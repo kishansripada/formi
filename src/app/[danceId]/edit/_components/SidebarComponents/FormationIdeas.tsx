@@ -11,6 +11,8 @@ import {
    DropdownMenuTrigger,
 } from "../../../../../../@/components/ui/dropdown-menu";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { HStack } from "../../../../../../@/components/ui/stacks";
+import { Subtract } from "../../../../../../@/components/ui/button";
 export const FormationIdeas: React.FC<{
    setLocalSettings: Function;
    localSettings: any;
@@ -20,6 +22,7 @@ export const FormationIdeas: React.FC<{
    setHelpUrl: Function;
    setAssetsOpen: Function;
    setCurrentTemplate: Function;
+   danceId: string;
 }> = ({
    setLocalSettings,
    localSettings,
@@ -29,6 +32,7 @@ export const FormationIdeas: React.FC<{
    setHelpUrl,
    setAssetsOpen,
    setCurrentTemplate,
+   danceId,
 }) => {
    const {
       viewOnly,
@@ -38,7 +42,7 @@ export const FormationIdeas: React.FC<{
       get,
       dancers,
    } = useStore();
-   const [numDancers, setNumDancers] = useState(10);
+   const [numDancers, setNumDancers] = useState(Math.min(Math.max(5, dancers.length), 15));
    const [templates, setTemplates] = useState([]);
 
    const supabase = createClientComponentClient();
@@ -71,8 +75,10 @@ export const FormationIdeas: React.FC<{
       // };
 
       // const { data } = await supabase.from("dances").select("*").eq("id", files[numDancers]).single();
-      const { data, error } = await supabase.from("formation_templates").select("*").eq("number_of_performers", numDancers);
+      let { data, error } = await supabase.from("formation_templates").select("*").eq("number_of_performers", numDancers);
       //   console.log(data);
+
+      data = data?.filter((template) => template.referece_performance_id !== danceId);
       return shuffle(data);
       // const templates = data.formations;
       // //   console.log();
@@ -82,9 +88,8 @@ export const FormationIdeas: React.FC<{
    return (
       <div className="overflow-hidden h-full flex flex-col">
          <div className="flex flex-row p-3 justify-between items-center">
-            <p className="font-semibold text-xl whitespace-nowrap  ">
-               Templates <span className="text-neutral-400 text-sm font-light ml-1"> for</span>
-            </p>
+            <p className="font-semibold text-xl whitespace-nowrap  ">Templates</p>
+
             {/* <Select
                onValueChange={(e) => {
                   setNumDancers(e);
@@ -101,6 +106,8 @@ export const FormationIdeas: React.FC<{
                   })}
                </SelectContent>
             </Select> */}
+         </div>
+         <HStack className="justify-between px-2">
             <DropdownMenu>
                <DropdownMenuTrigger asChild className="dark:hover:bg-neutral-600 mt-[6px] hover:bg-neutral-200 cursor-pointer rounded-md">
                   <div className=" py-1 px-3 h-[26px] w-38  flex flex-row items-center  ">
@@ -125,10 +132,15 @@ export const FormationIdeas: React.FC<{
                   })}
                </DropdownMenuContent>
             </DropdownMenu>
-         </div>
+
+            <Subtract
+               onClick={() => {
+                  setCurrentTemplate(null);
+               }}
+            ></Subtract>
+         </HStack>
 
          <div className="overflow-y-scroll h-full ">
-            {/* <div className="min-h-0 "> */}
             <div className="flex flex-col gap-3 p-3 ">
                {templates.map((template: formation) => {
                   return (
@@ -158,7 +170,6 @@ export const FormationIdeas: React.FC<{
                })}
             </div>
          </div>
-         {/* </div> */}
       </div>
    );
 };

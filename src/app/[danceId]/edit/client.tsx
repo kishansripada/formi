@@ -534,6 +534,7 @@ const Edit = ({
                                                 localSettings={localSettings}
                                                 pushChange={() => {}}
                                                 setAssetsOpen={setAssetsOpen}
+                                                danceId={danceId}
                                              ></FormationIdeas>
                                           ) : menuOpen === "settings" ? (
                                              <Settings
