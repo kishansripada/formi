@@ -5,13 +5,13 @@ import { HStack, VStack } from "../../../../@/components/ui/stacks";
 
 export const UpgradeBanner = ({ setCookies }: { setCookies: Function }) => {
    return (
-      <HStack className="rounded-md bg-neutral-800 p-7 ">
-         <VStack className="w-1/2">
-            <p className="text-2xl font-medium text-[#FEA3E5]">Try Pro for free</p>
+      <HStack className="rounded-md bg-neutral-800 p-7 relative min-h-[250px] overflow-hidden hidden xl:flex ">
+         <VStack className="w-1/3">
+            <p className="text-2xl font-medium text-[#FEA3E5]">Can't think of creative formations?</p>
             <p className="text-xl  text-neutral-100">Enjoy the full FORMI experience</p>
             <HStack className="mt-14 items-center gap-5">
                <a href={"/upgrade/checkout/price_1ODBDgHvC3w6e8fcLHwIA71e"}>
-                  <button className=" rounded-md  px-5 py-2 text-black bg-[#FEA3E5] text-sm font-medium">Start 7-day free trial</button>
+                  <button className=" rounded-md  px-5 py-2 text-black bg-[#FEA3E5] text-sm font-medium">Upgrade now — $4.99/month</button>
                </a>
 
                <Link href={"/upgrade"} className="text-xs text-neutral-300">
@@ -19,9 +19,31 @@ export const UpgradeBanner = ({ setCookies }: { setCookies: Function }) => {
                </Link>
             </HStack>
          </VStack>
-         <HStack className="w-1/2">
-            <VStack className="w-1/2 gap-5 justify-center">
-               <HStack className="items-center gap-2 text-neutral-400">
+         <HStack className="w-1/4">
+            <VStack className="w-full gap-5 justify-center">
+               <HStack className="items-center gap-2 text-neutral-400 justify-end">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                     <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"
+                     />
+                  </svg>
+
+                  <p className="text-xs">100+ of formation templates</p>
+               </HStack>
+               <HStack className="items-center gap-2 text-neutral-400 justify-end">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                     <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                     />
+                  </svg>
+
+                  <p className="text-xs">Unlimited performances</p>
+               </HStack>
+               <HStack className="items-center gap-2 text-neutral-400 justify-end">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                      <path
                         strokeLinecap="round"
@@ -33,18 +55,7 @@ export const UpgradeBanner = ({ setCookies }: { setCookies: Function }) => {
                   <p className="text-xs">Unlimited editors</p>
                </HStack>
 
-               <HStack className="items-center gap-2 text-neutral-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                     <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                     />
-                  </svg>
-
-                  <p className="text-xs">Unlimited performances</p>
-               </HStack>
-               <HStack className="items-center gap-2 text-neutral-400">
+               {/* <HStack className="items-center gap-2 text-neutral-400 justify-end">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                      <path
                         strokeLinecap="round"
@@ -54,8 +65,8 @@ export const UpgradeBanner = ({ setCookies }: { setCookies: Function }) => {
                   </svg>
 
                   <p className="text-xs">Realtime collaboration</p>
-               </HStack>
-               <HStack className="items-center gap-2 text-neutral-400">
+               </HStack> */}
+               <HStack className="items-center gap-2 text-neutral-400 justify-end">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                      <path
                         strokeLinecap="round"
@@ -67,7 +78,7 @@ export const UpgradeBanner = ({ setCookies }: { setCookies: Function }) => {
                   <p className="text-xs">Unlimited audio files</p>
                </HStack>
             </VStack>
-            <VStack className="w-1/2 items-end text-neutral-300">
+            {/* <VStack className="w-1/2 items-end text-neutral-300">
                <button
                   onClick={() => {
                      setCookies((cookies) => {
@@ -79,8 +90,11 @@ export const UpgradeBanner = ({ setCookies }: { setCookies: Function }) => {
                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                </button>
-            </VStack>
+            </VStack> */}
          </HStack>
+         <VStack className="w-1/3 absolute right-0  ">
+            <img className="w-56" src="/templates.png" alt="" />
+         </VStack>
       </HStack>
    );
 };

@@ -14,6 +14,7 @@ import Link from "next/link";
 import { UpgradeBanner } from "./_components/UpgradeBanner";
 import { useState } from "react";
 import { Button } from "../../../@/components/ui/button";
+import useCookies from "../../utls";
 // import useCookies from "../../utls";
 
 type Cookies = {
@@ -21,7 +22,7 @@ type Cookies = {
 };
 
 export default function Client({ myDances, sharedWithMe, session, rosters, projects, plan, myCookies }) {
-   // const [cookies, setCookies] = useCookies<Cookies>(myCookies);
+   const [cookies, setCookies] = useCookies<Cookies>(myCookies);
 
    const supabase = createClientComponentClient();
    const router = useRouter();
@@ -132,7 +133,7 @@ export default function Client({ myDances, sharedWithMe, session, rosters, proje
 
    return (
       <div className="overflow-y-scroll h-full px-4 py-5 flex flex-col gap-5 ">
-         {/* {!cookies.hideUpgradeBanner && <UpgradeBanner setCookies={setCookies} />} */}
+         {!cookies.hideUpgradeBanner && isDesktop && !plan && <UpgradeBanner setCookies={setCookies} />}
 
          <p className="text-3xl font-semibold">Recents</p>
          <button
