@@ -93,7 +93,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                         <NumberToggle label={"performers"} count={roster.length} setCount={setNumPerformers} min={1} max={100}></NumberToggle>
                      </div>
 
-                     {rosters.length || myDances.length ? (
+                     {rosters.length || myDances.filter((dance) => !dance.isInTrash).length ? (
                         <div className="flex flex-col gap-1  items-end">
                            <p className="text-sm font-medium">Existing rosters</p>
 
@@ -121,7 +121,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                                        </div>
                                        {rosters.map((roster) => {
                                           return (
-                                             <SelectItem value={roster.id}>
+                                             <SelectItem key={roster.id} value={roster.id}>
                                                 <p className="">{roster.name}</p>
                                              </SelectItem>
                                           );
@@ -140,7 +140,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                                           .filter((dance) => !dance.isInTrash)
                                           .map((dance) => {
                                              return (
-                                                <SelectItem value={dance.id}>
+                                                <SelectItem key={dance.id} value={dance.id}>
                                                    <p className="">{dance.name}</p>
                                                 </SelectItem>
                                              );
@@ -156,7 +156,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
             </div>
          </div>
 
-         <div className="h-[1px] bg-neutral-700 w-full my-6"></div>
+         <div className="h-[1px] bg-neutral-700 w-full my-4"></div>
          <div className="flex flex-col  w-full">
             <DialogTitle className="mb-3">
                Choose your stage <span className="text-xs font-normal ml-2 text-neutral-400">you can change this later</span>
@@ -169,35 +169,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                className=""
             >
                <TabsContent className="gap-5 flex flex-col" value="existing">
-                  {/* <div className="w-full  py-3  overflow-scroll  max-h-[250px]  flex flex-row  gap-5 ">
-                        <div
-                           onClick={() => {
-                              setSelectedTemplate("default");
-                           }}
-                           className=" h-[98px] w-[198px]  "
-                        >
-                           <div
-                              style={{
-                                 backgroundSize: "contain",
-                                 backgroundPosition: "center",
-                                 width: letterboxDimensions(198, 98, 36, 24).width,
-                                 height: letterboxDimensions(198, 98, 36, 24).height,
-                                 borderColor: selectedTemplate === "default" ? "#db2777" : "white",
-                              }}
-                              className="border-2 relative border-white  rounded-md opacity-100 flex flex-col items-center justify-end text-xs py-1 "
-                           >
-                              <p className="text-neutral-300">{"Default"}</p>
-                              <div className=" text-xl font-semibold absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 ">
-                                 <p className="whitespace-nowrap">
-                                    36x24 <span className="text-xs text-neutral-300 font-normal"> feet</span>
-                                 </p>
-                              </div>
-                           </div>
-                        </div>
-                     </div> */}
-
                   <div>
-                     {/* <p className="mb-3 font-medium text-sm">Existing performances</p> */}
                      <div className=" w-[550px]  overflow-scroll pb-3 ">
                         <div className="flex flex-row items-center justify-center gap-8  w-min  p-2 ">
                            <div
@@ -235,6 +207,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                                              setSelectedTemplate(dance.id);
                                           }}
                                           className="w-full h-full grid place-items-center relative "
+                                          key={dance.id}
                                        >
                                           <div
                                              style={{
@@ -302,19 +275,6 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                               <p className="text-sm">{"Basketball court"}</p>
                               <Image height={80} priority src={nbaCourt} alt="Follow us on Twitter" />
                            </div>
-
-                           {/* <div
-                              onClick={() => {
-                                 setSelectedTemplate("nfl");
-                              }}
-                              style={{
-                                 borderColor: selectedTemplate === "nfl" ? "#db2777" : "transparent",
-                              }}
-                              className="flex flex-col gap-2 w-max border-2 rounded-md p-2 border-transparent"
-                           >
-                              <p className="text-sm">{"Football field"}</p>
-                              <Image height={80} priority src={nflField} alt="Follow us on Twitter" />
-                           </div> */}
                         </div>
                      </div>
                   </div>
@@ -339,7 +299,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                            </SelectItem>
                            {projects.map((project) => {
                               return (
-                                 <SelectItem value={project.id}>
+                                 <SelectItem key={project.id} value={project.id}>
                                     <p className="">{project.name}</p>
                                  </SelectItem>
                               );

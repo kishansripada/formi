@@ -51,7 +51,7 @@ export const Share: React.FC<{
    };
    return (
       <div className="flex flex-col rounded-xl h-full text-sm mt-4">
-         <div className="flex flex-row justify-between  overflow-hidden   rounded-md ">
+         <div className="flex flex-row justify-between  overflow-hidden border border-neutral-700  rounded-md ">
             <Input
                value={newUserEmail}
                onChange={(e) => {
@@ -62,7 +62,7 @@ export const Share: React.FC<{
                      addNewEmail(e);
                   }
                }}
-               className="rounded-r-none"
+               className="rounded-r-none "
                type="text"
                placeholder="Email address"
             />
@@ -75,7 +75,7 @@ export const Share: React.FC<{
 
                   addNewEmail(e);
                }}
-               className="text-sm dark:bg-neutral-600 bg-black text-neutral-200 w-10 grid place-items-center  "
+               className="text-sm dark:bg-neutral-700 bg-black text-neutral-200 w-10 grid place-items-center  "
             >
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                   <path

@@ -13,14 +13,15 @@ import { HStack, VStack } from "../../../@/components/ui/stacks";
 import Link from "next/link";
 import { UpgradeBanner } from "./_components/UpgradeBanner";
 import { useState } from "react";
-import useCookies from "../../utls";
+import { Button } from "../../../@/components/ui/button";
+// import useCookies from "../../utls";
 
 type Cookies = {
    hideUpgradeBanner: string;
 };
 
 export default function Client({ myDances, sharedWithMe, session, rosters, projects, plan, myCookies }) {
-   const [cookies, setCookies] = useCookies<Cookies>(myCookies);
+   // const [cookies, setCookies] = useCookies<Cookies>(myCookies);
 
    const supabase = createClientComponentClient();
    const router = useRouter();
@@ -130,7 +131,7 @@ export default function Client({ myDances, sharedWithMe, session, rosters, proje
    const isDesktop = useIsDesktop();
 
    return (
-      <div className="overflow-y-scroll h-full flex-grow px-4 py-5 flex flex-col gap-5 ">
+      <div className="overflow-y-scroll h-full px-4 py-5 flex flex-col gap-5 ">
          {/* {!cookies.hideUpgradeBanner && <UpgradeBanner setCookies={setCookies} />} */}
 
          <p className="text-3xl font-semibold">Recents</p>
@@ -148,23 +149,25 @@ export default function Client({ myDances, sharedWithMe, session, rosters, proje
             <Dialog>
                {isDesktop ? (
                   <DialogTrigger>
-                     <button className="w-[230px] bg-white h-[50px] rounded-md flex flex-row items-center pl-5 text-black">
-                        <svg
-                           xmlns="http://www.w3.org/2000/svg"
-                           fill="none"
-                           viewBox="0 0 24 24"
-                           strokeWidth={1.5}
-                           stroke="currentColor"
-                           className="w-4 h-4 mr-3"
-                        >
-                           <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
-                           />
-                        </svg>
-                        <p className="text-sm font-medium">New performance</p>
-                     </button>
+                     <Button className="rounded-md  px-8 py-6 text-black">
+                        <div className="flex flex-row items-center">
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-4 h-4 mr-2"
+                           >
+                              <path
+                                 strokeLinecap="round"
+                                 strokeLinejoin="round"
+                                 d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"
+                              />
+                           </svg>
+                           <p className="text-sm font-medium">New performance</p>
+                        </div>
+                     </Button>
                   </DialogTrigger>
                ) : null}
 

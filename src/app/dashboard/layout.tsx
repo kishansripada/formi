@@ -16,6 +16,7 @@ export const revalidate = 0;
 
 import { ThemeProvider } from "../../../@/components/theme-provider";
 import { getMyDances, getMyDancesMetadata, getProjects, getRosters, getStripe } from "./api";
+import { AppWrapper } from "../../../@/components/ui/app-wrapper";
 const getServerSideProps = async (projectId: string, onboarded: boolean) => {
    const supabase = createServerComponentClient(
       { cookies },
@@ -76,27 +77,16 @@ export default async function RootLayout({
 
    return (
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-         <div>
-            <style>
-               {`
-             html, body {
-                overscroll-behavior: none;
-                user-select: none;
-             }
-          `}
-            </style>
+         <AppWrapper className={"flex flex-col"}>
+            <div className="flex flex-row font-inter overscroll-none overflow-hidden  text-white">
+               <Sidebar projects={projects} myDances={myDances} plan={plan} session={session} rosters={rosters} userData={userData}></Sidebar>
 
-            <div className="h-[calc(100dvh)] flex flex-col font-inter overscroll-none overflow-hidden bg-neutral-900 text-white">
-               <div className="flex flex-row font-inter overscroll-none overflow-hidden  text-white">
-                  <Sidebar projects={projects} myDances={myDances} plan={plan} session={session} rosters={rosters} userData={userData}></Sidebar>
-
-                  <div className="flex flex-col bg-neutral  h-full  overflow-hidden  w-full justify-start  ">
-                     <Header session={session} plan={plan}></Header>
-                     <div className="  w-full h-full overflow-hidden">{children}</div>
-                  </div>
+               <div className="flex flex-col bg-neutral  h-full  overflow-hidden  w-full justify-start  ">
+                  <Header session={session} plan={plan}></Header>
+                  <div className="  w-full h-full overflow-hidden">{children}</div>
                </div>
             </div>
-         </div>
+         </AppWrapper>
       </ThemeProvider>
    );
 }
