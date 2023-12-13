@@ -32,6 +32,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
       cheer9: {
          stageDimensions: { width: 54, height: 42 },
          backgroundUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/f30197ba-cf06-4234-bcdb-5d40d83c7999/IMG_1130.png",
+         gridSubdivisions: 9,
       },
       nba: {
          stageDimensions: { width: 94, height: 50 },
