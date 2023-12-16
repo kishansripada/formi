@@ -6,12 +6,22 @@ import type { NextRequest } from "next/server";
 // import type { Database } from '@/lib/database.types'
 
 export async function GET(request: NextRequest) {
+   const supabase = createRouteHandlerClient({ cookies });
+
    const requestUrl = new URL(request.url);
    const code = requestUrl.searchParams.get("code");
 
    if (code) {
-      const supabase = createRouteHandlerClient({ cookies });
       await supabase.auth.exchangeCodeForSession(code);
+   }
+
+   const { data } = await supabase
+      .from("user_data")
+      .select("*")
+      .eq("user_id", (await supabase.auth.getUser()).data.user?.id);
+
+   if (!data?.length) {
+      return NextResponse.redirect(requestUrl.origin + "/welcome/1");
    }
 
    // URL to redirect to after sign in process completes
