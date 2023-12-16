@@ -17,6 +17,8 @@ export default function Client({ session }: { session: AuthSession }) {
    const [howYouFoundOut, setHowYouFoundOut] = useState<string>("");
 
    const [howYouFoundOutOther, setHowYouFoundOutOther] = useState<string>("");
+
+   const [loading, setLoading] = useState<boolean>(false);
    const [step, setStep] = useState<number>(0);
    const supabase = createClientComponentClient();
    const router = useRouter();
@@ -155,6 +157,7 @@ export default function Client({ session }: { session: AuthSession }) {
 
                            <Button
                               onClick={async () => {
+                                 setLoading(true);
                                  let uses = selectedUses;
                                  if (other !== "") {
                                     uses = [...selectedUses, other];
@@ -167,7 +170,11 @@ export default function Client({ session }: { session: AuthSession }) {
                                  const _ = await supabase
                                     .from("user_data")
                                     .upsert({ user_id: session.user.id, response_data: { selectedUses: uses, howYouFoundOut }, name });
+
                                  router.push("/welcome/tutorial");
+                              }}
+                              style={{
+                                 pointerEvents: loading ? "none" : "all",
                               }}
                            >
                               Get started
