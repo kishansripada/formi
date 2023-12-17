@@ -27,6 +27,16 @@ async function getServerSideProps() {
    if (!session) {
       redirect("/login");
    }
+
+   const { data } = await supabase
+      .from("user_data")
+      .select("*")
+      .eq("user_id", (await supabase.auth.getUser()).data.user?.id);
+
+   if (data?.length) {
+      return redirect("/dashboard");
+   }
+
    return { session };
 }
 
