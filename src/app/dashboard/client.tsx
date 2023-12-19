@@ -73,7 +73,7 @@ export default function Client({ myDances, sharedWithMe, session, rosters, proje
                      name: "First formation",
                      id: uuidv4(),
                      positions: (roster || defaultRoster).map((dancer, index) => {
-                        const numDancersPerCol = stage?.stageDimensions?.height / gridSizeY;
+                        const numDancersPerCol = settings?.stageDimensions?.height / gridSizeY;
                         const currentCol = Math.floor(index / numDancersPerCol);
                         const oddIndex = index % 2 === 0;
                         const x = oddIndex
@@ -95,7 +95,7 @@ export default function Client({ myDances, sharedWithMe, session, rosters, proje
                      name: "Second formation",
                      id: uuidv4(),
                      positions: (roster || defaultRoster).map((dancer, index) => {
-                        const numDancersPerCol = stage?.stageDimensions?.height / gridSizeY;
+                        const numDancersPerCol = settings?.stageDimensions?.height / gridSizeY;
                         const currentCol = Math.floor(index / numDancersPerCol) + 1;
                         const oddIndex = index % 2 === 0;
                         let x = oddIndex

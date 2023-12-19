@@ -54,6 +54,9 @@ const Client = () => {
                         </div>
                         <div className=" lg:text-base text-sm  flex-row items-center justify-around lg:hidden flex">Launch mobile web app</div>
                      </Button>
+                     <div className="  text-xs mt-2 max-w-xs text-neutral-400  flex-row items-center justify-around lg:hidden flex">
+                        FORMI can be used on mobile, but is best experienced on desktop.
+                     </div>
                   </Link>
                </motion.div>
 
