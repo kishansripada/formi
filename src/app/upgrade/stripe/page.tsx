@@ -22,6 +22,9 @@ async function getStripe(session: Session) {
       "darrengundling18@gmail.com",
 
       "gtramblinraas@gmail.com",
+
+      // 1 year starting dec 26th 2023
+      "mghamsini@gmail.com",
    ];
    if (!session) return null;
    if (session.user.email?.endsWith("@umich.edu") || EXEMPT_EMAILS.includes(session.user.email)) return "choreographer";

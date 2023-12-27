@@ -22,6 +22,9 @@ const EXEMPT_EMAILS = [
    "darrengundling18@gmail.com",
 
    "gtramblinraas@gmail.com",
+
+   // 1 year starting dec 26th 2023
+   "mghamsini@gmail.com",
 ];
 
 export async function getStripe(session: Session | null) {
