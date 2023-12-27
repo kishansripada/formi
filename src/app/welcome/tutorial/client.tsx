@@ -11,6 +11,9 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AppWrapper } from "../../../../@/components/ui/app-wrapper";
 export default function Client({ session }: { session: AuthSession }) {
    const router = useRouter();
+
+   const firstName = session?.user?.user_metadata?.full_name ? session.user.user_metadata.full_name.split(" ")[0] : "";
+   const email = session?.user?.email;
    return (
       <AppWrapper>
          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
@@ -38,8 +41,17 @@ export default function Client({ session }: { session: AuthSession }) {
                         <script src="https://player.vimeo.com/api/player.js"></script>
                         <Button
                            className="w-full"
-                           onClick={() => {
+                           onClick={async () => {
                               router.push("/dashboard");
+                              const response = await fetch("/api/send", {
+                                 method: "POST", // *GET, POST, PUT, DELETE, etc.
+                                 mode: "cors", // no-cors, *cors, same-origin
+                                 credentials: "same-origin", // include, *same-origin, omit
+                                 headers: {
+                                    "Content-Type": "application/json",
+                                 },
+                                 body: JSON.stringify({ firstName, to: email }), // body data type must match "Content-Type" header
+                              });
                            }}
                         >
                            Get started
