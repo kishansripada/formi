@@ -34,6 +34,7 @@ export const Formation: React.FC<{
       pasteCopiedPositions,
       splitSelectedFormations,
    } = useStore();
+
    const transitionResize = useRef();
    const formationResize = useRef();
    const others = useStore((state) => state.liveblocks.others);
@@ -44,6 +45,7 @@ export const Formation: React.FC<{
       attributes: { tabIndex: -1 },
       disabled: viewOnly,
    });
+
    const style = {
       transform: CSS.Translate.toString(transform),
       transition,
@@ -292,7 +294,11 @@ export const Formation: React.FC<{
                   }}
                >
                   {!isMobileView ? (
-                     <p className="text-[10px] select-none px-1 my-auto bg-transparent   font-semibold   relative whitespace-nowrap  focus:outline-none  ">
+                     <p
+                        {...attributes}
+                        {...listeners}
+                        className="text-[10px] select-none px-1 my-auto bg-transparent  cursor-default  font-semibold   relative whitespace-nowrap  focus:outline-none  "
+                     >
                         {formation.name || ""}
                      </p>
                   ) : null}
