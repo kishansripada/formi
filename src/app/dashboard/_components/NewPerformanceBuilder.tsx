@@ -200,7 +200,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
 
                            {myDances.length ? (
                               <>
-                                 <div className="bg-neutral-700 h-[100px] w-[2px]"></div>
+                                 <div className="bg-neutral-700 h-[100px] min-w-[1px]"></div>
                                  {myDances.map((dance) => {
                                     return (
                                        <div
