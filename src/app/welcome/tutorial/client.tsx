@@ -28,20 +28,17 @@ export default function Client({ session }: { session: AuthSession }) {
                      <div className="flex flex-col gap-4 mt-10 items-center">
                         <div className="rounded-md overflow-hidden">
                            <iframe
+                              className="md:h-[533px] md:w-[300px] w-[200px] h-[354px] "
                               src="https://player.vimeo.com/video/895024118?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
                               // frameborder="0"
                               allow="autoplay; fullscreen; picture-in-picture"
-                              style={{
-                                 height: 533,
-                                 width: 300,
-                              }}
                               title="8c4caaa3d1b64eb08ea2677768472cfe"
                            ></iframe>
                         </div>
                         <script src="https://player.vimeo.com/api/player.js"></script>
                         <Button
                            className="w-full"
-                           onClick={async () => {
+                           onClick={() => {
                               router.push("/dashboard");
                            }}
                         >
