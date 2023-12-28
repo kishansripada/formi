@@ -1,5 +1,5 @@
 "use client";
-import { roundToHundredth, useSupabaseQuery, whereInFormation } from "../../../utls";
+import useCookies, { roundToHundredth, useSupabaseQuery, whereInFormation } from "../../../utls";
 import { detectCollisions } from "../../../types/collisionDetector";
 import { useIsDesktop } from "../../../utls";
 import { Video } from "./_components/Video";
@@ -10,7 +10,7 @@ import Head from "next/head";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import { useLocalStorage, useUploadToSupabase } from "../../../utls";
 import debounce from "lodash.debounce";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { comment, PIXELS_PER_SQUARE, localSettings, prop } from "../../../types/types";
 import { AudioControls } from "./_components/AudioControls";
@@ -47,6 +47,11 @@ import { Button } from "../../../../@/components/ui/button";
 import { exportThree } from "../../../utils/augmentedReality";
 import { sleep } from "../../../utils/sleep";
 import { AppWrapper } from "../../../../@/components/ui/app-wrapper";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { HStack } from "../../../../@/components/ui/stacks";
+import { Input } from "../../../../@/components/ui/input";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../../@/components/ui/dropdown-menu";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 if (typeof Node === "function" && Node.prototype) {
    const originalRemoveChild = Node.prototype.removeChild;
@@ -78,6 +83,7 @@ const Edit = ({
    session,
    permissions: initialPermissions,
    plan,
+   myCookies,
 }: {
    initialData: any;
    viewOnly: boolean;
@@ -326,6 +332,9 @@ const Edit = ({
 
    const isDesktop = useIsDesktop();
 
+   const [cookies, setCookies] = useCookies(myCookies);
+   const [feedbackOpen, setFeedbackOpen] = useState(!cookies.hasBeenPromptedForFeedback);
+
    return (
       <>
          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
@@ -349,6 +358,53 @@ const Edit = ({
             </Head>
 
             {/* {<HelpUrl helpUrl={helpUrl} setHelpUrl={setHelpUrl}></HelpUrl>} */}
+            <Dialog
+               onOpenChange={() => {
+                  setFeedbackOpen(false);
+                  setCookies((cookies) => {
+                     return { ...cookies, hasBeenPromptedForFeedback: true };
+                  });
+               }}
+               open={feedbackOpen}
+            >
+               {/* <DialogTrigger>Open</DialogTrigger> */}
+               <DialogContent className="">
+                  <DialogHeader className="min-w-[450px] w-[450px]">
+                     <DialogTitle className="mb-2 leading-normal">
+                        Get a year of free access to our pro tier in exchange for a 15 min phone call
+                     </DialogTitle>
+                     <DialogDescription className="">
+                        We want to understand your experience with FORMI so we can make it better. We promise we won't ask you again.
+                     </DialogDescription>
+                     <div className="h-[20px]"></div>
+                     <HStack className="justify-between">
+                        <Button
+                           onClick={() => {
+                              setFeedbackOpen(false);
+                              setCookies((cookies) => {
+                                 return { ...cookies, hasBeenPromptedForFeedback: true };
+                              });
+                           }}
+                        >
+                           No thanks
+                        </Button>
+
+                        <Button
+                           onClick={async () => {
+                              const data = await supabase.from("feedback").insert({});
+                              toast("Thanks! We'll reach out to you ASAP to schedule a call");
+                              setCookies((cookies) => {
+                                 return { ...cookies, hasBeenPromptedForFeedback: true };
+                              });
+                              setFeedbackOpen(false);
+                           }}
+                        >
+                           Yes, let's do it
+                        </Button>
+                     </HStack>
+                  </DialogHeader>
+               </DialogContent>
+            </Dialog>
 
             {pdfLoading ? (
                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] bg-black/80 text-white border border-neutral-600  rounded-xl h-[100px] bg-white z-50 grid place-items-center">

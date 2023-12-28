@@ -14,22 +14,13 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 const getServerSideProps = async (danceId: string) => {
-   // Create authenticated Supabase Client
-   // const supabase = createServerSupabaseClient(ctx, {
+   const supabase = createServerComponentClient<Database>(
+      { cookies }
+      // {
    //    supabaseKey:
    //       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4dHhieGtrdm9zbGNyc3hiZmFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjE0NjM3NDYsImV4cCI6MTk3NzAzOTc0Nn0.caFbFV4Ck7MrTSwsPXyIifjeKWYJWXisKR9-zFA33Ng",
    //    supabaseUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co",
-   // });
-   const cookieStore = cookies();
-   const hasSeenCollab = cookieStore.get("hasSeenCollab");
-   // cookies().set("hasVisited", "true");
-   const supabase = createServerComponentClient<Database>(
-      { cookies },
-      {
-         supabaseKey:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4dHhieGtrdm9zbGNyc3hiZmFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjE0NjM3NDYsImV4cCI6MTk3NzAzOTc0Nn0.caFbFV4Ck7MrTSwsPXyIifjeKWYJWXisKR9-zFA33Ng",
-         supabaseUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co",
-      }
+      // }
    );
    let noAccess = false;
    // Check if we have a session
@@ -113,6 +104,10 @@ const getServerSideProps = async (danceId: string) => {
       viewOnly = false;
    }
 
+   const cookieStore = cookies();
+
+   let myCookies = cookieStore.getAll();
+
    // dance = { ...{ ...dance, formations: dance.formations } };
 
    // const extraDancers = (formation: formation, dancers: dancer[]) => {
@@ -142,6 +137,7 @@ const getServerSideProps = async (danceId: string) => {
       // hasSeenCollab,
       noAccess,
       plan,
+      myCookies,
       // isMobileView: Boolean(isMobileView),
 
       // },
@@ -171,6 +167,7 @@ export default async function Page({ params }: { params: { danceId: string } }) 
                viewOnly={data.viewOnly}
                pricingTier={data.pricingTier}
                plan={data?.plan}
+               myCookies={data.myCookies}
                // hasSeenCollab={data.hasSeenCollab}
             />
          )}
