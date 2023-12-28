@@ -233,9 +233,8 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
          </VStack>
 
          <div>
-            <HDivider />
-            <div className=" px-2  py-2">
-               <AutoGrowTextArea
+            {/* <HDivider /> */}
+            <textarea
                   value={thisFormation?.notes || ""}
                   onChange={(e) => {
                      setFormations(
@@ -251,10 +250,15 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
                      );
                   }}
                   readOnly={viewOnly}
-                  className="  text-sm"
+               style={{
+                  minHeight: 200,
+                  height: 200,
+               }}
+               className="dark:bg-neutral-900 transition bg-neutral-50 mt-auto w-full focus:outline-none p-3 text-sm border-t border-neutral-300 focus:border-pink-300 dark:border-neutral-600 dark:focus:border-pink-600 resize-none "
+               cols={30}
+               rows={9}
                   placeholder="Formation notes..."
-               />
-            </div>
+            ></textarea>
          </div>
       </div>
    );
