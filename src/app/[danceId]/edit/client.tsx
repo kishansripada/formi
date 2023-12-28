@@ -333,7 +333,7 @@ const Edit = ({
    const isDesktop = useIsDesktop();
 
    const [cookies, setCookies] = useCookies(myCookies);
-   const [feedbackOpen, setFeedbackOpen] = useState(!cookies.hasBeenPromptedForFeedback);
+   const [feedbackOpen, setFeedbackOpen] = useState(!cookies.hasBeenPromptedForFeedback && isDesktop);
 
    return (
       <>
