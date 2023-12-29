@@ -22,6 +22,12 @@ const EXEMPT_EMAILS = [
 
    // 1 year starting dec 29th 2023
    "pressplaycg@gmail.com",
+
+   // 1 year starting dec 29th 2023
+   "iriscannary9@gmail.com",
+
+   // 1 year starting dec 29th 2023
+   "slpaligreen@gmail.com",
 ];
 
 export default EXEMPT_EMAILS;
