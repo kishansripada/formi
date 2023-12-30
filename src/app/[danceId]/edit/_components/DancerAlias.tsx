@@ -80,7 +80,8 @@ export const DancerAlias: React.FC<{
    const HUMAN_WIDTH_FEET = 1.5;
    const dancerGroup = (getFirstSelectedFormation()?.groups || []).find((group) => group.id === dancerPos?.groupId);
 
-   const dancerColor = dancerPos?.color || dancerGroup?.color || dancer?.color || "#db2777";
+   const dancerColor = dancerPos?.color || dancer?.color || "#db2777";
+   const dancerShape = dancerPos?.shape || dancer?.shape || "circle";
    return (
       <>
          {/* {othersOnThisDancer.length && !isPlaying ? (
@@ -220,7 +221,7 @@ export const DancerAlias: React.FC<{
                </div>
             ) : null}
 
-            {dancer.shape === "square" ? (
+            {dancerShape === "square" ? (
                <svg
                   className={` w-full h-full select-none   pointer-events-none flex  flex-row justify-center items-center absolute z-[40] mr-auto ml-auto cursor-default `}
                   xmlns="http://www.w3.org/2000/svg"
@@ -244,7 +245,7 @@ export const DancerAlias: React.FC<{
                      d="M3.5 3.5h133v133H3.5z"
                   />
                </svg>
-            ) : dancer.shape === "triangle" ? (
+            ) : dancerShape === "triangle" ? (
                <svg
                   className={` w-full h-full select-none  pointer-events-none relative  flex  flex-row justify-center items-center  z-[40] mr-auto ml-auto cursor-default `}
                   xmlns="http://www.w3.org/2000/svg"

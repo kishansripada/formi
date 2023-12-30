@@ -61,6 +61,7 @@ export const ObjectControls: React.FC<{
       pauseHistory,
       resumeHistory,
    } = useStore();
+
    const thisFormation = useStore((state) => state.getFirstSelectedFormation());
 
    if (!thisFormation) return <></>;
@@ -187,15 +188,45 @@ export const ObjectControls: React.FC<{
 
    return (
       <VStack className="w-full  h-full bg-neutral-50 pb-2  dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
-         <div className="  border-neutral-700 w-full p-2 flex flex-row items-center">
-            <p className="md:text-sm text-[10px]  font-bold">
-               {selectedDancers.length === dancers.length
-                  ? "Everyone"
-                  : formatNames(dancers.filter((dancer) => selectedDancers.includes(dancer.id)).map((dancer) => dancer.name))}
-            </p>
+         <div className="  border-neutral-700 w-full p-2 flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center w-full">
+               {selectedDancers.length === 1 ? (
+                  <div className="mr-3">
+                     {dancers.find((dancer) => dancer.id === selectedDancers[0])?.shape === "square" ? (
+                        <div
+                           style={{
+                              backgroundColor: dancers.find((dancer) => dancer.id === selectedDancers[0])?.color || "#db2777",
+                           }}
+                           className="h-5 w-5 rounded-sm"
+                        ></div>
+                     ) : dancers.find((dancer) => dancer.id === selectedDancers[0])?.shape === "triangle" ? (
+                        <svg className="w-5 h-5" viewBox="0 0 1055 914" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <path
+                              d="M527.409 0L1054.82 913.5H0L527.409 0Z"
+                              fill={dancers.find((dancer) => dancer.id === selectedDancers[0])?.color || "#db2777"}
+                           />
+                        </svg>
+                     ) : (
+                        <div
+                           style={{
+                              backgroundColor: dancers.find((dancer) => dancer.id === selectedDancers[0])?.color || "#db2777",
+                           }}
+                           className="h-5 w-5 rounded-full"
+                        ></div>
+                     )}
+                  </div>
+               ) : null}
+               <div className="w-full max-w-full flex-1">
+                  <p className="md:text-sm text-[10px]  font-bold max-w-full w-full">
+                     {selectedDancers.length === dancers.length
+                        ? "Everyone"
+                        : formatNames(dancers.filter((dancer) => selectedDancers.includes(dancer.id)).map((dancer) => dancer.name))}
+                  </p>
+               </div>
+            </div>
 
             {selectedDancers.length === 1 ? (
-               <p className="font-light text-neutral-400 text-sm ml-auto ">
+               <p className="font-light whitespace-nowrap text-neutral-400 text-sm ml-auto ">
                   ({getRealPosition(pos, cloudSettings)?.x}, {getRealPosition(pos, cloudSettings)?.y})
                </p>
             ) : null}
@@ -381,7 +412,7 @@ export const ObjectControls: React.FC<{
          </PropertyAdd>
          <HDivider />
 
-         {selectedFormations.length === 1 ? (
+         {/* {selectedFormations.length === 1 ? (
             <div className="flex flex-col py-3 px-2  gap-3">
                <div className=" flex flex-row justify-between items-center h-6">
                   <p className="text-xs  font-semibold  ">Group</p>
@@ -503,15 +534,21 @@ export const ObjectControls: React.FC<{
                   </div>
                ) : null}
             </div>
-         ) : null}
-         <HDivider />
+         ) : null} */}
+         {/* <HDivider /> */}
 
          <PropertyAdd
-            onAdd={() => setSelectedPositionProperty("color", dancers.find((dancer) => dancer.id === selectedDancers[0])?.color || "#db2777")}
+            onAdd={() => {
+               const allOtherColors = thisFormation.positions
+                  .filter((position) => !selectedDancers.includes(position.id))
+                  .map((position) => position.color || dancers.find((dancer) => dancer.id === position.id)?.color || "#db2777");
+
+               setSelectedPositionProperty("color", getRandomColorWithMaxHueDistance(allOtherColors));
+            }}
             onSubtract={() => setSelectedPositionProperty("color", null)}
             canAdd={!(getSelectedPositionsProperty("color") !== null) && !viewOnly}
             canSubtract={getSelectedPositionsProperty("color") !== null && !viewOnly}
-            label="Color override"
+            label="Color"
             isOpen={getSelectedPositionsProperty("color") !== null}
          >
             <div className="flex flex-row items-center justify-between px-2">
@@ -521,6 +558,69 @@ export const ObjectControls: React.FC<{
                   setColor={(color: string) => setSelectedPositionProperty("color", color)}
                   position="bottom"
                ></PopoverPicker>
+            </div>
+         </PropertyAdd>
+         <HDivider />
+         <PropertyAdd
+            onAdd={() => setSelectedPositionProperty("shape", "square")}
+            onSubtract={() => setSelectedPositionProperty("shape", null)}
+            canAdd={!(getSelectedPositionsProperty("shape") !== null) && !viewOnly}
+            canSubtract={getSelectedPositionsProperty("shape") !== null && !viewOnly}
+            label="Shape"
+            isOpen={getSelectedPositionsProperty("shape") !== null}
+         >
+            <div className="flex flex-row items-center justify-between px-2">
+               <div className="flex w-full flex-row items-center gap-2">
+                  <button
+                     onClick={() => {
+                        setSelectedPositionProperty("shape", "circle");
+                     }}
+                  >
+                     <svg
+                        style={{
+                           fill: getSelectedPositionsProperty("shape") === "circle" ? "white" : "gray",
+                        }}
+                        className="h-8 w-8 "
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 -960 960 960"
+                     >
+                        <path d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-156t86-127Q252-817 325-848.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82-31.5 155T763-197.5q-54 54.5-127 86T480-80Zm0-60q142 0 241-99.5T820-480q0-142-99-241t-241-99q-141 0-240.5 99T140-480q0 141 99.5 240.5T480-140Zm0-340Z" />
+                     </svg>
+                  </button>
+
+                  <button
+                     onClick={() => {
+                        setSelectedPositionProperty("shape", "square");
+                     }}
+                  >
+                     <svg
+                        style={{
+                           fill: getSelectedPositionsProperty("shape") === "square" ? "white" : "gray",
+                        }}
+                        className="h-8 w-8 dark:fill-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 -960 960 960"
+                     >
+                        <path d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600v-600H180v600Z" />
+                     </svg>
+                  </button>
+                  <button
+                     onClick={() => {
+                        setSelectedPositionProperty("shape", "triangle");
+                     }}
+                  >
+                     <svg
+                        style={{
+                           fill: getSelectedPositionsProperty("shape") === "triangle" ? "white" : "gray",
+                        }}
+                        className="h-8 w-8 dark:fill-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 -960 960 960"
+                     >
+                        <path d="m80-160 401-640 399 640H80Zm107-60h586L481-685 187-220Zm293-233Z" />
+                     </svg>
+                  </button>
+               </div>
             </div>
          </PropertyAdd>
          <HDivider />
@@ -536,4 +636,92 @@ function formatNames(names: string[]): string {
    if (names.length === 2) return `${names[0]} & ${names[1]}`;
 
    return `${names[0]} & ${names.length - 1} others`;
+}
+
+function hslToHex(h, s, l) {
+   l /= 100;
+   const a = (s * Math.min(l, 1 - l)) / 100;
+   const f = (n) => {
+      const k = (n + h / 30) % 12;
+      const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+      return Math.round(255 * color)
+         .toString(16)
+         .padStart(2, "0");
+   };
+   return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function hueDistance(hue1: number, hue2: number) {
+   var diff = Math.abs(hue1 - hue2);
+   return Math.min(diff, 360 - diff);
+}
+
+function getRandomColorWithMaxHueDistance(existingColors: string[]) {
+   const saturation = 65;
+   const lightness = 57;
+   const existingHues = existingColors.map((color) => hexToHSL(color).h);
+
+   if (existingHues.length === 0) {
+      var randomHue = Math.floor(Math.random() * 360);
+      return hslToHex(randomHue, saturation, lightness);
+   }
+   var maxDistance = 0;
+   var furthestHue = 0;
+
+   for (var i = 0; i < 360; i++) {
+      // Check every hue
+      var minDistance = existingHues.reduce((min, existingHue) => {
+         var distance = hueDistance(i, existingHue);
+         return Math.min(min, distance);
+      }, 360);
+
+      if (minDistance > maxDistance) {
+         maxDistance = minDistance;
+         furthestHue = i;
+      }
+   }
+
+   return hslToHex(furthestHue, saturation, lightness); // hslToHex from previous example
+}
+
+function hexToHSL(H: string) {
+   // Convert hex to RGB first
+   let r = 0,
+      g = 0,
+      b = 0;
+   if (H.length == 4) {
+      r = "0x" + H[1] + H[1];
+      g = "0x" + H[2] + H[2];
+      b = "0x" + H[3] + H[3];
+   } else if (H.length == 7) {
+      r = "0x" + H[1] + H[2];
+      g = "0x" + H[3] + H[4];
+      b = "0x" + H[5] + H[6];
+   }
+   // Then to HSL
+   r /= 255;
+   g /= 255;
+   b /= 255;
+   let cmin = Math.min(r, g, b),
+      cmax = Math.max(r, g, b),
+      delta = cmax - cmin,
+      h = 0,
+      s = 0,
+      l = 0;
+
+   if (delta == 0) h = 0;
+   else if (cmax == r) h = ((g - b) / delta) % 6;
+   else if (cmax == g) h = (b - r) / delta + 2;
+   else h = (r - g) / delta + 4;
+
+   h = Math.round(h * 60);
+
+   if (h < 0) h += 360;
+
+   l = (cmax + cmin) / 2;
+   s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+   s = +(s * 100).toFixed(1);
+   l = +(l * 100).toFixed(1);
+
+   return { h, s, l };
 }

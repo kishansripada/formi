@@ -55,7 +55,7 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
                />
             </div>
 
-            {(thisFormation?.groups || []).length ? (
+            {/* {(thisFormation?.groups || []).length ? (
                <div className="w-full py-1  border-neutral-700 px-2 flex flex-row items-center justify-between border-b">
                   <p className="text-xs font-semibold">Formation groups</p>
                   <button
@@ -73,9 +73,9 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
                      </svg>
                   </button>
                </div>
-            ) : null}
+            ) : null} */}
 
-            <div className="w-full overflow-y-scroll  pb-5  removeScrollBar flex flex-col  ">
+            {/* <div className="w-full overflow-y-scroll  pb-5  removeScrollBar flex flex-col  ">
                {(thisFormation?.groups || []).map((group) => {
                   const dancerInThisGroupSelected = (
                      thisFormation?.positions.filter((position) => position.groupId === group.id).map((position) => position.id) || []
@@ -229,27 +229,27 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
                      </div>
                   );
                })}
-            </div>
+            </div> */}
          </VStack>
 
          <div>
             {/* <HDivider /> */}
             <textarea
-                  value={thisFormation?.notes || ""}
-                  onChange={(e) => {
-                     setFormations(
-                        formations.map((formation) => {
-                           if (selectedFormations.includes(formation.id)) {
-                              return {
-                                 ...formation,
-                                 notes: e.target.value,
-                              };
-                           }
-                           return formation;
-                        })
-                     );
-                  }}
-                  readOnly={viewOnly}
+               value={thisFormation?.notes || ""}
+               onChange={(e) => {
+                  setFormations(
+                     formations.map((formation) => {
+                        if (selectedFormations.includes(formation.id)) {
+                           return {
+                              ...formation,
+                              notes: e.target.value,
+                           };
+                        }
+                        return formation;
+                     })
+                  );
+               }}
+               readOnly={viewOnly}
                style={{
                   minHeight: 200,
                   height: 200,
@@ -257,7 +257,7 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
                className="dark:bg-neutral-900 transition bg-neutral-50 mt-auto w-full focus:outline-none p-3 text-sm border-t border-neutral-300 focus:border-pink-300 dark:border-neutral-600 dark:focus:border-pink-600 resize-none "
                cols={30}
                rows={9}
-                  placeholder="Formation notes..."
+               placeholder="Formation notes..."
             ></textarea>
          </div>
       </div>

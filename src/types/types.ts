@@ -43,7 +43,8 @@ export type dancerPosition = {
    itemId?: string | null;
    color?: string | null;
    level?: number | null; // elevation off the ground
-   groupId?: string | null;
+   groupId?: string | null; // deprecated
+   shape?: "circle" | "square" | "triangle"; // default circle
 };
 
 export type formation = {
