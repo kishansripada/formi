@@ -34,55 +34,105 @@ export const Sidebar: React.FC<{
    const router = useRouter();
 
    const [newFolderName, setNewFolderName] = useState("");
-   async function createNewDance(roster?: any) {
+   async function createNewDance(roster, stage, projectId: string | null) {
       if (!plan && myDances.length >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {
          router.push("/upgrade");
          return;
       }
 
-      if (session === null) {
+      if (!session) {
          router.push(`/login`);
          return;
       }
 
-      if (roster?.roster?.length) {
-         roster.roster = roster.roster.map((dancer) => {
+      const defaultRoster = new Array(10)
+         .fill(0)
+         .map((_, index) => ({ name: `Dancer-${index + 1}` }))
+         .map((dancer) => {
             return { ...dancer, id: uuidv4() };
          });
-         const { data, error } = await supabase
-            .from("dances")
-            .insert([
-               {
-                  user: session.user.id,
-                  last_edited: new Date(),
-                  dancers: roster.roster,
-                  formations: [
-                     {
-                        name: "First formation",
-                        id: uuidv4(),
-                        positions: roster.roster.map((dancer, index) => {
-                           return { id: dancer.id, position: { x: index - 18, y: 0 } };
-                        }),
-                        durationSeconds: 3,
-                        transition: { durationSeconds: 3 },
-                     },
-                  ],
-               },
-            ])
-            .select("id")
-            .single();
-         if (!data?.id) return;
-         router.refresh();
-         router.push(`/${data.id}/edit`);
-         return;
-      }
+
+      const settings = {
+         gridSnap: 1,
+         previousFormationView: "ghostDancersAndPaths",
+
+         // default stage
+         stageBackground: "gridfluid",
+         gridSubdivisions: 8,
+         verticalFineDivisions: 4,
+         horizontalFineDivisions: 4,
+         horizontalGridSubdivisions: 4,
+         stageDimensions: { width: 36, height: 24 },
+         ...stage,
+      };
+
+      const { gridSizeX, gridSizeY } = getGridCellSize(settings);
+
       const { data, error } = await supabase
          .from("dances")
-         .insert([{ user: session.user.id, last_edited: new Date() }])
-         .select("id")
+         .insert([
+            {
+               user: session.user.id,
+               last_edited: new Date(),
+               dancers: roster || defaultRoster,
+               formations: [
+                  {
+                     name: "First formation",
+                     id: uuidv4(),
+                     positions: (roster || defaultRoster).map((dancer, index) => {
+                        const numDancersPerCol = settings?.stageDimensions?.height / gridSizeY;
+                        const currentCol = Math.floor(index / numDancersPerCol);
+                        const oddIndex = index % 2 === 0;
+                        const x = oddIndex
+                           ? -settings.stageDimensions.width / 2 - gridSizeX * currentCol * 2
+                           : settings.stageDimensions.width / 2 + gridSizeX * currentCol * 2;
+                        const cycle = Math.floor((index % numDancersPerCol) / 2);
+
+                        const y = settings.stageDimensions.height / 2 - cycle * gridSizeY * 2;
+                        return {
+                           ...dancer,
+                           position: { x, y },
+                        };
+                     }),
+
+                     durationSeconds: 3,
+                     transition: { durationSeconds: 3 },
+                  },
+                  {
+                     name: "Second formation",
+                     id: uuidv4(),
+                     positions: (roster || defaultRoster).map((dancer, index) => {
+                        const numDancersPerCol = settings?.stageDimensions?.height / gridSizeY;
+                        const currentCol = Math.floor(index / numDancersPerCol) + 1;
+                        const oddIndex = index % 2 === 0;
+                        let x = oddIndex
+                           ? -settings.stageDimensions.width / 2 - gridSizeX * currentCol * 2
+                           : settings.stageDimensions.width / 2 + gridSizeX * currentCol * 2;
+
+                        // in second formation, dancers are closer to the center
+                        x = x / 2;
+                        const cycle = Math.floor((index % numDancersPerCol) / 2);
+
+                        const y = settings.stageDimensions.height / 2 - cycle * gridSizeY * 2;
+                        return {
+                           ...dancer,
+                           position: { x, y },
+                        };
+                     }),
+
+                     durationSeconds: 3,
+                     transition: { durationSeconds: 3 },
+                  },
+               ],
+               settings,
+               project_id: projectId || null,
+            },
+         ])
+         .select("*")
          .single();
 
       if (!data?.id) return;
+      router.refresh();
       router.push(`/${data.id}/edit`);
    }
 
@@ -295,4 +345,27 @@ export const Sidebar: React.FC<{
          </div>
       </>
    );
+};
+
+const getGridCellSize = (cloudSettings: cloudSettings) => {
+   const { stageBackground, gridSubdivisions, horizontalGridSubdivisions, verticalFineDivisions, horizontalFineDivisions, stageDimensions } =
+      cloudSettings;
+
+   let gridSizeX = 1;
+   let gridSizeY = 1;
+
+   if (stageBackground === "gridfluid" || stageBackground === "cheer9") {
+      // Determine the total number of divisions along each axis.
+      const totalVerticalDivisions = gridSubdivisions * verticalFineDivisions;
+      const totalHorizontalDivisions = horizontalGridSubdivisions * horizontalFineDivisions;
+
+      // Calculate the width and height of each grid cell.
+      gridSizeX = stageDimensions.width / totalVerticalDivisions;
+      gridSizeY = stageDimensions.height / totalHorizontalDivisions;
+   } else {
+      gridSizeX = 1;
+      gridSizeY = 1;
+   }
+
+   return { gridSizeX, gridSizeY };
 };
