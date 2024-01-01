@@ -168,7 +168,29 @@ export const StageSettings: React.FC<{
                   </DropdownMenu>
                ) : null}
             </HStack>
-
+            {(cloudSettings.stageMarkers || []).length ? (
+               <>
+                  <div className=" flex flex-col gap-2 py-2 min-h-[44px] justify-center mb-auto ">
+                     <div className="flex flex-row items-center justify-between px-2">
+                        <p className=" font-medium text-xs">Stage Sketch</p>
+                        <div className="flex flex-row items-center gap-2">
+                           <button
+                              onClick={() => {
+                                 setCloudSettings({ ...cloudSettings, stageMarkers: [] });
+                              }}
+                              className={"hover:bg-neutral-800 p-1  cursor-default"}
+                           >
+                              <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 873 873">
+                                 <circle cx="436.5" cy="436.5" r="405.5" stroke="white" stroke-width="62" />
+                                 <path stroke="white" stroke-width="62" d="m54.82 247.825 751.663 368.686" />
+                              </svg>
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+                  <HDivider />
+               </>
+            ) : null}
             <VStack className="gap-2 px-2 py-2">
                <p className="py-1">Dimensions (feet)</p>
 

@@ -112,6 +112,8 @@ export type cloudSettings = {
 
    backgroundImageOpacity: number;
    hideSubdivisions: boolean;
+
+   stageMarkers: [];
 };
 
 export type comment = {

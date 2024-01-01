@@ -77,6 +77,7 @@ export const Canvas: React.FC<{
 }) => {
    const {
       setFormations,
+      setCloudSettings,
       formations,
       get,
       viewOnly,
@@ -95,6 +96,7 @@ export const Canvas: React.FC<{
       },
       isMobileView,
       isPlaying,
+      isUsingPenTool,
    } = useStore();
    // const undo = useStore((state) => state.liveblocks.room?.history.undo);
    let { selectedFormations, getFirstSelectedFormation } = useStore();
@@ -114,7 +116,7 @@ export const Canvas: React.FC<{
    const [isDragging, setIsDragging] = useState(false);
    const [rotatingDancerId, setRotatingDancerId] = useState(null);
    const [draggingPropId, setDraggingPropId] = useState(null);
-
+   const [penDown, setIsPenDown] = useState(false);
    const horizontalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
    const verticalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
 
@@ -201,6 +203,8 @@ export const Canvas: React.FC<{
       if (!selectedFormations.length || isPlaying) return;
       // if (isMobileView) return;
 
+      if (isUsingPenTool) return;
+      // ///////////////////////////
       const movementX = e.movementX * horizontalScalar;
       const movementY = e.movementY * verticalScalar;
 
@@ -388,6 +392,40 @@ export const Canvas: React.FC<{
    };
 
    const pointerDown = (e: any) => {
+      // if (isUsingPenTool) {
+      //    const target = e.currentTarget;
+
+      //    // Get the bounding rectangle of target
+      //    const rect = target.getBoundingClientRect();
+      //    // Mouse position
+      //    const left = (e.clientX - rect.left) / zoom;
+      //    const top = (e.clientY - rect.top) / zoom;
+      //    const positionToCoords = (position: { left: number; top: number } | null | undefined) => {
+      //       if (!position) return null;
+      //       let { left, top } = position;
+      //       return {
+      //          x: Math.round(((left - (PIXELS_PER_SQUARE * stageDimensions.width) / 2) / PIXELS_PER_SQUARE) * 100) / 100,
+      //          y: Math.round((-(top - (PIXELS_PER_SQUARE * stageDimensions.height) / 2) / PIXELS_PER_SQUARE) * 100) / 100,
+      //       };
+      //    };
+      //    let newCommentCoords = positionToCoords({ left, top });
+      //    const id = uuidv4();
+      //    setFormations(
+      //       formations.map((formation, index) => {
+      //          if (selectedFormations.includes(formation.id)) {
+      //             return {
+      //                ...formation,
+      //                stageMarkers: [...(formation.stageMarkers || []), { id, positions: [newCommentCoords] }],
+      //             };
+      //          }
+
+      //          return formation;
+      //       })
+      //    );
+
+      //    setIsPenDown(id);
+      // }
+
       if (isPlaying) return;
       pauseHistory();
       if (isCommenting) {
@@ -413,6 +451,7 @@ export const Canvas: React.FC<{
             };
          };
          let newCommentCoords = positionToCoords({ left, top });
+
          if (stageFlipped) {
             newCommentCoords = { x: -newCommentCoords?.x, y: -newCommentCoords?.y };
          }
@@ -649,8 +688,77 @@ export const Canvas: React.FC<{
       {
          onDrag: ({ delta: [movementX, movementY], cancel, touches, event, target, pinching }) => {
             if (pinching) cancel();
+            // console.log({ isUsingPenTool });
+            // if (isUsingPenTool) {
+            //    console.log("drag");
+            // }
 
-            if (!target.id && touches === 1 && isMobileView) {
+            if (isUsingPenTool && penDown) {
+               // console.log("drag");
+               const target = event.currentTarget;
+               const stage = target.querySelector("#stage-cutout");
+               // Get the bounding rectangle of target
+               const rect = stage.getBoundingClientRect();
+               // Mouse position
+               const left = (event.clientX - rect.left) / zoom;
+               const top = (event.clientY - rect.top) / zoom;
+               const positionToCoords = (position: { left: number; top: number } | null | undefined) => {
+                  if (!position) return null;
+                  let { left, top } = position;
+                  return {
+                     x: Math.round(((left - (PIXELS_PER_SQUARE * stageDimensions.width) / 2) / PIXELS_PER_SQUARE) * 100) / 100,
+                     y: Math.round((-(top - (PIXELS_PER_SQUARE * stageDimensions.height) / 2) / PIXELS_PER_SQUARE) * 100) / 100,
+                  };
+               };
+               let newPointCoords = positionToCoords({ left, top });
+               const threshold = 0.5;
+
+               if (isUsingPenTool === "formation") {
+                  setFormations(
+                     formations.map((formation) => {
+                        if (selectedFormations.includes(formation.id)) {
+                           return {
+                              ...formation,
+                              stageMarkers: (formation.stageMarkers || []).map((stageMarker) => {
+                                 if (stageMarker.id === penDown) {
+                                    const lastPoint = stageMarker.positions[stageMarker.positions.length - 1];
+                                    if (Math.abs(lastPoint.x - newPointCoords.x) < threshold && Math.abs(lastPoint.y - newPointCoords.y) < threshold)
+                                       return stageMarker;
+                                    return {
+                                       ...stageMarker,
+                                       positions: [...stageMarker.positions, newPointCoords],
+                                    };
+                                 }
+                                 return stageMarker;
+                              }),
+                           };
+                        }
+                        return formation;
+                     })
+                  );
+               } else {
+                  // === "stage"
+                  setCloudSettings({
+                     ...cloudSettings,
+                     stageMarkers: (cloudSettings.stageMarkers || []).map((stageMarker) => {
+                        if (stageMarker.id === penDown) {
+                           const lastPoint = stageMarker.positions[stageMarker.positions.length - 1];
+                           if (Math.abs(lastPoint.x - newPointCoords.x) < threshold && Math.abs(lastPoint.y - newPointCoords.y) < threshold)
+                              return stageMarker;
+                           return {
+                              ...stageMarker,
+                              positions: [...stageMarker.positions, newPointCoords],
+                           };
+                        }
+                        return stageMarker;
+                     }),
+                  });
+               }
+
+               return;
+            }
+
+            if (!target.id && touches === 1 && isMobileView && !isUsingPenTool) {
                setScrollOffset((scrollOffset) => ({
                   x: scrollOffset.x + movementX / zoom,
                   y: scrollOffset.y + movementY / zoom,
@@ -771,13 +879,56 @@ export const Canvas: React.FC<{
          onDragEnd: () => {
             if (viewOnly) return;
             roundPositions();
+            setIsPenDown(false);
+         },
+         onDragStart: ({ event }) => {
+            if (isUsingPenTool) {
+               const target = event.currentTarget;
+               const stage = target.querySelector("#stage-cutout");
+               // Get the bounding rectangle of target
+               const rect = stage.getBoundingClientRect();
+               // Mouse position
+               const left = (event.clientX - rect.left) / zoom;
+               const top = (event.clientY - rect.top) / zoom;
+               const positionToCoords = (position: { left: number; top: number } | null | undefined) => {
+                  if (!position) return null;
+                  let { left, top } = position;
+                  return {
+                     x: Math.round(((left - (PIXELS_PER_SQUARE * stageDimensions.width) / 2) / PIXELS_PER_SQUARE) * 100) / 100,
+                     y: Math.round((-(top - (PIXELS_PER_SQUARE * stageDimensions.height) / 2) / PIXELS_PER_SQUARE) * 100) / 100,
+                  };
+               };
+               let newCommentCoords = positionToCoords({ left, top });
+               const id = uuidv4();
+               setIsPenDown(id);
+
+               if (isUsingPenTool === "formation") {
+                  setFormations(
+                     formations.map((formation, index) => {
+                        if (selectedFormations.includes(formation.id)) {
+                           return {
+                              ...formation,
+                              stageMarkers: [...(formation.stageMarkers || []), { id, positions: [newCommentCoords] }],
+                           };
+                        }
+                        return formation;
+                     })
+                  );
+               } else {
+                  // === "stage"
+                  setCloudSettings({
+                     ...cloudSettings,
+                     stageMarkers: [...(cloudSettings.stageMarkers || []), { id, positions: [newCommentCoords] }],
+                  });
+               }
+            }
          },
       },
 
       {
          eventOptions: { passive: false },
          target: container.current,
-         // drag: { enabled: isMobileView },
+         // drag: { enabled: },
          wheel: { preventDefault: true, enabled: !isMobileView },
          pinch: {
             from: () => [zoom, zoom],
@@ -888,7 +1039,7 @@ export const Canvas: React.FC<{
          ) : null}
          <div
             // flex
-                  className="  relative  bg-neutral-50  dark:bg-neutral-900  h-full  w-full overflow-scroll  overscroll-none  flex flex-row items-center justify-center "
+            className="  relative  bg-neutral-50  dark:bg-neutral-900  h-full  w-full overflow-scroll  overscroll-none  flex flex-row items-center justify-center "
             id="stage"
             ref={container}
             // {...bind()}
@@ -945,7 +1096,7 @@ export const Canvas: React.FC<{
                   ref={stage}
                   id="stage-cutout"
                   onPointerDown={pointerDown}
-                        className="relative  border-2 dark:border-pink-600 border-pink-300 rounded-xl bg-white dark:bg-neutral-900 box-content "
+                  className="relative  border-2 dark:border-pink-600 border-pink-300 rounded-xl bg-white dark:bg-neutral-900 box-content "
                   // border-pink-600 border-4 box-border
                   style={{
                      // margin: 400,
@@ -1000,7 +1151,7 @@ export const Canvas: React.FC<{
                      {cloudSettings.stageBackground === "gridfluid" || stageBackground === "cheer9" ? (
                         <>
                            {!cloudSettings.hideSubdivisions ? (
-                           <GridLines localSettings={localSettings} zoom={zoom} stageDimensions={stageDimensions} />
+                              <GridLines localSettings={localSettings} zoom={zoom} stageDimensions={stageDimensions} />
                            ) : null}
                            <StageLines localSettings={localSettings} divisions={{ y: 4, x: 8 }} zoom={zoom} stageDimensions={stageDimensions} />
                         </>
@@ -1062,12 +1213,12 @@ export const Canvas: React.FC<{
                      </>
                   ) : null}
 
-                        {!localSettings.stageFlipped && (
+                  {!localSettings.stageFlipped && (
                      <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
                         <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
                      </div>
                   )}
-                        {localSettings.stageFlipped && (
+                  {localSettings.stageFlipped && (
                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-10">
                         <p className="text-center text-3xl dark:text-white font-extrabold opacity-30 tracking-widest">BACKSTAGE</p>
                      </div>

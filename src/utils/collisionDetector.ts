@@ -1,4 +1,4 @@
-import { formation, dancerPosition } from "./types";
+import { formation, dancerPosition } from "../types/types";
 interface Position {
    x: number;
    y: number;

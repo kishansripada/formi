@@ -349,6 +349,7 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
                      }),
                      comments: [],
                      notes: "",
+                     stageMarkers: [],
                      groups: keepGroups ? formations[formations.length - 1]?.groups || [] : [],
                   },
                ],
@@ -655,6 +656,9 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
                .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
                .reduce((a, b) => a + b, 0);
          },
+
+         isUsingPenTool: false,
+         setIsUsingPenTool: (isUsingPenTool: boolean) => set({ isUsingPenTool }),
       }),
       {
          client,

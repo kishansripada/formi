@@ -11,19 +11,7 @@ import { HDivider } from "../../../../../../@/components/ui/hdivider";
 import { VStack } from "../../../../../../@/components/ui/stacks";
 
 export const CurrentFormation: React.FC<{}> = ({}) => {
-   const {
-      formations,
-      setFormations,
-      viewOnly,
-      selectedFormations,
-      selectedDancers,
-      setSelectedDancers,
-      deleteGroup,
-      setHoveringDancerIds,
-      shiftHeld,
-      pauseHistory,
-      resumeHistory,
-   } = useStore();
+   const { formations, setFormations, viewOnly, selectedFormations, isUsingPenTool } = useStore();
 
    const thisFormation = useStore((state) => state.getFirstSelectedFormation());
 
@@ -231,6 +219,37 @@ export const CurrentFormation: React.FC<{}> = ({}) => {
                })}
             </div> */}
          </VStack>
+
+         {(thisFormation.stageMarkers || []).length ? (
+            <div className=" flex flex-col gap-2 py-2 min-h-[44px] justify-center mb-auto ">
+               <div className="flex flex-row items-center justify-between px-2">
+                  <p className=" font-medium text-xs">Formation Sketch</p>
+                  <div className="flex flex-row items-center gap-2">
+                     <button
+                        onClick={() => {
+                           setFormations(
+                              formations.map((formation) => {
+                                 if (selectedFormations.includes(formation.id)) {
+                                    return {
+                                       ...formation,
+                                       stageMarkers: [],
+                                    };
+                                 }
+                                 return formation;
+                              })
+                           );
+                        }}
+                        className={"hover:bg-neutral-800 p-1  cursor-default"}
+                     >
+                        <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 873 873">
+                           <circle cx="436.5" cy="436.5" r="405.5" stroke="white" stroke-width="62" />
+                           <path stroke="white" stroke-width="62" d="m54.82 247.825 751.663 368.686" />
+                        </svg>
+                     </button>
+                  </div>
+               </div>
+            </div>
+         ) : null}
 
          <div>
             {/* <HDivider /> */}

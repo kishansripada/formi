@@ -36,6 +36,8 @@ import {
    DropdownMenuSubTrigger,
    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { HStack, VStack } from "../../../../../@/components/ui/stacks";
 import LearnKeyboardShortcut from "../../../../../@/components/LearnKeyboardShortcut";
 import { KeyboardShortcuts } from "./Modals/KeyboardShortcuts";
@@ -67,6 +69,7 @@ export const Header: React.FC<{
    setPermissions: Function;
    anyoneCanView: boolean;
    setAnyoneCanView: Function;
+   setMenuOpen: Function;
 }> = ({
    saved,
    undo,
@@ -89,6 +92,7 @@ export const Header: React.FC<{
    anyoneCanView,
    setAnyoneCanView,
    scene,
+   setMenuOpen,
 }) => {
    const {
       formations,
@@ -104,6 +108,8 @@ export const Header: React.FC<{
       copySelectedPositions,
       pasteCopiedPositions,
       setSelectedFormations,
+      isUsingPenTool,
+      setIsUsingPenTool,
    } = useStore();
 
    const { setTheme, theme } = useTheme();
@@ -114,7 +120,7 @@ export const Header: React.FC<{
    const redo = liveblocks.room?.history.redo;
    const isDesktop = useIsDesktop();
    const [rosterName, setRosterName] = useState("");
-
+   const [penMenuOpen, setPenMenuOpen] = useState(false);
    const createNewRoster = async () => {
       if (!session) return;
       const response = await supabase.from("rosters").insert([
@@ -525,6 +531,58 @@ export const Header: React.FC<{
                   </button>
                ) : null}
 
+               <Select
+                  open={penMenuOpen}
+                  onValueChange={(value) => {
+                     // console.log(value);
+                     if (value === "stage") {
+                        setMenuOpen("stageSettings");
+                     }
+                     setPenMenuOpen(false);
+                     setIsUsingPenTool(value);
+                  }}
+                  value={isUsingPenTool}
+               >
+                  <SelectTrigger
+                     onClick={() => {
+                        if (isUsingPenTool) {
+                           setIsUsingPenTool(false);
+                        } else {
+                           setPenMenuOpen(true);
+                        }
+                     }}
+                     className="min-w-[48px] w-[48px] border-none h-full p-0"
+                  >
+                     {!viewOnlyInitial ? (
+                        <button
+                           title="Draw on stage"
+                           className={`min-w-[48px]  hidden lg:grid h-full  place-items-center ${
+                              isUsingPenTool ? "dark:bg-pink-600 bg-pink-300" : "bg-transparent"
+                           }`}
+                        >
+                           <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-6 h-6"
+                           >
+                              <path
+                                 strokeLinecap="round"
+                                 strokeLinejoin="round"
+                                 d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+                              />
+                           </svg>
+                        </button>
+                     ) : null}
+                  </SelectTrigger>
+                  <SelectContent>
+                     <SelectItem value="stage">On Stage</SelectItem>
+                     <SelectItem value="formation">On Formation</SelectItem>
+                  </SelectContent>
+               </Select>
+
                {!viewOnlyInitial && !isMobileView ? (
                   <button
                      title="Comment on stage"
@@ -708,7 +766,7 @@ export const Header: React.FC<{
 
                {!viewOnlyInitial ? (
                   <Dialog>
-                     <DialogTrigger suppressHydrationWarning={true} r>
+                     <DialogTrigger>
                         <Button className="px-3 h-8 text-xs">Share</Button>
                      </DialogTrigger>
                      <DialogContent>

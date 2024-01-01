@@ -1,6 +1,6 @@
 "use client";
 import useCookies, { roundToHundredth, useSupabaseQuery, whereInFormation } from "../../../utls";
-import { detectCollisions } from "../../../types/collisionDetector";
+import { detectCollisions } from "../../../utils/collisionDetector";
 import { useIsDesktop } from "../../../utls";
 import { Video } from "./_components/Video";
 import { DndContext, useDroppable } from "@dnd-kit/core";
@@ -52,6 +52,8 @@ import { HStack } from "../../../../@/components/ui/stacks";
 import { Input } from "../../../../@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../../@/components/ui/dropdown-menu";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { FormationMarkersLayer } from "./_components/FormationMarkersLayer";
+import { StageMarkersLayer } from "./_components/StageMarkersLayer";
 
 if (typeof Node === "function" && Node.prototype) {
    const originalRemoveChild = Node.prototype.removeChild;
@@ -127,6 +129,7 @@ const Edit = ({
       shiftHeld,
       setShiftHeld,
       isPlaying,
+      isUsingPenTool,
    } = useStore();
 
    useEffect(() => {
@@ -518,6 +521,7 @@ const Edit = ({
                         setPermissions={setPermissions}
                         anyoneCanView={anyoneCanView}
                         setAnyoneCanView={setAnyoneCanView}
+                        setMenuOpen={setMenuOpen}
                      />
                   )}
 
@@ -729,29 +733,24 @@ const Edit = ({
                                              <></>
                                           )}
 
-                                          <TemplateOverlay
-                                             currentTemplate={currentTemplate}
+                                          <FormationMarkersLayer
+                                             zoom={zoom}
+                                             collisions={collisions}
+                                             dancers={dancers}
+                                             currentFormationIndex={currentFormationIndex}
+                                             selectedDancers={selectedDancers}
                                              localSettings={localSettings}
                                              coordsToPosition={coordsToPosition}
-                                          ></TemplateOverlay>
-
-                                          {dancers.map((dancer, index) => (
-                                             <DancerAlias
+                                          ></FormationMarkersLayer>
+                                          <StageMarkersLayer
                                                 zoom={zoom}
-                                                setZoom={setZoom}
-                                                coordsToPosition={coordsToPosition}
-                                                selectedDancers={selectedDancers}
-                                                position={position}
-                                                key={dancer.id}
-                                                dancer={dancer}
-                                                draggingDancerId={draggingDancerId}
+                                             collisions={collisions}
+                                             dancers={dancers}
                                                 currentFormationIndex={currentFormationIndex}
-                                                percentThroughTransition={percentThroughTransition}
+                                             selectedDancers={selectedDancers}
                                                 localSettings={localSettings}
-                                                index={index}
-                                                collisions={collisions}
-                                             />
-                                          ))}
+                                             coordsToPosition={coordsToPosition}
+                                          ></StageMarkersLayer>
 
                                           {selectedFormation !== null
                                              ? props.map((prop: prop) => {
@@ -774,9 +773,37 @@ const Edit = ({
                                                })
                                              : null}
 
+                                          {menuOpen !== "stageSettings" && (
+                                             <>
+                                                <TemplateOverlay
+                                                   currentTemplate={currentTemplate}
+                                                   localSettings={localSettings}
+                                                   coordsToPosition={coordsToPosition}
+                                                ></TemplateOverlay>
+
+                                                {dancers.map((dancer, index) => (
+                                                   <DancerAlias
+                                                      zoom={zoom}
+                                                      setZoom={setZoom}
+                                                      coordsToPosition={coordsToPosition}
+                                                      selectedDancers={selectedDancers}
+                                                      position={position}
+                                                      key={dancer.id}
+                                                      dancer={dancer}
+                                                      draggingDancerId={draggingDancerId}
+                                                      currentFormationIndex={currentFormationIndex}
+                                                      percentThroughTransition={percentThroughTransition}
+                                                      localSettings={localSettings}
+                                                      index={index}
+                                                      collisions={collisions}
+                                                   />
+                                                ))}
+
                                           {localSettings.viewCollisions && selectedFormations.length === 1
                                              ? collisions.map((collision, i) => {
-                                                  return <Collision key={i} coordsToPosition={coordsToPosition} collision={collision}></Collision>;
+                                                        return (
+                                                           <Collision key={i} coordsToPosition={coordsToPosition} collision={collision}></Collision>
+                                                        );
                                                })
                                              : null}
 
@@ -830,6 +857,8 @@ const Edit = ({
                                                         })}
                                              </>
                                           ) : null}
+                                             </>
+                                          )}
                                        </Canvas>
                                     ) : null}
                                  </div>
