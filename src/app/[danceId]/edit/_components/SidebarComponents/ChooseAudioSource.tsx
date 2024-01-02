@@ -169,9 +169,9 @@ export const ChooseAudioSource: React.FC<{
                                              return { ...localSettings, isInSlideMode: false };
                                           });
                                        }}
-                                       className={` ${
-                                          audiofile.name === soundCloudTrackId?.split("/").slice(-1)[0] ? "opacity-50 pointer-events-none" : ""
-                                       }    `}
+                                       // className={` ${
+                                       //    audiofile.name === soundCloudTrackId?.split("/").slice(-1)[0] ? "opacity-50 pointer-events-none" : ""
+                                       // }    `}
                                     >
                                        {audiofile.name}
                                     </div>
