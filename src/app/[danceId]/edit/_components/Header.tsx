@@ -622,7 +622,7 @@ export const Header: React.FC<{
                <a
                   href="https://linktr.ee/formistudio.app"
                   target={"_blank"}
-                  className="text-xs mr-6  whitespace-nowrap ml-3  hidden lg:block border-pink-600 border p-2 rounded-md"
+                  className="text-xs mr-6  whitespace-nowrap ml-3  hidden xl:block border-pink-600 border p-2 rounded-md"
                >
                   Beta feedback
                </a>

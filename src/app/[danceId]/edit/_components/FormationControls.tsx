@@ -63,7 +63,7 @@ export const FormationControls: React.FC<{
                </button>
 
                <DropdownMenu>
-                  <DropdownMenuTrigger className="text-sm flex flex-row items-center">
+                  <DropdownMenuTrigger className="text-sm hidden xl:flex flex-row items-center">
                      More{" "}
                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 ml-1">
                         <path
@@ -147,7 +147,7 @@ export const FormationControls: React.FC<{
 
          <div className="flex flex-row ml-auto">
             {selectedFormations.length === 1 ? (
-               <p className="mr-5 text-sm font-semibold">{`Formation ${
+               <p className="mr-5 text-sm font-semibold hidden xl:block">{`Formation ${
                   formations.findIndex((formation) => formation.id === getFirstSelectedFormation()?.id) + 1
                }/${formations.length}`}</p>
             ) : null}
