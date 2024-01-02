@@ -173,7 +173,7 @@ export const Layer: React.FC<{
                               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                            </svg>
                         </button>
-                        <DropdownMenu>
+                        {/* <DropdownMenu>
                            <DropdownMenuTrigger asChild>
                               <button className="border-l w-10 hover:bg-neutral-700 transition h-full border-neutral-500 grid place-items-center">
                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -190,7 +190,7 @@ export const Layer: React.FC<{
                                  New formation with same groups
                               </DropdownMenuItem>
                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        </DropdownMenu> */}
                      </div>
                   ) : null}
                </SortableContext>
