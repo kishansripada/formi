@@ -1,4 +1,5 @@
 "use client";
+import { v4 as uuidv4 } from "uuid";
 import useCookies, { roundToHundredth, useSupabaseQuery, whereInFormation } from "../../../utls";
 import { detectCollisions } from "../../../utils/collisionDetector";
 import { useIsDesktop } from "../../../utls";
@@ -12,7 +13,7 @@ import { useLocalStorage, useUploadToSupabase } from "../../../utls";
 import debounce from "lodash.debounce";
 import toast, { Toaster } from "react-hot-toast";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { comment, PIXELS_PER_SQUARE, localSettings, prop } from "../../../types/types";
+import { comment, PIXELS_PER_SQUARE, localSettings, prop, dancerPosition } from "../../../types/types";
 import { AudioControls } from "./_components/AudioControls";
 import { Header } from "./_components/Header";
 import { DancerAlias } from "./_components/DancerAlias";
@@ -129,9 +130,10 @@ const Edit = ({
       shiftHeld,
       setShiftHeld,
       isPlaying,
-      isUsingPenTool,
+      newFormationFromLast,
+      getSelectedFormationIndex,
    } = useStore();
-
+   const [cookies, setCookies] = useCookies(myCookies);
    useEffect(() => {
       // Sentry.init({
       //    dsn: "https://256536ba4b0c4b0e96d719fc685bbd59@o4504556574605312.ingest.sentry.io/4504965604638720",
@@ -199,6 +201,7 @@ const Edit = ({
       fullScreen: false,
       isDarkMode: true,
       autoScroll: false,
+      isInSlideMode: false,
    });
 
    if (localSettings.viewingTwo === undefined || localSettings.isDarkMode === undefined || localSettings.autoScroll === undefined) {
@@ -214,6 +217,7 @@ const Edit = ({
          fullScreen: false,
          isDarkMode: true,
          autoScroll: false,
+         isInSlideMode: false,
       });
    }
    const videoPlayer = useRef();
@@ -299,6 +303,7 @@ const Edit = ({
    const propsIsSaved = useUploadToSupabase("props", props, danceId, supabaseUploadingEnabled);
    const itemsIsSaved = useUploadToSupabase("items", items, danceId, supabaseUploadingEnabled);
    const segmentsIsSaved = useUploadToSupabase("segments", segments, danceId, supabaseUploadingEnabled);
+   const localSettingsIsSaved = useUploadToSupabase("localsettings", localSettings, danceId, supabaseUploadingEnabled);
 
    const saved =
       soundCloudIdSaved &&
@@ -335,7 +340,6 @@ const Edit = ({
 
    const isDesktop = useIsDesktop();
 
-   const [cookies, setCookies] = useCookies(myCookies);
    // !cookies.hasBeenPromptedForFeedback && isDesktop
    const [feedbackOpen, setFeedbackOpen] = useState(false);
 
@@ -585,6 +589,8 @@ const Edit = ({
                                                 audioFiles={audioFiles}
                                                 invalidateAudioFiles={invalidateAudioFiles}
                                                 setLocalSource={setLocalSource}
+                                                setLocalSettings={setLocalSettings}
+                                                localSettings={localSettings}
                                              ></ChooseAudioSource>
                                           ) : menuOpen === "formationideas" ? (
                                              <FormationIdeas
@@ -743,12 +749,12 @@ const Edit = ({
                                              coordsToPosition={coordsToPosition}
                                           ></FormationMarkersLayer>
                                           <StageMarkersLayer
-                                                zoom={zoom}
+                                             zoom={zoom}
                                              collisions={collisions}
                                              dancers={dancers}
-                                                currentFormationIndex={currentFormationIndex}
+                                             currentFormationIndex={currentFormationIndex}
                                              selectedDancers={selectedDancers}
-                                                localSettings={localSettings}
+                                             localSettings={localSettings}
                                              coordsToPosition={coordsToPosition}
                                           ></StageMarkersLayer>
 
@@ -799,53 +805,32 @@ const Edit = ({
                                                    />
                                                 ))}
 
-                                          {localSettings.viewCollisions && selectedFormations.length === 1
-                                             ? collisions.map((collision, i) => {
+                                                {localSettings.viewCollisions && selectedFormations.length === 1
+                                                   ? collisions.map((collision, i) => {
                                                         return (
                                                            <Collision key={i} coordsToPosition={coordsToPosition} collision={collision}></Collision>
                                                         );
-                                               })
-                                             : null}
+                                                     })
+                                                   : null}
 
-                                          {selectedFormations.length === 1 && !isPlaying && !isMobileView ? (
-                                             <>
-                                                {(getFirstSelectedFormation()?.comments || []).map((comment: comment) => {
-                                                   return (
-                                                      <Comment
-                                                         zoom={zoom}
-                                                         localSettings={localSettings}
-                                                         coordsToPosition={coordsToPosition}
-                                                         key={comment.id}
-                                                         comment={comment}
-                                                         addToStack={() => {}}
-                                                         pushChange={() => {}}
-                                                      />
-                                                   );
-                                                })}
+                                                {selectedFormations.length === 1 && !isPlaying && !isMobileView ? (
+                                                   <>
+                                                      {(getFirstSelectedFormation()?.comments || []).map((comment: comment) => {
+                                                         return (
+                                                            <Comment
+                                                               zoom={zoom}
+                                                               localSettings={localSettings}
+                                                               coordsToPosition={coordsToPosition}
+                                                               key={comment.id}
+                                                               comment={comment}
+                                                               addToStack={() => {}}
+                                                               pushChange={() => {}}
+                                                            />
+                                                         );
+                                                      })}
 
-                                                {localSettings.previousFormationView !== "none"
-                                                   ? dancers.map((dancer, index) => (
-                                                        <DancerAliasShadow
-                                                           coordsToPosition={coordsToPosition}
-                                                           currentFormationIndex={currentFormationIndex}
-                                                           key={"shadow" + dancer.id}
-                                                           dancer={dancer}
-                                                           localSettings={localSettings}
-                                                        />
-                                                     ))
-                                                   : dancers
-                                                        .filter(
-                                                           (dancer) =>
-                                                              selectedDancers.includes(dancer.id) ||
-                                                              (selectedFormation
-                                                                 ? collisions
-                                                                      ?.map((collision) => collision.dancers)
-                                                                      .flat(Infinity)
-                                                                      .includes(dancer.id)
-                                                                 : false)
-                                                        )
-                                                        .map((dancer, index) => {
-                                                           return (
+                                                      {localSettings.previousFormationView !== "none"
+                                                         ? dancers.map((dancer, index) => (
                                                               <DancerAliasShadow
                                                                  coordsToPosition={coordsToPosition}
                                                                  currentFormationIndex={currentFormationIndex}
@@ -853,10 +838,31 @@ const Edit = ({
                                                                  dancer={dancer}
                                                                  localSettings={localSettings}
                                                               />
-                                                           );
-                                                        })}
-                                             </>
-                                          ) : null}
+                                                           ))
+                                                         : dancers
+                                                              .filter(
+                                                                 (dancer) =>
+                                                                    selectedDancers.includes(dancer.id) ||
+                                                                    (selectedFormation
+                                                                       ? collisions
+                                                                            ?.map((collision) => collision.dancers)
+                                                                            .flat(Infinity)
+                                                                            .includes(dancer.id)
+                                                                       : false)
+                                                              )
+                                                              .map((dancer, index) => {
+                                                                 return (
+                                                                    <DancerAliasShadow
+                                                                       coordsToPosition={coordsToPosition}
+                                                                       currentFormationIndex={currentFormationIndex}
+                                                                       key={"shadow" + dancer.id}
+                                                                       dancer={dancer}
+                                                                       localSettings={localSettings}
+                                                                    />
+                                                                 );
+                                                              })}
+                                                   </>
+                                                ) : null}
                                              </>
                                           )}
                                        </Canvas>
@@ -896,40 +902,170 @@ const Edit = ({
                         </div>
 
                         <div className="  bg-black">
-                           <AudioControls
-                              dancers={dancers}
-                              setHelpUrl={setHelpUrl}
-                              localSettings={localSettings}
-                              setLocalSettings={setLocalSettings}
-                              setPlaybackRate={setPlaybackRate}
-                              addToStack={() => {}}
-                              pushChange={() => {}}
-                              position={position}
-                              setPixelsPerSecond={setPixelsPerSecond}
-                              pixelsPerSecond={pixelsPerSecond}
-                              localSource={localSource}
-                           ></AudioControls>
+                           {!localSettings.isInSlideMode && (
+                              <AudioControls
+                                 dancers={dancers}
+                                 setHelpUrl={setHelpUrl}
+                                 localSettings={localSettings}
+                                 setLocalSettings={setLocalSettings}
+                                 setPlaybackRate={setPlaybackRate}
+                                 addToStack={() => {}}
+                                 pushChange={() => {}}
+                                 position={position}
+                                 setPixelsPerSecond={setPixelsPerSecond}
+                                 pixelsPerSecond={pixelsPerSecond}
+                                 localSource={localSource}
+                              ></AudioControls>
+                           )}
 
-                           <Timeline
-                              shiftHeld={shiftHeld}
-                              playbackRate={playbackRate}
-                              setIsScrollingTimeline={setIsScrollingTimeline}
-                              isScrollingTimeline={isScrollingTimeline}
-                              setPixelsPerSecond={setPixelsPerSecond}
-                              addToStack={() => {}}
-                              pushChange={() => {}}
-                              setSelectedDancers={setSelectedDancers}
-                              position={position}
-                              soundCloudTrackId={soundCloudTrackId}
-                              pixelsPerSecond={pixelsPerSecond}
-                              setPosition={setPosition}
-                              videoPlayer={videoPlayer}
-                              localSource={localSource}
-                              localSettings={localSettings}
-                              hasVisited={true}
-                              currentFormationIndex={currentFormationIndex}
-                              menuOpen={menuOpen}
-                           ></Timeline>
+                           {!localSettings.isInSlideMode ? (
+                              <Timeline
+                                 shiftHeld={shiftHeld}
+                                 playbackRate={playbackRate}
+                                 setIsScrollingTimeline={setIsScrollingTimeline}
+                                 isScrollingTimeline={isScrollingTimeline}
+                                 setPixelsPerSecond={setPixelsPerSecond}
+                                 addToStack={() => {}}
+                                 pushChange={() => {}}
+                                 setSelectedDancers={setSelectedDancers}
+                                 position={position}
+                                 soundCloudTrackId={soundCloudTrackId}
+                                 pixelsPerSecond={pixelsPerSecond}
+                                 setPosition={setPosition}
+                                 videoPlayer={videoPlayer}
+                                 localSource={localSource}
+                                 localSettings={localSettings}
+                                 hasVisited={true}
+                                 currentFormationIndex={currentFormationIndex}
+                                 menuOpen={menuOpen}
+                              ></Timeline>
+                           ) : (
+                              <div
+                                 className=" overflow-y-hidden overflow-x-scroll gap-3 relative flex flex-row removeScrollBar bg-neutral-50 dark:bg-neutral-900 border-t border-neutral-700  p-3 "
+                                 style={{
+                                    overscrollBehavior: "none",
+                                    touchAction: "pan-x",
+                                 }}
+                              >
+                                 {formations.map((formation, i) => {
+                                    const thisFormation = formations[i];
+                                    return (
+                                       <div className="flex flex-col gap-1 reltive max-w-[120px]">
+                                          <p className="text-xs whitespace-nowrap overflow-hidden font-medium text-white ml-1">
+                                             {thisFormation.name}
+                                          </p>
+                                          <div
+                                             onClick={(e: any) => {
+                                                setSelectedFormations([formation.id]);
+                                             }}
+                                             style={{
+                                                borderColor: formation.id === getFirstSelectedFormation()?.id ? "#db2777" : "rgb(64 64 64)",
+                                             }}
+                                             className="rounded-md border border-neutral-700 min-h-[70px] min-w-[120px] w-[120px] relative"
+                                          >
+                                             {i !== formations.length - 1 && (
+                                                <div
+                                                   onClick={() => {
+                                                      const selectedFormationIndex = i;
+                                                      const formationAtIndex = formations[selectedFormationIndex];
+                                                      setFormations([
+                                                         ...formations.slice(0, selectedFormationIndex),
+                                                         {
+                                                            ...formationAtIndex,
+                                                         },
+                                                         {
+                                                            ...formationAtIndex,
+                                                            id: uuidv4(),
+                                                            name: formationAtIndex.name + " copy",
+                                                         },
+                                                         ...formations.slice(selectedFormationIndex + 1),
+                                                      ]);
+                                                      // setSelectedFormations([formations[i + 2]?.id]);
+                                                   }}
+                                                   className={`absolute w-6 h-6 rounded-md grid place-items-center border border-neutral-700 text-white bg-neutral-700 transition -right-5 top-1/2 -translate-y-1/2 z-10 opacity-0 ${
+                                                      isMobileView && getSelectedFormationIndex() === i ? "opacity-100" : "hover:opacity-100"
+                                                   } `}
+                                                >
+                                                   <svg
+                                                      xmlns="http://www.w3.org/2000/svg"
+                                                      viewBox="0 0 16 16"
+                                                      fill="currentColor"
+                                                      className="w-4 h-4"
+                                                   >
+                                                      <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                                   </svg>
+                                                </div>
+                                             )}
+                                             {thisFormation.positions?.map((position: dancerPosition) => {
+                                                return (
+                                                   <div
+                                                      key={position.id}
+                                                      className="absolute w-1 h-1  -translate-x-1/2 -translate-y-1/2 rounded-full  pointer-events-none"
+                                                      style={{
+                                                         backgroundColor:
+                                                            position.color ||
+                                                            dancers?.find((dancer: dancer) => dancer.id === position.id)?.color ||
+                                                            "#db2777",
+                                                         left: `${
+                                                            ((position.position.x + cloudSettings.stageDimensions.width / 2) /
+                                                               cloudSettings.stageDimensions.width) *
+                                                            100
+                                                         }%`,
+                                                         top: `${
+                                                            ((-position.position.y + cloudSettings.stageDimensions.height / 2) /
+                                                               cloudSettings.stageDimensions.height) *
+                                                            100
+                                                         }%`,
+                                                      }}
+                                                   ></div>
+                                                );
+                                             })}
+                                          </div>
+                                       </div>
+                                    );
+                                 })}
+                                 {!viewOnly ? (
+                                    <div className="rounded-md border border-neutral-700 overflow-hidden min-h-[70px] h-[70px] mt-auto min-w-[120px] dark:text-white flex flex-row items-center justify-between">
+                                       <button
+                                          onClick={() => newFormationFromLast(true)}
+                                          className="grid place-items-center w-full hover:bg-neutral-700 transition h-full"
+                                       >
+                                          <svg
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             fill="none"
+                                             viewBox="0 0 24 24"
+                                             strokeWidth={1.5}
+                                             stroke="currentColor"
+                                             className="w-6 h-6"
+                                          >
+                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                          </svg>
+                                       </button>
+                                       <DropdownMenu>
+                                          <DropdownMenuTrigger asChild>
+                                             <button className="border-l w-10 hover:bg-neutral-700 transition h-full border-neutral-500 grid place-items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                                   <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                                                </svg>
+                                             </button>
+                                          </DropdownMenuTrigger>
+
+                                          <DropdownMenuContent>
+                                             <DropdownMenuItem
+                                                onClick={() => newFormationFromLast(false)}
+                                                className="hover:bg-neutral-700 transition"
+                                             >
+                                                New formation and no groups
+                                             </DropdownMenuItem>
+                                             <DropdownMenuItem onClick={() => newFormationFromLast(true)} className="hover:bg-neutral-700 transition">
+                                                New formation with same groups
+                                             </DropdownMenuItem>
+                                          </DropdownMenuContent>
+                                       </DropdownMenu>
+                                    </div>
+                                 ) : null}
+                              </div>
+                           )}
                         </div>
                      </div>
                   </div>

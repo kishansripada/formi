@@ -87,6 +87,7 @@ export type localSettings = {
    isDarkMode: boolean;
    autoScroll: boolean;
    videoPlacement: "pip" | "left" | "above" | "hidden";
+   isInSlideMode: boolean;
 };
 
 export type cloudSettings = {

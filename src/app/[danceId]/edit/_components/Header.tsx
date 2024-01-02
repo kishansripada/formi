@@ -42,6 +42,7 @@ import { HStack, VStack } from "../../../../../@/components/ui/stacks";
 import LearnKeyboardShortcut from "../../../../../@/components/LearnKeyboardShortcut";
 import { KeyboardShortcuts } from "./Modals/KeyboardShortcuts";
 import { sleep } from "../../../../utils/sleep";
+import { Switch } from "../../../../../@/components/ui/switch";
 
 export const Header: React.FC<{
    saved: boolean;
@@ -110,6 +111,7 @@ export const Header: React.FC<{
       setSelectedFormations,
       isUsingPenTool,
       setIsUsingPenTool,
+      setIsPlaying,
    } = useStore();
 
    const { setTheme, theme } = useTheme();
@@ -650,12 +652,16 @@ export const Header: React.FC<{
             </div>
 
             <div className=" flex flex-row items-center justify-end mr-3 w-2/5 gap-3 ">
-               {!plan && session ? (
-                  <Link href={"/upgrade"} className="text-sm mr-3 hidden md:flex dark:text-neutral-200 text-neutral-800 ">
-                     Upgrade <span className="ml-1">⚡️</span>
-                  </Link>
-               ) : null}
-
+               <div className="flex items-center space-x-2">
+                  <Switch
+                     onCheckedChange={(e) => {
+                        setLocalSettings({ ...localSettings, isInSlideMode: !localSettings.isInSlideMode });
+                        setIsPlaying(false);
+                     }}
+                     checked={localSettings.isInSlideMode}
+                     id="airplane-mode"
+                  />
+               </div>
                <DropdownMenu>
                   {!viewOnly && (
                      <DropdownMenuTrigger asChild>

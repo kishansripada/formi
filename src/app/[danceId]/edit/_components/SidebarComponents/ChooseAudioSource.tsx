@@ -17,6 +17,7 @@ import { HDivider } from "../../../../../../@/components/ui/hdivider";
 import { PopoverPicker } from "../ColorPicker";
 import { Popover, PopoverContent, PopoverTrigger } from "../../../../../../@/components/ui/popover";
 import { HexColorPicker } from "react-colorful";
+import { localSettings } from "../../../../../types/types";
 export const ChooseAudioSource: React.FC<{
    audioFiles: any;
    soundCloudTrackId: string | null;
@@ -24,7 +25,9 @@ export const ChooseAudioSource: React.FC<{
    invalidateAudioFiles: Function;
    setLocalSource: Function;
    session: AuthSession | null;
-}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, invalidateAudioFiles, setLocalSource, session }) => {
+   setLocalSettings: Function;
+   localSettings: localSettings;
+}> = ({ audioFiles, setSoundCloudTrackId, soundCloudTrackId, invalidateAudioFiles, setLocalSource, session, setLocalSettings, localSettings }) => {
    const { viewOnly, setPlayer, player, setIsPlaying, segments, setSegments, newSegment, updateSegmentProperty } = useStore();
    const [file, setFile] = useState<File | null>();
 
@@ -44,6 +47,9 @@ export const ChooseAudioSource: React.FC<{
 
       reader.onloadend = () => {
          setLocalSource(reader.result);
+         setLocalSettings((localSettings: localSettings) => {
+            return { ...localSettings, isInSlideMode: false };
+         });
       };
       reader.readAsDataURL(file);
 
@@ -159,6 +165,9 @@ export const ChooseAudioSource: React.FC<{
                                              `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/audiofiles/${session?.user.id}/${audiofile.name}`
                                           );
                                           setLocalSource(null);
+                                          setLocalSettings((localSettings: localSettings) => {
+                                             return { ...localSettings, isInSlideMode: false };
+                                          });
                                        }}
                                        className={` ${
                                           audiofile.name === soundCloudTrackId?.split("/").slice(-1)[0] ? "opacity-50 pointer-events-none" : ""
@@ -257,6 +266,24 @@ export const ChooseAudioSource: React.FC<{
             </VStack>
          </PropertyAdd>
          <HDivider />
+
+         {!soundCloudTrackId && !localSettings.isInSlideMode ? (
+            <div className="text-xs font-medium px-2 py-2">
+               <p>
+                  Don't have music?
+                  <button
+                     onClick={() => {
+                        setLocalSettings((localSettings: localSettings) => {
+                           return { ...localSettings, isInSlideMode: true };
+                        });
+                     }}
+                     className="text-pink-300"
+                  >
+                     Try switching to slide mode
+                  </button>
+               </p>
+            </div>
+         ) : null}
       </VStack>
    );
 };
