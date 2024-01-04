@@ -99,15 +99,17 @@ const Client = () => {
                         <div className="flex flex-row justify-between items-center">
                            <p className="text-blue-300 font-medium ">Studio</p>
                         </div>
-                        <p className="text-4xl mt-3 font-medium">CUSTOM</p>
-                        <p className="text-sm mt-1 font-medium">per month</p>
+                        <p className="text-4xl mt-3 font-medium">$4</p>
+                        <p className="text-sm mt-1 font-medium">per editor/month</p>
                         <div className="mt-3">
                            {[
                               // "Everything in choreographer",
                               // "Shared performances and assets",
                               "Collaborative editing",
+                              "Org-wide libraries",
+
                               "Accounts for you and your team",
-                              "Priority support",
+                              "Unified admin and billing",
                            ].map((text) => {
                               return (
                                  <div className="flex flex-row items-center mt-3">
