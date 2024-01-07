@@ -805,13 +805,13 @@ const Edit = ({
                                                    />
                                                 ))}
 
-                                                {localSettings.viewCollisions && selectedFormations.length === 1
+                                                {/* {localSettings.viewCollisions && selectedFormations.length === 1
                                                    ? collisions.map((collision, i) => {
                                                         return (
                                                            <Collision key={i} coordsToPosition={coordsToPosition} collision={collision}></Collision>
                                                         );
                                                      })
-                                                   : null}
+                                                   : null} */}
 
                                                 {selectedFormations.length === 1 && !isPlaying && !isMobileView ? (
                                                    <>
