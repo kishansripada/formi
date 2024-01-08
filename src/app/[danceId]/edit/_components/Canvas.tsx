@@ -119,42 +119,53 @@ export const Canvas: React.FC<{
    const [penDown, setIsPenDown] = useState(false);
    const horizontalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
    const verticalScalar = (1 / PIXELS_PER_SQUARE) * (1 / zoom) * stageFlippedFactor;
+   const [rotateAround, setRotateAround] = useState(null);
 
-   // const selectedDancersBoundingBox = useMemo(() => {
-   //    function findBoundingBox(
-   //       points: { x: number; y: number }[]
-   //    ): { start: { left: number; top: number }; end: { left: number; top: number } } | null {
-   //       if (points.length === 0) {
-   //          throw new Error("Points array must not be empty");
-   //       }
-   //       const buffer = 0.6;
+   const selectedDancersBoundingBox = useMemo(() => {
+      function findBoundingBox(
+         points: { x: number; y: number }[]
+      ): { start: { left: number; top: number }; end: { left: number; top: number } } | null {
+         if (points.length === 0) {
+            throw new Error("Points array must not be empty");
+         }
+         const buffer = 0.6;
 
-   //       let minX = points[0].x;
-   //       let minY = points[0].y;
-   //       let maxX = points[0].x;
-   //       let maxY = points[0].y;
+         let minX = points[0].x;
+         let minY = points[0].y;
+         let maxX = points[0].x;
+         let maxY = points[0].y;
 
-   //       for (let i = 1; i < points.length; i++) {
-   //          const point = points[i];
-   //          minX = Math.min(minX, point.x);
-   //          minY = Math.min(minY, point.y);
-   //          maxX = Math.max(maxX, point.x);
-   //          maxY = Math.max(maxY, point.y);
-   //       }
+         for (let i = 1; i < points.length; i++) {
+            const point = points[i];
+            minX = Math.min(minX, point.x);
+            minY = Math.min(minY, point.y);
+            maxX = Math.max(maxX, point.x);
+            maxY = Math.max(maxY, point.y);
+         }
 
-   //       return {
-   //          start: coordsToPosition({ x: minX - buffer, y: maxY + buffer }), // In graphical representation, the top left point has the smallest x and the largest y
-   //          end: coordsToPosition({ x: maxX + buffer, y: minY - buffer }), // Similarly, the bottom right point has the largest x and the smallest y
-   //       };
-   //    }
-   //    if (selectedFormation === null) return null;
-   //    if (selectedDancers.length < 2) return null;
-   //    const positions = formations[selectedFormation]?.positions
-   //       .filter((position: dancerPosition) => selectedDancers.includes(position.id))
-   //       .map((position) => position.position);
-   //    if (!positions?.length) return null;
-   //    return findBoundingBox(positions);
-   // }, [selectedDancers, formations, selectedFormation]);
+         return {
+            start: coordsToPosition({ x: minX - buffer, y: maxY + buffer }), // In graphical representation, the top left point has the smallest x and the largest y
+            end: coordsToPosition({ x: maxX + buffer, y: minY - buffer }), // Similarly, the bottom right point has the largest x and the smallest y
+         };
+      }
+      if (!selectedFormations.length) return null;
+      if (selectedDancers.length < 2) return null;
+      const positions = getFirstSelectedFormation()
+         ?.positions.filter((position: dancerPosition) => selectedDancers.includes(position.id))
+         .map((position) => position.position);
+      if (!positions?.length) return null;
+      return findBoundingBox(positions);
+   }, [selectedDancers, formations, selectedFormations]);
+
+   const boundingBoxCenter = useMemo(() => {
+      if (!selectedDancersBoundingBox) return null;
+      return {
+         left: (selectedDancersBoundingBox.start.left + selectedDancersBoundingBox.end.left) / 2,
+         top: (selectedDancersBoundingBox.start.top + selectedDancersBoundingBox.end.top) / 2,
+      };
+   }, [selectedDancersBoundingBox]);
+
+   // console.log({ boundingBoxCenter });
 
    const [resizingPropType, setResizingPropType] = useState(null);
    const positionToCoords = (position: { left: number; top: number }) => {
@@ -766,6 +777,7 @@ export const Canvas: React.FC<{
             }
 
             const dragType = event?.target?.dataset?.type;
+            console.log(dragType);
             if (viewOnly) return;
             if (dragType === "controlPointStart" || dragType === "controlPointEnd") {
                setFormations(
@@ -786,6 +798,41 @@ export const Canvas: React.FC<{
                                     [dragType]: {
                                        x: roundToHundredth(dancerPosition[dragType].x + movementX * horizontalScalar),
                                        y: roundToHundredth(dancerPosition[dragType].y - movementY * verticalScalar),
+                                    },
+                                 };
+                              }
+
+                              return dancerPosition;
+                           }),
+                        };
+                     }
+                     return formation;
+                  })
+               );
+            }
+
+            if (dragType === "rotate-group") {
+               movementX = movementX / 100;
+               const rotateAroundCoords = positionToCoords(rotateAround);
+               // const rotateAround = positionToCoords(rotateAround);
+               if (!rotateAroundCoords) return;
+               setFormations(
+                  get().formations.map((formation) => {
+                     if (get().selectedFormations.includes(formation.id)) {
+                        return {
+                           ...formation,
+                           positions: formation.positions.map((dancerPosition) => {
+                              if (selectedDancers.includes(dancerPosition.id)) {
+                                 const { x, y } = dancerPosition.position;
+                                 const dx = x - rotateAroundCoords.x;
+                                 const dy = y - rotateAroundCoords.y;
+                                 const newX = dx * Math.cos(movementX) - dy * Math.sin(movementX) + rotateAroundCoords.x;
+                                 const newY = dx * Math.sin(movementX) + dy * Math.cos(movementX) + rotateAroundCoords.y;
+                                 return {
+                                    ...dancerPosition,
+                                    position: {
+                                       x: newX,
+                                       y: newY,
                                     },
                                  };
                               }
@@ -880,8 +927,11 @@ export const Canvas: React.FC<{
             if (viewOnly) return;
             roundPositions();
             setIsPenDown(false);
+            setRotateAround(null);
          },
          onDragStart: ({ event }) => {
+            setDraggingDancerId("something");
+            setRotateAround(boundingBoxCenter);
             if (isUsingPenTool) {
                const target = event.currentTarget;
                const stage = target.querySelector("#stage-cutout");
@@ -1224,10 +1274,11 @@ export const Canvas: React.FC<{
                      </div>
                   )}
 
-                  {/* {selectedDancersBoundingBox && !isPlaying ? (
+                  {selectedDancersBoundingBox && !isPlaying ? (
                      <>
                         <div
-                           className="absolute  z-20 cursor-default border-2 border-blue-600 "
+                           //
+                           className="absolute  z-20 cursor-default border-2 border-pink-600 opacity-20 "
                            style={{
                               width: Math.abs(selectedDancersBoundingBox.end.left - selectedDancersBoundingBox.start.left),
                               height: Math.abs(selectedDancersBoundingBox.end.top - selectedDancersBoundingBox.start.top),
@@ -1235,18 +1286,28 @@ export const Canvas: React.FC<{
                               top: selectedDancersBoundingBox.start.top,
                            }}
                         ></div>
+
                         <div
+                           data-type={"rotate-group"}
                            id="rotate-group"
                            className="absolute -translate-x-1/2  w-7 h-7 grid place-items-center cursor-ew-resize  z-20 border border-neutral-300 bg-neutral-200 rounded-full "
                            style={{
                               left:
                                  selectedDancersBoundingBox.start.left +
                                  Math.abs(selectedDancersBoundingBox.end.left - selectedDancersBoundingBox.start.left) * 0.5,
-                              top: selectedDancersBoundingBox.end.top + 20,
+                              top: selectedDancersBoundingBox.end.top + 60,
                            }}
                         >
-                           <svg className=" w-5 h-5 fill-neutral-700 " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                           <svg
+                              data-type={"rotate-group"}
+                              id="rotate-group"
+                              className=" w-5 h-5 fill-neutral-700 "
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                           >
                               <path
+                                 data-type={"rotate-group"}
+                                 id="rotate-group"
                                  fill="currentColor"
                                  d="M15.25 18.48V15a.75.75 0 1 0-1.5 0v4c0 .97.78 1.75 1.75 1.75h4a.75.75 0 1 0 0-1.5h-2.6a8.75 8.75 0 0 0-2.07-15.53.75.75 0 1 0-.49 1.42 7.25 7.25 0 0 1 .91 13.34zM8.75 5.52V9a.75.75 0 0 0 1.5 0V5c0-.97-.78-1.75-1.75-1.75h-4a.75.75 0 0 0 0 1.5h2.6a8.75 8.75 0 0 0 2.18 15.57.75.75 0 0 0 .47-1.43 7.25 7.25 0 0 1-1-13.37z"
                               />
@@ -1255,7 +1316,7 @@ export const Canvas: React.FC<{
                      </>
                   ) : (
                      <></>
-                  )} */}
+                  )}
                </div>
             </div>
          </div>

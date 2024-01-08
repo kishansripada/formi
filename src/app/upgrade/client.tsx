@@ -105,6 +105,7 @@ const Client = () => {
                            {[
                               // "Everything in choreographer",
                               // "Shared performances and assets",
+                              "Minimum 2 editors",
                               "Collaborative editing",
                               "Org-wide libraries",
 
