@@ -137,7 +137,7 @@ export const FormationIdeas: React.FC<{
                            setCurrentTemplate(template);
                         }}
                         className={`w-full  bg-neutral-800 rounded-md relative hover:bg-neutral-700 transition ${
-                           i !== 0 && !plan ? "blur-sm pointer-events-none" : ""
+                           i !== 0 && !plan ? "blur-md pointer-events-none" : ""
                         }`}
                      >
                         <p className="text-neutral-300 text-xs font-medium left-2 top-1 absolute">{template.name}</p>

@@ -99,16 +99,16 @@ const Client = () => {
                         <div className="flex flex-row justify-between items-center">
                            <p className="text-blue-300 font-medium ">Studio</p>
                         </div>
-                        <p className="text-4xl mt-3 font-medium">$4</p>
+                        <p className="text-4xl mt-3 font-medium">$9.99</p>
                         <p className="text-sm mt-1 font-medium">per editor/month</p>
                         <div className="mt-3">
                            {[
                               // "Everything in choreographer",
                               // "Shared performances and assets",
+                              "Everything in choreographer",
                               "Minimum 2 editors",
                               "Collaborative editing",
-                              "Org-wide libraries",
-
+                              "Org-wide performances and assets",
                               "Accounts for you and your team",
                               "Unified admin and billing",
                            ].map((text) => {
@@ -175,7 +175,7 @@ const Client = () => {
                      </div> */}
                   </div>
                </div>
-               <p className="text-5xl">All features included for free</p>
+               {/* <p className="text-5xl">All features included for free</p>
                <div className="w-2/3 grid grid-cols-4 py-20">
                   {[
                      "Synced to video or audio",
@@ -183,9 +183,9 @@ const Client = () => {
                      `Assign performer "props"`,
                      "Custom stage background",
                      "Custom set pieces",
-                     "Collision detection",
+                     // "Collision detection",
                      "Commenting",
-                     "Real-time collaboration",
+                     // "Real-time collaboration",
                      "3D view",
                      "Number line",
                      "Custom stage size and format",
@@ -210,7 +210,7 @@ const Client = () => {
                         </div>
                      );
                   })}
-               </div>
+               </div> */}
             </div>
 
             {/* <div
