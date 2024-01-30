@@ -724,6 +724,7 @@ const Edit = ({
                                           resizingPropId={resizingPropId}
                                           setResizingPropId={setResizingPropId}
                                           menuOpen={menuOpen}
+                                          setLocalSettings={setLocalSettings}
                                        >
                                           {selectedFormations.length === 1 && getFirstSelectedFormation()?.id !== formations[0]?.id && !isPlaying ? (
                                              <PathEditor

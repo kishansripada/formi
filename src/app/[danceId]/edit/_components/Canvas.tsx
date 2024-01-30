@@ -53,6 +53,7 @@ export const Canvas: React.FC<{
    setResizingPropId: Function;
    session: AuthSession | null;
    menuOpen: string;
+   setLocalSettings: Function;
 }> = ({
    children,
    setSelectedDancers,
@@ -74,6 +75,7 @@ export const Canvas: React.FC<{
    resizingPropId,
    setResizingPropId,
    menuOpen,
+   setLocalSettings,
 }) => {
    const {
       setFormations,
@@ -1106,9 +1108,16 @@ export const Canvas: React.FC<{
             // }}
          >
             {localSettings.fullScreen && (
-               <div className="absolute top-5 left-5">
+               <button
+                  onClick={(e) => {
+                     setLocalSettings((localSettings: localSettings) => {
+                        return { ...localSettings, fullScreen: false };
+                     });
+                  }}
+                  className="absolute top-5 left-5 z-50"
+               >
                   <p className="text-sm text-neutral-300">Esc to exit full screen</p>
-               </div>
+               </button>
             )}
             <Toaster />
             <div
