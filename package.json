@@ -52,6 +52,7 @@
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.3.0",
     "resend": "^2.1.0",
+    "stripe": "^14.14.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.148.0",
