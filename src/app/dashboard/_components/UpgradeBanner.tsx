@@ -7,10 +7,10 @@ export const UpgradeBanner = ({ setCookies }: { setCookies: Function }) => {
    return (
       <HStack className="rounded-md bg-neutral-800 p-7 relative min-h-[250px] overflow-hidden hidden xl:flex ">
          <VStack className="w-1/3">
-            <p className="text-2xl font-medium text-[#FEA3E5]">Can't think of creative formations?</p>
+            <p className="text-2xl font-medium text-[#FEA3E5]">Let FORMI come up with formations</p>
             <p className="text-xl  text-neutral-100">Enjoy the full FORMI experience</p>
             <HStack className="mt-14 items-center gap-5">
-               <a href={"/upgrade/checkout/price_1Nv8jbHvC3w6e8fcE6maAFjv"}>
+               <a href={"/upgrade/checkout/price_1Nv8jbHvC3w6e8fcE6maAFjv?utm_content=dashboard_idea_banner"}>
                   <button className=" rounded-md  px-5 py-2 text-black bg-[#FEA3E5] text-sm font-medium">Upgrade now — $5/month</button>
                </a>
 

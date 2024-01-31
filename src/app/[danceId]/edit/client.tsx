@@ -595,6 +595,7 @@ const Edit = ({
                                           ) : menuOpen === "formationideas" ? (
                                              <FormationIdeas
                                                 setCurrentTemplate={setCurrentTemplate}
+                                                currentTemplate={currentTemplate}
                                                 setHelpUrl={setHelpUrl}
                                                 dropDownToggle={dropDownToggle}
                                                 setLocalSettings={setLocalSettings}

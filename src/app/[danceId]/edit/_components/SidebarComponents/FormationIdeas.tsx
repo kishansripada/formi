@@ -16,9 +16,10 @@ import { Subtract } from "../../../../../../@/components/ui/button";
 import Link from "next/link";
 export const FormationIdeas: React.FC<{
    setCurrentTemplate: Function;
+   currentTemplate: string | null;
    danceId: string;
    plan: string | null;
-}> = ({ setCurrentTemplate, danceId, plan }) => {
+}> = ({ setCurrentTemplate, danceId, plan, currentTemplate }) => {
    const { dancers } = useStore();
    const [numDancers, setNumDancers] = useState(Math.min(Math.max(5, dancers.length), 15));
    const [templates, setTemplates] = useState([]);
@@ -66,7 +67,7 @@ export const FormationIdeas: React.FC<{
    return (
       <div className="overflow-hidden h-full flex flex-col">
          <div className="flex flex-row p-3 justify-between items-center">
-            <p className="font-semibold text-xl whitespace-nowrap  ">Templates</p>
+            <p className="font-semibold text-xl whitespace-nowrap  ">Formation ideas</p>
 
             {/* <Select
                onValueChange={(e) => {
@@ -111,19 +112,22 @@ export const FormationIdeas: React.FC<{
                </DropdownMenuContent>
             </DropdownMenu>
 
-            <Subtract
-               onClick={() => {
-                  setCurrentTemplate(null);
-               }}
-            ></Subtract>
+            {currentTemplate && (
+               <Subtract
+                  onClick={() => {
+                     setCurrentTemplate(null);
+                  }}
+               ></Subtract>
+            )}
          </HStack>
 
          <div className="overflow-y-scroll overflow-x-hidden h-full ">
             <div className="flex flex-col gap-3 p-3 relative ">
                {!plan && (
-                  <div className="absolute top-[250px] left-0  grid place-items-center z-10 w-full ">
+                  <div className="absolute top-[500px] left-0  grid place-items-center z-10 w-full ">
                      <Link href={"/upgrade"} className="text-sm font-medium text-center text-neutral-200">
-                        Upgrade for access to 100+ templates
+                        Upgrade now — $5/month
+                        <p>100+ formation ideas</p>
                      </Link>
                   </div>
                )}
@@ -137,7 +141,7 @@ export const FormationIdeas: React.FC<{
                            setCurrentTemplate(template);
                         }}
                         className={`w-full  bg-neutral-800 rounded-md relative hover:bg-neutral-700 transition ${
-                           i !== 0 && i !== 1 && !plan ? "blur-md pointer-events-none" : ""
+                           i > 3 && !plan ? "blur-md pointer-events-none" : ""
                         }`}
                      >
                         <p className="text-neutral-300 text-xs font-medium left-2 top-1 absolute">{template.name}</p>
