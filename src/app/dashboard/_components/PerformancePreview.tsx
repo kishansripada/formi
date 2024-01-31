@@ -160,7 +160,8 @@ export const PerformancePreview = ({ dance, session, projects }: { dance: Dance;
                                     key={position.id}
                                     className="absolute w-2 h-2  -translate-x-1/2 -translate-y-1/2 rounded-full  pointer-events-none"
                                     style={{
-                                       backgroundColor: dance?.dancers?.find((dancer: dancer) => dancer.id === position.id)?.color || "#db2777",
+                                       backgroundColor:
+                                          dance?.dancers?.find((dancer: dancer) => dancer.id === position.id)?.color || position?.color || "#db2777",
                                        left: `${
                                           ((position.position.x + dance.settings.stageDimensions.width / 2) / dance.settings.stageDimensions.width) *
                                           100
