@@ -276,7 +276,7 @@ export const Sidebar: React.FC<{
             </svg>
 
             <p className=" mt-1">Ideas</p>
-            <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p>
+            {/* <p className="bg-pink-600 py-[0.5px] px-2 text-white rounded-full  mt-1">BETA</p> */}
          </button>
 
          {/* <button

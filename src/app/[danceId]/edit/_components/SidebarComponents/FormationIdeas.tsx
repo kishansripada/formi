@@ -121,7 +121,7 @@ export const FormationIdeas: React.FC<{
          <div className="overflow-y-scroll overflow-x-hidden h-full ">
             <div className="flex flex-col gap-3 p-3 relative ">
                {!plan && (
-                  <div className="absolute top-[150px] left-0  grid place-items-center z-10 w-full ">
+                  <div className="absolute top-[250px] left-0  grid place-items-center z-10 w-full ">
                      <Link href={"/upgrade"} className="text-sm font-medium text-center text-neutral-200">
                         Upgrade for access to 100+ templates
                      </Link>
@@ -137,7 +137,7 @@ export const FormationIdeas: React.FC<{
                            setCurrentTemplate(template);
                         }}
                         className={`w-full  bg-neutral-800 rounded-md relative hover:bg-neutral-700 transition ${
-                           i !== 0 && !plan ? "blur-md pointer-events-none" : ""
+                           i !== 0 && i !== 1 && !plan ? "blur-md pointer-events-none" : ""
                         }`}
                      >
                         <p className="text-neutral-300 text-xs font-medium left-2 top-1 absolute">{template.name}</p>
@@ -162,18 +162,18 @@ export const FormationIdeas: React.FC<{
 };
 
 function shuffle(array) {
-   let currentIndex = array.length,
-      randomIndex;
+   // let currentIndex = array.length,
+   //    randomIndex;
 
-   // While there remain elements to shuffle.
-   while (currentIndex > 0) {
-      // Pick a remaining element.
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
+   // // While there remain elements to shuffle.
+   // while (currentIndex > 0) {
+   //    // Pick a remaining element.
+   //    randomIndex = Math.floor(Math.random() * currentIndex);
+   //    currentIndex--;
 
-      // And swap it with the current element.
-      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-   }
+   //    // And swap it with the current element.
+   //    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+   // }
 
    return array;
 }
