@@ -310,7 +310,7 @@ export const DancerAlias: React.FC<{
                      transform: `scale(${(1 / zoom) * 0.7}) translate(0%, ${100 * (thisItem?.side === "bottom" ? -1 : 1) * zoom * (1 / 0.7)}%)`,
                      transformOrigin: `${thisItem?.side === "bottom" ? "bottom" : "top"} center`,
                   }}
-                  className="absolute  text-center select-none pointer-events-none dark:text-white   rounded-full px-1"
+                  className="absolute  text-center whitespace-nowrap select-none pointer-events-none dark:text-white   rounded-full px-1"
                >
                   {dancer.name.split(" ")[0]}
                </p>
