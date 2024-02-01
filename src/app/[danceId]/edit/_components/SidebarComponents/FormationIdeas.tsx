@@ -95,7 +95,7 @@ export const FormationIdeas: React.FC<{
                </DropdownMenuTrigger>
 
                <DropdownMenuContent className=" dark:fill-white ">
-                  {new Array(11).fill(null).map((val, index) => {
+                  {new Array(18).fill(null).map((val, index) => {
                      return (
                         <DropdownMenuItem
                            onClick={() => {
