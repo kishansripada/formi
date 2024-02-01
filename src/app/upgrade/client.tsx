@@ -60,7 +60,7 @@ const Client = () => {
                               "Unlimited media uploads",
                               "Export PDF",
                               "Access to 100+ curated formation templates",
-                              "Save roster",
+                              // "Save roster",
                            ].map((text) => {
                               return (
                                  <div className="flex flex-row items-center mt-3">

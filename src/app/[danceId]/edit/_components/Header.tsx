@@ -294,7 +294,7 @@ export const Header: React.FC<{
                                        {!plan ? <MenubarShortcut>⚡️</MenubarShortcut> : null}
                                     </MenubarItem>
 
-                                    <DialogTrigger
+                                    {/* <DialogTrigger
                                        onClick={(e) => {
                                           if (!plan) {
                                              e.preventDefault();
@@ -307,7 +307,7 @@ export const Header: React.FC<{
                                           Save roster
                                           {!plan ? <MenubarShortcut>⚡️</MenubarShortcut> : null}
                                        </MenubarItem>
-                                    </DialogTrigger>
+                                    </DialogTrigger> */}
 
                                     <DialogContent className="dark:bg-neutral-950/80 ">
                                        <DialogHeader>
