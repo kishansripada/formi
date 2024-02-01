@@ -99,17 +99,15 @@ const Client = () => {
                         <div className="flex flex-row justify-between items-center">
                            <p className="text-blue-300 font-medium ">Studio</p>
                         </div>
-                        <p className="text-4xl mt-3 font-medium">$9.99</p>
-                        <p className="text-sm mt-1 font-medium">per editor/month</p>
+                        <p className="text-4xl mt-3 font-medium">$60</p>
+                        <p className="text-sm mt-1 font-medium">per month</p>
                         <div className="mt-3">
                            {[
-                              // "Everything in choreographer",
+                              "Unlimited pro accounts for you and your team",
                               // "Shared performances and assets",
                               "Everything in choreographer",
-                              "Minimum 2 editors",
                               "Collaborative editing",
                               "Org-wide performances and assets",
-                              "Accounts for you and your team",
                               "Unified admin and billing",
                            ].map((text) => {
                               return (
