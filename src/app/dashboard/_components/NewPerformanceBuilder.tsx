@@ -247,7 +247,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                   </div>
 
                   <div>
-                     <p className=" font-medium text-sm">Official templates</p>
+                     <p className=" font-medium text-sm">Stage templates</p>
                      <div className=" w-[550px]  overflow-scroll pb-3 ">
                         <div className="flex flex-row items-center justify-center gap-8  w-min  ">
                            <div
