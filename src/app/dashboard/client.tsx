@@ -15,19 +15,22 @@ import { UpgradeBanner } from "./_components/UpgradeBanner";
 import { useState } from "react";
 import { Button } from "../../../@/components/ui/button";
 import useCookies from "../../utls";
+import { CheerUpgradeBanner } from "./_components/CheerUpgradeBanner";
 // import useCookies from "../../utls";
 
 type Cookies = {
    hideUpgradeBanner: string;
 };
 
-export default function Client({ myDances, sharedWithMe, session, rosters, projects, plan, myCookies }) {
+export default function Client({ myDances, sharedWithMe, session, rosters, projects, plan, myCookies, userData }) {
+   const isCheerleader = userData?.response_data?.selectedUses?.includes("cheer");
+
    const [cookies, setCookies] = useCookies<Cookies>(myCookies);
 
    const supabase = createClientComponentClient();
    const router = useRouter();
 
-   async function createNewDance(roster, stage, projectId: string | null) {
+   async function createNewDance(roster, stage, projectId: string | null, templateId?: number) {
       if (!plan && myDances.length >= MAX_NUMBER_OF_DANCES_FOR_FREE_PLAN) {
          router.push("/upgrade");
          return;
@@ -35,6 +38,31 @@ export default function Client({ myDances, sharedWithMe, session, rosters, proje
 
       if (!session) {
          router.push(`/login`);
+         return;
+      }
+
+      if (templateId) {
+         let dance = await supabase
+            .from("dances")
+            .select("*")
+            .eq("id", templateId)
+            .single()
+            .then((r) => r.data);
+
+         delete dance.id;
+         delete dance.created_at;
+         delete dance.last_edited;
+         delete dance.sharesettings;
+
+         const { data: newDance, error } = await supabase
+            .from("dances")
+            .insert([{ ...dance, name: "Copy of " + dance.name, user: (await supabase.auth.getUser()).data.user?.id, last_edited: new Date() }])
+            .select("id")
+            .single();
+
+         if (!newDance?.id) return;
+         router.refresh();
+         router.push(`/${newDance.id}/edit`);
          return;
       }
 
@@ -133,7 +161,12 @@ export default function Client({ myDances, sharedWithMe, session, rosters, proje
 
    return (
       <div className="overflow-y-scroll h-full px-4 py-5 flex flex-col gap-5 ">
-         {!cookies.hideUpgradeBanner && isDesktop && !plan && <UpgradeBanner setCookies={setCookies} />}
+         {!cookies.hideUpgradeBanner && isDesktop && !plan && isCheerleader && (
+            <CheerUpgradeBanner createNewDance={createNewDance} setCookies={setCookies} />
+         )}
+         {!cookies.hideUpgradeBanner && isDesktop && !plan && !isCheerleader && (
+            <UpgradeBanner createNewDance={createNewDance} setCookies={setCookies} />
+         )}
 
          <p className="text-3xl font-semibold">Recents</p>
          <button

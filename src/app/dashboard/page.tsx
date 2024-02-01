@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 import Client from "./client";
-import { getMyDances, getProjects, getRosters, getSharedWithMe, getStripe } from "./api";
+import { getMyDances, getProjects, getRosters, getSharedWithMe, getStripe, getUserData } from "./api";
 
 async function getServerSideProps() {
    const supabase = createServerComponentClient(
@@ -37,19 +37,20 @@ async function getServerSideProps() {
       return { ...acc, [cookie.name]: cookie.value };
    }, {});
 
-   let [myDances, sharedWithMe, plan, rosters, projects] = await Promise.all([
+   let [myDances, sharedWithMe, plan, rosters, projects, userData] = await Promise.all([
       getMyDances(session, supabase),
       getSharedWithMe(session, supabase),
       getStripe(session),
       getRosters(session, supabase),
       getProjects(session, supabase),
+      getUserData(session, supabase),
    ]);
 
-   return { myDances, sharedWithMe, plan, rosters, projects, session, myCookies };
+   return { myDances, sharedWithMe, plan, rosters, projects, session, myCookies, userData };
 }
 
 export default async function Page({}) {
-   const { myDances, sharedWithMe, session, plan, rosters, projects, myCookies } = await getServerSideProps();
+   const { myDances, sharedWithMe, session, plan, rosters, projects, myCookies, userData } = await getServerSideProps();
 
    return (
       <Client
@@ -60,6 +61,7 @@ export default async function Page({}) {
          plan={plan}
          rosters={rosters}
          projects={projects}
+         userData={userData}
       ></Client>
    );
 }

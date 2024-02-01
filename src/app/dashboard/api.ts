@@ -107,6 +107,11 @@ export async function getMyDances(session: Session, supabase: SupabaseClient) {
    return data?.data || [];
 }
 
+export async function getUserData(session: Session, supabase: SupabaseClient) {
+   const userData = await supabase.from("user_data").select("*").eq("user_id", session.user?.id).single();
+   return userData?.data || {};
+}
+
 export const deleteLiveblocksRoom = async (roomId: string) => {
    const options = {
       method: "DELETE",
