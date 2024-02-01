@@ -455,7 +455,9 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             }
             if (properties.every((val) => val === properties[0])) {
                if (propertyKey === "itemId") {
-                  return items.find((item) => item.id === properties[0])?.name || "Error";
+                  // console.log("KADLSFLSD");
+                  return items.find((item) => item.id === properties[0]);
+                  // return properties[0];
                }
 
                return properties[0];
