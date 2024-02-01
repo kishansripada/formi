@@ -14,6 +14,7 @@ import { Input } from "../../../../../@/components/ui/input";
 import { VStack } from "../../../../../@/components/ui/stacks";
 import PropertyAdd from "../../../../../@/components/PropertyAdd";
 import { HDivider } from "../../../../../@/components/ui/hdivider";
+import { Add, Subtract } from "../../../../../@/components/ui/button";
 
 const RemovePropertyButton = ({
    setSelectedPositionProperty,
@@ -60,6 +61,7 @@ export const ObjectControls: React.FC<{
       newGroupOnSelectedFormation,
       pauseHistory,
       resumeHistory,
+      setItems,
    } = useStore();
 
    const thisFormation = useStore((state) => state.getFirstSelectedFormation());
@@ -338,54 +340,196 @@ export const ObjectControls: React.FC<{
             </>
          ) : null}
 
-         <PropertyAdd
-            onAdd={() => {
-               if (!items.length) {
-                  setAssetsOpen({ type: "item" });
-                  toast("Create your first prop");
-                  return;
-               }
-               setSelectedPositionProperty("itemId", items[0].id);
-            }}
-            onSubtract={() => setSelectedPositionProperty("itemId", null)}
-            canAdd={!getSelectedPositionsProperty("itemId") && !viewOnly}
-            canSubtract={getSelectedPositionsProperty("itemId") !== null && !viewOnly}
-            label="Prop"
-            isOpen={getSelectedPositionsProperty("itemId") !== null}
-         >
-            <div className="flex flex-row items-center justify-between w-full px-2">
-               <DropdownMenu>
-                  <DropdownMenuTrigger
-                     disabled={viewOnly}
-                     asChild
-                     className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md border border-neutral-700"
-                  >
-                     <div className=" py-1 px-3 h-[32px] w-38  flex flex-row items-center  ">
-                        <p className=" text-xs">{getSelectedPositionsProperty("itemId")}</p>
-                     </div>
-                  </DropdownMenuTrigger>
+         <div className=" flex flex-col gap-2 py-2 min-h-[44px] justify-center ">
+            <div className="flex flex-row items-center justify-between px-2">
+               <p className=" font-medium text-xs">Prop</p>
+               <div className="flex flex-row items-center gap-2">
+                  {getSelectedPositionsProperty("itemId") !== null && !viewOnly && !viewOnly ? (
+                     <Subtract onClick={() => setSelectedPositionProperty("itemId", null)}></Subtract>
+                  ) : null}
+                  {!getSelectedPositionsProperty("itemId") && !viewOnly && !viewOnly ? (
+                     <DropdownMenu>
+                        <DropdownMenuTrigger
+                           disabled={viewOnly}
+                           asChild
+                           // className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md border border-neutral-700"
+                        >
+                           <Add
+                           // onClick={() => {
+                           //    if (!items.length) {
+                           //       setAssetsOpen({ type: "item" });
+                           //       toast("Create your first prop");
+                           //       return;
+                           //    }
+                           //    setSelectedPositionProperty("itemId", items[0].id);
+                           // }}
+                           ></Add>
+                        </DropdownMenuTrigger>
 
-                  <DropdownMenuContent className={`grid ${items.length > 10 ? "grid-cols-2 " : ""}`}>
-                     {items.map((item: item) => {
-                        return (
-                           <DropdownMenuItem key={item.id} onClick={() => setSelectedPositionProperty("itemId", item.id)}>
-                              <div className="text-xs flex flex-row items-center">
-                                 <div className="w-7 h-7 mr-5 ">
-                                    <img
-                                       className="h-full w-full object-contain"
-                                       src={imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`]}
-                                    />
-                                 </div>
+                        <DropdownMenuContent className={`grid ${items.length > 10 ? "grid-cols-2 " : ""}`}>
+                           {items.map((item: item) => {
+                              return (
+                                 <DropdownMenuItem key={item.id} onClick={() => setSelectedPositionProperty("itemId", item.id)}>
+                                    <div className="text-xs flex flex-row items-center">
+                                       <div className="w-7 h-7 mr-5 ">
+                                          <img
+                                             className="h-full w-full object-contain"
+                                             src={imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`]}
+                                          />
+                                       </div>
 
-                                 <p>{item.name}</p>
+                                       <p>{item.name}</p>
+                                    </div>
+                                 </DropdownMenuItem>
+                              );
+                           })}
+                           <DropdownMenuItem
+                              key={"add"}
+                              onClick={() => {
+                                 setAssetsOpen({ type: "item" });
+
+                                 return;
+                              }}
+                           >
+                              <div className="text-xs flex flex-row items-center gap-2">
+                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                    <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+                                 </svg>
+
+                                 <p>New prop</p>
                               </div>
                            </DropdownMenuItem>
-                        );
-                     })}
-                  </DropdownMenuContent>
-               </DropdownMenu>
+                        </DropdownMenuContent>
+                     </DropdownMenu>
+                  ) : null}
+               </div>
             </div>
-         </PropertyAdd>
+            {getSelectedPositionsProperty("itemId") !== null ? (
+               <>
+                  <div className="flex flex-row items-center justify-between w-full px-2">
+                     <DropdownMenu>
+                        <DropdownMenuTrigger
+                           disabled={viewOnly}
+                           asChild
+                           className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md border border-neutral-700"
+                        >
+                           <div className="text-xs flex flex-row items-center px-2 py-1">
+                              <div className="w-7 h-7 mr-3 ">
+                                 {getSelectedPositionsProperty("itemId")?.url && (
+                                    <img
+                                       className="h-full w-full object-contain"
+                                       src={
+                                          imageBlobs[
+                                             `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${
+                                                getSelectedPositionsProperty("itemId")?.url
+                                             }`
+                                          ]
+                                       }
+                                    />
+                                 )}
+                              </div>
+
+                              <p>{getSelectedPositionsProperty("itemId")?.name}</p>
+                           </div>
+                        </DropdownMenuTrigger>
+
+                        <DropdownMenuContent className={`grid ${items.length > 10 ? "grid-cols-2 " : ""}`}>
+                           {items.map((item: item) => {
+                              return (
+                                 <DropdownMenuItem key={item.id} onClick={() => setSelectedPositionProperty("itemId", item.id)}>
+                                    <div className="text-xs flex flex-row items-center">
+                                       <div className="w-7 h-7 mr-5 ">
+                                          <img
+                                             className="h-full w-full object-contain"
+                                             src={imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`]}
+                                          />
+                                       </div>
+
+                                       <p>{item.name}</p>
+                                    </div>
+                                 </DropdownMenuItem>
+                              );
+                           })}
+                           <DropdownMenuItem
+                              key={"add"}
+                              onClick={() => {
+                                 setAssetsOpen({ type: "item" });
+
+                                 return;
+                              }}
+                           >
+                              <div className="text-xs flex flex-row items-center">
+                                 <p>Add prop</p>
+                              </div>
+                           </DropdownMenuItem>
+                        </DropdownMenuContent>
+                     </DropdownMenu>
+                  </div>
+
+                  {getSelectedPositionsProperty("itemId").id && (
+                     <div
+                        className="  px-2 mt-1"
+                        style={{
+                           pointerEvents: viewOnly ? "none" : "auto",
+                        }}
+                     >
+                        <div className="flex flex-col  gap-1">
+                           <p className=" font-medium text-xs">Width</p>
+                           <div className="flex flex-row items-center border border-neutral-200 dark:border-neutral-700 rounded-md overflow-hidden w-min pl-1 pr-3 py-[2px]">
+                              <input
+                                 // onBlur={pushChange}
+                                 defaultValue={getSelectedPositionsProperty("itemId")?.width || 1}
+                                 type="number"
+                                 onChange={(e) => {
+                                    // check to make sure it's a number
+                                    if (isNaN(parseFloat(e.target.value))) {
+                                       toast.error("Not a valid number");
+                                    }
+
+                                    setItems(
+                                       items.map((itemx) => {
+                                          if (itemx.id === getSelectedPositionsProperty("itemId").id) {
+                                             return {
+                                                ...itemx,
+                                                width: parseFloat(e.target.value),
+                                             };
+                                          }
+                                          return itemx;
+                                       })
+                                    );
+                                 }}
+                                 onBlur={(e) => {
+                                    // check to make sure it's a number
+                                    if (isNaN(parseFloat(e.target.value))) {
+                                       toast.error("Not a valid number");
+                                    }
+
+                                    setItems(
+                                       items.map((itemx) => {
+                                          if (itemx.id === getSelectedPositionsProperty("itemId").id) {
+                                             return {
+                                                ...itemx,
+                                                width: parseFloat(e.target.value),
+                                             };
+                                          }
+                                          return itemx;
+                                       })
+                                    );
+                                 }}
+                                 style={{
+                                    borderRadius: 0,
+                                 }}
+                                 className="w-[45px] p-1 focus:outline-none rounded-none text-center bg-transparent text-sm   "
+                              />
+                              <p className=" ml-1 text-xs">squares</p>
+                           </div>
+                        </div>
+                     </div>
+                  )}
+               </>
+            ) : null}
+         </div>
+
          <HDivider />
          <PropertyAdd
             onAdd={() => setSelectedPositionProperty("level", 0)}
