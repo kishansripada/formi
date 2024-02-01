@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { cloudSettings, item, prop } from "../../../../../types/types";
+import { cloudSettings, dancerPosition, item, prop } from "../../../../../types/types";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { AuthSession } from "@supabase/supabase-js";
 import { useStore } from "../../store";
 import { v4 as uuidv4 } from "uuid";
+import { Button } from "../../../../../../@/components/ui/button";
 export const Assets: React.FC<{
    setAssetsOpen: Function;
    propUploads: any[];
@@ -15,7 +16,8 @@ export const Assets: React.FC<{
    session: AuthSession | null;
 }> = ({ setAssetsOpen, propUploads, invalidatePropUploads, pushChange, assetsOpen, menuOpen, session }) => {
    console.log({ assetsOpen });
-   const { setProps, props, setItems, items, setCloudSettings, cloudSettings } = useStore();
+   const { setProps, props, setItems, items, setCloudSettings, cloudSettings, setFormations, selectedDancers, selectedFormations, formations } =
+      useStore();
    const [file, setFile] = useState<File | null>();
    const [selectedAsset, setSelectedAsset] = useState(null);
    const supabase = createClientComponentClient();
@@ -117,7 +119,26 @@ export const Assets: React.FC<{
 
       // if (menuOpen === "items") {
       if (assetsOpen.type === "item" && !assetsOpen.id) {
-         setItems([...items, { id: uuidv4(), name: "New prop", url: `${session?.user.id}/${id || selectedAsset}` }]);
+         const itemId = uuidv4();
+         setItems([...items, { id: itemId, name: "New prop", url: `${session?.user.id}/${id || selectedAsset}` }]);
+
+         setFormations(
+            formations.map((formation) => {
+               if (!selectedFormations.includes(formation.id)) return formation;
+               return {
+                  ...formation,
+                  positions: formation.positions.map((position: dancerPosition) => {
+                     if (selectedDancers.includes(position.id)) {
+                        return {
+                           ...position,
+                           itemId,
+                        };
+                     }
+                     return position;
+                  }),
+               };
+            })
+         );
          // } else {
       }
       if (assetsOpen.type === "item" && assetsOpen.id) {
@@ -151,15 +172,15 @@ export const Assets: React.FC<{
             id="outside"
             className="fixed top-0 left-0 z-[70] flex h-screen w-screen items-center justify-center bg-black/20 backdrop-blur-[2px]"
          >
-            <div className="lg:w-2/3 w-full h-[560px] bg-neutral-800/90 border border-neutral-500  rounded-xl  text-sm  text-white  flex flex-col  items-center">
-               <div className="w-full h-12 border-b border-b-neutral-500 flex flex-row items-center px-6">
-                  <p className="font-semibold"> My assets</p>
+            <div className="lg:w-2/3 w-full h-[560px] bg-neutral-900 border border-neutral-700  rounded-xl  text-sm  text-white  flex flex-col  items-center">
+               <div className="w-full py-4  flex flex-row items-center px-6">
+                  <p className="font-semibold tracking-tight text-2xl"> My assets</p>
                </div>
 
                <div className="flex flex-row items-center cursor-pointer justify-between mr-auto p-6">
                   <div className="flex flex-col  cursor-pointer  ">
                      <div className="text-xl font-medium  cursor-pointer flex flex-row justify-between items-center">
-                        <button className="text-sm w-30 font-normal relative cursor-pointer">
+                        <Button className="text-sm w-30 font-normal relative cursor-pointer">
                            <input
                               accept="image/jpeg, image/png, image/webp, image/bmp, image/tiff"
                               type="file"
@@ -191,7 +212,7 @@ export const Assets: React.FC<{
 
                               <p className="relative cursor-pointer ">Upload</p>
                            </div>
-                        </button>
+                        </Button>
                      </div>
                   </div>
                </div>
@@ -287,24 +308,16 @@ export const Assets: React.FC<{
                      })
                   ) : (
                      <>
-                        <p className=" text-sm ">No Uploaded Images</p>
+                        <p className=" text-sm whitespace-nowrap font-semibold ">No uploaded images</p>
                      </>
                   )}
                </div>
-               <div className="w-full border-t border-neutral-500 mt-auto h-12 flex flex-row items-center px-4">
-                  <div
-                     style={{
-                        opacity: selectedAsset ? 1 : 0.7,
-                        pointerEvents: selectedAsset ? "auto" : "none",
-                     }}
-                     className="w-full flex flex-row"
-                  >
-                     <button onClick={deleteAsset} className="bg-pink-600 px-3 py-2 text-white rounded-md text-sm">
-                        Delete image
-                     </button>
-                     <button onClick={assignAsset} className="bg-pink-600 px-3 ml-auto py-2 text-white rounded-md text-sm">
+               <div className="w-full  mt-auto  flex flex-row items-center px-4">
+                  <div className="w-full flex flex-row py-4">
+                     <Button onClick={deleteAsset}>Delete image</Button>
+                     <Button className="ml-auto" onClick={assignAsset}>
                         Use image
-                     </button>
+                     </Button>
                   </div>
                </div>
             </div>
