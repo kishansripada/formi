@@ -24,7 +24,13 @@ export function ThreeSetPiece({
 }) {
    const { formations, isPlaying } = useStore();
    const url = `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${prop.user_id}/${prop?.url}`;
-   const texture = useLoader(TextureLoader, url);
+   let texture;
+   try {
+      texture = useLoader(TextureLoader, url);
+   } catch {
+      console.log("bad texture");
+   }
+
    const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
    useEffect(() => {
