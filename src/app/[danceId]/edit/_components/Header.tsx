@@ -533,7 +533,7 @@ export const Header: React.FC<{
                   </button>
                ) : null}
 
-               <Select
+               {/* <Select
                   open={penMenuOpen}
                   onValueChange={(value) => {
                      // console.log(value);
@@ -583,7 +583,7 @@ export const Header: React.FC<{
                      <SelectItem value="stage">On Stage</SelectItem>
                      <SelectItem value="formation">On Formation</SelectItem>
                   </SelectContent>
-               </Select>
+               </Select> */}
 
                {!viewOnlyInitial && !isMobileView ? (
                   <button
