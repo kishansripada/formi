@@ -31,6 +31,9 @@ const EXEMPT_EMAILS = [
 
    // UNC Chaalka
    "unc.chalkaa@gmail.com",
+
+   // cheer call
+   "hme733@gmail.com",
 ];
 
 export default EXEMPT_EMAILS;
