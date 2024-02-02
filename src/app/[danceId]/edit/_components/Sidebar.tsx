@@ -124,7 +124,7 @@ export const Sidebar: React.FC<{
                   />
                </svg>
 
-               <p className=" mt-1">Media</p>
+               <p className=" mt-1">Music</p>
             </button>
          ) : null}
          {/* <button
