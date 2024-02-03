@@ -548,7 +548,7 @@ const Edit = ({
                                     pointerEvents: menuOpen ? "auto" : "none",
                                  }}
                                  // top-[103px]
-                                 className="flex flex-row absolute md:static bottom-0  h-[calc(100vh-103px)] md:w-auto w-full md:z-auto z-[65]  "
+                                 className="flex flex-row fixed md:static top-[103px] left-0  h-[80vh] md:w-auto w-full md:z-auto z-[40]  "
                               >
                                  <>
                                     {menuOpen ? (
