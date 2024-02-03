@@ -33,6 +33,10 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
          stageDimensions: { width: 54, height: 42 },
          gridSubdivisions: 9,
       },
+      cheer7: {
+         stageDimensions: { width: 42, height: 42 },
+         gridSubdivisions: 7,
+      },
       nba: {
          stageDimensions: { width: 94, height: 50 },
          backgroundUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/f30197ba-cf06-4234-bcdb-5d40d83c7999/basketball.png",
@@ -259,7 +263,19 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
                               }}
                               className="flex flex-col gap-1 w-max border-2 rounded-md p-2 pt-1 border-transparent"
                            >
-                              <p className="text-sm">{"Cheer floor"}</p>
+                              <p className="text-sm">{"Cheer floor (9 rolls)"}</p>
+                              <Image height={80} priority src={cheerFloor} alt="Follow us on Twitter" />
+                           </div>
+                           <div
+                              onClick={() => {
+                                 setSelectedTemplate("cheer7");
+                              }}
+                              style={{
+                                 borderColor: selectedTemplate === "cheer7" ? "#FCA3FE" : "transparent",
+                              }}
+                              className="flex flex-col gap-1 w-max border-2 rounded-md p-2 pt-1 border-transparent"
+                           >
+                              <p className="text-sm">{"Cheer floor (7 rolls)"}</p>
                               <Image height={80} priority src={cheerFloor} alt="Follow us on Twitter" />
                            </div>
 
