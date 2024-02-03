@@ -12,7 +12,7 @@ const Client = () => {
    const [subscriptionType, setSubscriptionType] = useState("yearly");
 
    const MONTHLY_PRICE = "price_1O08eZHvC3w6e8fcq9ZE4uaj";
-   const YEARLY_PRICE = "price_1O0R9ZHvC3w6e8fcmX1gkOSA";
+   const YEARLY_PRICE = "price_1OfshsHvC3w6e8fcJ8WtvJCN";
 
    return (
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
@@ -60,7 +60,7 @@ const Client = () => {
                            <div className="flex flex-row justify-between items-center">
                               <p className="text-pink-500 font-medium ">Choreographer</p>
                            </div>
-                           <p className="text-4xl mt-3 font-medium">$ {subscriptionType === "yearly" ? "5" : "6"}</p>
+                           <p className="text-4xl mt-3 font-medium">$ {subscriptionType === "yearly" ? "4" : "6"}</p>
                            <p className="text-sm mt-1 font-medium">per month</p>
                            <Tabs
                               onValueChange={(value) => {
