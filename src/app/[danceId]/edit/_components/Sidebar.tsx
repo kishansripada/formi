@@ -97,7 +97,7 @@ export const Sidebar: React.FC<{
                />
             </svg>
 
-            <p className=" mt-1">Roster</p>
+            <p className=" mt-1">Performers</p>
          </button>
          {!viewOnly ? (
             <button

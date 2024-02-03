@@ -167,7 +167,7 @@ export const Settings: React.FC<{
 
             {/* <hr className="my-2" /> */}
 
-            <p className="pl-3 font-medium mb-1 text-sm mt-4">Grid Snap</p>
+            {/* <p className="pl-3 font-medium mb-1 text-sm mt-4">Grid Snap</p>
             <Dropdown
                dropDownToggle={dropDownToggle}
                value={gridSnap === 100 ? "None" : gridSnap === 1 ? "Whole Square" : "Half Square"}
@@ -175,7 +175,7 @@ export const Settings: React.FC<{
                options={["None", "Half Square", "Whole Square"]}
             ></Dropdown>
 
-            {/* <hr className="my-2" /> */}
+            <hr className="my-2" /> */}
 
             <p className="  pl-3 font-medium mb-1 text-sm mt-4">Dancer Style</p>
             <Dropdown

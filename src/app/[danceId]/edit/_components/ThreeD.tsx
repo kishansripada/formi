@@ -97,7 +97,7 @@ export const ThreeD: React.FC<{
       selectedFormations,
       isPlaying,
    } = useStore();
-   const { gridSnap } = localSettings;
+   const gridSnap = cloudSettings.gridSnap || localSettings.gridSnap || 1;
 
    // let planeIntersectPoint = new Vector3();
    // const floorPlane = new Plane(new Vector3(0, 1, 0), 0);

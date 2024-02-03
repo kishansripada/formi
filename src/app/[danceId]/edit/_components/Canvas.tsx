@@ -1005,7 +1005,7 @@ export const Canvas: React.FC<{
    const roundPositions = () => {
       const { stageBackground, gridSubdivisions, horizontalGridSubdivisions, verticalFineDivisions, horizontalFineDivisions, stageDimensions } =
          cloudSettings;
-      const { gridSnap } = localSettings;
+      const gridSnap = cloudSettings.gridSnap || localSettings.gridSnap || 1;
       let gridSizeX = 1;
       let gridSizeY = 1;
       let verticalOffset = 0;

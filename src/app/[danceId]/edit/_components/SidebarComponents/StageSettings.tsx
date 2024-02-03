@@ -12,17 +12,20 @@ import PropertyAdd from "../../../../../../@/components/PropertyAdd";
 import { HStack, VStack } from "../../../../../../@/components/ui/stacks";
 import { HDivider } from "../../../../../../@/components/ui/hdivider";
 import { Subtract } from "../../../../../../@/components/ui/button";
-import { cloudSettings } from "../../../../../types/types";
+import { cloudSettings, localSettings } from "../../../../../types/types";
 import { useStore } from "../../store";
 
 import { useEffect, useState } from "react";
 import { Session, SupabaseClient } from "@supabase/supabase-js";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Switch } from "../../../../../../@/components/ui/switch";
 
 export const StageSettings: React.FC<{
    setAssetsOpen: Function;
    session: Session;
-}> = ({ setAssetsOpen, session }) => {
+   setLocalSettings: Function;
+   localSettings: localSettings;
+}> = ({ setAssetsOpen, session, setLocalSettings, localSettings }) => {
    const {
       viewOnly,
       cloudSettings: { stageBackground, stageDimensions },
@@ -36,7 +39,7 @@ export const StageSettings: React.FC<{
    } = useStore();
    const supabase = createClientComponentClient();
    const [myDances, setMyDances] = useState([]);
-
+   const gridSnap = cloudSettings.gridSnap || localSettings.gridSnap || 1;
    const setStageBackground = (val: "gridfluid" | "none" | "grid") => {
       setCloudSettings({
          ...get().cloudSettings,
@@ -217,6 +220,19 @@ export const StageSettings: React.FC<{
 
             <HDivider />
 
+            <VStack className="">
+               <div className="flex items-center gap-2 justify-between px-2 py-2">
+                  <p>Snap dancers to grid</p>
+
+                  <Switch
+                     onCheckedChange={(e) => {
+                        setCloudSettings({ ...cloudSettings, gridSnap: gridSnap === 100 ? 1 : 100 });
+                     }}
+                     checked={gridSnap === 1}
+                  />
+               </div>
+            </VStack>
+            <HDivider />
             <VStack className="gap-2 p-2">
                <HStack className="items-center justify-between">
                   <p>Grid</p>
@@ -233,6 +249,7 @@ export const StageSettings: React.FC<{
                      </button>
                   )}
                </HStack>
+
                {/* custom is deprecated */}
                {stageBackground !== "none" && stageBackground !== "custom" && stageBackground ? (
                   <Select
@@ -253,7 +270,10 @@ export const StageSettings: React.FC<{
                   </Select>
                ) : null}
             </VStack>
+            {/* <div className="flex items-center space-x-2"> */}
 
+            {/* <p>Airplane Mode</p> */}
+            {/* </div> */}
             {stageBackground === "cheer9" || stageBackground === "gridfluid" ? (
                <>
                   <HDivider />

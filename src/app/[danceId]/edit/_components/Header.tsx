@@ -42,7 +42,7 @@ import { HStack, VStack } from "../../../../../@/components/ui/stacks";
 import LearnKeyboardShortcut from "../../../../../@/components/LearnKeyboardShortcut";
 import { KeyboardShortcuts } from "./Modals/KeyboardShortcuts";
 import { sleep } from "../../../../utils/sleep";
-import { Switch } from "../../../../../@/components/ui/switch";
+import { Switch } from "../../../../../@/components/ui/big-switch";
 
 export const Header: React.FC<{
    saved: boolean;
