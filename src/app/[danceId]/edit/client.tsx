@@ -741,7 +741,7 @@ const Edit = ({
                                              <></>
                                           )}
 
-                                          <FormationMarkersLayer
+                                          {/* <FormationMarkersLayer
                                              zoom={zoom}
                                              collisions={collisions}
                                              dancers={dancers}
@@ -758,7 +758,7 @@ const Edit = ({
                                              selectedDancers={selectedDancers}
                                              localSettings={localSettings}
                                              coordsToPosition={coordsToPosition}
-                                          ></StageMarkersLayer>
+                                          ></StageMarkersLayer> */}
 
                                           {selectedFormation !== null
                                              ? props.map((prop: prop) => {
