@@ -55,6 +55,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { DialogClose } from "@radix-ui/react-dialog";
 import { FormationMarkersLayer } from "./_components/FormationMarkersLayer";
 import { StageMarkersLayer } from "./_components/StageMarkersLayer";
+import { ReflectedDancers } from "./_components/ReflectedDancers";
 
 if (typeof Node === "function" && Node.prototype) {
    const originalRemoveChild = Node.prototype.removeChild;
