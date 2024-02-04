@@ -6,6 +6,7 @@ import { PopoverPicker } from "../ColorPicker";
 import { useStore } from "../../store";
 import { convertToCentimeters, convertToFeetAndInches } from "../../../../../utls";
 import { Add } from "../../../../../../@/components/ui/button";
+import { HDivider } from "../../../../../../@/components/ui/hdivider";
 export const Roster: React.FC<{
    addToStack: Function;
    pushChange: Function;
@@ -101,7 +102,7 @@ export const Roster: React.FC<{
          <div className="flex h-full w-full flex-col   dark:text-white ">
             {!viewOnly ? (
                <>
-                  <div className="flex flex-row items-center justify-between border-b border-neutral-200 px-2 py-2 text-xs dark:border-neutral-700 min-h-[40px] w-full">
+                  <div className="flex flex-row items-center justify-between border-b border-neutral-200 px-2  text-xs dark:border-neutral-700 min-h-[40px] w-full">
                      <p className="font-medium">Performers</p>
                      <Add onClick={createNewDancer}></Add>
                   </div>
@@ -128,8 +129,8 @@ export const Roster: React.FC<{
                ))}
             </div>
             {/* <div className="bg-blue-200 flex-grow  overflow-y-auto"></div> */}
-
-            <div className=" flex h-[250px]  min-h-[250px] flex-col   ">
+            <HDivider />
+            <div className=" flex h-[200px]  min-h-[200px] flex-col   ">
                {selectedDancers.length ? (
                   <div
                      className="mt-3 px-3"
@@ -137,7 +138,7 @@ export const Roster: React.FC<{
                         pointerEvents: viewOnly ? "none" : "auto",
                      }}
                   >
-                     <p className="   mb-2 text-sm font-medium">Height</p>
+                     <p className="   mb-2 text-xs font-medium">Height</p>
                      <div className="flex w-full flex-row  items-center ">
                         <div className="flex flex-row items-center border border-neutral-200 dark:border-neutral-700">
                            <input
@@ -164,7 +165,7 @@ export const Roster: React.FC<{
                               }}
                               className="w-[45px] rounded-none p-1 text-center focus:outline-none dark:bg-neutral-800  "
                            />
-                           <p className="mx-1">ft</p>
+                           <p className="mx-1 text-xs">ft</p>
                         </div>
                         <div className="ml-4 flex flex-row items-center border border-neutral-200 dark:border-neutral-700">
                            <input
@@ -191,12 +192,12 @@ export const Roster: React.FC<{
                               }}
                               className="w-[45px] rounded-none p-1 text-center focus:outline-none  dark:bg-neutral-800"
                            />
-                           <p className="mx-1">in</p>
+                           <p className="mx-1 text-xs">in</p>
                         </div>
                      </div>
                      <div className="flex flex-row items-center justify-between   ">
                         <div className="flex flex-col ">
-                           <p className=" mb-2 mt-2  text-sm font-medium text-neutral-800 dark:text-white">Shape</p>
+                           <p className=" mb-2 mt-2  text-xs font-medium text-neutral-800 dark:text-white">Shape</p>
 
                            <div className="flex w-full flex-row items-center gap-2">
                               <button
@@ -232,7 +233,7 @@ export const Roster: React.FC<{
                         </div>
 
                         <div className="flex flex-col justify-end">
-                           <p className=" mb-2 mt-2  text-sm font-medium text-neutral-800 dark:text-white">Color</p>
+                           <p className=" mb-2 mt-2  text-xs font-medium text-neutral-800 dark:text-white">Color</p>
                            <PopoverPicker
                               dancers={dancers}
                               color={dancers.find((dancer) => dancer.id === selectedDancers[0])?.color || null}
