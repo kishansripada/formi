@@ -34,6 +34,9 @@ const EXEMPT_EMAILS = [
 
    // cheer call
    "hme733@gmail.com",
+
+   // 1 year starting feb 4 2024
+   "thermann.a@gmail.com",
 ];
 
 export default EXEMPT_EMAILS;
