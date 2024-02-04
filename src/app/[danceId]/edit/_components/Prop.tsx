@@ -35,7 +35,7 @@ export const Prop: React.FC<{
 
    pushChange: Function;
 }> = ({ prop, currentFormationIndex, percentThroughTransition, position, coordsToPosition, zoom, localSettings, selectedPropIds }) => {
-   let { formations, selectedFormations, getFirstSelectedFormation, isPlaying } = useStore();
+   let { formations, selectedFormations, getFirstSelectedFormation, isPlaying, imageBlobs } = useStore();
    const { stageFlipped } = localSettings;
 
    if (!selectedFormations.length) return <></>;
@@ -130,7 +130,7 @@ export const Prop: React.FC<{
             )}
             <img
                className=" pointer-events-none select-none w-full h-auto "
-               src={`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${prop.user_id}/${prop?.url}`}
+               src={imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${prop.user_id}/${prop?.url}`]}
                alt=""
             />
             {/* {isDropdownOpen && (

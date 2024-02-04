@@ -132,7 +132,9 @@ const Edit = ({
       isPlaying,
       newFormationFromLast,
       getSelectedFormationIndex,
+      commandHeld,
    } = useStore();
+
    const [cookies, setCookies] = useCookies(myCookies);
    useEffect(() => {
       // Sentry.init({
@@ -258,10 +260,15 @@ const Edit = ({
    );
 
    useEffect(() => {
-      const allImages = items.map((item) => `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`);
+      let allImages = items.map((item) => `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`);
       if (cloudSettings.backgroundUrl) {
          allImages.push(cloudSettings.backgroundUrl);
       }
+
+      allImages = [
+         ...allImages,
+         ...props.map((prop) => `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${prop.user_id}/${prop?.url}`),
+      ];
       const fetchImage = async (url) => {
          const response = await fetch(url);
          const blob = await response.blob();
