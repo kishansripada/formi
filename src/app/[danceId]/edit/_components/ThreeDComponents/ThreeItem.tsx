@@ -7,9 +7,14 @@ export function ThreeItem({ itemPos, thisItem }: { itemPos: any; thisItem: any }
    const { imageBlobs } = useStore();
    const [itemDimensions, setItemDimensions] = useState({ width: 0, height: 0 });
    // const outerMaterial = new MeshStandardMaterial({ color: 0x00ff00 });
+   let texture;
    const url = imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${thisItem?.url}`];
-   const texture = useLoader(TextureLoader, url);
 
+   try {
+      texture = useLoader(TextureLoader, url);
+   } catch {
+      console.log("error");
+   }
    // const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
    useEffect(() => {
