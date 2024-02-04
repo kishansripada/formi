@@ -67,7 +67,8 @@ export const StageSettings: React.FC<{
          gridSubdivisions: 9,
          stageBackground: "gridfluid",
          hideSubdivisions: false,
-         backgroundUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/f30197ba-cf06-4234-bcdb-5d40d83c7999/basketball.png",
+         backgroundUrl:
+            "https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/f30197ba-cf06-4234-bcdb-5d40d83c7999/nba blueprint2.png",
       },
       nfl: { stageDimensions: { width: 330, height: 160 } },
       default: {
