@@ -777,15 +777,30 @@ export const Header: React.FC<{
                      </DialogTrigger>
                      <DialogContent>
                         <DialogTitle>Permission settings</DialogTitle>
-
-                        <Share
-                           danceId={danceId}
-                           permissions={permissions}
-                           setPermissions={setPermissions}
-                           anyoneCanView={anyoneCanView}
-                           setAnyoneCanView={setAnyoneCanView}
-                           plan={plan}
-                        ></Share>
+                        {!plan && (
+                           <p className="text-neutral-400 text-xs">
+                              Sharing is available to{" "}
+                              <span
+                                 className="cursor-pointer font-bold text-pink-400"
+                                 onClick={() => {
+                                    router.push("/upgrade");
+                                 }}
+                              >
+                                 subscribers
+                              </span>{" "}
+                              only
+                           </p>
+                        )}
+                        {plan && (
+                           <Share
+                              danceId={danceId}
+                              permissions={permissions}
+                              setPermissions={setPermissions}
+                              anyoneCanView={anyoneCanView}
+                              setAnyoneCanView={setAnyoneCanView}
+                              plan={plan}
+                           ></Share>
+                        )}
                      </DialogContent>
                   </Dialog>
                ) : null}

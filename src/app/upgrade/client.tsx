@@ -82,9 +82,10 @@ const Client = () => {
                            <div className="mt-3">
                               {[
                                  "Unlimited performances",
+                                 "Unlimited performance sharing",
                                  "Unlimited media uploads",
                                  "Export PDF",
-                                 "Access to 100+ curated formation templates",
+                                 "Hundreds of curated formation templates",
                                  // "Save roster",
                               ].map((text) => {
                                  return (
