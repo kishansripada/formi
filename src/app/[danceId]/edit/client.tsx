@@ -730,6 +730,7 @@ const Edit = ({
                                           menuOpen={menuOpen}
                                           setLocalSettings={setLocalSettings}
                                        >
+                                          {commandHeld && <ReflectedDancers coordsToPosition={coordsToPosition}></ReflectedDancers>}
                                           {selectedFormations.length === 1 && getFirstSelectedFormation()?.id !== formations[0]?.id && !isPlaying ? (
                                              <PathEditor
                                                 zoom={zoom}

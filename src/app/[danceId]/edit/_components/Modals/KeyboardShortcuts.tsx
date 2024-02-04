@@ -56,6 +56,15 @@ export const KeyboardShortcuts: React.FC<{}> = ({}) => {
                      shortcut={["⌘", "V"]}
                   />
                </HStack>
+               <HStack className="">
+                  <LearnKeyboardShortcut
+                     action="View selected dancer symmetry"
+                     description="Hold command to view the symmetry of the selected dancer"
+                     shortcut={["⌘"]}
+                  />
+                  <div className="w-full"></div>
+                  <div className="w-full"></div>
+               </HStack>
             </VStack>
          </TabsContent>
          <TabsContent value="timeline">
