@@ -12,7 +12,8 @@ export const ReflectedDancers: React.FC<{
    return (
       <>
          {selectedDancers.map((selectedDancerId: string) => {
-            const selectedDancerPosition = getFirstSelectedFormation().positions.find((position) => position.id === selectedDancerId);
+            const selectedDancerPosition = getFirstSelectedFormation()?.positions?.find((position) => position?.id === selectedDancerId);
+            if (!selectedDancerPosition) return null;
             const dancer = dancers.find((dancer) => dancer.id === selectedDancerId);
             if (selectedDancerPosition && dancer) {
                const { left, top } = coordsToPosition({ x: -selectedDancerPosition.position.x, y: selectedDancerPosition.position.y });
