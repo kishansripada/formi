@@ -347,7 +347,7 @@ export const ObjectControls: React.FC<{
                   {getSelectedPositionsProperty("itemId") !== null && !viewOnly && !viewOnly ? (
                      <Subtract onClick={() => setSelectedPositionProperty("itemId", null)}></Subtract>
                   ) : null}
-                  {!getSelectedPositionsProperty("itemId") && !viewOnly && !viewOnly ? (
+                  {!getSelectedPositionsProperty("itemId") && !viewOnly ? (
                      <DropdownMenu>
                         <DropdownMenuTrigger
                            disabled={viewOnly}
@@ -370,15 +370,15 @@ export const ObjectControls: React.FC<{
                            {items.map((item: item) => {
                               return (
                                  <DropdownMenuItem key={item.id} onClick={() => setSelectedPositionProperty("itemId", item.id)}>
-                                    <div className="text-xs flex flex-row items-center">
-                                       <div className="w-7 h-7 mr-5 ">
+                                    <div className="text-xs flex flex-row items-center justify-center w-full">
+                                       <div className="w-9 h-9 ">
                                           <img
                                              className="h-full w-full object-contain"
                                              src={imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`]}
                                           />
                                        </div>
 
-                                       <p>{item.name}</p>
+                                       {/* <p>{item.name}</p> */}
                                     </div>
                                  </DropdownMenuItem>
                               );
@@ -396,7 +396,7 @@ export const ObjectControls: React.FC<{
                                     <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
                                  </svg>
 
-                                 <p>New prop</p>
+                                 <p>Upload image</p>
                               </div>
                            </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -413,8 +413,8 @@ export const ObjectControls: React.FC<{
                            asChild
                            className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md border border-neutral-700"
                         >
-                           <div className="text-xs flex flex-row items-center px-2 py-1">
-                              <div className="w-7 h-7 mr-3 ">
+                           <div className="text-xs flex flex-row items-center  justify-center px-2 py-1">
+                              <div className="w-12 h-12 ">
                                  {getSelectedPositionsProperty("itemId")?.url && (
                                     <img
                                        className="h-full w-full object-contain"
@@ -429,7 +429,7 @@ export const ObjectControls: React.FC<{
                                  )}
                               </div>
 
-                              <p>{getSelectedPositionsProperty("itemId")?.name}</p>
+                              {/* <p>{getSelectedPositionsProperty("itemId")?.name}</p> */}
                            </div>
                         </DropdownMenuTrigger>
 
@@ -437,15 +437,15 @@ export const ObjectControls: React.FC<{
                            {items.map((item: item) => {
                               return (
                                  <DropdownMenuItem key={item.id} onClick={() => setSelectedPositionProperty("itemId", item.id)}>
-                                    <div className="text-xs flex flex-row items-center">
-                                       <div className="w-7 h-7 mr-5 ">
+                                    <div className="text-xs flex flex-row justify-center w-full items-center">
+                                       <div className="w-12 h-12 ">
                                           <img
                                              className="h-full w-full object-contain"
                                              src={imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`]}
                                           />
                                        </div>
 
-                                       <p>{item.name}</p>
+                                       {/* <p>{item.name}</p> */}
                                     </div>
                                  </DropdownMenuItem>
                               );
@@ -536,7 +536,7 @@ export const ObjectControls: React.FC<{
             onSubtract={() => setSelectedPositionProperty("level", null)}
             canAdd={!(getSelectedPositionsProperty("level") !== null) && !viewOnly}
             canSubtract={getSelectedPositionsProperty("level") !== null && !viewOnly}
-            label="Level"
+            label="Height off ground"
             isOpen={getSelectedPositionsProperty("level") !== null}
          >
             <div className="px-2">
