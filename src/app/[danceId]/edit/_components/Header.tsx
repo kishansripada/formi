@@ -585,7 +585,7 @@ export const Header: React.FC<{
                   </SelectContent>
                </Select> */}
 
-               {!viewOnlyInitial && !isMobileView ? (
+               {/* {!viewOnlyInitial && !isMobileView ? (
                   <button
                      title="Comment on stage"
                      className={`min-w-[48px]  hidden lg:grid h-full  place-items-center ${
@@ -617,7 +617,7 @@ export const Header: React.FC<{
                         />
                      </svg>
                   </button>
-               ) : null}
+               ) : null} */}
 
                <a
                   href="https://linktr.ee/formistudio.app"
