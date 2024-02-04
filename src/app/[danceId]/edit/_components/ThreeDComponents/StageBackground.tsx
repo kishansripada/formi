@@ -4,15 +4,16 @@ import { TextureLoader, DoubleSide } from "three";
 import { cloudSettings } from "../../../../../types/types";
 import { useStore } from "../../store";
 export function StageBackground({ url }: { url: string }) {
-   const texture = useLoader(TextureLoader, url);
-   const { cloudSettings } = useStore();
+   const { cloudSettings, imageBlobs } = useStore();
+   const texture = useLoader(TextureLoader, imageBlobs[url]);
+
    const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
    useEffect(() => {
-      calculateImageDimensions(cloudSettings, url, (width, height) => {
+      calculateImageDimensions(cloudSettings, imageBlobs[url], (width, height) => {
          setDimensions({ width, height });
       });
-   }, [cloudSettings, url]);
+   }, [cloudSettings, imageBlobs[url]]);
 
    return (
       <mesh position={[0, 0, 0]} rotation={[Math.PI * 1.5, 0, 0]}>

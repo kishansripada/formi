@@ -99,6 +99,7 @@ export const Canvas: React.FC<{
       isMobileView,
       isPlaying,
       isUsingPenTool,
+      imageBlobs,
    } = useStore();
    // const undo = useStore((state) => state.liveblocks.room?.history.undo);
    let { selectedFormations, getFirstSelectedFormation } = useStore();
@@ -1198,7 +1199,7 @@ export const Canvas: React.FC<{
                      <img
                         draggable={false}
                         className="w-full h-full object-contain absolute select-none  "
-                        src={cloudSettings.backgroundUrl}
+                        src={imageBlobs[cloudSettings.backgroundUrl]}
                         alt=""
                         style={{
                            opacity: (cloudSettings.backgroundImageOpacity === undefined ? 100 : cloudSettings.backgroundImageOpacity) / 100,

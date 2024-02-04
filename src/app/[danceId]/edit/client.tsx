@@ -259,7 +259,9 @@ const Edit = ({
 
    useEffect(() => {
       const allImages = items.map((item) => `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`);
-
+      if (cloudSettings.backgroundUrl) {
+         allImages.push(cloudSettings.backgroundUrl);
+      }
       const fetchImage = async (url) => {
          const response = await fetch(url);
          const blob = await response.blob();
