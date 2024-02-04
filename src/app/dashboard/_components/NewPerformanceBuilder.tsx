@@ -40,6 +40,7 @@ export const NewPerformanceBuilder: React.FC<{}> = ({ rosters, projects, createN
       nba: {
          stageDimensions: { width: 94, height: 50 },
          backgroundUrl: "https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/f30197ba-cf06-4234-bcdb-5d40d83c7999/basketball.png",
+         gridSnap: 100,
       },
       nfl: { stageDimensions: { width: 330, height: 160 } },
       default: { stageDimensions: { width: 36, height: 24 } },
