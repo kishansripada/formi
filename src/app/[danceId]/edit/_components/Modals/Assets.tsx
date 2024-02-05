@@ -120,7 +120,7 @@ export const Assets: React.FC<{
       // if (menuOpen === "items") {
       if (assetsOpen.type === "item" && !assetsOpen.id) {
          const itemId = uuidv4();
-         setItems([...items, { id: itemId, name: "New prop", url: `${session?.user.id}/${id || selectedAsset}` }]);
+         setItems([...items, { id: itemId, name: "New prop", url: `${session?.user.id}/${id || selectedAsset}`, width: 4 }]);
 
          setFormations(
             formations.map((formation) => {
