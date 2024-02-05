@@ -5,7 +5,12 @@ import { cloudSettings } from "../../../../../types/types";
 import { useStore } from "../../store";
 export function StageBackground({ url }: { url: string }) {
    const { cloudSettings, imageBlobs } = useStore();
-   const texture = useLoader(TextureLoader, imageBlobs[url]);
+   let texture;
+   try {
+      texture = useLoader(TextureLoader, imageBlobs[url]);
+   } catch {
+      console.log("error");
+   }
 
    const [dimensions, setDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
