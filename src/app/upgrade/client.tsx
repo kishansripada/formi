@@ -9,9 +9,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ThemeProvider } from "@/components/theme-provider";
 import { useState } from "react";
 const Client = () => {
-   const [subscriptionType, setSubscriptionType] = useState("yearly");
+   const [subscriptionType, setSubscriptionType] = useState("monthly");
 
-   const MONTHLY_PRICE = "price_1O08eZHvC3w6e8fcq9ZE4uaj";
+   const MONTHLY_PRICE = "price_1Nv8jbHvC3w6e8fcE6maAFjv";
    const YEARLY_PRICE = "price_1OfshsHvC3w6e8fcJ8WtvJCN";
 
    return (
@@ -60,13 +60,13 @@ const Client = () => {
                            <div className="flex flex-row justify-between items-center">
                               <p className="text-pink-500 font-medium ">Choreographer</p>
                            </div>
-                           <p className="text-4xl mt-3 font-medium">$ {subscriptionType === "yearly" ? "4" : "6"}</p>
+                           <p className="text-4xl mt-3 font-medium">$ {subscriptionType === "yearly" ? "4" : "5"}</p>
                            <p className="text-sm mt-1 font-medium">per month</p>
                            <Tabs
                               onValueChange={(value) => {
                                  setSubscriptionType(value);
                               }}
-                              defaultValue="yearly"
+                              defaultValue="monthly"
                               className="w-full "
                            >
                               <TabsList className="w-full mt-3 ">
