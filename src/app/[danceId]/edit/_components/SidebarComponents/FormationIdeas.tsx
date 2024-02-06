@@ -131,7 +131,7 @@ export const FormationIdeas: React.FC<{
                      </Link>
                   </div>
                )}
-               {templates.map((template: formation, i: number) => {
+               {(templates || []).map((template: formation, i: number) => {
                   return (
                      <button
                         style={{
