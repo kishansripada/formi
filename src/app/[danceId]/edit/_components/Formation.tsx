@@ -125,10 +125,12 @@ export const Formation: React.FC<{
                preventScrollRef.current = false;
             }
 
-            setHasClickedOnTimeline(true);
             setFormations(
                get().formations.map((formation, i) => {
                   if (formation.id === state.target.id) {
+                     if (formations.length > 2 && i !== formations.length - 1) {
+                        setHasClickedOnTimeline(true);
+                     }
                      // console.log(formation);
                      if (formation.durationSeconds + state.delta[0] / pixelsPerSecond >= 0) {
                         return { ...formation, durationSeconds: roundToHundredth(formation.durationSeconds + state.delta[0] / pixelsPerSecond) };
