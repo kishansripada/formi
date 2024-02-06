@@ -205,7 +205,7 @@ export const Formation: React.FC<{
                }}
                className="text-sm py-1 "
             >
-               Duplicate
+               New formation after this
             </ContextMenuItem>
             <ContextMenuItem
                onClick={() => {
