@@ -349,9 +349,11 @@ const Edit = ({
    }
 
    const isDesktop = useIsDesktop();
+   const [hasClickedOnTimeline, setHasClickedOnTimeline] = useState(false);
+   //
 
-   // !cookies.hasBeenPromptedForFeedback && isDesktop
-   const [feedbackOpen, setFeedbackOpen] = useState(false);
+   const feedbackOpen = !cookies.hasSeenTimelineShiftHelp && isDesktop && hasClickedOnTimeline;
+   // console.log({ feedbackOpen });
 
    return (
       <>
@@ -378,9 +380,9 @@ const Edit = ({
             {/* {<HelpUrl helpUrl={helpUrl} setHelpUrl={setHelpUrl}></HelpUrl>} */}
             <Dialog
                onOpenChange={() => {
-                  setFeedbackOpen(false);
+                  // setFeedbackOpen(false);
                   setCookies((cookies) => {
-                     return { ...cookies, hasBeenPromptedForFeedback: true };
+                     return { ...cookies, hasSeenTimelineShiftHelp: true };
                   });
                }}
                open={feedbackOpen}
@@ -388,36 +390,24 @@ const Edit = ({
                {/* <DialogTrigger>Open</DialogTrigger> */}
                <DialogContent className="">
                   <DialogHeader className="min-w-[450px] w-[450px]">
-                     <DialogTitle className="mb-2 leading-normal">
-                        Get a year of free access to our pro tier in exchange for a 15 min phone call
-                     </DialogTitle>
+                     <DialogTitle className="mb-2 leading-normal">Hold shift to not affect surrounding formations</DialogTitle>
                      <DialogDescription className="">
-                        We want to understand your experience with FORMI so we can make it better. We promise we won't ask you again.
+                        Holding shift while changing the length of a formation will adjust the surrounding formations to maintain the same total
+                        duration.
                      </DialogDescription>
                      <div className="h-[20px]"></div>
+                     <img src="/shiftPopup.gif" alt="" className="rounded-md" />
+                     {/* <div className="h-[20px]"></div> */}
                      <HStack className="justify-between">
-                        <Button
-                           onClick={() => {
-                              setFeedbackOpen(false);
-                              setCookies((cookies) => {
-                                 return { ...cookies, hasBeenPromptedForFeedback: true };
-                              });
-                           }}
-                        >
-                           No thanks
-                        </Button>
-
+                        <div></div>
                         <Button
                            onClick={async () => {
-                              const data = await supabase.from("feedback").insert({});
-                              toast("Thanks! We'll reach out to you ASAP to schedule a call");
                               setCookies((cookies) => {
-                                 return { ...cookies, hasBeenPromptedForFeedback: true };
+                                 return { ...cookies, hasSeenTimelineShiftHelp: true };
                               });
-                              setFeedbackOpen(false);
                            }}
                         >
-                           Yes, let's do it
+                           Ok
                         </Button>
                      </HStack>
                   </DialogHeader>
@@ -952,6 +942,7 @@ const Edit = ({
                                  hasVisited={true}
                                  currentFormationIndex={currentFormationIndex}
                                  menuOpen={menuOpen}
+                                 setHasClickedOnTimeline={setHasClickedOnTimeline}
                               ></Timeline>
                            ) : (
                               <div

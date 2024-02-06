@@ -35,6 +35,7 @@ export const Timeline: React.FC<{
    hasVisited: boolean;
    menuOpen: string | null;
    currentFormationIndex: number;
+   setHasClickedOnTimeline: Function;
 }> = ({
    position,
 
@@ -59,6 +60,7 @@ export const Timeline: React.FC<{
    hasVisited,
    menuOpen,
    currentFormationIndex,
+   setHasClickedOnTimeline,
 }) => {
    const segments = useStore((state) => state.segments);
    const setSegments = useStore((state) => state.setSegments);
@@ -191,7 +193,7 @@ export const Timeline: React.FC<{
                min: Math.min(
                   Math.max((songDuration || 0) / 1000, totalDurationOfFormations)
                      ? (window.screen.width - (69 + 12)) / Math.max((songDuration || 0) / 1000, totalDurationOfFormations)
-                  : 10,
+                     : 10,
                   10
                ),
                max: MAX_PIXELS_PER_SECOND,
@@ -271,13 +273,13 @@ export const Timeline: React.FC<{
                ref={timeline}
             >
                <div className="min-h-[18px]">
-               <div
-                  style={{
-                     width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
-                  }}
-                  className={` relative   py-1 ${!soundCloudTrackId ? "min-h-[18px]" : ""} `}
-                  id="wave-timeline"
-               ></div>
+                  <div
+                     style={{
+                        width: songDuration ? (songDuration / 1000) * pixelsPerSecond : "100%",
+                     }}
+                     className={` relative   py-1 ${!soundCloudTrackId ? "min-h-[18px]" : ""} `}
+                     id="wave-timeline"
+                  ></div>
                </div>
 
                {others
@@ -335,6 +337,7 @@ export const Timeline: React.FC<{
                localSettings={localSettings}
                shiftHeld={shiftHeld}
                hasVisited={hasVisited}
+               setHasClickedOnTimeline={setHasClickedOnTimeline}
             />
 
             {segments.length ? (

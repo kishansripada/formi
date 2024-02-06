@@ -21,7 +21,8 @@ export const Formation: React.FC<{
    pixelsPerSecond: number;
    activeId: string | null;
    shiftHeld: boolean;
-}> = ({ formation, index, pixelsPerSecond, activeId, shiftHeld }) => {
+   setHasClickedOnTimeline: Function;
+}> = ({ formation, index, pixelsPerSecond, activeId, shiftHeld, setHasClickedOnTimeline }) => {
    const {
       viewOnly,
       selectedFormations,
@@ -123,6 +124,8 @@ export const Formation: React.FC<{
             } else {
                preventScrollRef.current = false;
             }
+
+            setHasClickedOnTimeline(true);
             setFormations(
                get().formations.map((formation, i) => {
                   if (formation.id === state.target.id) {
@@ -153,7 +156,7 @@ export const Formation: React.FC<{
                      }
                   }
                   // if shift held, then ripple the change to all formations
-                  if (shiftHeld) return formation;
+                  if (!shiftHeld) return formation;
 
                   if (i === formations.findIndex((f) => f.id === state.target.id) + 1) {
                      if (

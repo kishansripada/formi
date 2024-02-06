@@ -29,6 +29,7 @@ export const Layer: React.FC<{
    localSettings: localSettings;
    setPosition: Function;
    shiftHeld: boolean;
+   setHasClickedOnTimeline: Function;
 }> = ({
    selectedFormation,
 
@@ -40,6 +41,7 @@ export const Layer: React.FC<{
    setPosition,
    localSettings,
    shiftHeld,
+   setHasClickedOnTimeline,
 }) => {
    const { formations, setFormations, selectedFormations, setSelectedFormations, commandHeld, newFormationFromLast, goToFormation, viewOnly } =
       useStore();
@@ -153,6 +155,7 @@ export const Layer: React.FC<{
                            activeId={activeId}
                            localSettings={localSettings}
                            shiftHeld={shiftHeld}
+                           setHasClickedOnTimeline={setHasClickedOnTimeline}
                         />
                      </div>
                   ))}

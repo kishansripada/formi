@@ -22,6 +22,7 @@ export const Layers: React.FC<{
    localSettings: localSettings;
    shiftHeld: boolean;
    hasVisited: boolean;
+   setHasClickedOnTimeline: Function;
 }> = ({
    position,
 
@@ -35,6 +36,7 @@ export const Layers: React.FC<{
    localSettings,
    shiftHeld,
    hasVisited,
+   setHasClickedOnTimeline,
    // setSelectedFormations,
    // selectedFormations,
 }) => {
@@ -94,6 +96,7 @@ export const Layers: React.FC<{
             formationGroups={formationGroups}
             localSettings={localSettings}
             shiftHeld={shiftHeld}
+            setHasClickedOnTimeline={setHasClickedOnTimeline}
             // bind={bind}
             // setSelectedFormations={setSelectedFormations}
             // selectedFormations={selectedFormations}
