@@ -131,15 +131,19 @@ export const Formation: React.FC<{
                      if (formations.length > 2 && i !== formations.length - 1) {
                         setHasClickedOnTimeline(true);
                      }
-                     // console.log(formation);
-                     if (formation.durationSeconds + state.delta[0] / pixelsPerSecond >= 0) {
+
+                     if (
+                        formation.durationSeconds + state.delta[0] / pixelsPerSecond >= 0 &&
+                        // if first formation is getting to small
+                        !(i === 0 && formation.durationSeconds + state.delta[0] / pixelsPerSecond <= 0.5)
+                     ) {
                         return { ...formation, durationSeconds: roundToHundredth(formation.durationSeconds + state.delta[0] / pixelsPerSecond) };
                      } else {
                         // transition should be longer than 0.5 seconds
                         if (formation.transition.durationSeconds + state.delta[0] / pixelsPerSecond > MIN_TRANSITION_DURATION) {
                            return {
                               ...formation,
-                              durationSeconds: 0,
+                              durationSeconds: i === 0 ? 0.5 : 0,
                               transition: {
                                  ...formation.transition,
                                  durationSeconds: roundToHundredth(formation.transition.durationSeconds + state.delta[0] / pixelsPerSecond),
@@ -148,7 +152,7 @@ export const Formation: React.FC<{
                         } else {
                            return {
                               ...formation,
-                              durationSeconds: 0,
+                              durationSeconds: i === 0 ? 0.5 : 0,
                               transition: {
                                  ...formation.transition,
                                  durationSeconds: MIN_TRANSITION_DURATION,
