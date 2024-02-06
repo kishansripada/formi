@@ -390,7 +390,7 @@ const Edit = ({
                {/* <DialogTrigger>Open</DialogTrigger> */}
                <DialogContent className="">
                   <DialogHeader className="min-w-[450px] w-[450px]">
-                     <DialogTitle className="mb-2 leading-normal">Hold shift to not affect surrounding formations</DialogTitle>
+                     <DialogTitle className="mb-2 leading-normal">Hold shift to keep other formations in place when resizing</DialogTitle>
                      <DialogDescription className="">
                         Holding shift while changing the length of a formation will adjust the surrounding formations to maintain the same total
                         duration.
