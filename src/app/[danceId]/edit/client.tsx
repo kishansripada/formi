@@ -548,11 +548,11 @@ const Edit = ({
                                     pointerEvents: menuOpen ? "auto" : "none",
                                  }}
                                  // top-[103px]
-                                 className="flex flex-row fixed md:static top-[103px] left-0  h-[80vh] md:w-auto w-full md:z-auto z-[40]  "
+                                 className="flex flex-row fixed md:static top-[103px]  left-0  h-[80vh] md:w-auto w-full md:z-auto z-[40] md:h-full  "
                               >
                                  <>
                                     {menuOpen ? (
-                                       <div className="border-r border-neutral-300 dark:border-neutral-700 min-w-[240px]  w-[240px] dark:bg-neutral-900 bg-neutral-50 dark:text-white relative">
+                                       <div className="border-r border-neutral-300 dark:border-neutral-700 min-w-[240px] overflow-hidden w-[240px] dark:bg-neutral-900 bg-neutral-50 dark:text-white relative">
                                           {menuOpen ? (
                                              <button
                                                 onClick={() => setMenuOpen(null)}
