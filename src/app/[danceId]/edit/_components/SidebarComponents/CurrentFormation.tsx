@@ -48,8 +48,10 @@ export const CurrentFormation: React.FC<{ setMenuOpen: Function; setLocalSetting
          </div>
 
          <div className="overflow-y-scroll removeScrollBar mb-auto h-full">
-            <div className=" min-h-fit ">
+            <div className=" min-h-fit h-full">
+               <div className=" h-full min-h-[500px]">
                <ObjectControls setLocalSettings={setLocalSettings} setAssetsOpen={setAssetsOpen} setMenuOpen={setMenuOpen} />
+               </div>
             </div>
          </div>
 
