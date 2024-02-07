@@ -384,9 +384,9 @@ const Edit = ({
                user={{
                   id: session?.user.id,
                   email: session?.user.email,
-                  created_at: userData.created_at,
-                  how_you_found_out: userData.howYouFoundOut,
-                  uses: userData.selectedUses,
+                  created_at: userData?.created_at,
+                  how_you_found_out: userData?.howYouFoundOut,
+                  uses: userData?.selectedUses,
                }}
             ></Index>
 

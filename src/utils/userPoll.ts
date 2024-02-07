@@ -5576,7 +5576,7 @@ function Ps({ poll: n, user: e }) {
    Fe(() => {
       var c = new Date(/* @__PURE__ */ new Date().getTime() - 6048e5);
       n.active &&
-         (new Date(e.created_at) > c ||
+         ((e.created_at && new Date(e.created_at) > c) ||
             new Date(n.active_until) < /* @__PURE__ */ new Date() ||
             o().then((l) => {
                if (l.length) return;
