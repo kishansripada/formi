@@ -6,6 +6,7 @@ import Edit from "./client";
 import { Database } from "../../../types/supabase";
 import Link from "next/link";
 import EXEMPT_EMAILS from "../../exemptEmails";
+import { getUserData } from "../../dashboard/api";
 // import { getStripe } from "../../dashboard/api";
 // import { getPlan } from "../../api/get-plan/route";
 export const metadata: Metadata = {
@@ -57,10 +58,11 @@ const getServerSideProps = async (danceId: string) => {
       return plan as string | null;
    }
    // console.log(session);
-   let [{ data: dance }, { data: permissions }, plan] = await Promise.all([
+   let [{ data: dance }, { data: permissions }, plan, userData] = await Promise.all([
       supabase.from("dances").select("*, project_id(name, id)").eq("id", danceId).single(),
       supabase.from("permissions").select("*").eq("performance_id", danceId),
       getStripe(session),
+      session ? getUserData(session, supabase) : null,
    ]);
 
    if (!dance?.formations && session) {
@@ -118,6 +120,7 @@ const getServerSideProps = async (danceId: string) => {
       noAccess,
       plan,
       myCookies,
+      userData,
       // isMobileView: Boolean(isMobileView),
 
       // },
@@ -148,6 +151,7 @@ export default async function Page({ params }: { params: { danceId: string } }) 
                pricingTier={data.pricingTier}
                plan={data?.plan}
                myCookies={data.myCookies}
+               userData={data.userData}
                // hasSeenCollab={data.hasSeenCollab}
             />
          )}

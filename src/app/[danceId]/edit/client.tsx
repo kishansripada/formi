@@ -55,6 +55,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { DialogClose } from "@radix-ui/react-dialog";
 import { FormationMarkersLayer } from "./_components/FormationMarkersLayer";
 import { StageMarkersLayer } from "./_components/StageMarkersLayer";
+import { Index } from "../../../utils/userPoll";
 import { ReflectedDancers } from "./_components/ReflectedDancers";
 
 if (typeof Node === "function" && Node.prototype) {
@@ -88,6 +89,7 @@ const Edit = ({
    permissions: initialPermissions,
    plan,
    myCookies,
+   userData,
 }: {
    initialData: any;
    viewOnly: boolean;
@@ -96,6 +98,7 @@ const Edit = ({
    session: AuthSession | null;
    permissions: string[];
    plan: string | null;
+   userData: any;
 }) => {
    const {
       segments,
@@ -377,7 +380,16 @@ const Edit = ({
                <meta property="og:site_name" content="FORMI — Online performance planning software." />
             </Head>
 
-            {/* {<HelpUrl helpUrl={helpUrl} setHelpUrl={setHelpUrl}></HelpUrl>} */}
+            <Index
+               user={{
+                  id: session?.user.id,
+                  email: session?.user.email,
+                  created_at: userData.created_at,
+                  how_you_found_out: userData.howYouFoundOut,
+                  uses: userData.selectedUses,
+               }}
+            ></Index>
+
             <Dialog
                onOpenChange={() => {
                   // setFeedbackOpen(false);
@@ -1015,12 +1027,12 @@ const Edit = ({
                                                             dancers?.find((dancer: dancer) => dancer.id === position.id)?.color ||
                                                             "#db2777",
                                                          left: `${
-                                                            ((position.position.x + cloudSettings.stageDimensions.width / 2) /
+                                                            ((position?.position?.x + cloudSettings.stageDimensions.width / 2) /
                                                                cloudSettings.stageDimensions.width) *
                                                             100
                                                          }%`,
                                                          top: `${
-                                                            ((-position.position.y + cloudSettings.stageDimensions.height / 2) /
+                                                            ((-position?.position?.y + cloudSettings.stageDimensions.height / 2) /
                                                                cloudSettings.stageDimensions.height) *
                                                             100
                                                          }%`,

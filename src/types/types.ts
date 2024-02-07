@@ -41,6 +41,8 @@ export type dancerPosition = {
    controlPointStart?: { x: number; y: number };
    controlPointEnd?: { x: number; y: number };
    itemId?: string | null;
+   itemWidth?: number;
+   itemSide?: "left" | "right" | "top" | "bottom";
    color?: string | null;
    level?: number | null; // elevation off the ground
    groupId?: string | null; // deprecated
@@ -51,6 +53,7 @@ export type formation = {
    durationSeconds: number;
    positions: dancerPosition[];
    props?: propPosition[];
+
    transition: {
       durationSeconds: number;
    };
@@ -75,7 +78,7 @@ export type performerGroup = {
 // };
 
 export type localSettings = {
-   gridSnap: 1 | 2 | 100;
+   gridSnap: 1 | 2 | 100; // deprecated
    previousFormationView: "none" | "ghostDancers" | "ghostDancersAndPaths";
    dancerStyle: "initials" | "numbered" | "solid" | "initialsAndName";
    viewCollisions: boolean;
@@ -114,7 +117,8 @@ export type cloudSettings = {
    backgroundImageOpacity: number;
    hideSubdivisions: boolean;
 
-   stageMarkers: [];
+   stageMarkers: []; // deprecated
+   gridSnap: 1 | 2 | 100;
 };
 
 export type comment = {
