@@ -83,7 +83,7 @@ export const DancerAlias: React.FC<{
    const dancerColor = dancerPos?.color || dancer?.color || "#db2777";
    const dancerShape = dancerPos?.shape || dancer?.shape || "circle";
 
-   const itemSide = dancerPos.itemSide || thisItem?.side || "top";
+   const itemSide = (dancerPos.itemId && dancerPos.itemSide) || thisItem?.side || "top";
    const itemWidth = dancerPos.itemWidth || thisItem?.width || 1;
 
    return (
