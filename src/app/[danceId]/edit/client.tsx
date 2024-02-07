@@ -662,6 +662,9 @@ const Edit = ({
                                                 selectedDancers={selectedDancers}
                                                 setSelectedDancers={setSelectedDancers}
                                                 dancers={dancers}
+                                                setMenuOpen={setMenuOpen}
+                                                setLocalSettings={setLocalSettings}
+                                                setAssetsOpen={setAssetsOpen}
                                              />
                                           ) : null}
                                        </div>
@@ -891,7 +894,7 @@ const Edit = ({
                                  )}
                               </div>
                            </DndContext>
-
+                           {/* 
                            {!localSettings.fullScreen && (
                               <div className="h-full bg-neutral-900 max-w-[200px] w-[200px] min-w-[200px] border-l border-neutral-700 hidden md:flex">
                                  <ObjectControls
@@ -902,7 +905,7 @@ const Edit = ({
                                     setMenuOpen={setMenuOpen}
                                  ></ObjectControls>
                               </div>
-                           )}
+                           )} */}
                         </div>
 
                         <div className="  bg-black">

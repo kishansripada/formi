@@ -240,6 +240,7 @@ export const Roster: React.FC<{
                               selectedDancers={selectedDancers}
                               setColor={setColor}
                               position="top"
+                              side="right"
                            ></PopoverPicker>
                         </div>
                      </div>

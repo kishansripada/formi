@@ -16,37 +16,12 @@ import PropertyAdd from "../../../../../@/components/PropertyAdd";
 import { HDivider } from "../../../../../@/components/ui/hdivider";
 import { Add, Subtract } from "../../../../../@/components/ui/button";
 
-const RemovePropertyButton = ({
-   setSelectedPositionProperty,
-   propertyKey,
-   viewOnly,
-}: {
-   setSelectedPositionProperty: Function;
-   propertyKey: string;
-   viewOnly: boolean;
-}) => {
-   if (viewOnly) return <></>;
-   return (
-      <button
-         onClick={() => {
-            setSelectedPositionProperty(propertyKey, null);
-         }}
-         className="  md:text-xs text-[10px] hover:bg-neutral-800 p-1  cursor-default "
-      >
-         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-            <path fillRule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clipRule="evenodd" />
-         </svg>
-      </button>
-   );
-};
-
 export const ObjectControls: React.FC<{
    setLocalSettings: Function;
-   dancers: dancer[];
-   selectedDancers: string[];
+
    setAssetsOpen: Function;
    setMenuOpen: Function;
-}> = ({ selectedDancers, dancers, setLocalSettings, setAssetsOpen, setMenuOpen }) => {
+}> = ({ setLocalSettings, setAssetsOpen, setMenuOpen }) => {
    const {
       formations,
       setFormations,
@@ -58,10 +33,10 @@ export const ObjectControls: React.FC<{
       cloudSettings,
       setSelectedPositionProperty,
       getSelectedPositionsProperty,
-      newGroupOnSelectedFormation,
-      pauseHistory,
-      resumeHistory,
+
       setItems,
+      dancers,
+      selectedDancers,
    } = useStore();
 
    const thisFormation = useStore((state) => state.getFirstSelectedFormation());
@@ -189,9 +164,14 @@ export const ObjectControls: React.FC<{
    if (!selectedDancers.length || !selectedFormations.length) return <></>;
 
    return (
-      <VStack className="w-full  h-full bg-neutral-50 pb-2  dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
-         <div className="  border-neutral-700 w-full p-2 flex flex-row items-center justify-between">
-            <div className="flex flex-row items-center w-full">
+      <VStack className="w-full  h-full bg-neutral-50 pb-2  dark:bg-neutral-900 dark:border-neutral-700 dark:text-white overflow-y-scroll">
+         <div className="  border-neutral-700 w-full p-2 flex flex-row items-center justify-between ">
+            <div
+               onClick={() => {
+                  setMenuOpen("dancers");
+               }}
+               className="flex flex-row items-center w-full group"
+            >
                {selectedDancers.length === 1 ? (
                   <div className="mr-3">
                      {dancers.find((dancer) => dancer.id === selectedDancers[0])?.shape === "square" ? (
@@ -219,7 +199,7 @@ export const ObjectControls: React.FC<{
                   </div>
                ) : null}
                <div className="w-full max-w-full flex-1">
-                  <p className="md:text-sm text-[10px]  font-bold max-w-full w-full">
+                  <p className="md:text-sm text-[10px] max-w-full w-full group-hover:underline">
                      {selectedDancers.length === dancers.length
                         ? "Everyone"
                         : formatNames(dancers.filter((dancer) => selectedDancers.includes(dancer.id)).map((dancer) => dancer.name))}
@@ -234,6 +214,34 @@ export const ObjectControls: React.FC<{
             ) : null}
          </div>
          <HDivider />
+         {/* <div className="flex flex-row justify-between">
+            <div className="py-3 gap-2 flex flex-col">
+               <p className=" font-medium text-xs px-2">Color</p>
+
+               <div className="flex flex-row items-center justify-between px-2">
+                  <PopoverPicker
+                     dancers={dancers}
+                     color={getSelectedPositionsProperty("color")}
+                     setColor={(color: string) => setSelectedPositionProperty("color", color)}
+                     position="bottom"
+                  ></PopoverPicker>
+               </div>
+            </div>
+            <div className="py-3 gap-2 flex flex-col items-end">
+               <p className=" font-medium text-xs px-2">Height</p>
+
+               <div className="flex flex-row items-center justify-between px-2">
+                  <PopoverPicker
+                     dancers={dancers}
+                     color={getSelectedPositionsProperty("color")}
+                     setColor={(color: string) => setSelectedPositionProperty("color", color)}
+                     position="bottom"
+                  ></PopoverPicker>
+               </div>
+            </div>
+         </div>
+         <p className=" font-medium text-xs px-2 py-2">This formation</p>
+         <HDivider /> */}
 
          {selectedDancers.length === 2 && !viewOnly ? (
             <>
@@ -289,7 +297,7 @@ export const ObjectControls: React.FC<{
             })
             .includes(0) ? (
             <>
-               <div className="flex flex-row justify-between items-center py-2 px-2 max-h-[44px] h-[44px] ">
+               <div className="flex flex-row justify-between items-center py-2 px-2 max-h-[44px] h-[44px]  ">
                   <p className="text-xs  font-semibold">Path</p>
                   <DropdownMenu>
                      <DropdownMenuTrigger
@@ -339,222 +347,6 @@ export const ObjectControls: React.FC<{
                <HDivider />
             </>
          ) : null}
-
-         <div className=" flex flex-col gap-2 py-2 min-h-[44px] justify-center ">
-            <div className="flex flex-row items-center justify-between px-2">
-               <p className=" font-medium text-xs">Prop</p>
-               <div className="flex flex-row items-center gap-2">
-                  {getSelectedPositionsProperty("itemId") !== null && !viewOnly && !viewOnly ? (
-                     <Subtract onClick={() => setSelectedPositionProperty("itemId", null)}></Subtract>
-                  ) : null}
-                  {!getSelectedPositionsProperty("itemId") && !viewOnly ? (
-                     <DropdownMenu>
-                        <DropdownMenuTrigger
-                           disabled={viewOnly}
-                           asChild
-                           // className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md border border-neutral-700"
-                        >
-                           <Add
-                           // onClick={() => {
-                           //    if (!items.length) {
-                           //       setAssetsOpen({ type: "item" });
-                           //       toast("Create your first prop");
-                           //       return;
-                           //    }
-                           //    setSelectedPositionProperty("itemId", items[0].id);
-                           // }}
-                           ></Add>
-                        </DropdownMenuTrigger>
-
-                        <DropdownMenuContent className={`grid ${items.length > 10 ? "grid-cols-2 " : ""}`}>
-                           {items.map((item: item) => {
-                              return (
-                                 <DropdownMenuItem key={item.id} onClick={() => setSelectedPositionProperty("itemId", item.id)}>
-                                    <div className="text-xs flex flex-row items-center justify-center w-full">
-                                       <div className="w-9 h-9 ">
-                                          <img
-                                             className="h-full w-full object-contain"
-                                             src={imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`]}
-                                          />
-                                       </div>
-
-                                       {/* <p>{item.name}</p> */}
-                                    </div>
-                                 </DropdownMenuItem>
-                              );
-                           })}
-                           <DropdownMenuItem
-                              key={"add"}
-                              onClick={() => {
-                                 setAssetsOpen({ type: "item" });
-
-                                 return;
-                              }}
-                           >
-                              <div className="text-xs flex flex-row items-center gap-2">
-                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                                    <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
-                                 </svg>
-
-                                 <p>Upload image</p>
-                              </div>
-                           </DropdownMenuItem>
-                        </DropdownMenuContent>
-                     </DropdownMenu>
-                  ) : null}
-               </div>
-            </div>
-            {getSelectedPositionsProperty("itemId") !== null ? (
-               <>
-                  <div className="flex flex-row items-center justify-between w-full px-2">
-                     <DropdownMenu>
-                        <DropdownMenuTrigger
-                           disabled={viewOnly}
-                           asChild
-                           className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md border border-neutral-700"
-                        >
-                           <div className="text-xs flex flex-row items-center  justify-center px-2 py-1">
-                              <div className="w-12 h-12 ">
-                                 {getSelectedPositionsProperty("itemId")?.url && (
-                                    <img
-                                       className="h-full w-full object-contain"
-                                       src={
-                                          imageBlobs[
-                                             `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${
-                                                getSelectedPositionsProperty("itemId")?.url
-                                             }`
-                                          ]
-                                       }
-                                    />
-                                 )}
-                              </div>
-
-                              {/* <p>{getSelectedPositionsProperty("itemId")?.name}</p> */}
-                           </div>
-                        </DropdownMenuTrigger>
-
-                        <DropdownMenuContent className={`grid ${items.length > 10 ? "grid-cols-2 " : ""}`}>
-                           {items.map((item: item) => {
-                              return (
-                                 <DropdownMenuItem key={item.id} onClick={() => setSelectedPositionProperty("itemId", item.id)}>
-                                    <div className="text-xs flex flex-row justify-center w-full items-center">
-                                       <div className="w-12 h-12 ">
-                                          <img
-                                             className="h-full w-full object-contain"
-                                             src={imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`]}
-                                          />
-                                       </div>
-
-                                       {/* <p>{item.name}</p> */}
-                                    </div>
-                                 </DropdownMenuItem>
-                              );
-                           })}
-                           <DropdownMenuItem
-                              key={"add"}
-                              onClick={() => {
-                                 setAssetsOpen({ type: "item" });
-
-                                 return;
-                              }}
-                           >
-                              <div className="text-xs flex flex-row items-center">
-                                 <p>Add prop</p>
-                              </div>
-                           </DropdownMenuItem>
-                        </DropdownMenuContent>
-                     </DropdownMenu>
-                  </div>
-
-                  {getSelectedPositionsProperty("itemId").id && (
-                     <div
-                        className="  px-2 mt-1"
-                        style={{
-                           pointerEvents: viewOnly ? "none" : "auto",
-                        }}
-                     >
-                        <div className="flex flex-col  gap-1">
-                           <p className=" font-medium text-xs">Width</p>
-                           <div className="flex flex-row items-center border border-neutral-200 dark:border-neutral-700 rounded-md overflow-hidden w-min pl-1 pr-3 py-[2px]">
-                              <input
-                                 // onBlur={pushChange}
-                                 defaultValue={getSelectedPositionsProperty("itemId")?.width || 1}
-                                 type="number"
-                                 onChange={(e) => {
-                                    // check to make sure it's a number
-                                    if (isNaN(parseFloat(e.target.value))) {
-                                       toast.error("Not a valid number");
-                                    }
-
-                                    setItems(
-                                       items.map((itemx) => {
-                                          if (itemx.id === getSelectedPositionsProperty("itemId").id) {
-                                             return {
-                                                ...itemx,
-                                                width: parseFloat(e.target.value),
-                                             };
-                                          }
-                                          return itemx;
-                                       })
-                                    );
-                                 }}
-                                 onBlur={(e) => {
-                                    // check to make sure it's a number
-                                    if (isNaN(parseFloat(e.target.value))) {
-                                       toast.error("Not a valid number");
-                                    }
-
-                                    setItems(
-                                       items.map((itemx) => {
-                                          if (itemx.id === getSelectedPositionsProperty("itemId").id) {
-                                             return {
-                                                ...itemx,
-                                                width: parseFloat(e.target.value),
-                                             };
-                                          }
-                                          return itemx;
-                                       })
-                                    );
-                                 }}
-                                 style={{
-                                    borderRadius: 0,
-                                 }}
-                                 className="w-[45px] p-1 focus:outline-none rounded-none text-center bg-transparent text-sm   "
-                              />
-                              <p className=" ml-1 text-xs">squares</p>
-                           </div>
-                        </div>
-                     </div>
-                  )}
-               </>
-            ) : null}
-         </div>
-
-         <HDivider />
-         <PropertyAdd
-            onAdd={() => setSelectedPositionProperty("level", 0)}
-            onSubtract={() => setSelectedPositionProperty("level", null)}
-            canAdd={!(getSelectedPositionsProperty("level") !== null) && !viewOnly}
-            canSubtract={getSelectedPositionsProperty("level") !== null && !viewOnly}
-            label="Height off ground"
-            isOpen={getSelectedPositionsProperty("level") !== null}
-         >
-            <div className="px-2">
-               <Input
-                  type="number"
-                  className="w-[70px] h-8 dark:bg-neutral-900 text-xs"
-                  size={1}
-                  onChange={(e) => {
-                     setLocalSettings((localSettings: localSettings) => {
-                        return { ...localSettings, viewingThree: true, viewingTwo: false };
-                     });
-                     setSelectedPositionProperty("level", parseInt(e.target.value));
-                  }}
-                  value={getSelectedPositionsProperty("level")}
-               />
-            </div>
-         </PropertyAdd>
-         <HDivider />
 
          {/* {selectedFormations.length === 1 ? (
             <div className="flex flex-col py-3 px-2  gap-3">
@@ -765,6 +557,273 @@ export const ObjectControls: React.FC<{
                      </svg>
                   </button>
                </div>
+            </div>
+         </PropertyAdd>
+         <HDivider />
+         <div className=" flex flex-col py-2 min-h-[44px] justify-center ">
+            <div className="flex flex-row items-center justify-between px-2">
+               <p className=" font-medium text-xs">Prop</p>
+               <div className="flex flex-row items-center gap-2">
+                  {getSelectedPositionsProperty("itemId") !== null && !viewOnly && !viewOnly ? (
+                     <Subtract onClick={() => setSelectedPositionProperty("itemId", null)}></Subtract>
+                  ) : null}
+                  {!getSelectedPositionsProperty("itemId") && !viewOnly ? (
+                     <DropdownMenu>
+                        <DropdownMenuTrigger
+                           disabled={viewOnly}
+                           asChild
+                           // className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md border border-neutral-700"
+                        >
+                           <Add
+                           // onClick={() => {
+                           //    if (!items.length) {
+                           //       setAssetsOpen({ type: "item" });
+                           //       toast("Create your first prop");
+                           //       return;
+                           //    }
+                           //    setSelectedPositionProperty("itemId", items[0].id);
+                           // }}
+                           ></Add>
+                        </DropdownMenuTrigger>
+
+                        <DropdownMenuContent className={`grid ${items.length > 10 ? "grid-cols-2 " : ""}`}>
+                           {items.map((item: item) => {
+                              return (
+                                 <DropdownMenuItem key={item.id} onClick={() => setSelectedPositionProperty("itemId", item.id)}>
+                                    <div className="text-xs flex flex-row items-center justify-center w-full">
+                                       <div className="w-9 h-9 ">
+                                          <img
+                                             className="h-full w-full object-contain"
+                                             src={imageBlobs[`https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`]}
+                                          />
+                                       </div>
+
+                                       {/* <p>{item.name}</p> */}
+                                    </div>
+                                 </DropdownMenuItem>
+                              );
+                           })}
+                           <DropdownMenuItem
+                              key={"add"}
+                              onClick={() => {
+                                 setAssetsOpen({ type: "item" });
+
+                                 return;
+                              }}
+                           >
+                              <div className="text-xs flex flex-row items-center gap-2">
+                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                    <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+                                 </svg>
+
+                                 <p>Upload image</p>
+                              </div>
+                           </DropdownMenuItem>
+                        </DropdownMenuContent>
+                     </DropdownMenu>
+                  ) : null}
+               </div>
+            </div>
+            {getSelectedPositionsProperty("itemId") !== null ? (
+               <>
+                  {getSelectedPositionsProperty("itemId").id && (
+                     <div className="flex flex-col">
+                        <div
+                           className=" flex flex-row items-center justify-between px-2 mt-1"
+                           style={{
+                              pointerEvents: viewOnly ? "none" : "auto",
+                           }}
+                        >
+                           <DropdownMenu>
+                              <DropdownMenuTrigger
+                                 disabled={viewOnly}
+                                 asChild
+                                 className="dark:hover:bg-neutral-600 hover:bg-neutral-200 cursor-pointer rounded-md border border-neutral-700"
+                              >
+                                 <div className="text-xs flex flex-row items-center  justify-center  p-1">
+                                    <div className="w-9 h-9 ">
+                                       {getSelectedPositionsProperty("itemId")?.url && (
+                                          <img
+                                             className="h-full w-full object-contain"
+                                             src={
+                                                imageBlobs[
+                                                   `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${
+                                                      getSelectedPositionsProperty("itemId")?.url
+                                                   }`
+                                                ]
+                                             }
+                                          />
+                                       )}
+                                    </div>
+
+                                    {/* <p>{getSelectedPositionsProperty("itemId")?.name}</p> */}
+                                 </div>
+                              </DropdownMenuTrigger>
+
+                              <DropdownMenuContent className={`grid ${items.length > 6 ? "grid-cols-2 " : ""}`}>
+                                 {items.map((item: item) => {
+                                    return (
+                                       <DropdownMenuItem key={item.id} onClick={() => setSelectedPositionProperty("itemId", item.id)}>
+                                          <div className={`text-xs  flex flex-row justify-center  w-full items-center`}>
+                                             <div className="w-12 h-12 ">
+                                                <img
+                                                   className="h-full w-full object-contain"
+                                                   src={
+                                                      imageBlobs[
+                                                         `https://dxtxbxkkvoslcrsxbfai.supabase.co/storage/v1/object/public/props/${item?.url}`
+                                                      ]
+                                                   }
+                                                />
+                                             </div>
+
+                                             {/* <p>{item.name}</p> */}
+                                          </div>
+                                       </DropdownMenuItem>
+                                    );
+                                 })}
+                                 <DropdownMenuItem
+                                    key={"add"}
+                                    onClick={() => {
+                                       setAssetsOpen({ type: "item" });
+
+                                       return;
+                                    }}
+                                 >
+                                    <div className="text-xs flex flex-row items-center">
+                                       <p>Upload image</p>
+                                    </div>
+                                 </DropdownMenuItem>
+                              </DropdownMenuContent>
+                           </DropdownMenu>
+                        </div>
+                        <div className="px-2 py-2 flex flex-col justify-between mt-1">
+                           <div className="flex flex-col w-full">
+                              <div className="flex flex-row justify-between items-center w-full ">
+                                 <p className=" font-medium text-xs">Side</p>
+                                 {getSelectedPositionsProperty("itemSide") && (
+                                    <Subtract
+                                       onClick={() => {
+                                          setSelectedPositionProperty("itemSide", null);
+                                       }}
+                                    ></Subtract>
+                                 )}
+                              </div>
+                              <div className="w-[70px] h-[70px]   grid grid-cols-3 grid-rows-3">
+                                 <div></div>
+                                 <div className="grid place-items-center">
+                                    <div
+                                       style={{
+                                          backgroundColor: getSelectedPositionsProperty("itemSide") === "top" ? "pink" : "#404040",
+                                       }}
+                                       onClick={() => setSelectedPositionProperty("itemSide", "top")}
+                                       className="w-4 rounded-md  h-4"
+                                    ></div>
+                                 </div>
+                                 <div></div>
+                                 <div className="grid place-items-center">
+                                    <div
+                                       style={{
+                                          backgroundColor: getSelectedPositionsProperty("itemSide") === "left" ? "pink" : "#404040",
+                                       }}
+                                       onClick={() => setSelectedPositionProperty("itemSide", "left")}
+                                       className="w-4 rounded-md  h-4"
+                                    ></div>
+                                 </div>
+                                 <div className="rounded-full w-3/4 h-3/4 m-auto bg-pink-600"></div>
+                                 <div className="grid place-items-center">
+                                    <div
+                                       style={{
+                                          backgroundColor: getSelectedPositionsProperty("itemSide") === "right" ? "pink" : "#404040",
+                                       }}
+                                       onClick={() => setSelectedPositionProperty("itemSide", "right")}
+                                       className="w-4 rounded-md  h-4"
+                                    ></div>
+                                 </div>
+                                 <div></div>
+                                 <div className="grid place-items-center">
+                                    <div
+                                       style={{
+                                          backgroundColor: getSelectedPositionsProperty("itemSide") === "bottom" ? "pink" : "#404040",
+                                       }}
+                                       onClick={() => setSelectedPositionProperty("itemSide", "bottom")}
+                                       className="w-4 rounded-md  h-4"
+                                    ></div>
+                                 </div>
+                                 <div></div>
+                              </div>
+                           </div>
+                           {/* <div className="flex flex-col   gap-2 w-full">
+                              <div className="flex flex-row items-center justify-between w-full">
+                                 <p className=" font-medium text-xs">Size</p>
+                                 {getSelectedPositionsProperty("itemWidth") && (
+                                    <Subtract
+                                       onClick={() => {
+                                          setSelectedPositionProperty("itemWidth", null);
+                                       }}
+                                    ></Subtract>
+                                 )}
+                              </div>
+                              <div className="flex flex-row items-center border border-neutral-200 dark:border-neutral-700 rounded-md overflow-hidden w-min pl-1 pr-3 py-[2px]">
+                                 <input
+                                    // onBlur={pushChange}
+                                    value={getSelectedPositionsProperty("itemWidth") || getSelectedPositionsProperty("itemId").width}
+                                    type="number"
+                                    onChange={(e) => {
+                                       // check to make sure it's a number
+                                       // if (isNaN(parseFloat(e.target.value))) {
+                                       //    toast.error("Not a valid number");
+                                       // }
+                                       // if (parseFloat(e.target.value) > 0) {
+
+                                       //    // toast.error("Not a valid number");
+                                       // }
+                                       setSelectedPositionProperty("itemWidth", parseFloat(e.target.value));
+                                    }}
+                                    // onBlur={(e) => {
+                                    //    // check to make sure it's a number
+                                    //    if (isNaN(parseFloat(e.target.value))) {
+                                    //       toast.error("Not a valid number");
+                                    //    }
+
+                                    //    setSelectedPositionProperty("itemWidth", parseFloat(e.target.value));
+                                    // }}
+                                    style={{
+                                       borderRadius: 0,
+                                    }}
+                                    className="w-[45px] p-1 focus:outline-none rounded-none text-center bg-transparent text-sm   "
+                                 />
+                                 <p className=" ml-1 text-xs">squares</p>
+                              </div>
+                           </div> */}
+                        </div>
+                     </div>
+                  )}
+               </>
+            ) : null}
+         </div>
+
+         <HDivider />
+         <PropertyAdd
+            onAdd={() => setSelectedPositionProperty("level", 0)}
+            onSubtract={() => setSelectedPositionProperty("level", null)}
+            canAdd={!(getSelectedPositionsProperty("level") !== null) && !viewOnly}
+            canSubtract={getSelectedPositionsProperty("level") !== null && !viewOnly}
+            label="Height off ground"
+            isOpen={getSelectedPositionsProperty("level") !== null}
+         >
+            <div className="px-2">
+               <Input
+                  type="number"
+                  className="w-[70px] h-8 dark:bg-neutral-900 text-xs"
+                  size={1}
+                  onChange={(e) => {
+                     setLocalSettings((localSettings: localSettings) => {
+                        return { ...localSettings, viewingThree: true, viewingTwo: false };
+                     });
+                     setSelectedPositionProperty("level", parseInt(e.target.value));
+                  }}
+                  value={getSelectedPositionsProperty("level")}
+               />
             </div>
          </PropertyAdd>
          <HDivider />

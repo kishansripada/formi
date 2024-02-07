@@ -82,6 +82,10 @@ export const DancerAlias: React.FC<{
 
    const dancerColor = dancerPos?.color || dancer?.color || "#db2777";
    const dancerShape = dancerPos?.shape || dancer?.shape || "circle";
+
+   const itemSide = dancerPos.itemSide || thisItem?.side || "top";
+   const itemWidth = dancerPos.itemWidth || thisItem?.width || 1;
+
    return (
       <>
          {/* {othersOnThisDancer.length && !isPlaying ? (
@@ -156,25 +160,25 @@ export const DancerAlias: React.FC<{
                <div
                   style={{
                      transform:
-                        thisItem.side === "bottom"
+                        itemSide === "bottom"
                            ? "translateY(50%)"
-                           : thisItem.side === "right"
+                           : itemSide === "right"
                            ? "translateY(0%) translateX(50%)"
-                           : thisItem.side === "left"
+                           : itemSide === "left"
                            ? "translateY(0%) translateX(-50%)"
                            : "translateY(-50%)",
-                     width: PIXELS_PER_SQUARE * (thisItem.width || 1),
+                     width: PIXELS_PER_SQUARE * itemWidth,
                   }}
                   className="absolute z-[99]  pointer-events-none  "
                >
                   <img
                      style={{
                         transform:
-                           thisItem.side === "bottom"
+                           itemSide === "bottom"
                               ? `translateY(${PIXELS_PER_SQUARE / 2}px)`
-                              : thisItem.side === "right"
+                              : itemSide === "right"
                               ? `translateX(${PIXELS_PER_SQUARE / 2}px)`
-                              : thisItem.side === "left"
+                              : itemSide === "left"
                               ? `translateX(${-PIXELS_PER_SQUARE / 2}px)`
                               : `translateY(${-PIXELS_PER_SQUARE / 2}px)`,
                      }}
@@ -302,13 +306,13 @@ export const DancerAlias: React.FC<{
             {dancerStyle !== "initials" ? (
                <p
                   style={{
-                     bottom: thisItem?.side === "bottom" ? null : 0,
-                     top: thisItem?.side === "bottom" ? 0 : null,
+                     bottom: itemSide === "bottom" ? null : 0,
+                     top: itemSide === "bottom" ? 0 : null,
                      // bottom: 0,
                      opacity: zoom < 0.2 ? 0 : 1,
                      // transform: `scale(${(1 / zoom) * 0.8}) translate(0%, 100%)`,
-                     transform: `scale(${(1 / zoom) * 0.7}) translate(0%, ${100 * (thisItem?.side === "bottom" ? -1 : 1) * zoom * (1 / 0.7)}%)`,
-                     transformOrigin: `${thisItem?.side === "bottom" ? "bottom" : "top"} center`,
+                     transform: `scale(${(1 / zoom) * 0.7}) translate(0%, ${100 * (itemSide === "bottom" ? -1 : 1) * zoom * (1 / 0.7)}%)`,
+                     transformOrigin: `${itemSide === "bottom" ? "bottom" : "top"} center`,
                   }}
                   className="absolute  text-center whitespace-nowrap select-none pointer-events-none dark:text-white   rounded-full px-1"
                >

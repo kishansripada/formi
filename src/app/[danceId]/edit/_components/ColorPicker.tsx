@@ -10,12 +10,14 @@ export const PopoverPicker = ({
    dancers,
    position,
    text,
+   side,
 }: {
    color: string | null;
    setColor: Function;
    dancers: dancer[];
    position: "top" | "bottom";
    text?: string;
+   side?: "right" | "left";
 }) => {
    const popover = useRef();
    const [isOpen, toggle] = useState(false);
@@ -64,7 +66,8 @@ export const PopoverPicker = ({
                .popover {
                   position: absolute;
                   ${position === "bottom" ? "top" : "bottom"}: calc(100% + 2px);
-                  right: 0;
+                  ${side === "right" ? "right" : "left"}: calc(100% + 2px);
+                  :0 ;
                   border-radius: 9px;
                   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
                   z-index: 20;

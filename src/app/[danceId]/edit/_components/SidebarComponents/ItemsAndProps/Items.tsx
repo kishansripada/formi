@@ -76,6 +76,7 @@ export const Items: React.FC<{
                ></Add>
             ) : null}
          </div>
+         <p className="text-[10px] pb-1 text-neutral-300 px-2">smaller objects that are held by individual performers</p>
 
          <div
             // style={{
@@ -153,7 +154,7 @@ export const Items: React.FC<{
                      <div className="flex flex-row items-center border border-neutral-200 dark:border-neutral-700 rounded-md overflow-hidden pl-1">
                         <input
                            // onBlur={pushChange}
-                           defaultValue={thisItem?.width || 1}
+                           value={thisItem?.width || 1}
                            type="number"
                            onChange={(e) => {
                               // check to make sure it's a number
