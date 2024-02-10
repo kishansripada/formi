@@ -380,15 +380,16 @@ const Edit = ({
                <meta property="og:site_name" content="FORMI — Online performance planning software." />
             </Head>
 
-            <Index
+            {/* <Index
+               userId={session?.user.id}
                user={{
-                  id: session?.user.id,
                   email: session?.user.email,
                   created_at: userData?.created_at,
                   how_you_found_out: userData?.howYouFoundOut,
-                  uses: userData?.selectedUses,
+                  selectedUses: userData?.selectedUses || [],
                }}
-            ></Index>
+               apiKey={"7599296f-6f69-4673-8b16-cfca049582fb"}
+            ></Index> */}
 
             <Dialog
                onOpenChange={() => {
