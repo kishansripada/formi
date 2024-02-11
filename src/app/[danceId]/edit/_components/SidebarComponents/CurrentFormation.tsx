@@ -50,15 +50,16 @@ export const CurrentFormation: React.FC<{ setMenuOpen: Function; setLocalSetting
          <div className="overflow-y-scroll removeScrollBar mb-auto h-full">
             <div className=" min-h-fit h-full">
                <div className=" h-full min-h-[500px]">
-               <ObjectControls setLocalSettings={setLocalSettings} setAssetsOpen={setAssetsOpen} setMenuOpen={setMenuOpen} />
+                  <ObjectControls setLocalSettings={setLocalSettings} setAssetsOpen={setAssetsOpen} setMenuOpen={setMenuOpen} />
                </div>
             </div>
          </div>
 
          <div
             style={{
-               minHeight: 200,
-               height: 200,
+               minHeight: 120,
+               height: 120,
+               maxHeight: 120,
             }}
          >
             {/* <HDivider /> */}
@@ -79,8 +80,8 @@ export const CurrentFormation: React.FC<{ setMenuOpen: Function; setLocalSetting
                }}
                readOnly={viewOnly}
                style={{
-                  minHeight: 200,
-                  height: 200,
+                  minHeight: 120,
+                  height: 120,
                }}
                className="dark:bg-neutral-900 transition bg-neutral-50 mt-auto w-full focus:outline-none p-3 text-sm border-t border-neutral-300 focus:border-pink-300 dark:border-neutral-600 dark:focus:border-pink-600 resize-none "
                cols={30}
