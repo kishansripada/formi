@@ -380,7 +380,7 @@ const Edit = ({
                <meta property="og:site_name" content="FORMI — Online performance planning software." />
             </Head>
 
-            {/* <Index
+            <IndexWithShadowDOM
                userId={session?.user.id}
                user={{
                   email: session?.user.email,
@@ -389,7 +389,7 @@ const Edit = ({
                   selectedUses: userData?.selectedUses || [],
                }}
                apiKey={"7599296f-6f69-4673-8b16-cfca049582fb"}
-            ></Index> */}
+            ></IndexWithShadowDOM>
 
             <Dialog
                onOpenChange={() => {
