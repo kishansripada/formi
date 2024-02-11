@@ -385,8 +385,8 @@ const Edit = ({
                user={{
                   email: session?.user.email,
                   created_at: userData?.created_at,
-                  how_you_found_out: userData?.howYouFoundOut,
-                  selectedUses: userData?.selectedUses || [],
+                  how_you_found_out: userData?.response_data.howYouFoundOut,
+                  selectedUses: userData?.response_data?.selectedUses || [],
                }}
                apiKey={"7599296f-6f69-4673-8b16-cfca049582fb"}
             ></IndexWithShadowDOM>
