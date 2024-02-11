@@ -55,7 +55,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { DialogClose } from "@radix-ui/react-dialog";
 import { FormationMarkersLayer } from "./_components/FormationMarkersLayer";
 import { StageMarkersLayer } from "./_components/StageMarkersLayer";
-import { Index } from "../../../utils/userPoll";
+import { IndexWithShadowDOM } from "../../../utils/userPoll.js";
 import { ReflectedDancers } from "./_components/ReflectedDancers";
 
 if (typeof Node === "function" && Node.prototype) {
