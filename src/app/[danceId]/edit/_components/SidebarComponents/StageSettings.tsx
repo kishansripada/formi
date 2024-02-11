@@ -222,15 +222,28 @@ export const StageSettings: React.FC<{
             <HDivider />
 
             <VStack className="">
-               <div className="flex items-center gap-2 justify-between px-2 py-2">
+               <div className="flex flex-col items-start gap-3 justify-between px-2 py-3 ">
                   <p>Snap dancers to grid</p>
 
-                  <Switch
+                  <DropdownMenu>
+                     <DropdownMenuTrigger>
+                        <p className="border border-neutral-700 rounded-md py-2 px-3">
+                           {gridSnap === 100 ? "None" : gridSnap === 2 ? "Half square" : "Every square"}
+                        </p>
+                     </DropdownMenuTrigger>
+                     <DropdownMenuContent className="max-h-[500px] overflow-scroll">
+                        <DropdownMenuItem onClick={() => setCloudSettings({ ...cloudSettings, gridSnap: 1 })}>Every square</DropdownMenuItem>
+
+                        <DropdownMenuItem onClick={() => setCloudSettings({ ...cloudSettings, gridSnap: 2 })}>Half square</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setCloudSettings({ ...cloudSettings, gridSnap: 100 })}>None</DropdownMenuItem>
+                     </DropdownMenuContent>
+                  </DropdownMenu>
+                  {/* <Switch
                      onCheckedChange={(e) => {
                         setCloudSettings({ ...cloudSettings, gridSnap: gridSnap === 100 ? 1 : 100 });
                      }}
                      checked={gridSnap === 1}
-                  />
+                  /> */}
                </div>
             </VStack>
             <HDivider />
