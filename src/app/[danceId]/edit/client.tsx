@@ -55,7 +55,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { DialogClose } from "@radix-ui/react-dialog";
 import { FormationMarkersLayer } from "./_components/FormationMarkersLayer";
 import { StageMarkersLayer } from "./_components/StageMarkersLayer";
-import { IndexWithShadowDOM } from "../../../utils/userPoll.js";
+// import HolyMetrics from "../../../utils/HolyMetrics/dist/userpollts";
 import { ReflectedDancers } from "./_components/ReflectedDancers";
 
 if (typeof Node === "function" && Node.prototype) {
@@ -380,7 +380,7 @@ const Edit = ({
                <meta property="og:site_name" content="FORMI — Online performance planning software." />
             </Head>
 
-            <IndexWithShadowDOM
+            {/* <HolyMetrics
                userId={session?.user.id}
                user={{
                   email: session?.user.email,
@@ -389,7 +389,7 @@ const Edit = ({
                   selectedUses: userData?.response_data?.selectedUses || [],
                }}
                apiKey={"7599296f-6f69-4673-8b16-cfca049582fb"}
-            ></IndexWithShadowDOM>
+            ></HolyMetrics> */}
 
             <Dialog
                onOpenChange={() => {
