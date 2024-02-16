@@ -15,6 +15,8 @@ import { Input } from "../../../../@/components/ui/input";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { NewPerformanceBuilder } from "./NewPerformanceBuilder";
 import { DoubleClickInput } from "../../../../@/components/ui/double-click-input";
+import { teams } from "../../teams";
+
 export const Sidebar: React.FC<{
    rosters: any;
    session: AuthSession;
@@ -259,6 +261,17 @@ export const Sidebar: React.FC<{
                   >
                      <p>Rosters</p>
                   </Link>
+                  {teams.find((team) => team.includes(session?.user?.email)) ? (
+                     <Link
+                        href="/dashboard/team"
+                        prefetch={true}
+                        className={`flex flex-row justify-between rounded-sm items-center hover:bg-neutral-800 transition cursor-default ${
+                           pathname === "/dashboard/team" ? "bg-neutral-800" : ""
+                        }   w-full h-9 px-3`}
+                     >
+                        <p>Team</p>
+                     </Link>
+                  ) : null}
                </div>
                <Dialog>
                   <DialogTrigger className="w-full">
@@ -305,6 +318,7 @@ export const Sidebar: React.FC<{
                      ></NewPerformanceBuilder>
                   </DialogContent>
                </Dialog>
+
                {/* </div> */}
             </div>
 
