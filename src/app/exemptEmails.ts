@@ -37,6 +37,13 @@ const EXEMPT_EMAILS = [
 
    // 1 year starting feb 4 2024
    "thermann.a@gmail.com",
+
+   //studio plan
+   "brittany@studiodans.com",
+
+   "sedegs1995@gmail.com",
+
+   "zoe@studiodans.com",
 ];
 
 export default EXEMPT_EMAILS;
