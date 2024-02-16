@@ -28,6 +28,10 @@ async function getServerSideProps() {
       redirect("/login");
    }
 
+   if (!myTeam) {
+      redirect("/dashboard");
+   }
+
    async function getTeamIds(session, supabase) {
       let data = await supabase.from("users").select("id").in("email", myTeam);
 
@@ -65,7 +69,7 @@ async function getServerSideProps() {
          teamIds.map((member) => member.id)
       ),
    ]);
-
+   // console.log(teamPerformances.length);
    return { teamPerformances };
 }
 
