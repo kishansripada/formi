@@ -185,8 +185,8 @@ export const StageSettings: React.FC<{
                               className={"hover:bg-neutral-800 p-1  cursor-default"}
                            >
                               <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 873 873">
-                                 <circle cx="436.5" cy="436.5" r="405.5" stroke="white" stroke-width="62" />
-                                 <path stroke="white" stroke-width="62" d="m54.82 247.825 751.663 368.686" />
+                                 <circle cx="436.5" cy="436.5" r="405.5" stroke="white" strokeWidth="62" />
+                                 <path stroke="white" strokeWidth="62" d="m54.82 247.825 751.663 368.686" />
                               </svg>
                            </button>
                         </div>

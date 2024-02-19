@@ -294,7 +294,7 @@ const Edit = ({
       };
 
       fetchImages();
-   }, [items]);
+   }, [items.length, cloudSettings.backgroundUrl, props.length]);
 
    const { data: audioFiles, invalidate: invalidateAudioFiles } = useSupabaseQuery(() =>
       supabase.storage.from("audiofiles").list(session?.user.id, {})
