@@ -55,7 +55,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { DialogClose } from "@radix-ui/react-dialog";
 import { FormationMarkersLayer } from "./_components/FormationMarkersLayer";
 import { StageMarkersLayer } from "./_components/StageMarkersLayer";
-// import HolyMetrics from "../../../utils/HolyMetrics/dist/userpollts";
+import { HolyWidget } from "holyuser";
 import { ReflectedDancers } from "./_components/ReflectedDancers";
 
 if (typeof Node === "function" && Node.prototype) {
@@ -380,16 +380,18 @@ const Edit = ({
                <meta property="og:site_name" content="FORMI — Online performance planning software." />
             </Head>
 
-            {/* <HolyMetrics
+            <HolyWidget
                userId={session?.user.id}
                user={{
                   email: session?.user.email,
                   created_at: userData?.created_at,
                   how_you_found_out: userData?.response_data?.howYouFoundOut,
                   selectedUses: userData?.response_data?.selectedUses || [],
+                  plan: plan,
                }}
-               apiKey={"7599296f-6f69-4673-8b16-cfca049582fb"}
-            ></HolyMetrics> */}
+               apiKey={"c64bcec7-3e92-4e10-bbed-3a4fd551175d"}
+               darkMode={true}
+            />
 
             <Dialog
                onOpenChange={() => {
