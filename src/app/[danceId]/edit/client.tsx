@@ -381,6 +381,7 @@ const Edit = ({
                <meta property="og:site_name" content="FORMI — Online performance planning software." />
             </Head>
 
+            {isDesktop && (
             <HolyWidget
                userId={session?.user.id}
                user={{
@@ -393,6 +394,7 @@ const Edit = ({
                apiKey={"7599296f-6f69-4673-8b16-cfca049582fb"}
                darkMode={true}
             />
+            )}
 
             <Dialog
                onOpenChange={() => {
