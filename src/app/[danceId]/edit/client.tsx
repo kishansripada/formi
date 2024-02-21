@@ -56,7 +56,7 @@ import { DialogClose } from "@radix-ui/react-dialog";
 import { FormationMarkersLayer } from "./_components/FormationMarkersLayer";
 import { StageMarkersLayer } from "./_components/StageMarkersLayer";
 import { useSearchParams } from "next/navigation";
-import { HolyWidget } from "holyuser";
+// import { HolyWidget, useHolyStore } from "../../../utils/dist/holyuser";
 import { ReflectedDancers } from "./_components/ReflectedDancers";
 
 if (typeof Node === "function" && Node.prototype) {
@@ -381,7 +381,7 @@ const Edit = ({
                <meta property="og:site_name" content="FORMI — Online performance planning software." />
             </Head>
 
-            {isDesktop && (
+            {/* {isDesktop && (
             <HolyWidget
                userId={session?.user.id}
                user={{
@@ -394,7 +394,7 @@ const Edit = ({
                apiKey={"7599296f-6f69-4673-8b16-cfca049582fb"}
                darkMode={true}
             />
-            )}
+            )} */}
 
             <Dialog
                onOpenChange={() => {
