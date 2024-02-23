@@ -256,7 +256,7 @@ const Client = () => {
                                  />
                               </svg>
                            </div>
-                           <div className=" lg:text-base text-sm  flex-row items-center justify-around lg:hidden flex">Launch mobile web app</div>
+                           <div className="  text-sm  flex-row items-center justify-around lg:hidden flex">Launch mobile web app</div>
                         </Button>
                      </Link>
                   </div>

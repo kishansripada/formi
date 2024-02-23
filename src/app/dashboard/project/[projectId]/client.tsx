@@ -4,7 +4,6 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button } from "../../../../../@/components/ui/button";
 import { PerformancePreview } from "../../_components/PerformancePreview";
 import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
 export default function PageClient({ myDances, session, projectId }) {
    const router = useRouter();
    const supabase = createClientComponentClient();
