@@ -539,8 +539,8 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
             const index = formations.findIndex((formation) => formation.id === formationId);
             let position =
                formations
-               .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
-               .slice(0, index)
+                  .map((formation, i) => formation.durationSeconds + (i === 0 ? 0 : formation.transition.durationSeconds))
+                  .slice(0, index)
                   .reduce((a, b) => a + b, 0) + 0.01;
 
             set({ selectedFormations: [formationId] });
@@ -642,10 +642,12 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
 
          pauseHistory: () => {
             const room = get().liveblocks.room!;
+            if (!room) return;
             room.history.pause();
          },
          resumeHistory: () => {
             const room = get().liveblocks.room!;
+            if (!room) return;
             room.history.resume();
          },
 
@@ -662,6 +664,7 @@ export const useStore = create<WithLiveblocks<Store, Presence>>(
          isUsingPenTool: false,
          setIsUsingPenTool: (isUsingPenTool: boolean) => set({ isUsingPenTool }),
       }),
+
       {
          client,
          presenceMapping: {

@@ -39,7 +39,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "framer-motion": "^10.16.4",
-    "holyuser": "^0.0.23",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "lodash.debounce": "^4.0.8",
