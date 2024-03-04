@@ -191,6 +191,11 @@ export const Formation: React.FC<{
                })
             );
          },
+         onPointerUp: () => {
+            if (formations.length > 2) {
+               window.holyTrigger("24");
+            }
+         },
       },
       {
          eventOptions: { passive: false },

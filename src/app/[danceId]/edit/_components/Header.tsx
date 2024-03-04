@@ -433,13 +433,14 @@ export const Header: React.FC<{
 
                            <MenubarItem
                               onClick={() => {
+                                 window.holyTrigger("31");
                                  setLocalSettings((localSettings: localSettings) => {
                                     return { ...localSettings, stageFlipped: !localSettings.stageFlipped };
                                  });
                               }}
                               className="py-1 hover:bg-neutral-200"
                            >
-                              {!localSettings.stageFlipped ? "View from back" : "View from front"}
+                              Flip stage
                               <MenubarShortcut>R</MenubarShortcut>
                            </MenubarItem>
                            <MenubarItem
@@ -655,11 +656,13 @@ export const Header: React.FC<{
                <div className="flex items-center space-x-2">
                   <Switch
                      onCheckedChange={(e) => {
+                        if (!localSettings.isInSlideMode) {
+                           window.holyTrigger("28");
+                        }
                         setLocalSettings({ ...localSettings, isInSlideMode: !localSettings.isInSlideMode });
                         setIsPlaying(false);
                      }}
                      checked={localSettings.isInSlideMode}
-                     id="airplane-mode"
                   />
                </div>
                <DropdownMenu>

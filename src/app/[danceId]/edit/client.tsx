@@ -381,6 +381,27 @@ const Edit = ({
                <meta property="og:site_name" content="FORMI — Online performance planning software." />
             </Head>
 
+            <Script
+               src="https://widget.holyuser.com/holyuser.js"
+               onLoad={() => {
+                  const HolyWidget = window.HolyWidget;
+                  if (!isDesktop) return;
+                  HolyWidget({
+                     darkMode: true,
+                     user: {
+                        email: session?.user.email,
+                        created_at: userData?.created_at,
+                        how_you_found_out: userData?.response_data?.howYouFoundOut,
+                        selectedUses: userData?.response_data?.selectedUses || [],
+                        plan: plan,
+                     },
+                     userId: session?.user.id,
+                     apiKey: "c64bcec7-3e92-4e10-bbed-3a4fd551175d",
+                  });
+               }}
+               type="module"
+            />
+
             {/* {isDesktop && (
             <HolyWidget
                userId={session?.user.id}

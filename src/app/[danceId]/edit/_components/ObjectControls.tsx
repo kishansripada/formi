@@ -475,6 +475,7 @@ export const ObjectControls: React.FC<{
 
          <PropertyAdd
             onAdd={() => {
+               window.holyTrigger("29");
                const allOtherColors = thisFormation.positions
                   .filter((position) => !selectedDancers.includes(position.id))
                   .map((position) => position.color || dancers.find((dancer) => dancer.id === position.id)?.color || "#db2777");
@@ -498,7 +499,10 @@ export const ObjectControls: React.FC<{
          </PropertyAdd>
          <HDivider />
          <PropertyAdd
-            onAdd={() => setSelectedPositionProperty("shape", "square")}
+            onAdd={() => {
+               window.holyTrigger("29");
+               setSelectedPositionProperty("shape", "square");
+            }}
             onSubtract={() => setSelectedPositionProperty("shape", null)}
             canAdd={!(getSelectedPositionsProperty("shape") !== null) && !viewOnly}
             canSubtract={getSelectedPositionsProperty("shape") !== null && !viewOnly}
@@ -804,7 +808,10 @@ export const ObjectControls: React.FC<{
 
          <HDivider />
          <PropertyAdd
-            onAdd={() => setSelectedPositionProperty("level", 0)}
+            onAdd={() => {
+               window.holyTrigger("29");
+               setSelectedPositionProperty("level", 0);
+            }}
             onSubtract={() => setSelectedPositionProperty("level", null)}
             canAdd={!(getSelectedPositionsProperty("level") !== null) && !viewOnly}
             canSubtract={getSelectedPositionsProperty("level") !== null && !viewOnly}
