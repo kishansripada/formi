@@ -339,7 +339,7 @@ export const EventHandler: React.FC<{
       if (key === "Shift") {
          setShiftHeld(false);
       }
-      if (key === "Meta") {
+      if (key === "Meta" || key === "Control") {
          setCommandHeld(false);
       }
    }
