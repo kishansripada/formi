@@ -66,8 +66,8 @@ export const FormationIdeas: React.FC<{
    };
    return (
       <div className="overflow-hidden h-full flex flex-col">
-         <div className="flex flex-row p-3 justify-between items-center">
-            <p className="font-semibold text-xl whitespace-nowrap  ">Formation ideas</p>
+         <div className="flex flex-row px-2 py-3 justify-between items-center">
+            <p className="font-semibold text-xs whitespace-nowrap  ">Formation ideas</p>
 
             {/* <Select
                onValueChange={(e) => {
@@ -86,7 +86,7 @@ export const FormationIdeas: React.FC<{
                </SelectContent>
             </Select> */}
          </div>
-         <HStack className="justify-between px-2">
+         <HStack className="justify-between px-2 py-1">
             <DropdownMenu>
                <DropdownMenuTrigger asChild className="dark:hover:bg-neutral-600 mt-[6px] hover:bg-neutral-200 cursor-pointer rounded-md">
                   <div className=" py-1 px-3 h-[26px] w-38  flex flex-row items-center  ">
