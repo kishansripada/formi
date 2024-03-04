@@ -58,7 +58,7 @@ import { StageMarkersLayer } from "./_components/StageMarkersLayer";
 import { useSearchParams } from "next/navigation";
 // import { HolyWidget, useHolyStore } from "../../../utils/dist/holyuser";
 import { ReflectedDancers } from "./_components/ReflectedDancers";
-
+import Script from "next/script";
 if (typeof Node === "function" && Node.prototype) {
    const originalRemoveChild = Node.prototype.removeChild;
    Node.prototype.removeChild = function (child) {
