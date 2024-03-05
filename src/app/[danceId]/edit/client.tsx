@@ -385,8 +385,9 @@ const Edit = ({
                src="https://widget.holyuser.com/holyuser.js"
                onLoad={() => {
                   const HolyWidget = window.HolyWidget;
-                  if (!isDesktop) return;
+
                   HolyWidget({
+                     disabled: !isDesktop,
                      darkMode: true,
                      user: {
                         email: session?.user.email,
