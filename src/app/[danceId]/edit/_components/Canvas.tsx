@@ -100,6 +100,7 @@ export const Canvas: React.FC<{
       isPlaying,
       isUsingPenTool,
       imageBlobs,
+      dancers,
    } = useStore();
    // const undo = useStore((state) => state.liveblocks.room?.history.undo);
    let { selectedFormations, getFirstSelectedFormation } = useStore();
@@ -931,6 +932,9 @@ export const Canvas: React.FC<{
             roundPositions();
             setIsPenDown(false);
             setRotateAround(null);
+            if (selectedDancers.length === dancers.length) {
+               window.holyTrigger("32");
+            }
          },
          onDragStart: ({ event }) => {
             setDraggingDancerId("something");
