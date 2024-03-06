@@ -398,9 +398,6 @@ const Edit = ({
                      },
                      userId: session?.user.id,
                      apiKey: "c64bcec7-3e92-4e10-bbed-3a4fd551175d",
-                     templates: {
-                        modal: GenericModal,
-                     },
                   });
                }}
                type="module"
