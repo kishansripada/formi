@@ -128,10 +128,6 @@ export const Formation: React.FC<{
             setFormations(
                get().formations.map((formation, i) => {
                   if (formation.id === state.target.id) {
-                     if (formations.length > 2 && i !== formations.length - 1) {
-                        setHasClickedOnTimeline(true);
-                     }
-
                      if (
                         formation.durationSeconds + state.delta[0] / pixelsPerSecond >= 0 &&
                         // if first formation is getting to small
@@ -193,7 +189,7 @@ export const Formation: React.FC<{
          },
          onPointerUp: () => {
             if (formations.length > 2) {
-               window.holyTrigger("24");
+               // window.holyTrigger("24");
             }
          },
       },

@@ -933,7 +933,7 @@ export const Canvas: React.FC<{
             setIsPenDown(false);
             setRotateAround(null);
             if (selectedDancers.length === dancers.length) {
-               window.holyTrigger("32");
+               // window.holyTrigger("32");
             }
          },
          onDragStart: ({ event }) => {

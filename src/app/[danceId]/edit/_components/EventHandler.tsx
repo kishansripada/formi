@@ -326,7 +326,7 @@ export const EventHandler: React.FC<{
 
       if (e.key === "c") {
          e.preventDefault();
-         window.holyTrigger("30");
+         // window.holyTrigger("30");
          copySelectedPositions();
       }
 

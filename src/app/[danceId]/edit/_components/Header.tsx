@@ -433,7 +433,7 @@ export const Header: React.FC<{
 
                            <MenubarItem
                               onClick={() => {
-                                 window.holyTrigger("31");
+                                 // window.holyTrigger("31");
                                  setLocalSettings((localSettings: localSettings) => {
                                     return { ...localSettings, stageFlipped: !localSettings.stageFlipped };
                                  });
@@ -657,7 +657,7 @@ export const Header: React.FC<{
                   <Switch
                      onCheckedChange={(e) => {
                         if (!localSettings.isInSlideMode) {
-                           window.holyTrigger("28");
+                           // window.holyTrigger("28");
                         }
                         setLocalSettings({ ...localSettings, isInSlideMode: !localSettings.isInSlideMode });
                         setIsPlaying(false);

@@ -475,7 +475,7 @@ export const ObjectControls: React.FC<{
 
          <PropertyAdd
             onAdd={() => {
-               window.holyTrigger("29");
+               // window.holyTrigger("29");
                const allOtherColors = thisFormation.positions
                   .filter((position) => !selectedDancers.includes(position.id))
                   .map((position) => position.color || dancers.find((dancer) => dancer.id === position.id)?.color || "#db2777");
@@ -500,7 +500,7 @@ export const ObjectControls: React.FC<{
          <HDivider />
          <PropertyAdd
             onAdd={() => {
-               window.holyTrigger("29");
+               // window.holyTrigger("29");
                setSelectedPositionProperty("shape", "square");
             }}
             onSubtract={() => setSelectedPositionProperty("shape", null)}
@@ -809,7 +809,7 @@ export const ObjectControls: React.FC<{
          <HDivider />
          <PropertyAdd
             onAdd={() => {
-               window.holyTrigger("29");
+               // window.holyTrigger("29");
                setSelectedPositionProperty("level", 0);
             }}
             onSubtract={() => setSelectedPositionProperty("level", null)}

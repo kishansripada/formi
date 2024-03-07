@@ -381,8 +381,8 @@ const Edit = ({
                <meta property="og:site_name" content="FORMI — Online performance planning software." />
             </Head>
 
-            <Script
-               src="https://holyuser-widget-eqbd3hteq-kishansripada-s-team.vercel.app/holyuser.js"
+            {/* <Script
+               src="https://widget.holyuser.com/holyuser.js"
                onLoad={() => {
                   const HolyWidget = window.HolyWidget;
 
@@ -398,10 +398,13 @@ const Edit = ({
                      },
                      userId: session?.user.id,
                      apiKey: "c64bcec7-3e92-4e10-bbed-3a4fd551175d",
+                     templates: {
+                        modal: GenericModal,
+                     },
                   });
                }}
                type="module"
-            />
+            /> */}
 
             {/* {isDesktop && (
             <HolyWidget
